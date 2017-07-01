@@ -290,7 +290,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	Direct3D9Renderer::Direct3D9Renderer(const Renderer::Context& context) :
 		IRenderer(context),
-		mDirect3D9RuntimeLinking(new Direct3D9RuntimeLinking()),
+		mDirect3D9RuntimeLinking(nullptr),
 		mDirect3D9(nullptr),
 		mDirect3DDevice9(nullptr),
 		mShaderLanguageHlsl(nullptr),
@@ -307,6 +307,7 @@ namespace Direct3D9Renderer
 		mDirect3DPixelShader9(nullptr)
 	{
 		// Is Direct3D 9 available?
+		mDirect3D9RuntimeLinking = new Direct3D9RuntimeLinking(*this);
 		if (mDirect3D9RuntimeLinking->isDirect3D9Avaiable())
 		{
 			// Begin debug event
@@ -425,7 +426,7 @@ namespace Direct3D9Renderer
 				}
 
 				// Use debug output to show the current number of resource instances
-				getStatistics().debugOutputCurrentResouces();
+				getStatistics().debugOutputCurrentResouces(mContext);
 			}
 		}
 		#endif

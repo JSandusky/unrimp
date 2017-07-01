@@ -31,6 +31,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace Direct3D9Renderer
+{
+	class Direct3D9Renderer;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace Direct3D9Renderer
@@ -54,9 +63,12 @@ namespace Direct3D9Renderer
 	public:
 		/**
 		*  @brief
-		*    Default constructor
+		*    Constructor
+		*
+		*  @param[in] direct3D9Renderer
+		*    Owner Direct3D 9 renderer instance
 		*/
-		Direct3D9RuntimeLinking();
+		explicit Direct3D9RuntimeLinking(Direct3D9Renderer& direct3D9Renderer);
 
 		/**
 		*  @brief
@@ -78,6 +90,9 @@ namespace Direct3D9Renderer
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
+		explicit Direct3D9RuntimeLinking(const Direct3D9RuntimeLinking& source) = delete;
+		Direct3D9RuntimeLinking& operator =(const Direct3D9RuntimeLinking& source) = delete;
+
 		/**
 		*  @brief
 		*    Load the shared libraries
@@ -110,10 +125,11 @@ namespace Direct3D9Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		void* mD3D9SharedLibrary;		///< D3D9 shared library, can be a null pointer
-		void* mD3DX9SharedLibrary;		///< D3DX9 shared library, can be a null pointer
-		bool  mEntryPointsRegistered;	///< Entry points successfully registered?
-		bool  mInitialized;				///< Already initialized?
+		Direct3D9Renderer& mDirect3D9Renderer;
+		void*			   mD3D9SharedLibrary;		///< D3D9 shared library, can be a null pointer
+		void*			   mD3DX9SharedLibrary;		///< D3DX9 shared library, can be a null pointer
+		bool			   mEntryPointsRegistered;	///< Entry points successfully registered?
+		bool			   mInitialized;			///< Already initialized?
 
 
 	};

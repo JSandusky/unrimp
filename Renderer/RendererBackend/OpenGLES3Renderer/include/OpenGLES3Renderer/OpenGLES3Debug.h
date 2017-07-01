@@ -41,13 +41,13 @@
 	#define OPENGLES3RENDERER_RENDERERMATCHCHECK_RETURN(rendererReference, resourceReference) \
 		if (&rendererReference != &(resourceReference).getRenderer()) \
 		{ \
-			RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: The given resource is owned by another renderer instance") \
+			RENDERER_LOG((rendererReference).getContext(), CRITICAL, "OpenGL ES 3 error: The given resource is owned by another renderer instance") \
 			return; \
 		}
 	#define OPENGLES3RENDERER_RENDERERMATCHCHECK_NOTNULL_RETURN(resourcePointer) \
 		if (nullptr != resourcePointer) \
 		{ \
-			RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: The given resource is owned by another renderer instance") \
+			RENDERER_LOG(rendererReference->getContext(), CRITICAL, "OpenGL ES 3 error: The given resource is owned by another renderer instance") \
 			return; \
 		}
 #endif

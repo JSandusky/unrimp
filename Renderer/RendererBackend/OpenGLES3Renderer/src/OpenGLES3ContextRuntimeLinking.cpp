@@ -25,6 +25,9 @@
 
 #include "OpenGLES3Renderer/OpenGLES3ContextRuntimeLinking.h"
 #include "OpenGLES3Renderer/ExtensionsRuntimeLinking.h"
+#include "OpenGLES3Renderer/OpenGLES3Renderer.h"
+
+#include <Renderer/ILog.h>
 
 #include <EGL/eglext.h> // For "EGL_OPENGL_ES3_BIT_KHR"
 
@@ -44,8 +47,9 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	OpenGLES3ContextRuntimeLinking::OpenGLES3ContextRuntimeLinking(handle nativeWindowHandle, bool useExternalContext) :
+	OpenGLES3ContextRuntimeLinking::OpenGLES3ContextRuntimeLinking(OpenGLES3Renderer& openGLES3Renderer, handle nativeWindowHandle, bool useExternalContext) :
 		IOpenGLES3Context(nativeWindowHandle, useExternalContext),
+		mOpenGLES3Renderer(openGLES3Renderer),
 		mEGLSharedLibrary(nullptr),
 		mGLESSharedLibrary(nullptr),
 		mEntryPointsRegistered(false),
@@ -65,17 +69,17 @@ namespace OpenGLES3Renderer
 				}
 				else
 				{
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Failed to load in the OpenGL ES 3 entry points\n")
+					RENDERER_LOG(openGLES3Renderer.getContext(), CRITICAL, "Failed to load in the OpenGL ES 3 entry points")
 				}
 			}
 			else
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Failed to load in the EGL entry points\n")
+				RENDERER_LOG(openGLES3Renderer.getContext(), CRITICAL, "Failed to load in the OpenGL ES 3 EGL entry points")
 			}
 		}
 		else
 		{
-			RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Failed to load in the OpenGL ES 3 shared libraries\n")
+			RENDERER_LOG(openGLES3Renderer.getContext(), CRITICAL, "Failed to load in the OpenGL ES 3 shared libraries")
 		}
 	}
 
@@ -294,87 +298,87 @@ namespace OpenGLES3Renderer
 
 		// Define a helper macro
 		#ifdef WIN32
-			#define IMPORT_FUNC(funcName)																																			\
-				if (result)																																							\
-				{																																									\
-					void* symbol = ::GetProcAddress(static_cast<HMODULE>(mEGLSharedLibrary), #funcName);																			\
-					if (nullptr == symbol)																																			\
-					{																																								\
-						/* The specification states that "eglGetProcAddress" is only for extension functions, but when using OpenGL ES 3 on desktop PC by using a					\
-						   native OpenGL ES 3 capable graphics driver under Linux (tested with "AMD Catalyst 11.8"), only this way will work */										\
-						if (nullptr != eglGetProcAddress)																															\
-						{																																							\
-							symbol = eglGetProcAddress(#funcName);																													\
-						}																																							\
-					}																																								\
-					if (nullptr != symbol)																																			\
-					{																																								\
-						*(reinterpret_cast<void**>(&(funcName))) = symbol;																											\
-					}																																								\
-					else																																							\
-					{																																								\
-						wchar_t moduleFilename[MAX_PATH];																															\
-						moduleFilename[0] = '\0';																																	\
-						::GetModuleFileNameW(static_cast<HMODULE>(mEGLSharedLibrary), moduleFilename, MAX_PATH);																	\
-						RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 3 error: Failed to locate the entry point \"%s\" within the EGL shared library \"%s\"", #funcName, moduleFilename)	\
-						result = false;																																				\
-					}																																								\
+			#define IMPORT_FUNC(funcName)																																								\
+				if (result)																																												\
+				{																																														\
+					void* symbol = ::GetProcAddress(static_cast<HMODULE>(mEGLSharedLibrary), #funcName);																								\
+					if (nullptr == symbol)																																								\
+					{																																													\
+						/* The specification states that "eglGetProcAddress" is only for extension functions, but when using OpenGL ES 3 on desktop PC by using a										\
+						   native OpenGL ES 3 capable graphics driver under Linux (tested with "AMD Catalyst 11.8"), only this way will work */															\
+						if (nullptr != eglGetProcAddress)																																				\
+						{																																												\
+							symbol = eglGetProcAddress(#funcName);																																		\
+						}																																												\
+					}																																													\
+					if (nullptr != symbol)																																								\
+					{																																													\
+						*(reinterpret_cast<void**>(&(funcName))) = symbol;																																\
+					}																																													\
+					else																																												\
+					{																																													\
+						wchar_t moduleFilename[MAX_PATH];																																				\
+						moduleFilename[0] = '\0';																																						\
+						::GetModuleFileNameW(static_cast<HMODULE>(mEGLSharedLibrary), moduleFilename, MAX_PATH);																						\
+						RENDERER_LOG(mOpenGLES3Renderer.getContext(), CRITICAL, "Failed to locate the OpenGL ES 3 entry point \"%s\" within the EGL shared library \"%s\"", #funcName, moduleFilename)	\
+						result = false;																																									\
+					}																																													\
 				}
 		#elif defined LINUX && !defined(ANDROID)
-			#define IMPORT_FUNC(funcName)																																			\
-				if (result)																																							\
-				{																																									\
-					void* symbol = ::dlsym(mEGLSharedLibrary, #funcName);																											\
-					if (nullptr == symbol)																																			\
-					{																																								\
-						/* The specification states that "eglGetProcAddress" is only for extension functions, but when using OpenGL ES 3 on desktop PC by using a					\
-						   native OpenGL ES 3 capable graphics driver under Linux (tested with "AMD Catalyst 11.8"), only this way will work */										\
-						if (nullptr != eglGetProcAddress)																															\
-						{																																							\
-							symbol = eglGetProcAddress(#funcName);																													\
-						}																																							\
-					}																																								\
-					if (nullptr != symbol)																																			\
-					{																																								\
-						*(reinterpret_cast<void**>(&(funcName))) = symbol;																											\
-					}																																								\
-					else																																							\
-					{																																								\
-						link_map* linkMap = nullptr;																																\
-						const char* libraryName = "unknown";																														\
-						if (dlinfo(mEGLSharedLibrary, RTLD_DI_LINKMAP, &linkMap))																									\
-						{																																							\
-							libraryName = linkMap->l_name;																															\
-						}																																							\
-						libraryName = libraryName; /* To avoid -Wunused-but-set-variable warning when RENDERER_OUTPUT_DEBUG_PRINTF is defined empty */ \
-						RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 3 error: Failed to locate the entry point \"%s\" within the EGL shared library \"%s\"", #funcName, libraryName)		\
-						result = false;																																				\
-					}																																								\
+			#define IMPORT_FUNC(funcName)																																							\
+				if (result)																																											\
+				{																																													\
+					void* symbol = ::dlsym(mEGLSharedLibrary, #funcName);																															\
+					if (nullptr == symbol)																																							\
+					{																																												\
+						/* The specification states that "eglGetProcAddress" is only for extension functions, but when using OpenGL ES 3 on desktop PC by using a									\
+						   native OpenGL ES 3 capable graphics driver under Linux (tested with "AMD Catalyst 11.8"), only this way will work */														\
+						if (nullptr != eglGetProcAddress)																																			\
+						{																																											\
+							symbol = eglGetProcAddress(#funcName);																																	\
+						}																																											\
+					}																																												\
+					if (nullptr != symbol)																																							\
+					{																																												\
+						*(reinterpret_cast<void**>(&(funcName))) = symbol;																															\
+					}																																												\
+					else																																											\
+					{																																												\
+						link_map* linkMap = nullptr;																																				\
+						const char* libraryName = "unknown";																																		\
+						if (dlinfo(mEGLSharedLibrary, RTLD_DI_LINKMAP, &linkMap))																													\
+						{																																											\
+							libraryName = linkMap->l_name;																																			\
+						}																																											\
+						libraryName = libraryName; /* To avoid -Wunused-but-set-variable warning when RENDERER_LOG is defined empty */ \
+						RENDERER_LOG(mOpenGLES3Renderer.getContext(), CRITICAL, "Failed to locate the OpenGL ES 3 entry point \"%s\" within the EGL shared library \"%s\"", #funcName, libraryName)	\
+						result = false;																																								\
+					}																																												\
 				}
 		#elif defined (LINUX) && defined(ANDROID)
-			#define IMPORT_FUNC(funcName)																																			\
-				if (result)																																							\
-				{																																									\
-					void* symbol = ::dlsym(mEGLSharedLibrary, #funcName);																											\
-					if (nullptr == symbol)																																			\
-					{																																								\
-						/* The specification states that "eglGetProcAddress" is only for extension functions, but when using OpenGL ES 3 on desktop PC by using a					\
-						   native OpenGL ES 3 capable graphics driver under Linux (tested with "AMD Catalyst 11.8"), only this way will work */										\
-						if (nullptr != eglGetProcAddress)																															\
-						{																																							\
-							symbol = eglGetProcAddress(#funcName);																													\
-						}																																							\
-					}																																								\
-					if (nullptr != symbol)																																			\
-					{																																								\
-						*(reinterpret_cast<void**>(&(funcName))) = symbol;																											\
-					}																																								\
-					else																																							\
-					{																																								\
-						const char* libraryName = "unknown";																														\
-						RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 3 error: Failed to locate the entry point \"%s\" within the EGL shared library \"%s\"", #funcName, libraryName)		\
-						result = false;																																				\
-					}																																								\
+			#define IMPORT_FUNC(funcName)																																							\
+				if (result)																																											\
+				{																																													\
+					void* symbol = ::dlsym(mEGLSharedLibrary, #funcName);																															\
+					if (nullptr == symbol)																																							\
+					{																																												\
+						/* The specification states that "eglGetProcAddress" is only for extension functions, but when using OpenGL ES 3 on desktop PC by using a									\
+						   native OpenGL ES 3 capable graphics driver under Linux (tested with "AMD Catalyst 11.8"), only this way will work */														\
+						if (nullptr != eglGetProcAddress)																																			\
+						{																																											\
+							symbol = eglGetProcAddress(#funcName);																																	\
+						}																																											\
+					}																																												\
+					if (nullptr != symbol)																																							\
+					{																																												\
+						*(reinterpret_cast<void**>(&(funcName))) = symbol;																															\
+					}																																												\
+					else																																											\
+					{																																												\
+						const char* libraryName = "unknown";																																		\
+						RENDERER_LOG(mOpenGLES3Renderer.getContext(), CRITICAL, "Failed to locate the OpenGL ES 3 entry point \"%s\" within the EGL shared library \"%s\"", #funcName, libraryName)	\
+						result = false;																																								\
+					}																																												\
 				}
 		#else
 			#error "Unsupported platform"
@@ -442,21 +446,21 @@ namespace OpenGLES3Renderer
 				}
 		#else
 			// Native OpenGL ES 3 on desktop PC, we need an function entry point work around for this
-			#define IMPORT_FUNC(funcName)																														\
-				if (result)																																		\
-				{																																				\
-					/* The specification states that "eglGetProcAddress" is only for extension functions, but when using OpenGL ES 3 on desktop PC by using a	\
-					   native OpenGL ES 3 capable graphics driver (tested with "AMD Catalyst 11.8"), only this way will work */									\
-					void* symbol = eglGetProcAddress(#funcName);																								\
-					if (nullptr != symbol)																														\
-					{																																			\
-						*(reinterpret_cast<void**>(&(funcName))) = symbol;																						\
-					}																																			\
-					else																																		\
-					{																																			\
-						RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 3 error: Failed to locate the entry point \"%s\" within the GLES shared library", #funcName)	\
-						result = false;																															\
-					}																																			\
+			#define IMPORT_FUNC(funcName)																																			\
+				if (result)																																							\
+				{																																									\
+					/* The specification states that "eglGetProcAddress" is only for extension functions, but when using OpenGL ES 3 on desktop PC by using a						\
+					   native OpenGL ES 3 capable graphics driver (tested with "AMD Catalyst 11.8"), only this way will work */														\
+					void* symbol = eglGetProcAddress(#funcName);																													\
+					if (nullptr != symbol)																																			\
+					{																																								\
+						*(reinterpret_cast<void**>(&(funcName))) = symbol;																											\
+					}																																								\
+					else																																							\
+					{																																								\
+						RENDERER_LOG(mOpenGLES3Renderer.getContext(), CRITICAL, "Failed to locate the OpenGL ES 3 entry point \"%s\" within the GLES shared library", #funcName)	\
+						result = false;																																				\
+					}																																								\
 				}
 		#endif
 

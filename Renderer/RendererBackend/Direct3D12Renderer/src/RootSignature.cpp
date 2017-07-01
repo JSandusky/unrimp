@@ -26,6 +26,7 @@
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
 #include "Direct3D12Renderer/Direct3D12RuntimeLinking.h"
 
+#include <Renderer/ILog.h>
 #include <Renderer/RootSignatureTypes.h>
 
 
@@ -107,13 +108,13 @@ namespace Direct3D12Renderer
 			{
 				if (FAILED(direct3D12Renderer.getD3D12Device()->CreateRootSignature(0, d3dBlobSignature->GetBufferPointer(), d3dBlobSignature->GetBufferSize(), IID_PPV_ARGS(&mD3D12RootSignature))))
 				{
-					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create the root signature instance")
+					RENDERER_LOG(direct3D12Renderer.getContext(), CRITICAL, "Failed to create the Direct3D 12 root signature instance")
 				}
 				d3dBlobSignature->Release();
 			}
 			else
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create the root signature instance")
+				RENDERER_LOG(direct3D12Renderer.getContext(), CRITICAL, "Failed to create the Direct3D 12 root signature instance")
 				d3dBlobError->Release();
 			}
 		}

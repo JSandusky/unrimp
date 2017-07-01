@@ -32,6 +32,8 @@
 #include "Direct3D10Renderer/State/RasterizerState.h"
 #include "Direct3D10Renderer/State/DepthStencilState.h"
 
+#include <Renderer/ILog.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -102,7 +104,7 @@ namespace Direct3D10Renderer
 		}
 		else
 		{
-			RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Failed to create the pipeline stage input layout because there's no vertex shader");
+			RENDERER_LOG(direct3D10Renderer.getContext(), CRITICAL, "Failed to create the Direct3D 10 pipeline stage input layout because there's no vertex shader")
 		}
 
 		// Assign a default name to the resource for debugging purposes

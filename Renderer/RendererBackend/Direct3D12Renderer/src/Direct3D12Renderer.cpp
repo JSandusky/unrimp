@@ -52,6 +52,7 @@
 #include "Direct3D12Renderer/Shader/TessellationControlShaderHlsl.h"
 #include "Direct3D12Renderer/Shader/TessellationEvaluationShaderHlsl.h"
 
+#include <Renderer/ILog.h>
 #include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
 
@@ -334,7 +335,7 @@ namespace Direct3D12Renderer
 				// -> In case of failure, create an emulated device instance so we can at least test the DirectX 12 API
 				if (FAILED(D3D12CreateDevice(nullptr, D3D_FEATURE_LEVEL_12_0, IID_PPV_ARGS(&mD3D12Device))))
 				{
-					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create DirectX 12 device instance. Creating an emulated Direct3D 11 device instance instead.")
+					RENDERER_LOG(mContext, CRITICAL, "Failed to create Direct3D 12 device instance. Creating an emulated Direct3D 11 device instance instead.")
 
 					// Create the DXGI adapter instance
 					IDXGIAdapter* dxgiAdapter = nullptr;
@@ -343,7 +344,7 @@ namespace Direct3D12Renderer
 						// Create the emulated Direct3D 12 device
 						if (FAILED(D3D12CreateDevice(dxgiAdapter, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&mD3D12Device))))
 						{
-							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create the device instance")
+							RENDERER_LOG(mContext, CRITICAL, "Failed to create the Direct3D 12 device instance")
 						}
 
 						// Release the DXGI adapter instance
@@ -351,13 +352,13 @@ namespace Direct3D12Renderer
 					}
 					else
 					{
-						RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create DXGI adapter instance")
+						RENDERER_LOG(mContext, CRITICAL, "Failed to create Direct3D 12 DXGI adapter instance")
 					}
 				}
 			}
 			else
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create DXGI factory instance")
+				RENDERER_LOG(mContext, CRITICAL, "Failed to create Direct3D 12 DXGI factory instance")
 			}
 
 			// Is there a valid Direct3D 12 device instance?
@@ -395,22 +396,22 @@ namespace Direct3D12Renderer
 							}
 							else
 							{
-								RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to close the command list instance")
+								RENDERER_LOG(mContext, CRITICAL, "Failed to close the Direct3D 12 command list instance")
 							}
 						}
 						else
 						{
-							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create the command list instance")
+							RENDERER_LOG(mContext, CRITICAL, "Failed to create the Direct3D 12 command list instance")
 						}
 					}
 					else
 					{
-						RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create the command allocator instance")
+						RENDERER_LOG(mContext, CRITICAL, "Failed to create the Direct3D 12 command allocator instance")
 					}
 				}
 				else
 				{
-					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create the command queue instance")
+					RENDERER_LOG(mContext, CRITICAL, "Failed to create the Direct3D 12 command queue instance")
 				}
 			}
 		}
@@ -445,15 +446,15 @@ namespace Direct3D12Renderer
 				// Error!
 				if (numberOfCurrentResources > 1)
 				{
-					RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 12 error: Renderer is going to be destroyed, but there are still %d resource instances left (memory leak)\n", numberOfCurrentResources)
+					RENDERER_LOG(mContext, CRITICAL, "The Direct3D 12 renderer backend is going to be destroyed, but there are still %d resource instances left (memory leak)", numberOfCurrentResources)
 				}
 				else
 				{
-					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Renderer is going to be destroyed, but there is still one resource instance left (memory leak)\n")
+					RENDERER_LOG(mContext, CRITICAL, "The Direct3D 12 renderer backend is going to be destroyed, but there is still one resource instance left (memory leak)")
 				}
 
 				// Use debug output to show the current number of resource instances
-				getStatistics().debugOutputCurrentResouces();
+				getStatistics().debugOutputCurrentResouces(mContext);
 			}
 		}
 		#endif
@@ -656,7 +657,7 @@ namespace Direct3D12Renderer
 				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
 				case Renderer::ResourceType::GEOMETRY_SHADER:
 				case Renderer::ResourceType::FRAGMENT_SHADER:
-					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Invalid resource type")
+					RENDERER_LOG(mContext, CRITICAL, "Invalid Direct3D 12 renderer backend resource type")
 					break;
 			}
 		}

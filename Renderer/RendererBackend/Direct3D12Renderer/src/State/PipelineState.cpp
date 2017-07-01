@@ -34,6 +34,7 @@
 #include "Direct3D12Renderer/Shader/TessellationControlShaderHlsl.h"
 #include "Direct3D12Renderer/Shader/TessellationEvaluationShaderHlsl.h"
 
+#include <Renderer/ILog.h>
 #include <Renderer/State/PipelineStateTypes.h>
 
 
@@ -63,7 +64,7 @@ namespace Direct3D12Renderer
 		uint32_t numberOfVertexAttributes = pipelineState.vertexAttributes.numberOfAttributes;
 		if (numberOfVertexAttributes > MAXIMUM_NUMBER_OF_ATTRIBUTES)
 		{
-			RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 12 error: Too many vertex attributes (%d) provided. The limit is %d.", numberOfVertexAttributes, MAXIMUM_NUMBER_OF_ATTRIBUTES);
+			RENDERER_LOG(direct3D12Renderer.getContext(), CRITICAL, "Too many vertex attributes (%d) provided. The limit of the Direct3D 12 renderer backend is %d.", numberOfVertexAttributes, MAXIMUM_NUMBER_OF_ATTRIBUTES)
 			numberOfVertexAttributes = MAXIMUM_NUMBER_OF_ATTRIBUTES;
 		}
 		D3D12_INPUT_ELEMENT_DESC d3d12InputElementDescs[MAXIMUM_NUMBER_OF_ATTRIBUTES];
@@ -152,7 +153,7 @@ namespace Direct3D12Renderer
 		d3d12GraphicsPipelineState.SampleDesc.Count = 1;
 		if (FAILED(direct3D12Renderer.getD3D12Device()->CreateGraphicsPipelineState(&d3d12GraphicsPipelineState, IID_PPV_ARGS(&mD3D12PipelineState))))
 		{
-			RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create the pipeline state object")
+			RENDERER_LOG(direct3D12Renderer.getContext(), CRITICAL, "Failed to create the Direct3D 12 pipeline state object")
 		}
 
 		// Assign a default name to the resource for debugging purposes

@@ -31,6 +31,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace Direct3D10Renderer
+{
+	class Direct3D10Renderer;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace Direct3D10Renderer
@@ -54,9 +63,12 @@ namespace Direct3D10Renderer
 	public:
 		/**
 		*  @brief
-		*    Default constructor
+		*    Constructor
+		*
+		*  @param[in] direct3D10Renderer
+		*    Owner Direct3D 10 renderer instance
 		*/
-		Direct3D10RuntimeLinking();
+		explicit Direct3D10RuntimeLinking(Direct3D10Renderer& direct3D10Renderer);
 
 		/**
 		*  @brief
@@ -78,6 +90,9 @@ namespace Direct3D10Renderer
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
+		explicit Direct3D10RuntimeLinking(const Direct3D10RuntimeLinking& source) = delete;
+		Direct3D10RuntimeLinking& operator =(const Direct3D10RuntimeLinking& source) = delete;
+
 		/**
 		*  @brief
 		*    Load the shared libraries
@@ -110,10 +125,11 @@ namespace Direct3D10Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		void* mD3D10SharedLibrary;		///< D3D10 shared library, can be a null pointer
-		void* mD3DX10SharedLibrary;		///< D3DX10 shared library, can be a null pointer
-		bool  mEntryPointsRegistered;	///< Entry points successfully registered?
-		bool  mInitialized;				///< Already initialized?
+		Direct3D10Renderer&	mDirect3D10Renderer;	///< Owner Direct3D 10 renderer instance
+		void*				mD3D10SharedLibrary;	///< D3D10 shared library, can be a null pointer
+		void*				mD3DX10SharedLibrary;	///< D3DX10 shared library, can be a null pointer
+		bool				mEntryPointsRegistered;	///< Entry points successfully registered?
+		bool				mInitialized;			///< Already initialized?
 
 
 	};

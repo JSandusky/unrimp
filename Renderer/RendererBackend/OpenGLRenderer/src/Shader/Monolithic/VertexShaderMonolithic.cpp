@@ -38,7 +38,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	VertexShaderMonolithic::VertexShaderMonolithic(OpenGLRenderer& openGLRenderer, const char* sourceCode) :
 		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
-		mOpenGLShader(ShaderLanguageMonolithic::loadShaderFromSourcecode(GL_VERTEX_SHADER_ARB, sourceCode))
+		mOpenGLShader(ShaderLanguageMonolithic::loadShaderFromSourcecode(openGLRenderer, GL_VERTEX_SHADER_ARB, sourceCode))
 	{
 		// Nothing here
 	}

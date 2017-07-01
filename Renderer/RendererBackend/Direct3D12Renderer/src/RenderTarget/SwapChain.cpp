@@ -26,6 +26,8 @@
 #include "Direct3D12Renderer/D3D12X.h"
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
 
+#include <Renderer/ILog.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -99,7 +101,7 @@ namespace Direct3D12Renderer
 		if (FAILED(dxgiSwapChain->QueryInterface(IID_PPV_ARGS(&mDxgiSwapChain3))))
 		{
 			dxgiSwapChain->Release();
-			RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to retrieve DXGI swap chain 3")
+			RENDERER_LOG(direct3D12Renderer.getContext(), CRITICAL, "Failed to retrieve the Direct3D 12 DXGI swap chain 3")
 		}
 
 		// Disable alt-return for automatic fullscreen state change
@@ -126,17 +128,17 @@ namespace Direct3D12Renderer
 					mFenceEvent = ::CreateEvent(nullptr, FALSE, FALSE, nullptr);
 					if (nullptr == mFenceEvent)
 					{
-						RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 12 error: Failed to create an event handle to use for frame synchronization. Error code %d", ::GetLastError())
+						RENDERER_LOG(direct3D12Renderer.getContext(), CRITICAL, "Failed to create an Direct3D 12 event handle to use for frame synchronization. Error code %d", ::GetLastError())
 					}
 				}
 				else
 				{
-					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create Direct3D 12 fence instance")
+					RENDERER_LOG(direct3D12Renderer.getContext(), CRITICAL, "Failed to create Direct3D 12 fence instance")
 				}
 			}
 			else
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to retrieve the Direct3D 12 device instance from the swap chain")
+				RENDERER_LOG(direct3D12Renderer.getContext(), CRITICAL, "Failed to retrieve the Direct3D 12 device instance from the swap chain")
 			}
 		}
 
@@ -382,7 +384,7 @@ namespace Direct3D12Renderer
 			if (FAILED(result))
 			{
 				// TODO(co) Better error handling
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to set fullscreen state")
+				RENDERER_LOG(static_cast<Direct3D12Renderer&>(getRenderer()).getContext(), CRITICAL, "Failed to set Direct3D 12 fullscreen state")
 			}
 		}
 	}
@@ -458,7 +460,7 @@ namespace Direct3D12Renderer
 							}
 							else
 							{
-								RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to retrieve frame buffer from DXGI swap chain")
+								RENDERER_LOG(static_cast<Direct3D12Renderer&>(getRenderer()).getContext(), CRITICAL, "Failed to retrieve frame buffer from Direct3D 12 DXGI swap chain")
 							}
 						}
 					}
@@ -467,7 +469,7 @@ namespace Direct3D12Renderer
 				}
 				else
 				{
-					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to describe and create a render target view (RTV) descriptor heap")
+					RENDERER_LOG(static_cast<Direct3D12Renderer&>(getRenderer()).getContext(), CRITICAL, "Failed to describe and create a Direct3D 12 render target view (RTV) descriptor heap")
 				}
 			}
 
@@ -508,18 +510,18 @@ namespace Direct3D12Renderer
 					}
 					else
 					{
-						RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create the depth stencil view (DSV) resource")
+						RENDERER_LOG(static_cast<Direct3D12Renderer&>(getRenderer()).getContext(), CRITICAL, "Failed to create the Direct3D 12 depth stencil view (DSV) resource")
 					}
 				}
 				else
 				{
-					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to describe and create a depth stencil view (DSV) descriptor heap")
+					RENDERER_LOG(static_cast<Direct3D12Renderer&>(getRenderer()).getContext(), CRITICAL, "Failed to describe and create a Direct3D 12 depth stencil view (DSV) descriptor heap")
 				}
 			}
 		}
 		else
 		{
-			RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to retrieve the Direct3D 12 device instance from the swap chain")
+			RENDERER_LOG(static_cast<Direct3D12Renderer&>(getRenderer()).getContext(), CRITICAL, "Failed to retrieve the Direct3D 12 device instance from the swap chain")
 		}
 	}
 
@@ -577,7 +579,7 @@ namespace Direct3D12Renderer
 				}
 				else
 				{
-					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to set event on completion")
+					RENDERER_LOG(static_cast<Direct3D12Renderer&>(getRenderer()).getContext(), CRITICAL, "Failed to set Direct3D 12 event on completion")
 				}
 			}
 

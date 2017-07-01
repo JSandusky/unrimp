@@ -28,6 +28,8 @@
 #include "OpenGLES3Renderer/Shader/VertexShaderGlsl.h"
 #include "OpenGLES3Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 3 functions
 
+#include <Renderer/ILog.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -45,7 +47,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	uint32_t ShaderLanguageGlsl::loadShaderFromSourcecode(uint32_t shaderType, const char* shaderSource)
+	uint32_t ShaderLanguageGlsl::loadShaderFromSourcecode(OpenGLES3Renderer& openGLES3Renderer, uint32_t shaderType, const char* shaderSource)
 	{
 		// Create the shader object
 		const GLuint openGLES3Shader = glCreateShader(shaderType);
@@ -67,8 +69,8 @@ namespace OpenGLES3Renderer
 		else
 		{
 			// Error, failed to compile the shader!
-			#ifdef RENDERER_OUTPUT_DEBUG
-				// Get the length of the information
+
+			{ // Get the length of the information
 				GLint informationLength = 0;
 				glGetShaderiv(openGLES3Shader, GL_INFO_LOG_LENGTH, &informationLength);
 				if (informationLength > 1)
@@ -80,12 +82,12 @@ namespace OpenGLES3Renderer
 					glGetShaderInfoLog(openGLES3Shader, informationLength, nullptr, informationLog);
 
 					// Output the debug string
-					RENDERER_OUTPUT_DEBUG_STRING(informationLog)
+					RENDERER_LOG(openGLES3Renderer.getContext(), CRITICAL, informationLog)
 
 					// Cleanup information memory
 					delete [] informationLog;
 				}
-			#endif
+			}
 
 			// Destroy the shader
 			// -> A value of 0 for shader will be silently ignored

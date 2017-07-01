@@ -32,6 +32,7 @@
 #include "OpenGLRenderer/OpenGLRenderer.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 
+#include <Renderer/ILog.h>
 #include <Renderer/Buffer/VertexArrayTypes.h>
 
 
@@ -144,7 +145,7 @@ namespace OpenGLRenderer
 					// TODO(co) For now, we only support a single descriptor range
 					if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
 					{
-						RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: Only a single descriptor range is supported")
+						RENDERER_LOG(openGLRenderer.getContext(), CRITICAL, "Only a single descriptor range is supported by the OpenGL renderer backend")
 					}
 					else
 					{
@@ -217,25 +218,24 @@ namespace OpenGLRenderer
 		else
 		{
 			// Error, program link failed!
-			#ifdef RENDERER_OUTPUT_DEBUG
-				// Get the length of the information (including a null termination)
-				GLint informationLength = 0;
-				glGetObjectParameterivARB(mOpenGLProgram, GL_OBJECT_INFO_LOG_LENGTH_ARB, &informationLength);
-				if (informationLength > 1)
-				{
-					// Allocate memory for the information
-					char* informationLog = new char[static_cast<uint32_t>(informationLength)];
 
-					// Get the information
-					glGetInfoLogARB(mOpenGLProgram, informationLength, nullptr, informationLog);
+			// Get the length of the information (including a null termination)
+			GLint informationLength = 0;
+			glGetObjectParameterivARB(mOpenGLProgram, GL_OBJECT_INFO_LOG_LENGTH_ARB, &informationLength);
+			if (informationLength > 1)
+			{
+				// Allocate memory for the information
+				char* informationLog = new char[static_cast<uint32_t>(informationLength)];
 
-					// Output the debug string
-					RENDERER_OUTPUT_DEBUG_STRING(informationLog)
+				// Get the information
+				glGetInfoLogARB(mOpenGLProgram, informationLength, nullptr, informationLog);
 
-					// Cleanup information memory
-					delete [] informationLog;
-				}
-			#endif
+				// Output the debug string
+				RENDERER_LOG(openGLRenderer.getContext(), CRITICAL, informationLog)
+
+				// Cleanup information memory
+				delete [] informationLog;
+			}
 		}
 	}
 

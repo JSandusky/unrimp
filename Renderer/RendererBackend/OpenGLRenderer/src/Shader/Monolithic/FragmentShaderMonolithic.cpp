@@ -38,7 +38,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	FragmentShaderMonolithic::FragmentShaderMonolithic(OpenGLRenderer& openGLRenderer, const char* sourceCode) :
 		IFragmentShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
-		mOpenGLShader(ShaderLanguageMonolithic::loadShaderFromSourcecode(GL_FRAGMENT_SHADER_ARB, sourceCode))
+		mOpenGLShader(ShaderLanguageMonolithic::loadShaderFromSourcecode(openGLRenderer, GL_FRAGMENT_SHADER_ARB, sourceCode))
 	{
 		// Nothing here
 	}

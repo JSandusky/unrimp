@@ -24,9 +24,11 @@
 #define DIRECT3D9_DEFINERUNTIMELINKING
 
 #include "Direct3D10Renderer/Direct3D9RuntimeLinking.h"
+#include "Direct3D10Renderer/Direct3D10Renderer.h"
 
-#include <Renderer/PlatformTypes.h>	// For "RENDERER_OUTPUT_DEBUG_PRINTF()"
+#include <Renderer/PlatformTypes.h>
 #include <Renderer/WindowsHeader.h>
+#include <Renderer/ILog.h>
 
 
 //[-------------------------------------------------------]
@@ -39,7 +41,8 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Direct3D9RuntimeLinking::Direct3D9RuntimeLinking() :
+	Direct3D9RuntimeLinking::Direct3D9RuntimeLinking(Direct3D10Renderer& direct3D10Renderer) :
+		mDirect3D10Renderer(direct3D10Renderer),
 		mD3D9SharedLibrary(nullptr),
 		mEntryPointsRegistered(false),
 		mInitialized(false)
@@ -86,7 +89,7 @@ namespace Direct3D10Renderer
 		mD3D9SharedLibrary = ::LoadLibraryExA("d3d9.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
 		if (nullptr == mD3D9SharedLibrary)
 		{
-			RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Failed to load in the shared library \"d3d9.dll\"\n")
+			RENDERER_LOG(mDirect3D10Renderer.getContext(), CRITICAL, "Failed to load in the Direct3D 9 shared library \"d3d9.dll\"")
 		}
 
 		// Done
@@ -98,22 +101,22 @@ namespace Direct3D10Renderer
 		bool result = true;	// Success by default
 
 		// Define a helper macro
-		#define IMPORT_FUNC(funcName)																																					\
-			if (result)																																									\
-			{																																											\
-				void* symbol = ::GetProcAddress(static_cast<HMODULE>(mD3D9SharedLibrary), #funcName);																					\
-				if (nullptr != symbol)																																					\
-				{																																										\
-					*(reinterpret_cast<void**>(&(funcName))) = symbol;																													\
-				}																																										\
-				else																																									\
-				{																																										\
-					wchar_t moduleFilename[MAX_PATH];																																	\
-					moduleFilename[0] = '\0';																																			\
-					::GetModuleFileNameW(static_cast<HMODULE>(mD3D9SharedLibrary), moduleFilename, MAX_PATH);																			\
-					RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 10 error: Failed to locate the entry point \"%s\" within the Direct3D 9 shared library \"%s\"", #funcName, moduleFilename)	\
-					result = false;																																						\
-				}																																										\
+		#define IMPORT_FUNC(funcName)																																							\
+			if (result)																																											\
+			{																																													\
+				void* symbol = ::GetProcAddress(static_cast<HMODULE>(mD3D9SharedLibrary), #funcName);																							\
+				if (nullptr != symbol)																																							\
+				{																																												\
+					*(reinterpret_cast<void**>(&(funcName))) = symbol;																															\
+				}																																												\
+				else																																											\
+				{																																												\
+					wchar_t moduleFilename[MAX_PATH];																																			\
+					moduleFilename[0] = '\0';																																					\
+					::GetModuleFileNameW(static_cast<HMODULE>(mD3D9SharedLibrary), moduleFilename, MAX_PATH);																					\
+					RENDERER_LOG(mDirect3D10Renderer.getContext(), CRITICAL, "Failed to locate the entry point \"%s\" within the Direct3D 9 shared library \"%s\"", #funcName, moduleFilename)	\
+					result = false;																																								\
+				}																																												\
 			}
 
 		// Load the entry points

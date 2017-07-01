@@ -39,7 +39,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	VertexShaderGlsl::VertexShaderGlsl(OpenGLES3Renderer& openGLES3Renderer, const char* sourceCode) :
 		IVertexShader(openGLES3Renderer),
-		mOpenGLES3Shader(ShaderLanguageGlsl::loadShaderFromSourcecode(GL_VERTEX_SHADER, sourceCode))
+		mOpenGLES3Shader(ShaderLanguageGlsl::loadShaderFromSourcecode(openGLES3Renderer, GL_VERTEX_SHADER, sourceCode))
 	{
 		// Nothing here
 	}

@@ -48,6 +48,7 @@
 #include "OpenGLES3Renderer/Shader/ShaderLanguageGlsl.h"
 #include "OpenGLES3Renderer/OpenGLES3ContextRuntimeLinking.h"
 
+#include <Renderer/ILog.h>
 #include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
 
@@ -342,7 +343,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	OpenGLES3Renderer::OpenGLES3Renderer(const Renderer::Context& context) :
 		IRenderer(context),
-		mOpenGLES3Context(new OpenGLES3ContextRuntimeLinking(context.getNativeWindowHandle(), context.isUsingExternalContext())),
+		mOpenGLES3Context(nullptr),
 		mShaderLanguageGlsl(nullptr),
 		mGraphicsRootSignature(nullptr),
 		mDefaultSamplerState(nullptr),
@@ -362,6 +363,7 @@ namespace OpenGLES3Renderer
 		mCurrentStartInstanceLocation(~0u)
 	{
 		// Initialize the OpenGL ES 3 context
+		mOpenGLES3Context = new OpenGLES3ContextRuntimeLinking(*this, context.getNativeWindowHandle(), context.isUsingExternalContext());
 		if (mOpenGLES3Context->initialize(0))
 		{
 			// Initialize the capabilities
@@ -382,7 +384,7 @@ namespace OpenGLES3Renderer
 					// by default all messages are enabled and this is good this way
 
 					// Set the debug message callback function
-					glDebugMessageCallbackKHR(&OpenGLES3Renderer::debugMessageCallback, nullptr);
+					glDebugMessageCallbackKHR(&OpenGLES3Renderer::debugMessageCallback, this);
 				}
 			#endif
 
@@ -459,15 +461,15 @@ namespace OpenGLES3Renderer
 				// Error!
 				if (numberOfCurrentResources > 1)
 				{
-					RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 3 error: Renderer is going to be destroyed, but there are still %lu resource instances left (memory leak)\n", numberOfCurrentResources)
+					RENDERER_LOG(mContext, CRITICAL, "The OpenGL ES 3 renderer backend is going to be destroyed, but there are still %lu resource instances left (memory leak)", numberOfCurrentResources)
 				}
 				else
 				{
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Renderer is going to be destroyed, but there is still one resource instance left (memory leak)\n")
+					RENDERER_LOG(mContext, CRITICAL, "The OpenGL ES 3 renderer backend is going to be destroyed, but there is still one resource instance left (memory leak)")
 				}
 
 				// Use debug output to show the current number of resource instances
-				getStatistics().debugOutputCurrentResouces();
+				getStatistics().debugOutputCurrentResouces(mContext);
 			}
 		}
 		#endif
@@ -509,31 +511,31 @@ namespace OpenGLES3Renderer
 		{
 			if (nullptr == mGraphicsRootSignature)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: No graphics root signature set")
+				RENDERER_LOG(mContext, CRITICAL, "No OpenGL ES 3 renderer backend graphics root signature set")
 				return;
 			}
 			const Renderer::RootSignature& rootSignature = mGraphicsRootSignature->getRootSignature();
 			if (rootParameterIndex >= rootSignature.numberOfParameters)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Root parameter index is out of bounds")
+				RENDERER_LOG(mContext, CRITICAL, "The OpenGL ES 3 renderer backend root parameter index is out of bounds")
 				return;
 			}
 			const Renderer::RootParameter& rootParameter = rootSignature.parameters[rootParameterIndex];
 			if (Renderer::RootParameterType::DESCRIPTOR_TABLE != rootParameter.parameterType)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Root parameter index doesn't reference a descriptor table")
+				RENDERER_LOG(mContext, CRITICAL, "The OpenGL ES 3 renderer backend root parameter index doesn't reference a descriptor table")
 				return;
 			}
 
 			// TODO(co) For now, we only support a single descriptor range
 			if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Only a single descriptor range is supported")
+				RENDERER_LOG(mContext, CRITICAL, "Only a single descriptor range is supported by the OpenGL ES 3 renderer backend")
 				return;
 			}
 			if (nullptr == reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges))
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Descriptor ranges is a null pointer")
+				RENDERER_LOG(mContext, CRITICAL, "The OpenGL ES 3 renderer backend descriptor ranges is a null pointer")
 				return;
 			}
 		}
@@ -645,15 +647,15 @@ namespace OpenGLES3Renderer
 						}
 
 						case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
-							RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3: OpenGL ES 3 has no tessellation control shader support (hull shader in Direct3D terminology)")
+							RENDERER_LOG(mContext, CRITICAL, "OpenGL ES 3 has no tessellation control shader support (hull shader in Direct3D terminology)")
 							break;
 
 						case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
-							RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: OpenGL ES 3 has no tessellation evaluation shader support (domain shader in Direct3D terminology)")
+							RENDERER_LOG(mContext, CRITICAL, "OpenGL ES 3 has no tessellation evaluation shader support (domain shader in Direct3D terminology)")
 							break;
 
 						case Renderer::ShaderVisibility::GEOMETRY:
-							RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: OpenGL ES 3 has no geometry shader support")
+							RENDERER_LOG(mContext, CRITICAL, "OpenGL ES 3 has no geometry shader support")
 							break;
 					}
 					break;
@@ -680,7 +682,7 @@ namespace OpenGLES3Renderer
 				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
 				case Renderer::ResourceType::GEOMETRY_SHADER:
 				case Renderer::ResourceType::FRAGMENT_SHADER:
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Invalid resource type")
+					RENDERER_LOG(mContext, CRITICAL, "Invalid OpenGL ES 3 renderer backend resource type")
 					break;
 			}
 		}
@@ -813,7 +815,7 @@ namespace OpenGLES3Renderer
 		#ifndef RENDERER_NO_DEBUG
 			if (numberOfViewports > 1)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: OpenGL ES 3 supports only one viewport")
+				RENDERER_LOG(mContext, CRITICAL, "OpenGL ES 3 supports only one viewport")
 			}
 		#endif
 			glViewport(static_cast<GLint>(viewports->topLeftX), static_cast<GLint>(renderTargetHeight - viewports->topLeftY - viewports->height), static_cast<GLsizei>(viewports->width), static_cast<GLsizei>(viewports->height));
@@ -841,7 +843,7 @@ namespace OpenGLES3Renderer
 		#ifndef RENDERER_NO_DEBUG
 			if (numberOfScissorRectangles > 1)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: OpenGL ES 3 supports only one scissor rectangle")
+				RENDERER_LOG(mContext, CRITICAL, "OpenGL ES 3 supports only one scissor rectangle")
 			}
 		#endif
 			const GLsizei width  = scissorRectangles->bottomRightX - scissorRectangles->topLeftX;
@@ -1700,106 +1702,110 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Private static methods                                ]
 	//[-------------------------------------------------------]
-	void OpenGLES3Renderer::debugMessageCallback(uint32_t source, uint32_t type, uint32_t id, uint32_t severity, int, const char* message, const void*)
+	void OpenGLES3Renderer::debugMessageCallback(uint32_t source, uint32_t type, uint32_t id, uint32_t severity, int, const char* message, const void* userParam)
 	{
-		// Source to string
-		char debugSource[20 + 1]{0};	// +1 for terminating zero
-		switch (source)
-		{
-			case GL_DEBUG_SOURCE_API_KHR:
-				strncpy(debugSource, "OpenGL", 20);
-				break;
-
-			case GL_DEBUG_SOURCE_WINDOW_SYSTEM_KHR:
-				strncpy(debugSource, "Windows", 20);
-				break;
-
-			case GL_DEBUG_SOURCE_SHADER_COMPILER_KHR:
-				strncpy(debugSource, "Shader compiler", 20);
-				break;
-
-			case GL_DEBUG_SOURCE_THIRD_PARTY_KHR:
-				strncpy(debugSource, "Third party", 20);
-				break;
-
-			case GL_DEBUG_SOURCE_APPLICATION_KHR:
-				strncpy(debugSource, "Application", 20);
-				break;
-
-			case GL_DEBUG_SOURCE_OTHER_KHR:
-				strncpy(debugSource, "Other", 20);
-				break;
-
-			default:
-				strncpy(debugSource, "?", 20);
-				break;
-		}
-
-		// Debug type to string
-		char debugType[25 + 1]{0};	// +1 for terminating zero
-		switch (type)
-		{
-			case GL_DEBUG_TYPE_ERROR_KHR:
-				strncpy(debugType, "Error", 25);
-				break;
-
-			case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR_KHR:
-				strncpy(debugType, "Deprecated behavior", 25);
-				break;
-
-			case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR_KHR:
-				strncpy(debugType, "Undefined behavior", 25);
-				break;
-
-			case GL_DEBUG_TYPE_PORTABILITY_KHR:
-				strncpy(debugType, "Portability", 25);
-				break;
-
-			case GL_DEBUG_TYPE_PERFORMANCE_KHR:
-				strncpy(debugType, "Performance", 25);
-				break;
-
-			case GL_DEBUG_TYPE_OTHER_KHR:
-				strncpy(debugType, "Other", 25);
-				break;
-
-			default:
-				strncpy(debugType, "?", 25);
-				break;
-		}
-
-		// Debug severity to string
-		char debugSeverity[20 + 1]{0};	// +1 for terminating zero
-		switch (severity)
-		{
-			case GL_DEBUG_SEVERITY_HIGH_KHR:
-				strncpy(debugSeverity, "High", 20);
-				break;
-
-			case GL_DEBUG_SEVERITY_MEDIUM_KHR:
-				strncpy(debugSeverity, "Medium", 20);
-				break;
-
-			case GL_DEBUG_SEVERITY_LOW_KHR:
-				strncpy(debugSeverity, "Low", 20);
-				break;
-
-			case GL_DEBUG_SEVERITY_NOTIFICATION_KHR:
-				strncpy(debugSeverity, "Notification", 20);
-				break;
-
-			default:
-				strncpy(debugSeverity, "?", 20);
-				break;
-		}
-
 		// Output the debug message
 		#ifdef RENDERER_NO_DEBUG
 			// Avoid "warning C4100: '<x>' : unreferenced formal parameter"-warning
+			source = source;
+			type = type;
 			id = id;
+			severity = severity;
 			message = message;
+			userParam = userParam;
 		#else
-			RENDERER_OUTPUT_DEBUG_PRINTF("OpenGLES error: OpenGL debug message\tSource:\"%s\"\tType:\"%s\"\tID:\"%d\"\tSeverity:\"%s\"\tMessage:\"%s\"\n", debugSource, debugType, id, debugSeverity, message)
+			// Source to string
+			char debugSource[20 + 1]{0};	// +1 for terminating zero
+			switch (source)
+			{
+				case GL_DEBUG_SOURCE_API_KHR:
+					strncpy(debugSource, "OpenGL", 20);
+					break;
+
+				case GL_DEBUG_SOURCE_WINDOW_SYSTEM_KHR:
+					strncpy(debugSource, "Windows", 20);
+					break;
+
+				case GL_DEBUG_SOURCE_SHADER_COMPILER_KHR:
+					strncpy(debugSource, "Shader compiler", 20);
+					break;
+
+				case GL_DEBUG_SOURCE_THIRD_PARTY_KHR:
+					strncpy(debugSource, "Third party", 20);
+					break;
+
+				case GL_DEBUG_SOURCE_APPLICATION_KHR:
+					strncpy(debugSource, "Application", 20);
+					break;
+
+				case GL_DEBUG_SOURCE_OTHER_KHR:
+					strncpy(debugSource, "Other", 20);
+					break;
+
+				default:
+					strncpy(debugSource, "?", 20);
+					break;
+			}
+
+			// Debug type to string
+			char debugType[25 + 1]{0};	// +1 for terminating zero
+			switch (type)
+			{
+				case GL_DEBUG_TYPE_ERROR_KHR:
+					strncpy(debugType, "Error", 25);
+					break;
+
+				case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR_KHR:
+					strncpy(debugType, "Deprecated behavior", 25);
+					break;
+
+				case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR_KHR:
+					strncpy(debugType, "Undefined behavior", 25);
+					break;
+
+				case GL_DEBUG_TYPE_PORTABILITY_KHR:
+					strncpy(debugType, "Portability", 25);
+					break;
+
+				case GL_DEBUG_TYPE_PERFORMANCE_KHR:
+					strncpy(debugType, "Performance", 25);
+					break;
+
+				case GL_DEBUG_TYPE_OTHER_KHR:
+					strncpy(debugType, "Other", 25);
+					break;
+
+				default:
+					strncpy(debugType, "?", 25);
+					break;
+			}
+
+			// Debug severity to string
+			char debugSeverity[20 + 1]{0};	// +1 for terminating zero
+			switch (severity)
+			{
+				case GL_DEBUG_SEVERITY_HIGH_KHR:
+					strncpy(debugSeverity, "High", 20);
+					break;
+
+				case GL_DEBUG_SEVERITY_MEDIUM_KHR:
+					strncpy(debugSeverity, "Medium", 20);
+					break;
+
+				case GL_DEBUG_SEVERITY_LOW_KHR:
+					strncpy(debugSeverity, "Low", 20);
+					break;
+
+				case GL_DEBUG_SEVERITY_NOTIFICATION_KHR:
+					strncpy(debugSeverity, "Notification", 20);
+					break;
+
+				default:
+					strncpy(debugSeverity, "?", 20);
+					break;
+			}
+
+			RENDERER_LOG(static_cast<const OpenGLES3Renderer*>(userParam)->getContext(), CRITICAL, "OpenGL ES 3 debug message\tSource:\"%s\"\tType:\"%s\"\tID:\"%d\"\tSeverity:\"%s\"\tMessage:\"%s\"\n", debugSource, debugType, id, debugSeverity, message)
 		#endif
 	}
 

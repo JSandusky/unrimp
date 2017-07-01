@@ -52,6 +52,7 @@
 #include "Direct3D11Renderer/Shader/TessellationControlShaderHlsl.h"
 #include "Direct3D11Renderer/Shader/TessellationEvaluationShaderHlsl.h"
 
+#include <Renderer/ILog.h>
 #include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
 
@@ -364,7 +365,7 @@ namespace Direct3D11Renderer
 			// Create the Direct3D 11 device
 			if (!detail::createDevice(flags, &mD3D11Device, &mD3D11DeviceContext) && (flags & D3D11_CREATE_DEVICE_DEBUG))
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 11 error: Failed to create device instance, retrying without debug flag (maybe no Windows SDK is installed)")
+				RENDERER_LOG(mContext, CRITICAL, "Failed to create the Direct3D 11 device instance, retrying without debug flag (maybe no Windows SDK is installed)")
 				flags &= ~D3D11_CREATE_DEVICE_DEBUG;
 				detail::createDevice(flags, &mD3D11Device, &mD3D11DeviceContext);
 			}
@@ -441,7 +442,7 @@ namespace Direct3D11Renderer
 			}
 			else
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 11 error: Failed to create device and device context instance")
+				RENDERER_LOG(mContext, CRITICAL, "Failed to create the Direct3D 11 device and device context instance")
 			}
 		}
 
@@ -480,15 +481,15 @@ namespace Direct3D11Renderer
 				// Error!
 				if (numberOfCurrentResources > 1)
 				{
-					RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 11 error: Renderer is going to be destroyed, but there are still %d resource instances left (memory leak)\n", numberOfCurrentResources)
+					RENDERER_LOG(mContext, CRITICAL, "The Direct3D 11 renderer backend is going to be destroyed, but there are still %d resource instances left (memory leak)", numberOfCurrentResources)
 				}
 				else
 				{
-					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 11 error: Renderer is going to be destroyed, but there is still one resource instance left (memory leak)\n")
+					RENDERER_LOG(mContext, CRITICAL, "The Direct3D 11 renderer backend is going to be destroyed, but there is still one resource instance left (memory leak)")
 				}
 
 				// Use debug output to show the current number of resource instances
-				getStatistics().debugOutputCurrentResouces();
+				getStatistics().debugOutputCurrentResouces(mContext);
 			}
 		}
 		#endif
@@ -556,31 +557,31 @@ namespace Direct3D11Renderer
 		{
 			if (nullptr == mGraphicsRootSignature)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 11 error: No graphics root signature set")
+				RENDERER_LOG(mContext, CRITICAL, "No Direct3D 11 renderer backend graphics root signature set")
 				return;
 			}
 			const Renderer::RootSignature& rootSignature = mGraphicsRootSignature->getRootSignature();
 			if (rootParameterIndex >= rootSignature.numberOfParameters)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 11 error: Root parameter index is out of bounds")
+				RENDERER_LOG(mContext, CRITICAL, "The Direct3D 11 renderer backend root parameter index is out of bounds")
 				return;
 			}
 			const Renderer::RootParameter& rootParameter = rootSignature.parameters[rootParameterIndex];
 			if (Renderer::RootParameterType::DESCRIPTOR_TABLE != rootParameter.parameterType)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 11 error: Root parameter index doesn't reference a descriptor table")
+				RENDERER_LOG(mContext, CRITICAL, "The Direct3D 11 renderer backend root parameter index doesn't reference a descriptor table")
 				return;
 			}
 
 			// TODO(co) For now, we only support a single descriptor range
 			if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 11 error: Only a single descriptor range is supported")
+				RENDERER_LOG(mContext, CRITICAL, "Only a single descriptor range is supported by the Direct3D 11 renderer backend")
 				return;
 			}
 			if (nullptr == reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges))
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 11 error: Descriptor ranges is a null pointer")
+				RENDERER_LOG(mContext, CRITICAL, "The Direct3D 11 renderer backend descriptor ranges is a null pointer")
 				return;
 			}
 		}
@@ -690,7 +691,7 @@ namespace Direct3D11Renderer
 						case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
 						case Renderer::ResourceType::GEOMETRY_SHADER:
 						case Renderer::ResourceType::FRAGMENT_SHADER:
-							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 11 error: Invalid resource type")
+							RENDERER_LOG(mContext, CRITICAL, "Invalid Direct3D 11 renderer backend resource type")
 							break;
 					}
 					const UINT startSlot = descriptorRange->baseShaderRegister;
@@ -784,7 +785,7 @@ namespace Direct3D11Renderer
 				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
 				case Renderer::ResourceType::GEOMETRY_SHADER:
 				case Renderer::ResourceType::FRAGMENT_SHADER:
-					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 11 error: Invalid resource type")
+					RENDERER_LOG(mContext, CRITICAL, "Invalid Direct3D 11 renderer backend resource type")
 					break;
 			}
 		}

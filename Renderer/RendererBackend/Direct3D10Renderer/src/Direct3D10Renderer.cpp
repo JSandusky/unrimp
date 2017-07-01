@@ -51,6 +51,7 @@
 #include "Direct3D10Renderer/Shader/GeometryShaderHlsl.h"
 #include "Direct3D10Renderer/Shader/FragmentShaderHlsl.h"
 
+#include <Renderer/ILog.h>
 #include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
 
@@ -321,7 +322,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	Direct3D10Renderer::Direct3D10Renderer(const Renderer::Context& context) :
 		IRenderer(context),
-		mDirect3D10RuntimeLinking(new Direct3D10RuntimeLinking()),
+		mDirect3D10RuntimeLinking(nullptr),
 		mD3D10Device(nullptr),
 		mDirect3D9RuntimeLinking(nullptr),
 		mShaderLanguageHlsl(nullptr),
@@ -333,6 +334,8 @@ namespace Direct3D10Renderer
 		mD3d10GeometryShader(nullptr),
 		mD3d10PixelShader(nullptr)
 	{
+		mDirect3D10RuntimeLinking = new Direct3D10RuntimeLinking(*this);
+
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
 
@@ -348,7 +351,7 @@ namespace Direct3D10Renderer
 			// Create the Direct3D 10 device
 			if (!detail::createDevice(flags, &mD3D10Device) && (flags & D3D10_CREATE_DEVICE_DEBUG))
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Failed to create device instance, retrying without debug flag (maybe no Windows SDK is installed)")
+				RENDERER_LOG(mContext, CRITICAL, "Failed to create the Direct3D 10 device instance, retrying without debug flag (maybe no Windows SDK is installed)")
 				flags &= ~D3D10_CREATE_DEVICE_DEBUG;
 				detail::createDevice(flags, &mD3D10Device);
 			}
@@ -428,7 +431,7 @@ namespace Direct3D10Renderer
 			}
 			else
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Failed to create device instance")
+				RENDERER_LOG(mContext, CRITICAL, "Failed to create the Direct3D 10 device instance")
 			}
 		}
 
@@ -467,15 +470,15 @@ namespace Direct3D10Renderer
 				// Error!
 				if (numberOfCurrentResources > 1)
 				{
-					RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 10 error: Renderer is going to be destroyed, but there are still %d resource instances left (memory leak)\n", numberOfCurrentResources)
+					RENDERER_LOG(mContext, CRITICAL, "The Direct3D 10 renderer backend is going to be destroyed, but there are still %d resource instances left (memory leak)", numberOfCurrentResources)
 				}
 				else
 				{
-					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Renderer is going to be destroyed, but there is still one resource instance left (memory leak)\n")
+					RENDERER_LOG(mContext, CRITICAL, "The Direct3D 10 renderer backend is going to be destroyed, but there is still one resource instance left (memory leak)")
 				}
 
 				// Use debug output to show the current number of resource instances
-				getStatistics().debugOutputCurrentResouces();
+				getStatistics().debugOutputCurrentResouces(mContext);
 			}
 		}
 		#endif
@@ -536,31 +539,31 @@ namespace Direct3D10Renderer
 		{
 			if (nullptr == mGraphicsRootSignature)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: No graphics root signature set")
+				RENDERER_LOG(mContext, CRITICAL, "No Direct3D 10 renderer backend graphics root signature set")
 				return;
 			}
 			const Renderer::RootSignature& rootSignature = mGraphicsRootSignature->getRootSignature();
 			if (rootParameterIndex >= rootSignature.numberOfParameters)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Root parameter index is out of bounds")
+				RENDERER_LOG(mContext, CRITICAL, "The Direct3D 10 renderer backend root parameter index is out of bounds")
 				return;
 			}
 			const Renderer::RootParameter& rootParameter = rootSignature.parameters[rootParameterIndex];
 			if (Renderer::RootParameterType::DESCRIPTOR_TABLE != rootParameter.parameterType)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Root parameter index doesn't reference a descriptor table")
+				RENDERER_LOG(mContext, CRITICAL, "The Direct3D 10 renderer backend root parameter index doesn't reference a descriptor table")
 				return;
 			}
 
 			// TODO(co) For now, we only support a single descriptor range
 			if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Only a single descriptor range is supported")
+				RENDERER_LOG(mContext, CRITICAL, "Only a single descriptor range is supported by the Direct3D 10 renderer backend")
 				return;
 			}
 			if (nullptr == reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges))
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Descriptor ranges is a null pointer")
+				RENDERER_LOG(mContext, CRITICAL, "The Direct3D 10 renderer backend descriptor ranges is a null pointer")
 				return;
 			}
 		}
@@ -597,11 +600,11 @@ namespace Direct3D10Renderer
 							break;
 
 						case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
-							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Direct3D 10 has no tessellation control shader support (hull shader in Direct3D terminology)")
+							RENDERER_LOG(mContext, CRITICAL, "Direct3D 10 has no tessellation control shader support (hull shader in Direct3D terminology)")
 							break;
 
 						case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
-							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Direct3D 10 has no tessellation evaluation shader support (domain shader in Direct3D terminology)")
+							RENDERER_LOG(mContext, CRITICAL, "Direct3D 10 has no tessellation evaluation shader support (domain shader in Direct3D terminology)")
 							break;
 
 						case Renderer::ShaderVisibility::GEOMETRY:
@@ -666,7 +669,7 @@ namespace Direct3D10Renderer
 						case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
 						case Renderer::ResourceType::GEOMETRY_SHADER:
 						case Renderer::ResourceType::FRAGMENT_SHADER:
-							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Invalid resource type")
+							RENDERER_LOG(mContext, CRITICAL, "Invalid Direct3D 10 renderer backend resource type")
 							break;
 					}
 					const UINT startSlot = descriptorRange->baseShaderRegister;
@@ -683,11 +686,12 @@ namespace Direct3D10Renderer
 							break;
 
 						case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
-							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Direct3D 10 has no tessellation control shader support (hull shader in Direct3D terminology)")
+							RENDERER_LOG(mContext, CRITICAL, "Direct3D 10 has no tessellation control shader support (hull shader in Direct3D terminology)")
 							break;
 
 						case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
-							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Direct3D 10 has no tessellation evaluation shader support (domain shader in Direct3D terminology)")
+							RENDERER_LOG(mContext, CRITICAL, "Direct3D 10 has no tessellation evaluation shader support (domain shader in Direct3D terminology)")
+
 							break;
 
 						case Renderer::ShaderVisibility::GEOMETRY:
@@ -719,11 +723,11 @@ namespace Direct3D10Renderer
 							break;
 
 						case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
-							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Direct3D 10 has no tessellation control shader support (hull shader in Direct3D terminology)")
+							RENDERER_LOG(mContext, CRITICAL, "Direct3D 10 has no tessellation control shader support (hull shader in Direct3D terminology)")
 							break;
 
 						case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
-							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Direct3D 10 has no tessellation evaluation shader support (domain shader in Direct3D terminology)")
+							RENDERER_LOG(mContext, CRITICAL, "Direct3D 10 has no tessellation evaluation shader support (domain shader in Direct3D terminology)")
 							break;
 
 						case Renderer::ShaderVisibility::GEOMETRY:
@@ -752,7 +756,7 @@ namespace Direct3D10Renderer
 				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
 				case Renderer::ResourceType::GEOMETRY_SHADER:
 				case Renderer::ResourceType::FRAGMENT_SHADER:
-					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: Invalid resource type")
+					RENDERER_LOG(mContext, CRITICAL, "Invalid Direct3D 10 renderer backend resource type")
 					break;
 			}
 		}
@@ -823,7 +827,7 @@ namespace Direct3D10Renderer
 				// Is the given number of viewports valid?
 				if (numberOfViewports > (D3D10_VIEWPORT_AND_SCISSORRECT_MAX_INDEX + 1))
 				{
-					RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 10 error: Direct3D 10 supports only %d viewports", D3D10_VIEWPORT_AND_SCISSORRECT_MAX_INDEX)
+					RENDERER_LOG(mContext, CRITICAL, "Direct3D 10 supports only %d viewports", D3D10_VIEWPORT_AND_SCISSORRECT_MAX_INDEX)
 					numberOfViewports = D3D10_VIEWPORT_AND_SCISSORRECT_MAX_INDEX + 1;
 				}
 			#endif
@@ -1303,7 +1307,7 @@ namespace Direct3D10Renderer
 			// Create the Direct3D 9 runtime linking instance, in case there's no one, yet
 			if (nullptr == mDirect3D9RuntimeLinking)
 			{
-				mDirect3D9RuntimeLinking = new Direct3D9RuntimeLinking();
+				mDirect3D9RuntimeLinking = new Direct3D9RuntimeLinking(*this);
 			}
 
 			// Call the Direct3D 9 PIX function
@@ -1323,7 +1327,7 @@ namespace Direct3D10Renderer
 			// Create the Direct3D 9 runtime linking instance, in case there's no one, yet
 			if (nullptr == mDirect3D9RuntimeLinking)
 			{
-				mDirect3D9RuntimeLinking = new Direct3D9RuntimeLinking();
+				mDirect3D9RuntimeLinking = new Direct3D9RuntimeLinking(*this);
 			}
 
 			// Call the Direct3D 9 PIX function
@@ -1343,7 +1347,7 @@ namespace Direct3D10Renderer
 			// Create the Direct3D 9 runtime linking instance, in case there's no one, yet
 			if (nullptr == mDirect3D9RuntimeLinking)
 			{
-				mDirect3D9RuntimeLinking = new Direct3D9RuntimeLinking();
+				mDirect3D9RuntimeLinking = new Direct3D9RuntimeLinking(*this);
 			}
 
 			// Call the Direct3D 9 PIX function

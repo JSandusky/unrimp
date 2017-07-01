@@ -49,6 +49,7 @@
 	#include "VulkanRenderer/Linux/VulkanContextLinux.h"
 #endif
 
+#include <Renderer/ILog.h>
 #include <Renderer/Buffer/CommandBuffer.h>
 
 
@@ -396,15 +397,15 @@ namespace VulkanRenderer
 				// Error!
 				if (numberOfCurrentResources > 1)
 				{
-					RENDERER_OUTPUT_DEBUG_PRINTF("Vulkan error: Renderer is going to be destroyed, but there are still %d resource instances left (memory leak)\n", numberOfCurrentResources)
+					RENDERER_LOG(mContext, CRITICAL, "The Vulkan renderer backend is going to be destroyed, but there are still %d resource instances left (memory leak)", numberOfCurrentResources)
 				}
 				else
 				{
-					RENDERER_OUTPUT_DEBUG_STRING("Vulkan error: Renderer is going to be destroyed, but there is still one resource instance left (memory leak)\n")
+					RENDERER_LOG(mContext, CRITICAL, "The Vulkan renderer backend is going to be destroyed, but there is still one resource instance left (memory leak)")
 				}
 
 				// Use debug output to show the current number of resource instances
-				getStatistics().debugOutputCurrentResouces();
+				getStatistics().debugOutputCurrentResouces(mContext);
 			}
 		}
 		#endif
@@ -452,31 +453,31 @@ namespace VulkanRenderer
 		{
 			if (nullptr == mGraphicsRootSignature)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Vulkan error: No graphics root signature set")
+				RENDERER_LOG(mContext, CRITICAL, "No Vulkan renderer backend graphics root signature set")
 				return;
 			}
 			const Renderer::RootSignature& rootSignature = mGraphicsRootSignature->getRootSignature();
 			if (rootParameterIndex >= rootSignature.numberOfParameters)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Vulkan error: Root parameter index is out of bounds")
+				RENDERER_LOG(mContext, CRITICAL, "The Vulkan renderer backend root parameter index is out of bounds")
 				return;
 			}
 			const Renderer::RootParameter& rootParameter = rootSignature.parameters[rootParameterIndex];
 			if (Renderer::RootParameterType::DESCRIPTOR_TABLE != rootParameter.parameterType)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Vulkan error: Root parameter index doesn't reference a descriptor table")
+				RENDERER_LOG(mContext, CRITICAL, "The Vulkan renderer backend root parameter index doesn't reference a descriptor table")
 				return;
 			}
 
 			// TODO(co) For now, we only support a single descriptor range
 			if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Vulkan error: Only a single descriptor range is supported")
+				RENDERER_LOG(mContext, CRITICAL, "Only a single descriptor range is supported by the Vulkan renderer backend")
 				return;
 			}
 			if (nullptr == reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges))
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Vulkan error: Descriptor ranges is a null pointer")
+				RENDERER_LOG(mContext, CRITICAL, "The Vulkan renderer backend descriptor ranges is a null pointer")
 				return;
 			}
 		}
@@ -533,7 +534,7 @@ namespace VulkanRenderer
 				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
 				case Renderer::ResourceType::GEOMETRY_SHADER:
 				case Renderer::ResourceType::FRAGMENT_SHADER:
-					RENDERER_OUTPUT_DEBUG_STRING("Vulkan error: Invalid resource type")
+					RENDERER_LOG(mContext, CRITICAL, "Invalid Vulkan renderer backend resource type")
 					break;
 			}
 		}

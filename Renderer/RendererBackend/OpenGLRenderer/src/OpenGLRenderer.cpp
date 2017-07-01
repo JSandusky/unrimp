@@ -64,6 +64,7 @@
 	#include "OpenGLRenderer/Linux/OpenGLContextLinux.h"
 #endif
 
+#include <Renderer/ILog.h>
 #include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
 
@@ -459,7 +460,7 @@ namespace OpenGLRenderer
 						glDebugMessageControlARB(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, 0, false);
 
 						// Set the debug message callback function
-						glDebugMessageCallbackARB(&OpenGLRenderer::debugMessageCallback, nullptr);
+						glDebugMessageCallbackARB(&OpenGLRenderer::debugMessageCallback, this);
 					}
 				#endif
 
@@ -538,15 +539,15 @@ namespace OpenGLRenderer
 				// Error!
 				if (numberOfCurrentResources > 1)
 				{
-					RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL error: Renderer is going to be destroyed, but there are still %lu resource instances left (memory leak)\n", numberOfCurrentResources)
+					RENDERER_LOG(mContext, CRITICAL, "The OpenGL renderer backend is going to be destroyed, but there are still %lu resource instances left (memory leak)", numberOfCurrentResources)
 				}
 				else
 				{
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: Renderer is going to be destroyed, but there is still one resource instance left (memory leak)\n")
+					RENDERER_LOG(mContext, CRITICAL, "The OpenGL renderer backend is going to be destroyed, but there is still one resource instance left (memory leak)")
 				}
 
 				// Use debug output to show the current number of resource instances
-				getStatistics().debugOutputCurrentResouces();
+				getStatistics().debugOutputCurrentResouces(mContext);
 			}
 		}
 		#endif
@@ -594,31 +595,31 @@ namespace OpenGLRenderer
 		{
 			if (nullptr == mGraphicsRootSignature)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: No graphics root signature set")
+				RENDERER_LOG(mContext, CRITICAL, "No OpenGL renderer backend graphics root signature set")
 				return;
 			}
 			const Renderer::RootSignature& rootSignature = mGraphicsRootSignature->getRootSignature();
 			if (rootParameterIndex >= rootSignature.numberOfParameters)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: Root parameter index is out of bounds")
+				RENDERER_LOG(mContext, CRITICAL, "The OpenGL renderer backend root parameter index is out of bounds")
 				return;
 			}
 			const Renderer::RootParameter& rootParameter = rootSignature.parameters[rootParameterIndex];
 			if (Renderer::RootParameterType::DESCRIPTOR_TABLE != rootParameter.parameterType)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: Root parameter index doesn't reference a descriptor table")
+				RENDERER_LOG(mContext, CRITICAL, "The OpenGL renderer backend root parameter index doesn't reference a descriptor table")
 				return;
 			}
 
 			// TODO(co) For now, we only support a single descriptor range
 			if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: Only a single descriptor range is supported")
+				RENDERER_LOG(mContext, CRITICAL, "Only a single descriptor range is supported by the OpenGL renderer backend")
 				return;
 			}
 			if (nullptr == reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges))
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: Descriptor ranges is a null pointer")
+				RENDERER_LOG(mContext, CRITICAL, "The OpenGL renderer backend descriptor ranges is a null pointer")
 				return;
 			}
 		}
@@ -765,7 +766,7 @@ namespace OpenGLRenderer
 							case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
 							case Renderer::ResourceType::GEOMETRY_SHADER:
 							case Renderer::ResourceType::FRAGMENT_SHADER:
-								RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: Invalid resource type")
+								RENDERER_LOG(mContext, CRITICAL, "Invalid OpenGL renderer backend resource type")
 								break;
 						}
 
@@ -877,7 +878,7 @@ namespace OpenGLRenderer
 								case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
 								case Renderer::ResourceType::GEOMETRY_SHADER:
 								case Renderer::ResourceType::FRAGMENT_SHADER:
-									RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: Invalid resource type")
+									RENDERER_LOG(mContext, CRITICAL, "Invalid OpenGL renderer backend resource type")
 									break;
 							}
 
@@ -935,7 +936,7 @@ namespace OpenGLRenderer
 				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
 				case Renderer::ResourceType::GEOMETRY_SHADER:
 				case Renderer::ResourceType::FRAGMENT_SHADER:
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: Invalid resource type")
+					RENDERER_LOG(mContext, CRITICAL, "Invalid OpenGL renderer backend resource type")
 					break;
 			}
 		}
@@ -1094,7 +1095,7 @@ namespace OpenGLRenderer
 			#ifndef RENDERER_NO_DEBUG
 				if (numberOfViewports > 1)
 				{
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: OpenGL supports only one viewport")
+					RENDERER_LOG(mContext, CRITICAL, "OpenGL supports only one viewport")
 				}
 			#endif
 			glViewport(static_cast<GLint>(viewports->topLeftX), static_cast<GLint>(renderTargetHeight - viewports->topLeftY - viewports->height), static_cast<GLsizei>(viewports->width), static_cast<GLsizei>(viewports->height));
@@ -1124,7 +1125,7 @@ namespace OpenGLRenderer
 			#ifndef RENDERER_NO_DEBUG
 				if (numberOfScissorRectangles > 1)
 				{
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: OpenGL supports only one scissor rectangle")
+					RENDERER_LOG(mContext, CRITICAL, "OpenGL supports only one scissor rectangle")
 				}
 			#endif
 			const GLsizei width  = scissorRectangles->bottomRightX - scissorRectangles->topLeftX;
@@ -2246,106 +2247,110 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Private static methods                                ]
 	//[-------------------------------------------------------]
-	void OpenGLRenderer::debugMessageCallback(uint32_t source, uint32_t type, uint32_t id, uint32_t severity, int, const char* message, const void*)
+	void OpenGLRenderer::debugMessageCallback(uint32_t source, uint32_t type, uint32_t id, uint32_t severity, int, const char* message, const void* userParam)
 	{
-		// Source to string
-		char debugSource[20 + 1]{0};	// +1 for terminating zero
-		switch (source)
-		{
-			case GL_DEBUG_SOURCE_API_ARB:
-				strncpy(debugSource, "OpenGL", 20);
-				break;
-
-			case GL_DEBUG_SOURCE_WINDOW_SYSTEM_ARB:
-				strncpy(debugSource, "Windows", 20);
-				break;
-
-			case GL_DEBUG_SOURCE_SHADER_COMPILER_ARB:
-				strncpy(debugSource, "Shader compiler", 20);
-				break;
-
-			case GL_DEBUG_SOURCE_THIRD_PARTY_ARB:
-				strncpy(debugSource, "Third party", 20);
-				break;
-
-			case GL_DEBUG_SOURCE_APPLICATION_ARB:
-				strncpy(debugSource, "Application", 20);
-				break;
-
-			case GL_DEBUG_SOURCE_OTHER_ARB:
-				strncpy(debugSource, "Other", 20);
-				break;
-
-			default:
-				strncpy(debugSource, "?", 20);
-				break;
-		}
-
-		// Debug type to string
-		char debugType[25 + 1]{0};	// +1 for terminating zero
-		switch (type)
-		{
-			case GL_DEBUG_TYPE_ERROR_ARB:
-				strncpy(debugType, "Error", 25);
-				break;
-
-			case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR_ARB:
-				strncpy(debugType, "Deprecated behavior", 25);
-				break;
-
-			case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR_ARB:
-				strncpy(debugType, "Undefined behavior", 25);
-				break;
-
-			case GL_DEBUG_TYPE_PORTABILITY_ARB:
-				strncpy(debugType, "Portability", 25);
-				break;
-
-			case GL_DEBUG_TYPE_PERFORMANCE_ARB:
-				strncpy(debugType, "Performance", 25);
-				break;
-
-			case GL_DEBUG_TYPE_OTHER_ARB:
-				strncpy(debugType, "Other", 25);
-				break;
-
-			default:
-				strncpy(debugType, "?", 25);
-				break;
-		}
-
-		// Debug severity to string
-		char debugSeverity[20 + 1]{0};	// +1 for terminating zero
-		switch (severity)
-		{
-			case GL_DEBUG_SEVERITY_HIGH_ARB:
-				strncpy(debugSeverity, "High", 20);
-				break;
-
-			case GL_DEBUG_SEVERITY_MEDIUM_ARB:
-				strncpy(debugSeverity, "Medium", 20);
-				break;
-
-			case GL_DEBUG_SEVERITY_LOW_ARB:
-				strncpy(debugSeverity, "Low", 20);
-				break;
-
-			case GL_DEBUG_SEVERITY_NOTIFICATION:
-				strncpy(debugSeverity, "Notification", 20);
-				break;
-
-			default:
-				strncpy(debugSeverity, "?", 20);
-				break;
-		}
-
 		// Output the debug message
 		#ifdef RENDERER_NO_DEBUG
 			// Avoid "warning C4100: '<x>' : unreferenced formal parameter"-warning
+			source = source;
+			type = type;
 			id = id;
+			severity = severity;
 			message = message;
+			userParam = userParam;
 		#else
-			RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL error: OpenGL debug message\tSource:\"%s\"\tType:\"%s\"\tID:\"%d\"\tSeverity:\"%s\"\tMessage:\"%s\"\n", debugSource, debugType, id, debugSeverity, message)
+			// Source to string
+			char debugSource[20 + 1]{0};	// +1 for terminating zero
+			switch (source)
+			{
+				case GL_DEBUG_SOURCE_API_ARB:
+					strncpy(debugSource, "OpenGL", 20);
+					break;
+
+				case GL_DEBUG_SOURCE_WINDOW_SYSTEM_ARB:
+					strncpy(debugSource, "Windows", 20);
+					break;
+
+				case GL_DEBUG_SOURCE_SHADER_COMPILER_ARB:
+					strncpy(debugSource, "Shader compiler", 20);
+					break;
+
+				case GL_DEBUG_SOURCE_THIRD_PARTY_ARB:
+					strncpy(debugSource, "Third party", 20);
+					break;
+
+				case GL_DEBUG_SOURCE_APPLICATION_ARB:
+					strncpy(debugSource, "Application", 20);
+					break;
+
+				case GL_DEBUG_SOURCE_OTHER_ARB:
+					strncpy(debugSource, "Other", 20);
+					break;
+
+				default:
+					strncpy(debugSource, "?", 20);
+					break;
+			}
+
+			// Debug type to string
+			char debugType[25 + 1]{0};	// +1 for terminating zero
+			switch (type)
+			{
+				case GL_DEBUG_TYPE_ERROR_ARB:
+					strncpy(debugType, "Error", 25);
+					break;
+
+				case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR_ARB:
+					strncpy(debugType, "Deprecated behavior", 25);
+					break;
+
+				case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR_ARB:
+					strncpy(debugType, "Undefined behavior", 25);
+					break;
+
+				case GL_DEBUG_TYPE_PORTABILITY_ARB:
+					strncpy(debugType, "Portability", 25);
+					break;
+
+				case GL_DEBUG_TYPE_PERFORMANCE_ARB:
+					strncpy(debugType, "Performance", 25);
+					break;
+
+				case GL_DEBUG_TYPE_OTHER_ARB:
+					strncpy(debugType, "Other", 25);
+					break;
+
+				default:
+					strncpy(debugType, "?", 25);
+					break;
+			}
+
+			// Debug severity to string
+			char debugSeverity[20 + 1]{0};	// +1 for terminating zero
+			switch (severity)
+			{
+				case GL_DEBUG_SEVERITY_HIGH_ARB:
+					strncpy(debugSeverity, "High", 20);
+					break;
+
+				case GL_DEBUG_SEVERITY_MEDIUM_ARB:
+					strncpy(debugSeverity, "Medium", 20);
+					break;
+
+				case GL_DEBUG_SEVERITY_LOW_ARB:
+					strncpy(debugSeverity, "Low", 20);
+					break;
+
+				case GL_DEBUG_SEVERITY_NOTIFICATION:
+					strncpy(debugSeverity, "Notification", 20);
+					break;
+
+				default:
+					strncpy(debugSeverity, "?", 20);
+					break;
+			}
+
+			RENDERER_LOG(static_cast<const OpenGLRenderer*>(userParam)->getContext(), CRITICAL, "OpenGL debug message\tSource:\"%s\"\tType:\"%s\"\tID:\"%d\"\tSeverity:\"%s\"\tMessage:\"%s\"\n", debugSource, debugType, id, debugSeverity, message)
 		#endif
 	}
 

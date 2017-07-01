@@ -28,6 +28,8 @@
 #include "OpenGLRenderer/OpenGLRenderer.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 
+#include <Renderer/ILog.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -67,7 +69,7 @@ namespace OpenGLRenderer
 				if (&openGLRenderer != &texture->getRenderer())
 				{
 					// Output an error message and keep on going in order to keep a reasonable behaviour even in case on an error
-					RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL error: The given color texture at index %d is owned by another renderer instance", colorFramebufferAttachment - colorFramebufferAttachments)
+					RENDERER_LOG(openGLRenderer.getContext(), CRITICAL, "OpenGL error: The given color texture at index %d is owned by another renderer instance", colorFramebufferAttachment - colorFramebufferAttachments)
 
 					// Continue, there's no point in trying to do any error handling in here
 					continue;
@@ -136,7 +138,7 @@ namespace OpenGLRenderer
 				case Renderer::ResourceType::GEOMETRY_SHADER:
 				case Renderer::ResourceType::FRAGMENT_SHADER:
 				default:
-					RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL error: The type of the given color texture at index %ld is not supported", colorFramebufferAttachment - colorFramebufferAttachments)
+					RENDERER_LOG(openGLRenderer.getContext(), CRITICAL, "The type of the given color texture at index %ld is not supported by the OpenGL renderer backend", colorFramebufferAttachment - colorFramebufferAttachments)
 					break;
 			}
 		}
@@ -149,7 +151,7 @@ namespace OpenGLRenderer
 				if (&openGLRenderer != &mDepthStencilTexture->getRenderer())
 				{
 					// Output an error message and keep on going in order to keep a reasonable behaviour even in case on an error
-					RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL error: The given depth stencil texture is owned by another renderer instance")
+					RENDERER_LOG(openGLRenderer.getContext(), CRITICAL, "OpenGL error: The given depth stencil texture is owned by another renderer instance")
 				}
 			#endif
 
@@ -218,60 +220,58 @@ namespace OpenGLRenderer
 				case Renderer::ResourceType::GEOMETRY_SHADER:
 				case Renderer::ResourceType::FRAGMENT_SHADER:
 				default:
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: The type of the given depth stencil texture is not supported")
+					RENDERER_LOG(openGLRenderer.getContext(), CRITICAL, "The type of the given depth stencil texture is not supported by the OpenGL renderer backend")
 					break;
 			}
 		}
 
-		#ifdef RENDERER_OUTPUT_DEBUG
-			// Check the status of the OpenGL framebuffer
-			const GLenum openGLStatus = isArbDsa ? glCheckNamedFramebufferStatus(mOpenGLFramebuffer, GL_FRAMEBUFFER) : glCheckNamedFramebufferStatusEXT(mOpenGLFramebuffer, GL_FRAMEBUFFER);
-			switch (openGLStatus)
-			{
-				case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: Not all framebuffer attachment points are framebuffer attachment complete (\"GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT\")")
-					break;
+		// Check the status of the OpenGL framebuffer
+		const GLenum openGLStatus = isArbDsa ? glCheckNamedFramebufferStatus(mOpenGLFramebuffer, GL_FRAMEBUFFER) : glCheckNamedFramebufferStatusEXT(mOpenGLFramebuffer, GL_FRAMEBUFFER);
+		switch (openGLStatus)
+		{
+			case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+				RENDERER_LOG(openGLRenderer.getContext(), CRITICAL, "OpenGL error: Not all framebuffer attachment points are framebuffer attachment complete (\"GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT\")")
+				break;
 
-				case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: No images are attached to the framebuffer (\"GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT\")")
-					break;
+			case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+				RENDERER_LOG(openGLRenderer.getContext(), CRITICAL, "OpenGL error: No images are attached to the framebuffer (\"GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT\")")
+				break;
 
-				case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: Incomplete draw buffer framebuffer (\"GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER\")")
-					break;
+			case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
+				RENDERER_LOG(openGLRenderer.getContext(), CRITICAL, "OpenGL error: Incomplete draw buffer framebuffer (\"GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER\")")
+				break;
 
-				case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: Incomplete read buffer framebuffer (\"GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER\")")
-					break;
+			case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
+				RENDERER_LOG(openGLRenderer.getContext(), CRITICAL, "OpenGL error: Incomplete read buffer framebuffer (\"GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER\")")
+				break;
 
-				case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: Incomplete multisample framebuffer (\"GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE\")")
-					break;
+			case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
+				RENDERER_LOG(openGLRenderer.getContext(), CRITICAL, "OpenGL error: Incomplete multisample framebuffer (\"GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE\")")
+				break;
 
-				case GL_FRAMEBUFFER_UNDEFINED:
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: Undefined framebuffer (\"GL_FRAMEBUFFER_UNDEFINED\")")
-					break;
+			case GL_FRAMEBUFFER_UNDEFINED:
+				RENDERER_LOG(openGLRenderer.getContext(), CRITICAL, "OpenGL error: Undefined framebuffer (\"GL_FRAMEBUFFER_UNDEFINED\")")
+				break;
 
-				case GL_FRAMEBUFFER_UNSUPPORTED:
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: The combination of internal formats of the attached images violates an implementation-dependent set of restrictions (\"GL_FRAMEBUFFER_UNSUPPORTED\")")
-					break;
+			case GL_FRAMEBUFFER_UNSUPPORTED:
+				RENDERER_LOG(openGLRenderer.getContext(), CRITICAL, "OpenGL error: The combination of internal formats of the attached images violates an implementation-dependent set of restrictions (\"GL_FRAMEBUFFER_UNSUPPORTED\")")
+				break;
 
-				// From "GL_EXT_framebuffer_object" (should no longer matter, should)
-				case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: Not all attached images have the same width and height (\"GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT\")")
-					break;
+			// From "GL_EXT_framebuffer_object" (should no longer matter, should)
+			case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
+				RENDERER_LOG(openGLRenderer.getContext(), CRITICAL, "OpenGL error: Not all attached images have the same width and height (\"GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT\")")
+				break;
 
-				// From "GL_EXT_framebuffer_object" (should no longer matter, should)
-				case GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT:
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: Incomplete formats framebuffer object (\"GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT\")")
-					break;
+			// From "GL_EXT_framebuffer_object" (should no longer matter, should)
+			case GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT:
+				RENDERER_LOG(openGLRenderer.getContext(), CRITICAL, "OpenGL error: Incomplete formats framebuffer object (\"GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT\")")
+				break;
 
-				default:
-				case GL_FRAMEBUFFER_COMPLETE:
-					// Nothing here
-					break;
-			}
-		#endif
+			default:
+			case GL_FRAMEBUFFER_COMPLETE:
+				// Nothing here
+				break;
+		}
 	}
 
 	FramebufferDsa::~FramebufferDsa()

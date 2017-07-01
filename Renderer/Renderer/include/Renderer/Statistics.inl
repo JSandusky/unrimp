@@ -21,7 +21,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Renderer/PlatformTypes.h"	// For "RENDERER_OUTPUT_DEBUG_STRING()" and "RENDERER_OUTPUT_DEBUG_PRINTF()"
+#include "Renderer/ILog.h"
+#include "Renderer/Context.h"
 
 
 //[-------------------------------------------------------]
@@ -125,47 +126,47 @@ namespace Renderer
 				currentNumberOfFragmentShaders;
 	}
 
-	inline void Statistics::debugOutputCurrentResouces() const
+	inline void Statistics::debugOutputCurrentResouces(const Context& context) const
 	{
 		// Start
-		RENDERER_OUTPUT_DEBUG_STRING("** Number of current renderer resource instances **\n")
+		RENDERER_LOG(context, INFORMATION, "** Number of current renderer resource instances **")
 
 		// Misc
-		RENDERER_OUTPUT_DEBUG_PRINTF("Root signatures: %d\n", currentNumberOfRootSignatures.load())
-		RENDERER_OUTPUT_DEBUG_PRINTF("Programs: %d\n", currentNumberOfPrograms.load())
-		RENDERER_OUTPUT_DEBUG_PRINTF("Vertex arrays: %d\n", currentNumberOfVertexArrays.load())
+		RENDERER_LOG(context, INFORMATION, "Root signatures: %d", currentNumberOfRootSignatures.load())
+		RENDERER_LOG(context, INFORMATION, "Programs: %d", currentNumberOfPrograms.load())
+		RENDERER_LOG(context, INFORMATION, "Vertex arrays: %d", currentNumberOfVertexArrays.load())
 
 		// IRenderTarget
-		RENDERER_OUTPUT_DEBUG_PRINTF("Swap chains: %d\n", currentNumberOfSwapChains.load())
-		RENDERER_OUTPUT_DEBUG_PRINTF("Framebuffers: %d\n", currentNumberOfFramebuffers.load())
+		RENDERER_LOG(context, INFORMATION, "Swap chains: %d", currentNumberOfSwapChains.load())
+		RENDERER_LOG(context, INFORMATION, "Framebuffers: %d", currentNumberOfFramebuffers.load())
 
 		// IBuffer
-		RENDERER_OUTPUT_DEBUG_PRINTF("Index buffers: %d\n", currentNumberOfIndexBuffers.load())
-		RENDERER_OUTPUT_DEBUG_PRINTF("Vertex buffers: %d\n", currentNumberOfVertexBuffers.load())
-		RENDERER_OUTPUT_DEBUG_PRINTF("Uniform buffers: %d\n", currentNumberOfUniformBuffers.load())
-		RENDERER_OUTPUT_DEBUG_PRINTF("Texture buffers: %d\n", currentNumberOfTextureBuffers.load())
-		RENDERER_OUTPUT_DEBUG_PRINTF("Indirect buffers: %d\n", currentNumberOfIndirectBuffers.load())
+		RENDERER_LOG(context, INFORMATION, "Index buffers: %d", currentNumberOfIndexBuffers.load())
+		RENDERER_LOG(context, INFORMATION, "Vertex buffers: %d", currentNumberOfVertexBuffers.load())
+		RENDERER_LOG(context, INFORMATION, "Uniform buffers: %d", currentNumberOfUniformBuffers.load())
+		RENDERER_LOG(context, INFORMATION, "Texture buffers: %d", currentNumberOfTextureBuffers.load())
+		RENDERER_LOG(context, INFORMATION, "Indirect buffers: %d", currentNumberOfIndirectBuffers.load())
 
 		// ITexture
-		RENDERER_OUTPUT_DEBUG_PRINTF("1D textures: %d\n", currentNumberOfTexture1Ds.load())
-		RENDERER_OUTPUT_DEBUG_PRINTF("2D textures: %d\n", currentNumberOfTexture2Ds.load())
-		RENDERER_OUTPUT_DEBUG_PRINTF("2D texture arrays: %d\n", currentNumberOfTexture2DArrays.load())
-		RENDERER_OUTPUT_DEBUG_PRINTF("3D textures: %d\n", currentNumberOfTexture3Ds.load())
-		RENDERER_OUTPUT_DEBUG_PRINTF("Cube textures: %d\n", currentNumberOfTextureCubes.load())
+		RENDERER_LOG(context, INFORMATION, "1D textures: %d", currentNumberOfTexture1Ds.load())
+		RENDERER_LOG(context, INFORMATION, "2D textures: %d", currentNumberOfTexture2Ds.load())
+		RENDERER_LOG(context, INFORMATION, "2D texture arrays: %d", currentNumberOfTexture2DArrays.load())
+		RENDERER_LOG(context, INFORMATION, "3D textures: %d", currentNumberOfTexture3Ds.load())
+		RENDERER_LOG(context, INFORMATION, "Cube textures: %d", currentNumberOfTextureCubes.load())
 
 		// IState
-		RENDERER_OUTPUT_DEBUG_PRINTF("Pipeline states: %d\n", currentNumberOfPipelineStates.load())
-		RENDERER_OUTPUT_DEBUG_PRINTF("Sampler states: %d\n", currentNumberOfSamplerStates.load())
+		RENDERER_LOG(context, INFORMATION, "Pipeline states: %d", currentNumberOfPipelineStates.load())
+		RENDERER_LOG(context, INFORMATION, "Sampler states: %d", currentNumberOfSamplerStates.load())
 
 		// IShader
-		RENDERER_OUTPUT_DEBUG_PRINTF("Vertex shaders: %d\n", currentNumberOfVertexShaders.load())
-		RENDERER_OUTPUT_DEBUG_PRINTF("Tessellation control shaders: %d\n", currentNumberOfTessellationControlShaders.load())
-		RENDERER_OUTPUT_DEBUG_PRINTF("Tessellation evaluation shaders: %d\n", currentNumberOfTessellationEvaluationShaders.load())
-		RENDERER_OUTPUT_DEBUG_PRINTF("Geometry shaders: %d\n", currentNumberOfGeometryShaders.load())
-		RENDERER_OUTPUT_DEBUG_PRINTF("Fragment shaders: %d\n", currentNumberOfFragmentShaders.load())
+		RENDERER_LOG(context, INFORMATION, "Vertex shaders: %d", currentNumberOfVertexShaders.load())
+		RENDERER_LOG(context, INFORMATION, "Tessellation control shaders: %d", currentNumberOfTessellationControlShaders.load())
+		RENDERER_LOG(context, INFORMATION, "Tessellation evaluation shaders: %d", currentNumberOfTessellationEvaluationShaders.load())
+		RENDERER_LOG(context, INFORMATION, "Geometry shaders: %d", currentNumberOfGeometryShaders.load())
+		RENDERER_LOG(context, INFORMATION, "Fragment shaders: %d", currentNumberOfFragmentShaders.load())
 
 		// End
-		RENDERER_OUTPUT_DEBUG_STRING("***************************************************\n")
+		RENDERER_LOG(context, INFORMATION, "***************************************************")
 	}
 
 

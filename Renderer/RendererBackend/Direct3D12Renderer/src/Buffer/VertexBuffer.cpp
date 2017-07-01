@@ -27,6 +27,8 @@
 #include "Direct3D12Renderer/Mapping.h"
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
 
+#include <Renderer/ILog.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -77,13 +79,13 @@ namespace Direct3D12Renderer
 				}
 				else
 				{
-					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to map vertex buffer")
+					RENDERER_LOG(direct3D12Renderer.getContext(), CRITICAL, "Failed to map Direct3D 12 vertex buffer")
 				}
 			}
 		}
 		else
 		{
-			RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create vertex buffer resource")
+			RENDERER_LOG(direct3D12Renderer.getContext(), CRITICAL, "Failed to create Direct3D 12 vertex buffer resource")
 		}
 
 		// Assign a default name to the resource for debugging purposes

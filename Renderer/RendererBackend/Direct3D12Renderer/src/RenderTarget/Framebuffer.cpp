@@ -28,7 +28,7 @@
 #include "Direct3D12Renderer/D3D12.h"
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
 
-#include <stdio.h>	// For "sprintf_s()"
+#include <Renderer/ILog.h>
 
 
 //[-------------------------------------------------------]
@@ -164,7 +164,7 @@ namespace Direct3D12Renderer
 						case Renderer::ResourceType::GEOMETRY_SHADER:
 						case Renderer::ResourceType::FRAGMENT_SHADER:
 						default:
-							RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 12 error: The type of the given color texture at index %d is not supported", colorTexture - mColorTextures)
+							RENDERER_LOG(direct3D12Renderer.getContext(), CRITICAL, "The type of the given color texture at index %d is not supported by the Direct3D 12 renderer backend", colorTexture - mColorTextures)
 							*d3d12DescriptorHeapRenderTargetView = nullptr;
 							break;
 					}
@@ -276,7 +276,7 @@ namespace Direct3D12Renderer
 				case Renderer::ResourceType::GEOMETRY_SHADER:
 				case Renderer::ResourceType::FRAGMENT_SHADER:
 				default:
-					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: The type of the given depth stencil texture is not supported")
+					RENDERER_LOG(direct3D12Renderer.getContext(), CRITICAL, "The type of the given depth stencil texture is not supported by the Direct3D 12 renderer backend")
 					break;
 			}
 		}

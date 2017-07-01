@@ -39,7 +39,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	FragmentShaderGlsl::FragmentShaderGlsl(OpenGLES3Renderer& openGLES3Renderer, const char* sourceCode) :
 		IFragmentShader(openGLES3Renderer),
-		mOpenGLES3Shader(ShaderLanguageGlsl::loadShaderFromSourcecode(GL_FRAGMENT_SHADER, sourceCode))
+		mOpenGLES3Shader(ShaderLanguageGlsl::loadShaderFromSourcecode(openGLES3Renderer, GL_FRAGMENT_SHADER, sourceCode))
 	{
 		// Nothing here
 	}

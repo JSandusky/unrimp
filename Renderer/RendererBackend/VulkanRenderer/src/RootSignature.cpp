@@ -25,6 +25,8 @@
 #include "VulkanRenderer/VulkanRenderer.h"
 #include "VulkanRenderer/State/SamplerState.h"
 
+#include <Renderer/ILog.h>
+
 #include <memory.h>
 
 
@@ -41,29 +43,29 @@
 			//[-------------------------------------------------------]
 			//[ Global functions                                      ]
 			//[-------------------------------------------------------]
-			void checkSamplerState(const Renderer::RootSignature& rootSignature, uint32_t samplerRootParameterIndex)
+			void checkSamplerState(VulkanRenderer::VulkanRenderer& vulkanRenderer, const Renderer::RootSignature& rootSignature, uint32_t samplerRootParameterIndex)
 			{
 				if (samplerRootParameterIndex >= rootSignature.numberOfParameters)
 				{
-					RENDERER_OUTPUT_DEBUG_STRING("Vulkan error: Sampler root parameter index is out of bounds")
+					RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Vulkan renderer backend sampler root parameter index is out of bounds")
 					return;
 				}
 				const Renderer::RootParameter& samplerRootParameter = rootSignature.parameters[samplerRootParameterIndex];
 				if (Renderer::RootParameterType::DESCRIPTOR_TABLE != samplerRootParameter.parameterType)
 				{
-					RENDERER_OUTPUT_DEBUG_STRING("Vulkan error: Sampler root parameter index doesn't point to a descriptor table")
+					RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Vulkan renderer backend sampler root parameter index doesn't point to a descriptor table")
 					return;
 				}
 
 				// TODO(co) For now, we only support a single descriptor range
 				if (1 != samplerRootParameter.descriptorTable.numberOfDescriptorRanges)
 				{
-					RENDERER_OUTPUT_DEBUG_STRING("Vulkan error: Sampler root parameter: Only a single descriptor range is supported")
+					RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Vulkan renderer backend sampler root parameter: Only a single descriptor range is supported")
 					return;
 				}
 				if (Renderer::DescriptorRangeType::SAMPLER != reinterpret_cast<const Renderer::DescriptorRange*>(samplerRootParameter.descriptorTable.descriptorRanges)[0].rangeType)
 				{
-					RENDERER_OUTPUT_DEBUG_STRING("Vulkan error: Sampler root parameter index is out of bounds")
+					RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Vulkan renderer backend sampler root parameter index is out of bounds")
 					return;
 				}
 			}
@@ -168,10 +170,11 @@ namespace VulkanRenderer
 	{
 		// Security checks
 		#ifndef VULKANRENDERER_NO_DEBUG
-			detail::checkSamplerState(mRootSignature, samplerRootParameterIndex);
+			VulkanRenderer& vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
+			detail::checkSamplerState(vulkanRenderer, mRootSignature, samplerRootParameterIndex);
 			if (nullptr == mSamplerStates[samplerRootParameterIndex])
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Vulkan error: Sampler root parameter index points to no sampler state instance")
+				RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Vulkan renderer backend sampler root parameter index points to no sampler state instance")
 				return nullptr;
 			}
 		#endif
@@ -182,7 +185,7 @@ namespace VulkanRenderer
 	{
 		// Security checks
 		#ifndef VULKANRENDERER_NO_DEBUG
-			detail::checkSamplerState(mRootSignature, samplerRootParameterIndex);
+			detail::checkSamplerState(static_cast<VulkanRenderer&>(getRenderer()), mRootSignature, samplerRootParameterIndex);
 		#endif
 
 		// Set sampler state

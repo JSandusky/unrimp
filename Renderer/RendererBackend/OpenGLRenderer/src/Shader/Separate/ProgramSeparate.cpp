@@ -32,6 +32,8 @@
 #include "OpenGLRenderer/RootSignature.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
 
+#include <Renderer/ILog.h>
+
 
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]
@@ -184,7 +186,7 @@ namespace OpenGLRenderer
 					// TODO(co) For now, we only support a single descriptor range
 					if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
 					{
-						RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: Only a single descriptor range is supported")
+						RENDERER_LOG(openGLRenderer.getContext(), CRITICAL, "Only a single descriptor range is supported by the OpenGL renderer backend")
 					}
 					else
 					{
@@ -268,25 +270,24 @@ namespace OpenGLRenderer
 		else
 		{
 			// Error, program pipeline validation failed!
-			#ifdef RENDERER_OUTPUT_DEBUG
-				// Get the length of the information (including a null termination)
-				GLint informationLength = 0;
-				glGetProgramPipelineiv(mOpenGLProgramPipeline, GL_INFO_LOG_LENGTH, &informationLength);
-				if (informationLength > 1)
-				{
-					// Allocate memory for the information
-					char* informationLog = new char[static_cast<uint32_t>(informationLength)];
 
-					// Get the information
-					glGetProgramPipelineInfoLog(mOpenGLProgramPipeline, informationLength, nullptr, informationLog);
+			// Get the length of the information (including a null termination)
+			GLint informationLength = 0;
+			glGetProgramPipelineiv(mOpenGLProgramPipeline, GL_INFO_LOG_LENGTH, &informationLength);
+			if (informationLength > 1)
+			{
+				// Allocate memory for the information
+				char* informationLog = new char[static_cast<uint32_t>(informationLength)];
 
-					// Output the debug string
-					RENDERER_OUTPUT_DEBUG_STRING(informationLog)
+				// Get the information
+				glGetProgramPipelineInfoLog(mOpenGLProgramPipeline, informationLength, nullptr, informationLog);
 
-					// Cleanup information memory
-					delete [] informationLog;
-				}
-			#endif
+				// Output the debug string
+				RENDERER_LOG(openGLRenderer.getContext(), CRITICAL, informationLog)
+
+				// Cleanup information memory
+				delete [] informationLog;
+			}
 		}
 
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP

@@ -35,6 +35,7 @@
 //[-------------------------------------------------------]
 namespace OpenGLES3Renderer
 {
+	class OpenGLES3Renderer;
 	class ExtensionsRuntimeLinking;
 }
 
@@ -82,12 +83,14 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Constructor
 		*
+		*  @param[in] openGLES3Renderer
+		*    Owner OpenGL ES 3 renderer instance
 		*  @param[in] nativeWindowHandle
 		*    Handle of a native OS window which is valid as long as the renderer instance exists, "NULL_HANDLE" if there's no such window
 		*  @param[in] useExternalContext
 		*    When true an own OpenGL ES context won't be created
 		*/
-		OpenGLES3ContextRuntimeLinking(handle nativeWindowHandle, bool useExternalContext);
+		OpenGLES3ContextRuntimeLinking(OpenGLES3Renderer& openGLES3Renderer, handle nativeWindowHandle, bool useExternalContext);
 
 		/**
 		*  @brief
@@ -115,6 +118,9 @@ namespace OpenGLES3Renderer
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
+		explicit OpenGLES3ContextRuntimeLinking(const OpenGLES3ContextRuntimeLinking& source) = delete;
+		OpenGLES3ContextRuntimeLinking& operator =(const OpenGLES3ContextRuntimeLinking& source) = delete;
+
 		/**
 		*  @brief
 		*    Loads the shared libraries
@@ -153,6 +159,7 @@ namespace OpenGLES3Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		OpenGLES3Renderer&		  mOpenGLES3Renderer;		///< Owner OpenGL ES 3 renderer instance
 		void*					  mEGLSharedLibrary;		///< EGL shared library, can be a null pointer
 		void*					  mGLESSharedLibrary;		///< OpenGL ES 3 shared library, can be a null pointer
 		bool					  mEntryPointsRegistered;	///< Entry points successfully registered?

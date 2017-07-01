@@ -27,6 +27,8 @@
 #include "Direct3D12Renderer/Mapping.h"
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
 
+#include <Renderer/ILog.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -49,7 +51,7 @@ namespace Direct3D12Renderer
 		// TODO(co) Check this, there's "DXGI_FORMAT_R8_UINT" which might work in Direct3D 12
 		if (Renderer::IndexBufferFormat::UNSIGNED_CHAR == indexBufferFormat)
 		{
-			RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: \"Renderer::IndexBufferFormat::UNSIGNED_CHAR\" is not supported by Direct3D 12")
+			RENDERER_LOG(direct3D12Renderer.getContext(), CRITICAL, "\"Renderer::IndexBufferFormat::UNSIGNED_CHAR\" is not supported by Direct3D 12")
 			mD3D12IndexBufferView.BufferLocation = 0;
 			mD3D12IndexBufferView.SizeInBytes	 = 0;
 			mD3D12IndexBufferView.Format		 = DXGI_FORMAT_UNKNOWN;
@@ -87,7 +89,7 @@ namespace Direct3D12Renderer
 					}
 					else
 					{
-						RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to map index buffer")
+						RENDERER_LOG(direct3D12Renderer.getContext(), CRITICAL, "Failed to map Direct3D 12 index buffer")
 					}
 				}
 
@@ -98,7 +100,7 @@ namespace Direct3D12Renderer
 			}
 			else
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create index buffer resource")
+				RENDERER_LOG(direct3D12Renderer.getContext(), CRITICAL, "Failed to create Direct3D 12 index buffer resource")
 				mD3D12IndexBufferView.BufferLocation = 0;
 				mD3D12IndexBufferView.SizeInBytes	 = 0;
 				mD3D12IndexBufferView.Format		 = DXGI_FORMAT_UNKNOWN;

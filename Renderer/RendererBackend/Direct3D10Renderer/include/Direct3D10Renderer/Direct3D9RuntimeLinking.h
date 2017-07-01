@@ -31,6 +31,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace Direct3D10Renderer
+{
+	class Direct3D10Renderer;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace Direct3D10Renderer
@@ -54,9 +63,12 @@ namespace Direct3D10Renderer
 	public:
 		/**
 		*  @brief
-		*    Default constructor
+		*    Constructor
+		*
+		*  @param[in] direct3D10Renderer
+		*    Owner Direct3D 10 renderer instance
 		*/
-		Direct3D9RuntimeLinking();
+		explicit Direct3D9RuntimeLinking(Direct3D10Renderer& direct3D10Renderer);
 
 		/**
 		*  @brief
@@ -78,6 +90,9 @@ namespace Direct3D10Renderer
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
+		explicit Direct3D9RuntimeLinking(const Direct3D9RuntimeLinking& source) = delete;
+		Direct3D9RuntimeLinking& operator =(const Direct3D9RuntimeLinking& source) = delete;
+
 		/**
 		*  @brief
 		*    Load the shared library
@@ -101,9 +116,10 @@ namespace Direct3D10Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		void* mD3D9SharedLibrary;		///< D3D9 shared library, can be a null pointer
-		bool  mEntryPointsRegistered;	///< Entry points successfully registered?
-		bool  mInitialized;				///< Already initialized?
+		Direct3D10Renderer&	mDirect3D10Renderer;	///< Owner Direct3D 10 renderer instance
+		void*				mD3D9SharedLibrary;		///< D3D9 shared library, can be a null pointer
+		bool				mEntryPointsRegistered;	///< Entry points successfully registered?
+		bool				mInitialized;			///< Already initialized?
 
 
 	};

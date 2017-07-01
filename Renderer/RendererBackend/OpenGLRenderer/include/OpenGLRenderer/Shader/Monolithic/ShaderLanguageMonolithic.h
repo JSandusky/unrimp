@@ -74,6 +74,8 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Creates, loads and compiles a shader from source code
 		*
+		*  @param[in] openGLRenderer
+		*    Owner OpenGL renderer instance
 		*  @param[in] shaderType
 		*    Shader type (for example "GL_VERTEX_SHADER_ARB", type GLenum not used in here in order to keep the header slim)
 		*  @param[in] shaderSource
@@ -82,7 +84,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    The OpenGL shader, 0 on error, destroy the resource if you no longer need it (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		static uint32_t loadShaderFromSourcecode(uint32_t shaderType, const char* shaderSource);
+		static uint32_t loadShaderFromSourcecode(OpenGLRenderer& openGLRenderer, uint32_t shaderType, const char* shaderSource);
 
 
 	//[-------------------------------------------------------]

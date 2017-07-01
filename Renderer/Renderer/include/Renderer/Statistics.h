@@ -33,6 +33,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace Renderer
+{
+	class Context;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace Renderer
@@ -146,11 +155,14 @@ namespace Renderer
 		*  @brief
 		*    Use debug output to show the current number of resource instances
 		*
+		*  @param[in] context
+		*    The renderer context to use
+		*
 		*  @note
 		*    - Primarily for debugging
 		*    - Not for the public "Renderer.h"-interface
 		*/
-		inline void debugOutputCurrentResouces() const;
+		inline void debugOutputCurrentResouces(const Context& context) const;
 
 
 	//[-------------------------------------------------------]

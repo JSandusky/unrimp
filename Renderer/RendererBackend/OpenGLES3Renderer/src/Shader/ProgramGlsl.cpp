@@ -28,6 +28,7 @@
 #include "OpenGLES3Renderer/RootSignature.h"
 #include "OpenGLES3Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 3 functions
 
+#include <Renderer/ILog.h>
 #include <Renderer/Buffer/VertexArrayTypes.h>
 
 
@@ -105,7 +106,7 @@ namespace OpenGLES3Renderer
 						// TODO(co) For now, we only support a single descriptor range
 						if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
 						{
-							RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Only a single descriptor range is supported")
+							RENDERER_LOG(openGLES3Renderer.getContext(), CRITICAL, "Only a single descriptor range is supported by the OpenGL ES 3 renderer backend")
 						}
 						else
 						{
@@ -187,26 +188,23 @@ namespace OpenGLES3Renderer
 		}
 		else
 		{
-			// Error, program link failed!
-			#ifdef RENDERER_OUTPUT_DEBUG
-				// Get the length of the information (including a null termination)
-				GLint informationLength = 0;
-				glGetProgramiv(mOpenGLES3Program, GL_INFO_LOG_LENGTH, &informationLength);
-				if (informationLength > 1)
-				{
-					// Allocate memory for the information
-					char* informationLog = new char[static_cast<uint32_t>(informationLength)];
+			// Get the length of the information (including a null termination)
+			GLint informationLength = 0;
+			glGetProgramiv(mOpenGLES3Program, GL_INFO_LOG_LENGTH, &informationLength);
+			if (informationLength > 1)
+			{
+				// Allocate memory for the information
+				char* informationLog = new char[static_cast<uint32_t>(informationLength)];
 
-					// Get the information
-					glGetProgramInfoLog(mOpenGLES3Program, informationLength, nullptr, informationLog);
+				// Get the information
+				glGetProgramInfoLog(mOpenGLES3Program, informationLength, nullptr, informationLog);
 
-					// Output the debug string
-					RENDERER_OUTPUT_DEBUG_STRING(informationLog)
+				// Output the debug string
+				RENDERER_LOG(openGLES3Renderer.getContext(), CRITICAL, informationLog)
 
-					// Cleanup information memory
-					delete [] informationLog;
-				}
-			#endif
+				// Cleanup information memory
+				delete [] informationLog;
+			}
 		}
 	}
 

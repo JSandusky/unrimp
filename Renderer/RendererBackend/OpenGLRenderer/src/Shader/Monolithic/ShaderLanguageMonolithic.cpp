@@ -32,6 +32,8 @@
 #include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
 
+#include <Renderer/ILog.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -49,7 +51,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	uint32_t ShaderLanguageMonolithic::loadShaderFromSourcecode(uint32_t shaderType, const char* sourceCode)
+	uint32_t ShaderLanguageMonolithic::loadShaderFromSourcecode(OpenGLRenderer& openGLRenderer, uint32_t shaderType, const char* sourceCode)
 	{
 		// Create the shader object
 		const GLuint openGLShader = glCreateShaderObjectARB(shaderType);
@@ -71,8 +73,8 @@ namespace OpenGLRenderer
 		else
 		{
 			// Error, failed to compile the shader!
-			#ifdef RENDERER_OUTPUT_DEBUG
-				// Get the length of the information
+
+			{ // Get the length of the information
 				GLint informationLength = 0;
 				glGetObjectParameterivARB(openGLShader, GL_OBJECT_INFO_LOG_LENGTH_ARB, &informationLength);
 				if (informationLength > 1)
@@ -84,12 +86,12 @@ namespace OpenGLRenderer
 					glGetInfoLogARB(openGLShader, informationLength, nullptr, informationLog);
 
 					// Output the debug string
-					RENDERER_OUTPUT_DEBUG_STRING(informationLog)
+					RENDERER_LOG(openGLRenderer.getContext(), CRITICAL, informationLog)
 
 					// Cleanup information memory
 					delete [] informationLog;
 				}
-			#endif
+			}
 
 			// Destroy the shader
 			// -> A value of 0 for shader will be silently ignored

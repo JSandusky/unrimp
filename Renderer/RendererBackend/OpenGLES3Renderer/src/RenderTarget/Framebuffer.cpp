@@ -27,6 +27,8 @@
 #include "OpenGLES3Renderer/IOpenGLES3Context.h"	// We need to include this header, else the linker won't find our defined OpenGL ES 3 functions
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
+#include <Renderer/ILog.h>
+
 #include <climits> // For UINT_MAX
 
 
@@ -90,7 +92,7 @@ namespace OpenGLES3Renderer
 						if (&openGLES3Renderer != &(*colorTexture)->getRenderer())
 						{
 							// Output an error message and keep on going in order to keep a reasonable behaviour even in case on an error
-							RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 3 error: The given color texture at index %d is owned by another renderer instance", colorTexture - mColorTextures)
+							RENDERER_LOG(openGLES3Renderer.getContext(), CRITICAL, "OpenGL ES 3 error: The given color texture at index %d is owned by another renderer instance", colorTexture - mColorTextures)
 
 							// Continue, there's no point in trying to do any error handling in here
 							continue;
@@ -160,7 +162,7 @@ namespace OpenGLES3Renderer
 						case Renderer::ResourceType::GEOMETRY_SHADER:
 						case Renderer::ResourceType::FRAGMENT_SHADER:
 						default:
-							RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 3 error: The type of the given color texture at index %ld is not supported", colorTexture - mColorTextures)
+							RENDERER_LOG(openGLES3Renderer.getContext(), CRITICAL, "The type of the given color texture at index %ld is not supported by the OpenGL ES 3 renderer backend", colorTexture - mColorTextures)
 							break;
 					}
 				}
@@ -227,63 +229,61 @@ namespace OpenGLES3Renderer
 				case Renderer::ResourceType::GEOMETRY_SHADER:
 				case Renderer::ResourceType::FRAGMENT_SHADER:
 				default:
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: The type of the given depth stencil texture is not supported")
+					RENDERER_LOG(openGLES3Renderer.getContext(), CRITICAL, "The type of the given depth stencil texture is not supported by the OpenGL ES 3 renderer backend")
 					break;
 			}
 		}
 
-		#ifdef RENDERER_OUTPUT_DEBUG
-			// Check the status of the OpenGL ES 3 framebuffer
-			const GLenum openGLES3Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-			switch (openGLES3Status)
-			{
-				case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Not all framebuffer attachment points are framebuffer attachment complete (\"GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT\")")
-					break;
+		// Check the status of the OpenGL ES 3 framebuffer
+		const GLenum openGLES3Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+		switch (openGLES3Status)
+		{
+			case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+				RENDERER_LOG(openGLES3Renderer.getContext(), CRITICAL, "OpenGL ES 3 error: Not all framebuffer attachment points are framebuffer attachment complete (\"GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT\")")
+				break;
 
-				case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: No images are attached to the framebuffer (\"GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT\")")
-					break;
+			case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+				RENDERER_LOG(openGLES3Renderer.getContext(), CRITICAL, "OpenGL ES 3 error: No images are attached to the framebuffer (\"GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT\")")
+				break;
+
+		// Not supported by OpenGL ES 3
+		//	case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
+		//		RENDERER_LOG(openGLES3Renderer.getContext(), CRITICAL, "OpenGL ES 3 error: Incomplete draw buffer framebuffer (\"GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER\")")
+		//		break;
+
+		// Not supported by OpenGL ES 3
+		//	case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
+		//		RENDERER_LOG(openGLES3Renderer.getContext(), CRITICAL, "OpenGL ES 3 error: Incomplete read buffer framebuffer (\"GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER\")")
+		//		break;
+
+			case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
+				RENDERER_LOG(openGLES3Renderer.getContext(), CRITICAL, "OpenGL ES 3 error: Incomplete multisample framebuffer (\"GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE\")")
+				break;
+
+			case GL_FRAMEBUFFER_UNDEFINED:
+				RENDERER_LOG(openGLES3Renderer.getContext(), CRITICAL, "OpenGL ES 3 error: Undefined framebuffer (\"GL_FRAMEBUFFER_UNDEFINED\")")
+				break;
+
+			case GL_FRAMEBUFFER_UNSUPPORTED:
+				RENDERER_LOG(openGLES3Renderer.getContext(), CRITICAL, "OpenGL ES 3 error: The combination of internal formats of the attached images violates an implementation-dependent set of restrictions (\"GL_FRAMEBUFFER_UNSUPPORTED\")")
+				break;
 
 			// Not supported by OpenGL ES 3
-			//	case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
-			//		RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Incomplete draw buffer framebuffer (\"GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER\")")
-			//		break;
+			case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS:
+				RENDERER_LOG(openGLES3Renderer.getContext(), CRITICAL, "OpenGL ES 3 error: Not all attached images have the same width and height (\"GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS\")")
+				break;
 
 			// Not supported by OpenGL ES 3
-			//	case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
-			//		RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Incomplete read buffer framebuffer (\"GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER\")")
-			//		break;
+			// OpenGL: From "GL_EXT_framebuffer_object" (should no longer matter, should)
+		//	case GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT:
+		//		RENDERER_LOG(openGLES3Renderer.getContext(), CRITICAL, "OpenGL ES 3 error: Incomplete formats framebuffer object (\"GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT\")")
+		//		break;
 
-				case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Incomplete multisample framebuffer (\"GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE\")")
-					break;
-
-				case GL_FRAMEBUFFER_UNDEFINED:
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Undefined framebuffer (\"GL_FRAMEBUFFER_UNDEFINED\")")
-					break;
-
-				case GL_FRAMEBUFFER_UNSUPPORTED:
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: The combination of internal formats of the attached images violates an implementation-dependent set of restrictions (\"GL_FRAMEBUFFER_UNSUPPORTED\")")
-					break;
-
-				// Not supported by OpenGL ES 3
-				case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS:
-					RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Not all attached images have the same width and height (\"GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS\")")
-					break;
-
-				// Not supported by OpenGL ES 3
-				// OpenGL: From "GL_EXT_framebuffer_object" (should no longer matter, should)
-			//	case GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT:
-			//		RENDERER_OUTPUT_DEBUG_STRING("OpenGL ES 3 error: Incomplete formats framebuffer object (\"GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT\")")
-			//		break;
-
-				default:
-				case GL_FRAMEBUFFER_COMPLETE:
-					// Nothing here
-					break;
-			}
-		#endif
+			default:
+			case GL_FRAMEBUFFER_COMPLETE:
+				// Nothing here
+				break;
+		}
 
 		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Be polite and restore the previous bound OpenGL ES 3 framebuffer

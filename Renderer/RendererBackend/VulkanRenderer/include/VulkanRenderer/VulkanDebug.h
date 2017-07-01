@@ -40,7 +40,7 @@
 	#define VULKANRENDERER_RENDERERMATCHCHECK_RETURN(rendererReference, resourceReference) \
 		if (&rendererReference != &(resourceReference).getRenderer()) \
 		{ \
-			RENDERER_OUTPUT_DEBUG_STRING("Vulkan error: The given resource is owned by another renderer instance") \
+			RENDERER_LOG((rendererReference).getContext(), CRITICAL, "Vulkan error: The given resource is owned by another renderer instance") \
 			return; \
 		}
 #endif

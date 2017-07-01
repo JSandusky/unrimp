@@ -165,28 +165,26 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
-		#ifdef RENDERER_OUTPUT_DEBUG
-			void printOpenGLShaderProgramInformationIntoLog(GLuint openGLObject)
+		void printOpenGLShaderProgramInformationIntoLog(GLuint openGLObject)
+		{
+			// Get the length of the information (including a null termination)
+			GLint informationLength = 0;
+			OpenGLRenderer::glGetObjectParameterivARB(openGLObject, GL_OBJECT_INFO_LOG_LENGTH_ARB, &informationLength);
+			if (informationLength > 1)
 			{
-				// Get the length of the information (including a null termination)
-				GLint informationLength = 0;
-				OpenGLRenderer::glGetObjectParameterivARB(openGLObject, GL_OBJECT_INFO_LOG_LENGTH_ARB, &informationLength);
-				if (informationLength > 1)
-				{
-					// Allocate memory for the information
-					char* informationLog = new char[static_cast<uint32_t>(informationLength)];
+				// Allocate memory for the information
+				char* informationLog = new char[static_cast<uint32_t>(informationLength)];
 
-					// Get the information
-					OpenGLRenderer::glGetInfoLogARB(openGLObject, informationLength, nullptr, informationLog);
+				// Get the information
+				OpenGLRenderer::glGetInfoLogARB(openGLObject, informationLength, nullptr, informationLog);
 
-					// Output the debug string
-					RENDERER_OUTPUT_DEBUG_STRING(informationLog)
+				// Output the debug string
+				RENDERER_OUTPUT_DEBUG_STRING(informationLog)
 
-					// Cleanup information memory
-					delete [] informationLog;
-				}
+				// Cleanup information memory
+				delete [] informationLog;
 			}
-		#endif
+		}
 
 
 //[-------------------------------------------------------]
@@ -262,9 +260,7 @@ namespace OpenGLRenderer
 			if (GL_TRUE != linked)
 			{
 				// Error, program link failed!
-				#ifdef RENDERER_OUTPUT_DEBUG
-					::detail::printOpenGLShaderProgramInformationIntoLog(openGLProgram);
-				#endif
+				::detail::printOpenGLShaderProgramInformationIntoLog(openGLProgram);
 			}
 
 			// Done
@@ -273,9 +269,7 @@ namespace OpenGLRenderer
 		else
 		{
 			// Error, failed to compile the shader!
-			#ifdef RENDERER_OUTPUT_DEBUG
-				::detail::printOpenGLShaderProgramInformationIntoLog(openGLShader);
-			#endif
+			::detail::printOpenGLShaderProgramInformationIntoLog(openGLShader);
 
 			// Destroy the OpenGL shader
 			// -> A value of 0 for shader will be silently ignored
@@ -302,9 +296,7 @@ namespace OpenGLRenderer
 		else
 		{
 			// Error, failed to compile the shader!
-			#ifdef RENDERER_OUTPUT_DEBUG
-				::detail::printOpenGLShaderProgramInformationIntoLog(openGLProgram);
-			#endif
+			::detail::printOpenGLShaderProgramInformationIntoLog(openGLProgram);
 
 			// Destroy the program
 			// -> A value of 0 for shader will be silently ignored

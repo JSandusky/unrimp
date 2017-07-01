@@ -26,6 +26,8 @@
 #include "Direct3D12Renderer/D3D12X.h"
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
 
+#include <Renderer/ILog.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -64,7 +66,7 @@ namespace Direct3D12Renderer
 		}
 		else
 		{
-			RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to create sampler state descriptor heap")
+			RENDERER_LOG(direct3D12Renderer.getContext(), CRITICAL, "Failed to create the Direct3D 12 sampler state descriptor heap")
 		}
 
 		// Assign a default name to the resource for debugging purposes
