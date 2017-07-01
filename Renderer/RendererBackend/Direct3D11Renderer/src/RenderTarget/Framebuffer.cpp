@@ -29,7 +29,7 @@
 #include "Direct3D11Renderer/Mapping.h"
 #include "Direct3D11Renderer/Direct3D11Renderer.h"
 
-#include <stdio.h>	// For "sprintf_s()"
+#include <Renderer/ILog.h>
 
 
 //[-------------------------------------------------------]
@@ -161,7 +161,7 @@ namespace Direct3D11Renderer
 						case Renderer::ResourceType::GEOMETRY_SHADER:
 						case Renderer::ResourceType::FRAGMENT_SHADER:
 						default:
-							RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 11 error: The type of the given color texture at index %d is not supported", colorTexture - mColorTextures)
+							RENDERER_LOG(direct3D11Renderer.getContext(), CRITICAL, "The type of the given color texture at index %d is not supported by the Direct3D 11 renderer backend", colorTexture - mColorTextures)
 							*d3d11RenderTargetView = nullptr;
 							break;
 					}
@@ -266,7 +266,7 @@ namespace Direct3D11Renderer
 				case Renderer::ResourceType::GEOMETRY_SHADER:
 				case Renderer::ResourceType::FRAGMENT_SHADER:
 				default:
-					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 11 error: The type of the given depth stencil texture is not supported")
+					RENDERER_LOG(direct3D11Renderer.getContext(), CRITICAL, "The type of the given depth stencil texture is not supported by the Direct3D 11 renderer backend")
 					break;
 			}
 		}

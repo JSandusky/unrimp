@@ -27,6 +27,8 @@
 #include "Direct3D10Renderer/Mapping.h"
 #include "Direct3D10Renderer/Direct3D10Renderer.h"
 
+#include <Renderer/ILog.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -46,7 +48,7 @@ namespace Direct3D10Renderer
 		// "Renderer::IndexBufferFormat::UNSIGNED_CHAR" is not supported by Direct3D 10
 		if (Renderer::IndexBufferFormat::UNSIGNED_CHAR == indexBufferFormat)
 		{
-			RENDERER_OUTPUT_DEBUG_STRING("Direct3D 10 error: \"Renderer::IndexBufferFormat::UnsignedChar\" is not supported by Direct3D 10")
+			RENDERER_LOG(direct3D10Renderer.getContext(), CRITICAL, "\"Renderer::IndexBufferFormat::UNSIGNED_CHAR\" is not supported by Direct3D 10")
 		}
 		else
 		{

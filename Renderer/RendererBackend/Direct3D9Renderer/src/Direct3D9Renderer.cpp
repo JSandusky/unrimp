@@ -45,6 +45,7 @@
 #include "Direct3D9Renderer/Shader/ShaderLanguageHlsl.h"
 #include "Direct3D9Renderer/Shader/FragmentShaderHlsl.h"
 
+#include <Renderer/ILog.h>
 #include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
 
@@ -365,12 +366,12 @@ namespace Direct3D9Renderer
 				}
 				else
 				{
-					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Failed to create device instance")
+					RENDERER_LOG(mContext, CRITICAL, "Failed to create the Direct3D 9 device instance")
 				}
 			}
 			else
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Failed to create Direct3D 9 instance")
+				RENDERER_LOG(mContext, CRITICAL, "Failed to create the Direct3D 9 instance")
 			}
 
 			// End debug event
@@ -416,11 +417,11 @@ namespace Direct3D9Renderer
 				// Error!
 				if (numberOfCurrentResources > 1)
 				{
-					RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 9 error: Renderer is going to be destroyed, but there are still %d resource instances left (memory leak)\n", numberOfCurrentResources)
+					RENDERER_LOG(mContext, CRITICAL, "The Direct3D 9 renderer backend is going to be destroyed, but there are still %d resource instances left (memory leak)", numberOfCurrentResources)
 				}
 				else
 				{
-					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Renderer is going to be destroyed, but there is still one resource instance left (memory leak)\n")
+					RENDERER_LOG(mContext, CRITICAL, "The Direct3D 9 renderer backend is going to be destroyed, but there is still one resource instance left (memory leak)")
 				}
 
 				// Use debug output to show the current number of resource instances
@@ -487,31 +488,31 @@ namespace Direct3D9Renderer
 		{
 			if (nullptr == mGraphicsRootSignature)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: No graphics root signature set")
+				RENDERER_LOG(mContext, CRITICAL, "No Direct3D 9 renderer backend graphics root signature set")
 				return;
 			}
 			const Renderer::RootSignature& rootSignature = mGraphicsRootSignature->getRootSignature();
 			if (rootParameterIndex >= rootSignature.numberOfParameters)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Root parameter index is out of bounds")
+				RENDERER_LOG(mContext, CRITICAL, "The Direct3D 9 renderer backend root parameter index is out of bounds")
 				return;
 			}
 			const Renderer::RootParameter& rootParameter = rootSignature.parameters[rootParameterIndex];
 			if (Renderer::RootParameterType::DESCRIPTOR_TABLE != rootParameter.parameterType)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Root parameter index doesn't reference a descriptor table")
+				RENDERER_LOG(mContext, CRITICAL, "The Direct3D 9 renderer backend root parameter index doesn't reference a descriptor table")
 				return;
 			}
 
 			// TODO(co) For now, we only support a single descriptor range
 			if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Only a single descriptor range is supported")
+				RENDERER_LOG(mContext, CRITICAL, "Only a single descriptor range is supported by the Direct3D 9 renderer backend")
 				return;
 			}
 			if (nullptr == reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges))
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Descriptor ranges is a null pointer")
+				RENDERER_LOG(mContext, CRITICAL, "The Direct3D 9 renderer backend descriptor ranges is a null pointer")
 				return;
 			}
 		}
@@ -531,7 +532,7 @@ namespace Direct3D9Renderer
 			switch (resource->getResourceType())
 			{
 				case Renderer::ResourceType::TEXTURE_BUFFER:
-					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Direct3D 9 has no texture buffer support")
+					RENDERER_LOG(mContext, CRITICAL, "Direct3D 9 has no texture buffer support")
 					break;
 
 				case Renderer::ResourceType::TEXTURE_1D:
@@ -555,7 +556,7 @@ namespace Direct3D9Renderer
 							break;
 
 						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Direct3D 9 has no 2D array textures support")
+							RENDERER_LOG(mContext, CRITICAL, "Direct3D 9 has no 2D array textures support")
 							break;
 
 						case Renderer::ResourceType::TEXTURE_3D:
@@ -642,15 +643,15 @@ namespace Direct3D9Renderer
 							break;
 
 						case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
-							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Direct3D 9 has no tessellation control shader support (hull shader in Direct3D terminology)")
+							RENDERER_LOG(mContext, CRITICAL, "Direct3D 9 has no tessellation control shader support (hull shader in Direct3D terminology)")
 							break;
 
 						case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
-							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Direct3D 9 has no tessellation evaluation shader support (domain shader in Direct3D terminology)")
+							RENDERER_LOG(mContext, CRITICAL, "Direct3D 9 has no tessellation evaluation shader support (domain shader in Direct3D terminology)")
 							break;
 
 						case Renderer::ShaderVisibility::GEOMETRY:
-							RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Direct3D 9 has no geometry shader support")
+							RENDERER_LOG(mContext, CRITICAL, "Direct3D 9 has no geometry shader support")
 							break;
 
 						case Renderer::ShaderVisibility::FRAGMENT:
@@ -692,7 +693,7 @@ namespace Direct3D9Renderer
 				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
 				case Renderer::ResourceType::GEOMETRY_SHADER:
 				case Renderer::ResourceType::FRAGMENT_SHADER:
-					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Invalid resource type")
+					RENDERER_LOG(mContext, CRITICAL, "Invalid Direct3D 9 renderer backend resource type")
 					break;
 			}
 		}
@@ -777,7 +778,7 @@ namespace Direct3D9Renderer
 		#ifndef RENDERER_NO_DEBUG
 			if (numberOfViewports > 1)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Direct3D 9 supports only one viewport")
+				RENDERER_LOG(mContext, CRITICAL, "Direct3D 9 supports only one viewport")
 			}
 		#endif
 			const D3DVIEWPORT9 direct3D9Viewport =
@@ -804,7 +805,7 @@ namespace Direct3D9Renderer
 		#ifndef RENDERER_NO_DEBUG
 			if (numberOfScissorRectangles > 1)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Direct3D 9 supports only one scissor rectangle")
+				RENDERER_LOG(mContext, CRITICAL, "Direct3D 9 supports only one scissor rectangle")
 			}
 		#endif
 			mDirect3DDevice9->SetScissorRect(reinterpret_cast<const RECT*>(scissorRectangles));
@@ -967,7 +968,7 @@ namespace Direct3D9Renderer
 		#ifndef RENDERER_NO_DEBUG
 			if (normalizedColor[0] != color[0] || normalizedColor[1] != color[1] || normalizedColor[2] != color[2] || normalizedColor[3] != color[3])
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 warning: The given clear color was clamped to [0, 1] because Direct3D 9 does not support values outside this range")
+				RENDERER_LOG(mContext, CRITICAL, "The given clear color was clamped to [0, 1] because Direct3D 9 does not support values outside this range")
 			}
 		#endif
 
@@ -1439,7 +1440,7 @@ namespace Direct3D9Renderer
 
 			case Renderer::ResourceType::TEXTURE_1D:
 				// TODO(co) Implement Direct3D 9 1D texture
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: 1D texture not implemented, yet")
+				RENDERER_LOG(mContext, CRITICAL, "The 1D texture support is not yet implemented inside the Direct3D 9 renderer backend")
 				return false;
 
 			case Renderer::ResourceType::TEXTURE_2D:
@@ -1531,12 +1532,12 @@ namespace Direct3D9Renderer
 
 			case Renderer::ResourceType::TEXTURE_3D:
 				// TODO(co) Implement Direct3D 9 3D texture
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: 3D texture not implemented, yet")
+				RENDERER_LOG(mContext, CRITICAL, "The 3D texture support is not yet implemented inside the Direct3D 9 renderer backend")
 				return false;
 
 			case Renderer::ResourceType::TEXTURE_CUBE:
 				// TODO(co) Implement Direct3D 9 cube texture
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Cube texture not implemented, yet")
+				RENDERER_LOG(mContext, CRITICAL, "The cube texture support is not yet implemented inside the Direct3D 9 renderer backend")
 				return false;
 
 			case Renderer::ResourceType::ROOT_SIGNATURE:
@@ -1584,7 +1585,7 @@ namespace Direct3D9Renderer
 
 			case Renderer::ResourceType::TEXTURE_1D:
 				// TODO(co) Implement Direct3D 9 1D texture
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: 1D texture not implemented, yet")
+				RENDERER_LOG(mContext, CRITICAL, "The 1D texture support is not yet implemented inside the Direct3D 9 renderer backend")
 				break;
 
 			case Renderer::ResourceType::TEXTURE_2D:
@@ -1593,12 +1594,12 @@ namespace Direct3D9Renderer
 
 			case Renderer::ResourceType::TEXTURE_3D:
 				// TODO(co) Implement Direct3D 9 3D texture
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: 3D texture not implemented, yet")
+				RENDERER_LOG(mContext, CRITICAL, "The 3D texture support is not yet implemented inside the Direct3D 9 renderer backend")
 				break;
 
 			case Renderer::ResourceType::TEXTURE_CUBE:
 				// TODO(co) Implement Direct3D 9 cube texture
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: Cube texture not implemented, yet")
+				RENDERER_LOG(mContext, CRITICAL, "The cube texture support is not yet implemented inside the Direct3D 9 renderer backend")
 				break;
 
 			case Renderer::ResourceType::ROOT_SIGNATURE:

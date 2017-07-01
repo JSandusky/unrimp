@@ -26,6 +26,8 @@
 #include "Direct3D9Renderer/Mapping.h"
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
 
+#include <Renderer/ILog.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -70,7 +72,7 @@ namespace Direct3D9Renderer
 			#ifndef RENDERER_NO_DEBUG
 				if (normalizedColor[0] != samplerState.borderColor[0] || normalizedColor[1] != samplerState.borderColor[1] || normalizedColor[2] != samplerState.borderColor[2] || normalizedColor[3] != samplerState.borderColor[3])
 				{
-					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 warning: The given border color was clamped to [0, 1] because Direct3D 9 does not support values outside this range")
+					RENDERER_LOG(direct3D9Renderer.getContext(), CRITICAL, "The given border color was clamped to [0, 1] because Direct3D 9 does not support values outside this range")
 				}
 			#endif
 			mDirect3DBorderColor = D3DCOLOR_COLORVALUE(normalizedColor[0], normalizedColor[1], normalizedColor[2], normalizedColor[3]);

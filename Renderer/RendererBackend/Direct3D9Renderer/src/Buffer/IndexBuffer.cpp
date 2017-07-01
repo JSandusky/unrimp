@@ -27,6 +27,8 @@
 #include "Direct3D9Renderer/Mapping.h"
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
 
+#include <Renderer/ILog.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -45,7 +47,7 @@ namespace Direct3D9Renderer
 		// "Renderer::IndexBufferFormat::UNSIGNED_CHAR" is not supported by Direct3D 9
 		if (Renderer::IndexBufferFormat::UNSIGNED_CHAR == indexBufferFormat)
 		{
-			RENDERER_OUTPUT_DEBUG_STRING("Direct3D 9 error: \"Renderer::IndexBufferFormat::UNSIGNED_CHAR\" is not supported by Direct3D 9")
+			RENDERER_LOG(direct3D9Renderer.getContext(), CRITICAL, "\"Renderer::IndexBufferFormat::UNSIGNED_CHAR\" is not supported by Direct3D 9")
 		}
 		else
 		{
