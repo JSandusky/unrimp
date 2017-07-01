@@ -464,14 +464,20 @@ copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\CommandLineArguments.cpp" />
     <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
+    <None Include="src\CommandLineArguments.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\CommandLineArguments.h" />
     <ClInclude Include="src\Main.h" />
     <ClInclude Include="src\WindowsHeader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="CMakeLists.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

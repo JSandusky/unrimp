@@ -36,20 +36,19 @@
 //[-------------------------------------------------------]
 //[ Platform independent program entry point              ]
 //[-------------------------------------------------------]
-int programEntryPoint(CommandLineArguments& args)
+int programEntryPoint(CommandLineArguments& commandLineArguments)
 {
 	RendererRuntime::StdFileManager stdFileManager;
 	RendererToolkit::RendererToolkitInstance rendererToolkitInstance(stdFileManager);
 	RendererToolkit::IRendererToolkit* rendererToolkit = rendererToolkitInstance.getRendererToolkit();
 	if (nullptr != rendererToolkit)
 	{
-		// TODO(co) Experiments
 		RendererToolkit::IProject* project = rendererToolkit->createProject();
 		try
 		{
 			project->loadByFilename("../DataSource/Example.project");
 
-			if (args.empty())
+			if (commandLineArguments.getArguments().empty())
 			{
 				//	project->compileAllAssets("Direct3D9_30");
 					project->compileAllAssets("Direct3D11_50");
@@ -60,7 +59,7 @@ int programEntryPoint(CommandLineArguments& args)
 			else
 			{
 				// For now all given arguments are interpreted as render target
-				for (auto& renderTarget : args)
+				for (const std::string& renderTarget : commandLineArguments.getArguments())
 				{
 					std::cout << "Compile for target: " << renderTarget << '\n';
 					project->compileAllAssets(renderTarget.c_str());
@@ -70,7 +69,7 @@ int programEntryPoint(CommandLineArguments& args)
 		}
 		catch (const std::exception& e)
 		{
-			std::cout<<"Project compilation failed: "<<e.what()<<"\n";
+			std::cout << "Project compilation failed: " << e.what() << "\n";
 		}
 		delete project;
 	}

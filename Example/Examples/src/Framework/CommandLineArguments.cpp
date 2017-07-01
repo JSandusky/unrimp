@@ -22,38 +22,54 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "PrecompiledHeader.h"
-#include "Framework/Main.h"
-#include "ConsoleExampleRunner.h"
-#ifdef EXAMPLE_RUNNER_QT4
-	#include "Framework/QtRunner/ExampleRunnerQt4.h"
+#include "CommandLineArguments.h"
+#ifdef WIN32
+	#include "WindowsHeader.h"
+	#ifdef UNICODE
+		#include "utf8/utf8.h"	// To convert utf16 strings to utf8
+	#else
+		#include <sstream>
+		#include <iterator>
+		#include <algorithm>
+	#endif
 #endif
 
 
 //[-------------------------------------------------------]
-//[ Global variables                                      ]
+//[ Public methods                                        ]
 //[-------------------------------------------------------]
-#ifdef WIN32
-	extern "C"
-	{
-		// NVIDIA: Force usage of NVidia GPU in case there is an integrated graphics unit as well, if we don't do this we risk getting the integrated graphics unit and hence a horrible performance
-		// -> See "Enabling High Performance Graphics Rendering on Optimus Systems" http://developer.download.nvidia.com/devzone/devcenter/gamegraphics/files/OptimusRenderingPolicies.pdf
-		_declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
-
-		// AMD: Force usage of AMD GPU in case there is an integrated graphics unit as well, if we don't do this we risk getting the integrated graphics unit and hence a horrible performance
-		// -> Named "Dynamic Switchable Graphics", found no official documentation, only https://community.amd.com/message/1307599#comment-1307599 - "Can an OpenGL app default to the discrete GPU on an Enduro system?"
-		__declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
-	}
-#endif // WIN32
-
-
-//[-------------------------------------------------------]
-//[ Platform independent program entry point              ]
-//[-------------------------------------------------------]
-int programEntryPoint(CommandLineArguments& commandLineArguments)
+CommandLineArguments::CommandLineArguments()
 {
-#ifdef EXAMPLE_RUNNER_QT4
-	return ExampleRunnerQt4().run(commandLineArguments);
-#else
-	return ConsoleExampleRunner().run(commandLineArguments);
+#if WIN32
+	#ifdef UNICODE
+		int wargc = 0;
+		wchar_t** wargv = ::CommandLineToArgvW(GetCommandLineW(), &wargc);
+		if (wargc > 0)
+		{
+			// argv[0] is the path+name of the program
+			// -> Ignore it
+			mArguments.reserve(wargc - 1);
+			std::vector<std::wstring> lines(wargv + 1, wargv + wargc);
+			for (std::vector<std::wstring>::iterator iterator = lines.begin(); iterator != lines.end(); ++iterator)
+			{
+				std::string utf8line;
+				utf8::utf16to8((*iterator).begin(), (*iterator).end(), std::back_inserter(utf8line));
+				mArguments.push_back(utf8line);
+			}
+			
+		}
+		LocalFree(wargv);
+	#else
+		std::string cmdLine(::GetCommandLineA());
+		std::istringstream ss(cmdLine);
+		std::istream_iterator<std::string> iss(ss);
+
+		// The first token is the path+name of the program
+		// -> Ignore it
+		++iss;
+		std::copy(iss,
+			 std::istream_iterator<std::string>(),
+			 std::back_inserter<std::vector<std::string>>(mArguments));
+	#endif
 #endif
 }

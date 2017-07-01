@@ -33,7 +33,7 @@
 //[-------------------------------------------------------]
 //[ Platform independent program entry point              ]
 //[-------------------------------------------------------]
-int programEntryPoint(CommandLineArguments &args);
+int programEntryPoint(CommandLineArguments& commandLineArguments);
 
 
 //[-------------------------------------------------------]

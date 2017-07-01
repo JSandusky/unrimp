@@ -21,16 +21,15 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "PrecompiledHeader.h"
-#include "CmdLineArgs.h"
+#include "CommandLineArguments.h"
 #ifdef WIN32
-	#include "framework/WindowsHeader.h"
+	#include "WindowsHeader.h"
 	#ifdef UNICODE
-		#include "utf8/utf8.h" // to convert utf16 strings to utf8
+		#include "utf8/utf8.h"	// To convert utf16 strings to utf8
 	#else
 		#include <sstream>
-		#include <algorithm>
 		#include <iterator>
+		#include <algorithm>
 	#endif
 #endif
 
@@ -38,41 +37,38 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-CmdLineArgs::CmdLineArgs()
+CommandLineArguments::CommandLineArguments()
 {
 #if WIN32
 	#ifdef UNICODE
-		int wargc;
-		wchar_t** wargv = CommandLineToArgvW(GetCommandLineW(),&wargc);
-		if (wargc > 0) {			
+		int wargc = 0;
+		wchar_t** wargv = ::CommandLineToArgvW(GetCommandLineW(), &wargc);
+		if (wargc > 0)
+		{
 			// argv[0] is the path+name of the program
-			// -> ignore it
-			m_args.reserve(wargc-1);
-			std::vector<std::wstring> lines(wargv+1, wargv+wargc);
-			for(std::vector<std::wstring>::iterator wit = lines.begin(); wit != lines.end(); ++wit)
+			// -> Ignore it
+			mArguments.reserve(wargc - 1);
+			std::vector<std::wstring> lines(wargv + 1, wargv + wargc);
+			for (std::vector<std::wstring>::iterator iterator = lines.begin(); iterator != lines.end(); ++iterator)
 			{
-				std::string utf8line; 
-				utf8::utf16to8((*wit).begin(), (*wit).end(), std::back_inserter(utf8line));
-				m_args.push_back(utf8line);
+				std::string utf8line;
+				utf8::utf16to8((*iterator).begin(), (*iterator).end(), std::back_inserter(utf8line));
+				mArguments.push_back(utf8line);
 			}
 			
 		}
 		LocalFree(wargv);
 	#else
-		std::string cmdLine(GetCommandLineA());
+		std::string cmdLine(::GetCommandLineA());
 		std::istringstream ss(cmdLine);
 		std::istream_iterator<std::string> iss(ss);
-		// the first token is the path+name of the program
-		// -> ignore it
-		iss++;
+
+		// The first token is the path+name of the program
+		// -> Ignore it
+		++iss;
 		std::copy(iss,
 			 std::istream_iterator<std::string>(),
-			 std::back_inserter<std::vector<std::string> >(m_args));
+			 std::back_inserter<std::vector<std::string>>(mArguments));
 	#endif
 #endif
-}
-
-CmdLineArgs::CmdLineArgs(int argc, char** argv)
-	: m_args(argv+1, argv+argc)
-{
 }

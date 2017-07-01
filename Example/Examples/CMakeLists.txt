@@ -92,7 +92,7 @@ set(SOURCE_CODES
 	src/Basics/VertexBuffer/VertexBuffer.cpp
 	src/ConsoleExampleRunner.cpp
 	src/ExampleRunner.cpp
-	src/Framework/CmdLineArgs.cpp
+	src/Framework/CommandLineArguments.cpp
 	src/Framework/Color4.cpp
 	src/Framework/ExampleBase.cpp
 	src/Framework/IApplication.cpp

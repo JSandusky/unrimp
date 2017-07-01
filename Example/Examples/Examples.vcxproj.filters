@@ -123,9 +123,6 @@
     <ClInclude Include="src\Framework\LinuxHeader.h">
       <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="src\Framework\CmdLineArgs.h">
-      <Filter>Framework</Filter>
-    </ClInclude>
     <ClInclude Include="src\Framework\CLocaleChanger.h">
       <Filter>Framework</Filter>
     </ClInclude>
@@ -414,6 +411,9 @@
     <ClInclude Include="src\Advanced\FirstGpgpu\FirstGpgpu_GLSL_ES3.h">
       <Filter>Advanced\FirstGpgpu</Filter>
     </ClInclude>
+    <ClInclude Include="src\Framework\CommandLineArguments.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Framework\IApplication.cpp">
@@ -442,9 +442,6 @@
       <Filter>Framework</Filter>
     </ClCompile>
     <ClCompile Include="src\Framework\ApplicationImplLinux.cpp">
-      <Filter>Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Framework\CmdLineArgs.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
     <ClCompile Include="src\Basics\FirstGeometryShader\FirstGeometryShader.cpp">
@@ -537,6 +534,9 @@
     <ClCompile Include="src\Framework\QtRunner\ExampleRunnerQt4.cpp">
       <Filter>Framework\QtRunner</Filter>
     </ClCompile>
+    <ClCompile Include="src\Framework\CommandLineArguments.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\Framework\IApplication.inl">
@@ -566,6 +566,9 @@
       <Filter>Framework</Filter>
     </None>
     <None Include="src\Framework\IApplicationFrontend.inl">
+      <Filter>Framework</Filter>
+    </None>
+    <None Include="src\Framework\CommandLineArguments.inl">
       <Filter>Framework</Filter>
     </None>
   </ItemGroup>

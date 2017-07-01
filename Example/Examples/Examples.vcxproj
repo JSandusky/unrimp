@@ -524,8 +524,8 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
     <ClInclude Include="src\Framework\ApplicationImplLinux.h" />
     <ClInclude Include="src\Framework\ApplicationImplWindows.h" />
     <ClInclude Include="src\Framework\CLocaleChanger.h" />
-    <ClInclude Include="src\Framework\CmdLineArgs.h" />
     <ClInclude Include="src\Framework\Color4.h" />
+    <ClInclude Include="src\Framework\CommandLineArguments.h" />
     <ClInclude Include="src\Framework\ExampleBase.h" />
     <ClInclude Include="src\Framework\IApplication.h" />
     <ClInclude Include="src\Framework\IApplicationFrontend.h" />
@@ -591,8 +591,8 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="src\Framework\ApplicationImplWindows.cpp" />
-    <ClCompile Include="src\Framework\CmdLineArgs.cpp" />
     <ClCompile Include="src\Framework\Color4.cpp" />
+    <ClCompile Include="src\Framework\CommandLineArguments.cpp" />
     <ClCompile Include="src\Framework\ExampleBase.cpp" />
     <ClCompile Include="src\Framework\IApplication.cpp" />
     <ClCompile Include="src\Framework\IApplicationImpl.cpp" />
@@ -653,6 +653,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
     <None Include="CMakeLists.txt" />
     <None Include="Readme.txt" />
     <None Include="src\Framework\Color4.inl" />
+    <None Include="src\Framework\CommandLineArguments.inl" />
     <None Include="src\Framework\ExampleBase.inl" />
     <None Include="src\Framework\IApplication.inl" />
     <None Include="src\Framework\IApplicationFrontend.inl" />

@@ -27,13 +27,13 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Framework/CmdLineArgs.h"
+#include "Framework/CommandLineArguments.h"
 
 
 //[-------------------------------------------------------]
 //[ Platform independent program entry point              ]
 //[-------------------------------------------------------]
-int programEntryPoint(CmdLineArgs& args);
+int programEntryPoint(CommandLineArguments& commandLineArguments);
 
 
 //[-------------------------------------------------------]
@@ -59,7 +59,7 @@ int programEntryPoint(CmdLineArgs& args);
 				int result;
 				{
 					// Uses internally GetCommandline to fetch the command line arguments
-					CmdLineArgs arguments;
+					CommandLineArguments arguments;
 
 					// Call the platform independent program entry point
 					result = programEntryPoint(arguments);
@@ -91,7 +91,7 @@ int programEntryPoint(CmdLineArgs& args);
 				int result = 0;
 				{
 					// Uses internally GetCommandline to fetch the command line arguments
-					CmdLineArgs arguments;
+					CommandLineArguments arguments;
 
 					// Call the platform independent program entry point
 					result = programEntryPoint(arguments);
@@ -112,7 +112,7 @@ int programEntryPoint(CmdLineArgs& args);
 	#include "Framework/PlatformTypes.h"
 	int main(int argc, char** argv)
 	{
-		CmdLineArgs arguments(argc, argv);
+		CommandLineArguments arguments(argc, argv);
 
 		// Call the platform independent program entry point
 		return programEntryPoint(arguments);

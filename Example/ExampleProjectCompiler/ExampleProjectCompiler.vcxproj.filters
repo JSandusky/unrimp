@@ -2,12 +2,18 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\CommandLineArguments.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
+    <None Include="src\CommandLineArguments.inl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Main.h" />
     <ClInclude Include="src\WindowsHeader.h" />
+    <ClInclude Include="src\CommandLineArguments.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="CMakeLists.txt" />
   </ItemGroup>
 </Project>

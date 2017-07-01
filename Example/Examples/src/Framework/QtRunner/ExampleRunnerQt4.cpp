@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 #include "Framework/PlatformTypes.h"
 #include "Framework/QtRunner/ExampleRunnerQt4.h"
-#include "Framework/CmdLineArgs.h"
+#include "Framework/CommandLineArguments.h"
 #include "Framework/CLocaleChanger.h"
 
 #include <iostream>
@@ -52,7 +52,7 @@ void ExampleRunnerQt4::printUsage(const ExampleRunner::AvailableExamplesMap& kno
 		std::cout <<"\t"<< *it<< '\n';
 }
 
-int ExampleRunnerQt4::run(const CmdLineArgs& args)
+int ExampleRunnerQt4::run(const CommandLineArguments& commandLineArguments)
 {
 	int nu = 0;
 	QApplication app(nu, nullptr);
@@ -60,7 +60,7 @@ int ExampleRunnerQt4::run(const CmdLineArgs& args)
 	// activate the 'C' locale
 	CLocaleChanger cLocale;
 	
-	if(!parseArgs(args)) {
+	if(!parseArgs(commandLineArguments)) {
 		printUsage(m_availableExamples, m_availableRenderer);
 		return -1;
 	}
@@ -112,17 +112,17 @@ int ExampleRunnerQt4::run(const CmdLineArgs& args)
 	return result;
 }
 
-bool ExampleRunnerQt4::parseArgs(const CmdLineArgs &args) {
-	unsigned int length = args.GetCount();
+bool ExampleRunnerQt4::parseArgs(const CommandLineArguments& commandLineArguments) {
+	unsigned int length = commandLineArguments.getCount();
 	for(unsigned int i = 0; i < length; ++i) {
-		std::string arg = args.GetArg(i); 
+		std::string arg = commandLineArguments.getArgumentAtIndex(i);
 		if (arg != "-r") {
 			m_exampleName = arg;
 		}
 		else {
 			if (i+1 < length) {
 				++i;
-				m_rendererName = args.GetArg(i);
+				m_rendererName = commandLineArguments.getArgumentAtIndex(i);
 			}
 			else
 			{

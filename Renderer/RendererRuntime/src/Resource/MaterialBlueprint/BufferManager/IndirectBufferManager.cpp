@@ -38,7 +38,7 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global definitions                                    ]
 		//[-------------------------------------------------------]
-		static uint32_t DEFAULT_INDIRECT_BUFFER_NUMBER_OF_BYTES = 64 * 1024;		// 64 KiB
+		static uint32_t DEFAULT_INDIRECT_BUFFER_NUMBER_OF_BYTES = 64 * 1024;	// 64 KiB
 
 
 //[-------------------------------------------------------]

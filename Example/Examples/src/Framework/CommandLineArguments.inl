@@ -17,32 +17,27 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 \*********************************************************/
 
-#ifndef EXAMPLERUNNERQT_H
-#define EXAMPLERUNNERQT_H
-#pragma once
-
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
+//[ Public methods                                        ]
 //[-------------------------------------------------------]
-#include "Framework/ExampleRunner.h"
-
-class ExampleRunnerQt4 :  ExampleRunner
+inline CommandLineArguments::CommandLineArguments(int argc, char** argv) :
+	mArguments(argv + 1, argv + argc)
 {
-public:
-    virtual int run(const CommandLineArguments& commandLineArguments) override;
+	// Nothing here
+}
 
-protected:
-    virtual void showError(const std::string errorMsg) override;
-    virtual void printUsage(const ExampleRunner::AvailableExamplesMap& knownExamples, const ExampleRunner::AvailableRendererMap& availableRenderer) override;
+inline const CommandLineArguments::Arguments& CommandLineArguments::getArguments() const
+{
+	return mArguments;
+}
 
-private:
-	bool parseArgs(const CommandLineArguments& commandLineArguments);
+inline uint32_t CommandLineArguments::getCount() const
+{
+	return static_cast<uint32_t>(mArguments.size());
+}
 
-private:
-	std::string m_rendererName;
-	std::string m_exampleName;
-
-};
-
-#endif // EXAMPLERUNNERQT_H
+inline std::string CommandLineArguments::getArgumentAtIndex(uint32_t index) const
+{
+	return (index >= mArguments.size()) ? "" : mArguments[index];
+}

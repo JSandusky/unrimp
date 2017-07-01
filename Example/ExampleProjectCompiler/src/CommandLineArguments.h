@@ -18,9 +18,6 @@
 \*********************************************************/
 
 
-// TODO(co) "CmdLineArgs.h" sounds pretty cryptic, "CommandLineArguments.h" would be easier to pronounce
-
-
 //[-------------------------------------------------------]
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
@@ -41,8 +38,15 @@
 *  @brief
 *    Holds the command line arguments of an program (as UTF-8 strings)
 */
-class CmdLineArgs
+class CommandLineArguments
 {
+
+
+//[-------------------------------------------------------]
+//[ Public definitions                                    ]
+//[-------------------------------------------------------]
+public:
+	typedef std::vector<std::string> Arguments;
 
 
 //[-------------------------------------------------------]
@@ -51,25 +55,34 @@ class CmdLineArgs
 public:
 	/**
 	*  @brief
-	*    Constructor
+	*    Default constructor
 	*
-	*  @remarks
-	*    Uses GetCommandLineW under Windows to get the command line parameters for the program
+	*  @note
+	*    - Uses "GetCommandLineW" under MS Windows to get the command line parameters for the program
 	*/
-	CmdLineArgs();
+	CommandLineArguments();
 
 	/**
 	*  @brief
 	*    Constructor
 	*
 	*  @remarks
-	*    Reads the command line parameters via the parameters argc and argv
+	*    Reads the command line parameters via the parameters "argc" and "argv"
 	*  @param[in] argc
-	*    Count of arguments pointed by argv
+	*    Count of arguments pointed by "argv"
 	*  @param[in] argv
 	*    List of arguments
 	*/
-	CmdLineArgs(int argc, char** argv);
+	inline CommandLineArguments(int argc, char** argv);
+
+	/**
+	*  @brief
+	*    Return the arguments
+	*
+	*  @return
+	*    The arguments
+	*/
+	inline const Arguments& getArguments() const;
 
 	/**
 	*  @brief
@@ -78,10 +91,7 @@ public:
 	*  @return
 	*    The amount of arguments hold by this instance
 	*/
-	uint32_t GetCount() const
-	{
-		return static_cast<uint32_t>(m_args.size());
-	}
+	inline uint32_t getCount() const;
 
 	/**
 	*  @brief
@@ -93,17 +103,20 @@ public:
 	*  @return
 	*    The argument at the given index or an empty string when index is out of range
 	*/
-	std::string GetArg(uint32_t index) const
-	{
-		return (index >= m_args.size()) ? "" : m_args[index];
-	}
+	inline std::string getArgumentAtIndex(uint32_t index) const;
 
 
 //[-------------------------------------------------------]
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	std::vector<std::string> m_args; ///< List of arguments as UTF-8 strings
+	Arguments mArguments;	///< List of arguments as UTF-8 strings
 
 
 };
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "CommandLineArguments.inl"
