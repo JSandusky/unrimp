@@ -124,7 +124,7 @@ namespace
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-CubeRendererInstancedArrays::CubeRendererInstancedArrays(Renderer::IRenderer &renderer, uint32_t numberOfTextures, uint32_t sceneRadius) :
+CubeRendererInstancedArrays::CubeRendererInstancedArrays(Renderer::IRenderer& renderer, uint32_t numberOfTextures, uint32_t sceneRadius) :
 	mRenderer(&renderer),
 	mNumberOfTextures(numberOfTextures),
 	mSceneRadius(sceneRadius),

@@ -68,7 +68,7 @@ public:
 	*  @param[in] sceneRadius
 	*    Scene radius
 	*/
-	CubeRendererDrawInstanced(Renderer::IRenderer &renderer, uint32_t numberOfTextures, uint32_t sceneRadius);
+	CubeRendererDrawInstanced(Renderer::IRenderer& renderer, uint32_t numberOfTextures, uint32_t sceneRadius);
 
 	/**
 	*  @brief

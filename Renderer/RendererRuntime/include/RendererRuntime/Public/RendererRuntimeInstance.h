@@ -54,7 +54,7 @@
 	// This is needed to do here because the methods in the library are also defined in global namespace
 
 	// "createRendererRuntimeInstance()" signature
-	extern RendererRuntime::IRendererRuntime* createRendererRuntimeInstance(Renderer::IRenderer &renderer, RendererRuntime::IFileManager& fileManager);
+	extern RendererRuntime::IRendererRuntime* createRendererRuntimeInstance(Renderer::IRenderer& renderer, RendererRuntime::IFileManager& fileManager);
 #endif
 
 
@@ -106,7 +106,7 @@ namespace RendererRuntime
 						if (nullptr != symbol)
 						{
 							// "createRendererRuntimeInstance()" signature
-							typedef RendererRuntime::IRendererRuntime* (__cdecl *createRendererRuntimeInstance)(Renderer::IRenderer &renderer, RendererRuntime::IFileManager& fileManager);
+							typedef RendererRuntime::IRendererRuntime* (__cdecl *createRendererRuntimeInstance)(Renderer::IRenderer& renderer, RendererRuntime::IFileManager& fileManager);
 
 							// Create the renderer runtime instance
 							mRendererRuntime = static_cast<createRendererRuntimeInstance>(symbol)(renderer, fileManager);
@@ -138,7 +138,7 @@ namespace RendererRuntime
 						if (nullptr != symbol)
 						{
 							// "createRendererRuntimeInstance()" signature
-							typedef RendererRuntime::IRendererRuntime* (*createRendererRuntimeInstance)(Renderer::IRenderer &renderer, RendererRuntime::IFileManager& fileManager);
+							typedef RendererRuntime::IRendererRuntime* (*createRendererRuntimeInstance)(Renderer::IRenderer& renderer, RendererRuntime::IFileManager& fileManager);
 
 							// Create the renderer runtime instance
 							mRendererRuntime = reinterpret_cast<createRendererRuntimeInstance>(symbol)(renderer, fileManager);

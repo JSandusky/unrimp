@@ -80,7 +80,7 @@ namespace RendererRuntime
 		*  @note
 		*    - The renderer runtime keeps a reference to the provided renderer instance
 		*/
-		explicit RendererRuntimeImpl(Renderer::IRenderer &renderer, IFileManager& fileManager);
+		explicit RendererRuntimeImpl(Renderer::IRenderer& renderer, IFileManager& fileManager);
 
 		/**
 		*  @brief
