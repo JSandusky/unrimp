@@ -45,6 +45,9 @@
     <None Include="include\RendererToolkit\Project\IProject.inl">
       <Filter>Source Files\Project</Filter>
     </None>
+    <None Include="include\RendererToolkit\Context.inl">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererToolkit\RendererToolkitImpl.h">
@@ -178,6 +181,9 @@
     </ClInclude>
     <ClInclude Include="..\..\External\mikktspace\include\mikktspace\mikktspace.h">
       <Filter>External\mikktspace</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererToolkit\Context.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

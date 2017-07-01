@@ -48,12 +48,9 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-namespace RendererRuntime
-{
-	class IFileManager;
-}
 namespace RendererToolkit
 {
+	class Context;
 	class IRendererToolkit;
 }
 
@@ -66,7 +63,7 @@ namespace RendererToolkit
 	// This is needed to do here because the methods in the library are also defined in global namespace
 
 	// "createRendererToolkitInstance()" signature
-	extern RendererToolkit::IRendererToolkit* createRendererToolkitInstance(RendererRuntime::IFileManager& fileManager);
+	extern RendererToolkit::IRendererToolkit* createRendererToolkitInstance(RendererToolkit::Context& context);
 #endif
 
 
@@ -96,10 +93,10 @@ namespace RendererToolkit
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] fileManager
-		*    The file manager instance to use
+		*  @param[in] context
+		*    Renderer toolkit context, the renderer toolkit context instance must stay valid as long as the renderer toolkit instance exists
 		*/
-		RendererToolkitInstance(RendererRuntime::IFileManager& fileManager)
+		explicit RendererToolkitInstance(Context& context)
 		{
 			#ifdef SHARED_LIBRARIES
 				// Dynamically linked libraries
@@ -118,10 +115,10 @@ namespace RendererToolkit
 						if (nullptr != symbol)
 						{
 							// "createRendererToolkitInstance()" signature
-							typedef RendererToolkit::IRendererToolkit* (__cdecl *createRendererToolkitInstance)(RendererRuntime::IFileManager& fileManager);
+							typedef RendererToolkit::IRendererToolkit* (__cdecl *createRendererToolkitInstance)(Context& context);
 
 							// Create the renderer toolkit instance
-							mRendererToolkit = static_cast<createRendererToolkitInstance>(symbol)(fileManager);
+							mRendererToolkit = static_cast<createRendererToolkitInstance>(symbol)(context);
 						}
 						else
 						{
@@ -150,10 +147,10 @@ namespace RendererToolkit
 						if (nullptr != symbol)
 						{
 							// "createRendererToolkitInstance()" signature
-							typedef RendererToolkit::IRendererToolkit* (*createRendererToolkitInstance)(RendererRuntime::IFileManager& fileManager);
+							typedef RendererToolkit::IRendererToolkit* (*createRendererToolkitInstance)(Context& context);
 
 							// Create the renderer toolkit instance
-							mRendererToolkit = reinterpret_cast<createRendererToolkitInstance>(symbol)(fileManager);
+							mRendererToolkit = reinterpret_cast<createRendererToolkitInstance>(symbol)(context);
 						}
 						else
 						{
@@ -174,7 +171,7 @@ namespace RendererToolkit
 				// Statically linked libraries
 
 				// Create the renderer toolkit instance
-				mRendererToolkit = createRendererToolkitInstance(fileManager);
+				mRendererToolkit = createRendererToolkitInstance(context);
 			#endif
 		}
 

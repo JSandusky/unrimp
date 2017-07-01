@@ -24,9 +24,9 @@
 #include "OpenGLRenderer/RenderTarget/SwapChain.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
 #ifdef WIN32
-	#include "OpenGLRenderer/Windows/ContextWindows.h"
+	#include "OpenGLRenderer/Windows/OpenGLContextWindows.h"
 #elif defined LINUX
-	#include "OpenGLRenderer/Linux/ContextLinux.h"
+	#include "OpenGLRenderer/Linux/OpenGLContextLinux.h"
 	#include "OpenGLRenderer/OpenGLRuntimeLinking.h" // For "glxSwapBuffers()"
 #endif
 
@@ -48,13 +48,13 @@ namespace OpenGLRenderer
 		ISwapChain(openGLRenderer),
 		mNativeWindowHandle(nativeWindowHandle),
 		#ifdef WIN32
-			mContext(new ContextWindows(nativeWindowHandle, static_cast<const ContextWindows*>(&openGLRenderer.getContext()))),
+			mOpenGLContext(new OpenGLContextWindows(nativeWindowHandle, static_cast<const OpenGLContextWindows*>(&openGLRenderer.getOpenGLContext()))),
 		#elif defined LINUX
-			mContext(new ContextLinux(nativeWindowHandle, useExternalContext, static_cast<const ContextLinux*>(&openGLRenderer.getContext()))),
+			mOpenGLContext(new OpenGLContextLinux(nativeWindowHandle, useExternalContext, static_cast<const OpenGLContextLinux*>(&openGLRenderer.getOpenGLContext()))),
 		#else
 			#error "Unsupported platform"
 		#endif
-		mOwnsContext(true),
+		mOwnsOpenGLContext(true),
 		mRenderWindow(nullptr)
 	{
 		#ifdef WIN32
@@ -62,11 +62,11 @@ namespace OpenGLRenderer
 		#endif
 	}
 
-	SwapChain::SwapChain(OpenGLRenderer& openGLRenderer, handle nativeWindowHandle, IContext& context) :
+	SwapChain::SwapChain(OpenGLRenderer& openGLRenderer, handle nativeWindowHandle, IOpenGLContext& openGLContext) :
 		ISwapChain(openGLRenderer),
 		mNativeWindowHandle(nativeWindowHandle),
-		mContext(&context),
-		mOwnsContext(false),
+		mOpenGLContext(&openGLContext),
+		mOwnsOpenGLContext(false),
 		mRenderWindow(nullptr)
 	{
 		// Nothing here
@@ -74,9 +74,9 @@ namespace OpenGLRenderer
 
 	SwapChain::~SwapChain()
 	{
-		if (mOwnsContext)
+		if (mOwnsOpenGLContext)
 		{
-			delete mContext;
+			delete mOpenGLContext;
 		}
 	}
 
@@ -130,7 +130,7 @@ namespace OpenGLRenderer
 			if (NULL_HANDLE != mNativeWindowHandle)
 			{
 				OpenGLRenderer& openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
-				Display* display = static_cast<const ContextLinux&>(openGLRenderer.getContext()).getDisplay();
+				Display* display = static_cast<const OpenGLContextLinux&>(openGLRenderer.getOpenGLContext()).getDisplay();
 
 				// Get the width and height...
 				::Window rootWindow = 0;
@@ -185,7 +185,7 @@ namespace OpenGLRenderer
 			if (NULL_HANDLE != mNativeWindowHandle)
 			{
 				OpenGLRenderer& openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
-				glXSwapBuffers(static_cast<const ContextLinux&>(openGLRenderer.getContext()).getDisplay(), mNativeWindowHandle);
+				glXSwapBuffers(static_cast<const OpenGLContextLinux&>(openGLRenderer.getOpenGLContext()).getDisplay(), mNativeWindowHandle);
 			}
 		#else
 			#error "Unsupported platform"

@@ -83,7 +83,7 @@ namespace OpenGLES3Renderer
 		if (GL_TRUE == linked)
 		{
 			// Get draw ID uniform location
-			if (!openGLES3Renderer.getContext().getExtensions().isGL_EXT_base_instance())
+			if (!openGLES3Renderer.getOpenGLES3Context().getExtensions().isGL_EXT_base_instance())
 			{
 				mDrawIdUniformLocation = glGetUniformLocation(mOpenGLES3Program, "drawIdUniform");
 			}
@@ -96,7 +96,7 @@ namespace OpenGLES3Renderer
 			{
 				mRootSignatureParameterIndexToUniformLocation = new int32_t[numberOfParameters];
 				memset(mRootSignatureParameterIndexToUniformLocation, -1, sizeof(int32_t) * numberOfParameters);
-				const bool isGL_EXT_texture_buffer = openGLES3Renderer.getContext().getExtensions().isGL_EXT_texture_buffer();
+				const bool isGL_EXT_texture_buffer = openGLES3Renderer.getOpenGLES3Context().getExtensions().isGL_EXT_texture_buffer();
 				for (uint32_t parameterIndex = 0; parameterIndex < numberOfParameters; ++parameterIndex)
 				{
 					const Renderer::RootParameter& rootParameter = rootSignatureData.parameters[parameterIndex];

@@ -146,6 +146,35 @@ namespace Renderer
 		#endif
 	#endif
 
+	// Renderer/Context.h
+	#ifndef __RENDERER_RENDERER_CONTEXT_H__
+	#define __RENDERER_RENDERER_CONTEXT_H__
+		class Context
+		{
+		public:
+			inline Context(handle nativeWindowHandle = 0, bool useExternalContext = false) :
+				mNativeWindowHandle(nativeWindowHandle),
+				mUseExternalContext(useExternalContext)
+			{}
+			inline ~Context()
+			{}
+			inline handle getNativeWindowHandle() const
+			{
+				return mNativeWindowHandle;
+			}
+			inline bool isUsingExternalContext() const
+			{
+				return mUseExternalContext;
+			}
+		private:
+			explicit Context(const Context&) = delete;
+			Context& operator=(const Context&) = delete;
+		private:
+			handle mNativeWindowHandle;
+			bool   mUseExternalContext;
+		};
+	#endif
+
 	// Renderer/RendererTypes.h
 	#ifndef __RENDERER_RENDERER_TYPES_H__
 	#define __RENDERER_RENDERER_TYPES_H__
@@ -1818,6 +1847,10 @@ namespace Renderer
 		{
 		public:
 			virtual ~IRenderer();
+			inline const Context& getContext() const
+			{
+				return mContext;
+			}
 			inline const Capabilities& getCapabilities() const
 			{
 				return mCapabilities;
@@ -1851,11 +1884,14 @@ namespace Renderer
 			virtual void flush() = 0;
 			virtual void finish() = 0;
 		protected:
-			IRenderer();
+			explicit IRenderer(const Context& context) :
+				mContext(context)
+			{}
 			explicit IRenderer(const IRenderer& source) = delete;
 			IRenderer& operator =(const IRenderer& source) = delete;
 		protected:
-			Capabilities mCapabilities;
+			const Context& mContext;
+			Capabilities   mCapabilities;
 		#ifndef RENDERER_NO_STATISTICS
 			private:
 				Statistics mStatistics;

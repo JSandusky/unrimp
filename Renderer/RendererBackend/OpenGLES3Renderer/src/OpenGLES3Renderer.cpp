@@ -26,7 +26,7 @@
 #include "OpenGLES3Renderer/Mapping.h"
 #include "OpenGLES3Renderer/IExtensions.h"
 #include "OpenGLES3Renderer/RootSignature.h"
-#include "OpenGLES3Renderer/ContextRuntimeLinking.h"
+#include "OpenGLES3Renderer/OpenGLES3ContextRuntimeLinking.h"
 #include "OpenGLES3Renderer/RenderTarget/SwapChain.h"
 #include "OpenGLES3Renderer/RenderTarget/Framebuffer.h"
 #include "OpenGLES3Renderer/Buffer/BufferManager.h"
@@ -46,7 +46,7 @@
 #include "OpenGLES3Renderer/State/PipelineState.h"
 #include "OpenGLES3Renderer/Shader/ProgramGlsl.h"
 #include "OpenGLES3Renderer/Shader/ShaderLanguageGlsl.h"
-#include "OpenGLES3Renderer/ContextRuntimeLinking.h"
+#include "OpenGLES3Renderer/OpenGLES3ContextRuntimeLinking.h"
 
 #include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
@@ -63,9 +63,9 @@
 #else
 	#define OPENGLES3RENDERER_API_EXPORT
 #endif
-OPENGLES3RENDERER_API_EXPORT Renderer::IRenderer* createOpenGLES3RendererInstance(handle nativeWindowHandle, bool useExternalContext)
+OPENGLES3RENDERER_API_EXPORT Renderer::IRenderer* createOpenGLES3RendererInstance(const Renderer::Context& context)
 {
-	return new OpenGLES3Renderer::OpenGLES3Renderer(nativeWindowHandle, useExternalContext);
+	return new OpenGLES3Renderer::OpenGLES3Renderer(context);
 }
 #undef OPENGLES3RENDERER_API_EXPORT
 
@@ -340,8 +340,9 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	OpenGLES3Renderer::OpenGLES3Renderer(handle nativeWindowHandle, bool useExternalContext) :
-		mContext(new ContextRuntimeLinking(nativeWindowHandle, useExternalContext)),
+	OpenGLES3Renderer::OpenGLES3Renderer(const Renderer::Context& context) :
+		IRenderer(context),
+		mOpenGLES3Context(new OpenGLES3ContextRuntimeLinking(context.getNativeWindowHandle(), context.isUsingExternalContext())),
 		mShaderLanguageGlsl(nullptr),
 		mGraphicsRootSignature(nullptr),
 		mDefaultSamplerState(nullptr),
@@ -360,8 +361,8 @@ namespace OpenGLES3Renderer
 		mDrawIdUniformLocation(-1),
 		mCurrentStartInstanceLocation(~0u)
 	{
-		// Initialize the context
-		if (mContext->initialize(0))
+		// Initialize the OpenGL ES 3 context
+		if (mOpenGLES3Context->initialize(0))
 		{
 			// Initialize the capabilities
 			initializeCapabilities();
@@ -371,7 +372,7 @@ namespace OpenGLES3Renderer
 
 			#ifdef RENDERER_OUTPUT_DEBUG
 				// "GL_KHR_debug"-extension available?
-				if (mContext->getExtensions().isGL_KHR_debug())
+				if (mOpenGLES3Context->getExtensions().isGL_KHR_debug())
 				{
 					// Synchronous debug output, please
 					// -> Makes it easier to find the place causing the issue
@@ -393,6 +394,7 @@ namespace OpenGLES3Renderer
 			}
 
 			// Create a main swap chain instance?
+			const handle nativeWindowHandle = mContext.getNativeWindowHandle();
 			if (NULL_HANDLE != nativeWindowHandle)
 			{
 				// Create a main swap chain instance
@@ -476,8 +478,8 @@ namespace OpenGLES3Renderer
 			mShaderLanguageGlsl->releaseReference();
 		}
 
-		// Destroy the context instance
-		delete mContext;
+		// Destroy the OpenGL ES 3 context instance
+		delete mOpenGLES3Context;
 	}
 
 
@@ -562,7 +564,7 @@ namespace OpenGLES3Renderer
 				}
 
 				case Renderer::ResourceType::TEXTURE_BUFFER:
-					if (mContext->getExtensions().isGL_EXT_texture_buffer())
+					if (mOpenGLES3Context->getExtensions().isGL_EXT_texture_buffer())
 					{
 						// Fall through by intent
 					}
@@ -1146,10 +1148,10 @@ namespace OpenGLES3Renderer
 				updateGL_EXT_base_instanceEmulation(drawInstancedArguments.startInstanceLocation);
 
 				// Draw and advance
-				if (drawInstancedArguments.instanceCount > 1 || (drawInstancedArguments.startInstanceLocation > 0 && mContext->getExtensions().isGL_EXT_base_instance()))
+				if (drawInstancedArguments.instanceCount > 1 || (drawInstancedArguments.startInstanceLocation > 0 && mOpenGLES3Context->getExtensions().isGL_EXT_base_instance()))
 				{
 					// With instancing
-					if (drawInstancedArguments.startInstanceLocation > 0 && mContext->getExtensions().isGL_EXT_base_instance())
+					if (drawInstancedArguments.startInstanceLocation > 0 && mOpenGLES3Context->getExtensions().isGL_EXT_base_instance())
 					{
 						glDrawArraysInstancedBaseInstanceEXT(mOpenGLES3PrimitiveTopology, static_cast<GLint>(drawInstancedArguments.startVertexLocation), static_cast<GLsizei>(drawInstancedArguments.vertexCountPerInstance), static_cast<GLsizei>(drawInstancedArguments.instanceCount), drawInstancedArguments.startInstanceLocation);
 					}
@@ -1190,20 +1192,20 @@ namespace OpenGLES3Renderer
 					updateGL_EXT_base_instanceEmulation(drawIndexedInstancedArguments.startInstanceLocation);
 
 					// Draw and advance
-					if (drawIndexedInstancedArguments.instanceCount > 1 || (drawIndexedInstancedArguments.startInstanceLocation > 0 && mContext->getExtensions().isGL_EXT_base_instance()))
+					if (drawIndexedInstancedArguments.instanceCount > 1 || (drawIndexedInstancedArguments.startInstanceLocation > 0 && mOpenGLES3Context->getExtensions().isGL_EXT_base_instance()))
 					{
 						// With instancing
 						if (drawIndexedInstancedArguments.baseVertexLocation > 0)
 						{
 							// Use start instance location?
-							if (drawIndexedInstancedArguments.startInstanceLocation > 0 && mContext->getExtensions().isGL_EXT_base_instance())
+							if (drawIndexedInstancedArguments.startInstanceLocation > 0 && mOpenGLES3Context->getExtensions().isGL_EXT_base_instance())
 							{
 								// Draw with base vertex location and start instance location
 								glDrawElementsInstancedBaseVertexBaseInstanceEXT(mOpenGLES3PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES3Type(), reinterpret_cast<void*>(static_cast<uintptr_t>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes())), static_cast<GLsizei>(drawIndexedInstancedArguments.instanceCount), static_cast<GLint>(drawIndexedInstancedArguments.baseVertexLocation), drawIndexedInstancedArguments.startInstanceLocation);
 							}
 
 							// Is the "GL_EXT_draw_elements_base_vertex" extension there?
-							else if (mContext->getExtensions().isGL_EXT_draw_elements_base_vertex())
+							else if (mOpenGLES3Context->getExtensions().isGL_EXT_draw_elements_base_vertex())
 							{
 								// Draw with base vertex location
 								glDrawElementsInstancedBaseVertexEXT(mOpenGLES3PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES3Type(), reinterpret_cast<void*>(static_cast<uintptr_t>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes())), static_cast<GLsizei>(drawIndexedInstancedArguments.instanceCount), static_cast<GLint>(drawIndexedInstancedArguments.baseVertexLocation));
@@ -1214,7 +1216,7 @@ namespace OpenGLES3Renderer
 								assert(false);
 							}
 						}
-						else if (drawIndexedInstancedArguments.startInstanceLocation > 0 && mContext->getExtensions().isGL_EXT_base_instance())
+						else if (drawIndexedInstancedArguments.startInstanceLocation > 0 && mOpenGLES3Context->getExtensions().isGL_EXT_base_instance())
 						{
 							// Draw without base vertex location and with start instance location
 							glDrawElementsInstancedBaseInstanceEXT(mOpenGLES3PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES3Type(), reinterpret_cast<void*>(static_cast<uintptr_t>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes())), static_cast<GLsizei>(drawIndexedInstancedArguments.instanceCount), drawIndexedInstancedArguments.startInstanceLocation);
@@ -1233,7 +1235,7 @@ namespace OpenGLES3Renderer
 						if (drawIndexedInstancedArguments.baseVertexLocation > 0)
 						{
 							// Is the "GL_EXT_draw_elements_base_vertex" extension there?
-							if (mContext->getExtensions().isGL_EXT_draw_elements_base_vertex())
+							if (mOpenGLES3Context->getExtensions().isGL_EXT_draw_elements_base_vertex())
 							{
 								// Draw with base vertex location
 								glDrawElementsBaseVertexEXT(mOpenGLES3PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES3Type(), reinterpret_cast<void*>(static_cast<uintptr_t>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes())), static_cast<GLint>(drawIndexedInstancedArguments.baseVertexLocation));
@@ -1295,8 +1297,8 @@ namespace OpenGLES3Renderer
 
 	bool OpenGLES3Renderer::isInitialized() const
 	{
-		// Is the context initialized?
-		return mContext->isInitialized();
+		// Is the OpenGL ES 3 context initialized?
+		return mOpenGLES3Context->isInitialized();
 	}
 
 	bool OpenGLES3Renderer::isDebugEnabled()
@@ -1831,7 +1833,7 @@ namespace OpenGLES3Renderer
 		mCapabilities.maximumUniformBufferSize = static_cast<uint32_t>(openGLValue);
 
 		// Maximum texture buffer (TBO) size in texel (>65536, typically much larger than that of one-dimensional texture, in case there's no support for texture buffer it's 0)
-		if (mContext->getExtensions().isGL_EXT_texture_buffer())
+		if (mOpenGLES3Context->getExtensions().isGL_EXT_texture_buffer())
 		{
 			openGLValue = 0;
 			glGetIntegerv(GL_MAX_TEXTURE_BUFFER_SIZE_EXT, &openGLValue);
@@ -1872,7 +1874,7 @@ namespace OpenGLES3Renderer
 		mCapabilities.drawInstanced = true;	// Is core feature in OpenGL ES 3.0
 
 		// Base vertex supported for draw calls?
-		mCapabilities.baseVertex = mContext->getExtensions().isGL_EXT_draw_elements_base_vertex();
+		mCapabilities.baseVertex = mOpenGLES3Context->getExtensions().isGL_EXT_draw_elements_base_vertex();
 
 		// OpenGL ES 3 has no native multi-threading
 		mCapabilities.nativeMultiThreading = false;

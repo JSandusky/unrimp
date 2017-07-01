@@ -19,6 +19,13 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "OpenGLRenderer/IOpenGLContext.h"
+#include "OpenGLRenderer/OpenGLRuntimeLinking.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace OpenGLRenderer
@@ -28,19 +35,24 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline const Extensions& OpenGLRenderer::getExtensions() const
+	IOpenGLContext::~IOpenGLContext()
 	{
-		return *mExtensions;
+		// Nothing here
 	}
 
-	inline Extensions& OpenGLRenderer::getExtensions()
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	IOpenGLContext::IOpenGLContext(OpenGLRuntimeLinking* openGLRuntimeLinking) :
+		mOpenGLRuntimeLinking(openGLRuntimeLinking)
 	{
-		return *mExtensions;
+		// Nothing here
 	}
 
-	inline const IOpenGLContext& OpenGLRenderer::getOpenGLContext() const
+	bool IOpenGLContext::loadOpenGL3EntryPoints() const
 	{
-		return *mOpenGLContext;
+		return (nullptr != mOpenGLRuntimeLinking) ? mOpenGLRuntimeLinking->loadOpenGL3EntryPoints() : true;
 	}
 
 

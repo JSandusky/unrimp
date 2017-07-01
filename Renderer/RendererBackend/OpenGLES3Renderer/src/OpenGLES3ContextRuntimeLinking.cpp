@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 #define CONTEXT_DEFINERUNTIMELINKING
 
-#include "OpenGLES3Renderer/ContextRuntimeLinking.h"
+#include "OpenGLES3Renderer/OpenGLES3ContextRuntimeLinking.h"
 #include "OpenGLES3Renderer/ExtensionsRuntimeLinking.h"
 
 #include <EGL/eglext.h> // For "EGL_OPENGL_ES3_BIT_KHR"
@@ -44,8 +44,8 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ContextRuntimeLinking::ContextRuntimeLinking(handle nativeWindowHandle, bool useExternalContext) :
-		IContext(nativeWindowHandle, useExternalContext),
+	OpenGLES3ContextRuntimeLinking::OpenGLES3ContextRuntimeLinking(handle nativeWindowHandle, bool useExternalContext) :
+		IOpenGLES3Context(nativeWindowHandle, useExternalContext),
 		mEGLSharedLibrary(nullptr),
 		mGLESSharedLibrary(nullptr),
 		mEntryPointsRegistered(false),
@@ -79,7 +79,7 @@ namespace OpenGLES3Renderer
 		}
 	}
 
-	ContextRuntimeLinking::~ContextRuntimeLinking()
+	OpenGLES3ContextRuntimeLinking::~OpenGLES3ContextRuntimeLinking()
 	{
 		// De-initialize the context while we still can
 		deinitialize();
@@ -113,15 +113,15 @@ namespace OpenGLES3Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual OpenGLES3Renderer::IContext methods    ]
+	//[ Public virtual OpenGLES3Renderer::IOpenGLES3Context methods ]
 	//[-------------------------------------------------------]
-	bool ContextRuntimeLinking::initialize(uint32_t multisampleAntialiasingSamples)
+	bool OpenGLES3ContextRuntimeLinking::initialize(uint32_t multisampleAntialiasingSamples)
 	{
 		// Entry points successfully registered?
 		if (mEntryPointsRegistered)
 		{
 			// Call base implementation
-			if (IContext::initialize(multisampleAntialiasingSamples))
+			if (IOpenGLES3Context::initialize(multisampleAntialiasingSamples))
 			{
 				// Initialize the supported extensions
 				mExtensions->initialize();
@@ -135,16 +135,16 @@ namespace OpenGLES3Renderer
 		return false;
 	}
 
-	const IExtensions &ContextRuntimeLinking::getExtensions() const
+	const IExtensions &OpenGLES3ContextRuntimeLinking::getExtensions() const
 	{
 		return *mExtensions;
 	}
 
 
 	//[-------------------------------------------------------]
-	//[ Protected virtual OpenGLES3Renderer::IContext methods ]
+	//[ Protected virtual OpenGLES3Renderer::IOpenGLES3Context methods ]
 	//[-------------------------------------------------------]
-	EGLConfig ContextRuntimeLinking::chooseConfig(uint32_t multisampleAntialiasingSamples) const
+	EGLConfig OpenGLES3ContextRuntimeLinking::chooseConfig(uint32_t multisampleAntialiasingSamples) const
 	{
 		// Try to find a working EGL configuration
 		EGLConfig eglConfig = nullptr;
@@ -175,7 +175,7 @@ namespace OpenGLES3Renderer
 			};
 
 			// Choose exactly one matching configuration
-			if (eglChooseConfig(mDisplay, configAttribs, &eglConfig, 1, &numberOfConfigurations) == EGL_FALSE || numberOfConfigurations < 1)
+			if (eglChooseConfig(mEGLDisplay, configAttribs, &eglConfig, 1, &numberOfConfigurations) == EGL_FALSE || numberOfConfigurations < 1)
 			{
 				// Can we change something on the multisample antialiasing? (may be the cause that no configuration was found!)
 				if (multisampleAntialiasing)
@@ -213,7 +213,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	bool ContextRuntimeLinking::loadSharedLibraries()
+	bool OpenGLES3ContextRuntimeLinking::loadSharedLibraries()
 	{
 		// We don't need to check m_pEGLSharedLibrary and m_pGLESSharedLibrary at this point because we know they must contain a null pointer
 
@@ -288,7 +288,7 @@ namespace OpenGLES3Renderer
 		return (nullptr != mEGLSharedLibrary && nullptr != mGLESSharedLibrary);
 	}
 
-	bool ContextRuntimeLinking::loadEGLEntryPoints()
+	bool OpenGLES3ContextRuntimeLinking::loadEGLEntryPoints()
 	{
 		bool result = true;	// Success by default
 
@@ -420,7 +420,7 @@ namespace OpenGLES3Renderer
 		return result;
 	}
 
-	bool ContextRuntimeLinking::loadGLESEntryPoints()
+	bool OpenGLES3ContextRuntimeLinking::loadGLESEntryPoints()
 	{
 		bool result = true;	// Success by default
 

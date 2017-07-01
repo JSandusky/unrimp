@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/Linux/ContextLinux.h"
+#include "OpenGLRenderer/Linux/OpenGLContextLinux.h"
 #include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 
@@ -45,13 +45,13 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ContextLinux::ContextLinux(handle nativeWindowHandle, bool useExternalContext, const ContextLinux* shareContextLinux) :
-		ContextLinux(nullptr, nativeWindowHandle, useExternalContext, shareContextLinux)
+	OpenGLContextLinux::OpenGLContextLinux(handle nativeWindowHandle, bool useExternalContext, const OpenGLContextLinux* shareContextLinux) :
+		OpenGLContextLinux(nullptr, nativeWindowHandle, useExternalContext, shareContextLinux)
 	{
 		// Nothing here
 	}
 
-	ContextLinux::~ContextLinux()
+	OpenGLContextLinux::~OpenGLContextLinux()
 	{
 		// Release the device context of the OpenGL window
 		if (nullptr != mDisplay)
@@ -79,9 +79,9 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual OpenGLRenderer::IContext methods       ]
+	//[ Public virtual OpenGLRenderer::IOpenGLContext methods ]
 	//[-------------------------------------------------------]
-	void ContextLinux::makeCurrent() const
+	void OpenGLContextLinux::makeCurrent() const
 	{
 		// Only do something when have created our renderer context and don't use a external renderer context
 		if (!mUseExternalContext)
@@ -103,8 +103,8 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	ContextLinux::ContextLinux(OpenGLRuntimeLinking* openGLRuntimeLinking, handle nativeWindowHandle, bool useExternalContext, const ContextLinux* shareContextLinux) :
-		IContext(openGLRuntimeLinking),
+	OpenGLContextLinux::OpenGLContextLinux(OpenGLRuntimeLinking* openGLRuntimeLinking, handle nativeWindowHandle, bool useExternalContext, const OpenGLContextLinux* shareContextLinux) :
+		IOpenGLContext(openGLRuntimeLinking),
 		mNativeWindowHandle(nativeWindowHandle),
 		mDummyWindow(NULL_HANDLE),
 		mDisplay(nullptr),
@@ -238,7 +238,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	GLXContext ContextLinux::createOpenGLContext()
+	GLXContext OpenGLContextLinux::createOpenGLContext()
 	{
 		#define GLX_CONTEXT_MAJOR_VERSION_ARB	0x2091
 		#define GLX_CONTEXT_MINOR_VERSION_ARB	0x2092

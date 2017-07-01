@@ -38,12 +38,14 @@
 #include "Framework/IApplicationRendererRuntime.h"
 
 #ifdef SHARED_LIBRARIES
+	#include <RendererToolkit/Context.h>
 	#include <RendererToolkit/Public/RendererToolkitInstance.h>
 #endif
 
 #include <RendererRuntime/Public/RendererRuntimeInstance.h>
 #include <RendererRuntime/Core/File/StdFileManager.h>
 #include <RendererRuntime/Asset/AssetManager.h>
+#include <RendererRuntime/Context.h>
 
 
 //[-------------------------------------------------------]
@@ -52,8 +54,10 @@
 IApplicationRendererRuntime::IApplicationRendererRuntime(const char* rendererName, ExampleBase* exampleBase) :
 	IApplicationRenderer(rendererName, exampleBase),
 	mFileManager(nullptr),
+	mRendererRuntimeContext(nullptr),
 	mRendererRuntimeInstance(nullptr)
 	#ifdef SHARED_LIBRARIES
+		, mRendererToolkitContext(nullptr)
 		, mRendererToolkitInstance(nullptr)
 		, mProject(nullptr)
 	#endif
@@ -84,7 +88,8 @@ RendererToolkit::IRendererToolkit* IApplicationRendererRuntime::getRendererToolk
 		if (nullptr == mRendererToolkitInstance)
 		{
 			assert(nullptr != mRendererRuntimeInstance && "The renderer runtime instance must be valid");
-			mRendererToolkitInstance = new RendererToolkit::RendererToolkitInstance(mRendererRuntimeInstance->getRendererRuntime()->getFileManager());
+			mRendererToolkitContext = new RendererToolkit::Context(mRendererRuntimeInstance->getRendererRuntime()->getFileManager());
+			mRendererToolkitInstance = new RendererToolkit::RendererToolkitInstance(*mRendererToolkitContext);
 		}
 		return (nullptr != mRendererToolkitInstance) ? mRendererToolkitInstance->getRendererToolkit() : nullptr;
 	#else
@@ -109,7 +114,8 @@ void IApplicationRendererRuntime::onInitialization()
 	{
 		// Create the renderer runtime instance
 		mFileManager = new RendererRuntime::StdFileManager();
-		mRendererRuntimeInstance = new RendererRuntime::RendererRuntimeInstance(*renderer, *mFileManager);
+		mRendererRuntimeContext = new RendererRuntime::Context(*renderer, *mFileManager);
+		mRendererRuntimeInstance = new RendererRuntime::RendererRuntimeInstance(*mRendererRuntimeContext);
 
 		{
 			RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
@@ -175,6 +181,8 @@ void IApplicationRendererRuntime::onDeinitialization()
 	// Delete the renderer runtime instance
 	delete mRendererRuntimeInstance;
 	mRendererRuntimeInstance = nullptr;
+	delete mRendererRuntimeContext;
+	mRendererRuntimeContext = nullptr;
 	delete static_cast<RendererRuntime::StdFileManager*>(mFileManager);
 	mFileManager = nullptr;
 	#ifdef SHARED_LIBRARIES
@@ -187,6 +195,11 @@ void IApplicationRendererRuntime::onDeinitialization()
 		{
 			delete mRendererToolkitInstance;
 			mRendererToolkitInstance = nullptr;
+		}
+		if (nullptr != mRendererToolkitContext)
+		{
+			delete mRendererToolkitContext;
+			mRendererToolkitContext = nullptr;
 		}
 	#endif
 

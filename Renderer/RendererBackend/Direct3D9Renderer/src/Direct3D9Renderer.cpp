@@ -48,8 +48,6 @@
 #include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
 
-#include <tuple>	// For "std::ignore"
-
 
 //[-------------------------------------------------------]
 //[ Global functions                                      ]
@@ -60,10 +58,9 @@
 #else
 	#define DIRECT3D9RENDERER_API_EXPORT
 #endif
-DIRECT3D9RENDERER_API_EXPORT Renderer::IRenderer* createDirect3D9RendererInstance(handle nativeWindowHandle, bool useExternalContext)
+DIRECT3D9RENDERER_API_EXPORT Renderer::IRenderer* createDirect3D9RendererInstance(const Renderer::Context& context)
 {
-	std::ignore = useExternalContext;
-	return new Direct3D9Renderer::Direct3D9Renderer(nativeWindowHandle);
+	return new Direct3D9Renderer::Direct3D9Renderer(context);
 }
 #undef DIRECT3D9RENDERER_API_EXPORT
 
@@ -290,7 +287,8 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Direct3D9Renderer::Direct3D9Renderer(handle nativeWindowHandle) :
+	Direct3D9Renderer::Direct3D9Renderer(const Renderer::Context& context) :
+		IRenderer(context),
 		mDirect3D9RuntimeLinking(new Direct3D9RuntimeLinking()),
 		mDirect3D9(nullptr),
 		mDirect3DDevice9(nullptr),
@@ -356,6 +354,7 @@ namespace Direct3D9Renderer
 					}
 
 					// Create a main swap chain instance?
+					const handle nativeWindowHandle = mContext.getNativeWindowHandle();
 					if (NULL_HANDLE != nativeWindowHandle)
 					{
 						// Create a main swap chain instance

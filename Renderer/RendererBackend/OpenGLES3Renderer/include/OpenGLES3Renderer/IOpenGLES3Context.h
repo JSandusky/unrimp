@@ -71,9 +71,9 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Abstract OpenGL ES context base interface
+	*    Abstract OpenGL ES 3 context base interface
 	*/
-	class IContext
+	class IOpenGLES3Context
 	{
 
 
@@ -85,7 +85,7 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~IContext();
+		virtual ~IOpenGLES3Context();
 
 		/**
 		*  @brief
@@ -159,7 +159,7 @@ namespace OpenGLES3Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual OpenGLES3Renderer::IContext methods    ]
+	//[ Public virtual OpenGLES3Renderer::IOpenGLES3Context methods ]
 	//[-------------------------------------------------------]
 	public:
 		/**
@@ -197,7 +197,7 @@ namespace OpenGLES3Renderer
 		*  @param[in] useExternalContext
 		*    When true an own OpenGL ES context won't be created
 		*/
-		explicit IContext(handle nativeWindowHandle, bool useExternalContext);
+		explicit IOpenGLES3Context(handle nativeWindowHandle, bool useExternalContext);
 
 		/**
 		*  @brief
@@ -206,7 +206,7 @@ namespace OpenGLES3Renderer
 		*  @param[in] source
 		*    Source to copy from
 		*/
-		explicit IContext(const IContext& source);
+		explicit IOpenGLES3Context(const IOpenGLES3Context& source);
 
 		/**
 		*  @brief
@@ -224,11 +224,11 @@ namespace OpenGLES3Renderer
 		*  @return
 		*    Reference to this instance
 		*/
-		IContext& operator =(const IContext& source);
+		IOpenGLES3Context& operator =(const IOpenGLES3Context& source);
 
 
 	//[-------------------------------------------------------]
-	//[ Protected virtual OpenGLES3Renderer::IContext methods ]
+	//[ Protected virtual OpenGLES3Renderer::IOpenGLES3Context methods ]
 	//[-------------------------------------------------------]
 	protected:
 		/**
@@ -257,10 +257,10 @@ namespace OpenGLES3Renderer
 			::Display	   *mX11Display;
 		#endif
 		// EGL
-		EGLDisplay			mDisplay;
+		EGLDisplay			mEGLDisplay;
 		// EGL
-		EGLConfig			mConfig;
-		EGLContext			mContext;
+		EGLConfig			mEGLConfig;
+		EGLContext			mEGLContext;
 		EGLNativeWindowType	mDummyNativeWindow;	///< Native dummy window handle, can be identical to "mNativeWindowHandle" if it's in fact no dummy at all, can be "NULL_HANDLE"
 		EGLSurface			mDummySurface;
 		bool				mUseExternalContext;
@@ -278,5 +278,5 @@ namespace OpenGLES3Renderer
 //[-------------------------------------------------------]
 //[ Implementation includes                               ]
 //[-------------------------------------------------------]
-#include "OpenGLES3Renderer/IContext.inl"
-#include "OpenGLES3Renderer/ContextRuntimeLinking.h"	// Required in here because we redefine the OpenGL ES 3 functions for dynamic runtime linking
+#include "OpenGLES3Renderer/IOpenGLES3Context.inl"
+#include "OpenGLES3Renderer/OpenGLES3ContextRuntimeLinking.h"	// Required in here because we redefine the OpenGL ES 3 functions for dynamic runtime linking

@@ -55,7 +55,7 @@
 //[-------------------------------------------------------]
 namespace OpenGLRenderer
 {
-	class IContext;
+	class IOpenGLContext;
 }
 
 
@@ -94,10 +94,10 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] context
-		*    Owner context
+		*  @param[in] openGLContext
+		*    Owner OpenGL context
 		*/
-		explicit Extensions(IContext& context);
+		explicit Extensions(IOpenGLContext& openGLContext);
 
 		/**
 		*  @brief
@@ -227,8 +227,8 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IContext* mContext;		///< Owner context, always valid!
-		bool	  mInitialized;	///< Are the extensions initialized?
+		IOpenGLContext* mOpenGLContext;	///< Owner OpenGL context, always valid!
+		bool			mInitialized;	///< Are the extensions initialized?
 
 		// Supported extensions
 		// WGL (Windows only)

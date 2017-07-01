@@ -28,7 +28,6 @@
 #include "VulkanRenderer/Shader/FragmentShaderGlsl.h"
 #include "VulkanRenderer/Shader/TessellationControlShaderGlsl.h"
 #include "VulkanRenderer/Shader/TessellationEvaluationShaderGlsl.h"
-#include "VulkanRenderer/IContext.h"
 #include "VulkanRenderer/Extensions.h"
 #include "VulkanRenderer/VulkanRenderer.h"
 

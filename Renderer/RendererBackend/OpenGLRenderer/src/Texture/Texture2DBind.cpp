@@ -23,7 +23,6 @@
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Texture/Texture2DBind.h"
 #include "OpenGLRenderer/Mapping.h"
-#include "OpenGLRenderer/IContext.h"
 #include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"

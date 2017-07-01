@@ -19,36 +19,49 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "VulkanRenderer/Windows/VulkanContextWindows.h"
+#include "VulkanRenderer/Extensions.h"
+#include "VulkanRenderer/VulkanRuntimeLinking.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLRenderer
+namespace VulkanRenderer
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline Display* ContextLinux::getDisplay() const
+	VulkanContextWindows::VulkanContextWindows(VulkanRenderer& vulkanRenderer, handle nativeWindowHandle, const VulkanContextWindows*) :
+		IVulkanContext(vulkanRenderer),
+		mNativeWindowHandle(nativeWindowHandle),
+		mDummyWindow(NULL_HANDLE),
+		mWindowDeviceContext(NULL_HANDLE),
+		mOwnsRenderContext(true)
 	{
-		return mDisplay;
+		// TODO(co) Implement me
 	}
 
-	inline GLXContext ContextLinux::getRenderContext() const
+	VulkanContextWindows::~VulkanContextWindows()
 	{
-		return mWindowRenderContext;
+		// TODO(co) Implement me
 	}
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual OpenGLRenderer::IContext methods       ]
+	//[ Public virtual VulkanRenderer::IVulkanContext methods ]
 	//[-------------------------------------------------------]
-	inline bool ContextLinux::isInitialized() const
+	void VulkanContextWindows::makeCurrent() const
 	{
-		return (nullptr != mWindowRenderContext || mUseExternalContext);
+		// TODO(co) Implement me
 	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLRenderer
+} // VulkanRenderer

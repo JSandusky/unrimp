@@ -42,12 +42,12 @@ namespace Renderer
 }
 namespace OpenGLRenderer
 {
-	class IContext;
 	class SwapChain;
 	class Extensions;
 	class VertexArray;
 	class PipelineState;
 	class RootSignature;
+	class IOpenGLContext;
 	class OpenGLRuntimeLinking;
 }
 
@@ -98,15 +98,13 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] nativeWindowHandle
-		*    Optional native main window handle, can be a null handle
-		*  @param[in] useExternalContext
-		*    When true the renderer doesn't create an own OpenGL context for rendering
+		*  @param[in] context
+		*    Renderer context, the renderer context instance must stay valid as long as the renderer instance exists
 		*
 		*  @note
 		*    - Do never ever use a not properly initialized renderer! Use "Renderer::IRenderer::isInitialized()" to check the initialization state.
 		*/
-		OpenGLRenderer(handle nativeWindowHandle, bool useExternalContext);
+		explicit OpenGLRenderer(const Renderer::Context& context);
 
 		/**
 		*  @brief
@@ -121,7 +119,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    The OpenGL context instance, do not free the memory the reference is pointing to
 		*/
-		inline const IContext& getContext() const;
+		inline const IOpenGLContext& getOpenGLContext() const;
 
 		/**
 		*  @brief
@@ -293,7 +291,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	private:
 		OpenGLRuntimeLinking*	   mOpenGLRuntimeLinking;			///< OpenGL runtime linking instance, always valid
-		IContext*				   mContext;						///< OpenGL context instance, always valid
+		IOpenGLContext*			   mOpenGLContext;					///< OpenGL context instance, always valid
 		Extensions*				   mExtensions;						///< Extensions instance, always valid
 		Renderer::IShaderLanguage* mShaderLanguage;					///< Shader language instance (we keep a reference to it), can be a null pointer
 		RootSignature*			   mGraphicsRootSignature;			///< Currently set graphics root signature (we keep a reference to it), can be a null pointer

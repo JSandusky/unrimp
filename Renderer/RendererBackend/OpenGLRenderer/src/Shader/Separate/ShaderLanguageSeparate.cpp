@@ -29,7 +29,6 @@
 #include "OpenGLRenderer/Shader/Separate/FragmentShaderSeparate.h"
 #include "OpenGLRenderer/Shader/Separate/TessellationControlShaderSeparate.h"
 #include "OpenGLRenderer/Shader/Separate/TessellationEvaluationShaderSeparate.h"
-#include "OpenGLRenderer/IContext.h"
 #include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
 

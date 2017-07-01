@@ -29,7 +29,7 @@
 #include "OpenGLES3Renderer/Texture/Texture2DArray.h"
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 #include "OpenGLES3Renderer/IExtensions.h"
-#include "OpenGLES3Renderer/IContext.h"
+#include "OpenGLES3Renderer/IOpenGLES3Context.h"
 
 
 //[-------------------------------------------------------]
@@ -44,7 +44,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	TextureManager::TextureManager(OpenGLES3Renderer& openGLES3Renderer) :
 		ITextureManager(openGLES3Renderer),
-		mExtensions(&openGLES3Renderer.getContext().getExtensions())
+		mExtensions(&openGLES3Renderer.getOpenGLES3Context().getExtensions())
 	{
 		// Nothing here
 	}

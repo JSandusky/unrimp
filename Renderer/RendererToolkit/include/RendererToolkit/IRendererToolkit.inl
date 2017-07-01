@@ -33,11 +33,17 @@ namespace RendererToolkit
 		// Nothing here
 	}
 
+	inline Context& IRendererToolkit::getContext() const
+	{
+		return mContext;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IRendererToolkit::IRendererToolkit()
+	inline IRendererToolkit::IRendererToolkit(Context& context) :
+		mContext(context)
 	{
 		// Nothing here
 	}

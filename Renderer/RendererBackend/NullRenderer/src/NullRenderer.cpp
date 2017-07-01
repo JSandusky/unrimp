@@ -43,9 +43,6 @@
 #include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
 
-#include <string.h>
-#include <tuple>	// For "std::ignore"
-
 
 //[-------------------------------------------------------]
 //[ Global functions                                      ]
@@ -56,10 +53,9 @@
 #else
 	#define NULLRENDERER_API_EXPORT
 #endif
-NULLRENDERER_API_EXPORT Renderer::IRenderer* createNullRendererInstance(handle nativeWindowHandle, bool useExternalContext)
+NULLRENDERER_API_EXPORT Renderer::IRenderer* createNullRendererInstance(const Renderer::Context& context)
 {
-	std::ignore = useExternalContext;
-	return new NullRenderer::NullRenderer(nativeWindowHandle);
+	return new NullRenderer::NullRenderer(context);
 }
 #undef NULLRENDERER_API_EXPORT
 
@@ -286,7 +282,8 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	NullRenderer::NullRenderer(handle nativeWindowHandle) :
+	NullRenderer::NullRenderer(const Renderer::Context& context) :
+		IRenderer(context),
 		mShaderLanguage(nullptr),
 		mMainSwapChain(nullptr),
 		mRenderTarget(nullptr),
@@ -296,6 +293,7 @@ namespace NullRenderer
 		initializeCapabilities();
 
 		// Create a main swap chain instance?
+		const handle nativeWindowHandle = mContext.getNativeWindowHandle();
 		if (NULL_HANDLE != nativeWindowHandle)
 		{
 			// Create a main swap chain instance

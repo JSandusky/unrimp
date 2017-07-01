@@ -18,9 +18,6 @@
 \*********************************************************/
 
 
-// TODO(co) Remove the platform specific context classes if they're not required
-
-
 //[-------------------------------------------------------]
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
@@ -30,16 +27,16 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "VulkanRenderer/IContext.h"
+#include "OpenGLRenderer/IOpenGLContext.h"
 
 #include <Renderer/PlatformTypes.h>
-#include <Renderer/WindowsHeader.h>
+#include <Renderer/LinuxHeader.h>
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace VulkanRenderer
+namespace OpenGLRenderer
 {
 
 
@@ -48,10 +45,16 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Windows Vulkan context class
+	*    Linux OpenGL context class
 	*/
-	class ContextWindows : public IContext
+	class OpenGLContextLinux : public IOpenGLContext
 	{
+
+
+	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class OpenGLRenderer;
 
 
 	//[-------------------------------------------------------]
@@ -62,20 +65,20 @@ namespace VulkanRenderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] vulkanRenderer
-		*    Owner Vulkan renderer instance
 		*  @param[in] nativeWindowHandle
 		*    Optional native main window handle, can be a null handle
-		*  @param[in] shareContextWindows
+		*  @param[in] useExternalContext
+		*    When true an own OpenGL context won't be created and the context pointed by "shareContextLinux" is ignored
+		*  @param[in] shareContextLinux
 		*    Optional share context, can be a null pointer
 		*/
-		explicit ContextWindows(VulkanRenderer& vulkanRenderer, handle nativeWindowHandle, const ContextWindows* shareContextWindows = nullptr);
+		OpenGLContextLinux(handle nativeWindowHandle, bool useExternalContext, const OpenGLContextLinux* shareContextLinux = nullptr);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~ContextWindows();
+		virtual ~OpenGLContextLinux();
 
 		/**
 		*  @brief
@@ -84,7 +87,7 @@ namespace VulkanRenderer
 		*  @return
 		*    The primary device context, null pointer on error
 		*/
-		inline HDC getDeviceContext() const;
+		inline Display* getDisplay() const;
 
 		/**
 		*  @brief
@@ -93,50 +96,60 @@ namespace VulkanRenderer
 		*  @return
 		*    The primary render context, null pointer on error
 		*/
-		inline HGLRC getRenderContext() const;
+		inline GLXContext getRenderContext() const;
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual VulkanRenderer::IContext methods       ]
+	//[ Public virtual OpenGLRenderer::IOpenGLContext methods ]
 	//[-------------------------------------------------------]
 	public:
+		inline virtual bool isInitialized() const override;
 		virtual void makeCurrent() const override;
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	protected:
-		/**
-		*  @brief
-		*    Copy constructor
-		*
-		*  @param[in] source
-		*    Source to copy from
-		*/
-		explicit ContextWindows(const ContextWindows& source) = delete;
+	private:
+		explicit OpenGLContextLinux(const OpenGLContextLinux& source) = delete;
+		OpenGLContextLinux& operator =(const OpenGLContextLinux& source) = delete;
 
 		/**
 		*  @brief
-		*    Copy operator
+		*    Constructor for primary context
 		*
-		*  @param[in] source
-		*    Source to copy from
+		*  @param[in] openGLRuntimeLinking
+		*    OpenGL runtime linking instance, if null pointer this isn't a primary context
+		*  @param[in] nativeWindowHandle
+		*    Optional native main window handle, can be a null handle
+		*  @param[in] useExternalContext
+		*    When true an own OpenGL context won't be created and the context pointed by "shareContextLinux" is ignored
+		*  @param[in] shareContextLinux
+		*    Optional share context, can be a null pointer
+		*/
+		OpenGLContextLinux(OpenGLRuntimeLinking* openGLRuntimeLinking, handle nativeWindowHandle, bool useExternalContext, const OpenGLContextLinux* shareContextLinux = nullptr);
+
+		/**
+		*  @brief
+		*    Create a OpenGL context
 		*
 		*  @return
-		*    Reference to this instance
+		*    The created OpenGL context, null pointer on error
 		*/
-		ContextWindows& operator =(const ContextWindows& source) = delete;
+		GLXContext createOpenGLContext();
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		handle mNativeWindowHandle;		///< Vulkan window, can be a null pointer (HWND)
-		handle mDummyWindow;			///< Vulkan dummy window, can be a null pointer (HWND)
-		HDC	   mWindowDeviceContext;	///< The device context of the Vulkan dummy window, can be a null pointer
-		bool   mOwnsRenderContext;		///< Does this context owns the Vulkan render context?
+		handle		 mNativeWindowHandle;	///< OpenGL window, can be a null pointer (Window)
+		handle		 mDummyWindow;			///< OpenGL dummy window, can be a null pointer (Window)
+		Display*	 mDisplay;				///< The device context of the OpenGL dummy window, can be a null pointer
+		XVisualInfo* m_pDummyVisualInfo;
+		GLXContext	 mWindowRenderContext;	///< The render context of the OpenGL dummy window, can be a null pointer
+		bool		 mUseExternalContext;
+		bool		 mOwnsRenderContext;	///< Does this context own the OpenGL render context?
 
 
 	};
@@ -145,10 +158,10 @@ namespace VulkanRenderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // VulkanRenderer
+} // OpenGLRenderer
 
 
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "VulkanRenderer/Windows/ContextWindows.inl"
+#include "OpenGLRenderer/Linux/OpenGLContextLinux.inl"

@@ -61,7 +61,7 @@ namespace VulkanRenderer
 	*  @note
 	*    - Every native OS window needs its own context instance
 	*/
-	class IContext
+	class IVulkanContext
 	{
 
 
@@ -73,7 +73,7 @@ namespace VulkanRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~IContext();
+		virtual ~IVulkanContext();
 
 		/**
 		*  @brief
@@ -128,7 +128,7 @@ namespace VulkanRenderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual IContext methods                       ]
+	//[ Public virtual IVulkanContext methods                 ]
 	//[-------------------------------------------------------]
 	public:
 		/**
@@ -158,7 +158,7 @@ namespace VulkanRenderer
 		*  @param[in] vulkanRenderer
 		*    Owner Vulkan renderer instance
 		*/
-		explicit IContext(VulkanRenderer& vulkanRenderer);
+		explicit IVulkanContext(VulkanRenderer& vulkanRenderer);
 
 		/**
 		*  @brief
@@ -167,7 +167,7 @@ namespace VulkanRenderer
 		*  @param[in] source
 		*    Source to copy from
 		*/
-		explicit IContext(const IContext& source) = delete;
+		explicit IVulkanContext(const IVulkanContext& source) = delete;
 
 		/**
 		*  @brief
@@ -179,7 +179,7 @@ namespace VulkanRenderer
 		*  @return
 		*    Reference to this instance
 		*/
-		IContext& operator =(const IContext& source) = delete;
+		IVulkanContext& operator =(const IVulkanContext& source) = delete;
 
 
 	//[-------------------------------------------------------]
@@ -205,4 +205,4 @@ namespace VulkanRenderer
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "VulkanRenderer/IContext.inl"
+#include "VulkanRenderer/IVulkanContext.inl"

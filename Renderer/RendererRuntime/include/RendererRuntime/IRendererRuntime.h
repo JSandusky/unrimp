@@ -39,6 +39,7 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+	class Context;
 	class IVrManager;
 	class TimeManager;
 	class IFileManager;
@@ -108,6 +109,15 @@ namespace RendererRuntime
 		//[-------------------------------------------------------]
 		//[ Core                                                  ]
 		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    Return the used renderer runtime context instance
+		*
+		*  @return
+		*    The used renderer runtime context instance
+		*/
+		inline Context& getContext() const;
+
 		/**
 		*  @brief
 		*    Return the used renderer instance
@@ -373,9 +383,12 @@ namespace RendererRuntime
 	protected:
 		/**
 		*  @brief
-		*    Default constructor
+		*    Constructor
+		*
+		*  @param[in] context
+		*    Renderer runtime context, the renderer runtime context instance must stay valid as long as the renderer runtime instance exists
 		*/
-		inline IRendererRuntime();
+		inline explicit IRendererRuntime(Context& context);
 
 		explicit IRendererRuntime(const IRendererRuntime& source) = delete;
 		IRendererRuntime& operator =(const IRendererRuntime& source) = delete;
@@ -386,6 +399,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	protected:
 		// Core
+		Context&				   mContext;		///< Renderer runtime context
 		Renderer::IRenderer*	   mRenderer;		///< The used renderer instance (we keep a reference to it), always valid
 		Renderer::IBufferManager*  mBufferManager;	///< The used buffer manager instance (we keep a reference to it), always valid
 		Renderer::ITextureManager* mTextureManager;	///< The used texture manager instance (we keep a reference to it), always valid

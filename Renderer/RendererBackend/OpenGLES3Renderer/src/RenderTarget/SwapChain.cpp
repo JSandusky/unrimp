@@ -22,7 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLES3Renderer/RenderTarget/SwapChain.h"
-#include "OpenGLES3Renderer/IContext.h"
+#include "OpenGLES3Renderer/IOpenGLES3Context.h"
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
 #include <algorithm>
@@ -60,7 +60,7 @@ namespace OpenGLES3Renderer
 		// TODO(co) Use "eglQuerySurface()"
 	//	EGLint renderTargetWidth  = 1;
 	//	EGLint renderTargetHeight = 1;
-	//	eglQuerySurface(mContext->getEGLDisplay(), mContext->getEGLDummySurface(), EGL_HEIGHT, &renderTargetHeight);
+	//	eglQuerySurface(mOpenGLES3Context->getEGLDisplay(), mOpenGLES3Context->getEGLDummySurface(), EGL_HEIGHT, &renderTargetHeight);
 		// Return stored width and height when both valid
 		if (nullptr != mRenderWindow)
 		{
@@ -104,10 +104,10 @@ namespace OpenGLES3Renderer
 		#elif defined LINUX && !defined(ANDROID)
 			if (mNativeWindowHandle)
 			{
-				IContext &context = static_cast<OpenGLES3Renderer&>(getRenderer()).getContext();
+				IOpenGLES3Context& openGLES3Context = static_cast<OpenGLES3Renderer&>(getRenderer()).getOpenGLES3Context();
 
-				// TODO(sw) Resue X11 display from "Frontend" -> for now reuse it from the context
-				Display* display = context.getX11Display();
+				// TODO(sw) Resue X11 display from "Frontend" -> for now reuse it from the OpenGL ES 3 context
+				Display* display = openGLES3Context.getX11Display();
 
 				// Get the width and height...
 				::Window rootWindow = 0;
@@ -160,9 +160,9 @@ namespace OpenGLES3Renderer
 		else
 		{
 			// TODO(co) Correct implementation
-			IContext& context = static_cast<OpenGLES3Renderer&>(getRenderer()).getContext();
+			IOpenGLES3Context& openGLES3Context = static_cast<OpenGLES3Renderer&>(getRenderer()).getOpenGLES3Context();
 			// Swap buffers
-			eglSwapBuffers(context.getEGLDisplay(), context.getEGLDummySurface());
+			eglSwapBuffers(openGLES3Context.getEGLDisplay(), openGLES3Context.getEGLDummySurface());
 		}
 	}
 

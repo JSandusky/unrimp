@@ -193,6 +193,9 @@
     <ClInclude Include="include\Renderer\Shader\ShaderTypes.h">
       <Filter>Header Files\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="include\Renderer\Context.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Renderer\IResource.inl">
@@ -322,6 +325,9 @@
     </None>
     <None Include="include\Renderer\Texture\ITextureCube.inl">
       <Filter>Header Files\Texture</Filter>
+    </None>
+    <None Include="include\Renderer\Context.inl">
+      <Filter>Header Files</Filter>
     </None>
   </ItemGroup>
 </Project>

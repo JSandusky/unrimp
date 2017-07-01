@@ -110,6 +110,7 @@
 class ExampleBase;
 namespace Renderer
 {
+	class Context;
 	class RendererInstance;
 }
 
@@ -136,10 +137,10 @@ public:
 	*  @param[in] rendererName
 	*    Case sensitive ASCII name of the renderer to instance, if null pointer or unknown renderer no renderer will be used.
 	*    Example renderer names: "Null", "OpenGL", "OpenGLES3", "Vulkan", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12"
-	*  @param[in] example
+	*  @param[in] exampleBase
 	*    Pointer to an example which should be used
 	*/
-	explicit IApplicationRenderer(const char* rendererName, ExampleBase* example);
+	IApplicationRenderer(const char* rendererName, ExampleBase* exampleBase);
 
 	/**
 	*  @brief
@@ -232,10 +233,11 @@ private:
 //[-------------------------------------------------------]
 private:
 	char						mRendererName[32];	///< Case sensitive ASCII name of the renderer to instance
+	const Renderer::Context*	mRendererContext;	///< Renderer context, can be a null pointer
 	Renderer::RendererInstance* mRendererInstance;	///< Renderer instance, can be a null pointer
 	Renderer::IRenderer*		mRenderer;			///< Renderer instance, can be a null pointer, do not destroy the instance
 	Renderer::CommandBuffer		mCommandBuffer;		///< Command buffer
-	ExampleBase*				mExample;
+	ExampleBase*				mExampleBase;
 
 
 };

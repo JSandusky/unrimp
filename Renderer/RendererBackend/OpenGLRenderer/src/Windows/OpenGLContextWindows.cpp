@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/Windows/ContextWindows.h"
+#include "OpenGLRenderer/Windows/OpenGLContextWindows.h"
 #include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 
@@ -36,13 +36,13 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ContextWindows::ContextWindows(handle nativeWindowHandle, const ContextWindows* shareContextWindows) :
-		ContextWindows(nullptr, nativeWindowHandle, shareContextWindows)
+	OpenGLContextWindows::OpenGLContextWindows(handle nativeWindowHandle, const OpenGLContextWindows* shareContextWindows) :
+		OpenGLContextWindows(nullptr, nativeWindowHandle, shareContextWindows)
 	{
 		// Nothing here
 	}
 
-	ContextWindows::~ContextWindows()
+	OpenGLContextWindows::~OpenGLContextWindows()
 	{
 		// Release the device context of the OpenGL window
 		if (NULL_HANDLE != mWindowDeviceContext)
@@ -79,9 +79,9 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual OpenGLRenderer::IContext methods       ]
+	//[ Public virtual OpenGLRenderer::IOpenGLContext methods ]
 	//[-------------------------------------------------------]
-	void ContextWindows::makeCurrent() const
+	void OpenGLContextWindows::makeCurrent() const
 	{
 		wglMakeCurrent(mWindowDeviceContext, mWindowRenderContext);
 	}
@@ -90,8 +90,8 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	ContextWindows::ContextWindows(OpenGLRuntimeLinking* openGLRuntimeLinking, handle nativeWindowHandle, const ContextWindows* shareContextWindows) :
-		IContext(openGLRuntimeLinking),
+	OpenGLContextWindows::OpenGLContextWindows(OpenGLRuntimeLinking* openGLRuntimeLinking, handle nativeWindowHandle, const OpenGLContextWindows* shareContextWindows) :
+		IOpenGLContext(openGLRuntimeLinking),
 		mNativeWindowHandle(nativeWindowHandle),
 		mDummyWindow(NULL_HANDLE),
 		mWindowDeviceContext(NULL_HANDLE),
@@ -227,7 +227,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	HGLRC ContextWindows::createOpenGLContext(const ContextWindows* shareContextWindows)
+	HGLRC OpenGLContextWindows::createOpenGLContext(const OpenGLContextWindows* shareContextWindows)
 	{
 		// Disable the following warning, we can't do anything to resolve this warning
 		__pragma(warning(push))

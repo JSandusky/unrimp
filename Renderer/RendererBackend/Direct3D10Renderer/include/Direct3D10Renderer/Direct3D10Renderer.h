@@ -83,13 +83,13 @@ namespace Direct3D10Renderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] nativeWindowHandle
-		*    Optional native main window handle, can be a null handle
+		*  @param[in] context
+		*    Renderer context, the renderer context instance must stay valid as long as the renderer instance exists
 		*
 		*  @note
 		*    - Do never ever use a not properly initialized renderer! Use "Renderer::IRenderer::isInitialized()" to check the initialization state.
 		*/
-		explicit Direct3D10Renderer(handle nativeWindowHandle);
+		explicit Direct3D10Renderer(const Renderer::Context& context);
 
 		/**
 		*  @brief

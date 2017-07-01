@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLES3Renderer/IContext.h"
+#include "OpenGLES3Renderer/IOpenGLES3Context.h"
 
 #include <EGL/eglext.h>
 
@@ -40,18 +40,18 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	IContext::~IContext()
+	IOpenGLES3Context::~IOpenGLES3Context()
 	{
 		// Everything must be done in "deinitialize()" because when we're in here, the shared libraries
 		// are already unloaded and we are no longer allowed to use EGL or OpenGL ES 3 functions
 	}
 
-	bool IContext::isInitialized() const
+	bool IOpenGLES3Context::isInitialized() const
 	{
 		return (mUseExternalContext || EGL_NO_CONTEXT != getEGLContext());
 	}
 
-	EGLBoolean IContext::makeCurrent(EGLSurface eglSurface)
+	EGLBoolean IOpenGLES3Context::makeCurrent(EGLSurface eglSurface)
 	{
 		// Use the EGL dummy surface?
 		if (nullptr == eglSurface)
@@ -60,14 +60,14 @@ namespace OpenGLES3Renderer
 		}
 
 		// Make the EGL surface to the current one
-		return eglMakeCurrent(mDisplay, eglSurface, eglSurface, mContext);
+		return eglMakeCurrent(mEGLDisplay, eglSurface, eglSurface, mEGLContext);
 	}
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual OpenGLES3Renderer::IContext methods    ]
+	//[ Public virtual OpenGLES3Renderer::IOpenGLES3Context methods ]
 	//[-------------------------------------------------------]
-	bool IContext::initialize(uint32_t multisampleAntialiasingSamples)
+	bool IOpenGLES3Context::initialize(uint32_t multisampleAntialiasingSamples)
 	{
 		if (mUseExternalContext)
 		{
@@ -76,21 +76,21 @@ namespace OpenGLES3Renderer
 
 		// Get display
 		#if (defined(LINUX) && !defined(ANDROID))
-			mDisplay = eglGetDisplay(static_cast<EGLNativeDisplayType>(mX11Display));
+			mEGLDisplay = eglGetDisplay(static_cast<EGLNativeDisplayType>(mX11Display));
 		#else
-			mDisplay = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+			mEGLDisplay = eglGetDisplay(EGL_DEFAULT_DISPLAY);
 		#endif
-		if (EGL_NO_DISPLAY != mDisplay)
+		if (EGL_NO_DISPLAY != mEGLDisplay)
 		{
 			// Initialize EGL
 			EGLint eglMajorVersion, eglMinorVersion;
-			if (eglInitialize(mDisplay, &eglMajorVersion, &eglMinorVersion) == EGL_TRUE)
+			if (eglInitialize(mEGLDisplay, &eglMajorVersion, &eglMinorVersion) == EGL_TRUE)
 			{
 				// Choose a EGL configuration
-				mConfig = chooseConfig(multisampleAntialiasingSamples);
+				mEGLConfig = chooseConfig(multisampleAntialiasingSamples);
 
 				// We can only go on if a EGL configuration was chosen properly
-				if (mConfig)
+				if (mEGLConfig)
 				{
 					// Create context (request an version 3 client)
 					const EGLint contextAttribs[] = {
@@ -100,8 +100,8 @@ namespace OpenGLES3Renderer
 						#endif
 						EGL_NONE
 					};
-					mContext = eglCreateContext(mDisplay, mConfig, EGL_NO_CONTEXT, contextAttribs);
-					if (EGL_NO_CONTEXT != mContext)
+					mEGLContext = eglCreateContext(mEGLDisplay, mEGLConfig, EGL_NO_CONTEXT, contextAttribs);
+					if (EGL_NO_CONTEXT != mEGLContext)
 					{
 						// Create a dummy native window?
 						if (NULL_HANDLE != mNativeWindowHandle)
@@ -114,7 +114,7 @@ namespace OpenGLES3Renderer
 							#ifdef ANDROID
 								// Reconfigure the ANativeWindow buffers to match
 								EGLint format;
-								eglGetConfigAttrib(mDisplay, mConfig, EGL_NATIVE_VISUAL_ID, &format);
+								eglGetConfigAttrib(mEGLDisplay, mEGLConfig, EGL_NATIVE_VISUAL_ID, &format);
 								ANativeWindow_setBuffersGeometry(reinterpret_cast<ANativeWindow*>(mNativeWindowHandle), 0, 0, format);
 							#endif
 						}
@@ -147,7 +147,7 @@ namespace OpenGLES3Renderer
 						}
 
 						// Create an EGL dummy surface
-						mDummySurface = eglCreateWindowSurface(mDisplay, mConfig, mDummyNativeWindow, nullptr);
+						mDummySurface = eglCreateWindowSurface(mEGLDisplay, mEGLConfig, mDummyNativeWindow, nullptr);
 						if (EGL_NO_SURFACE == mDummySurface)
 						{
 							// Error! Failed to create EGL dummy surface!
@@ -190,14 +190,14 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	IContext::IContext(handle nativeWindowHandle, bool useExternalContext) :
+	IOpenGLES3Context::IOpenGLES3Context(handle nativeWindowHandle, bool useExternalContext) :
 		mNativeWindowHandle(nativeWindowHandle),
 		#if (defined(LINUX) && !defined(ANDROID))
 			mX11Display(XOpenDisplay(nullptr)),
 		#endif
-		mDisplay(EGL_NO_DISPLAY),
-		mConfig(nullptr),
-		mContext(EGL_NO_CONTEXT),
+		mEGLDisplay(EGL_NO_DISPLAY),
+		mEGLConfig(nullptr),
+		mEGLContext(EGL_NO_CONTEXT),
 		mDummyNativeWindow(NULL_HANDLE),
 		mDummySurface(EGL_NO_SURFACE),
 		mUseExternalContext(useExternalContext)
@@ -205,14 +205,14 @@ namespace OpenGLES3Renderer
 		// Nothing here
 	}
 
-	IContext::IContext(const IContext&) :
+	IOpenGLES3Context::IOpenGLES3Context(const IOpenGLES3Context&) :
 		mNativeWindowHandle(NULL_HANDLE),
 		#if (defined(LINUX) && !defined(ANDROID))
 			mX11Display(nullptr),
 		#endif
-		mDisplay(EGL_NO_DISPLAY),
-		mConfig(nullptr),
-		mContext(EGL_NO_CONTEXT),
+		mEGLDisplay(EGL_NO_DISPLAY),
+		mEGLConfig(nullptr),
+		mEGLContext(EGL_NO_CONTEXT),
 		mDummyNativeWindow(NULL_HANDLE),
 		mDummySurface(EGL_NO_SURFACE),
 		mUseExternalContext(false)
@@ -220,33 +220,33 @@ namespace OpenGLES3Renderer
 		// No implementation because the copy constructor is never used
 	}
 
-	void IContext::deinitialize()
+	void IOpenGLES3Context::deinitialize()
 	{
 		// Don't touch anything in case we don't have a display
-		if (EGL_NO_DISPLAY != mDisplay)
+		if (EGL_NO_DISPLAY != mEGLDisplay)
 		{
 			// Make "nothing" current
-			eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+			eglMakeCurrent(mEGLDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
 
 			// Destroy the EGL dummy surface
-			if (EGL_NO_SURFACE != mDummySurface && eglDestroySurface(mDisplay, mDummySurface) == EGL_FALSE)
+			if (EGL_NO_SURFACE != mDummySurface && eglDestroySurface(mEGLDisplay, mDummySurface) == EGL_FALSE)
 			{
 				// Error! Failed to destroy the used EGL dummy surface!
 			}
 			mDummySurface = EGL_NO_SURFACE;
 
 			// Destroy the EGL context
-			if (EGL_NO_CONTEXT != mContext)
+			if (EGL_NO_CONTEXT != mEGLContext)
 			{
 				// Release all resources allocated by the shader compiler
 				glReleaseShaderCompiler();
 
 				// Destroy the EGL context
-				if (eglDestroyContext(mDisplay, mContext) == EGL_FALSE)
+				if (eglDestroyContext(mEGLDisplay, mEGLContext) == EGL_FALSE)
 				{
 					// Error! Failed to destroy the used EGL context!
 				}
-				mContext = EGL_NO_CONTEXT;
+				mEGLContext = EGL_NO_CONTEXT;
 			}
 
 			// Return EGL to it's state at thread initialization
@@ -256,12 +256,12 @@ namespace OpenGLES3Renderer
 			}
 
 			// Terminate the EGL display
-			if (eglTerminate(mDisplay) == EGL_FALSE)
+			if (eglTerminate(mEGLDisplay) == EGL_FALSE)
 			{
 				// Error! Failed to terminate the used EGL display!
 			}
-			mDisplay = EGL_NO_DISPLAY;
-			mConfig  = nullptr;
+			mEGLDisplay = EGL_NO_DISPLAY;
+			mEGLConfig  = nullptr;
 
 			// Destroy the dummy native window, if required
 			#ifdef WIN32
@@ -289,7 +289,7 @@ namespace OpenGLES3Renderer
 		}
 	}
 
-	IContext& IContext::operator =(const IContext&)
+	IOpenGLES3Context& IOpenGLES3Context::operator =(const IOpenGLES3Context&)
 	{
 		// No implementation because the copy operator is never used
 		return *this;
@@ -297,9 +297,9 @@ namespace OpenGLES3Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Protected virtual OpenGLES3Renderer::IContext methods ]
+	//[ Protected virtual OpenGLES3Renderer::IOpenGLES3Context methods ]
 	//[-------------------------------------------------------]
-	EGLConfig IContext::chooseConfig(uint32_t multisampleAntialiasingSamples) const
+	EGLConfig IOpenGLES3Context::chooseConfig(uint32_t multisampleAntialiasingSamples) const
 	{
 		// Try to find a working EGL configuration
 		EGLConfig eglConfig = nullptr;
@@ -327,7 +327,7 @@ namespace OpenGLES3Renderer
 			};
 
 			// Choose exactly one matching configuration
-			if (eglChooseConfig(mDisplay, configAttribs, &eglConfig, 1, &numberOfConfigurations) == EGL_FALSE || numberOfConfigurations < 1)
+			if (eglChooseConfig(mEGLDisplay, configAttribs, &eglConfig, 1, &numberOfConfigurations) == EGL_FALSE || numberOfConfigurations < 1)
 			{
 				// Can we change something on the multisample antialiasing? (may be the cause that no configuration was found!)
 				if (multisampleAntialiasing)

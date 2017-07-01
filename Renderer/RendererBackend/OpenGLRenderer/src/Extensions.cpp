@@ -29,7 +29,7 @@
 #include <Renderer/PlatformTypes.h>	// For "RENDERER_OUTPUT_DEBUG_PRINTF()"
 #ifdef LINUX
 	#include <Renderer/LinuxHeader.h>
-	#include "OpenGLRenderer/Linux/ContextLinux.h"
+	#include "OpenGLRenderer/Linux/OpenGLContextLinux.h"
 #endif
 
 
@@ -43,8 +43,8 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Extensions::Extensions(IContext& context) :
-		mContext(&context),
+	Extensions::Extensions(IOpenGLContext& openGLContext) :
+		mOpenGLContext(&openGLContext),
 		mInitialized(false)
 	{
 		// Reset extensions
@@ -168,7 +168,7 @@ namespace OpenGLRenderer
 						// On Mac OS X, only "glGetString(GL_EXTENSIONS)" is required
 					#elif LINUX
 						// Get the X server display connection
-						Display* display = static_cast<ContextLinux&>(*mContext).getDisplay();
+						Display* display = static_cast<OpenGLContextLinux&>(*mOpenGLContext).getDisplay();
 						if (nullptr != display)
 						{
 							if (2 == loopIndex)

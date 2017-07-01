@@ -28,21 +28,21 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline HDC ContextWindows::getDeviceContext() const
+	inline HDC OpenGLContextWindows::getDeviceContext() const
 	{
 		return mWindowDeviceContext;
 	}
 
-	inline HGLRC ContextWindows::getRenderContext() const
+	inline HGLRC OpenGLContextWindows::getRenderContext() const
 	{
 		return mWindowRenderContext;
 	}
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual OpenGLRenderer::IContext methods       ]
+	//[ Public virtual OpenGLRenderer::IOpenGLContext methods ]
 	//[-------------------------------------------------------]
-	inline bool ContextWindows::isInitialized() const
+	inline bool OpenGLContextWindows::isInitialized() const
 	{
 		return (nullptr != mWindowRenderContext);
 	}

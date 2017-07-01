@@ -25,6 +25,7 @@
 
 #include <RendererRuntime/Core/File/StdFileManager.h>
 
+#include <RendererToolkit/Context.h>
 #include <RendererToolkit/Public/RendererToolkit.h>
 #include <RendererToolkit/Public/RendererToolkitInstance.h>
 
@@ -39,7 +40,8 @@
 int programEntryPoint(CommandLineArguments& commandLineArguments)
 {
 	RendererRuntime::StdFileManager stdFileManager;
-	RendererToolkit::RendererToolkitInstance rendererToolkitInstance(stdFileManager);
+	RendererToolkit::Context rendererToolkitContext(stdFileManager);
+	RendererToolkit::RendererToolkitInstance rendererToolkitInstance(rendererToolkitContext);
 	RendererToolkit::IRendererToolkit* rendererToolkit = rendererToolkitInstance.getRendererToolkit();
 	if (nullptr != rendererToolkit)
 	{

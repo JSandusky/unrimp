@@ -47,6 +47,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class Context;
+}
+
+
+//[-------------------------------------------------------]
 //[ Global functions                                      ]
 //[-------------------------------------------------------]
 #ifndef SHARED_LIBRARIES
@@ -54,7 +63,7 @@
 	// This is needed to do here because the methods in the library are also defined in global namespace
 
 	// "createRendererRuntimeInstance()" signature
-	extern RendererRuntime::IRendererRuntime* createRendererRuntimeInstance(Renderer::IRenderer& renderer, RendererRuntime::IFileManager& fileManager);
+	extern RendererRuntime::IRendererRuntime* createRendererRuntimeInstance(RendererRuntime::Context& context);
 #endif
 
 
@@ -84,10 +93,10 @@ namespace RendererRuntime
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] renderer
-		*    Renderer instance to use
+		*  @param[in] context
+		*    Renderer runtime context, the renderer runtime context instance must stay valid as long as the renderer runtime instance exists
 		*/
-		RendererRuntimeInstance(Renderer::IRenderer& renderer, RendererRuntime::IFileManager& fileManager)
+		explicit RendererRuntimeInstance(Context& context)
 		{
 			#ifdef SHARED_LIBRARIES
 				// Dynamically linked libraries
@@ -106,10 +115,10 @@ namespace RendererRuntime
 						if (nullptr != symbol)
 						{
 							// "createRendererRuntimeInstance()" signature
-							typedef RendererRuntime::IRendererRuntime* (__cdecl *createRendererRuntimeInstance)(Renderer::IRenderer& renderer, RendererRuntime::IFileManager& fileManager);
+							typedef IRendererRuntime* (__cdecl *createRendererRuntimeInstance)(Context& context);
 
 							// Create the renderer runtime instance
-							mRendererRuntime = static_cast<createRendererRuntimeInstance>(symbol)(renderer, fileManager);
+							mRendererRuntime = static_cast<createRendererRuntimeInstance>(symbol)(context);
 						}
 						else
 						{
@@ -138,10 +147,10 @@ namespace RendererRuntime
 						if (nullptr != symbol)
 						{
 							// "createRendererRuntimeInstance()" signature
-							typedef RendererRuntime::IRendererRuntime* (*createRendererRuntimeInstance)(Renderer::IRenderer& renderer, RendererRuntime::IFileManager& fileManager);
+							typedef IRendererRuntime* (*createRendererRuntimeInstance)(Context& context);
 
 							// Create the renderer runtime instance
-							mRendererRuntime = reinterpret_cast<createRendererRuntimeInstance>(symbol)(renderer, fileManager);
+							mRendererRuntime = reinterpret_cast<createRendererRuntimeInstance>(symbol)(context);
 						}
 						else
 						{
@@ -162,7 +171,7 @@ namespace RendererRuntime
 				// Statically linked libraries
 
 				// Create the renderer runtime instance
-				mRendererRuntime = createRendererRuntimeInstance(renderer, fileManager);
+				mRendererRuntime = createRendererRuntimeInstance(context);
 			#endif
 		}
 
@@ -202,7 +211,7 @@ namespace RendererRuntime
 		*  @remarks
 		*    The renderer runtime instance, can be a null pointer
 		*/
-		inline RendererRuntime::IRendererRuntime* getRendererRuntime() const
+		inline IRendererRuntime* getRendererRuntime() const
 		{
 			return mRendererRuntime;
 		}
@@ -212,8 +221,8 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		void								 *mRendererRuntimeSharedLibrary;	///< Renderer runtime shared library, can be a null pointer
-		RendererRuntime::IRendererRuntimePtr  mRendererRuntime;					///< Renderer runtime instance, can be a null pointer
+		void*				mRendererRuntimeSharedLibrary;	///< Renderer runtime shared library, can be a null pointer
+		IRendererRuntimePtr	mRendererRuntime;				///< Renderer runtime instance, can be a null pointer
 
 
 	};

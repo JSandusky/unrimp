@@ -48,6 +48,7 @@
 	#include "RendererRuntime/DebugGui/Detail/DebugGuiManagerLinux.h"
 #endif
 #include "RendererRuntime/Vr/OpenVR/VrManagerOpenVR.h"
+#include "RendererRuntime/Context.h"
 
 #include <cstring>
 
@@ -56,9 +57,9 @@
 //[ Global functions                                      ]
 //[-------------------------------------------------------]
 // Export the instance creation function
-RENDERERRUNTIME_FUNCTION_EXPORT RendererRuntime::IRendererRuntime* createRendererRuntimeInstance(Renderer::IRenderer& renderer, RendererRuntime::IFileManager& fileManager)
+RENDERERRUNTIME_FUNCTION_EXPORT RendererRuntime::IRendererRuntime* createRendererRuntimeInstance(RendererRuntime::Context& context)
 {
-	return new RendererRuntime::RendererRuntimeImpl(renderer, fileManager);
+	return new RendererRuntime::RendererRuntimeImpl(context);
 }
 
 
@@ -136,10 +137,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	RendererRuntimeImpl::RendererRuntimeImpl(Renderer::IRenderer& renderer, IFileManager& fileManager)
+	RendererRuntimeImpl::RendererRuntimeImpl(Context& context) :
+		IRendererRuntime(context)
 	{
 		// Backup the given renderer and add our reference
-		mRenderer = &renderer;
+		mRenderer = &context.getRenderer();
 		mRenderer->addReference();
 
 		// Create the buffer and texture manager instance and add our reference
@@ -149,7 +151,7 @@ namespace RendererRuntime
 		mTextureManager->addReference();
 
 		// Backup the given file manager instance
-		mFileManager = &fileManager;
+		mFileManager = &context.getFileManager();
 
 		// Create the core manager instances
 		mThreadManager = new ThreadManager();

@@ -21,20 +21,37 @@
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace VulkanRenderer
+namespace Renderer
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline HDC ContextWindows::getDeviceContext() const
+	inline Context::Context(handle nativeWindowHandle, bool useExternalContext) :
+		mNativeWindowHandle(nativeWindowHandle),
+		mUseExternalContext(useExternalContext)
 	{
-		return mWindowDeviceContext;
+		// Nothing here
+	}
+
+	inline Context::~Context()
+	{
+		// Nothing here
+	}
+
+	inline handle Context::getNativeWindowHandle() const
+	{
+		return mNativeWindowHandle;
+	}
+
+	inline bool Context::isUsingExternalContext() const
+	{
+		return mUseExternalContext;
 	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // VulkanRenderer
+} // Renderer

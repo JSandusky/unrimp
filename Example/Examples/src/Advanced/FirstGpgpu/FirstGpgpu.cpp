@@ -60,7 +60,8 @@ FirstGpgpu::~FirstGpgpu()
 int FirstGpgpu::run()
 {
 	// Create renderer instance
-	mRendererInstance = new Renderer::RendererInstance(mRendererName, 0);
+	Renderer::Context rendererContext;
+	mRendererInstance = new Renderer::RendererInstance(mRendererName, rendererContext);
 
 	// Get the renderer instance and ensure it's valid
 	mRenderer = mRendererInstance->getRenderer();

@@ -33,6 +33,11 @@ namespace Renderer
 		// Nothing here
 	}
 
+	inline const Context& IRenderer::getContext() const
+	{
+		return mContext;
+	}
+
 	inline const Capabilities& IRenderer::getCapabilities() const
 	{
 		return mCapabilities;
@@ -49,7 +54,8 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IRenderer::IRenderer()
+	inline IRenderer::IRenderer(const Context& context) :
+		mContext(context)
 	{
 		// Nothing here
 	}

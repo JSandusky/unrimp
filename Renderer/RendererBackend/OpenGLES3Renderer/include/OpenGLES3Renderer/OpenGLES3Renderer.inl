@@ -28,9 +28,9 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline IContext& OpenGLES3Renderer::getContext() const
+	inline IOpenGLES3Context& OpenGLES3Renderer::getOpenGLES3Context() const
 	{
-		return *mContext;
+		return *mOpenGLES3Context;
 	}
 
 

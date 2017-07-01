@@ -31,7 +31,6 @@
 #include "OpenGLES3Renderer/Buffer/UniformBuffer.h"
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 #include "OpenGLES3Renderer/IExtensions.h"
-#include "OpenGLES3Renderer/IContext.h"
 
 
 //[-------------------------------------------------------]
@@ -46,7 +45,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	BufferManager::BufferManager(OpenGLES3Renderer& openGLES3Renderer) :
 		IBufferManager(openGLES3Renderer),
-		mExtensions(&openGLES3Renderer.getContext().getExtensions())
+		mExtensions(&openGLES3Renderer.getOpenGLES3Context().getExtensions())
 	{
 		// Nothing here
 	}

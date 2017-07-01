@@ -39,11 +39,11 @@ namespace Renderer
 }
 namespace VulkanRenderer
 {
-	class IContext;
 	class SwapChain;
 	class Extensions;
 	class VertexArray;
 	class RootSignature;
+	class IVulkanContext;
 	class VulkanRuntimeLinking;
 }
 
@@ -94,15 +94,13 @@ namespace VulkanRenderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] nativeWindowHandle
-		*    Optional native main window handle, can be a null handle
-		*  @param[in] useExternalContext
-		*    When true the renderer doesn't create an own Vulkan context for rendering
+		*  @param[in] context
+		*    Renderer context, the renderer context instance must stay valid as long as the renderer instance exists
 		*
 		*  @note
 		*    - Do never ever use a not properly initialized renderer! Use "Renderer::IRenderer::isInitialized()" to check the initialization state.
 		*/
-		explicit VulkanRenderer(handle nativeWindowHandle, bool useExternalContext);
+		explicit VulkanRenderer(const Renderer::Context& context);
 
 		/**
 		*  @brief
@@ -117,7 +115,7 @@ namespace VulkanRenderer
 		*  @return
 		*    The Vulkan runtime linking instance, do not free the memory the reference is pointing to
 		*/
-		inline const VulkanRuntimeLinking &getVulkanRuntimeLinking() const;
+		inline const VulkanRuntimeLinking& getVulkanRuntimeLinking() const;
 
 		/**
 		*  @brief
@@ -126,7 +124,7 @@ namespace VulkanRenderer
 		*  @return
 		*    The Vulkan context instance, do not free the memory the reference is pointing to
 		*/
-		inline const IContext &getContext() const;
+		inline const IVulkanContext& getVulkanContext() const;
 
 		/**
 		*  @brief
@@ -135,7 +133,7 @@ namespace VulkanRenderer
 		*  @return
 		*    The available extensions, do not free the memory the reference is pointing to
 		*/
-		inline const Extensions &getExtensions() const;
+		inline const Extensions& getExtensions() const;
 
 		/**
 		*  @brief
@@ -144,7 +142,7 @@ namespace VulkanRenderer
 		*  @return
 		*    The available extensions, do not free the memory the reference is pointing to
 		*/
-		inline Extensions &getExtensions();
+		inline Extensions& getExtensions();
 
 		//[-------------------------------------------------------]
 		//[ States                                                ]
@@ -260,20 +258,20 @@ namespace VulkanRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		VulkanRuntimeLinking	  *mVulkanRuntimeLinking;	///< Vulkan runtime linking instance, always valid
-		IContext				  *mContext;				///< Vulkan context instance, always valid
-		Extensions				  *mExtensions;				///< Extensions instance, always valid
+		VulkanRuntimeLinking*	   mVulkanRuntimeLinking;	///< Vulkan runtime linking instance, always valid
+		IVulkanContext*			   mVulkanContext;			///< Vulkan context instance, always valid
+		Extensions*				   mExtensions;				///< Extensions instance, always valid
 		Renderer::IShaderLanguage* mShaderLanguageGlsl;		///< GLSL shader language instance (we keep a reference to it), can be a null pointer
-		RootSignature			  *mGraphicsRootSignature;	///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
-		Renderer::ISamplerState	  *mDefaultSamplerState;	///< Default rasterizer state (we keep a reference to it), can be a null pointer
+		RootSignature*			   mGraphicsRootSignature;	///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
+		Renderer::ISamplerState*   mDefaultSamplerState;	///< Default rasterizer state (we keep a reference to it), can be a null pointer
 		//[-------------------------------------------------------]
 		//[ Input-assembler (IA) stage                            ]
 		//[-------------------------------------------------------]
-		VertexArray	*mVertexArray;				///< Currently set vertex array (we keep a reference to it), can be a null pointer
+		VertexArray* mVertexArray;	///< Currently set vertex array (we keep a reference to it), can be a null pointer
 		//[-------------------------------------------------------]
 		//[ Output-merger (OM) stage                              ]
 		//[-------------------------------------------------------]
-		SwapChain				*mMainSwapChain;	///< In case the optional native main window handle within the "VulkanRenderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
+		SwapChain*				 mMainSwapChain;	///< In case the optional native main window handle within the "VulkanRenderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
 		Renderer::IRenderTarget* mRenderTarget;		///< Currently set render target (we keep a reference to it), can be a null pointer
 
 

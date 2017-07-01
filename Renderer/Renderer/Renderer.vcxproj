@@ -49,6 +49,7 @@
     <ClInclude Include="include\Renderer\Buffer\IVertexBuffer.h" />
     <ClInclude Include="include\Renderer\Buffer\VertexArrayTypes.h" />
     <ClInclude Include="include\Renderer\Capabilities.h" />
+    <ClInclude Include="include\Renderer\Context.h" />
     <ClInclude Include="include\Renderer\IRenderer.h" />
     <ClInclude Include="include\Renderer\IResource.h" />
     <ClInclude Include="include\Renderer\IRootSignature.h" />
@@ -104,6 +105,7 @@
     <None Include="include\Renderer\Buffer\IVertexArray.inl" />
     <None Include="include\Renderer\Buffer\IVertexBuffer.inl" />
     <None Include="include\Renderer\Capabilities.inl" />
+    <None Include="include\Renderer\Context.inl" />
     <None Include="include\Renderer\IRenderer.inl" />
     <None Include="include\Renderer\IResource.inl" />
     <None Include="include\Renderer\IRootSignature.inl" />

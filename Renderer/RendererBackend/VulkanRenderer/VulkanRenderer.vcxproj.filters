@@ -28,12 +28,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\VulkanRenderer\Windows\ContextWindows.h">
-      <Filter>Source Files\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="include\VulkanRenderer\Linux\ContextLinux.h">
-      <Filter>Source Files\Linux</Filter>
-    </ClInclude>
     <ClInclude Include="include\VulkanRenderer\Shader\GeometryShaderGlsl.h">
       <Filter>Source Files\Shader</Filter>
     </ClInclude>
@@ -56,9 +50,6 @@
       <Filter>Source Files\Shader</Filter>
     </ClInclude>
     <ClInclude Include="include\VulkanRenderer\Extensions.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\VulkanRenderer\IContext.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\VulkanRenderer\Mapping.h">
@@ -142,16 +133,19 @@
     <ClInclude Include="include\VulkanRenderer\Texture\Texture3D.h">
       <Filter>Source Files\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\IVulkanContext.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Windows\VulkanContextWindows.h">
+      <Filter>Source Files\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\Linux\VulkanContextLinux.h">
+      <Filter>Source Files\Linux</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Windows\ContextWindows.cpp">
-      <Filter>Source Files\Windows</Filter>
-    </ClCompile>
     <ClCompile Include="src\Windows\ExtensionsWindows.cpp">
       <Filter>Source Files\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Linux\ContextLinux.cpp">
-      <Filter>Source Files\Linux</Filter>
     </ClCompile>
     <ClCompile Include="src\Linux\ExtensionsLinux.cpp">
       <Filter>Source Files\Linux</Filter>
@@ -178,9 +172,6 @@
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
     <ClCompile Include="src\Extensions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\IContext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Mapping.cpp">
@@ -258,16 +249,19 @@
     <ClCompile Include="src\Texture\Texture1D.cpp">
       <Filter>Source Files\Texture</Filter>
     </ClCompile>
+    <ClCompile Include="src\IVulkanContext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Windows\VulkanContextWindows.cpp">
+      <Filter>Source Files\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Linux\VulkanContextLinux.cpp">
+      <Filter>Source Files\Linux</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
     <None Include="CMakeLists.txt" />
-    <None Include="include\VulkanRenderer\Windows\ContextWindows.inl">
-      <Filter>Source Files\Windows</Filter>
-    </None>
-    <None Include="include\VulkanRenderer\Linux\ContextLinux.inl">
-      <Filter>Source Files\Linux</Filter>
-    </None>
     <None Include="include\VulkanRenderer\Shader\GeometryShaderGlsl.inl">
       <Filter>Source Files\Shader</Filter>
     </None>
@@ -293,9 +287,6 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\VulkanRenderer\VulkanRuntimeLinking.inl">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="include\VulkanRenderer\IContext.inl">
       <Filter>Source Files</Filter>
     </None>
     <None Include="include\VulkanRenderer\Texture\Texture2DArray.inl">
@@ -351,6 +342,15 @@
     </None>
     <None Include="include\VulkanRenderer\Texture\Texture1D.inl">
       <Filter>Source Files\Texture</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\IVulkanContext.inl">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\Windows\VulkanContextWindows.inl">
+      <Filter>Source Files\Windows</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\Linux\VulkanContextLinux.inl">
+      <Filter>Source Files\Linux</Filter>
     </None>
   </ItemGroup>
 </Project>

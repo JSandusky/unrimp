@@ -73,16 +73,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\OpenGLRenderer\Windows\ContextWindows.h">
-      <Filter>Source Files\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\Linux\ContextLinux.h">
-      <Filter>Source Files\Linux</Filter>
-    </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\Extensions.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\OpenGLRenderer\IContext.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\OpenGLRenderer\Mapping.h">
@@ -430,24 +421,24 @@
     <ClInclude Include="..\..\..\External\glslang\src\SPIRV\GLSL.std.450.h">
       <Filter>External\SPIRV</Filter>
     </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\IOpenGLContext.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Windows\OpenGLContextWindows.h">
+      <Filter>Source Files\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\Linux\OpenGLContextLinux.h">
+      <Filter>Source Files\Linux</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Windows\ContextWindows.cpp">
-      <Filter>Source Files\Windows</Filter>
-    </ClCompile>
     <ClCompile Include="src\Windows\ExtensionsWindows.cpp">
       <Filter>Source Files\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Linux\ContextLinux.cpp">
-      <Filter>Source Files\Linux</Filter>
     </ClCompile>
     <ClCompile Include="src\Linux\ExtensionsLinux.cpp">
       <Filter>Source Files\Linux</Filter>
     </ClCompile>
     <ClCompile Include="src\Extensions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\IContext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Mapping.cpp">
@@ -771,16 +762,19 @@
     <ClCompile Include="..\..\..\External\glslang\src\SPIRV\SpvBuilder.cpp">
       <Filter>External\SPIRV</Filter>
     </ClCompile>
+    <ClCompile Include="src\IOpenGLContext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Windows\OpenGLContextWindows.cpp">
+      <Filter>Source Files\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Linux\OpenGLContextLinux.cpp">
+      <Filter>Source Files\Linux</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
     <None Include="CMakeLists.txt" />
-    <None Include="include\OpenGLRenderer\Windows\ContextWindows.inl">
-      <Filter>Source Files\Windows</Filter>
-    </None>
-    <None Include="include\OpenGLRenderer\Linux\ContextLinux.inl">
-      <Filter>Source Files\Linux</Filter>
-    </None>
     <None Include="include\OpenGLRenderer\OpenGLRenderer.inl">
       <Filter>Source Files</Filter>
     </None>
@@ -891,6 +885,12 @@
     </None>
     <None Include="..\..\..\External\glslang\src\glslang\MachineIndependent\glslang.y">
       <Filter>External\glslang\MachineIndependent</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\Windows\OpenGLContextWindows.inl">
+      <Filter>Source Files\Windows</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\Linux\OpenGLContextLinux.inl">
+      <Filter>Source Files\Linux</Filter>
     </None>
   </ItemGroup>
 </Project>

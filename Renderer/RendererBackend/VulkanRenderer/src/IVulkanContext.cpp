@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "VulkanRenderer/IContext.h"
+#include "VulkanRenderer/IVulkanContext.h"
 #include "VulkanRenderer/VulkanRenderer.h"
 
 // Disable warnings in external headers, we can't fix them
@@ -232,7 +232,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	IContext::~IContext()
+	IVulkanContext::~IVulkanContext()
 	{
 		if (VK_NULL_HANDLE != mVkDevice)
 		{
@@ -249,7 +249,7 @@ namespace VulkanRenderer
 		}
 	}
 
-	void IContext::flushSetupVkCommandBuffer() const
+	void IVulkanContext::flushSetupVkCommandBuffer() const
 	{
 		VkResult vkResult = vkEndCommandBuffer(mSetupVkCommandBuffer);
 		if (vkResult == VK_SUCCESS)
@@ -294,9 +294,9 @@ namespace VulkanRenderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual IContext methods                       ]
+	//[ Public virtual IVulkanContext methods                 ]
 	//[-------------------------------------------------------]
-	bool IContext::isInitialized() const
+	bool IVulkanContext::isInitialized() const
 	{
 		return (VK_NULL_HANDLE != mSetupVkCommandBuffer);
 	}
@@ -305,7 +305,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	IContext::IContext(VulkanRenderer& vulkanRenderer) :
+	IVulkanContext::IVulkanContext(VulkanRenderer& vulkanRenderer) :
 		mVkPhysicalDevice(VK_NULL_HANDLE),
 		mVkDevice(VK_NULL_HANDLE),
 		mGraphicsVkQueue(VK_NULL_HANDLE),

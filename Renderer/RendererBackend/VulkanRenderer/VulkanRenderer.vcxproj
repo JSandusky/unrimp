@@ -44,8 +44,8 @@
     <ClInclude Include="include\VulkanRenderer\Buffer\VertexBuffer.h" />
     <ClInclude Include="include\VulkanRenderer\Extensions.h" />
     <ClInclude Include="include\VulkanRenderer\Helper.h" />
-    <ClInclude Include="include\VulkanRenderer\IContext.h" />
-    <ClInclude Include="include\VulkanRenderer\Linux\ContextLinux.h" />
+    <ClInclude Include="include\VulkanRenderer\IVulkanContext.h" />
+    <ClInclude Include="include\VulkanRenderer\Linux\VulkanContextLinux.h" />
     <ClInclude Include="include\VulkanRenderer\Mapping.h" />
     <ClInclude Include="include\VulkanRenderer\RenderTarget\Framebuffer.h" />
     <ClInclude Include="include\VulkanRenderer\RenderTarget\SwapChain.h" />
@@ -72,7 +72,7 @@
     <ClInclude Include="include\VulkanRenderer\Shader\TessellationControlShaderGlsl.h" />
     <ClInclude Include="include\VulkanRenderer\Shader\TessellationEvaluationShaderGlsl.h" />
     <ClInclude Include="include\VulkanRenderer\Shader\VertexShaderGlsl.h" />
-    <ClInclude Include="include\VulkanRenderer\Windows\ContextWindows.h" />
+    <ClInclude Include="include\VulkanRenderer\Windows\VulkanContextWindows.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Buffer\BufferManager.cpp" />
@@ -84,8 +84,8 @@
     <ClCompile Include="src\Buffer\VertexBuffer.cpp" />
     <ClCompile Include="src\Extensions.cpp" />
     <ClCompile Include="src\Helper.cpp" />
-    <ClCompile Include="src\IContext.cpp" />
-    <ClCompile Include="src\Linux\ContextLinux.cpp">
+    <ClCompile Include="src\IVulkanContext.cpp" />
+    <ClCompile Include="src\Linux\ExtensionsLinux.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">true</ExcludedFromBuild>
@@ -95,14 +95,14 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="src\Linux\ExtensionsLinux.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">true</ExcludedFromBuild>
+    <ClCompile Include="src\Linux\VulkanContextLinux.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="src\Mapping.cpp" />
@@ -129,8 +129,8 @@
     <ClCompile Include="src\Shader\TessellationControlShaderGlsl.cpp" />
     <ClCompile Include="src\Shader\TessellationEvaluationShaderGlsl.cpp" />
     <ClCompile Include="src\Shader\VertexShaderGlsl.cpp" />
-    <ClCompile Include="src\Windows\ContextWindows.cpp" />
     <ClCompile Include="src\Windows\ExtensionsWindows.cpp" />
+    <ClCompile Include="src\Windows\VulkanContextWindows.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
@@ -141,8 +141,8 @@
     <None Include="include\VulkanRenderer\Buffer\UniformBuffer.inl" />
     <None Include="include\VulkanRenderer\Buffer\VertexArray.inl" />
     <None Include="include\VulkanRenderer\Buffer\VertexBuffer.inl" />
-    <None Include="include\VulkanRenderer\IContext.inl" />
-    <None Include="include\VulkanRenderer\Linux\ContextLinux.inl" />
+    <None Include="include\VulkanRenderer\IVulkanContext.inl" />
+    <None Include="include\VulkanRenderer\Linux\VulkanContextLinux.inl" />
     <None Include="include\VulkanRenderer\RenderTarget\Framebuffer.inl" />
     <None Include="include\VulkanRenderer\RenderTarget\SwapChain.inl" />
     <None Include="include\VulkanRenderer\State\IState.inl" />
@@ -163,7 +163,7 @@
     <None Include="include\VulkanRenderer\Shader\TessellationEvaluationShaderGlsl.inl" />
     <None Include="include\VulkanRenderer\Shader\VertexShaderGlsl.inl" />
     <None Include="include\VulkanRenderer\VulkanRuntimeLinking.inl" />
-    <None Include="include\VulkanRenderer\Windows\ContextWindows.inl" />
+    <None Include="include\VulkanRenderer\Windows\VulkanContextWindows.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -28,9 +28,9 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline IContext& SwapChain::getContext() const
+	inline IOpenGLContext& SwapChain::getOpenGLContext() const
 	{
-		return *mContext;
+		return *mOpenGLContext;
 	}
 
 

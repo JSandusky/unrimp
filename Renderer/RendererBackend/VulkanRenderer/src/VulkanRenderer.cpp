@@ -44,9 +44,9 @@
 #include "VulkanRenderer/Shader/ShaderLanguageGlsl.h"
 #include "VulkanRenderer/Shader/ProgramGlsl.h"
 #ifdef WIN32
-	#include "VulkanRenderer/Windows/ContextWindows.h"
+	#include "VulkanRenderer/Windows/VulkanContextWindows.h"
 #elif defined LINUX
-	#include "VulkanRenderer/Linux/ContextLinux.h"
+	#include "VulkanRenderer/Linux/VulkanContextLinux.h"
 #endif
 
 #include <Renderer/Buffer/CommandBuffer.h>
@@ -61,9 +61,9 @@
 #else
 	#define VULKANRENDERER_API_EXPORT
 #endif
-VULKANRENDERER_API_EXPORT Renderer::IRenderer* createVulkanRendererInstance(handle nativeWindowHandle, bool useExternalContext)
+VULKANRENDERER_API_EXPORT Renderer::IRenderer* createVulkanRendererInstance(const Renderer::Context& context)
 {
-	return new VulkanRenderer::VulkanRenderer(nativeWindowHandle, useExternalContext);
+	return new VulkanRenderer::VulkanRenderer(context);
 }
 #undef VULKANRENDERER_API_EXPORT
 
@@ -290,15 +290,10 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	#ifdef WIN32
-	VulkanRenderer::VulkanRenderer(handle nativeWindowHandle, bool) :
-	#elif defined LINUX
-	VulkanRenderer::VulkanRenderer(handle nativeWindowHandle, bool useExternalContext) :
-	#else
-		#error "Unsupported platform"
-	#endif
+	VulkanRenderer::VulkanRenderer(const Renderer::Context& context) :
+		IRenderer(context),
 		mVulkanRuntimeLinking(new VulkanRuntimeLinking()),
-		mContext(nullptr),
+		mVulkanContext(nullptr),
 		mExtensions(nullptr),
 		mShaderLanguageGlsl(nullptr),
 		mGraphicsRootSignature(nullptr),
@@ -310,20 +305,21 @@ namespace VulkanRenderer
 		// Is Vulkan available?
 		if (mVulkanRuntimeLinking->isVulkanAvaiable())
 		{
+			const handle nativeWindowHandle = mContext.getNativeWindowHandle();
 			#ifdef WIN32
-				// TODO(co) Add external context support
-				mContext = new ContextWindows(*this, nativeWindowHandle);
+				// TODO(co) Add external Vulkan context support
+				mVulkanContext = new VulkanContextWindows(*this, nativeWindowHandle);
 			#elif defined LINUX
-				mContext = new ContextLinux(nativeWindowHandle, useExternalContext);
+				mVulkanContext = new VulkanContextLinux(nativeWindowHandle, mContext.isUsingExternalContext());
 			#else
 				#error "Unsupported platform"
 			#endif
 
 			// We're using "this" in here, so we are not allowed to write the following within the initializer list
-			mExtensions = new Extensions(*mContext);
+			mExtensions = new Extensions(*mVulkanContext);
 
-			// Is the context initialized?
-			if (mContext->isInitialized())
+			// Is the Vulkan context initialized?
+			if (mVulkanContext->isInitialized())
 			{
 				// Initialize the Vulkan extensions
 				mExtensions->initialize();
@@ -354,7 +350,7 @@ namespace VulkanRenderer
 					mMainSwapChain->addReference();	// Internal renderer reference
 
 					// Done
-					mContext->flushSetupVkCommandBuffer();
+					mVulkanContext->flushSetupVkCommandBuffer();
 				}
 			}
 		}
@@ -423,7 +419,7 @@ namespace VulkanRenderer
 		delete mExtensions;
 
 		// Destroy the Vulkan context instance
-		delete mContext;
+		delete mVulkanContext;
 
 		// Destroy the Vulkan runtime linking instance
 		delete mVulkanRuntimeLinking;
@@ -668,7 +664,7 @@ namespace VulkanRenderer
 					case Renderer::ResourceType::SWAP_CHAIN:
 					{
 						// TODO(co) Implement me
-						// static_cast<SwapChain*>(mRenderTarget)->getContext().makeCurrent();
+						// static_cast<SwapChain*>(mRenderTarget)->getVulkanContext().makeCurrent();
 						break;
 					}
 
@@ -798,8 +794,8 @@ namespace VulkanRenderer
 
 	bool VulkanRenderer::isInitialized() const
 	{
-		// Is the context initialized?
-		return mContext->isInitialized();
+		// Is the Vulkan context initialized?
+		return mVulkanContext->isInitialized();
 	}
 
 	bool VulkanRenderer::isDebugEnabled()

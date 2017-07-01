@@ -72,15 +72,13 @@ namespace RendererRuntime
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] renderer
-		*    Renderer instance to use
-		*  @param[in] fileManager
-		*    File manager instance to use
+		*  @param[in] context
+		*    Renderer runtime context, the renderer runtime context instance must stay valid as long as the renderer runtime instance exists
 		*
 		*  @note
 		*    - The renderer runtime keeps a reference to the provided renderer instance
 		*/
-		explicit RendererRuntimeImpl(Renderer::IRenderer& renderer, IFileManager& fileManager);
+		explicit RendererRuntimeImpl(Context& context);
 
 		/**
 		*  @brief

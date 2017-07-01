@@ -19,49 +19,52 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "VulkanRenderer/Linux/VulkanContextLinux.h"
+#include "VulkanRenderer/Extensions.h"
+#include "VulkanRenderer/VulkanRuntimeLinking.h"
+
+#include <iostream>	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLES3Renderer
+namespace VulkanRenderer
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline handle IContext::getNativeWindowHandle() const
+	VulkanContextLinux::VulkanContextLinux(handle nativeWindowHandle, bool useExternalContext) :
+		mNativeWindowHandle(nativeWindowHandle),
+		mDummyWindow(NULL_HANDLE),
+		mDisplay(nullptr),
+		m_pDummyVisualInfo(nullptr),
+		mWindowRenderContext(NULL_HANDLE),
+		mUseExternalContext(useExternalContext)
 	{
-		return mNativeWindowHandle;
+		// TODO(co) Implement me
 	}
 
-	inline EGLDisplay IContext::getEGLDisplay() const
+	VulkanContextLinux::~VulkanContextLinux()
 	{
-		return mDisplay;
+		// TODO(co) Implement me
 	}
 
-	inline EGLConfig IContext::getEGLConfig() const
-	{
-		return mConfig;
-	}
 
-	inline EGLContext IContext::getEGLContext() const
+	//[-------------------------------------------------------]
+	//[ Public virtual VulkanRenderer::IVulkanContext methods ]
+	//[-------------------------------------------------------]
+	void VulkanContextLinux::makeCurrent() const
 	{
-		return mContext;
+		// TODO(co) Implement me
 	}
-
-	inline EGLSurface IContext::getEGLDummySurface() const
-	{
-		return mDummySurface;
-	}
-
-	#if defined(LINUX) && !defined(ANDROID)
-		inline ::Display* IContext::getX11Display() const
-		{
-			return mX11Display;
-		}
-	#endif
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLES3Renderer
+} // VulkanRenderer

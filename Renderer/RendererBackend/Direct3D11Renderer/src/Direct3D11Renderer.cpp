@@ -55,8 +55,6 @@
 #include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
 
-#include <tuple>	// For "std::ignore"
-
 
 //[-------------------------------------------------------]
 //[ Global functions                                      ]
@@ -67,10 +65,9 @@
 #else
 	#define DIRECT3D11RENDERER_API_EXPORT
 #endif
-DIRECT3D11RENDERER_API_EXPORT Renderer::IRenderer* createDirect3D11RendererInstance(handle nativeWindowHandle, bool useExternalContext)
+DIRECT3D11RENDERER_API_EXPORT Renderer::IRenderer* createDirect3D11RendererInstance(const Renderer::Context& context)
 {
-	std::ignore = useExternalContext;
-	return new Direct3D11Renderer::Direct3D11Renderer(nativeWindowHandle);
+	return new Direct3D11Renderer::Direct3D11Renderer(context);
 }
 #undef DIRECT3D11RENDERER_API_EXPORT
 
@@ -335,7 +332,8 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Direct3D11Renderer::Direct3D11Renderer(handle nativeWindowHandle) :
+	Direct3D11Renderer::Direct3D11Renderer(const Renderer::Context& context) :
+		IRenderer(context),
 		mDirect3D11RuntimeLinking(new Direct3D11RuntimeLinking()),
 		mD3D11Device(nullptr),
 		mD3D11DeviceContext(nullptr),
@@ -432,6 +430,7 @@ namespace Direct3D11Renderer
 				initializeCapabilities();
 
 				// Create a main swap chain instance?
+				const handle nativeWindowHandle = mContext.getNativeWindowHandle();
 				if (NULL_HANDLE != nativeWindowHandle)
 				{
 					// Create a main swap chain instance

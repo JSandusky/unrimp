@@ -31,15 +31,16 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-IApplicationRenderer::IApplicationRenderer(const char* rendererName, ExampleBase* example) :
+IApplicationRenderer::IApplicationRenderer(const char* rendererName, ExampleBase* exampleBase) :
 	IApplication(rendererName),
+	mRendererContext(nullptr),
 	mRendererInstance(nullptr),
 	mRenderer(nullptr),
-	mExample(example)
+	mExampleBase(exampleBase)
 {
-	if (nullptr != mExample)
+	if (nullptr != mExampleBase)
 	{
-		mExample->setApplicationFrontend(this);
+		mExampleBase->setApplicationFrontend(this);
 	}
 	
 	// Copy the given renderer name
@@ -79,13 +80,15 @@ void IApplicationRenderer::onDeinitialization()
 	mRenderer = nullptr;
 	delete mRendererInstance;
 	mRendererInstance = nullptr;
+	delete mRendererContext;
+	mRendererContext = nullptr;
 }
 
 void IApplicationRenderer::onUpdate()
 {
-	if (nullptr != mExample)
+	if (nullptr != mExampleBase)
 	{
-		mExample->onUpdate();
+		mExampleBase->onUpdate();
 	}
 }
 
@@ -123,50 +126,50 @@ void IApplicationRenderer::onToggleFullscreenState()
 
 void IApplicationRenderer::onKeyDown(uint32_t key)
 {
-	if (nullptr != mExample)
+	if (nullptr != mExampleBase)
 	{
-		mExample->onKeyDown(key);
+		mExampleBase->onKeyDown(key);
 	}
 }
 
 void IApplicationRenderer::onKeyUp(uint32_t key)
 {
-	if (nullptr != mExample)
+	if (nullptr != mExampleBase)
 	{
-		mExample->onKeyUp(key);
+		mExampleBase->onKeyUp(key);
 	}
 }
 
 void IApplicationRenderer::onMouseButtonDown(uint32_t button)
 {
-	if (nullptr != mExample)
+	if (nullptr != mExampleBase)
 	{
-		mExample->onMouseButtonDown(button);
+		mExampleBase->onMouseButtonDown(button);
 	}
 }
 
 void IApplicationRenderer::onMouseButtonUp(uint32_t button)
 {
-	if (nullptr != mExample)
+	if (nullptr != mExampleBase)
 	{
-		mExample->onMouseButtonUp(button);
+		mExampleBase->onMouseButtonUp(button);
 	}
 }
 
 void IApplicationRenderer::onMouseMove(int x, int y)
 {
-	if (nullptr != mExample)
+	if (nullptr != mExampleBase)
 	{
-		mExample->onMouseMove(x, y);
+		mExampleBase->onMouseMove(x, y);
 	}
 }
 
 void IApplicationRenderer::onDrawRequest()
 {
-	if (nullptr != mExample && mExample->doesCompleteOwnDrawing())
+	if (nullptr != mExampleBase && mExampleBase->doesCompleteOwnDrawing())
 	{
 		// The example does the drawing completely on its own
-		mExample->draw();
+		mExampleBase->draw();
 	}
 
 	// Is there a renderer instance?
@@ -202,9 +205,9 @@ void IApplicationRenderer::onDrawRequest()
 				mCommandBuffer.submitAndClear(*mRenderer);
 
 				// Call the draw method
-				if (nullptr != mExample)
+				if (nullptr != mExampleBase)
 				{
-					mExample->draw();
+					mExampleBase->draw();
 				}
 
 				// End debug event
@@ -246,17 +249,17 @@ void IApplicationRenderer::createRenderer()
 
 void IApplicationRenderer::initializeExample()
 {
-	if (nullptr != mExample)
+	if (nullptr != mExampleBase)
 	{
-		mExample->initialize();
+		mExampleBase->initialize();
 	}
 }
 
 void IApplicationRenderer::deinitializeExample()
 {
-	if (nullptr != mExample)
+	if (nullptr != mExampleBase)
 	{
-		mExample->deinitialize();
+		mExampleBase->deinitialize();
 	}
 }
 
@@ -269,7 +272,8 @@ Renderer::IRenderer* IApplicationRenderer::createRendererInstance(const char* re
 	// Is the given pointer valid?
 	if (nullptr != rendererName)
 	{
-		mRendererInstance = new Renderer::RendererInstance(rendererName, getNativeWindowHandle());
+		mRendererContext = new Renderer::Context(getNativeWindowHandle());
+		mRendererInstance = new Renderer::RendererInstance(rendererName, *mRendererContext);
 	}
 	Renderer::IRenderer* renderer = (nullptr != mRendererInstance) ? mRendererInstance->getRenderer() : nullptr;
 
@@ -280,6 +284,8 @@ Renderer::IRenderer* IApplicationRenderer::createRendererInstance(const char* re
 		renderer = nullptr;
 		delete mRendererInstance;
 		mRendererInstance = nullptr;
+		delete mRendererContext;
+		mRendererContext = nullptr;
 	}
 
 	#ifdef RENDERER_NO_DEBUG

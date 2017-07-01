@@ -101,8 +101,8 @@
     <ClInclude Include="include\OpenGLRenderer\Buffer\VertexBufferBind.h" />
     <ClInclude Include="include\OpenGLRenderer\Buffer\VertexBufferDsa.h" />
     <ClInclude Include="include\OpenGLRenderer\Extensions.h" />
-    <ClInclude Include="include\OpenGLRenderer\IContext.h" />
-    <ClInclude Include="include\OpenGLRenderer\Linux\ContextLinux.h" />
+    <ClInclude Include="include\OpenGLRenderer\IOpenGLContext.h" />
+    <ClInclude Include="include\OpenGLRenderer\Linux\OpenGLContextLinux.h" />
     <ClInclude Include="include\OpenGLRenderer\Mapping.h" />
     <ClInclude Include="include\OpenGLRenderer\OpenGLDebug.h" />
     <ClInclude Include="include\OpenGLRenderer\OpenGLRenderer.h" />
@@ -153,7 +153,7 @@
     <ClInclude Include="include\OpenGLRenderer\Texture\TextureCubeBind.h" />
     <ClInclude Include="include\OpenGLRenderer\Texture\TextureCubeDsa.h" />
     <ClInclude Include="include\OpenGLRenderer\Texture\TextureManager.h" />
-    <ClInclude Include="include\OpenGLRenderer\Windows\ContextWindows.h" />
+    <ClInclude Include="include\OpenGLRenderer\Windows\OpenGLContextWindows.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\External\glslang\src\glslang\GenericCodeGen\CodeGen.cpp">
@@ -558,8 +558,8 @@
     <ClCompile Include="src\Buffer\VertexBufferBind.cpp" />
     <ClCompile Include="src\Buffer\VertexBufferDsa.cpp" />
     <ClCompile Include="src\Extensions.cpp" />
-    <ClCompile Include="src\IContext.cpp" />
-    <ClCompile Include="src\Linux\ContextLinux.cpp">
+    <ClCompile Include="src\IOpenGLContext.cpp" />
+    <ClCompile Include="src\Linux\ExtensionsLinux.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">true</ExcludedFromBuild>
@@ -569,14 +569,14 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="src\Linux\ExtensionsLinux.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">true</ExcludedFromBuild>
+    <ClCompile Include="src\Linux\OpenGLContextLinux.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="src\Mapping.cpp" />
@@ -627,8 +627,8 @@
     <ClCompile Include="src\Texture\TextureCubeBind.cpp" />
     <ClCompile Include="src\Texture\TextureCubeDsa.cpp" />
     <ClCompile Include="src\Texture\TextureManager.cpp" />
-    <ClCompile Include="src\Windows\ContextWindows.cpp" />
     <ClCompile Include="src\Windows\ExtensionsWindows.cpp" />
+    <ClCompile Include="src\Windows\OpenGLContextWindows.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\External\glslang\src\glslang\Include\revision.template" />
@@ -642,7 +642,7 @@
     <None Include="include\OpenGLRenderer\Buffer\VertexArray.inl" />
     <None Include="include\OpenGLRenderer\Buffer\VertexArrayVao.inl" />
     <None Include="include\OpenGLRenderer\Buffer\VertexBuffer.inl" />
-    <None Include="include\OpenGLRenderer\Linux\ContextLinux.inl" />
+    <None Include="include\OpenGLRenderer\Linux\OpenGLContextLinux.inl" />
     <None Include="include\OpenGLRenderer\OpenGLRenderer.inl" />
     <None Include="include\OpenGLRenderer\RenderTarget\Framebuffer.inl" />
     <None Include="include\OpenGLRenderer\RenderTarget\SwapChain.inl" />
@@ -670,7 +670,7 @@
     <None Include="include\OpenGLRenderer\Texture\Texture3D.inl" />
     <None Include="include\OpenGLRenderer\Texture\TextureCube.inl" />
     <None Include="include\OpenGLRenderer\Texture\TextureManager.inl" />
-    <None Include="include\OpenGLRenderer\Windows\ContextWindows.inl" />
+    <None Include="include\OpenGLRenderer\Windows\OpenGLContextWindows.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

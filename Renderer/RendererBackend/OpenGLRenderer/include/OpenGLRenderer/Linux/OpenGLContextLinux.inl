@@ -19,52 +19,36 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "VulkanRenderer/Linux/ContextLinux.h"
-#include "VulkanRenderer/Extensions.h"
-#include "VulkanRenderer/VulkanRuntimeLinking.h"
-
-#include <iostream>	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace VulkanRenderer
+namespace OpenGLRenderer
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ContextLinux::ContextLinux(handle nativeWindowHandle, bool useExternalContext) :
-		mNativeWindowHandle(nativeWindowHandle),
-		mDummyWindow(NULL_HANDLE),
-		mDisplay(nullptr),
-		m_pDummyVisualInfo(nullptr),
-		mWindowRenderContext(NULL_HANDLE),
-		mUseExternalContext(useExternalContext)
+	inline Display* OpenGLContextLinux::getDisplay() const
 	{
-		// TODO(co) Implement me
+		return mDisplay;
 	}
 
-	ContextLinux::~ContextLinux()
+	inline GLXContext OpenGLContextLinux::getRenderContext() const
 	{
-		// TODO(co) Implement me
+		return mWindowRenderContext;
 	}
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual VulkanRenderer::IContext methods       ]
+	//[ Public virtual OpenGLRenderer::IOpenGLContext methods ]
 	//[-------------------------------------------------------]
-	void ContextLinux::makeCurrent() const
+	inline bool OpenGLContextLinux::isInitialized() const
 	{
-		// TODO(co) Implement me
+		return (nullptr != mWindowRenderContext || mUseExternalContext);
 	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // VulkanRenderer
+} // OpenGLRenderer

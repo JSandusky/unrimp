@@ -59,9 +59,9 @@
 #include "OpenGLRenderer/Shader/Separate/VertexShaderSeparate.h"
 
 #ifdef WIN32
-	#include "OpenGLRenderer/Windows/ContextWindows.h"
+	#include "OpenGLRenderer/Windows/OpenGLContextWindows.h"
 #elif defined LINUX
-	#include "OpenGLRenderer/Linux/ContextLinux.h"
+	#include "OpenGLRenderer/Linux/OpenGLContextLinux.h"
 #endif
 
 #include <Renderer/Buffer/CommandBuffer.h>
@@ -79,9 +79,9 @@
 #else
 	#define OPENGLRENDERER_API_EXPORT
 #endif
-OPENGLRENDERER_API_EXPORT Renderer::IRenderer* createOpenGLRendererInstance(handle nativeWindowHandle, bool useExternalContext)
+OPENGLRENDERER_API_EXPORT Renderer::IRenderer* createOpenGLRendererInstance(const Renderer::Context& context)
 {
-	return new OpenGLRenderer::OpenGLRenderer(nativeWindowHandle, useExternalContext);
+	return new OpenGLRenderer::OpenGLRenderer(context);
 }
 #undef OPENGLRENDERER_API_EXPORT
 
@@ -396,15 +396,10 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	#ifdef WIN32
-	OpenGLRenderer::OpenGLRenderer(handle nativeWindowHandle, bool) :
-	#elif defined LINUX
-	OpenGLRenderer::OpenGLRenderer(handle nativeWindowHandle, bool useExternalContext) :
-	#else
-		#error "Unsupported platform"
-	#endif
+	OpenGLRenderer::OpenGLRenderer(const Renderer::Context& context) :
+		IRenderer(context),
 		mOpenGLRuntimeLinking(new OpenGLRuntimeLinking()),
-		mContext(nullptr),
+		mOpenGLContext(nullptr),
 		mExtensions(nullptr),
 		mShaderLanguage(nullptr),
 		mGraphicsRootSignature(nullptr),
@@ -430,20 +425,21 @@ namespace OpenGLRenderer
 		// Is OpenGL available?
 		if (mOpenGLRuntimeLinking->isOpenGLAvaiable())
 		{
+			const handle nativeWindowHandle = mContext.getNativeWindowHandle();
 			#ifdef WIN32
-				// TODO(co) Add external context support
-				mContext = new ContextWindows(mOpenGLRuntimeLinking, nativeWindowHandle);
+				// TODO(co) Add external OpenGL context support
+				mOpenGLContext = new OpenGLContextWindows(mOpenGLRuntimeLinking, nativeWindowHandle);
 			#elif defined LINUX
-				mContext = new ContextLinux(mOpenGLRuntimeLinking, nativeWindowHandle, useExternalContext);
+				mOpenGLContext = new OpenGLContextLinux(mOpenGLRuntimeLinking, nativeWindowHandle, mContext.isUsingExternalContext());
 			#else
 				#error "Unsupported platform"
 			#endif
 
 			// We're using "this" in here, so we are not allowed to write the following within the initializer list
-			mExtensions = new Extensions(*mContext);
+			mExtensions = new Extensions(*mOpenGLContext);
 
-			// Is the context initialized?
-			if (mContext->isInitialized())
+			// Is the OpenGL context initialized?
+			if (mOpenGLContext->isInitialized())
 			{
 				// Initialize the OpenGL extensions
 				mExtensions->initialize();
@@ -484,7 +480,7 @@ namespace OpenGLRenderer
 				if (NULL_HANDLE != nativeWindowHandle)
 				{
 					// Create a main swap chain instance
-					mMainSwapChain = new SwapChain(*this, nativeWindowHandle, *mContext);
+					mMainSwapChain = new SwapChain(*this, nativeWindowHandle, *mOpenGLContext);
 					RENDERER_SET_RESOURCE_DEBUG_NAME(mMainSwapChain, "Main swap chain")
 					mMainSwapChain->addReference();	// Internal renderer reference
 				}
@@ -565,7 +561,7 @@ namespace OpenGLRenderer
 		delete mExtensions;
 
 		// Destroy the OpenGL context instance
-		delete mContext;
+		delete mOpenGLContext;
 
 		// Destroy the OpenGL runtime linking instance
 		delete mOpenGLRuntimeLinking;
@@ -1190,7 +1186,7 @@ namespace OpenGLRenderer
 				{
 					case Renderer::ResourceType::SWAP_CHAIN:
 					{
-						static_cast<SwapChain*>(mRenderTarget)->getContext().makeCurrent();
+						static_cast<SwapChain*>(mRenderTarget)->getOpenGLContext().makeCurrent();
 						break;
 					}
 
@@ -1766,8 +1762,8 @@ namespace OpenGLRenderer
 
 	bool OpenGLRenderer::isInitialized() const
 	{
-		// Is the context initialized?
-		return (nullptr != mContext && mContext->isInitialized());
+		// Is the OpenGL context initialized?
+		return (nullptr != mOpenGLContext && mOpenGLContext->isInitialized());
 	}
 
 	bool OpenGLRenderer::isDebugEnabled()

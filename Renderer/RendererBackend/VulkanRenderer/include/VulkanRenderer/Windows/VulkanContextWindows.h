@@ -18,6 +18,9 @@
 \*********************************************************/
 
 
+// TODO(co) Remove the platform specific context classes if they're not required
+
+
 //[-------------------------------------------------------]
 //[ Header guard                                          ]
 //[-------------------------------------------------------]
@@ -27,22 +30,16 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "VulkanRenderer/IVulkanContext.h"
+
 #include <Renderer/PlatformTypes.h>
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace OpenGLRenderer
-{
-	class OpenGLRuntimeLinking;
-}
+#include <Renderer/WindowsHeader.h>
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLRenderer
+namespace VulkanRenderer
 {
 
 
@@ -51,15 +48,9 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Abstract OpenGL context interface
-	*
-	*  @remarks
-	*    While the OpenGL specification is platform independent, creating an OpenGL context is not.
-	*
-	*  @note
-	*    - Every native OS window needs its own context instance
+	*    Windows Vulkan context class
 	*/
-	class IContext
+	class VulkanContextWindows : public IVulkanContext
 	{
 
 
@@ -69,29 +60,47 @@ namespace OpenGLRenderer
 	public:
 		/**
 		*  @brief
+		*    Constructor
+		*
+		*  @param[in] vulkanRenderer
+		*    Owner Vulkan renderer instance
+		*  @param[in] nativeWindowHandle
+		*    Optional native main window handle, can be a null handle
+		*  @param[in] shareContextWindows
+		*    Optional share Vulkan context, can be a null pointer
+		*/
+		explicit VulkanContextWindows(VulkanRenderer& vulkanRenderer, handle nativeWindowHandle, const VulkanContextWindows* shareContextWindows = nullptr);
+
+		/**
+		*  @brief
 		*    Destructor
 		*/
-		virtual ~IContext();
+		virtual ~VulkanContextWindows();
 
-
-	//[-------------------------------------------------------]
-	//[ Public virtual IContext methods                       ]
-	//[-------------------------------------------------------]
-	public:
 		/**
 		*  @brief
-		*    Return whether or not the content is initialized
+		*    Return the primary device context
 		*
 		*  @return
-		*    "true" if the context is initialized, else "false"
+		*    The primary device context, null pointer on error
 		*/
-		virtual bool isInitialized() const = 0;
+		inline HDC getDeviceContext() const;
 
 		/**
 		*  @brief
-		*    Make the context current
+		*    Return the primary render context
+		*
+		*  @return
+		*    The primary render context, null pointer on error
 		*/
-		virtual void makeCurrent() const = 0;
+		inline HGLRC getRenderContext() const;
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual VulkanRenderer::IVulkanContext methods ]
+	//[-------------------------------------------------------]
+	public:
+		virtual void makeCurrent() const override;
 
 
 	//[-------------------------------------------------------]
@@ -100,37 +109,34 @@ namespace OpenGLRenderer
 	protected:
 		/**
 		*  @brief
-		*    Constructor
+		*    Copy constructor
 		*
-		*  @param[in] openGLRuntimeLinking
-		*    OpenGL runtime linking instance, if null pointer this isn't a primary context
+		*  @param[in] source
+		*    Source to copy from
 		*/
-		explicit IContext(OpenGLRuntimeLinking* openGLRuntimeLinking);
-
-		explicit IContext(const IContext& source) = delete;
-		IContext& operator =(const IContext& source) = delete;
+		explicit VulkanContextWindows(const VulkanContextWindows& source) = delete;
 
 		/**
 		*  @brief
-		*    Load the >= OpenGL 3.0 entry points
+		*    Copy operator
+		*
+		*  @param[in] source
+		*    Source to copy from
 		*
 		*  @return
-		*    "true" if all went fine, else "false"
-		*
-		*  @return
-		*    "true" if all went fine, else "false"
-		*
-		*  @note
-		*    - This method is only allowed to be called after an >= OpenGL context has been created and set
+		*    Reference to this instance
 		*/
-		bool loadOpenGL3EntryPoints() const;
+		VulkanContextWindows& operator =(const VulkanContextWindows& source) = delete;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		OpenGLRuntimeLinking* mOpenGLRuntimeLinking;	///< OpenGL runtime linking instance, if null pointer this isn't a primary context
+		handle mNativeWindowHandle;		///< Vulkan window, can be a null pointer (HWND)
+		handle mDummyWindow;			///< Vulkan dummy window, can be a null pointer (HWND)
+		HDC	   mWindowDeviceContext;	///< The device context of the Vulkan dummy window, can be a null pointer
+		bool   mOwnsRenderContext;		///< Does this context owns the Vulkan render context?
 
 
 	};
@@ -139,4 +145,10 @@ namespace OpenGLRenderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLRenderer
+} // VulkanRenderer
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "VulkanRenderer/Windows/VulkanContextWindows.inl"

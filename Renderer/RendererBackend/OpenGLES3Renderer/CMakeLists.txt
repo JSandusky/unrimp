@@ -56,9 +56,9 @@ set(SOURCE_CODES
 	src/Buffer/UniformBuffer.cpp
 	src/Buffer/VertexArray.cpp
 	src/Buffer/VertexBuffer.cpp
-	src/ContextRuntimeLinking.cpp
+	src/OpenGLES3ContextRuntimeLinking.cpp
 	src/ExtensionsRuntimeLinking.cpp
-	src/IContext.cpp
+	src/IOpenGLES3Context.cpp
 	src/IExtensions.cpp
 	src/Mapping.cpp
 	src/OpenGLES3Renderer.cpp

@@ -47,7 +47,7 @@
 //[-------------------------------------------------------]
 namespace OpenGLRenderer
 {
-	class IContext;	// Don't delete this forward declaration, required on Windows since Windows headers define a struct-type with this name
+	class IOpenGLContext;	// Don't delete this forward declaration, required on Windows since Windows headers define a struct-type with this name
 }
 
 
@@ -72,7 +72,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class IContext;
+		friend class IOpenGLContext;
 
 
 	//[-------------------------------------------------------]

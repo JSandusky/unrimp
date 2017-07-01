@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 #include "VulkanRenderer/RenderTarget/SwapChain.h"
 #include "VulkanRenderer/VulkanRenderer.h"
-#include "VulkanRenderer/IContext.h"
+#include "VulkanRenderer/IVulkanContext.h"
 #include "VulkanRenderer/Helper.h"
 
 
@@ -46,9 +46,9 @@ namespace VulkanRenderer
 	{
 		// Get the Vulkan instance and the Vulkan physical device
 		const VkInstance vkInstance = vulkanRenderer.getVulkanRuntimeLinking().getVkInstance();
-		const IContext& context = vulkanRenderer.getContext();
-		const VkPhysicalDevice vkPhysicalDevice = context.getVkPhysicalDevice();
-		const VkDevice vkDevice = context.getVkDevice();
+		const IVulkanContext& vulkanContext = vulkanRenderer.getVulkanContext();
+		const VkPhysicalDevice vkPhysicalDevice = vulkanContext.getVkPhysicalDevice();
+		const VkDevice vkDevice = vulkanContext.getVkDevice();
 
 		// Create Vulkan surface instance depending on OS
 		#ifdef _WIN32
@@ -256,7 +256,7 @@ namespace VulkanRenderer
 			mSwapChainBuffer[i].image = mVkImages[i];
 
 			// Transform images from initial (undefined) to present layout
-			Helper::setImageLayout(context.getSetupVkCommandBuffer(), mSwapChainBuffer[i].image, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, VK_IMAGE_ASPECT_COLOR_BIT);
+			Helper::setImageLayout(vulkanContext.getSetupVkCommandBuffer(), mSwapChainBuffer[i].image, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, VK_IMAGE_ASPECT_COLOR_BIT);
 
 			colorAttachmentView.image = mSwapChainBuffer[i].image;
 
@@ -270,7 +270,7 @@ namespace VulkanRenderer
 		if (VK_NULL_HANDLE != mVkSurfaceKHR)
 		{
 			const VulkanRenderer& vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
-			const VkDevice vkDevice = vulkanRenderer.getContext().getVkDevice();
+			const VkDevice vkDevice = vulkanRenderer.getVulkanContext().getVkDevice();
 			for (uint32_t i = 0; i < mSwapchainImageCount; ++i)
 			{
 				vkDestroyImageView(vkDevice, mSwapChainBuffer[i].view, nullptr);
@@ -327,7 +327,7 @@ namespace VulkanRenderer
 			if (NULL_HANDLE != mNativeWindowHandle)
 			{
 				VulkanRenderer& vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
-				Display* display = static_cast<const ContextLinux&>(vulkanRenderer.getContext()).getDisplay();
+				Display* display = static_cast<const VulkanContextLinux&>(vulkanRenderer.getVulkanContext()).getDisplay();
 
 				// Get the width and height...
 				::Window rootWindow = 0;
@@ -377,7 +377,7 @@ namespace VulkanRenderer
 			::ReleaseDC(reinterpret_cast<HWND>(mNativeWindowHandle), hDC);
 		#elif defined LINUX
 			VulkanRenderer& vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
-			glXSwapBuffers(static_cast<const ContextLinux&>(vulkanRenderer.getContext()).getDisplay(), mNativeWindowHandle);
+			glXSwapBuffers(static_cast<const VulkanContextLinux&>(vulkanRenderer.getVulkanContext()).getDisplay(), mNativeWindowHandle);
 		#else
 			#error "Unsupported platform"
 		#endif

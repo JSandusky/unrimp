@@ -21,30 +21,29 @@
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLRenderer
+namespace VulkanRenderer
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline const Extensions& OpenGLRenderer::getExtensions() const
+	inline Display* VulkanContextLinux::getDisplay() const
 	{
-		return *mExtensions;
+		return mDisplay;
 	}
 
-	inline Extensions& OpenGLRenderer::getExtensions()
-	{
-		return *mExtensions;
-	}
 
-	inline const IOpenGLContext& OpenGLRenderer::getOpenGLContext() const
+	//[-------------------------------------------------------]
+	//[ Public virtual VulkanRenderer::IVulkanContext methods ]
+	//[-------------------------------------------------------]
+	inline bool VulkanContextLinux::isInitialized() const
 	{
-		return *mOpenGLContext;
+		return (nullptr != mWindowRenderContext || mUseExternalContext);
 	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLRenderer
+} // VulkanRenderer

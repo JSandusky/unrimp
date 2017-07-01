@@ -67,13 +67,10 @@ namespace RendererToolkit
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] fileManager
-		*    The file manager instance to use
-		*
-		*  @note
-		*    - The renderer toolkit keeps a reference to the provided renderer instance
+		*  @param[in] context
+		*    Renderer toolkit context, the renderer toolkit context instance must stay valid as long as the renderer toolkit instance exists
 		*/
-		explicit RendererToolkitImpl(RendererRuntime::IFileManager& fileManager);
+		explicit RendererToolkitImpl(Context& context);
 
 		/**
 		*  @brief

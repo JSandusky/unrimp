@@ -81,7 +81,7 @@ set(SOURCE_CODES
 	src/Buffer/VertexBufferBind.cpp
 	src/Buffer/VertexBufferDsa.cpp
 	src/Extensions.cpp
-	src/IContext.cpp
+	src/IOpenGLContext.cpp
 	src/Mapping.cpp
 	src/OpenGLRenderer.cpp
 	src/OpenGLRuntimeLinking.cpp
@@ -135,7 +135,7 @@ if(WIN32)
 	# Windows source codes
 	set(SOURCE_CODES
 		${SOURCE_CODES}
-		src/Windows/ContextWindows.cpp
+		src/Windows/OpenGLContextWindows.cpp
 		src/Windows/ExtensionsWindows.cpp
 	)
 endif()
@@ -143,7 +143,7 @@ if(UNIX)
 	# Linux source codes
 	set(SOURCE_CODES
 		${SOURCE_CODES}
-		src/Linux/ContextLinux.cpp
+		src/Linux/OpenGLContextLinux.cpp
 		src/Linux/ExtensionsLinux.cpp
 	)
 endif()

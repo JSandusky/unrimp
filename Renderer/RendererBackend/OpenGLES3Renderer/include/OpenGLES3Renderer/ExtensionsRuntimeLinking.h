@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLES3Renderer/IContext.h"
+#include "OpenGLES3Renderer/IOpenGLES3Context.h"
 #include "OpenGLES3Renderer/IExtensions.h"
 
 

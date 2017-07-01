@@ -21,30 +21,31 @@
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLRenderer
+namespace RendererToolkit
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline const Extensions& OpenGLRenderer::getExtensions() const
+	inline Context::Context(RendererRuntime::IFileManager& fileManager) :
+		mFileManager(fileManager)
 	{
-		return *mExtensions;
+		// Nothing here
 	}
 
-	inline Extensions& OpenGLRenderer::getExtensions()
+	inline Context::~Context()
 	{
-		return *mExtensions;
+		// Nothing here
 	}
 
-	inline const IOpenGLContext& OpenGLRenderer::getOpenGLContext() const
+	inline RendererRuntime::IFileManager& Context::getFileManager() const
 	{
-		return *mOpenGLContext;
+		return mFileManager;
 	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLRenderer
+} // RendererToolkit

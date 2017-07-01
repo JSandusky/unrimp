@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/RenderTarget/ISwapChain.h>
+#include <Renderer/PlatformTypes.h>
 
 
 //[-------------------------------------------------------]
@@ -35,8 +35,7 @@
 //[-------------------------------------------------------]
 namespace OpenGLRenderer
 {
-	class IOpenGLContext;
-	class OpenGLRenderer;
+	class OpenGLRuntimeLinking;
 }
 
 
@@ -52,9 +51,15 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    OpenGL swap chain class
+	*    Abstract OpenGL context interface
+	*
+	*  @remarks
+	*    While the OpenGL specification is platform independent, creating an OpenGL context is not.
+	*
+	*  @note
+	*    - Every native OS window needs its own context instance
 	*/
-	class SwapChain : public Renderer::ISwapChain
+	class IOpenGLContext
 	{
 
 
@@ -64,81 +69,68 @@ namespace OpenGLRenderer
 	public:
 		/**
 		*  @brief
-		*    Constructor
-		*
-		*  @param[in] openGLRenderer
-		*    Owner OpenGL renderer instance
-		*  @param[in] nativeWindowHandle
-		*    Native window handle, must be valid
-		*  @param[in] useExternalContext
-		*    Indicates if an external renderer context is used; in this case the renderer itself has nothing to do with the creation/managing of an renderer context
-		*/
-		SwapChain(OpenGLRenderer& openGLRenderer, handle nativeWindowHandle, bool useExternalContext);
-
-		/**
-		*  @brief
-		*    Constructor
-		*
-		*  @param[in] openGLRenderer
-		*    Owner OpenGL renderer instance
-		*  @param[in] nativeWindowHandle
-		*    Native window handle, must be valid
-		*  @param[in] openGLContext
-		*    OpenGL context to use
-		*/
-		SwapChain(OpenGLRenderer& openGLRenderer, handle nativeWindowHandle, IOpenGLContext& openGLContext);
-
-		/**
-		*  @brief
 		*    Destructor
 		*/
-		virtual ~SwapChain();
+		virtual ~IOpenGLContext();
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual IOpenGLContext methods                 ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Return whether or not the content is initialized
+		*
+		*  @return
+		*    "true" if the context is initialized, else "false"
+		*/
+		virtual bool isInitialized() const = 0;
 
 		/**
 		*  @brief
-		*    Return the OpenGL context
+		*    Make the context current
+		*/
+		virtual void makeCurrent() const = 0;
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	protected:
+		/**
+		*  @brief
+		*    Constructor
+		*
+		*  @param[in] openGLRuntimeLinking
+		*    OpenGL runtime linking instance, if null pointer this isn't a primary context
+		*/
+		explicit IOpenGLContext(OpenGLRuntimeLinking* openGLRuntimeLinking);
+
+		explicit IOpenGLContext(const IOpenGLContext& source) = delete;
+		IOpenGLContext& operator =(const IOpenGLContext& source) = delete;
+
+		/**
+		*  @brief
+		*    Load the >= OpenGL 3.0 entry points
 		*
 		*  @return
-		*    The OpenGL context
+		*    "true" if all went fine, else "false"
+		*
+		*  @return
+		*    "true" if all went fine, else "false"
+		*
+		*  @note
+		*    - This method is only allowed to be called after an >= OpenGL context has been created and set
 		*/
-		inline IOpenGLContext& getOpenGLContext() const;
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IRenderTarget methods        ]
-	//[-------------------------------------------------------]
-	public:
-		virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const override;
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::ISwapChain methods           ]
-	//[-------------------------------------------------------]
-	public:
-		inline virtual handle getNativeWindowHandle() const override;
-		virtual void present() override;
-		virtual void resizeBuffers() override;
-		virtual bool getFullscreenState() const override;
-		virtual void setFullscreenState(bool fullscreen) override;
-		inline virtual void setRenderWindow(Renderer::IRenderWindow* renderWindow) override;
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	private:
-		explicit SwapChain(const SwapChain& source) = delete;
-		SwapChain& operator =(const SwapChain& source) = delete;
+		bool loadOpenGL3EntryPoints() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		handle					 mNativeWindowHandle;	///< Native window handle window, can be a null handle
-		IOpenGLContext*			 mOpenGLContext;		///< OpenGL context, must be valid
-		bool					 mOwnsOpenGLContext;	///< Does this swap chain own the OpenGL context?
-		Renderer::IRenderWindow* mRenderWindow;			///< Render window instance, can be a null pointer, don't destroy the instance since we don't own it
+		OpenGLRuntimeLinking* mOpenGLRuntimeLinking;	///< OpenGL runtime linking instance, if null pointer this isn't a primary context
 
 
 	};
@@ -148,9 +140,3 @@ namespace OpenGLRenderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // OpenGLRenderer
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "OpenGLRenderer/RenderTarget/SwapChain.inl"

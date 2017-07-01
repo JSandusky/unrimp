@@ -45,7 +45,7 @@ namespace OpenGLES3Renderer
 		mBufferSize(numberOfBytes)
 	{
 		// "GL_UNSIGNED_INT" is only allowed when the "GL_OES_element_index_uint" extension is there
-		if (Renderer::IndexBufferFormat::UNSIGNED_INT != indexBufferFormat || openGLES3Renderer.getContext().getExtensions().isGL_OES_element_index_uint())
+		if (Renderer::IndexBufferFormat::UNSIGNED_INT != indexBufferFormat || openGLES3Renderer.getOpenGLES3Context().getExtensions().isGL_OES_element_index_uint())
 		{
 			// Create the OpenGL ES 3 element array buffer
 			glGenBuffers(1, &mOpenGLES3ElementArrayBuffer);

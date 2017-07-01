@@ -33,6 +33,11 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
+	inline Context& IRendererRuntime::getContext() const
+	{
+		return mContext;
+	}
+
 	inline Renderer::IRenderer& IRendererRuntime::getRenderer() const
 	{
 		return *mRenderer;
@@ -157,8 +162,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IRendererRuntime::IRendererRuntime() :
+	inline IRendererRuntime::IRendererRuntime(Context& context) :
 		// Core
+		mContext(context),
 		mRenderer(nullptr),
 		mBufferManager(nullptr),
 		mTextureManager(nullptr),

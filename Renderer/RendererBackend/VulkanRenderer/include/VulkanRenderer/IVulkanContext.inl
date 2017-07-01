@@ -19,14 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "VulkanRenderer/Windows/ContextWindows.h"
-#include "VulkanRenderer/Extensions.h"
-#include "VulkanRenderer/VulkanRuntimeLinking.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace VulkanRenderer
@@ -36,28 +28,29 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ContextWindows::ContextWindows(VulkanRenderer& vulkanRenderer, handle nativeWindowHandle, const ContextWindows*) :
-		IContext(vulkanRenderer),
-		mNativeWindowHandle(nativeWindowHandle),
-		mDummyWindow(NULL_HANDLE),
-		mWindowDeviceContext(NULL_HANDLE),
-		mOwnsRenderContext(true)
+	inline VkPhysicalDevice IVulkanContext::getVkPhysicalDevice() const
 	{
-		// TODO(co) Implement me
+		return mVkPhysicalDevice;
 	}
 
-	ContextWindows::~ContextWindows()
+	inline VkDevice IVulkanContext::getVkDevice() const
 	{
-		// TODO(co) Implement me
+		return mVkDevice;
 	}
 
-
-	//[-------------------------------------------------------]
-	//[ Public virtual VulkanRenderer::IContext methods       ]
-	//[-------------------------------------------------------]
-	void ContextWindows::makeCurrent() const
+	inline VkQueue IVulkanContext::getGraphicsVkQueue() const
 	{
-		// TODO(co) Implement me
+		return mGraphicsVkQueue;
+	}
+
+	inline VkCommandPool IVulkanContext::getVkCommandPool() const
+	{
+		return mVkCommandPool;
+	}
+
+	inline VkCommandBuffer IVulkanContext::getSetupVkCommandBuffer() const
+	{
+		return mSetupVkCommandBuffer;
 	}
 
 

@@ -19,44 +19,49 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "OpenGLRenderer/IContext.h"
-#include "OpenGLRenderer/OpenGLRuntimeLinking.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLRenderer
+namespace OpenGLES3Renderer
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	IContext::~IContext()
+	inline handle IOpenGLES3Context::getNativeWindowHandle() const
 	{
-		// Nothing here
+		return mNativeWindowHandle;
 	}
 
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	IContext::IContext(OpenGLRuntimeLinking* openGLRuntimeLinking) :
-		mOpenGLRuntimeLinking(openGLRuntimeLinking)
+	inline EGLDisplay IOpenGLES3Context::getEGLDisplay() const
 	{
-		// Nothing here
+		return mEGLDisplay;
 	}
 
-	bool IContext::loadOpenGL3EntryPoints() const
+	inline EGLConfig IOpenGLES3Context::getEGLConfig() const
 	{
-		return (nullptr != mOpenGLRuntimeLinking) ? mOpenGLRuntimeLinking->loadOpenGL3EntryPoints() : true;
+		return mEGLConfig;
 	}
+
+	inline EGLContext IOpenGLES3Context::getEGLContext() const
+	{
+		return mEGLContext;
+	}
+
+	inline EGLSurface IOpenGLES3Context::getEGLDummySurface() const
+	{
+		return mDummySurface;
+	}
+
+	#if defined(LINUX) && !defined(ANDROID)
+		inline ::Display* IOpenGLES3Context::getX11Display() const
+		{
+			return mX11Display;
+		}
+	#endif
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLRenderer
+} // OpenGLES3Renderer

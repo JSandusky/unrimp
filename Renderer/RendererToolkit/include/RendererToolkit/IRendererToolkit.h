@@ -35,6 +35,7 @@
 //[-------------------------------------------------------]
 namespace RendererToolkit
 {
+	class Context;
 	class IProject;
 }
 
@@ -67,6 +68,15 @@ namespace RendererToolkit
 		*/
 		inline virtual ~IRendererToolkit();
 
+		/**
+		*  @brief
+		*    Return the used renderer toolkit context instance
+		*
+		*  @return
+		*    The used renderer toolkit context instance
+		*/
+		inline Context& getContext() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererToolkit::IRendererToolkit methods ]
@@ -81,12 +91,22 @@ namespace RendererToolkit
 	protected:
 		/**
 		*  @brief
-		*    Default constructor
+		*    Constructor
+		*
+		*  @param[in] context
+		*    Renderer toolkit context, the renderer toolkit context instance must stay valid as long as the renderer toolkit instance exists
 		*/
-		inline IRendererToolkit();
+		inline explicit IRendererToolkit(Context& context);
 
 		explicit IRendererToolkit(const IRendererToolkit& source) = delete;
 		IRendererToolkit& operator =(const IRendererToolkit& source) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		Context& mContext;
 
 
 	};

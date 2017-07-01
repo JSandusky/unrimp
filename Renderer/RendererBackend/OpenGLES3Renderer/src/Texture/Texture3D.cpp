@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 #include "OpenGLES3Renderer/Texture/Texture3D.h"
 #include "OpenGLES3Renderer/Mapping.h"
-#include "OpenGLES3Renderer/IContext.h"	// We need to include this header, else the linker won't find our defined OpenGL ES 3 functions
+#include "OpenGLES3Renderer/IOpenGLES3Context.h"	// We need to include this header, else the linker won't find our defined OpenGL ES 3 functions
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
 

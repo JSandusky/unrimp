@@ -22,8 +22,9 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/RendererToolkitImpl.h"
-#include "RendererToolkit/PlatformTypes.h"
 #include "RendererToolkit/Project/ProjectImpl.h"
+#include "RendererToolkit/PlatformTypes.h"
+#include "RendererToolkit/Context.h"
 
 
 //[-------------------------------------------------------]
@@ -35,9 +36,9 @@
 #else
 	#define RENDERERTOOLKIT_API_EXPORT
 #endif
-RENDERERTOOLKIT_API_EXPORT RendererToolkit::IRendererToolkit* createRendererToolkitInstance(RendererRuntime::IFileManager& fileManager)
+RENDERERTOOLKIT_API_EXPORT RendererToolkit::IRendererToolkit* createRendererToolkitInstance(RendererToolkit::Context& context)
 {
-	return new RendererToolkit::RendererToolkitImpl(fileManager);
+	return new RendererToolkit::RendererToolkitImpl(context);
 }
 #undef RENDERERTOOLKIT_API_EXPORT
 
@@ -52,8 +53,9 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	RendererToolkitImpl::RendererToolkitImpl(RendererRuntime::IFileManager& fileManager) :
-		mFileManager(fileManager)
+	RendererToolkitImpl::RendererToolkitImpl(Context& context) :
+		IRendererToolkit(context),
+		mFileManager(context.getFileManager())
 	{
 		// Nothing here
 	}

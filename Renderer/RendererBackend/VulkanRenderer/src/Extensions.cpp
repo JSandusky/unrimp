@@ -29,7 +29,7 @@
 #include <Renderer/PlatformTypes.h>	// For "RENDERER_OUTPUT_DEBUG_PRINTF()"
 #ifdef LINUX
 	#include <Renderer/LinuxHeader.h>
-	#include "VulkanRenderer/Linux/ContextLinux.h"
+	#include "VulkanRenderer/Linux/VulkanContextLinux.h"
 #endif
 
 
@@ -43,8 +43,8 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Extensions::Extensions(IContext &context) :
-		mContext(&context),
+	Extensions::Extensions(IVulkanContext& vulkanContext) :
+		mVulkanContext(&vulkanContext),
 		mInitialized(false)
 	{
 		// Reset extensions

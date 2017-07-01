@@ -27,10 +27,10 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/IContext.h"
+#include "OpenGLRenderer/IOpenGLContext.h"
 
 #include <Renderer/PlatformTypes.h>
-#include <Renderer/LinuxHeader.h>
+#include <Renderer/WindowsHeader.h>
 
 
 //[-------------------------------------------------------]
@@ -45,9 +45,9 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Linux OpenGL context class
+	*    Windows OpenGL context class
 	*/
-	class ContextLinux : public IContext
+	class OpenGLContextWindows : public IOpenGLContext
 	{
 
 
@@ -67,18 +67,16 @@ namespace OpenGLRenderer
 		*
 		*  @param[in] nativeWindowHandle
 		*    Optional native main window handle, can be a null handle
-		*  @param[in] useExternalContext
-		*    When true an own OpenGL context won't be created and the context pointed by "shareContextLinux" is ignored
-		*  @param[in] shareContextLinux
+		*  @param[in] shareContextWindows
 		*    Optional share context, can be a null pointer
 		*/
-		ContextLinux(handle nativeWindowHandle, bool useExternalContext, const ContextLinux* shareContextLinux = nullptr);
+		OpenGLContextWindows(handle nativeWindowHandle, const OpenGLContextWindows* shareContextWindows = nullptr);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~ContextLinux();
+		virtual ~OpenGLContextWindows();
 
 		/**
 		*  @brief
@@ -87,7 +85,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    The primary device context, null pointer on error
 		*/
-		inline Display* getDisplay() const;
+		inline HDC getDeviceContext() const;
 
 		/**
 		*  @brief
@@ -96,11 +94,11 @@ namespace OpenGLRenderer
 		*  @return
 		*    The primary render context, null pointer on error
 		*/
-		inline GLXContext getRenderContext() const;
+		inline HGLRC getRenderContext() const;
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual OpenGLRenderer::IContext methods       ]
+	//[ Public virtual OpenGLRenderer::IOpenGLContext methods ]
 	//[-------------------------------------------------------]
 	public:
 		inline virtual bool isInitialized() const override;
@@ -111,8 +109,8 @@ namespace OpenGLRenderer
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		explicit ContextLinux(const ContextLinux& source) = delete;
-		ContextLinux& operator =(const ContextLinux& source) = delete;
+		explicit OpenGLContextWindows(const OpenGLContextWindows& source) = delete;
+		OpenGLContextWindows& operator =(const OpenGLContextWindows& source) = delete;
 
 		/**
 		*  @brief
@@ -122,34 +120,33 @@ namespace OpenGLRenderer
 		*    OpenGL runtime linking instance, if null pointer this isn't a primary context
 		*  @param[in] nativeWindowHandle
 		*    Optional native main window handle, can be a null handle
-		*  @param[in] useExternalContext
-		*    When true an own OpenGL context won't be created and the context pointed by "shareContextLinux" is ignored
-		*  @param[in] shareContextLinux
+		*  @param[in] shareContextWindows
 		*    Optional share context, can be a null pointer
 		*/
-		ContextLinux(OpenGLRuntimeLinking* openGLRuntimeLinking, handle nativeWindowHandle, bool useExternalContext, const ContextLinux* shareContextLinux = nullptr);
+		OpenGLContextWindows(OpenGLRuntimeLinking* openGLRuntimeLinking, handle nativeWindowHandle, const OpenGLContextWindows* shareContextWindows = nullptr);
 
 		/**
 		*  @brief
 		*    Create a OpenGL context
 		*
+		*  @param[in] shareContextWindows
+		*    Optional share context, can be a null pointer
+		*
 		*  @return
 		*    The created OpenGL context, null pointer on error
 		*/
-		GLXContext createOpenGLContext();
+		HGLRC createOpenGLContext(const OpenGLContextWindows* shareContextWindows);
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		handle		 mNativeWindowHandle;	///< OpenGL window, can be a null pointer (Window)
-		handle		 mDummyWindow;			///< OpenGL dummy window, can be a null pointer (Window)
-		Display*	 mDisplay;				///< The device context of the OpenGL dummy window, can be a null pointer
-		XVisualInfo* m_pDummyVisualInfo;
-		GLXContext	 mWindowRenderContext;	///< The render context of the OpenGL dummy window, can be a null pointer
-		bool		 mUseExternalContext;
-		bool		 mOwnsRenderContext;	///< Does this context own the OpenGL render context?
+		handle mNativeWindowHandle;		///< OpenGL window, can be a null pointer (HWND)
+		handle mDummyWindow;			///< OpenGL dummy window, can be a null pointer (HWND)
+		HDC	   mWindowDeviceContext;	///< The device context of the OpenGL dummy window, can be a null pointer
+		HGLRC  mWindowRenderContext;	///< The render context of the OpenGL dummy window, can be a null pointer
+		bool   mOwnsRenderContext;		///< Does this context owns the OpenGL render context?
 
 
 	};
@@ -164,4 +161,4 @@ namespace OpenGLRenderer
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/Linux/ContextLinux.inl"
+#include "OpenGLRenderer/Windows/OpenGLContextWindows.inl"

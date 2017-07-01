@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "VulkanRenderer/IContext.h"
+#include "VulkanRenderer/IVulkanContext.h"
 
 #include <Renderer/PlatformTypes.h>
 #include <Renderer/LinuxHeader.h>
@@ -47,7 +47,7 @@ namespace VulkanRenderer
 	*  @brief
 	*    Linux Vulkan context class
 	*/
-	class ContextLinux : public IContext
+	class VulkanContextLinux : public IVulkanContext
 	{
 
 
@@ -64,13 +64,13 @@ namespace VulkanRenderer
 		*  @param[in] useExternalContext
 		*    When true an own Vulkan context won't be created
 		*/
-		explicit ContextLinux(handle nativeWindowHandle, bool useExternalContext);
+		VulkanContextLinux(handle nativeWindowHandle, bool useExternalContext);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~ContextLinux();
+		virtual ~VulkanContextLinux();
 
 		/**
 		*  @brief
@@ -92,7 +92,7 @@ namespace VulkanRenderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual VulkanRenderer::IContext methods       ]
+	//[ Public virtual VulkanRenderer::IVulkanContext methods ]
 	//[-------------------------------------------------------]
 	public:
 		inline virtual bool isInitialized() const override;
@@ -122,4 +122,4 @@ namespace VulkanRenderer
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "VulkanRenderer/Linux/ContextLinux.inl"
+#include "VulkanRenderer/Linux/VulkanContextLinux.inl"

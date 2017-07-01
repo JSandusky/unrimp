@@ -615,6 +615,9 @@
     <None Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\IndirectBufferManager.inl">
       <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
     </None>
+    <None Include="include\RendererRuntime\Context.inl">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -1220,6 +1223,9 @@
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\MaterialBlueprint\BufferManager\IndirectBufferManager.h">
       <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Context.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

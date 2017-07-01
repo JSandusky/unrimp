@@ -29,7 +29,6 @@
 #include "OpenGLRenderer/Shader/Monolithic/FragmentShaderMonolithic.h"
 #include "OpenGLRenderer/Shader/Monolithic/TessellationControlShaderMonolithic.h"
 #include "OpenGLRenderer/Shader/Monolithic/TessellationEvaluationShaderMonolithic.h"
-#include "OpenGLRenderer/IContext.h"
 #include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
 

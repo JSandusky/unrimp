@@ -76,13 +76,13 @@ namespace Direct3D12Renderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] nativeWindowHandle
-		*    Optional native main window handle, can be a null handle
+		*  @param[in] context
+		*    Renderer context, the renderer context instance must stay valid as long as the renderer instance exists
 		*
 		*  @note
 		*    - Do never ever use a not properly initialized renderer! Use "Renderer::IRenderer::isInitialized()" to check the initialization state.
 		*/
-		explicit Direct3D12Renderer(handle nativeWindowHandle);
+		explicit Direct3D12Renderer(const Renderer::Context& context);
 
 		/**
 		*  @brief
@@ -251,18 +251,18 @@ namespace Direct3D12Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Direct3D12RuntimeLinking	  *mDirect3D12RuntimeLinking;	///< Direct3D 12 runtime linking instance, always valid
-		IDXGIFactory4*				   mDxgiFactory4;				///< DXGI factors instance, always valid for a correctly initialized renderer
-		ID3D12Device				  *mD3D12Device;				///< The Direct3D 12 device, null pointer on error (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!)
-		ID3D12CommandQueue*			   mD3D12CommandQueue;			///< The Direct3D 12 command queue, null pointer on error (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!)
-		ID3D12CommandAllocator*		   mD3D12CommandAllocator;
-		ID3D12GraphicsCommandList*	   mD3D12GraphicsCommandList;
-		Renderer::IShaderLanguage	  *mShaderLanguageHlsl;			///< HLSL shader language instance (we keep a reference to it), can be a null pointer
-		ID3D12Query					  *mD3D12QueryFlush;			///< Direct3D 12 query used for flush, can be a null pointer
+		Direct3D12RuntimeLinking*  mDirect3D12RuntimeLinking;	///< Direct3D 12 runtime linking instance, always valid
+		IDXGIFactory4*			   mDxgiFactory4;				///< DXGI factors instance, always valid for a correctly initialized renderer
+		ID3D12Device*			   mD3D12Device;				///< The Direct3D 12 device, null pointer on error (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!)
+		ID3D12CommandQueue*		   mD3D12CommandQueue;			///< The Direct3D 12 command queue, null pointer on error (we don't check because this would be a total overhead, the user has to use "Renderer::IRenderer::isInitialized()" and is asked to never ever use a not properly initialized renderer!)
+		ID3D12CommandAllocator*	   mD3D12CommandAllocator;
+		ID3D12GraphicsCommandList* mD3D12GraphicsCommandList;
+		Renderer::IShaderLanguage* mShaderLanguageHlsl;			///< HLSL shader language instance (we keep a reference to it), can be a null pointer
+		ID3D12Query*			   mD3D12QueryFlush;			///< Direct3D 12 query used for flush, can be a null pointer
 		//[-------------------------------------------------------]
 		//[ Output-merger (OM) stage                              ]
 		//[-------------------------------------------------------]
-		SwapChain				*mMainSwapChain;	///< In case the optional native main window handle within the "Direct3D12Renderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
+		SwapChain*				 mMainSwapChain;	///< In case the optional native main window handle within the "Direct3D12Renderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
 		Renderer::IRenderTarget* mRenderTarget;		///< Currently set render target (we keep a reference to it), can be a null pointer
 
 

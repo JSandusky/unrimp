@@ -21,29 +21,37 @@
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace VulkanRenderer
+namespace RendererRuntime
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline Display *ContextLinux::getDisplay() const
+	inline Context::Context(Renderer::IRenderer& renderer, IFileManager& fileManager) :
+		mRenderer(renderer),
+		mFileManager(fileManager)
 	{
-		return mDisplay;
+		// Nothing here
 	}
 
-
-	//[-------------------------------------------------------]
-	//[ Public virtual VulkanRenderer::IContext methods       ]
-	//[-------------------------------------------------------]
-	inline bool ContextLinux::isInitialized() const
+	inline Context::~Context()
 	{
-		return (nullptr != mWindowRenderContext || mUseExternalContext);
+		// Nothing here
+	}
+
+	inline Renderer::IRenderer& Context::getRenderer() const
+	{
+		return mRenderer;
+	}
+
+	inline IFileManager& Context::getFileManager() const
+	{
+		return mFileManager;
 	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // VulkanRenderer
+} // RendererRuntime

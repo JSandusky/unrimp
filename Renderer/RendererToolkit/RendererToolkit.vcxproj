@@ -36,6 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CMakeLists.txt" />
+    <None Include="include\RendererToolkit\Context.inl" />
     <None Include="include\RendererToolkit\IRendererToolkit.inl" />
     <None Include="include\RendererToolkit\Project\IProject.inl" />
     <None Include="include\RendererToolkit\Project\ProjectImpl.inl" />
@@ -71,6 +72,7 @@
     <ClInclude Include="include\RendererToolkit\AssetCompiler\SkeletonAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\TextureAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\VertexAttributesAssetCompiler.h" />
+    <ClInclude Include="include\RendererToolkit\Context.h" />
     <ClInclude Include="include\RendererToolkit\Helper\CacheManager.h" />
     <ClInclude Include="include\RendererToolkit\Helper\FileSystemHelper.h" />
     <ClInclude Include="include\RendererToolkit\Helper\JsonHelper.h" />

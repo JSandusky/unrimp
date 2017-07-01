@@ -25,18 +25,18 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
+//[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/IContext.h"
-
-#include <Renderer/PlatformTypes.h>
-#include <Renderer/WindowsHeader.h>
+namespace RendererRuntime
+{
+	class IFileManager;
+}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace OpenGLRenderer
+namespace RendererToolkit
 {
 
 
@@ -45,16 +45,10 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Windows OpenGL context class
+	*    Context class encapsulating all embedding related wirings
 	*/
-	class ContextWindows : public IContext
+	class Context
 	{
-
-
-	//[-------------------------------------------------------]
-	//[ Friends                                               ]
-	//[-------------------------------------------------------]
-		friend class OpenGLRenderer;
 
 
 	//[-------------------------------------------------------]
@@ -65,88 +59,40 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] nativeWindowHandle
-		*    Optional native main window handle, can be a null handle
-		*  @param[in] shareContextWindows
-		*    Optional share context, can be a null pointer
+		*  @param[in] fileManager
+		*    File manager instance to use, the file manager instance must stay valid as long as the renderer toolkit instance exists
 		*/
-		ContextWindows(handle nativeWindowHandle, const ContextWindows* shareContextWindows = nullptr);
+		inline explicit Context(RendererRuntime::IFileManager& fileManager);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~ContextWindows();
+		inline ~Context();
 
 		/**
 		*  @brief
-		*    Return the primary device context
+		*    Return the used file manager instance
 		*
 		*  @return
-		*    The primary device context, null pointer on error
+		*    The used file manager instance
 		*/
-		inline HDC getDeviceContext() const;
-
-		/**
-		*  @brief
-		*    Return the primary render context
-		*
-		*  @return
-		*    The primary render context, null pointer on error
-		*/
-		inline HGLRC getRenderContext() const;
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual OpenGLRenderer::IContext methods       ]
-	//[-------------------------------------------------------]
-	public:
-		inline virtual bool isInitialized() const override;
-		virtual void makeCurrent() const override;
+		inline RendererRuntime::IFileManager& getFileManager() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		explicit ContextWindows(const ContextWindows& source) = delete;
-		ContextWindows& operator =(const ContextWindows& source) = delete;
-
-		/**
-		*  @brief
-		*    Constructor for primary context
-		*
-		*  @param[in] openGLRuntimeLinking
-		*    OpenGL runtime linking instance, if null pointer this isn't a primary context
-		*  @param[in] nativeWindowHandle
-		*    Optional native main window handle, can be a null handle
-		*  @param[in] shareContextWindows
-		*    Optional share context, can be a null pointer
-		*/
-		ContextWindows(OpenGLRuntimeLinking* openGLRuntimeLinking, handle nativeWindowHandle, const ContextWindows* shareContextWindows = nullptr);
-
-		/**
-		*  @brief
-		*    Create a OpenGL context
-		*
-		*  @param[in] shareContextWindows
-		*    Optional share context, can be a null pointer
-		*
-		*  @return
-		*    The created OpenGL context, null pointer on error
-		*/
-		HGLRC createOpenGLContext(const ContextWindows* shareContextWindows);
+		explicit Context(const Context&) = delete;
+		Context& operator=(const Context&) = delete;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		handle mNativeWindowHandle;		///< OpenGL window, can be a null pointer (HWND)
-		handle mDummyWindow;			///< OpenGL dummy window, can be a null pointer (HWND)
-		HDC	   mWindowDeviceContext;	///< The device context of the OpenGL dummy window, can be a null pointer
-		HGLRC  mWindowRenderContext;	///< The render context of the OpenGL dummy window, can be a null pointer
-		bool   mOwnsRenderContext;		///< Does this context owns the OpenGL render context?
+		RendererRuntime::IFileManager& mFileManager;
 
 
 	};
@@ -155,10 +101,10 @@ namespace OpenGLRenderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // OpenGLRenderer
+} // Renderer
 
 
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "OpenGLRenderer/Windows/ContextWindows.inl"
+#include "RendererToolkit/Context.inl"

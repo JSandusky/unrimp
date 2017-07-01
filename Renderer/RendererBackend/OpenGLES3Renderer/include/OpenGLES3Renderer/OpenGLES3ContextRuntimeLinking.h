@@ -27,7 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "OpenGLES3Renderer/IContext.h"
+#include "OpenGLES3Renderer/IOpenGLES3Context.h"
 
 
 //[-------------------------------------------------------]
@@ -70,7 +70,7 @@ namespace OpenGLES3Renderer
 	*      a OpenGL ES 3 capable graphics driver, you may want to use the "ContextNative"-implementation
 	*      instead.
 	*/
-	class ContextRuntimeLinking : public IContext
+	class OpenGLES3ContextRuntimeLinking : public IOpenGLES3Context
 	{
 
 
@@ -87,17 +87,17 @@ namespace OpenGLES3Renderer
 		*  @param[in] useExternalContext
 		*    When true an own OpenGL ES context won't be created
 		*/
-		explicit ContextRuntimeLinking(handle nativeWindowHandle, bool useExternalContext);
+		OpenGLES3ContextRuntimeLinking(handle nativeWindowHandle, bool useExternalContext);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~ContextRuntimeLinking();
+		virtual ~OpenGLES3ContextRuntimeLinking();
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual OpenGLES3Renderer::IContext methods    ]
+	//[ Public virtual OpenGLES3Renderer::IOpenGLES3Context methods ]
 	//[-------------------------------------------------------]
 	public:
 		virtual bool initialize(uint32_t multisampleAntialiasingSamples) override;
@@ -105,7 +105,7 @@ namespace OpenGLES3Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Protected virtual OpenGLES3Renderer::IContext methods ]
+	//[ Protected virtual OpenGLES3Renderer::IOpenGLES3Context methods ]
 	//[-------------------------------------------------------]
 	protected:
 		virtual EGLConfig chooseConfig(uint32_t multisampleAntialiasingSamples) const override;

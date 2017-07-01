@@ -33,9 +33,9 @@ namespace VulkanRenderer
 		return *mVulkanRuntimeLinking;
 	}
 
-	inline const IContext &VulkanRenderer::getContext() const
+	inline const IVulkanContext &VulkanRenderer::getVulkanContext() const
 	{
-		return *mContext;
+		return *mVulkanContext;
 	}
 
 	inline const Extensions &VulkanRenderer::getExtensions() const

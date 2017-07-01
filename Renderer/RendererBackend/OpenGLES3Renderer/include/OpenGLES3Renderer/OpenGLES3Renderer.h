@@ -42,11 +42,11 @@ namespace Renderer
 }
 namespace OpenGLES3Renderer
 {
-	class IContext;
 	class SwapChain;
 	class VertexArray;
 	class RootSignature;
 	class PipelineState;
+	class IOpenGLES3Context;
 }
 
 
@@ -96,15 +96,13 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] nativeWindowHandle
-		*    Optional native main window handle, can be a null handle
-		*  @param[in] useExternalContext
-		*    When true the renderer doesn't create an own OpenGL ES context for rendering
+		*  @param[in] context
+		*    Renderer context, the renderer context instance must stay valid as long as the renderer instance exists
 		*
 		*  @note
 		*    - Do never ever use a not properly initialized renderer! Use "Renderer::IRenderer::isInitialized()" to check the initialization state.
 		*/
-		OpenGLES3Renderer(handle nativeWindowHandle, bool useExternalContext);
+		explicit OpenGLES3Renderer(const Renderer::Context& context);
 
 		/**
 		*  @brief
@@ -114,12 +112,12 @@ namespace OpenGLES3Renderer
 
 		/**
 		*  @brief
-		*    Return the context instance
+		*    Return the OpenGL ES 3 context instance
 		*
 		*  @return
-		*    The context instance, do not free the memory the reference is pointing to
+		*    The OpenGL ES 3 context instance, do not free the memory the reference is pointing to
 		*/
-		inline IContext& getContext() const;
+		inline IOpenGLES3Context& getOpenGLES3Context() const;
 
 		//[-------------------------------------------------------]
 		//[ States                                                ]
@@ -264,7 +262,7 @@ namespace OpenGLES3Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IContext*				   mContext;							///< Context instance, always valid
+		IOpenGLES3Context*		   mOpenGLES3Context;					///< OpenGL ES 3 context instance, always valid
 		Renderer::IShaderLanguage* mShaderLanguageGlsl;					///< GLSL shader language instance (we keep a reference to it), can be a null pointer
 		RootSignature*			   mGraphicsRootSignature;				///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
 		Renderer::ISamplerState*   mDefaultSamplerState;				///< Default rasterizer state (we keep a reference to it), can be a null pointer

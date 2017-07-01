@@ -44,7 +44,7 @@
     <None Include="include\OpenGLES3Renderer\Buffer\VertexArray.inl" />
     <None Include="include\OpenGLES3Renderer\Buffer\VertexBuffer.inl" />
     <None Include="include\OpenGLES3Renderer\ExtensionsRuntimeLinking.inl" />
-    <None Include="include\OpenGLES3Renderer\IContext.inl" />
+    <None Include="include\OpenGLES3Renderer\IOpenGLES3Context.inl" />
     <None Include="include\OpenGLES3Renderer\OpenGLES3Renderer.inl" />
     <None Include="include\OpenGLES3Renderer\RenderTarget\Framebuffer.inl" />
     <None Include="include\OpenGLES3Renderer\RenderTarget\SwapChain.inl" />
@@ -74,11 +74,11 @@
     <ClInclude Include="include\OpenGLES3Renderer\Buffer\UniformBuffer.h" />
     <ClInclude Include="include\OpenGLES3Renderer\Buffer\VertexArray.h" />
     <ClInclude Include="include\OpenGLES3Renderer\Buffer\VertexBuffer.h" />
-    <ClInclude Include="include\OpenGLES3Renderer\ContextRuntimeLinking.h" />
     <ClInclude Include="include\OpenGLES3Renderer\ExtensionsRuntimeLinking.h" />
-    <ClInclude Include="include\OpenGLES3Renderer\IContext.h" />
     <ClInclude Include="include\OpenGLES3Renderer\IExtensions.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\IOpenGLES3Context.h" />
     <ClInclude Include="include\OpenGLES3Renderer\Mapping.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\OpenGLES3ContextRuntimeLinking.h" />
     <ClInclude Include="include\OpenGLES3Renderer\OpenGLES3Debug.h" />
     <ClInclude Include="include\OpenGLES3Renderer\OpenGLES3Renderer.h" />
     <ClInclude Include="include\OpenGLES3Renderer\RenderTarget\Framebuffer.h" />
@@ -111,11 +111,11 @@
     <ClCompile Include="src\Buffer\UniformBuffer.cpp" />
     <ClCompile Include="src\Buffer\VertexArray.cpp" />
     <ClCompile Include="src\Buffer\VertexBuffer.cpp" />
-    <ClCompile Include="src\ContextRuntimeLinking.cpp" />
     <ClCompile Include="src\ExtensionsRuntimeLinking.cpp" />
-    <ClCompile Include="src\IContext.cpp" />
     <ClCompile Include="src\IExtensions.cpp" />
+    <ClCompile Include="src\IOpenGLES3Context.cpp" />
     <ClCompile Include="src\Mapping.cpp" />
+    <ClCompile Include="src\OpenGLES3ContextRuntimeLinking.cpp" />
     <ClCompile Include="src\OpenGLES3Renderer.cpp" />
     <ClCompile Include="src\RenderTarget\Framebuffer.cpp" />
     <ClCompile Include="src\RenderTarget\SwapChain.cpp" />

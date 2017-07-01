@@ -72,13 +72,13 @@ namespace NullRenderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] nativeWindowHandle
-		*    Optional native main window handle, can be a null handle
+		*  @param[in] context
+		*    Renderer context, the renderer context instance must stay valid as long as the renderer instance exists
 		*
 		*  @note
 		*    - Do never ever use a not properly initialized renderer! Use "Renderer::IRenderer::isInitialized()" to check the initialization state.
 		*/
-		explicit NullRenderer(handle nativeWindowHandle);
+		explicit NullRenderer(const Renderer::Context& context);
 
 		/**
 		*  @brief
@@ -186,9 +186,9 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	private:
 		Renderer::IShaderLanguage* mShaderLanguage;			///< Null shader language instance (we keep a reference to it), can be a null pointer
-		SwapChain				  *mMainSwapChain;			///< In case the optional native main window handle within the "NullRenderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
-		Renderer::IRenderTarget   *mRenderTarget;			///< Currently set render target (we keep a reference to it), can be a null pointer
-		RootSignature			  *mGraphicsRootSignature;	///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
+		SwapChain*				   mMainSwapChain;			///< In case the optional native main window handle within the "NullRenderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
+		Renderer::IRenderTarget*   mRenderTarget;			///< Currently set render target (we keep a reference to it), can be a null pointer
+		RootSignature*			   mGraphicsRootSignature;	///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
 
 
 	};

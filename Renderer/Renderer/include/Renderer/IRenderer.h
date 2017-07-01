@@ -30,6 +30,7 @@
 #ifndef RENDERER_NO_STATISTICS
 	#include "Renderer/Statistics.h"
 #endif
+#include "Renderer/Context.h"
 #include "Renderer/Capabilities.h"
 #include "Renderer/RendererTypes.h"
 #include "Renderer/SmartRefCount.h"
@@ -119,13 +120,19 @@ namespace Renderer
 
 		/**
 		*  @brief
+		*    Return the context of the renderer instance
+		*
+		*  @return
+		*    The context of the renderer instance, do not free the memory the returned reference is pointing to
+		*/
+		inline const Context& getContext() const;
+
+		/**
+		*  @brief
 		*    Return the capabilities of the renderer instance
 		*
 		*  @return
-		*    The capabilities of the renderer instance
-		*
-		*  @note
-		*    - Do not free the memory the returned reference is pointing to
+		*    The capabilities of the renderer instance, do not free the memory the returned reference is pointing to
 		*/
 		inline const Capabilities& getCapabilities() const;
 
@@ -135,10 +142,9 @@ namespace Renderer
 			*    Return the statistics of the renderer instance
 			*
 			*  @return
-			*    The statistics of the renderer instance
+			*    The statistics of the renderer instance, do not free the memory the returned reference is pointing to
 			*
 			*  @note
-			*    - Do not free the memory the returned reference is pointing to
 			*    - It's possible that the statistics or part of it are disabled, e.g. due to hight performance constrains
 			*/
 			inline const Statistics& getStatistics() const;
@@ -154,10 +160,7 @@ namespace Renderer
 		*    Return the name of the renderer instance
 		*
 		*  @return
-		*    The ASCII name of the renderer instance, null pointer on error
-		*
-		*  @note
-		*    - Do not free the memory the returned pointer is pointing to
+		*    The ASCII name of the renderer instance, null pointer on error, do not free the memory the returned pointer is pointing to
 		*/
 		virtual const char* getName() const = 0;
 
@@ -444,9 +447,12 @@ namespace Renderer
 	protected:
 		/**
 		*  @brief
-		*    Default constructor
+		*    Constructor
+		*
+		*  @param[in] context
+		*    Renderer context, the renderer context instance must stay valid as long as the renderer instance exists
 		*/
-		inline IRenderer();
+		inline explicit IRenderer(const Context& context);
 
 		explicit IRenderer(const IRenderer& source) = delete;
 		IRenderer& operator =(const IRenderer& source) = delete;
@@ -471,7 +477,8 @@ namespace Renderer
 	//[ Protected data                                        ]
 	//[-------------------------------------------------------]
 	protected:
-		Capabilities mCapabilities;	///< Capabilities
+		const Context& mContext;		///< Context
+		Capabilities   mCapabilities;	///< Capabilities
 
 
 	#ifndef RENDERER_NO_STATISTICS
