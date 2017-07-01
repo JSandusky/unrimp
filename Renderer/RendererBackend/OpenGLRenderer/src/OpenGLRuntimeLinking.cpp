@@ -47,7 +47,7 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
-	//[ Macros                                                ]
+	//[ Macros & definitions                                  ]
 	//[-------------------------------------------------------]
 	// Define a helper macro
 	#ifdef WIN32

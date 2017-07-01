@@ -27,16 +27,9 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Renderer/PlatformTypes.h"
+#include <Renderer/Public/Renderer.h>
 
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace Renderer
-{
-	class ILog;
-}
+#include <mutex>
 
 
 //[-------------------------------------------------------]
@@ -51,9 +44,14 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Context class encapsulating all embedding related wirings
+	*    STD log implementation class one can use
+	*
+	*  @note
+	*    - Designed to be instanced and used inside a single C++ file
+	*    - On MS Windows it will print to the Visual Studio output console, on critical message the debugger will break
+	*    - On Linux it will print on the console
 	*/
-	class Context
+	class StdLog : public ILog
 	{
 
 
@@ -61,68 +59,44 @@ namespace Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		/**
-		*  @brief
-		*    Constructor
-		*
-		*  @param[in] log
-		*    Log instance to use, the log instance must stay valid as long as the renderer instance exists
-		*  @param[in] nativeWindowHandle
-		*    Native window handle
-		*  @param[in] useExternalContext
-		*    Indicates if an external renderer context is used; in this case the renderer itself has nothing to do with the creation/managing of an renderer context
-		*/
-		inline Context(ILog& log, handle nativeWindowHandle = 0, bool useExternalContext = false);
+		inline StdLog();
+		inline virtual ~StdLog();
 
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		inline ~Context();
 
-		/**
-		*  @brief
-		*    Return the log instance
-		*
-		*  @return
-		*    The log instance
-		*/
-		inline ILog& getLog() const;
-
-		/**
-		*  @brief
-		*    Return the native window handle
-		*
-		*  @return
-		*    The native window handle
-		*/
-		inline handle getNativeWindowHandle() const;
-
-		/**
-		*  @brief
-		*    Return whether or not an external context is used
-		*
-		*  @return
-		*    "true" if an external context is used, else "false"
-		*/
-		inline bool isUsingExternalContext() const;
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::ILog methods                 ]
+	//[-------------------------------------------------------]
+	public:
+		inline virtual void print(Type type, const char* format, ...) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		explicit Context(const Context&) = delete;
-		Context& operator=(const Context&) = delete;
+		explicit StdLog(const StdLog&) = delete;
+		StdLog& operator=(const StdLog&) = delete;
+		inline const char* typeToString(Type type) const;
+
+		/*
+		*  @brief
+		*    Receives an already formatted message for further processing
+		*
+		*  @param[in] type
+		*    Log message type
+		*  @param[in] message
+		*    Message
+		*  @param[in] numberOfCharacters
+		*    Number of characters inside the message, does not include the terminating zero character
+		*/
+		inline void printInternal(Type type, const char* message, uint32_t numberOfCharacters);
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ILog&  mLog;
-		handle mNativeWindowHandle;
-		bool   mUseExternalContext;
+		std::mutex mMutex;
 
 
 	};
@@ -137,4 +111,4 @@ namespace Renderer
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "Renderer/Context.inl"
+#include <Renderer/Public/StdLog.inl>

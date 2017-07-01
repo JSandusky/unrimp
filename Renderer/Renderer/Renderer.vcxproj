@@ -50,6 +50,7 @@
     <ClInclude Include="include\Renderer\Buffer\VertexArrayTypes.h" />
     <ClInclude Include="include\Renderer\Capabilities.h" />
     <ClInclude Include="include\Renderer\Context.h" />
+    <ClInclude Include="include\Renderer\ILog.h" />
     <ClInclude Include="include\Renderer\IRenderer.h" />
     <ClInclude Include="include\Renderer\IResource.h" />
     <ClInclude Include="include\Renderer\IRootSignature.h" />
@@ -57,6 +58,7 @@
     <ClInclude Include="include\Renderer\PlatformTypes.h" />
     <ClInclude Include="include\Renderer\Public\Renderer.h" />
     <ClInclude Include="include\Renderer\Public\RendererInstance.h" />
+    <ClInclude Include="include\Renderer\Public\StdLog.h" />
     <ClInclude Include="include\Renderer\RefCount.h" />
     <ClInclude Include="include\Renderer\RendererTypes.h" />
     <ClInclude Include="include\Renderer\RenderTarget\IFramebuffer.h" />
@@ -106,9 +108,11 @@
     <None Include="include\Renderer\Buffer\IVertexBuffer.inl" />
     <None Include="include\Renderer\Capabilities.inl" />
     <None Include="include\Renderer\Context.inl" />
+    <None Include="include\Renderer\ILog.inl" />
     <None Include="include\Renderer\IRenderer.inl" />
     <None Include="include\Renderer\IResource.inl" />
     <None Include="include\Renderer\IRootSignature.inl" />
+    <None Include="include\Renderer\Public\StdLog.inl" />
     <None Include="include\Renderer\RefCount.inl" />
     <None Include="include\Renderer\RenderTarget\IFramebuffer.inl" />
     <None Include="include\Renderer\RenderTarget\IRenderTarget.inl" />

@@ -45,6 +45,8 @@
 //[-------------------------------------------------------]
 namespace Renderer
 {
+	class ILog;
+	class Context;
 	class IRenderer;
 	class IShaderLanguage;
 	class IResource;
@@ -152,12 +154,17 @@ namespace Renderer
 		class Context
 		{
 		public:
-			inline Context(handle nativeWindowHandle = 0, bool useExternalContext = false) :
+			inline Context(ILog& log, handle nativeWindowHandle = 0, bool useExternalContext = false) :
+				mLog(log),
 				mNativeWindowHandle(nativeWindowHandle),
 				mUseExternalContext(useExternalContext)
 			{}
 			inline ~Context()
 			{}
+			inline ILog& getLog() const
+			{
+				return mLog;
+			}
 			inline handle getNativeWindowHandle() const
 			{
 				return mNativeWindowHandle;
@@ -170,8 +177,36 @@ namespace Renderer
 			explicit Context(const Context&) = delete;
 			Context& operator=(const Context&) = delete;
 		private:
+			ILog&  mLog;
 			handle mNativeWindowHandle;
 			bool   mUseExternalContext;
+		};
+		#define RENDERER_LOG(context, type, format, ...) context.getLog().print(Renderer::ILog::Type::type, format, ##__VA_ARGS__);
+	#endif
+
+	// Renderer/Log/ILog.h
+	#ifndef __RENDERER_RENDERER_ILOG_H__
+	#define __RENDERER_RENDERER_ILOG_H__
+		class ILog
+		{
+		public:
+			enum class Type
+			{
+				TRACE,
+				DEBUG,
+				INFORMATION,
+				WARNING,
+				CRITICAL
+			};
+		public:
+			virtual void print(Type type, const char* format, ...) = 0;
+		protected:
+			inline ILog()
+			{}
+			inline virtual ~ILog()
+			{}
+			explicit ILog(const ILog&) = delete;
+			ILog& operator=(const ILog&) = delete;
 		};
 	#endif
 

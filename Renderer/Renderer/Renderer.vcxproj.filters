@@ -196,6 +196,12 @@
     <ClInclude Include="include\Renderer\Context.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Renderer\Public\StdLog.h">
+      <Filter>Header Files\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\ILog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Renderer\IResource.inl">
@@ -327,6 +333,12 @@
       <Filter>Header Files\Texture</Filter>
     </None>
     <None Include="include\Renderer\Context.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\Public\StdLog.inl">
+      <Filter>Header Files\Public</Filter>
+    </None>
+    <None Include="include\Renderer\ILog.inl">
       <Filter>Header Files</Filter>
     </None>
   </ItemGroup>

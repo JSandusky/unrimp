@@ -26,6 +26,7 @@
 #include "Framework/Color4.h"
 #include "Framework/PlatformTypes.h"
 
+#include <Renderer/Public/StdLog.h>
 #include <Renderer/Public/RendererInstance.h>
 
 #include <string.h>
@@ -60,7 +61,8 @@ FirstGpgpu::~FirstGpgpu()
 int FirstGpgpu::run()
 {
 	// Create renderer instance
-	Renderer::Context rendererContext;
+	Renderer::StdLog rendererLog;
+	Renderer::Context rendererContext(rendererLog);
 	mRendererInstance = new Renderer::RendererInstance(mRendererName, rendererContext);
 
 	// Get the renderer instance and ensure it's valid

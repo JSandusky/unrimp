@@ -26,34 +26,16 @@ namespace Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline Context::Context(ILog& log, handle nativeWindowHandle, bool useExternalContext) :
-		mLog(log),
-		mNativeWindowHandle(nativeWindowHandle),
-		mUseExternalContext(useExternalContext)
+	inline ILog::ILog()
 	{
 		// Nothing here
 	}
 
-	inline Context::~Context()
+	inline ILog::~ILog()
 	{
 		// Nothing here
-	}
-
-	inline ILog& Context::getLog() const
-	{
-		return mLog;
-	}
-
-	inline handle Context::getNativeWindowHandle() const
-	{
-		return mNativeWindowHandle;
-	}
-
-	inline bool Context::isUsingExternalContext() const
-	{
-		return mUseExternalContext;
 	}
 
 

@@ -25,7 +25,30 @@
 #include "Framework/IApplicationRenderer.h"
 #include "Framework/ExampleBase.h"
 
+#include <Renderer/Public/StdLog.h>
 #include <Renderer/Public/RendererInstance.h>
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global variables                                      ]
+		//[-------------------------------------------------------]
+		Renderer::StdLog g_RendererLog;
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
 
 
 //[-------------------------------------------------------]
@@ -272,7 +295,7 @@ Renderer::IRenderer* IApplicationRenderer::createRendererInstance(const char* re
 	// Is the given pointer valid?
 	if (nullptr != rendererName)
 	{
-		mRendererContext = new Renderer::Context(getNativeWindowHandle());
+		mRendererContext = new Renderer::Context(::detail::g_RendererLog, getNativeWindowHandle());
 		mRendererInstance = new Renderer::RendererInstance(rendererName, *mRendererContext);
 	}
 	Renderer::IRenderer* renderer = (nullptr != mRendererInstance) ? mRendererInstance->getRenderer() : nullptr;

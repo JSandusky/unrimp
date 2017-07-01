@@ -25,21 +25,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "Renderer/PlatformTypes.h"
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace Renderer
-{
-	class ILog;
-}
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace Renderer
@@ -51,78 +36,57 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Context class encapsulating all embedding related wirings
+	*    Abstract log interface
+	*
+	*  @note
+	*    - The implementation must be multi-threading safe since the renderer is allowed to internally use multiple threads
 	*/
-	class Context
+	class ILog
 	{
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
 		/**
 		*  @brief
-		*    Constructor
-		*
-		*  @param[in] log
-		*    Log instance to use, the log instance must stay valid as long as the renderer instance exists
-		*  @param[in] nativeWindowHandle
-		*    Native window handle
-		*  @param[in] useExternalContext
-		*    Indicates if an external renderer context is used; in this case the renderer itself has nothing to do with the creation/managing of an renderer context
+		*    Log message type
 		*/
-		inline Context(ILog& log, handle nativeWindowHandle = 0, bool useExternalContext = false);
-
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		inline ~Context();
-
-		/**
-		*  @brief
-		*    Return the log instance
-		*
-		*  @return
-		*    The log instance
-		*/
-		inline ILog& getLog() const;
-
-		/**
-		*  @brief
-		*    Return the native window handle
-		*
-		*  @return
-		*    The native window handle
-		*/
-		inline handle getNativeWindowHandle() const;
-
-		/**
-		*  @brief
-		*    Return whether or not an external context is used
-		*
-		*  @return
-		*    "true" if an external context is used, else "false"
-		*/
-		inline bool isUsingExternalContext() const;
+		enum class Type
+		{
+			TRACE,			///< Trace
+			DEBUG,			///< Debug
+			INFORMATION,	///< Information
+			WARNING,		///< Warning
+			CRITICAL		///< Critical
+		};
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Public virtual Renderer::ILog methods                 ]
 	//[-------------------------------------------------------]
-	private:
-		explicit Context(const Context&) = delete;
-		Context& operator=(const Context&) = delete;
+	public:
+		/**
+		*  @brief
+		*    Print a formated log message
+		*
+		*  @param[in] type
+		*    Log message type
+		*  @param[in] format
+		*    "sprintf"-style formated log message
+		*/
+		virtual void print(Type type, const char* format, ...) = 0;
 
 
 	//[-------------------------------------------------------]
-	//[ Private data                                          ]
+	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	private:
-		ILog&  mLog;
-		handle mNativeWindowHandle;
-		bool   mUseExternalContext;
+	protected:
+		inline ILog();
+		inline virtual ~ILog();
+		explicit ILog(const ILog&) = delete;
+		ILog& operator=(const ILog&) = delete;
 
 
 	};
@@ -135,6 +99,26 @@ namespace Renderer
 
 
 //[-------------------------------------------------------]
+//[ Macros & definitions                                  ]
+//[-------------------------------------------------------]
+/**
+*  @brief
+*    Ease-of-use log macro
+*
+*  @param[in] context
+*    Renderer context to ask for the log interface
+*  @param[in] type
+*    Log message type
+*  @param[in] format
+*    "sprintf"-style formated log message
+*
+*  @note
+*    - Example: RENDERER_LOG(mContext, DEBUG, "Direct3D 11 renderer backend startup")
+*/
+#define RENDERER_LOG(context, type, format, ...) context.getLog().print(Renderer::ILog::Type::type, format, ##__VA_ARGS__);
+
+
+//[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "Renderer/Context.inl"
+#include "Renderer/ILog.inl"
