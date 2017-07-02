@@ -26,7 +26,6 @@
 #include "VulkanRenderer/VulkanRuntimeLinking.h"
 #include "VulkanRenderer/VulkanRenderer.h"
 
-#include <Renderer/PlatformTypes.h>
 #include <Renderer/ILog.h>
 #ifdef WIN32
 	#include <Renderer/WindowsHeader.h>

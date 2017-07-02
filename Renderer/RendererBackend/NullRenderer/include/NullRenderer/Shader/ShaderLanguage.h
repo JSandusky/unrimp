@@ -28,7 +28,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include <Renderer/Shader/IShaderLanguage.h>
-#include <Renderer/PlatformTypes.h>	// For "override"
 
 
 //[-------------------------------------------------------]

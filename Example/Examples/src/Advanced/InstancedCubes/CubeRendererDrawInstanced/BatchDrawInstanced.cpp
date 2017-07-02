@@ -23,7 +23,6 @@
 //[-------------------------------------------------------]
 #include "PrecompiledHeader.h"
 #include "Advanced/InstancedCubes/CubeRendererDrawInstanced/BatchDrawInstanced.h"
-#include "Framework/PlatformTypes.h"
 
 #include <RendererRuntime/Core/Math/EulerAngles.h>
 

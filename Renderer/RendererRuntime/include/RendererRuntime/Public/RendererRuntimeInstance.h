@@ -31,10 +31,8 @@
 #include <RendererRuntime/IRendererRuntime.h>
 
 #ifdef SHARED_LIBRARIES
-	// Dynamically linked libraries
 	#ifdef WIN32
 		#include "RendererRuntime/Core/Platform/WindowsHeader.h"
-
 	#elif defined LINUX
 		#include <dlfcn.h>
 	#else

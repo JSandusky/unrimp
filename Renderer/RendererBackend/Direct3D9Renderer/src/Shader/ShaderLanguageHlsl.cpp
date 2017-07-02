@@ -28,6 +28,8 @@
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
 #include "Direct3D9Renderer/Direct3D9RuntimeLinking.h"
 
+#include <Renderer/ILog.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -46,8 +48,7 @@ namespace Direct3D9Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	ShaderLanguageHlsl::ShaderLanguageHlsl(Direct3D9Renderer& direct3D9Renderer) :
-		IShaderLanguage(direct3D9Renderer),
-		mDirect3D9Renderer(&direct3D9Renderer)
+		IShaderLanguage(direct3D9Renderer)
 	{
 		// Nothing here
 	}
@@ -99,7 +100,7 @@ namespace Direct3D9Renderer
 		ID3DXBuffer* d3dXBufferErrorMessages = nullptr;
 		if (D3D_OK != D3DXCompileShader(shaderSource, static_cast<UINT>(strlen(shaderSource)), nullptr, nullptr, entryPoint ? entryPoint : "main", shaderModel, compileFlags, &d3dXBuffer, &d3dXBufferErrorMessages, d3dXConstantTable))
 		{
-			OutputDebugStringA(static_cast<char*>(d3dXBufferErrorMessages->GetBufferPointer()));
+			RENDERER_LOG(static_cast<Direct3D9Renderer&>(getRenderer()).getContext(), CRITICAL, static_cast<char*>(d3dXBufferErrorMessages->GetBufferPointer()))
 			d3dXBufferErrorMessages->Release();
 		}
 
@@ -119,13 +120,13 @@ namespace Direct3D9Renderer
 	Renderer::IVertexShader* ShaderLanguageHlsl::createVertexShaderFromBytecode(const Renderer::VertexAttributes&, const Renderer::ShaderBytecode& shaderBytecode)
 	{
 		// There's no need to check for "Renderer::Capabilities::vertexShader", we know there's vertex shader support
-		return new VertexShaderHlsl(*mDirect3D9Renderer, shaderBytecode);
+		return new VertexShaderHlsl(static_cast<Direct3D9Renderer&>(getRenderer()), shaderBytecode);
 	}
 
 	Renderer::IVertexShader* ShaderLanguageHlsl::createVertexShaderFromSourceCode(const Renderer::VertexAttributes&, const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
 	{
 		// There's no need to check for "Renderer::Capabilities::vertexShader", we know there's vertex shader support
-		return new VertexShaderHlsl(*mDirect3D9Renderer, shaderSourceCode.sourceCode, shaderBytecode);
+		return new VertexShaderHlsl(static_cast<Direct3D9Renderer&>(getRenderer()), shaderSourceCode.sourceCode, shaderBytecode);
 	}
 
 	Renderer::ITessellationControlShader* ShaderLanguageHlsl::createTessellationControlShaderFromBytecode(const Renderer::ShaderBytecode&)
@@ -167,13 +168,13 @@ namespace Direct3D9Renderer
 	Renderer::IFragmentShader* ShaderLanguageHlsl::createFragmentShaderFromBytecode(const Renderer::ShaderBytecode& shaderBytecode)
 	{
 		// There's no need to check for "Renderer::Capabilities::fragmentShader", we know there's fragment shader support
-		return new FragmentShaderHlsl(*mDirect3D9Renderer, shaderBytecode);
+		return new FragmentShaderHlsl(static_cast<Direct3D9Renderer&>(getRenderer()), shaderBytecode);
 	}
 
 	Renderer::IFragmentShader* ShaderLanguageHlsl::createFragmentShaderFromSourceCode(const Renderer::ShaderSourceCode& shaderSourceCode, Renderer::ShaderBytecode* shaderBytecode)
 	{
 		// There's no need to check for "Renderer::Capabilities::fragmentShader", we know there's fragment shader support
-		return new FragmentShaderHlsl(*mDirect3D9Renderer, shaderSourceCode.sourceCode, shaderBytecode);
+		return new FragmentShaderHlsl(static_cast<Direct3D9Renderer&>(getRenderer()), shaderSourceCode.sourceCode, shaderBytecode);
 	}
 
 	Renderer::IProgram* ShaderLanguageHlsl::createProgram(const Renderer::IRootSignature&, const Renderer::VertexAttributes&, Renderer::IVertexShader* vertexShader, Renderer::ITessellationControlShader* tessellationControlShader, Renderer::ITessellationEvaluationShader* tessellationEvaluationShader, Renderer::IGeometryShader* geometryShader, Renderer::IFragmentShader* fragmentShader)
@@ -205,7 +206,7 @@ namespace Direct3D9Renderer
 		else
 		{
 			// Create the program
-			return new ProgramHlsl(*mDirect3D9Renderer, static_cast<VertexShaderHlsl*>(vertexShader), static_cast<FragmentShaderHlsl*>(fragmentShader));
+			return new ProgramHlsl(static_cast<Direct3D9Renderer&>(getRenderer()), static_cast<VertexShaderHlsl*>(vertexShader), static_cast<FragmentShaderHlsl*>(fragmentShader));
 		}
 
 		// Error! Shader language mismatch!

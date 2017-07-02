@@ -32,7 +32,6 @@
 //[-------------------------------------------------------]
 #include "VulkanRenderer/IVulkanContext.h"
 
-#include <Renderer/PlatformTypes.h>
 #include <Renderer/WindowsHeader.h>
 
 

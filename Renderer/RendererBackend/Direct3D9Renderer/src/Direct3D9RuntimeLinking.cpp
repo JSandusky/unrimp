@@ -26,8 +26,6 @@
 #include "Direct3D9Renderer/Direct3D9RuntimeLinking.h"
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
 
-#include <Renderer/PlatformTypes.h>
-#include <Renderer/WindowsHeader.h>
 #include <Renderer/ILog.h>
 
 

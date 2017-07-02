@@ -18,15 +18,17 @@
 \*********************************************************/
 
 
+// TODO(co) Migrate to "RENDERER_LOG()" to have a uniform log handling?
+
+
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Framework/PlatformTypes.h"
-#include "Framework/QtRunner/ExampleRunnerQt4.h"
-#include "Framework/CommandLineArguments.h"
 #include "Framework/CLocaleChanger.h"
+#include "Framework/CommandLineArguments.h"
+#include "Framework/QtRunner/ExampleRunnerQt4.h"
 
-#include <iostream>
 #include <QMessageBox>
 #include <QDialog>
 #include <QLabel>
@@ -34,6 +36,8 @@
 #include <QComboBox>
 #include <QHBoxLayout>
 #include <QApplication>
+
+#include <iostream>
 
 
 void ExampleRunnerQt4::showError(const std::string errorMsg)

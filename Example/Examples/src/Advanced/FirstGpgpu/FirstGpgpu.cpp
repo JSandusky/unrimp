@@ -24,7 +24,6 @@
 #include "PrecompiledHeader.h"
 #include "Advanced/FirstGpgpu/FirstGpgpu.h"
 #include "Framework/Color4.h"
-#include "Framework/PlatformTypes.h"
 
 #include <Renderer/Public/StdLog.h>
 #include <Renderer/Public/RendererInstance.h>

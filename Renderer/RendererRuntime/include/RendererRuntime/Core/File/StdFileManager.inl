@@ -22,7 +22,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/File/IFile.h"
-#include "RendererRuntime/Core/Platform/PlatformTypes.h"
 
 #include <Renderer/Public/Renderer.h>
 

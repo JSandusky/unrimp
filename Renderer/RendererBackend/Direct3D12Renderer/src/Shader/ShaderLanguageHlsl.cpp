@@ -31,6 +31,8 @@
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
 #include "Direct3D12Renderer/Direct3D12RuntimeLinking.h"
 
+#include <Renderer/ILog.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -110,9 +112,11 @@ namespace Direct3D12Renderer
 
 		if (FAILED(hr))
 		{
-			if( errorBlob != nullptr )
-				OutputDebugStringA( (char*)errorBlob->GetBufferPointer() );
-			if( errorBlob ) errorBlob->Release();
+			if (nullptr != errorBlob)
+			{
+				RENDERER_LOG(static_cast<Direct3D12Renderer&>(getRenderer()).getContext(), CRITICAL, static_cast<char*>(errorBlob->GetBufferPointer()))
+				errorBlob->Release();
+			}
 			return nullptr;
 		}
 		if (nullptr != errorBlob ) errorBlob->Release();

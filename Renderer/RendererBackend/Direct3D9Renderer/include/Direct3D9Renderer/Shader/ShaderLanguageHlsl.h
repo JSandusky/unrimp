@@ -130,13 +130,6 @@ namespace Direct3D9Renderer
 		ShaderLanguageHlsl& operator =(const ShaderLanguageHlsl& source) = delete;
 
 
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-		Direct3D9Renderer* mDirect3D9Renderer;	///< Owner Direct3D 9 renderer instance, always valid
-
-
 	};
 
 

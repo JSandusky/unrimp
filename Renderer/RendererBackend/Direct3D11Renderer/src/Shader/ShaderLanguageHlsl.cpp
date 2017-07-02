@@ -31,6 +31,8 @@
 #include "Direct3D11Renderer/Direct3D11Renderer.h"
 #include "Direct3D11Renderer/Direct3D11RuntimeLinking.h"
 
+#include <Renderer/ILog.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -106,9 +108,11 @@ namespace Direct3D11Renderer
 
 		if (FAILED(hr))
 		{
-			if( errorBlob != nullptr )
-				OutputDebugStringA( (char*)errorBlob->GetBufferPointer() );
-			if( errorBlob ) errorBlob->Release();
+			if (nullptr != errorBlob)
+			{
+				RENDERER_LOG(static_cast<Direct3D11Renderer&>(getRenderer()).getContext(), CRITICAL, static_cast<char*>(errorBlob->GetBufferPointer()))
+				errorBlob->Release();
+			}
 			return nullptr;
 		}
 		if (nullptr != errorBlob ) errorBlob->Release();

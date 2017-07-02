@@ -27,20 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Renderer/PlatformTypes.h"	// For "handle"
 #include "Renderer/IResource.h"
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace Renderer
-{
-	class IVertexArray;
-	class IIndexBuffer;
-	struct VertexAttribute;
-	struct VertexArrayVertexBuffer;
-}
 
 
 //[-------------------------------------------------------]

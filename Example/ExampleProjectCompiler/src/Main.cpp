@@ -64,15 +64,15 @@ int programEntryPoint(CommandLineArguments& commandLineArguments)
 				// For now all given arguments are interpreted as render target
 				for (const std::string& renderTarget : commandLineArguments.getArguments())
 				{
-					std::cout << "Compile for target: " << renderTarget << '\n';
+					RENDERER_LOG(rendererToolkitContext, INFORMATION, "Compiling for target: \"%s\"", renderTarget.c_str())
 					project->compileAllAssets(renderTarget.c_str());
-					std::cout << "compilation done\n";
+					RENDERER_LOG(rendererToolkitContext, INFORMATION, "Compilation done")
 				}
 			}
 		}
 		catch (const std::exception& e)
 		{
-			std::cout << "Project compilation failed: " << e.what() << "\n";
+			RENDERER_LOG(rendererToolkitContext, CRITICAL, "Project compilation failed: %s", e.what())
 		}
 		delete project;
 	}

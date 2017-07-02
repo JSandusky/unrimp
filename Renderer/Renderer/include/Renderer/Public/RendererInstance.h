@@ -30,13 +30,10 @@
 #include <Renderer/Public/Renderer.h>
 
 #ifdef SHARED_LIBRARIES
-	// Dynamically linked libraries
 	#ifdef WIN32
 		#include "Renderer/WindowsHeader.h"
-
 	#elif defined LINUX
 		#include <dlfcn.h>
-		#include <iostream>	// For "std::cerr"
 	#else
 		#error "Unsupported platform"
 	#endif

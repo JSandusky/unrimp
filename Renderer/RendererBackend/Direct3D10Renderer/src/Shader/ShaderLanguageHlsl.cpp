@@ -29,6 +29,8 @@
 #include "Direct3D10Renderer/Direct3D10Renderer.h"
 #include "Direct3D10Renderer/Direct3D10RuntimeLinking.h"
 
+#include <Renderer/ILog.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -99,7 +101,7 @@ namespace Direct3D10Renderer
 		{
 			if (nullptr != errorBlob)
 			{
-				::OutputDebugStringA(static_cast<char*>(errorBlob->GetBufferPointer()));
+				RENDERER_LOG(static_cast<Direct3D10Renderer&>(getRenderer()).getContext(), CRITICAL, static_cast<char*>(errorBlob->GetBufferPointer()))
 				errorBlob->Release();
 			}
 

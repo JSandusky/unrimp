@@ -25,24 +25,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#ifdef WIN32
-	// Disable warnings in external headers, we can't fix them
-	__pragma(warning(push))
-		__pragma(warning(disable: 4668))	// warning C4668: '<x>' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
-		// TODO(co) Implement me
-	__pragma(warning(pop))
-#else
-	// TODO(co) Implement me
-#endif
-#include "Renderer/PlatformTypes.h"
-
-// Get rid of some nasty OS macros
-#undef max
-
-
-//[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 namespace VulkanRenderer

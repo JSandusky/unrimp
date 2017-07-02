@@ -27,7 +27,6 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Renderer/PlatformTypes.h"
 #include "Renderer/RenderTarget/IRenderTarget.h"
 
 

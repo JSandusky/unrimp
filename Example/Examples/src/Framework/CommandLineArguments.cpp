@@ -22,9 +22,9 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "PrecompiledHeader.h"
-#include "CommandLineArguments.h"
+#include "Framework/CommandLineArguments.h"
 #ifdef WIN32
-	#include "WindowsHeader.h"
+	#include "Framework/WindowsHeader.h"
 	#ifdef UNICODE
 		#include "utf8/utf8.h"	// To convert utf16 strings to utf8
 	#else
