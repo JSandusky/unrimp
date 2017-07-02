@@ -25,8 +25,6 @@
 #include "VulkanRenderer/Extensions.h"
 #include "VulkanRenderer/VulkanRuntimeLinking.h"
 
-#include <iostream>	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

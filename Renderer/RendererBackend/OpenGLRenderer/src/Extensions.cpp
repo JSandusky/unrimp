@@ -24,9 +24,10 @@
 #define EXTENSIONS_DEFINE
 
 #include "OpenGLRenderer/Extensions.h"
+#include "OpenGLRenderer/OpenGLRenderer.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 
-#include <Renderer/PlatformTypes.h>	// For "RENDERER_OUTPUT_DEBUG_PRINTF()"
+#include <Renderer/ILog.h>
 #ifdef LINUX
 	#include <Renderer/LinuxHeader.h>
 	#include "OpenGLRenderer/Linux/OpenGLContextLinux.h"
@@ -43,7 +44,8 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Extensions::Extensions(IOpenGLContext& openGLContext) :
+	Extensions::Extensions(OpenGLRenderer& openGLRenderer, IOpenGLContext& openGLContext) :
+		mOpenGLRenderer(openGLRenderer),
 		mOpenGLContext(&openGLContext),
 		mInitialized(false)
 	{
@@ -278,19 +280,19 @@ namespace OpenGLRenderer
 	{
 		// Define a platform dependent helper macro
 		#ifdef WIN32
-			#define IMPORT_FUNC(funcName)																													\
-				if (result)																																	\
-				{																																			\
-					void* symbol = wglGetProcAddress(#funcName);																							\
-					if (nullptr != symbol)																													\
-					{																																		\
-						*(reinterpret_cast<void**>(&(funcName))) = symbol;																					\
-					}																																		\
-					else																																	\
-					{																																		\
-						RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL error: Failed to locate the entry point \"%s\" within the OpenGL shared library", #funcName)	\
-						result = false;																														\
-					}																																		\
+			#define IMPORT_FUNC(funcName)																															\
+				if (result)																																			\
+				{																																					\
+					void* symbol = wglGetProcAddress(#funcName);																									\
+					if (nullptr != symbol)																															\
+					{																																				\
+						*(reinterpret_cast<void**>(&(funcName))) = symbol;																							\
+					}																																				\
+					else																																			\
+					{																																				\
+						RENDERER_LOG(mOpenGLRenderer.getContext(), CRITICAL, "Failed to locate the entry point \"%s\" within the OpenGL shared library", #funcName)	\
+						result = false;																																\
+					}																																				\
 				}
 		#elif APPLE
 			// For OpenGL extension handling, Apple provides several documents like
@@ -299,35 +301,35 @@ namespace OpenGLRenderer
 			// -> All referencing to "QA1188: GetProcAdress and OpenGL Entry Points" (http://developer.apple.com/qa/qa2001/qa1188.html).
 			//    Sadly, it appears that this site no longer exists.
 			// -> It appears that for Mac OS X v10.6 >, the "dlopen"-way is recommended.
-			#define IMPORT_FUNC(funcName)																													\
-				if (result)																																	\
-				{																																			\
-					void* symbol = m_pOpenGLSharedLibrary ? dlsym(mOpenGLSharedLibrary, #funcName) : nullptr;												\
-					if (nullptr != symbol)																													\
-					{																																		\
-						*(reinterpret_cast<void**>(&(funcName))) = symbol;																					\
-					}																																		\
-					else																																	\
-					{																																		\
-						RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL error: Failed to locate the entry point \"%s\" within the OpenGL shared library", #funcName)	\
-						result = false;																														\
-					}																																		\
+			#define IMPORT_FUNC(funcName)																															\
+				if (result)																																			\
+				{																																					\
+					void* symbol = m_pOpenGLSharedLibrary ? dlsym(mOpenGLSharedLibrary, #funcName) : nullptr;														\
+					if (nullptr != symbol)																															\
+					{																																				\
+						*(reinterpret_cast<void**>(&(funcName))) = symbol;																							\
+					}																																				\
+					else																																			\
+					{																																				\
+						RENDERER_LOG(mOpenGLRenderer.getContext(), CRITICAL, "Failed to locate the entry point \"%s\" within the OpenGL shared library", #funcName)	\
+						result = false;																																\
+					}																																				\
 				}
 		#elif LINUX
 			typedef void (*GLfunction)();
-			#define IMPORT_FUNC(funcName)																													\
-				if (result)																																	\
-				{																																			\
-					GLfunction symbol = glXGetProcAddressARB(reinterpret_cast<const GLubyte*>(#funcName));													\
-					if (nullptr != symbol)																													\
-					{																																		\
-						*(reinterpret_cast<GLfunction*>(&(funcName))) = symbol;																				\
-					}																																		\
-					else																																	\
-					{																																		\
-						RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL error: Failed to locate the entry point \"%s\" within the OpenGL shared library", #funcName)	\
-						result = false;																														\
-					}																																		\
+			#define IMPORT_FUNC(funcName)																															\
+				if (result)																																			\
+				{																																					\
+					GLfunction symbol = glXGetProcAddressARB(reinterpret_cast<const GLubyte*>(#funcName));															\
+					if (nullptr != symbol)																															\
+					{																																				\
+						*(reinterpret_cast<GLfunction*>(&(funcName))) = symbol;																						\
+					}																																				\
+					else																																			\
+					{																																				\
+						RENDERER_LOG(mOpenGLRenderer.getContext(), CRITICAL, "Failed to locate the entry point \"%s\" within the OpenGL shared library", #funcName)	\
+						result = false;																																\
+					}																																				\
 				}
 		#endif
 
@@ -479,7 +481,7 @@ namespace OpenGLRenderer
 			// Load the entry points
 			bool result = true;	// Success by default
 			IMPORT_FUNC(glVertexAttribPointerARB)
-			IMPORT_FUNC(glVertexAttribIPointerARB)	// GL_NV_vertex_program4
+			IMPORT_FUNC(glVertexAttribIPointer)	// GL_NV_vertex_program4
 			IMPORT_FUNC(glEnableVertexAttribArrayARB)
 			IMPORT_FUNC(glDisableVertexAttribArrayARB)
 			mGL_ARB_vertex_program = result;

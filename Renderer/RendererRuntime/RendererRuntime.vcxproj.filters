@@ -618,6 +618,9 @@
     <None Include="include\RendererRuntime\Context.inl">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\ShaderPiece\ShaderPieceResourceManager.inl">
+      <Filter>Source Files\Resource\ShaderPiece</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -1603,6 +1606,9 @@
     </ClCompile>
     <ClCompile Include="src\Resource\MaterialBlueprint\BufferManager\IndirectBufferManager.cpp">
       <Filter>Source Files\Resource\MaterialBlueprint\BufferManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Context.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

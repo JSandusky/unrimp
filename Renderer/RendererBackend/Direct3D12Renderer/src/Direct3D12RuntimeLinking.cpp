@@ -24,9 +24,9 @@
 #define DIRECT3D12_DEFINERUNTIMELINKING
 
 #include "Direct3D12Renderer/Direct3D12RuntimeLinking.h"
+#include "Direct3D12Renderer/Direct3D12Renderer.h"
 
-#include <Renderer/PlatformTypes.h>	// For "RENDERER_OUTPUT_DEBUG_PRINTF()"
-#include <Renderer/WindowsHeader.h>
+#include <Renderer/ILog.h>
 
 
 //[-------------------------------------------------------]
@@ -39,7 +39,8 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Direct3D12RuntimeLinking::Direct3D12RuntimeLinking() :
+	Direct3D12RuntimeLinking::Direct3D12RuntimeLinking(Direct3D12Renderer& direct3D12Renderer) :
+		mDirect3D12Renderer(direct3D12Renderer),
 		mDxgiSharedLibrary(nullptr),
 		mD3D12SharedLibrary(nullptr),
 		mD3DX11SharedLibrary(nullptr),
@@ -110,22 +111,22 @@ namespace Direct3D12Renderer
 					mD3DCompilerSharedLibrary = ::LoadLibraryExA("D3DCompiler_47.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
 					if (nullptr == mD3DCompilerSharedLibrary)
 					{
-						RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to load in the shared library \"D3DCompiler_47.dll\"\n")
+						RENDERER_LOG(mDirect3D12Renderer.getContext(), CRITICAL, "Failed to load in the shared Direct3D 12 library \"D3DCompiler_47.dll\"")
 					}
 				}
 				else
 				{
-					RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to load in the shared library \"d3dx11_43.dll\"\n")
+					RENDERER_LOG(mDirect3D12Renderer.getContext(), CRITICAL, "Failed to load in the shared Direct3D 12 library \"d3dx11_43.dll\"")
 				}
 			}
 			else
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to load in the shared library \"d3d12.dll\"\n")
+				RENDERER_LOG(mDirect3D12Renderer.getContext(), CRITICAL, "Failed to load in the shared Direct3D 12 library \"d3d12.dll\"")
 			}
 		}
 		else
 		{
-			RENDERER_OUTPUT_DEBUG_STRING("Direct3D 12 error: Failed to load in the shared library \"dxgi.dll\"\n")
+			RENDERER_LOG(mDirect3D12Renderer.getContext(), CRITICAL, "Failed to load in the shared Direct3D 12 library \"dxgi.dll\"")
 		}
 
 		// Done
@@ -137,22 +138,22 @@ namespace Direct3D12Renderer
 		bool result = true;	// Success by default
 
 		// Define a helper macro
-		#define IMPORT_FUNC(funcName)																																			\
-			if (result)																																							\
-			{																																									\
-				void* symbol = ::GetProcAddress(static_cast<HMODULE>(mDxgiSharedLibrary), #funcName);																			\
-				if (nullptr != symbol)																																			\
-				{																																								\
-					*(reinterpret_cast<void**>(&(funcName))) = symbol;																											\
-				}																																								\
-				else																																							\
-				{																																								\
-					wchar_t moduleFilename[MAX_PATH];																															\
-					moduleFilename[0] = '\0';																																	\
-					::GetModuleFileNameW(static_cast<HMODULE>(mDxgiSharedLibrary), moduleFilename, MAX_PATH);																	\
-					RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 12 error: Failed to locate the entry point \"%s\" within the DXGI shared library \"%s\"", #funcName, moduleFilename)	\
-					result = false;																																				\
-				}																																								\
+		#define IMPORT_FUNC(funcName)																																									\
+			if (result)																																													\
+			{																																															\
+				void* symbol = ::GetProcAddress(static_cast<HMODULE>(mDxgiSharedLibrary), #funcName);																									\
+				if (nullptr != symbol)																																									\
+				{																																														\
+					*(reinterpret_cast<void**>(&(funcName))) = symbol;																																	\
+				}																																														\
+				else																																													\
+				{																																														\
+					wchar_t moduleFilename[MAX_PATH];																																					\
+					moduleFilename[0] = '\0';																																							\
+					::GetModuleFileNameW(static_cast<HMODULE>(mDxgiSharedLibrary), moduleFilename, MAX_PATH);																							\
+					RENDERER_LOG(mDirect3D12Renderer.getContext(), CRITICAL, "Failed to locate the entry point \"%s\" within the Direct3D 12 DXGI shared library \"%s\"", #funcName, moduleFilename)	\
+					result = false;																																										\
+				}																																														\
 			}
 
 		// Load the entry points
@@ -170,22 +171,22 @@ namespace Direct3D12Renderer
 		bool result = true;	// Success by default
 
 		// Define a helper macro
-		#define IMPORT_FUNC(funcName)																																					\
-			if (result)																																									\
-			{																																											\
-				void* symbol = ::GetProcAddress(static_cast<HMODULE>(mD3D12SharedLibrary), #funcName);																					\
-				if (nullptr != symbol)																																					\
-				{																																										\
-					*(reinterpret_cast<void**>(&(funcName))) = symbol;																													\
-				}																																										\
-				else																																									\
-				{																																										\
-					wchar_t moduleFilename[MAX_PATH];																																	\
-					moduleFilename[0] = '\0';																																			\
-					::GetModuleFileNameW(static_cast<HMODULE>(mD3D12SharedLibrary), moduleFilename, MAX_PATH);																			\
-					RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 12 error: Failed to locate the entry point \"%s\" within the Direct3D 12 shared library \"%s\"", #funcName, moduleFilename)	\
-					result = false;																																						\
-				}																																										\
+		#define IMPORT_FUNC(funcName)																																							\
+			if (result)																																											\
+			{																																													\
+				void* symbol = ::GetProcAddress(static_cast<HMODULE>(mD3D12SharedLibrary), #funcName);																							\
+				if (nullptr != symbol)																																							\
+				{																																												\
+					*(reinterpret_cast<void**>(&(funcName))) = symbol;																															\
+				}																																												\
+				else																																											\
+				{																																												\
+					wchar_t moduleFilename[MAX_PATH];																																			\
+					moduleFilename[0] = '\0';																																					\
+					::GetModuleFileNameW(static_cast<HMODULE>(mD3D12SharedLibrary), moduleFilename, MAX_PATH);																					\
+					RENDERER_LOG(mDirect3D12Renderer.getContext(), CRITICAL, "Failed to locate the entry point \"%s\" within the Direct3D 12 shared library \"%s\"", #funcName, moduleFilename)	\
+					result = false;																																								\
+				}																																												\
 			}
 
 		// Load the entry points
@@ -207,22 +208,22 @@ namespace Direct3D12Renderer
 		bool result = true;	// Success by default
 
 		// Define a helper macro
-		#define IMPORT_FUNC(funcName)																																					\
-			if (result)																																									\
-			{																																											\
-				void* symbol = ::GetProcAddress(static_cast<HMODULE>(mD3DX11SharedLibrary), #funcName);																					\
-				if (nullptr != symbol)																																					\
-				{																																										\
-					*(reinterpret_cast<void**>(&(funcName))) = symbol;																													\
-				}																																										\
-				else																																									\
-				{																																										\
-					wchar_t moduleFilename[MAX_PATH];																																	\
-					moduleFilename[0] = '\0';																																			\
-					::GetModuleFileNameW(static_cast<HMODULE>(mD3DX11SharedLibrary), moduleFilename, MAX_PATH);																			\
-					RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 12 error: Failed to locate the entry point \"%s\" within the Direct3D 12 shared library \"%s\"", #funcName, moduleFilename)	\
-					result = false;																																						\
-				}																																										\
+		#define IMPORT_FUNC(funcName)																																							\
+			if (result)																																											\
+			{																																													\
+				void* symbol = ::GetProcAddress(static_cast<HMODULE>(mD3DX11SharedLibrary), #funcName);																							\
+				if (nullptr != symbol)																																							\
+				{																																												\
+					*(reinterpret_cast<void**>(&(funcName))) = symbol;																															\
+				}																																												\
+				else																																											\
+				{																																												\
+					wchar_t moduleFilename[MAX_PATH];																																			\
+					moduleFilename[0] = '\0';																																					\
+					::GetModuleFileNameW(static_cast<HMODULE>(mD3DX11SharedLibrary), moduleFilename, MAX_PATH);																					\
+					RENDERER_LOG(mDirect3D12Renderer.getContext(), CRITICAL, "Failed to locate the entry point \"%s\" within the Direct3D 12 shared library \"%s\"", #funcName, moduleFilename)	\
+					result = false;																																								\
+				}																																												\
 			}
 
 		// Load the entry points
@@ -241,22 +242,22 @@ namespace Direct3D12Renderer
 		bool result = true;	// Success by default
 
 		// Define a helper macro
-		#define IMPORT_FUNC(funcName)																																					\
-			if (result)																																									\
-			{																																											\
-				void* symbol = ::GetProcAddress(static_cast<HMODULE>(mD3DCompilerSharedLibrary), #funcName);																			\
-				if (nullptr != symbol)																																					\
-				{																																										\
-					*(reinterpret_cast<void**>(&(funcName))) = symbol;																													\
-				}																																										\
-				else																																									\
-				{																																										\
-					wchar_t moduleFilename[MAX_PATH];																																	\
-					moduleFilename[0] = '\0';																																			\
-					::GetModuleFileNameW(static_cast<HMODULE>(mD3DCompilerSharedLibrary), moduleFilename, MAX_PATH);																	\
-					RENDERER_OUTPUT_DEBUG_PRINTF("Direct3D 12 error: Failed to locate the entry point \"%s\" within the Direct3D 12 shared library \"%s\"", #funcName, moduleFilename)	\
-					result = false;																																						\
-				}																																										\
+		#define IMPORT_FUNC(funcName)																																							\
+			if (result)																																											\
+			{																																													\
+				void* symbol = ::GetProcAddress(static_cast<HMODULE>(mD3DCompilerSharedLibrary), #funcName);																					\
+				if (nullptr != symbol)																																							\
+				{																																												\
+					*(reinterpret_cast<void**>(&(funcName))) = symbol;																															\
+				}																																												\
+				else																																											\
+				{																																												\
+					wchar_t moduleFilename[MAX_PATH];																																			\
+					moduleFilename[0] = '\0';																																					\
+					::GetModuleFileNameW(static_cast<HMODULE>(mD3DCompilerSharedLibrary), moduleFilename, MAX_PATH);																			\
+					RENDERER_LOG(mDirect3D12Renderer.getContext(), CRITICAL, "Failed to locate the entry point \"%s\" within the Direct3D 12 shared library \"%s\"", #funcName, moduleFilename)	\
+					result = false;																																								\
+				}																																												\
 			}
 
 		// Load the entry points

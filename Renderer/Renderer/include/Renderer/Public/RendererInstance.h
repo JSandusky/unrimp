@@ -163,12 +163,12 @@ namespace Renderer
 						else
 						{
 							// Error!
-							OUTPUT_DEBUG_PRINTF("Failed to locate the entry point \"%s\" within the renderer shared library \"%s\"", functionName, rendererFilename)
+							RENDERER_LOG(context, CRITICAL, "Failed to locate the entry point \"%s\" within the shared renderer library \"%s\"", functionName, rendererFilename)
 						}
 					}
 					else
 					{
-						OUTPUT_DEBUG_PRINTF("Failed to load in the shared library \"%s\"\n", rendererFilename)
+						RENDERER_LOG(context, CRITICAL, "Failed to load in the shared renderer library \"%s\"", rendererFilename)
 					}
 				#elif defined LINUX
 					// Load in the shared library
@@ -196,14 +196,12 @@ namespace Renderer
 						else
 						{
 							// Error!
-							std::cerr << "Failed to locate the entry point \"" << functionName << "\" within the renderer shared library \"" << rendererFilename << "\"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead... as seen below, why the additional output?
-							OUTPUT_DEBUG_PRINTF("Failed to locate the entry point \"%s\" within the renderer shared library \"%s\"", functionName, rendererFilename)
+							RENDERER_LOG(context, CRITICAL, "Failed to locate the entry point \"%s\" within the shared renderer library \"%s\"", functionName, rendererFilename)
 						}
 					}
 					else
 					{
-						std::cerr << "Failed to load in the shared library \"" << rendererFilename << "\"\nReason:" << dlerror() << "\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead... as seen below, why the additional output?
-						OUTPUT_DEBUG_PRINTF("Failed to load in the shared library \"%s\"\n", rendererFilename)
+						RENDERER_LOG(context, CRITICAL, "Failed to load in the shared renderer library \"%s\"\n", rendererFilename)
 					}
 				#else
 					#error "Unsupported platform"
@@ -331,7 +329,7 @@ namespace Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		void*				   mRendererSharedLibrary;	///< Renderer shared library, can be a null pointer
+		void*				   mRendererSharedLibrary;	///< Shared renderer library, can be a null pointer
 		Renderer::IRendererPtr mRenderer;				///< Renderer instance, can be a null pointer
 
 

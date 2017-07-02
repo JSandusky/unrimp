@@ -27,6 +27,7 @@
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/Core/File/IFileManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
+#include "RendererRuntime/Context.h"
 
 #include <imguizmo/ImGuizmo.h>
 

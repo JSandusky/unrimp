@@ -829,7 +829,7 @@ namespace RendererRuntime
 		}
 
 		// Apply a C-preprocessor
-		Preprocessor::preprocess(mInString, mOutString);
+		Preprocessor::preprocess(shaderPieceResourceManager.getRendererRuntime(), mInString, mOutString);
 
 		// Done
 		return mOutString;

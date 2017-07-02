@@ -24,16 +24,17 @@
 #define OPENGL_DEFINERUNTIMELINKING
 
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
+#include "OpenGLRenderer/OpenGLRenderer.h"
 
-#include <Renderer/PlatformTypes.h>	// For "RENDERER_OUTPUT_DEBUG_PRINTF()"
+#include <Renderer/ILog.h>
 #ifdef WIN32
-	#include <Renderer/WindowsHeader.h>
+	// Nothing here
 #elif defined LINUX
 	#include <Renderer/LinuxHeader.h>
 
 	#include <dlfcn.h>
 	#include <link.h>
-	#include <iostream>
+	#include <iostream>	// TODO(co) Can this include be removed?
 #else
 	#error "Unsupported platform"
 #endif
@@ -51,47 +52,47 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	// Define a helper macro
 	#ifdef WIN32
-		#define IMPORT_FUNC(funcName)																																			\
-			if (result)																																							\
-			{																																									\
-				void* symbol = ::GetProcAddress(static_cast<HMODULE>(mOpenGLSharedLibrary), #funcName);																			\
-				if (nullptr == symbol)																																			\
-				{																																								\
-					symbol = wglGetProcAddress(#funcName);																														\
-				}																																								\
-				if (nullptr != symbol)																																			\
-				{																																								\
-					*(reinterpret_cast<void**>(&(funcName))) = symbol;																											\
-				}																																								\
-				else																																							\
-				{																																								\
-					wchar_t moduleFilename[MAX_PATH];																															\
-					moduleFilename[0] = '\0';																																	\
-					::GetModuleFileNameW(static_cast<HMODULE>(mOpenGLSharedLibrary), moduleFilename, MAX_PATH);																	\
-					RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL error: Failed to locate the entry point \"%s\" within the OpenGL shared library \"%s\"", #funcName, moduleFilename)	\
-					result = false;																																				\
-				}																																								\
+		#define IMPORT_FUNC(funcName)																																					\
+			if (result)																																									\
+			{																																											\
+				void* symbol = ::GetProcAddress(static_cast<HMODULE>(mOpenGLSharedLibrary), #funcName);																					\
+				if (nullptr == symbol)																																					\
+				{																																										\
+					symbol = wglGetProcAddress(#funcName);																																\
+				}																																										\
+				if (nullptr != symbol)																																					\
+				{																																										\
+					*(reinterpret_cast<void**>(&(funcName))) = symbol;																													\
+				}																																										\
+				else																																									\
+				{																																										\
+					wchar_t moduleFilename[MAX_PATH];																																	\
+					moduleFilename[0] = '\0';																																			\
+					::GetModuleFileNameW(static_cast<HMODULE>(mOpenGLSharedLibrary), moduleFilename, MAX_PATH);																			\
+					RENDERER_LOG(mOpenGLRenderer.getContext(), CRITICAL, "Failed to locate the entry point \"%s\" within the OpenGL shared library \"%s\"", #funcName, moduleFilename)	\
+					result = false;																																						\
+				}																																										\
 			}
 	#elif defined LINUX
-		#define IMPORT_FUNC(funcName)																																			\
-			if (result)																																							\
-			{																																									\
-				void* symbol = ::dlsym(mOpenGLSharedLibrary, #funcName);																										\
-				if (nullptr != symbol)																																			\
-				{																																								\
-					*(reinterpret_cast<void**>(&(funcName))) = symbol;																											\
-				}																																								\
-				else																																							\
-				{																																								\
-					link_map *linkMap = nullptr;																																\
-					const char* libraryName = "unknown";																														\
-					if (dlinfo(mOpenGLSharedLibrary, RTLD_DI_LINKMAP, &linkMap))																								\
-					{																																							\
-						libraryName = linkMap->l_name;																															\
-					}																																							\
-					std::cout << "OpenGL error: Failed to locate the entry point \"" << #funcName << "\" within the OpenGL shared library \"" << libraryName << "\"\n";		/* TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead*/ \
-					result = false;																																				\
-				}																																								\
+		#define IMPORT_FUNC(funcName)																																				\
+			if (result)																																								\
+			{																																										\
+				void* symbol = ::dlsym(mOpenGLSharedLibrary, #funcName);																											\
+				if (nullptr != symbol)																																				\
+				{																																									\
+					*(reinterpret_cast<void**>(&(funcName))) = symbol;																												\
+				}																																									\
+				else																																								\
+				{																																									\
+					link_map *linkMap = nullptr;																																	\
+					const char* libraryName = "unknown";																															\
+					if (dlinfo(mOpenGLSharedLibrary, RTLD_DI_LINKMAP, &linkMap))																									\
+					{																																								\
+						libraryName = linkMap->l_name;																																\
+					}																																								\
+					RENDERER_LOG(mOpenGLRenderer.getContext(), CRITICAL, "Failed to locate the entry point \"%s\" within the OpenGL shared library \"%s\"", #funcName, libraryName)	\
+					result = false;																																					\
+				}																																									\
 			}
 	#else
 		#error "Unsupported platform"
@@ -101,7 +102,8 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	OpenGLRuntimeLinking::OpenGLRuntimeLinking() :
+	OpenGLRuntimeLinking::OpenGLRuntimeLinking(OpenGLRenderer& openGLRenderer) :
+		mOpenGLRenderer(openGLRenderer),
 		mOpenGLSharedLibrary(nullptr),
 		mEntryPointsRegistered(false),
 		mInitialized(false)
@@ -158,13 +160,13 @@ namespace OpenGLRenderer
 			mOpenGLSharedLibrary = ::LoadLibraryExA("opengl32.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
 			if (nullptr == mOpenGLSharedLibrary)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("OpenGL error: Failed to load in the shared library \"opengl32.dll\"\n")
+				RENDERER_LOG(mOpenGLRenderer.getContext(), CRITICAL, "Failed to load in the shared OpenGL library \"opengl32.dll\"")
 			}
 		#elif defined LINUX
 			mOpenGLSharedLibrary = ::dlopen("libGL.so", RTLD_NOW);
 			if (nullptr == mOpenGLSharedLibrary)
 			{
-				std::cout << "OpenGL error: Failed to load in the shared library \"libGL.so\"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
+				RENDERER_LOG(mOpenGLRenderer.getContext(), CRITICAL, "Failed to load in the shared OpenGL library \"libGL.so\"")
 			}
 		#else
 			#error "Unsupported platform"

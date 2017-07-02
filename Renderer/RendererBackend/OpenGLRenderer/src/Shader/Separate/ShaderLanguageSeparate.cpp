@@ -32,6 +32,8 @@
 #include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
 
+#include <Renderer/ILog.h>
+
 #ifdef OPENGLRENDERER_GLSLTOSPIRV
 	// Disable warnings in external headers, we can't fix them
 	PRAGMA_WARNING_PUSH
@@ -165,7 +167,7 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
-		void printOpenGLShaderProgramInformationIntoLog(GLuint openGLObject)
+		void printOpenGLShaderProgramInformationIntoLog(OpenGLRenderer::OpenGLRenderer& openGLRenderer, GLuint openGLObject)
 		{
 			// Get the length of the information (including a null termination)
 			GLint informationLength = 0;
@@ -179,7 +181,7 @@ namespace
 				OpenGLRenderer::glGetInfoLogARB(openGLObject, informationLength, nullptr, informationLog);
 
 				// Output the debug string
-				RENDERER_OUTPUT_DEBUG_STRING(informationLog)
+				RENDERER_LOG(openGLRenderer.getContext(), CRITICAL, informationLog)
 
 				// Cleanup information memory
 				delete [] informationLog;
@@ -232,7 +234,7 @@ namespace OpenGLRenderer
 		return openGLShader;
 	}
 
-	uint32_t ShaderLanguageSeparate::loadShaderProgramFromBytecode(uint32_t shaderType, const Renderer::ShaderBytecode& shaderBytecode)
+	uint32_t ShaderLanguageSeparate::loadShaderProgramFromBytecode(OpenGLRenderer& openGLRenderer, uint32_t shaderType, const Renderer::ShaderBytecode& shaderBytecode)
 	{
 		// Create and load the shader object
 		const GLuint openGLShader = loadShaderFromBytecode(shaderType, shaderBytecode);
@@ -260,7 +262,7 @@ namespace OpenGLRenderer
 			if (GL_TRUE != linked)
 			{
 				// Error, program link failed!
-				::detail::printOpenGLShaderProgramInformationIntoLog(openGLProgram);
+				::detail::printOpenGLShaderProgramInformationIntoLog(openGLRenderer, openGLProgram);
 			}
 
 			// Done
@@ -269,7 +271,7 @@ namespace OpenGLRenderer
 		else
 		{
 			// Error, failed to compile the shader!
-			::detail::printOpenGLShaderProgramInformationIntoLog(openGLShader);
+			::detail::printOpenGLShaderProgramInformationIntoLog(openGLRenderer, openGLShader);
 
 			// Destroy the OpenGL shader
 			// -> A value of 0 for shader will be silently ignored
@@ -280,7 +282,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	uint32_t ShaderLanguageSeparate::loadShaderProgramFromSourceCode(uint32_t shaderType, const char* sourceCode)
+	uint32_t ShaderLanguageSeparate::loadShaderProgramFromSourceCode(OpenGLRenderer& openGLRenderer, uint32_t shaderType, const char* sourceCode)
 	{
 		// Create the shader program
 		const GLuint openGLProgram = glCreateShaderProgramv(shaderType, 1, &sourceCode);
@@ -296,7 +298,7 @@ namespace OpenGLRenderer
 		else
 		{
 			// Error, failed to compile the shader!
-			::detail::printOpenGLShaderProgramInformationIntoLog(openGLProgram);
+			::detail::printOpenGLShaderProgramInformationIntoLog(openGLRenderer, openGLProgram);
 
 			// Destroy the program
 			// -> A value of 0 for shader will be silently ignored

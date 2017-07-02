@@ -19,27 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include <string>
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace RendererRuntime
-{
-	class IRendererRuntime;
-}
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -47,40 +26,12 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Classes                                               ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    A simple interface for the shader preprocessor
-	*
-	*  @note
-	*    - Internally MojoShader ( https://icculus.org/mojoshader/ ) is used
-	*/
-	class Preprocessor
+	inline IRendererRuntime& ShaderPieceResourceManager::getRendererRuntime() const
 	{
-
-
-	//[-------------------------------------------------------]
-	//[ Public static methods                                 ]
-	//[-------------------------------------------------------]
-	public:
-		/**
-		*  @brief
-		*    Run a shader source string through the preprocessor
-		*
-		*  @param[in] rendererRuntime
-		*    Renderer runtime instance to use
-		*  @param[in] source
-		*    Source string
-		*  @param[out] result
-		*    Receives the processed code
-		*
-		*  @return processed string
-		*/
-		static void preprocess(const IRendererRuntime& rendererRuntime, std::string& source, std::string& result);
-
-
-	};
+		return mRendererRuntime;
+	}
 
 
 //[-------------------------------------------------------]

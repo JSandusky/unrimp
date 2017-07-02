@@ -38,14 +38,14 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	TessellationControlShaderSeparate::TessellationControlShaderSeparate(OpenGLRenderer& openGLRenderer, const Renderer::ShaderBytecode& shaderBytecode) :
 		ITessellationControlShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
-		mOpenGLShaderProgram(ShaderLanguageSeparate::loadShaderProgramFromBytecode(GL_TESS_CONTROL_SHADER, shaderBytecode))
+		mOpenGLShaderProgram(ShaderLanguageSeparate::loadShaderProgramFromBytecode(openGLRenderer, GL_TESS_CONTROL_SHADER, shaderBytecode))
 	{
 		// Nothing here
 	}
 
 	TessellationControlShaderSeparate::TessellationControlShaderSeparate(OpenGLRenderer& openGLRenderer, const char* sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
 		ITessellationControlShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
-		mOpenGLShaderProgram(ShaderLanguageSeparate::loadShaderProgramFromSourceCode(GL_TESS_CONTROL_SHADER, sourceCode))
+		mOpenGLShaderProgram(ShaderLanguageSeparate::loadShaderProgramFromSourceCode(openGLRenderer, GL_TESS_CONTROL_SHADER, sourceCode))
 	{
 		// Return shader bytecode, if requested do to so
 		if (nullptr != shaderBytecode)

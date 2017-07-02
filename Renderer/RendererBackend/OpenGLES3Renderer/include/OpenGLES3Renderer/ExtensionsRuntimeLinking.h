@@ -32,6 +32,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace OpenGLES3Renderer
+{
+	class OpenGLES3Renderer;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace OpenGLES3Renderer
@@ -55,9 +64,12 @@ namespace OpenGLES3Renderer
 	public:
 		/**
 		*  @brief
-		*    Default constructor
+		*    Constructor
+		*
+		*  @param[in] openGLES3Renderer
+		*    Owner OpenGL ES 3 renderer instance
 		*/
-		ExtensionsRuntimeLinking();
+		explicit ExtensionsRuntimeLinking(OpenGLES3Renderer& openGLES3Renderer);
 
 		/**
 		*  @brief
@@ -115,6 +127,7 @@ namespace OpenGLES3Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		OpenGLES3Renderer& mOpenGLES3Renderer;	///< Owner OpenGL ES 3 renderer instance
 		// EXT
 		bool mGL_EXT_texture_compression_s3tc;
 		bool mGL_EXT_texture_compression_dxt1;

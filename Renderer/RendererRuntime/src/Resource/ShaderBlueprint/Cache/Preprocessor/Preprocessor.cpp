@@ -23,9 +23,10 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/Cache/Preprocessor/Preprocessor.h"
-#include "RendererRuntime/Core/Platform/PlatformTypes.h"	// For "RENDERERRUNTIME_OUTPUT_DEBUG_PRINTF()"
 #define MOJOSHADER_NO_VERSION_INCLUDE
 #include "RendererRuntime/Resource/ShaderBlueprint/Cache/Preprocessor/mojoshader.h"
+#include "RendererRuntime/IRendererRuntime.h"
+#include "RendererRuntime/Context.h"
 
 #include <cstring>	// For "strlen()"
 
@@ -40,7 +41,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	void Preprocessor::preprocess(std::string& source, std::string& result)
+	void Preprocessor::preprocess(const IRendererRuntime& rendererRuntime, std::string& source, std::string& result)
 	{
 		// TODO(co) The usage of MojoShader just as preprocessor is overkill. Find a simpler but still efficient solution. Switch to "mcpp -- a portable C preprocessor" ( http://mcpp.sourceforge.net/ ) ?
 
@@ -52,10 +53,7 @@ namespace RendererRuntime
 		{
 			for (int i = 0; i < preprocessData->error_count; ++i)
 			{
-				RENDERERRUNTIME_OUTPUT_DEBUG_PRINTF("Shader preprocessor %s:%d: Error: %s\n",
-						preprocessData->errors[i].filename ? preprocessData->errors[i].filename : "???",
-						preprocessData->errors[i].error_position,
-						preprocessData->errors[i].error);
+				RENDERER_LOG(rendererRuntime.getContext(), CRITICAL, "Renderer runtime shader preprocessor %s:%d: Error: %s", preprocessData->errors[i].filename ? preprocessData->errors[i].filename : "???", preprocessData->errors[i].error_position, preprocessData->errors[i].error)
 			}
 		}
 		else

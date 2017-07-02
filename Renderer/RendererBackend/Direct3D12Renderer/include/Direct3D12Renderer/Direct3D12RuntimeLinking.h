@@ -31,6 +31,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace Direct3D12Renderer
+{
+	class Direct3D12Renderer;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace Direct3D12Renderer
@@ -57,9 +66,12 @@ namespace Direct3D12Renderer
 	public:
 		/**
 		*  @brief
-		*    Default constructor
+		*    Constructor
+		*
+		*  @param[in] direct3D12Renderer
+		*    Owner Direct3D 12 renderer instance
 		*/
-		Direct3D12RuntimeLinking();
+		explicit Direct3D12RuntimeLinking(Direct3D12Renderer& direct3D12Renderer);
 
 		/**
 		*  @brief
@@ -81,6 +93,9 @@ namespace Direct3D12Renderer
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
+		explicit Direct3D12RuntimeLinking(const Direct3D12RuntimeLinking& source) = delete;
+		Direct3D12RuntimeLinking& operator =(const Direct3D12RuntimeLinking& source) = delete;
+
 		/**
 		*  @brief
 		*    Load the shared libraries
@@ -131,12 +146,13 @@ namespace Direct3D12Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		void* mDxgiSharedLibrary;			///< DXGI shared library, can be a null pointer
-		void* mD3D12SharedLibrary;			///< D3D12 shared library, can be a null pointer
-		void* mD3DX11SharedLibrary;			///< D3DX11 shared library, can be a null pointer
-		void* mD3DCompilerSharedLibrary;	///< D3DCompiler shared library, can be a null pointer
-		bool  mEntryPointsRegistered;		///< Entry points successfully registered?
-		bool  mInitialized;					///< Already initialized?
+		Direct3D12Renderer&	mDirect3D12Renderer;		///< Owner Direct3D 12 renderer instance
+		void*				mDxgiSharedLibrary;			///< DXGI shared library, can be a null pointer
+		void*				mD3D12SharedLibrary;		///< D3D12 shared library, can be a null pointer
+		void*				mD3DX11SharedLibrary;		///< D3DX11 shared library, can be a null pointer
+		void*				mD3DCompilerSharedLibrary;	///< D3DCompiler shared library, can be a null pointer
+		bool				mEntryPointsRegistered;		///< Entry points successfully registered?
+		bool				mInitialized;				///< Already initialized?
 
 
 	};

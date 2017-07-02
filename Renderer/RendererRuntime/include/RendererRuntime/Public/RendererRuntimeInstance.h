@@ -27,6 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include <RendererRuntime/Context.h>
 #include <RendererRuntime/IRendererRuntime.h>
 
 #ifdef SHARED_LIBRARIES
@@ -123,14 +124,13 @@ namespace RendererRuntime
 						else
 						{
 							// Error!
-							// TODO(co) Error handling
-						//	OUTPUT_DEBUG_PRINTF("Failed to locate the entry point \"createRendererRuntimeInstance\" within the renderer runtime shared library \"%s\"", RENDERER_RUNTIME_FILENAME)
+							RENDERER_LOG(context, CRITICAL, "Failed to locate the entry point \"createRendererRuntimeInstance\" within the shared renderer runtime library \"%s\"", RENDERER_RUNTIME_FILENAME)
 						}
 					}
 					else
 					{
-						// TODO(co) Error handling
-					//	OUTPUT_DEBUG_PRINTF("Failed to load in the shared library \"%s\"\n", RENDERER_RUNTIME_FILENAME)
+						// Error!
+						RENDERER_LOG(context, CRITICAL, "Failed to load in the shared renderer runtime library \"%s\"\n", RENDERER_RUNTIME_FILENAME)
 					}
 				#elif defined LINUX
 					// Load in the shared library
@@ -155,14 +155,13 @@ namespace RendererRuntime
 						else
 						{
 							// Error!
-							// TODO(co) Error handling
-						//	OUTPUT_DEBUG_PRINTF("Failed to locate the entry point \"createRendererRuntimeInstance\" within the renderer runtime shared library \"%s\"", RENDERER_RUNTIME_FILENAME)
+							RENDERER_LOG(context, CRITICAL, "Failed to locate the entry point \"createRendererRuntimeInstance\" within the shared renderer runtime library \"%s\"", RENDERER_RUNTIME_FILENAME)
 						}
 					}
 					else
 					{
-						// TODO(co) Error handling
-						// OUTPUT_DEBUG_PRINTF("Failed to load in the shared library \"%s\"\n", RENDERER_RUNTIME_FILENAME)
+						// Error!
+						RENDERER_LOG(context, CRITICAL, "Failed to load in the shared renderer runtime library \"%s\"\n", RENDERER_RUNTIME_FILENAME)
 					}
 				#else
 					#error "Unsupported platform"
@@ -221,7 +220,7 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		void*				mRendererRuntimeSharedLibrary;	///< Renderer runtime shared library, can be a null pointer
+		void*				mRendererRuntimeSharedLibrary;	///< Shared renderer runtime library, can be a null pointer
 		IRendererRuntimePtr	mRendererRuntime;				///< Renderer runtime instance, can be a null pointer
 
 

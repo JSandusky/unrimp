@@ -24,7 +24,8 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #define OPENVR_DEFINERUNTIMELINKING
 #include "RendererRuntime/Vr/OpenVR/OpenVRRuntimeLinking.h"
-#include "RendererRuntime/Core/Platform/PlatformTypes.h"	// For "RENDERERRUNTIME_OUTPUT_DEBUG_PRINTF()"
+#include "RendererRuntime/IRendererRuntime.h"
+#include "RendererRuntime/Context.h"
 
 #ifdef WIN32
 	#include <Renderer/WindowsHeader.h>
@@ -51,43 +52,43 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	// Define a helper macro
 	#ifdef WIN32
-		#define IMPORT_FUNC(funcName)																																				\
-			if (result)																																								\
-			{																																										\
-				void* symbol = ::GetProcAddress(static_cast<HMODULE>(mOpenVRSharedLibrary), #funcName);																				\
-				if (nullptr != symbol)																																				\
-				{																																									\
-					*(reinterpret_cast<void**>(&(funcName))) = symbol;																												\
-				}																																									\
-				else																																								\
-				{																																									\
-					wchar_t moduleFilename[MAX_PATH];																																\
-					moduleFilename[0] = '\0';																																		\
-					::GetModuleFileNameW(static_cast<HMODULE>(mOpenVRSharedLibrary), moduleFilename, MAX_PATH);																		\
-					RENDERERRUNTIME_OUTPUT_DEBUG_PRINTF("OpenVR error: Failed to locate the entry point \"%s\" within the OpenVR shared library \"%s\"", #funcName, moduleFilename)	\
-					result = false;																																					\
-				}																																									\
+		#define IMPORT_FUNC(funcName)																																											\
+			if (result)																																															\
+			{																																																	\
+				void* symbol = ::GetProcAddress(static_cast<HMODULE>(mOpenVRSharedLibrary), #funcName);																											\
+				if (nullptr != symbol)																																											\
+				{																																																\
+					*(reinterpret_cast<void**>(&(funcName))) = symbol;																																			\
+				}																																																\
+				else																																															\
+				{																																																\
+					wchar_t moduleFilename[MAX_PATH];																																							\
+					moduleFilename[0] = '\0';																																									\
+					::GetModuleFileNameW(static_cast<HMODULE>(mOpenVRSharedLibrary), moduleFilename, MAX_PATH);																									\
+					RENDERER_LOG(mRendererRuntime.getContext(), CRITICAL, "The renderer runtime failed to locate the entry point \"%s\" within the OpenVR shared library \"%s\"", #funcName, moduleFilename)	\
+					result = false;																																												\
+				}																																																\
 			}
 	#elif defined LINUX
-		#define IMPORT_FUNC(funcName)																																				\
-			if (result)																																								\
-			{																																										\
-				void* symbol = ::dlsym(mOpenVRSharedLibrary, #funcName);																											\
-				if (nullptr != symbol)																																				\
-				{																																									\
-					*(reinterpret_cast<void**>(&(funcName))) = symbol;																												\
-				}																																									\
-				else																																								\
-				{																																									\
-					link_map *linkMap = nullptr;																																	\
-					const char* libraryName = "unknown";																															\
-					if (dlinfo(mOpenVRSharedLibrary, RTLD_DI_LINKMAP, &linkMap))																									\
-					{																																								\
-						libraryName = linkMap->l_name;																																\
-					}																																								\
-					std::cout << "OpenVR error: Failed to locate the entry point \"" << #funcName << "\" within the OpenVR shared library \"" << libraryName << "\"\n";		/* TODO(co) Use "RENDERERRUNTIME_OUTPUT_DEBUG_PRINTF" instead*/ \
-					result = false;																																					\
-				}																																									\
+		#define IMPORT_FUNC(funcName)																																										\
+			if (result)																																														\
+			{																																																\
+				void* symbol = ::dlsym(mOpenVRSharedLibrary, #funcName);																																	\
+				if (nullptr != symbol)																																										\
+				{																																															\
+					*(reinterpret_cast<void**>(&(funcName))) = symbol;																																		\
+				}																																															\
+				else																																														\
+				{																																															\
+					link_map *linkMap = nullptr;																																							\
+					const char* libraryName = "unknown";																																					\
+					if (dlinfo(mOpenVRSharedLibrary, RTLD_DI_LINKMAP, &linkMap))																															\
+					{																																														\
+						libraryName = linkMap->l_name;																																						\
+					}																																														\
+					RENDERER_LOG(mRendererRuntime.getContext(), CRITICAL, "The renderer runtime failed to locate the entry point \"%s\" within the OpenVR shared library \"%s\"", #funcName, libraryName)	\
+					result = false;																																											\
+				}																																															\
 			}
 	#else
 		#error "Unsupported platform"
@@ -97,7 +98,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	OpenVRRuntimeLinking::OpenVRRuntimeLinking() :
+	OpenVRRuntimeLinking::OpenVRRuntimeLinking(IRendererRuntime& rendererRuntime) :
+		mRendererRuntime(rendererRuntime),
 		mOpenVRSharedLibrary(nullptr),
 		mEntryPointsRegistered(false),
 		mInitialized(false)
@@ -150,13 +152,13 @@ namespace RendererRuntime
 			mOpenVRSharedLibrary = ::LoadLibraryExA("openvr_api.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
 			if (nullptr == mOpenVRSharedLibrary)
 			{
-				RENDERERRUNTIME_OUTPUT_DEBUG_STRING("OpenVR error: Failed to load in the shared library \"openvr_api.dll\"\n")
+				RENDERER_LOG(mRendererRuntime.getContext(), CRITICAL, "The renderer runtime failed to load in the shared OpenVR library \"openvr_api.dll\"")
 			}
 		#elif defined LINUX
 			mOpenVRSharedLibrary = ::dlopen("libopenvr_api.so", RTLD_NOW);
 			if (nullptr == mOpenVRSharedLibrary)
 			{
-				std::cout << "OpenVR error: Failed to load in the shared library \"libopenvr_api.so\"\n";	// TODO(co) Use "RENDERERRUNTIME_OUTPUT_DEBUG_PRINTF" instead
+				RENDERER_LOG(mRendererRuntime.getContext(), CRITICAL, "The renderer runtime failed to load in the shared OpenVR library \"libopenvr_api.so\"")
 			}
 		#else
 			#error "Unsupported platform"

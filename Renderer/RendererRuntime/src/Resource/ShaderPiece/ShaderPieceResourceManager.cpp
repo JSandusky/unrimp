@@ -90,7 +90,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	ShaderPieceResourceManager::ShaderPieceResourceManager(IRendererRuntime& rendererRuntime)
+	ShaderPieceResourceManager::ShaderPieceResourceManager(IRendererRuntime& rendererRuntime) :
+		mRendererRuntime(rendererRuntime)
 	{
 		mInternalResourceManager = new ResourceManagerTemplate<ShaderPieceResource, ShaderPieceResourceLoader, ShaderPieceResourceId, 64>(rendererRuntime, *this);
 	}

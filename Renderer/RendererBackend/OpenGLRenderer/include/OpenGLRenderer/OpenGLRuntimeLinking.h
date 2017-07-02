@@ -47,6 +47,7 @@
 //[-------------------------------------------------------]
 namespace OpenGLRenderer
 {
+	class OpenGLRenderer;
 	class IOpenGLContext;	// Don't delete this forward declaration, required on Windows since Windows headers define a struct-type with this name
 }
 
@@ -81,9 +82,12 @@ namespace OpenGLRenderer
 	public:
 		/**
 		*  @brief
-		*    Default constructor
+		*    Constructor
+		*
+		*  @param[in] openGLRenderer
+		*    Owner OpenGL renderer instance
 		*/
-		OpenGLRuntimeLinking();
+		explicit OpenGLRuntimeLinking(OpenGLRenderer& openGLRenderer);
 
 		/**
 		*  @brief
@@ -105,6 +109,9 @@ namespace OpenGLRenderer
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
+		explicit OpenGLRuntimeLinking(const OpenGLRuntimeLinking& source) = delete;
+		OpenGLRuntimeLinking& operator =(const OpenGLRuntimeLinking& source) = delete;
+
 		/**
 		*  @brief
 		*    Load the shared libraries
@@ -140,9 +147,10 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		void* mOpenGLSharedLibrary;		///< OpenGL shared library, can be a null pointer
-		bool  mEntryPointsRegistered;	///< Entry points successfully registered?
-		bool  mInitialized;				///< Already initialized?
+		OpenGLRenderer&	mOpenGLRenderer;		///< Owner OpenGL renderer instance
+		void*			mOpenGLSharedLibrary;	///< OpenGL shared library, can be a null pointer
+		bool			mEntryPointsRegistered;	///< Entry points successfully registered?
+		bool			mInitialized;			///< Already initialized?
 
 
 	};

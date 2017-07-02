@@ -44,6 +44,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace VulkanRenderer
+{
+	class VulkanRenderer;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace VulkanRenderer
@@ -75,9 +84,12 @@ namespace VulkanRenderer
 	public:
 		/**
 		*  @brief
-		*    Default constructor
+		*    Constructor
+		*
+		*  @param[in] vulkanRenderer
+		*    Owner Vulkan renderer instance
 		*/
-		VulkanRuntimeLinking();
+		explicit VulkanRuntimeLinking(VulkanRenderer& vulkanRenderer);
 
 		/**
 		*  @brief
@@ -108,6 +120,9 @@ namespace VulkanRenderer
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
+		explicit VulkanRuntimeLinking(const VulkanRuntimeLinking& source) = delete;
+		VulkanRuntimeLinking& operator =(const VulkanRuntimeLinking& source) = delete;
+
 		/**
 		*  @brief
 		*    Load the shared libraries
@@ -152,11 +167,12 @@ namespace VulkanRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		void*	   mVulkanSharedLibrary;	///< Vulkan shared library, can be a null pointer
-		bool	   mEntryPointsRegistered;	///< Entry points successfully registered?
-		VkInstance mVkInstance;				///< Vulkan instance, stores all per-application states
-		bool	   mFunctionsRegistered;	///< Instance based Vulkan function pointers registered?
-		bool	   mInitialized;			///< Already initialized?
+		VulkanRenderer&	mVulkanRenderer;		///< Owner Vulkan renderer instance
+		void*			mVulkanSharedLibrary;	///< Vulkan shared library, can be a null pointer
+		bool			mEntryPointsRegistered;	///< Entry points successfully registered?
+		VkInstance		mVkInstance;			///< Vulkan instance, stores all per-application states
+		bool			mFunctionsRegistered;	///< Instance based Vulkan function pointers registered?
+		bool			mInitialized;			///< Already initialized?
 
 
 	};

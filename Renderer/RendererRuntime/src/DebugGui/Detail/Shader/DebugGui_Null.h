@@ -27,5 +27,5 @@
 #endif
 {
 	// Error! (unsupported renderer)
-	RENDERERRUNTIME_OUTPUT_DEBUG_STRING("Error: Unsupported renderer\n")
+	RENDERER_LOG(mRendererRuntime.getContext(), CRITICAL, "The renderer backend \"%s\" isn't supported by the renderer runtime debug GUI", renderer.getName())
 }

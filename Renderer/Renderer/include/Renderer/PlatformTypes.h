@@ -295,12 +295,6 @@
 	*    ASCII name for debugging purposes, must be valid (there's no internal null pointer test)
 	*/
 	#define RENDERER_SET_RESOURCE_DEBUG_NAME(resource, name)
-
-	// OUTPUT_DEBUG_* macros
-	// -> Do not add this within the public "Renderer/Public/Renderer.h"-header, it's for the internal implementation only
-	// -> Debugging stuff is not supported
-	#define RENDERER_OUTPUT_DEBUG_STRING(outputString)
-	#define RENDERER_OUTPUT_DEBUG_PRINTF(outputString, ...)
 #else
 	/**
 	*  @brief
@@ -401,42 +395,4 @@
 			strcat(detailedName, ": "); \
 			strncat(detailedName, name, 256); \
 		}
-
-	// OUTPUT_DEBUG_* macros
-	// -> Do not add this within the public "Renderer/Public/Renderer.h"-header, it's for the internal implementation only
-	#ifdef _DEBUG
-		#ifdef WIN32
-			#ifndef RENDERER_OUTPUT_DEBUG
-				#define RENDERER_OUTPUT_DEBUG
-				#include <Renderer/WindowsHeader.h>
-				#include <strsafe.h>	// For "StringCbVPrintf()"
-				#define RENDERER_OUTPUT_DEBUG_STRING(outputString) OutputDebugString(TEXT(outputString));
-				inline void outputDebugPrintf(LPCTSTR outputString, ...)
-				{
-					va_list argptr;
-					va_start(argptr, outputString);
-					TCHAR buffer[2000];
-					const HRESULT hr = StringCbVPrintf(buffer, sizeof(buffer), outputString, argptr);
-					if (STRSAFE_E_INSUFFICIENT_BUFFER == hr || S_OK == hr)
-					{
-						OutputDebugString(buffer);
-					}
-					else
-					{
-						OutputDebugString(TEXT("\"StringCbVPrintf()\" error"));
-					}
-				}
-				#define RENDERER_OUTPUT_DEBUG_PRINTF(outputString, ...) outputDebugPrintf(outputString, __VA_ARGS__);
-			#endif
-		#elif LINUX
-			#include <iostream>
-			#define RENDERER_OUTPUT_DEBUG_STRING(outputString) std::cerr << outputString << '\n';
-			#define RENDERER_OUTPUT_DEBUG_PRINTF(outputString, ...) fprintf(stderr, outputString, __VA_ARGS__);
-		#else
-			#error "Unsupported platform"
-		#endif
-	#else
-		#define RENDERER_OUTPUT_DEBUG_STRING(outputString)
-		#define RENDERER_OUTPUT_DEBUG_PRINTF(outputString, ...)
-	#endif
 #endif

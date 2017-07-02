@@ -399,7 +399,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	OpenGLRenderer::OpenGLRenderer(const Renderer::Context& context) :
 		IRenderer(context),
-		mOpenGLRuntimeLinking(new OpenGLRuntimeLinking()),
+		mOpenGLRuntimeLinking(nullptr),
 		mOpenGLContext(nullptr),
 		mExtensions(nullptr),
 		mShaderLanguage(nullptr),
@@ -424,6 +424,7 @@ namespace OpenGLRenderer
 		mCurrentStartInstanceLocation(~0u)
 	{
 		// Is OpenGL available?
+		mOpenGLRuntimeLinking = new OpenGLRuntimeLinking(*this);
 		if (mOpenGLRuntimeLinking->isOpenGLAvaiable())
 		{
 			const handle nativeWindowHandle = mContext.getNativeWindowHandle();
@@ -437,7 +438,7 @@ namespace OpenGLRenderer
 			#endif
 
 			// We're using "this" in here, so we are not allowed to write the following within the initializer list
-			mExtensions = new Extensions(*mOpenGLContext);
+			mExtensions = new Extensions(*this, *mOpenGLContext);
 
 			// Is the OpenGL context initialized?
 			if (mOpenGLContext->isInitialized())

@@ -21,100 +21,29 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#define EXTENSIONS_DEFINE
+#include "RendererRuntime/PrecompiledHeader.h"
+#include "RendererRuntime/Context.h"
 
-#include "VulkanRenderer/Extensions.h"
-#include "VulkanRenderer/VulkanRuntimeLinking.h"
-
-#ifdef LINUX
-	#include <Renderer/LinuxHeader.h>
-	#include "VulkanRenderer/Linux/VulkanContextLinux.h"
-#endif
+#include <Renderer/Public/Renderer.h>
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace VulkanRenderer
+namespace RendererRuntime
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Extensions::Extensions(IVulkanContext& vulkanContext) :
-		mVulkanContext(&vulkanContext),
-		mInitialized(false)
+	Renderer::ILog& Context::getLog() const
 	{
-		// Reset extensions
-		resetExtensions();
-	}
-
-	Extensions::~Extensions()
-	{
-		// Nothing here
-	}
-
-	bool Extensions::isInitialized() const
-	{
-		return mInitialized;
-	}
-
-	///////////////////////////////////////////////////////////
-	// Returns whether an extension is supported or not
-	///////////////////////////////////////////////////////////
-	// TODO(co) Implement me
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	bool Extensions::isSupported(const char* extension) const
-	{
-		// Check whether or not the given extension string pointer is valid
-		if (nullptr != extension)
-		{
-			// Is the extension supported by the hardware?
-			if (checkExtension(extension))
-			{
-				// Extension is supported!
-				return true;
-			}
-		}
-
-		// Extension isn't supported!
-		return false;
-	}
-
-	bool Extensions::checkExtension(const char* extension) const
-	{
-		// Check whether or not the given extension string pointer is valid
-		if (nullptr != extension)
-		{
-			// TODO(co) Implement me
-		}
-
-		// Extension not found
-		return false;
-	}
-
-	void Extensions::resetExtensions()
-	{
-		mInitialized = false;
-
-		// TODO(co) Implement me
-	}
-
-	bool Extensions::initializeUniversal()
-	{
-		// TODO(co) Implement me
-
-		// Done
-		return true;
+		return mRenderer.getContext().getLog();
 	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // VulkanRenderer
+} // RendererRuntime

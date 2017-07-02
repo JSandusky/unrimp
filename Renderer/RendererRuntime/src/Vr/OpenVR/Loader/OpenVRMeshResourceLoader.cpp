@@ -32,6 +32,7 @@
 #include "RendererRuntime/Vr/OpenVR/VrManagerOpenVR.h"
 #include "RendererRuntime/Core/Math/Math.h"
 #include "RendererRuntime/IRendererRuntime.h"
+#include "RendererRuntime/Context.h"
 
 #include <openvr/openvr.h>
 
@@ -223,7 +224,7 @@ namespace RendererRuntime
 		}
 		if (vr::VRRenderModelError_None != vrRenderModelError)
 		{
-			RENDERERRUNTIME_OUTPUT_DEBUG_PRINTF("Error: Unable to load OpenVR render model \"%s\": %s", renderModelName.c_str(), vrRenderModels->GetRenderModelErrorNameFromEnum(vrRenderModelError));
+			RENDERER_LOG(mRendererRuntime.getContext(), CRITICAL, "The renderer runtime was unable to load OpenVR render model \"%s\": %s", renderModelName.c_str(), vrRenderModels->GetRenderModelErrorNameFromEnum(vrRenderModelError))
 			return;
 		}
 

@@ -33,6 +33,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace Renderer
+{
+	class ILog;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -65,7 +74,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline StdFileManager();
+		inline explicit StdFileManager(Renderer::ILog& log);
 		inline virtual ~StdFileManager();
 
 
@@ -91,6 +100,7 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		Renderer::ILog&   mLog;
 		const std::string mAbsoluteLocalDataDirectoryName;
 
 

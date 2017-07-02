@@ -41,6 +41,7 @@
 #include "RendererRuntime/Core/Math/Transform.h"
 #include "RendererRuntime/Core/Math/Math.h"
 #include "RendererRuntime/IRendererRuntime.h"
+#include "RendererRuntime/Context.h"
 
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
@@ -295,7 +296,7 @@ namespace RendererRuntime
 			if (!isOpenGLRenderer && !isDirect3D11Renderer)
 			{
 				// Error!
-				RENDERERRUNTIME_OUTPUT_DEBUG_STRING("Error: The VR OpenVR manager currently only supports Direct3D 11 and OpenGL");
+				RENDERER_LOG(mRendererRuntime.getContext(), CRITICAL, "The renderer runtime VR OpenVR manager currently only supports Direct3D 11 and OpenGL")
 				return false;
 			}
 			mVrTextureType = isOpenGLRenderer ? vr::TextureType_OpenGL : vr::TextureType_DirectX;
@@ -306,7 +307,7 @@ namespace RendererRuntime
 			if (vr::VRInitError_None != vrInitError)
 			{
 				// Error!
-				RENDERERRUNTIME_OUTPUT_DEBUG_PRINTF("Error: Unable to initialize OpenVR runtime: %s", vr::VR_GetVRInitErrorAsEnglishDescription(vrInitError));
+				RENDERER_LOG(mRendererRuntime.getContext(), CRITICAL, "The renderer runtime was unable to initialize OpenVR runtime: %s", vr::VR_GetVRInitErrorAsEnglishDescription(vrInitError))
 				return false;
 			}
 
@@ -319,7 +320,7 @@ namespace RendererRuntime
 				mVrSystem = nullptr;
 
 				// Error!
-				RENDERERRUNTIME_OUTPUT_DEBUG_PRINTF("Error: Unable to retrieve the OpenVR render models interface: %s", vr::VR_GetVRInitErrorAsEnglishDescription(vrInitError));
+				RENDERER_LOG(mRendererRuntime.getContext(), CRITICAL, "The renderer runtime was unable to retrieve the OpenVR render models interface: %s", vr::VR_GetVRInitErrorAsEnglishDescription(vrInitError))
 				return false;
 			}
 
@@ -619,7 +620,7 @@ namespace RendererRuntime
 		mVrDeviceMaterialResourceLoaded(false),
 		mVrDeviceMaterialResourceId(getUninitialized<MaterialResourceId>()),
 		mSceneResourceId(getUninitialized<SceneResourceId>()),
-		mOpenVRRuntimeLinking(new OpenVRRuntimeLinking()),
+		mOpenVRRuntimeLinking(new OpenVRRuntimeLinking(rendererRuntime)),
 		mVrTextureType(vr::TextureType_OpenGL),
 		mVrSystem(nullptr),
 		mVrRenderModels(nullptr),

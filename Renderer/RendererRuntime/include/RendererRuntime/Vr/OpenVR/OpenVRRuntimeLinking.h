@@ -31,6 +31,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class IRendererRuntime;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -60,15 +69,21 @@ namespace RendererRuntime
 	private:
 		/**
 		*  @brief
-		*    Default constructor
+		*    Constructor
+		*
+		*  @param[in] rendererRuntime
+		*    Renderer runtime instance to use
 		*/
-		OpenVRRuntimeLinking();
+		explicit OpenVRRuntimeLinking(IRendererRuntime& rendererRuntime);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
 		~OpenVRRuntimeLinking();
+
+		explicit OpenVRRuntimeLinking(const OpenVRRuntimeLinking&) = delete;
+		OpenVRRuntimeLinking& operator=(const OpenVRRuntimeLinking&) = delete;
 
 		/**
 		*  @brief
@@ -102,9 +117,10 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		void* mOpenVRSharedLibrary;		///< OpenVR shared library, can be a null pointer
-		bool  mEntryPointsRegistered;	///< Entry points successfully registered?
-		bool  mInitialized;				///< Already initialized?
+		IRendererRuntime& mRendererRuntime;			///< Renderer runtime instance to use
+		void*			  mOpenVRSharedLibrary;		///< OpenVR shared library, can be a null pointer
+		bool			  mEntryPointsRegistered;	///< Entry points successfully registered?
+		bool			  mInitialized;				///< Already initialized?
 
 
 	};

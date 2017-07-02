@@ -55,6 +55,7 @@
 //[-------------------------------------------------------]
 namespace OpenGLRenderer
 {
+	class OpenGLRenderer;
 	class IOpenGLContext;
 }
 
@@ -94,10 +95,12 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Constructor
 		*
+		*  @param[in] openGLRenderer
+		*    Owner OpenGL renderer instance
 		*  @param[in] openGLContext
 		*    Owner OpenGL context
 		*/
-		explicit Extensions(IOpenGLContext& openGLContext);
+		Extensions(OpenGLRenderer& openGLRenderer, IOpenGLContext& openGLContext);
 
 		/**
 		*  @brief
@@ -165,6 +168,9 @@ namespace OpenGLRenderer
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	public:
+		explicit Extensions(const Extensions& source) = delete;
+		Extensions& operator =(const Extensions& source) = delete;
+
 		/**
 		*  @brief
 		*    Checks whether an extension is supported by the given hardware or not
@@ -227,8 +233,9 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IOpenGLContext* mOpenGLContext;	///< Owner OpenGL context, always valid!
-		bool			mInitialized;	///< Are the extensions initialized?
+		OpenGLRenderer& mOpenGLRenderer;	///< Owner OpenGL renderer instance
+		IOpenGLContext* mOpenGLContext;		///< Owner OpenGL context, always valid!
+		bool			mInitialized;		///< Are the extensions initialized?
 
 		// Supported extensions
 		// WGL (Windows only)
@@ -371,7 +378,7 @@ namespace OpenGLRenderer
 
 	// GL_ARB_vertex_program
 	FNDEF_EX(glVertexAttribPointerARB,		PFNGLVERTEXATTRIBPOINTERARBPROC);
-	FNDEF_EX(glVertexAttribIPointerARB,		PFNGLVERTEXATTRIBIPOINTERPROC);	// GL_NV_vertex_program4
+	FNDEF_EX(glVertexAttribIPointer,		PFNGLVERTEXATTRIBIPOINTERPROC);	// GL_NV_vertex_program4
 	FNDEF_EX(glEnableVertexAttribArrayARB,	PFNGLENABLEVERTEXATTRIBARRAYARBPROC);
 	FNDEF_EX(glDisableVertexAttribArrayARB,	PFNGLDISABLEVERTEXATTRIBARRAYARBPROC);
 

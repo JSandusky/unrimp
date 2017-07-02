@@ -25,6 +25,7 @@
 #include "RendererRuntime/Vr/OpenVR/Loader/OpenVRTextureResourceLoader.h"
 #include "RendererRuntime/Resource/Texture/TextureResource.h"
 #include "RendererRuntime/IRendererRuntime.h"
+#include "RendererRuntime/Context.h"
 
 #include <openvr/openvr.h>
 
@@ -62,7 +63,7 @@ namespace RendererRuntime
 		}
 		if (vr::VRRenderModelError_None != vrRenderModelError)
 		{
-			RENDERERRUNTIME_OUTPUT_DEBUG_PRINTF("Error: Unable to load OpenVR diffuse texture %d: %s", diffuseTextureId, vrRenderModels->GetRenderModelErrorNameFromEnum(vrRenderModelError));
+			RENDERER_LOG(mRendererRuntime.getContext(), CRITICAL, "The renderer runtime was unable to load OpenVR diffuse texture %d: %s", diffuseTextureId, vrRenderModels->GetRenderModelErrorNameFromEnum(vrRenderModelError))
 			return;
 		}
 

@@ -23,13 +23,13 @@
 //[-------------------------------------------------------]
 #include "Main.h"
 
-#include <RendererRuntime/Core/File/StdFileManager.h>
-
 #include <RendererToolkit/Context.h>
 #include <RendererToolkit/Public/RendererToolkit.h>
 #include <RendererToolkit/Public/RendererToolkitInstance.h>
 
-#include <exception>
+#include <RendererRuntime/Core/File/StdFileManager.h>
+
+#include <Renderer/Public/StdLog.h>
 
 #include <iostream>
 
@@ -39,7 +39,8 @@
 //[-------------------------------------------------------]
 int programEntryPoint(CommandLineArguments& commandLineArguments)
 {
-	RendererRuntime::StdFileManager stdFileManager;
+	Renderer::StdLog stdLog;
+	RendererRuntime::StdFileManager stdFileManager(stdLog);
 	RendererToolkit::Context rendererToolkitContext(stdFileManager);
 	RendererToolkit::RendererToolkitInstance rendererToolkitInstance(rendererToolkitContext);
 	RendererToolkit::IRendererToolkit* rendererToolkit = rendererToolkitInstance.getRendererToolkit();

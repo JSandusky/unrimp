@@ -53,7 +53,7 @@ namespace OpenGLES3Renderer
 		mEGLSharedLibrary(nullptr),
 		mGLESSharedLibrary(nullptr),
 		mEntryPointsRegistered(false),
-		mExtensions(new ExtensionsRuntimeLinking())
+		mExtensions(new ExtensionsRuntimeLinking(openGLES3Renderer))
 	{
 		// Load the shared libraries
 		if (loadSharedLibraries())

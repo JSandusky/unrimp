@@ -293,7 +293,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	VulkanRenderer::VulkanRenderer(const Renderer::Context& context) :
 		IRenderer(context),
-		mVulkanRuntimeLinking(new VulkanRuntimeLinking()),
+		mVulkanRuntimeLinking(nullptr),
 		mVulkanContext(nullptr),
 		mExtensions(nullptr),
 		mShaderLanguageGlsl(nullptr),
@@ -304,6 +304,7 @@ namespace VulkanRenderer
 		mRenderTarget(nullptr)
 	{
 		// Is Vulkan available?
+		mVulkanRuntimeLinking = new VulkanRuntimeLinking(*this);
 		if (mVulkanRuntimeLinking->isVulkanAvaiable())
 		{
 			const handle nativeWindowHandle = mContext.getNativeWindowHandle();

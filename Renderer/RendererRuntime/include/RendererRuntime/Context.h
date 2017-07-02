@@ -25,10 +25,17 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Export.h"
+
+
+//[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 namespace Renderer
 {
+	class ILog;
 	class IRenderer;
 }
 namespace RendererRuntime
@@ -75,6 +82,15 @@ namespace RendererRuntime
 		*    Destructor
 		*/
 		inline ~Context();
+
+		/**
+		*  @brief
+		*    Return the log instance
+		*
+		*  @return
+		*    The log instance
+		*/
+		RENDERERRUNTIME_API_EXPORT Renderer::ILog& getLog() const;
 
 		/**
 		*  @brief

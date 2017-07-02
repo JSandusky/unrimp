@@ -31,6 +31,7 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/Listener/IMaterialBlueprintResourceListener.h"
 #include "RendererRuntime/Vr/OpenVR/VrManagerOpenVR.h"
 #include "RendererRuntime/IRendererRuntime.h"
+#include "RendererRuntime/Context.h"
 
 #include <Renderer/Public/Renderer.h>
 

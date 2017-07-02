@@ -24,6 +24,10 @@
 #define EXTENSIONS_DEFINERUNTIMELINKING
 
 #include "OpenGLES3Renderer/ExtensionsRuntimeLinking.h"
+#include "OpenGLES3Renderer/OpenGLES3Renderer.h"
+
+#include <Renderer/ILog.h>
+
 #ifdef LINUX
 	#include <string.h>
 #endif
@@ -39,7 +43,8 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ExtensionsRuntimeLinking::ExtensionsRuntimeLinking() :
+	ExtensionsRuntimeLinking::ExtensionsRuntimeLinking(OpenGLES3Renderer& openGLES3Renderer) :
+		mOpenGLES3Renderer(openGLES3Renderer),
 		// EXT
 		mGL_EXT_texture_compression_s3tc(false),
 		mGL_EXT_texture_compression_dxt1(false),
@@ -70,19 +75,19 @@ namespace OpenGLES3Renderer
 	void ExtensionsRuntimeLinking::initialize()
 	{
 		// Define a helper macro
-		#define IMPORT_FUNC(funcName)																														\
-			if (result)																																		\
-			{																																				\
-				void* symbol = eglGetProcAddress(#funcName);																								\
-				if (nullptr != symbol)																														\
-				{																																			\
-					*(reinterpret_cast<void**>(&(funcName))) = symbol;																						\
-				}																																			\
-				else																																		\
-				{																																			\
-					RENDERER_OUTPUT_DEBUG_PRINTF("OpenGL ES 3 error: Failed to locate the entry point \"%s\" within the GLES shared library", #funcName)	\
-					result = false;																															\
-				}																																			\
+		#define IMPORT_FUNC(funcName)																																	\
+			if (result)																																					\
+			{																																							\
+				void* symbol = eglGetProcAddress(#funcName);																											\
+				if (nullptr != symbol)																																	\
+				{																																						\
+					*(reinterpret_cast<void**>(&(funcName))) = symbol;																									\
+				}																																						\
+				else																																					\
+				{																																						\
+					RENDERER_LOG(mOpenGLES3Renderer.getContext(), CRITICAL, "Failed to locate the entry point \"%s\" within the OpenGL ES 3 shared library", #funcName)	\
+					result = false;																																		\
+				}																																						\
 			}
 
 		// Get the extensions string

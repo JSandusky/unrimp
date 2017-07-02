@@ -148,6 +148,7 @@
     <None Include="include\RendererRuntime\Resource\ShaderBlueprint\ShaderBlueprintResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\ShaderPiece\Loader\ShaderPieceResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\ShaderPiece\ShaderPieceResource.inl" />
+    <None Include="include\RendererRuntime\Resource\ShaderPiece\ShaderPieceResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\SkeletonAnimation\Loader\SkeletonAnimationResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationController.inl" />
     <None Include="include\RendererRuntime\Resource\SkeletonAnimation\SkeletonAnimationEvaluator.inl" />
@@ -531,6 +532,7 @@
     <ClCompile Include="src\Asset\AssetPackage.cpp" />
     <ClCompile Include="src\Asset\Serializer\AssetPackageSerializer.cpp" />
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp" />
+    <ClCompile Include="src\Context.cpp" />
     <ClCompile Include="src\Core\File\MemoryFile.cpp" />
     <ClCompile Include="src\Core\Math\EulerAngles.cpp" />
     <ClCompile Include="src\Core\Math\Math.cpp" />

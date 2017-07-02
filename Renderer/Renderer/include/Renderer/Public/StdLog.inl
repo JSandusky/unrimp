@@ -133,9 +133,9 @@ namespace Renderer
 			::OutputDebugString(typeToString(type));
 			::OutputDebugString(message);
 			::OutputDebugString("\n");
-			if (Type::CRITICAL == type)
+			if (Type::CRITICAL == type && ::IsDebuggerPresent())
 			{
-				__debugbreak();
+				::__debugbreak();
 			}
 		#elif LINUX
 			std::ignore = numberOfCharacters;

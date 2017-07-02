@@ -299,7 +299,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	Direct3D12Renderer::Direct3D12Renderer(const Renderer::Context& context) :
 		IRenderer(context),
-		mDirect3D12RuntimeLinking(new Direct3D12RuntimeLinking()),
+		mDirect3D12RuntimeLinking(nullptr),
 		mDxgiFactory4(nullptr),
 		mD3D12Device(nullptr),
 		mD3D12CommandQueue(nullptr),
@@ -310,6 +310,8 @@ namespace Direct3D12Renderer
 		mMainSwapChain(nullptr),
 		mRenderTarget(nullptr)
 	{
+		mDirect3D12RuntimeLinking = new Direct3D12RuntimeLinking(*this);
+
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
 

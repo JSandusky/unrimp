@@ -24,6 +24,8 @@
 #include "RendererRuntime/Core/File/IFile.h"
 #include "RendererRuntime/Core/Platform/PlatformTypes.h"
 
+#include <Renderer/Public/Renderer.h>
+
 #include <fstream>
 #include <cassert>
 #ifdef WIN32
@@ -270,7 +272,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline StdFileManager::StdFileManager() :
+	inline StdFileManager::StdFileManager(Renderer::ILog& log) :
+		mLog(log),
 		mAbsoluteLocalDataDirectoryName(std_filesystem::canonical(std_filesystem::current_path() / "/../LocalData").generic_string())
 	{
 		// Nothing here
@@ -309,7 +312,7 @@ namespace RendererRuntime
 		}
 		if (file->isInvalid())
 		{
-			RENDERERRUNTIME_OUTPUT_ERROR_PRINTF("Failed to open file %s", filename);
+			mLog.print(Renderer::ILog::Type::CRITICAL, "Failed to open file %s", filename);
 			delete file;
 			file = nullptr;
 		}

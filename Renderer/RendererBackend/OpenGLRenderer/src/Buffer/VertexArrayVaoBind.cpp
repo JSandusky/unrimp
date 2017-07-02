@@ -77,11 +77,11 @@ namespace OpenGLRenderer
 			glBindBufferARB(GL_ARRAY_BUFFER_ARB, static_cast<VertexBuffer*>(vertexArrayVertexBuffer.vertexBuffer)->getOpenGLArrayBuffer());
 			if (Mapping::isOpenGLVertexAttributeFormatInteger(attribute->vertexAttributeFormat))
 			{
-				glVertexAttribIPointerARB(attributeLocation,
-										 Mapping::getOpenGLSize(attribute->vertexAttributeFormat),
-										 Mapping::getOpenGLType(attribute->vertexAttributeFormat),
-										 static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes),
-										 reinterpret_cast<void*>(static_cast<uintptr_t>(attribute->alignedByteOffset)));
+				glVertexAttribIPointer(attributeLocation,
+									   Mapping::getOpenGLSize(attribute->vertexAttributeFormat),
+									   Mapping::getOpenGLType(attribute->vertexAttributeFormat),
+									   static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes),
+									   reinterpret_cast<void*>(static_cast<uintptr_t>(attribute->alignedByteOffset)));
 			}
 			else
 			{

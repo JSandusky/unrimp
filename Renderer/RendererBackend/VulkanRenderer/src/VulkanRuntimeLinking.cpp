@@ -24,8 +24,10 @@
 #define VULKAN_DEFINERUNTIMELINKING
 
 #include "VulkanRenderer/VulkanRuntimeLinking.h"
+#include "VulkanRenderer/VulkanRenderer.h"
 
-#include <Renderer/PlatformTypes.h>	// For "RENDERER_OUTPUT_DEBUG_PRINTF()"
+#include <Renderer/PlatformTypes.h>
+#include <Renderer/ILog.h>
 #ifdef WIN32
 	#include <Renderer/WindowsHeader.h>
 #elif defined LINUX
@@ -75,7 +77,8 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VulkanRuntimeLinking::VulkanRuntimeLinking() :
+	VulkanRuntimeLinking::VulkanRuntimeLinking(VulkanRenderer& vulkanRenderer) :
+		mVulkanRenderer(vulkanRenderer),
 		mVulkanSharedLibrary(nullptr),
 		mEntryPointsRegistered(false),
 		mVkInstance(VK_NULL_HANDLE),
@@ -135,7 +138,7 @@ namespace VulkanRenderer
 					else
 					{
 						// Error!
-						RENDERER_OUTPUT_DEBUG_PRINTF("Vulkan error: Failed to create the Vulkan instance")
+						RENDERER_LOG(mVulkanRenderer.getContext(), CRITICAL, "Failed to create the Vulkan instance")
 					}
 				}
 			}
@@ -156,13 +159,13 @@ namespace VulkanRenderer
 			mVulkanSharedLibrary = ::LoadLibraryExA("vulkan-1.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
 			if (nullptr == mVulkanSharedLibrary)
 			{
-				RENDERER_OUTPUT_DEBUG_STRING("Vulkan error: Failed to load in the shared library \"vulkan-1.dll\"\n")
+				RENDERER_LOG(mVulkanRenderer.getContext(), CRITICAL, "Failed to load in the shared Vulkan library \"vulkan-1.dll\"")
 			}
 		#elif defined LINUX
 			mVulkanSharedLibrary = ::dlopen("libvulkan-1.so", RTLD_NOW);
 			if (nullptr == mVulkanSharedLibrary)
 			{
-				std::cout << "Vulkan error: Failed to load in the shared library \"libvulkan-1.so\"\n";	// TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead
+				RENDERER_LOG(mVulkanRenderer.getContext(), CRITICAL, "Failed to load in the shared Vulkan library \"libvulkan-1.so\"")
 			}
 		#else
 			#error "Unsupported platform"
@@ -178,43 +181,43 @@ namespace VulkanRenderer
 
 		// Define a helper macro
 		#ifdef WIN32
-			#define IMPORT_FUNC(funcName)																																			\
-				if (result)																																							\
-				{																																									\
-					void* symbol = ::GetProcAddress(static_cast<HMODULE>(mVulkanSharedLibrary), #funcName);																			\
-					if (nullptr != symbol)																																			\
-					{																																								\
-						*(reinterpret_cast<void**>(&(funcName))) = symbol;																											\
-					}																																								\
-					else																																							\
-					{																																								\
-						wchar_t moduleFilename[MAX_PATH];																															\
-						moduleFilename[0] = '\0';																																	\
-						::GetModuleFileNameW(static_cast<HMODULE>(mVulkanSharedLibrary), moduleFilename, MAX_PATH);																	\
-						RENDERER_OUTPUT_DEBUG_PRINTF("Vulkan error: Failed to locate the entry point \"%s\" within the Vulkan shared library \"%s\"", #funcName, moduleFilename)	\
-						result = false;																																				\
-					}																																								\
+			#define IMPORT_FUNC(funcName)																																					\
+				if (result)																																									\
+				{																																											\
+					void* symbol = ::GetProcAddress(static_cast<HMODULE>(mVulkanSharedLibrary), #funcName);																					\
+					if (nullptr != symbol)																																					\
+					{																																										\
+						*(reinterpret_cast<void**>(&(funcName))) = symbol;																													\
+					}																																										\
+					else																																									\
+					{																																										\
+						wchar_t moduleFilename[MAX_PATH];																																	\
+						moduleFilename[0] = '\0';																																			\
+						::GetModuleFileNameW(static_cast<HMODULE>(mVulkanSharedLibrary), moduleFilename, MAX_PATH);																			\
+						RENDERER_LOG(mVulkanRenderer.getContext(), CRITICAL, "Failed to locate the entry point \"%s\" within the shared Vulkan library \"%s\"", #funcName, moduleFilename)	\
+						result = false;																																						\
+					}																																										\
 				}
 		#elif defined LINUX
-			#define IMPORT_FUNC(funcName)																																			\
-				if (result)																																							\
-				{																																									\
-					void* symbol = ::dlsym(mVulkanSharedLibrary, #funcName);																										\
-					if (nullptr != symbol)																																			\
-					{																																								\
-						*(reinterpret_cast<void**>(&(funcName))) = symbol;																											\
-					}																																								\
-					else																																							\
-					{																																								\
-						link_map *linkMap = nullptr;																																\
-						const char* libraryName = "unknown";																														\
-						if (dlinfo(mVulkanSharedLibrary, RTLD_DI_LINKMAP, &linkMap))																								\
-						{																																							\
-							libraryName = linkMap->l_name;																															\
-						}																																							\
-						std::cout << "Vulkan error: Failed to locate the entry point \"" << #funcName << "\" within the Vulkan shared library \"" << libraryName << "\"\n";		/* TODO(co) Use "RENDERER_OUTPUT_DEBUG_PRINTF" instead*/ \
-						result = false;																																				\
-					}																																								\
+			#define IMPORT_FUNC(funcName)																																				\
+				if (result)																																								\
+				{																																										\
+					void* symbol = ::dlsym(mVulkanSharedLibrary, #funcName);																											\
+					if (nullptr != symbol)																																				\
+					{																																									\
+						*(reinterpret_cast<void**>(&(funcName))) = symbol;																												\
+					}																																									\
+					else																																								\
+					{																																									\
+						link_map *linkMap = nullptr;																																	\
+						const char* libraryName = "unknown";																															\
+						if (dlinfo(mVulkanSharedLibrary, RTLD_DI_LINKMAP, &linkMap))																									\
+						{																																								\
+							libraryName = linkMap->l_name;																																\
+						}																																								\
+						RENDERER_LOG(mVulkanRenderer.getContext(), CRITICAL, "Failed to locate the entry point \"%s\" within the shared Vulkan library \"%s\"", #funcName, libraryName)	\
+						result = false;																																					\
+					}																																									\
 				}
 		#else
 			#error "Unsupported platform"
@@ -270,7 +273,7 @@ namespace VulkanRenderer
 		if (vkResult == VK_ERROR_LAYER_NOT_PRESENT && enableValidation)
 		{
 			// Error! Since the show must go on, try creating a Vulkan instance without validation enabled...
-			RENDERER_OUTPUT_DEBUG_PRINTF("Vulkan error: Failed to create the Vulkan instance with validation enabled, layer is not present")
+			RENDERER_LOG(mVulkanRenderer.getContext(), CRITICAL, "Failed to create the Vulkan instance with validation enabled, layer is not present")
 			vkResult = createVulkanInstance(false);
 		}
 
@@ -285,15 +288,15 @@ namespace VulkanRenderer
 		// Define a helper macro
 		#pragma warning(push)
 		#pragma warning(disable: 4191)	// 'reinterpret_cast': unsafe conversion from 'PFN_vkVoidFunction' to '<x>'
-		#define IMPORT_FUNC(funcName)																										\
-			if (result)																														\
-			{																																\
-				##funcName = reinterpret_cast<PFN_##funcName>(vkGetInstanceProcAddr(mVkInstance, #funcName));								\
-				if (nullptr == ##funcName)																									\
-				{																															\
-					RENDERER_OUTPUT_DEBUG_PRINTF("Vulkan error: Failed to load instance based Vulkan function pointer \"%s\"", #funcName)	\
-					result = false;																											\
-				}																															\
+		#define IMPORT_FUNC(funcName)																												\
+			if (result)																																\
+			{																																		\
+				##funcName = reinterpret_cast<PFN_##funcName>(vkGetInstanceProcAddr(mVkInstance, #funcName));										\
+				if (nullptr == ##funcName)																											\
+				{																																	\
+					RENDERER_LOG(mVulkanRenderer.getContext(), CRITICAL, "Failed to load instance based Vulkan function pointer \"%s\"", #funcName)	\
+					result = false;																													\
+				}																																	\
 			}
 
 		// Load the function pointers

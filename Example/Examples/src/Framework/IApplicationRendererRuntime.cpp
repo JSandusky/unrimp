@@ -113,7 +113,7 @@ void IApplicationRendererRuntime::onInitialization()
 	if (nullptr != renderer)
 	{
 		// Create the renderer runtime instance
-		mFileManager = new RendererRuntime::StdFileManager();
+		mFileManager = new RendererRuntime::StdFileManager(renderer->getContext().getLog());
 		mRendererRuntimeContext = new RendererRuntime::Context(*renderer, *mFileManager);
 		mRendererRuntimeInstance = new RendererRuntime::RendererRuntimeInstance(*mRendererRuntimeContext);
 

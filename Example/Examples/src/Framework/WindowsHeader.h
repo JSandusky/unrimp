@@ -111,3 +111,4 @@ __pragma(warning(pop))
 
 // Get rid of some nasty OS macros
 #undef max
+#undef min

@@ -28,6 +28,7 @@
 #include "OpenGLRenderer/OpenGLRenderer.h"
 #include "OpenGLRenderer/Extensions.h"
 
+#include <Renderer/ILog.h>
 #include <Renderer/Buffer/VertexArrayTypes.h>
 
 
@@ -43,7 +44,7 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
-		void printOpenGLShaderProgramInformationIntoLog(GLuint openGLObject)
+		void printOpenGLShaderProgramInformationIntoLog(OpenGLRenderer::OpenGLRenderer& openGLRenderer, GLuint openGLObject)
 		{
 			// Get the length of the information (including a null termination)
 			GLint informationLength = 0;
@@ -57,7 +58,7 @@ namespace
 				OpenGLRenderer::glGetInfoLogARB(openGLObject, informationLength, nullptr, informationLog);
 
 				// Output the debug string
-				RENDERER_OUTPUT_DEBUG_STRING(informationLog)
+				RENDERER_LOG(openGLRenderer.getContext(), CRITICAL, informationLog)
 
 				// Cleanup information memory
 				delete [] informationLog;
@@ -65,7 +66,7 @@ namespace
 		}
 
 		// Basing on the implementation from https://www.opengl.org/registry/specs/ARB/separate_shader_objects.txt
-		GLuint createShaderProgramObject(GLuint openGLShader, const Renderer::VertexAttributes& vertexAttributes)
+		GLuint createShaderProgramObject(OpenGLRenderer::OpenGLRenderer& openGLRenderer, GLuint openGLShader, const Renderer::VertexAttributes& vertexAttributes)
 		{
 			if (openGLShader > 0)
 			{
@@ -111,7 +112,7 @@ namespace
 					else
 					{
 						// Error, program link failed!
-						printOpenGLShaderProgramInformationIntoLog(openGLProgram);
+						printOpenGLShaderProgramInformationIntoLog(openGLRenderer, openGLProgram);
 					}
 				}
 			}
@@ -120,7 +121,7 @@ namespace
 			return 0;
 		}
 
-		GLuint loadShaderProgramFromBytecode(const Renderer::VertexAttributes& vertexAttributes, GLenum shaderType, const Renderer::ShaderBytecode& shaderBytecode)
+		GLuint loadShaderProgramFromBytecode(OpenGLRenderer::OpenGLRenderer& openGLRenderer, const Renderer::VertexAttributes& vertexAttributes, GLenum shaderType, const Renderer::ShaderBytecode& shaderBytecode)
 		{
 			// Create and load the shader object
 			const GLuint openGLShader = OpenGLRenderer::ShaderLanguageSeparate::loadShaderFromBytecode(shaderType, shaderBytecode);
@@ -135,12 +136,12 @@ namespace
 			if (GL_TRUE == compiled)
 			{
 				// All went fine, create and return the program
-				return createShaderProgramObject(openGLShader, vertexAttributes);
+				return createShaderProgramObject(openGLRenderer, openGLShader, vertexAttributes);
 			}
 			else
 			{
 				// Error, failed to compile the shader!
-				printOpenGLShaderProgramInformationIntoLog(openGLShader);
+				printOpenGLShaderProgramInformationIntoLog(openGLRenderer, openGLShader);
 
 				// Destroy the OpenGL shader
 				// -> A value of 0 for shader will be silently ignored
@@ -153,7 +154,7 @@ namespace
 
 		GLuint loadShaderProgramFromSourcecode(OpenGLRenderer::OpenGLRenderer& openGLRenderer, const Renderer::VertexAttributes& vertexAttributes, GLenum type, const char* sourceCode)
 		{
-			return createShaderProgramObject(OpenGLRenderer::ShaderLanguageMonolithic::loadShaderFromSourcecode(openGLRenderer, type, sourceCode), vertexAttributes);
+			return createShaderProgramObject(openGLRenderer, OpenGLRenderer::ShaderLanguageMonolithic::loadShaderFromSourcecode(openGLRenderer, type, sourceCode), vertexAttributes);
 		}
 
 
@@ -176,7 +177,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	VertexShaderSeparate::VertexShaderSeparate(OpenGLRenderer& openGLRenderer, const Renderer::VertexAttributes& vertexAttributes, const Renderer::ShaderBytecode& shaderBytecode) :
 		IVertexShader(static_cast<Renderer::IRenderer&>(openGLRenderer)),
-		mOpenGLShaderProgram(::detail::loadShaderProgramFromBytecode(vertexAttributes, GL_VERTEX_SHADER_ARB, shaderBytecode)),
+		mOpenGLShaderProgram(::detail::loadShaderProgramFromBytecode(openGLRenderer, vertexAttributes, GL_VERTEX_SHADER_ARB, shaderBytecode)),
 		mDrawIdUniformLocation(openGLRenderer.getExtensions().isGL_ARB_base_instance() ? -1 : glGetUniformLocationARB(mOpenGLShaderProgram, "drawIdUniform"))
 	{
 		// Nothing here

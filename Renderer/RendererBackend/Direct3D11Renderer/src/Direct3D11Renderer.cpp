@@ -335,7 +335,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	Direct3D11Renderer::Direct3D11Renderer(const Renderer::Context& context) :
 		IRenderer(context),
-		mDirect3D11RuntimeLinking(new Direct3D11RuntimeLinking()),
+		mDirect3D11RuntimeLinking(nullptr),
 		mD3D11Device(nullptr),
 		mD3D11DeviceContext(nullptr),
 		mD3DUserDefinedAnnotation(nullptr),
@@ -350,6 +350,8 @@ namespace Direct3D11Renderer
 		mD3d11GeometryShader(nullptr),
 		mD3d11PixelShader(nullptr)
 	{
+		mDirect3D11RuntimeLinking = new Direct3D11RuntimeLinking(*this);
+
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
 
