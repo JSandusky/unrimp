@@ -39,6 +39,7 @@
 #include "RendererToolkit/AssetCompiler/SkeletonAnimationAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/MaterialBlueprintAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/CompositorWorkspaceAssetCompiler.h"
+#include "RendererToolkit/Context.h"
 
 #include <RendererRuntime/Core/File/MemoryFile.h>
 #include <RendererRuntime/Core/Platform/PlatformManager.h>
@@ -119,8 +120,8 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ProjectImpl::ProjectImpl(RendererRuntime::IFileManager& fileManager) :
-		mFileManager(fileManager),
+	ProjectImpl::ProjectImpl(const Context& context) :
+		mContext(context),
 		mQualityStrategy(QualityStrategy::PRODUCTION),
 		mRapidJsonDocument(nullptr),
 		mProjectAssetMonitor(nullptr),
@@ -171,7 +172,7 @@ namespace RendererToolkit
 		std_filesystem::create_directories(assetOutputDirectory);
 
 		// Asset compiler input
-		IAssetCompiler::Input input(mFileManager, mProjectName, *mCacheManager.get(), assetFilename, assetInputDirectory, assetOutputDirectory, mSourceAssetIdToCompiledAssetId, mSourceAssetIdToAbsoluteFilename);
+		IAssetCompiler::Input input(mContext, mProjectName, *mCacheManager.get(), assetFilename, assetInputDirectory, assetOutputDirectory, mSourceAssetIdToCompiledAssetId, mSourceAssetIdToAbsoluteFilename);
 
 		// Asset compiler configuration
 		assert(nullptr != mRapidJsonDocument);
@@ -188,7 +189,7 @@ namespace RendererToolkit
 			const AssetCompilerTypeId assetCompilerTypeId(assetType.c_str());
 			if (TextureAssetCompiler::TYPE_ID == assetCompilerTypeId)
 			{
-				TextureAssetCompiler().compile(input, configuration, output);
+				TextureAssetCompiler(mContext).compile(input, configuration, output);
 			}
 			else if (ShaderPieceAssetCompiler::TYPE_ID == assetCompilerTypeId)
 			{
@@ -283,7 +284,7 @@ namespace RendererToolkit
 
 			// Setup project folder for cache manager, it will store there its data
 			// TODO(sw) For now only prototype. Change this.
-			mCacheManager = std::make_unique<CacheManager>(mFileManager, mProjectName);
+			mCacheManager = std::make_unique<CacheManager>(mContext, mProjectName);
 		}
 	}
 
@@ -324,7 +325,7 @@ namespace RendererToolkit
 			memoryFile.write(sortedAssetVector.data(), sizeof(RendererRuntime::Asset) * sortedAssetVector.size());
 
 			// Write LZ4 compressed output
-			memoryFile.writeLz4CompressedDataToFile(RendererRuntime::StringId("AssetPackage"), 2, "../" + getRenderTargetDataRootDirectory(rendererTarget) + mAssetPackageDirectoryName + "AssetPackage.assets", mFileManager);
+			memoryFile.writeLz4CompressedDataToFile(RendererRuntime::StringId("AssetPackage"), 2, "../" + getRenderTargetDataRootDirectory(rendererTarget) + mAssetPackageDirectoryName + "AssetPackage.assets", mContext.getFileManager());
 		}
 	}
 

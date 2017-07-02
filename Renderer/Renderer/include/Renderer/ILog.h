@@ -115,7 +115,7 @@ namespace Renderer
 *  @note
 *    - Example: RENDERER_LOG(mContext, DEBUG, "Direct3D 11 renderer backend startup")
 */
-#define RENDERER_LOG(context, type, format, ...) context.getLog().print(Renderer::ILog::Type::type, format, ##__VA_ARGS__);
+#define RENDERER_LOG(context, type, format, ...) (context).getLog().print(Renderer::ILog::Type::type, format, ##__VA_ARGS__);
 
 
 //[-------------------------------------------------------]

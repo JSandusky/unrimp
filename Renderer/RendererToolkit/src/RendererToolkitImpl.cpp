@@ -23,7 +23,6 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/RendererToolkitImpl.h"
 #include "RendererToolkit/Project/ProjectImpl.h"
-#include "RendererToolkit/PlatformTypes.h"
 #include "RendererToolkit/Context.h"
 
 
@@ -54,8 +53,7 @@ namespace RendererToolkit
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	RendererToolkitImpl::RendererToolkitImpl(Context& context) :
-		IRendererToolkit(context),
-		mFileManager(context.getFileManager())
+		IRendererToolkit(context)
 	{
 		// Nothing here
 	}
@@ -71,7 +69,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	IProject* RendererToolkitImpl::createProject()
 	{
-		return new ProjectImpl(mFileManager);
+		return new ProjectImpl(getContext());
 	}
 
 

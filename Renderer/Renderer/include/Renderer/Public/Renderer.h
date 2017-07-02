@@ -181,7 +181,7 @@ namespace Renderer
 			handle mNativeWindowHandle;
 			bool   mUseExternalContext;
 		};
-		#define RENDERER_LOG(context, type, format, ...) context.getLog().print(Renderer::ILog::Type::type, format, ##__VA_ARGS__);
+		#define RENDERER_LOG(context, type, format, ...) (context).getLog().print(Renderer::ILog::Type::type, format, ##__VA_ARGS__);
 	#endif
 
 	// Renderer/Log/ILog.h

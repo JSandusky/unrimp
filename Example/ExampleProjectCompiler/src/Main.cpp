@@ -41,7 +41,7 @@ int programEntryPoint(CommandLineArguments& commandLineArguments)
 {
 	Renderer::StdLog stdLog;
 	RendererRuntime::StdFileManager stdFileManager(stdLog);
-	RendererToolkit::Context rendererToolkitContext(stdFileManager);
+	RendererToolkit::Context rendererToolkitContext(stdLog, stdFileManager);
 	RendererToolkit::RendererToolkitInstance rendererToolkitInstance(rendererToolkitContext);
 	RendererToolkit::IRendererToolkit* rendererToolkit = rendererToolkitInstance.getRendererToolkit();
 	if (nullptr != rendererToolkit)

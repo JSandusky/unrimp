@@ -28,7 +28,8 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline Context::Context(RendererRuntime::IFileManager& fileManager) :
+	inline Context::Context(Renderer::ILog& log, RendererRuntime::IFileManager& fileManager) :
+		mLog(log),
 		mFileManager(fileManager)
 	{
 		// Nothing here
@@ -37,6 +38,11 @@ namespace RendererToolkit
 	inline Context::~Context()
 	{
 		// Nothing here
+	}
+
+	inline Renderer::ILog& Context::getLog() const
+	{
+		return mLog;
 	}
 
 	inline RendererRuntime::IFileManager& Context::getFileManager() const

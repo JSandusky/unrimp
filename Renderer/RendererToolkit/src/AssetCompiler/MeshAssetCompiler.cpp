@@ -26,6 +26,7 @@
 #include "RendererToolkit/Helper/CacheManager.h"
 #include "RendererToolkit/Helper/StringHelper.h"
 #include "RendererToolkit/Helper/JsonHelper.h"
+#include "RendererToolkit/Context.h"
 
 #include <RendererRuntime/Core/Math/Math.h>
 #include <RendererRuntime/Asset/AssetPackage.h>
@@ -868,7 +869,7 @@ namespace RendererToolkit
 			}
 
 			// Write LZ4 compressed output
-			memoryFile.writeLz4CompressedDataToFile(RendererRuntime::v1Mesh::FORMAT_TYPE, RendererRuntime::v1Mesh::FORMAT_VERSION, outputAssetFilename, input.fileManager);
+			memoryFile.writeLz4CompressedDataToFile(RendererRuntime::v1Mesh::FORMAT_TYPE, RendererRuntime::v1Mesh::FORMAT_VERSION, outputAssetFilename, input.context.getFileManager());
 
 			// Store new cache entries or update existing ones
 			input.cacheManager.storeOrUpdateCacheEntriesInDatabase(cacheEntries);

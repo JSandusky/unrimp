@@ -80,7 +80,6 @@
     <ClInclude Include="include\RendererToolkit\Helper\JsonMaterialHelper.h" />
     <ClInclude Include="include\RendererToolkit\Helper\StringHelper.h" />
     <ClInclude Include="include\RendererToolkit\IRendererToolkit.h" />
-    <ClInclude Include="include\RendererToolkit\PlatformTypes.h" />
     <ClInclude Include="include\RendererToolkit\Project\IProject.h" />
     <ClInclude Include="include\RendererToolkit\Project\ProjectAssetMonitor.h" />
     <ClInclude Include="include\RendererToolkit\Project\ProjectImpl.h" />

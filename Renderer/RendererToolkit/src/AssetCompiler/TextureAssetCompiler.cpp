@@ -26,7 +26,7 @@
 #include "RendererToolkit/Helper/StringHelper.h"
 #include "RendererToolkit/Helper/CacheManager.h"
 #include "RendererToolkit/Helper/JsonHelper.h"
-#include "RendererToolkit/PlatformTypes.h"
+#include "RendererToolkit/Context.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
 
@@ -638,7 +638,7 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
-		bool crunchConsoleOutput(crnlib::eConsoleMessageType type, const char* message, void*)
+		bool crunchConsoleOutput(crnlib::eConsoleMessageType type, const char* message, void* data)
 		{
 			// Filter Crunch output to ignore messages like "Flipping texture on Y axis" or "Generated 11 mipmap levels in 3.261s"
 			// -> Warnings like "Target bitrate/quality level is not supported for this output file format." don't cause harm either, but just show them so we're aware of possible issues
@@ -647,21 +647,20 @@ namespace
 			//          unregister our function when we're done. "crnlib::console::remove_console_output_func() only checks the function pointer.
 			if (crnlib::cMessageConsoleMessage == type || crnlib::cWarningConsoleMessage == type || crnlib::cErrorConsoleMessage == type)
 			{
-				RENDERERTOOLKIT_OUTPUT_DEBUG_STRING(message);
-				RENDERERTOOLKIT_OUTPUT_DEBUG_STRING("\n");
+				RENDERER_LOG(*static_cast<const RendererToolkit::Context*>(data), CRITICAL, message)
 			}
 
 			// We handled the console output
 			return true;
 		}
 
-		void initializeCrunch()
+		void initializeCrunch(const RendererToolkit::Context& context)
 		{
 			if (!g_CrunchInitialized)
 			{
 				// The Crunch console is using "printf()" by default if no console output function handles Crunch console output
 				// -> Redirect the Crunch console output into our log so we have an uniform handling of such information
-				crnlib::console::add_console_output_func(crunchConsoleOutput, nullptr);
+				crnlib::console::add_console_output_func(crunchConsoleOutput, &const_cast<RendererToolkit::Context&>(context));
 				g_CrunchInitialized = true;
 			}
 		}
@@ -882,7 +881,7 @@ namespace
 			}
 		}
 
-		void convertFile(const RendererToolkit::IAssetCompiler::Configuration& configuration, const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* basePath, const char* sourceFilename, const char* destinationFilename, crnlib::texture_file_types::format outputCrunchTextureFileType, TextureSemantic textureSemantic, bool createMipmaps, float mipmapBlurriness, const char* sourceNormalMapFilename)
+		void convertFile(const RendererToolkit::IAssetCompiler::Input& input, const RendererToolkit::IAssetCompiler::Configuration& configuration, const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* basePath, const char* sourceFilename, const char* destinationFilename, crnlib::texture_file_types::format outputCrunchTextureFileType, TextureSemantic textureSemantic, bool createMipmaps, float mipmapBlurriness, const char* sourceNormalMapFilename)
 		{
 			crnlib::texture_conversion::convert_params crunchConvertParams;
 
@@ -1000,7 +999,7 @@ namespace
 							const std::string warning = "4x4 block size based DXT compression used, but the texture dimension " + widthHeightToString(width, height) +
 														" at mipmap level " + std::to_string(mipmap) + " is no multiple of four. Texture dimension is " +
 														widthHeightToString(crunchMipmappedTexture.get_width(), crunchMipmappedTexture.get_height()) + ". Dynamic texture resolution scale will be limited to mipmap level " + std::to_string(mipmap - 1) + '.';
-							RENDERERTOOLKIT_OUTPUT_DEBUG_STRING(warning.c_str());
+							RENDERER_LOG(input.context, WARNING, warning.c_str())
 							break;
 						}
 
@@ -1159,9 +1158,9 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureAssetCompiler::TextureAssetCompiler()
+	TextureAssetCompiler::TextureAssetCompiler(const Context& context)
 	{
-		::detail::initializeCrunch();
+		::detail::initializeCrunch(context);
 	}
 
 	TextureAssetCompiler::~TextureAssetCompiler()
@@ -1295,7 +1294,7 @@ namespace RendererToolkit
 			}
 			else
 			{
-				detail::convertFile(configuration, rapidJsonValueTextureAssetCompiler, inputAssetFilename.c_str(), inputFile.empty() ? nullptr : inputAssetFilename.c_str(), outputAssetFilename.c_str(), crunchOutputTextureFileType, textureSemantic, createMipmaps, mipmapBlurriness, normalMapInputFile.empty() ? nullptr : normalMapAssetFilename.c_str());
+				detail::convertFile(input, configuration, rapidJsonValueTextureAssetCompiler, inputAssetFilename.c_str(), inputFile.empty() ? nullptr : inputAssetFilename.c_str(), outputAssetFilename.c_str(), crunchOutputTextureFileType, textureSemantic, createMipmaps, mipmapBlurriness, normalMapInputFile.empty() ? nullptr : normalMapAssetFilename.c_str());
 			}
 
 			// Store new cache entries or update existing ones

@@ -43,9 +43,9 @@ namespace SQLite
 {
 	class Database;
 }
-namespace RendererRuntime
+namespace RendererToolkit
 {
-	class IFileManager;
+	class Context;
 }
 
 
@@ -137,12 +137,12 @@ namespace RendererToolkit
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] fileManager
-		*    The file manager instance to use
+		*  @param[in] context
+		*    The renderer toolkit context to use, the renderer toolkit context instance must stay valid as long as the cache manager instance exists
 		*  @param[in] projectName
 		*    Name of the project this cache is for
 		*/
-		CacheManager(RendererRuntime::IFileManager& fileManager, const std::string& projectName);
+		CacheManager(const Context& context, const std::string& projectName);
 
 		/**
 		*  @brief
@@ -290,6 +290,7 @@ namespace RendererToolkit
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		const Context&					  mContext;
 		std::unique_ptr<SQLite::Database> mDatabaseConnection;
 
 		// We use here "uint32_t" instead of "RendererRuntime::StringId" because we don't define a "std::hash"-method for "RendererRuntime::StringId", which internal stores an "uint32_t"

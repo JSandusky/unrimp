@@ -42,11 +42,11 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class IFileManager;
 	class AssetPackage;
 }
 namespace RendererToolkit
 {
+	class Context;
 	class CacheManager;
 }
 
@@ -90,7 +90,7 @@ namespace RendererToolkit
 	public:
 		struct Input
 		{
-			RendererRuntime::IFileManager&			fileManager;
+			const Context&							context;
 			const std::string						projectName;
 			CacheManager&							cacheManager;
 			const std::string						assetFilename;
@@ -100,8 +100,8 @@ namespace RendererToolkit
 			const SourceAssetIdToAbsoluteFilename&	sourceAssetIdToAbsoluteFilename;
 
 			Input() = delete;
-			Input(RendererRuntime::IFileManager& _fileManager, const std::string _projectName, CacheManager& _cacheManager, const std::string& _assetFilename, const std::string& _assetInputDirectory, const std::string& _assetOutputDirectory, const SourceAssetIdToCompiledAssetId& _sourceAssetIdToCompiledAssetId, const SourceAssetIdToAbsoluteFilename& _sourceAssetIdToAbsoluteFilename) :
-				fileManager(_fileManager),
+			Input(const Context& _context, const std::string _projectName, CacheManager& _cacheManager, const std::string& _assetFilename, const std::string& _assetInputDirectory, const std::string& _assetOutputDirectory, const SourceAssetIdToCompiledAssetId& _sourceAssetIdToCompiledAssetId, const SourceAssetIdToAbsoluteFilename& _sourceAssetIdToAbsoluteFilename) :
+				context(_context),
 				projectName(_projectName),
 				cacheManager(_cacheManager),
 				assetFilename(_assetFilename),

@@ -22,13 +22,14 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 // Disable warnings in external headers, we can't fix them -> those warnings here happen apparently when instancing a template
-#include "RendererToolkit/PlatformTypes.h"
+#include <RendererRuntime/Core/Platform/PlatformTypes.h>
 PRAGMA_WARNING_DISABLE_MSVC(4242)	// warning C4242: '<x>': conversion from '<y>' to '<z>', possible loss of data
 PRAGMA_WARNING_DISABLE_MSVC(4244)	// warning C4244: '<x>': conversion from '<y>' to '<z>', possible loss of data
 
 #include "RendererToolkit/Helper/CacheManager.h"
 #include "RendererToolkit/Helper/StringHelper.h"
 #include "RendererToolkit/Helper/FileSystemHelper.h"
+#include "RendererToolkit/Context.h"
 
 #include <RendererRuntime/Core/File/IFileManager.h>
 
@@ -138,9 +139,10 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	CacheManager::CacheManager(RendererRuntime::IFileManager& fileManager, const std::string& projectName)
+	CacheManager::CacheManager(const Context& context, const std::string& projectName) :
+		mContext(context)
 	{
-		std_filesystem::path cachePath(fileManager.getAbsoluteLocalDataDirectoryName());
+		std_filesystem::path cachePath(mContext.getFileManager().getAbsoluteLocalDataDirectoryName());
 		cachePath /= "RendererToolkitCache";
 
 		// Ensure that the cache output directory exists
@@ -170,7 +172,7 @@ namespace RendererToolkit
 		mDatabaseConnection.reset();
 		if (sqlite3_shutdown() != SQLITE_OK)
 		{
-			RENDERERTOOLKIT_OUTPUT_ERROR_STRING("Failed to shutdown SQLite")
+			RENDERER_LOG(mContext, CRITICAL, "The renderer toolkit failed to shutdown SQLite")
 		}
 	}
 

@@ -33,15 +33,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace RendererRuntime
-{
-	class IFileManager;
-}
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererToolkit
@@ -92,13 +83,6 @@ namespace RendererToolkit
 	private:
 		inline explicit RendererToolkitImpl(const RendererToolkitImpl& source) = delete;
 		inline RendererToolkitImpl& operator =(const RendererToolkitImpl& source) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-		RendererRuntime::IFileManager& mFileManager;
 
 
 	};

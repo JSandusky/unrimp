@@ -42,13 +42,13 @@
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-	class IFileManager;
 	class IRendererRuntime;
 }
 namespace RendererToolkit
 {
-	class ProjectAssetMonitor;
+	class Context;
 	class CacheManager;
+	class ProjectAssetMonitor;
 }
 
 
@@ -85,10 +85,10 @@ namespace RendererToolkit
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] fileManager
-		*    The file manager instance to use
+		*  @param[in] context
+		*    The renderer toolkit context instance to use
 		*/
-		explicit ProjectImpl(RendererRuntime::IFileManager& fileManager);
+		explicit ProjectImpl(const Context& context);
 
 		/**
 		*  @brief
@@ -131,7 +131,7 @@ namespace RendererToolkit
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		RendererRuntime::IFileManager&  mFileManager;
+		const Context&					mContext;
 		std::string						mProjectName;
 		std::string						mProjectDirectory;			///< Includes "/" at the end
 		QualityStrategy					mQualityStrategy;

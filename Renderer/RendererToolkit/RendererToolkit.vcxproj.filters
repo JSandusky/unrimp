@@ -59,9 +59,6 @@
     <ClInclude Include="include\RendererToolkit\Public\RendererToolkit.h">
       <Filter>Source Files\Public</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererToolkit\PlatformTypes.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererToolkit\WindowsHeader.h">
       <Filter>Source Files</Filter>
     </ClInclude>

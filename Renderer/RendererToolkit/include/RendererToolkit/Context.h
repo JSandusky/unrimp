@@ -27,6 +27,10 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace Renderer
+{
+	class ILog;
+}
 namespace RendererRuntime
 {
 	class IFileManager;
@@ -59,16 +63,27 @@ namespace RendererToolkit
 		*  @brief
 		*    Constructor
 		*
+		*  @param[in] log
+		*    Log instance to use, the log instance must stay valid as long as the renderer toolkit instance exists
 		*  @param[in] fileManager
 		*    File manager instance to use, the file manager instance must stay valid as long as the renderer toolkit instance exists
 		*/
-		inline explicit Context(RendererRuntime::IFileManager& fileManager);
+		inline Context(Renderer::ILog& log, RendererRuntime::IFileManager& fileManager);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
 		inline ~Context();
+
+		/**
+		*  @brief
+		*    Return the used log instance
+		*
+		*  @return
+		*    The used log instance
+		*/
+		inline Renderer::ILog& getLog() const;
 
 		/**
 		*  @brief
@@ -92,6 +107,7 @@ namespace RendererToolkit
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		Renderer::ILog&				   mLog;
 		RendererRuntime::IFileManager& mFileManager;
 
 
