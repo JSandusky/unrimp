@@ -24,7 +24,6 @@
 #include "PrecompiledHeader.h"
 #include "Advanced/InstancedCubes/CubeRendererInstancedArrays/CubeRendererInstancedArrays.h"
 #include "Advanced/InstancedCubes/CubeRendererInstancedArrays/BatchInstancedArrays.h"
-#include "Framework/PlatformTypes.h"	// For "OUTPUT_DEBUG_STRING()"
 
 #include <math.h>
 #include <string.h>

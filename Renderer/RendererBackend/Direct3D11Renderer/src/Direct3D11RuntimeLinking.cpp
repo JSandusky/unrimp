@@ -113,7 +113,7 @@ namespace Direct3D11Renderer
 		}
 		else
 		{
-			RENDERER_LOG(mDirect3D11Renderer.getContext(), CRITICAL, "Failed to load in the shared Direct3D 11 library \"d3d11.dll\"\n")
+			RENDERER_LOG(mDirect3D11Renderer.getContext(), CRITICAL, "Failed to load in the shared Direct3D 11 library \"d3d11.dll\"")
 		}
 
 		// Done

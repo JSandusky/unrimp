@@ -1805,7 +1805,7 @@ namespace OpenGLES3Renderer
 					break;
 			}
 
-			RENDERER_LOG(static_cast<const OpenGLES3Renderer*>(userParam)->getContext(), CRITICAL, "OpenGL ES 3 debug message\tSource:\"%s\"\tType:\"%s\"\tID:\"%d\"\tSeverity:\"%s\"\tMessage:\"%s\"\n", debugSource, debugType, id, debugSeverity, message)
+			RENDERER_LOG(static_cast<const OpenGLES3Renderer*>(userParam)->getContext(), CRITICAL, "OpenGL ES 3 debug message\tSource:\"%s\"\tType:\"%s\"\tID:\"%d\"\tSeverity:\"%s\"\tMessage:\"%s\"", debugSource, debugType, id, debugSeverity, message)
 		#endif
 	}
 

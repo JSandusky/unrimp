@@ -42,35 +42,6 @@
 	#ifndef NULL_HANDLE
 		#define NULL_HANDLE 0
 	#endif
-
-	// For debugging
-	#ifndef OUTPUT_DEBUG
-		#ifdef _DEBUG
-			#include "Framework/WindowsHeader.h"
-			#include <strsafe.h>	// For "StringCbVPrintf()"
-			#define OUTPUT_DEBUG
-			#define OUTPUT_DEBUG_STRING(outputString) OutputDebugString(TEXT(outputString));
-			inline void outputDebugPrintf(LPCTSTR outputString, ...)
-			{
-				va_list argptr;
-				va_start(argptr, outputString);
-				TCHAR buffer[2000];
-				const HRESULT hr = StringCbVPrintf(buffer, sizeof(buffer), outputString, argptr);
-				if (STRSAFE_E_INSUFFICIENT_BUFFER == hr || S_OK == hr)
-				{
-					OutputDebugString(buffer);
-				}
-				else
-				{
-					OutputDebugString(TEXT("\"StringCbVPrintf()\" error"));
-				}
-			}
-			#define OUTPUT_DEBUG_PRINTF(outputString, ...) outputDebugPrintf(outputString, __VA_ARGS__);
-		#else
-			#define OUTPUT_DEBUG_STRING(outputString)
-			#define OUTPUT_DEBUG_PRINTF(outputString, ...)
-		#endif
-	#endif
 #elif LINUX
 	#if X64_ARCHITECTURE
 		typedef uint64_t handle;
@@ -80,10 +51,6 @@
 	#ifndef NULL_HANDLE
 		#define NULL_HANDLE 0
 	#endif
-
-	// Debugging stuff is not supported
-	#define OUTPUT_DEBUG_STRING(outputString)
-	#define OUTPUT_DEBUG_PRINTF(outputString, ...)
 #else
 	#error "Unsupported platform"
 #endif

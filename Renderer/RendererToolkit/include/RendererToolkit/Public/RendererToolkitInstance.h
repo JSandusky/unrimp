@@ -123,14 +123,13 @@ namespace RendererToolkit
 						else
 						{
 							// Error!
-							// TODO(co) Error handling
-						//	OUTPUT_DEBUG_PRINTF("Failed to locate the entry point \"createRendererToolkitInstance\" within the renderer toolkit shared library \"%s\"", RENDERER_TOOLKIT_FILENAME)
+							RENDERER_LOG(context, CRITICAL, "Failed to locate the entry point \"createRendererToolkitInstance\" within the shared renderer toolkit library \"%s\"", RENDERER_TOOLKIT_FILENAME)
 						}
 					}
 					else
 					{
-						// TODO(co) Error handling
-					//	OUTPUT_DEBUG_PRINTF("Failed to load in the shared library \"%s\"\n", RENDERER_TOOLKIT_FILENAME)
+						// Error!
+						RENDERER_LOG(context, CRITICAL, "Failed to load in the shared renderer toolkit library \"%s\"", RENDERER_TOOLKIT_FILENAME)
 					}
 				#elif defined LINUX
 					// Load in the shared library
@@ -155,14 +154,13 @@ namespace RendererToolkit
 						else
 						{
 							// Error!
-							// TODO(co) Error handling
-						//	OUTPUT_DEBUG_PRINTF("Failed to locate the entry point \"createRendererToolkitInstance\" within the renderer toolkit shared library \"%s\"", RENDERER_TOOLKIT_FILENAME)
+							RENDERER_LOG(context, CRITICAL, "Failed to locate the entry point \"createRendererToolkitInstance\" within the renderer toolkit shared renderer toolkit library \"%s\"", RENDERER_TOOLKIT_FILENAME)
 						}
 					}
 					else
 					{
-						// TODO(co) Error handling
-						// OUTPUT_DEBUG_PRINTF("Failed to load in the shared library \"%s\"\n", RENDERER_TOOLKIT_FILENAME)
+						// Error!
+						RENDERER_LOG(context, CRITICAL, "Failed to load in the shared renderer toolkit library \"%s\"", RENDERER_TOOLKIT_FILENAME)
 					}
 				#else
 					#error "Unsupported platform"
@@ -221,7 +219,7 @@ namespace RendererToolkit
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		void*								 mRendererToolkitSharedLibrary;	///< Renderer toolkit shared library, can be a null pointer
+		void*								 mRendererToolkitSharedLibrary;	///< Shared renderer toolkit library, can be a null pointer
 		RendererToolkit::IRendererToolkitPtr mRendererToolkit;				///< Renderer toolkit instance, can be a null pointer
 
 

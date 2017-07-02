@@ -201,7 +201,7 @@ namespace Renderer
 					}
 					else
 					{
-						RENDERER_LOG(context, CRITICAL, "Failed to load in the shared renderer library \"%s\"\n", rendererFilename)
+						RENDERER_LOG(context, CRITICAL, "Failed to load in the shared renderer library \"%s\"", rendererFilename)
 					}
 				#else
 					#error "Unsupported platform"

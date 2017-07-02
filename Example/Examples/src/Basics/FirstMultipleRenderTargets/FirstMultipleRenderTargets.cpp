@@ -191,7 +191,7 @@ void FirstMultipleRenderTargets::onInitialization()
 		else
 		{
 			// Error!
-			OUTPUT_DEBUG_STRING("Error: This example requires support for multiple simultaneous render targets\n")
+			RENDERER_LOG(renderer->getContext(), CRITICAL, "This example requires support for multiple simultaneous render targets")
 		}
 
 		// Since we're always submitting the same commands to the renderer, we can fill the command buffer once during initialization and then reuse it multiple times during runtime

@@ -85,10 +85,9 @@
 			mSwapChain = swapChain;
 		}
 
-		virtual bool HandleEvent(XEvent &event)
+		virtual bool HandleEvent(XEvent& event)
 		{
 			X11Window::HandleEvent(event);
-			OUTPUT_DEBUG_STRING("Handle Event in SwapChainWindow\n")
 			switch (event.type)
 			{
 				// Window configuration changed
@@ -97,7 +96,7 @@
 					{
 						mSwapChain->resizeBuffers();
 					}
-				break;
+					break;
 			}
 			return false;
 		}

@@ -27,5 +27,5 @@
 #endif
 {
 	// Error! (unsupported renderer)
-	OUTPUT_DEBUG_STRING("Error: Unsupported renderer\n")
+	RENDERER_LOG(mRenderer->getContext(), CRITICAL, "Error: Unsupported renderer")
 }

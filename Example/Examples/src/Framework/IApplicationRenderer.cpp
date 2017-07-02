@@ -329,7 +329,7 @@ Renderer::IRenderer* IApplicationRenderer::createRendererInstance(const char* re
 		if (nullptr != renderer && renderer->isDebugEnabled())
 		{
 			// We don't allow debugging in case debugging is disabled
-			OUTPUT_DEBUG_STRING("Debugging with debug/profile tools like e.g. Direct3D PIX is disabled within this application")
+			RENDERER_LOG(renderer->getContext(), CRITICAL, "Debugging with debug/profile tools like e.g. Direct3D PIX is disabled within this application")
 			delete renderer;
 			renderer = nullptr;
 		}

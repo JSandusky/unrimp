@@ -130,7 +130,7 @@ namespace RendererRuntime
 					else
 					{
 						// Error!
-						RENDERER_LOG(context, CRITICAL, "Failed to load in the shared renderer runtime library \"%s\"\n", RENDERER_RUNTIME_FILENAME)
+						RENDERER_LOG(context, CRITICAL, "Failed to load in the shared renderer runtime library \"%s\"", RENDERER_RUNTIME_FILENAME)
 					}
 				#elif defined LINUX
 					// Load in the shared library
@@ -161,7 +161,7 @@ namespace RendererRuntime
 					else
 					{
 						// Error!
-						RENDERER_LOG(context, CRITICAL, "Failed to load in the shared renderer runtime library \"%s\"\n", RENDERER_RUNTIME_FILENAME)
+						RENDERER_LOG(context, CRITICAL, "Failed to load in the shared renderer runtime library \"%s\"", RENDERER_RUNTIME_FILENAME)
 					}
 				#else
 					#error "Unsupported platform"

@@ -2351,7 +2351,7 @@ namespace OpenGLRenderer
 					break;
 			}
 
-			RENDERER_LOG(static_cast<const OpenGLRenderer*>(userParam)->getContext(), CRITICAL, "OpenGL debug message\tSource:\"%s\"\tType:\"%s\"\tID:\"%d\"\tSeverity:\"%s\"\tMessage:\"%s\"\n", debugSource, debugType, id, debugSeverity, message)
+			RENDERER_LOG(static_cast<const OpenGLRenderer*>(userParam)->getContext(), CRITICAL, "OpenGL debug message\tSource:\"%s\"\tType:\"%s\"\tID:\"%d\"\tSeverity:\"%s\"\tMessage:\"%s\"", debugSource, debugType, id, debugSeverity, message)
 		#endif
 	}
 
