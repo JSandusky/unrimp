@@ -59,12 +59,14 @@ namespace VulkanRenderer
 		*  @brief
 		*    Constructor
 		*
+		*  @param[in] vulkanRenderer
+		*    Owner Vulkan renderer instance
 		*  @param[in] nativeWindowHandle
 		*    Optional native main window handle, can be a null handle
 		*  @param[in] useExternalContext
 		*    When true an own Vulkan context won't be created
 		*/
-		VulkanContextLinux(handle nativeWindowHandle, bool useExternalContext);
+		VulkanContextLinux(VulkanRenderer& vulkanRenderer, handle nativeWindowHandle, bool useExternalContext);
 
 		/**
 		*  @brief

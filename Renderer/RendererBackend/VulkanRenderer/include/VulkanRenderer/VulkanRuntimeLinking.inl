@@ -28,6 +28,11 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline bool VulkanRuntimeLinking::isValidationEnabled() const
+	{
+		return mValidationEnabled;
+	}
+
 	inline VkInstance VulkanRuntimeLinking::getVkInstance() const
 	{
 		return mVkInstance;

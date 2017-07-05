@@ -31,13 +31,7 @@
 
 #include "VulkanRenderer/VulkanRuntimeLinking.h"
 
-// Disable warnings in external headers, we can't fix them
-PRAGMA_WARNING_PUSH
-	PRAGMA_WARNING_DISABLE_MSVC(4987)	// warning C4987: nonstandard extension used: 'throw (...)'
-	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: '<x>': conversion from '<y>' to '<z>', signed/unsigned mismatch
-	PRAGMA_WARNING_DISABLE_MSVC(4571)	// warning C4571: Informational: catch(...) semantics changed since Visual C++ 7.1; structured exceptions (SEH) are no longer caught
-	#include <vector>
-PRAGMA_WARNING_POP
+#include <vector>
 
 
 //[-------------------------------------------------------]
@@ -105,7 +99,7 @@ namespace VulkanRenderer
 		virtual void resizeBuffers() override;
 		virtual bool getFullscreenState() const override;
 		virtual void setFullscreenState(bool fullscreen) override;
-		virtual void setRenderWindow(Renderer::IRenderWindow* renderWindow) override;
+		inline virtual void setRenderWindow(Renderer::IRenderWindow* renderWindow) override;
 
 
 	//[-------------------------------------------------------]
@@ -137,6 +131,7 @@ namespace VulkanRenderer
 		uint32_t					 mSwapchainImageCount;
 		std::vector<VkImage>		 mVkImages;
 		std::vector<SwapChainBuffer> mSwapChainBuffer;
+		Renderer::IRenderWindow*	 mRenderWindow;			///< Render window instance, can be a null pointer, don't destroy the instance since we don't own it
 
 
 	};

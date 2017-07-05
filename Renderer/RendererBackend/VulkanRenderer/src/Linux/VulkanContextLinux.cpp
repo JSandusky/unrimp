@@ -36,7 +36,8 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VulkanContextLinux::VulkanContextLinux(handle nativeWindowHandle, bool useExternalContext) :
+	VulkanContextLinux::VulkanContextLinux(VulkanRenderer& vulkanRenderer, handle nativeWindowHandle, bool useExternalContext) :
+		IVulkanContext(vulkanRenderer),
 		mNativeWindowHandle(nativeWindowHandle),
 		mDummyWindow(NULL_HANDLE),
 		mDisplay(nullptr),

@@ -27,6 +27,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include <Renderer/PlatformTypes.h>
+
 #if defined(_WIN32)
 	#define VK_USE_PLATFORM_WIN32_KHR
 #elif defined(__ANDROID__)
@@ -37,11 +39,11 @@
 #define VK_NO_PROTOTYPES
 
 // Disable warnings in external headers, we can't fix them
-#pragma warning(push)
-	#pragma warning(disable: 4668)	// Warning	C4668	'<x>' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
-	#include <vulkan\vulkan.h>
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4668)	// Warning	C4668	'<x>' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+	#include <vulkan/vulkan.h>
 	#undef max	// Get rid of nasty OS macro
-#pragma warning(pop)
+PRAGMA_WARNING_POP
 
 
 //[-------------------------------------------------------]
@@ -89,14 +91,25 @@ namespace VulkanRenderer
 		*
 		*  @param[in] vulkanRenderer
 		*    Owner Vulkan renderer instance
+		*  @param[in] enableValidation
+		*    Enable validation?
 		*/
-		explicit VulkanRuntimeLinking(VulkanRenderer& vulkanRenderer);
+		VulkanRuntimeLinking(VulkanRenderer& vulkanRenderer, bool enableValidation);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
 		~VulkanRuntimeLinking();
+
+		/**
+		*  @brief
+		*    Return whether or not validation is enabled
+		*
+		*  @return
+		*    "true" if validation is enabled, else "false"
+		*/
+		inline bool isValidationEnabled() const;
 
 		/**
 		*  @brief
@@ -169,6 +182,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	private:
 		VulkanRenderer&	mVulkanRenderer;		///< Owner Vulkan renderer instance
+		bool			mValidationEnabled;		///< Validation enabled?
 		void*			mVulkanSharedLibrary;	///< Vulkan shared library, can be a null pointer
 		bool			mEntryPointsRegistered;	///< Entry points successfully registered?
 		VkInstance		mVkInstance;			///< Vulkan instance, stores all per-application states
@@ -200,6 +214,8 @@ namespace VulkanRenderer
 FNPTR(vkCreateInstance)
 FNPTR(vkDestroyInstance)
 FNPTR(vkGetInstanceProcAddr)
+FNPTR(vkEnumerateInstanceExtensionProperties)
+FNPTR(vkEnumerateInstanceLayerProperties)
 
 // Instance based Vulkan function pointers
 FNPTR(vkEnumeratePhysicalDevices)

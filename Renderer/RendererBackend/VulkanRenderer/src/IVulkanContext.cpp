@@ -26,20 +26,8 @@
 
 #include <Renderer/ILog.h>
 
-// Disable warnings in external headers, we can't fix them
-PRAGMA_WARNING_PUSH
-	PRAGMA_WARNING_DISABLE_MSVC(4987)	// warning C4987: nonstandard extension used: 'throw (...)'
-	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: '<x>': conversion from '<y>' to '<z>', signed/unsigned mismatch
-	PRAGMA_WARNING_DISABLE_MSVC(4623)	// warning C4623: '<x>': default constructor was implicitly defined as deleted
-	PRAGMA_WARNING_DISABLE_MSVC(4626)	// warning C4626: '<x>': assignment operator was implicitly defined as deleted
-	PRAGMA_WARNING_DISABLE_MSVC(5027)	// warning C5027: '<x>': move assignment operator was implicitly defined as deleted
-	PRAGMA_WARNING_DISABLE_MSVC(4571)	// warning C4571: Informational: catch(...) semantics changed since Visual C++ 7.1; structured exceptions (SEH) are no longer caught
-	PRAGMA_WARNING_DISABLE_MSVC(4625)	// warning C4625: '<x>': copy constructor was implicitly defined as deleted
-	PRAGMA_WARNING_DISABLE_MSVC(5026)	// warning C5026: '<x>': move constructor was implicitly defined as deleted
-	PRAGMA_WARNING_DISABLE_MSVC(4774)	// warning C4774: '<x>' : format string expected in argument 3 is not a string literal
-	#include <array>
-	#include <vector>
-PRAGMA_WARNING_POP
+#include <array>
+#include <vector>
 
 
 //[-------------------------------------------------------]
@@ -89,6 +77,47 @@ namespace
 				// Error!
 				RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to get the number of physical Vulkan devices")
 			}
+		}
+
+		VkPhysicalDevice selectPhysicalDevice(VulkanRenderer::VulkanRenderer& vulkanRenderer, const VkPhysicalDevices& vkPhysicalDevices)
+		{
+			// TODO(co) I'am sure this selection can be improved
+			for (const VkPhysicalDevice& vkPhysicalDevice : vkPhysicalDevices)
+			{
+				{ // Reject physical Vulkan devices basing on supported API version and some basic limits
+					VkPhysicalDeviceProperties vkPhysicalDeviceProperties;
+					vkGetPhysicalDeviceProperties(vkPhysicalDevice, &vkPhysicalDeviceProperties);
+					const uint32_t majorVersion = VK_VERSION_MAJOR(vkPhysicalDeviceProperties.apiVersion);
+					if ((majorVersion < 1) || (vkPhysicalDeviceProperties.limits.maxImageDimension2D < 4096))
+					{
+						// Reject physical Vulkan device
+						continue;
+					}
+				}
+
+				// Reject physical Vulkan devices basing on supported queue family
+				uint32_t queueFamilyPropertyCount = 0;
+				vkGetPhysicalDeviceQueueFamilyProperties(vkPhysicalDevice, &queueFamilyPropertyCount, nullptr);
+				if (0 == queueFamilyPropertyCount)
+				{
+					// Reject physical Vulkan device
+					continue;
+				}
+				std::vector<VkQueueFamilyProperties> queueFamilyProperties(queueFamilyPropertyCount);
+				vkGetPhysicalDeviceQueueFamilyProperties(vkPhysicalDevice, &queueFamilyPropertyCount, queueFamilyProperties.data());
+				for (uint32_t i = 0; i < queueFamilyPropertyCount; ++i)
+				{
+					if ((queueFamilyProperties[i].queueCount > 0) && (queueFamilyProperties[i].queueFlags & VK_QUEUE_GRAPHICS_BIT))
+					{
+						// Select physical Vulkan device
+						return vkPhysicalDevice;
+					}
+				}
+			}
+
+			// Error!
+			RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to select a physical Vulkan device")
+			return VK_NULL_HANDLE;
 		}
 
 		VkResult createVkDevice(VkPhysicalDevice vkPhysicalDevice, const VkDeviceQueueCreateInfo& vkDeviceQueueCreateInfo, bool enableValidation, VkDevice& vkDevice)
@@ -143,7 +172,7 @@ namespace
 						if (VK_ERROR_LAYER_NOT_PRESENT == vkResult && enableValidation)
 						{
 							// Error! Since the show must go on, try creating a Vulkan device instance without validation enabled...
-							RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create the Vulkan device instance with validation enabled, layer is not present")
+							RENDERER_LOG(vulkanRenderer.getContext(), WARNING, "Failed to create the Vulkan device instance with validation enabled, layer is not present")
 							vkResult = createVkDevice(vkPhysicalDevice, vkDeviceQueueCreateInfo, false, vkDevice);
 						}
 						// TODO(co) Error handling: Evaluate "vkResult"?
@@ -247,6 +276,7 @@ namespace VulkanRenderer
 				}
 				vkDestroyCommandPool(mVkDevice, mVkCommandPool, nullptr);
 			}
+			vkDeviceWaitIdle(mVkDevice);
 			vkDestroyDevice(mVkDevice, nullptr);
 		}
 	}
@@ -315,25 +345,25 @@ namespace VulkanRenderer
 		mVkCommandPool(VK_NULL_HANDLE),
 		mSetupVkCommandBuffer(VK_NULL_HANDLE)
 	{
+		const VulkanRuntimeLinking& vulkanRuntimeLinking = mVulkanRenderer.getVulkanRuntimeLinking();
+
 		{ // Get the physical Vulkan device this context should use
 			detail::VkPhysicalDevices vkPhysicalDevices;
-			::detail::enumeratePhysicalDevices(mVulkanRenderer, vulkanRenderer.getVulkanRuntimeLinking().getVkInstance(), vkPhysicalDevices);
+			::detail::enumeratePhysicalDevices(mVulkanRenderer, vulkanRuntimeLinking.getVkInstance(), vkPhysicalDevices);
 			if (!vkPhysicalDevices.empty())
 			{
-				// TODO(co) For now, we always use the first found physical Vulkan device
-				mVkPhysicalDevice = vkPhysicalDevices[0];
+				mVkPhysicalDevice = ::detail::selectPhysicalDevice(mVulkanRenderer, vkPhysicalDevices);
 			}
 		}
 
 		// Create the Vulkan device instance
 		if (VK_NULL_HANDLE != mVkPhysicalDevice)
 		{
-			// TODO(co) For now, the Vulkan validation layer is always enabled by default
 			uint32_t graphicsQueueFamilyIndex = 0;
-			mVkDevice = ::detail::createVkDevice(mVulkanRenderer, mVkPhysicalDevice, true, graphicsQueueFamilyIndex);
+			mVkDevice = ::detail::createVkDevice(mVulkanRenderer, mVkPhysicalDevice, vulkanRuntimeLinking.isValidationEnabled(), graphicsQueueFamilyIndex);
 			if (VK_NULL_HANDLE != mVkDevice)
 			{
-				// Get the to the Vulkan device graphics queue that command buffers are submitted to
+				// Get the Vulkan device graphics queue that command buffers are submitted to
 				vkGetDeviceQueue(mVkDevice, graphicsQueueFamilyIndex, 0, &mGraphicsVkQueue);
 				if (VK_NULL_HANDLE != mGraphicsVkQueue)
 				{
@@ -344,6 +374,16 @@ namespace VulkanRenderer
 						// Create setup Vulkan command buffer instance
 						mSetupVkCommandBuffer = ::detail::createSetupVkCommandBuffer(mVulkanRenderer, mVkDevice, mVkCommandPool);
 					}
+					else
+					{
+						// Error!
+						RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create Vulkan command pool instance")
+					}
+				}
+				else
+				{
+					// Error!
+					RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to get the Vulkan device graphics queue that command buffers are submitted to")
 				}
 			}
 		}

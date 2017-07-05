@@ -70,8 +70,9 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VulkanRuntimeLinking::VulkanRuntimeLinking(VulkanRenderer& vulkanRenderer) :
+	VulkanRuntimeLinking::VulkanRuntimeLinking(VulkanRenderer& vulkanRenderer, bool enableValidation) :
 		mVulkanRenderer(vulkanRenderer),
+		mValidationEnabled(enableValidation),
 		mVulkanSharedLibrary(nullptr),
 		mEntryPointsRegistered(false),
 		mVkInstance(VK_NULL_HANDLE),
@@ -121,8 +122,7 @@ namespace VulkanRenderer
 				if (mEntryPointsRegistered)
 				{
 					// Create the Vulkan instance
-					// TODO(co) For now, the Vulkan validation layer is always enabled by default
-					const VkResult vkResult = createVulkanInstance(true);
+					const VkResult vkResult = createVulkanInstance(mValidationEnabled);
 					if (VK_SUCCESS == vkResult)
 					{
 						// Load instance based Vulkan function pointers
@@ -220,6 +220,8 @@ namespace VulkanRenderer
 		IMPORT_FUNC(vkCreateInstance);
 		IMPORT_FUNC(vkDestroyInstance);
 		IMPORT_FUNC(vkGetInstanceProcAddr);
+		IMPORT_FUNC(vkEnumerateInstanceExtensionProperties);
+		IMPORT_FUNC(vkEnumerateInstanceLayerProperties );
 
 		// Undefine the helper macro
 		#undef IMPORT_FUNC
@@ -232,10 +234,12 @@ namespace VulkanRenderer
 	{
 		// TODO(co) Make it possible for the user to provide application related information?
 		VkApplicationInfo vkApplicationInfo = {};
-		vkApplicationInfo.sType			   = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-		vkApplicationInfo.pApplicationName = "Unrimp Application";
-		vkApplicationInfo.pEngineName	   = "Unrimp";
-		vkApplicationInfo.apiVersion		= VK_MAKE_VERSION(1, 0, 2);	// TODO(co) Temporary workaround for drivers not supporting SDK 1.0.3 upon launch, use VK_API_VERSION
+		vkApplicationInfo.sType				 = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+		vkApplicationInfo.pApplicationName	 = "Unrimp Application";
+		vkApplicationInfo.applicationVersion = VK_MAKE_VERSION(0, 0, 0);
+		vkApplicationInfo.pEngineName		 = "Unrimp";
+		vkApplicationInfo.engineVersion		 = VK_MAKE_VERSION(0, 0, 0);
+		vkApplicationInfo.apiVersion		 = VK_API_VERSION_1_0;
 
 		// Enable surface extensions depending on OS
 		std::vector<const char*> enabledExtensions = { VK_KHR_SURFACE_EXTENSION_NAME };
@@ -266,8 +270,9 @@ namespace VulkanRenderer
 		if (VK_ERROR_LAYER_NOT_PRESENT == vkResult && enableValidation)
 		{
 			// Error! Since the show must go on, try creating a Vulkan instance without validation enabled...
-			RENDERER_LOG(mVulkanRenderer.getContext(), CRITICAL, "Failed to create the Vulkan instance with validation enabled, layer is not present")
-			vkResult = createVulkanInstance(false);
+			RENDERER_LOG(mVulkanRenderer.getContext(), WARNING, "Failed to create the Vulkan instance with validation enabled, layer is not present. Install e.g. the LunarG Vulkan SDK.")
+			mValidationEnabled = false;
+			vkResult = createVulkanInstance(mValidationEnabled);
 		}
 
 		// Done
@@ -279,8 +284,8 @@ namespace VulkanRenderer
 		bool result = true;	// Success by default
 
 		// Define a helper macro
-		#pragma warning(push)
-		#pragma warning(disable: 4191)	// 'reinterpret_cast': unsafe conversion from 'PFN_vkVoidFunction' to '<x>'
+		PRAGMA_WARNING_PUSH
+		PRAGMA_WARNING_DISABLE_MSVC(4191)	// 'reinterpret_cast': unsafe conversion from 'PFN_vkVoidFunction' to '<x>'
 		#define IMPORT_FUNC(funcName)																												\
 			if (result)																																\
 			{																																		\
@@ -402,7 +407,7 @@ namespace VulkanRenderer
 
 		// Undefine the helper macro
 		#undef IMPORT_FUNC
-		#pragma warning(pop)
+		PRAGMA_WARNING_POP
 
 		// Done
 		return result;

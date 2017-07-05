@@ -28,7 +28,10 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	// TODO(co) Remove this header if not required
+	inline void SwapChain::setRenderWindow(Renderer::IRenderWindow* renderWindow)
+	{
+		mRenderWindow = renderWindow;
+	}
 
 
 //[-------------------------------------------------------]

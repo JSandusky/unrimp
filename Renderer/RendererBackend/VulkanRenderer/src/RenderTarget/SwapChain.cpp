@@ -42,7 +42,8 @@ namespace VulkanRenderer
 		mNativeWindowHandle(nativeWindowHandle),
 		mVkSurfaceKHR(VK_NULL_HANDLE),
 		mVkSwapchainKHR(VK_NULL_HANDLE),
-		mSwapchainImageCount(0)
+		mSwapchainImageCount(0),
+		mRenderWindow(nullptr)
 	{
 		// Get the Vulkan instance and the Vulkan physical device
 		const VkInstance vkInstance = vulkanRenderer.getVulkanRuntimeLinking().getVkInstance();
@@ -289,6 +290,12 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	void SwapChain::getWidthAndHeight(uint32_t& width, uint32_t& height) const
 	{
+		// Return stored width and height when both valid
+		if (nullptr != mRenderWindow)
+		{
+			mRenderWindow->getWidthAndHeight(width, height);
+			return;
+		}
 		#ifdef WIN32
 			// Is there a valid native OS window?
 			if (NULL_HANDLE != mNativeWindowHandle)
@@ -333,7 +340,10 @@ namespace VulkanRenderer
 				::Window rootWindow = 0;
 				int positionX = 0, positionY = 0;
 				unsigned int unsignedWidth = 0, unsignedHeight = 0, border = 0, depth = 0;
-				XGetGeometry(display, mNativeWindowHandle, &rootWindow, &positionX, &positionY, &unsignedWidth, &unsignedHeight, &border, &depth);
+				if (nullptr != display)
+				{
+					XGetGeometry(display, mNativeWindowHandle, &rootWindow, &positionX, &positionY, &unsignedWidth, &unsignedHeight, &border, &depth);
+				}
 
 				// ... and ensure that none of them is ever zero
 				if (unsignedWidth < 1)
@@ -371,6 +381,11 @@ namespace VulkanRenderer
 
 	void SwapChain::present()
 	{
+		if (nullptr != mRenderWindow)
+		{
+			mRenderWindow->present();
+			return;
+		}
 		#ifdef WIN32
 			HDC hDC = ::GetDC(reinterpret_cast<HWND>(mNativeWindowHandle));
 			::SwapBuffers(hDC);
@@ -397,11 +412,6 @@ namespace VulkanRenderer
 	void SwapChain::setFullscreenState(bool)
 	{
 		// TODO(co) Implement me
-	}
-
-	void SwapChain::setRenderWindow(Renderer::IRenderWindow*)
-	{
-		// TODO(sw) implement me
 	}
 
 

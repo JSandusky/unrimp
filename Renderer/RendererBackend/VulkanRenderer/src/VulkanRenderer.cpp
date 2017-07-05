@@ -303,8 +303,15 @@ namespace VulkanRenderer
 		mMainSwapChain(nullptr),
 		mRenderTarget(nullptr)
 	{
+		// TODO(co) Make it possible to enable/disable validation from the outside?
+		#ifdef _DEBUG
+			const bool enableValidation = true;
+		#else
+			const bool enableValidation = false;
+		#endif
+
 		// Is Vulkan available?
-		mVulkanRuntimeLinking = new VulkanRuntimeLinking(*this);
+		mVulkanRuntimeLinking = new VulkanRuntimeLinking(*this, enableValidation);
 		if (mVulkanRuntimeLinking->isVulkanAvaiable())
 		{
 			const handle nativeWindowHandle = mContext.getNativeWindowHandle();
@@ -312,16 +319,16 @@ namespace VulkanRenderer
 				// TODO(co) Add external Vulkan context support
 				mVulkanContext = new VulkanContextWindows(*this, nativeWindowHandle);
 			#elif defined LINUX
-				mVulkanContext = new VulkanContextLinux(nativeWindowHandle, mContext.isUsingExternalContext());
+				mVulkanContext = new VulkanContextLinux(*this, nativeWindowHandle, mContext.isUsingExternalContext());
 			#else
 				#error "Unsupported platform"
 			#endif
-			mExtensions = new Extensions(*mVulkanContext);
 
 			// Is the Vulkan context initialized?
 			if (mVulkanContext->isInitialized())
 			{
 				// Initialize the Vulkan extensions
+				mExtensions = new Extensions(*mVulkanContext);
 				mExtensions->initialize();
 
 				#ifdef RENDERER_OUTPUT_DEBUG
@@ -962,7 +969,71 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	void VulkanRenderer::initializeCapabilities()
 	{
-		// TODO(co) Implement me
+		// TODO(co) Implement me, this in here is just a placeholder implementation
+
+		{ // "D3D_FEATURE_LEVEL_11_0"
+			// Maximum number of viewports (always at least 1)
+			mCapabilities.maximumNumberOfViewports = 16;
+
+			// Maximum number of simultaneous render targets (if <1 render to texture is not supported)
+			mCapabilities.maximumNumberOfSimultaneousRenderTargets = 8;
+
+			// Maximum texture dimension
+			mCapabilities.maximumTextureDimension = 16384;
+
+			// Maximum number of 2D texture array slices (usually 512, in case there's no support for 2D texture arrays it's 0)
+			mCapabilities.maximumNumberOf2DTextureArraySlices = 512;
+
+			// Maximum texture buffer (TBO) size in texel (>65536, typically much larger than that of one-dimensional texture, in case there's no support for texture buffer it's 0)
+			mCapabilities.maximumTextureBufferSize = 128 * 1024 * 1024;	// TODO(co) http://msdn.microsoft.com/en-us/library/ff476876%28v=vs.85%29.aspx does not mention the texture buffer? Currently the OpenGL 3 minimum is used: 128 MiB.
+
+			// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
+			// TODO(co) Implement indirect buffer support
+			mCapabilities.maximumIndirectBufferSize = 64 * 1024;	// 64 KiB
+
+			// Maximum number of multisamples (always at least 1, usually 8)
+			mCapabilities.maximumNumberOfMultisamples = 8;
+
+			// Maximum anisotropy (always at least 1, usually 16)
+			mCapabilities.maximumAnisotropy = 16;
+
+			// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
+			mCapabilities.instancedArrays = true;
+
+			// Draw instanced supported? (shader model 4 feature, build in shader variable holding the current instance ID)
+			mCapabilities.drawInstanced = true;
+
+			// Maximum number of vertices per patch (usually 0 for no tessellation support or 32 which is the maximum number of supported vertices per patch)
+			mCapabilities.maximumNumberOfPatchVertices = 32;
+
+			// Maximum number of vertices a geometry shader can emit (usually 0 for no geometry shader support or 1024)
+			mCapabilities.maximumNumberOfGsOutputVertices = 1024;	// TODO(co) http://msdn.microsoft.com/en-us/library/ff476876%28v=vs.85%29.aspx does not mention it, so I assume it's 1024
+		}
+
+		// The rest is the same for all feature levels
+
+		// Maximum uniform buffer (UBO) size in bytes (usually at least 4096 * 16 bytes, in case there's no support for uniform buffer it's 0)
+		// -> See https://msdn.microsoft.com/en-us/library/windows/desktop/ff819065(v=vs.85).aspx - "Resource Limits (Direct3D 11)" - "Number of elements in a constant buffer D3D11_REQ_CONSTANT_BUFFER_ELEMENT_COUNT (4096)"
+		// -> One element = float4 = 16 bytes
+		mCapabilities.maximumUniformBufferSize = 4096 * 16;
+
+		// Individual uniforms ("constants" in Direct3D terminology) supported? If not, only uniform buffer objects are supported.
+		mCapabilities.individualUniforms = false;
+
+		// Base vertex supported for draw calls?
+		mCapabilities.baseVertex = true;
+
+		// Vulkan has native multi-threading
+		mCapabilities.nativeMultiThreading = false;	// TODO(co) Enable native multi-threading when done
+
+		// Direct3D 11 has shader bytecode support
+		mCapabilities.shaderBytecode = true;
+
+		// Is there support for vertex shaders (VS)?
+		mCapabilities.vertexShader = true;
+
+		// Is there support for fragment shaders (FS)?
+		mCapabilities.fragmentShader = true;
 	}
 
 	void VulkanRenderer::iaUnsetVertexArray()
