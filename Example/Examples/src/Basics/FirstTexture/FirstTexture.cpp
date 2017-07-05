@@ -65,9 +65,7 @@ void FirstTexture::onInitialization()
 			static const uint32_t TEXTURE_WIDTH   = 256;
 			static const uint32_t TEXEL_ELEMENTS  = 1;
 			static const uint32_t NUMBER_OF_BYTES = TEXTURE_WIDTH;
-
-			// Allocate memory for the texture
-			uint8_t* data = new uint8_t[NUMBER_OF_BYTES];
+			uint8_t data[NUMBER_OF_BYTES];
 
 			// Fill the texture data with a color gradient
 			for (uint32_t n = 0; n < NUMBER_OF_BYTES; n += TEXEL_ELEMENTS)
@@ -77,19 +75,14 @@ void FirstTexture::onInitialization()
 
 			// Create the texture instance
 			mTexture1D = mTextureManager->createTexture1D(TEXTURE_WIDTH, Renderer::TextureFormat::R8, data, Renderer::TextureFlag::GENERATE_MIPMAPS);
-
-			// Free texture memory
-			delete [] data;
 		}
 
 		{ // Create the 2D texture
-			static const uint32_t TEXTURE_WIDTH   = 128;
-			static const uint32_t TEXTURE_HEIGHT  = 128;
+			static const uint32_t TEXTURE_WIDTH   = 64;
+			static const uint32_t TEXTURE_HEIGHT  = 64;
 			static const uint32_t TEXEL_ELEMENTS  = 4;
 			static const uint32_t NUMBER_OF_BYTES = TEXTURE_WIDTH * TEXTURE_HEIGHT * TEXEL_ELEMENTS;
-
-			// Allocate memory for the texture
-			uint8_t* data = new uint8_t[NUMBER_OF_BYTES];
+			uint8_t data[NUMBER_OF_BYTES];
 
 			{ // Fill the texture data with a defective checkboard
 				const uint32_t rowPitch   = TEXTURE_WIDTH * TEXEL_ELEMENTS;
@@ -123,9 +116,6 @@ void FirstTexture::onInitialization()
 
 			// Create the texture instance
 			mTexture2D = mTextureManager->createTexture2D(TEXTURE_WIDTH, TEXTURE_HEIGHT, Renderer::TextureFormat::R8G8B8A8, data, Renderer::TextureFlag::GENERATE_MIPMAPS);
-
-			// Free texture memory
-			delete [] data;
 		}
 
 		{ // Create sampler state
