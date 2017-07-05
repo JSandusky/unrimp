@@ -74,7 +74,7 @@ namespace Direct3D10Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~Direct3D9RuntimeLinking();
+		~Direct3D9RuntimeLinking();
 
 		/**
 		*  @brief

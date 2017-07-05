@@ -74,7 +74,7 @@ namespace Direct3D11Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~Direct3D11RuntimeLinking();
+		~Direct3D11RuntimeLinking();
 
 		/**
 		*  @brief

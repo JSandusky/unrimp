@@ -28,22 +28,22 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline const VulkanRuntimeLinking &VulkanRenderer::getVulkanRuntimeLinking() const
+	inline const VulkanRuntimeLinking& VulkanRenderer::getVulkanRuntimeLinking() const
 	{
 		return *mVulkanRuntimeLinking;
 	}
 
-	inline const IVulkanContext &VulkanRenderer::getVulkanContext() const
+	inline const IVulkanContext& VulkanRenderer::getVulkanContext() const
 	{
 		return *mVulkanContext;
 	}
 
-	inline const Extensions &VulkanRenderer::getExtensions() const
+	inline const Extensions& VulkanRenderer::getExtensions() const
 	{
 		return *mExtensions;
 	}
 
-	inline Extensions &VulkanRenderer::getExtensions()
+	inline Extensions& VulkanRenderer::getExtensions()
 	{
 		return *mExtensions;
 	}

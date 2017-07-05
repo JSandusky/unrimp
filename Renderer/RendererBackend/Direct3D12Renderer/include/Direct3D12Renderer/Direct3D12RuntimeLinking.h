@@ -77,7 +77,7 @@ namespace Direct3D12Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~Direct3D12RuntimeLinking();
+		~Direct3D12RuntimeLinking();
 
 		/**
 		*  @brief

@@ -1272,7 +1272,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Resource handling                                     ]
 	//[-------------------------------------------------------]
-	bool Direct3D12Renderer::map(Renderer::IResource &, uint32_t, Renderer::MapType, uint32_t, Renderer::MappedSubresource &)
+	bool Direct3D12Renderer::map(Renderer::IResource&, uint32_t, Renderer::MapType, uint32_t, Renderer::MappedSubresource&)
 	{
 		// TODO(co) Direct3D 12 update
 		/*
@@ -1369,7 +1369,7 @@ namespace Direct3D12Renderer
 		return false;
 	}
 
-	void Direct3D12Renderer::unmap(Renderer::IResource &, uint32_t)
+	void Direct3D12Renderer::unmap(Renderer::IResource&, uint32_t)
 	{
 		// TODO(co) Direct3D 12 update
 		/*

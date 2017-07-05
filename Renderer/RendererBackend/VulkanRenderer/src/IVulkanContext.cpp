@@ -65,14 +65,14 @@ namespace
 			// Get the number of available physical devices
 			uint32_t physicalDeviceCount = 0;
 			VkResult vkResult = vkEnumeratePhysicalDevices(vkInstance, &physicalDeviceCount, nullptr);
-			if (vkResult == VK_SUCCESS)
+			if (VK_SUCCESS == vkResult)
 			{
 				if (physicalDeviceCount > 0)
 				{
 					// Enumerate physical devices
 					vkPhysicalDevices.resize(physicalDeviceCount);
 					vkResult = vkEnumeratePhysicalDevices(vkInstance, &physicalDeviceCount, vkPhysicalDevices.data());
-					if (vkResult != VK_SUCCESS)
+					if (VK_SUCCESS != vkResult)
 					{
 						// Error!
 						RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to enumerate physical Vulkan devices")
@@ -140,7 +140,7 @@ namespace
 						vkDeviceQueueCreateInfo.queueCount		 = 1;
 						vkDeviceQueueCreateInfo.pQueuePriorities = queuePriorities.data();
 						VkResult vkResult = createVkDevice(vkPhysicalDevice, vkDeviceQueueCreateInfo, enableValidation, vkDevice);
-						if (vkResult == VK_ERROR_LAYER_NOT_PRESENT && enableValidation)
+						if (VK_ERROR_LAYER_NOT_PRESENT == vkResult && enableValidation)
 						{
 							// Error! Since the show must go on, try creating a Vulkan device instance without validation enabled...
 							RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create the Vulkan device instance with validation enabled, layer is not present")
@@ -174,7 +174,7 @@ namespace
 			vkCommandPoolCreateInfo.queueFamilyIndex = graphicsQueueFamilyIndex;
 			vkCommandPoolCreateInfo.flags			 = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 			const VkResult vkResult = vkCreateCommandPool(vkDevice, &vkCommandPoolCreateInfo, nullptr, &vkCommandPool);
-			if (vkResult != VK_SUCCESS)
+			if (VK_SUCCESS != vkResult)
 			{
 				// Error!
 				RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create Vulkan command pool instance")
@@ -195,12 +195,12 @@ namespace
 			vkCommandBufferAllocateInfo.level			   = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
 			vkCommandBufferAllocateInfo.commandBufferCount = 1;
 			VkResult vkResult = vkAllocateCommandBuffers(vkDevice, &vkCommandBufferAllocateInfo, &vkCommandBuffer);
-			if (vkResult == VK_SUCCESS)
+			if (VK_SUCCESS == vkResult)
 			{
 				VkCommandBufferBeginInfo vkCommandBufferBeginInfo = {};
 				vkCommandBufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 				vkResult = vkBeginCommandBuffer(vkCommandBuffer, &vkCommandBufferBeginInfo);
-				if (vkResult != VK_SUCCESS)
+				if (VK_SUCCESS != vkResult)
 				{
 					// Error!
 					RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to begin setup Vulkan command buffer instance")
@@ -254,22 +254,22 @@ namespace VulkanRenderer
 	void IVulkanContext::flushSetupVkCommandBuffer() const
 	{
 		VkResult vkResult = vkEndCommandBuffer(mSetupVkCommandBuffer);
-		if (vkResult == VK_SUCCESS)
+		if (VK_SUCCESS == vkResult)
 		{
 			VkSubmitInfo vkSubmitInfo = {};
 			vkSubmitInfo.sType				= VK_STRUCTURE_TYPE_SUBMIT_INFO;
 			vkSubmitInfo.commandBufferCount = 1;
 			vkSubmitInfo.pCommandBuffers	= &mSetupVkCommandBuffer;
 			vkResult = vkQueueSubmit(mGraphicsVkQueue, 1, &vkSubmitInfo, VK_NULL_HANDLE);
-			if (vkResult == VK_SUCCESS)
+			if (VK_SUCCESS == vkResult)
 			{
 				vkResult = vkQueueWaitIdle(mGraphicsVkQueue);
-				if (vkResult == VK_SUCCESS)
+				if (VK_SUCCESS == vkResult)
 				{
 					VkCommandBufferBeginInfo vkCommandBufferBeginInfo = {};
 					vkCommandBufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 					vkResult = vkBeginCommandBuffer(mSetupVkCommandBuffer, &vkCommandBufferBeginInfo);
-					if (vkResult != VK_SUCCESS)
+					if (VK_SUCCESS != vkResult)
 					{
 						// Error!
 						RENDERER_LOG(mVulkanRenderer.getContext(), CRITICAL, "Failed to begin setup Vulkan command buffer instance")

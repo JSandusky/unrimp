@@ -1917,7 +1917,7 @@ namespace OpenGLRenderer
 		return new RootSignature(*this, rootSignature);
 	}
 
-	Renderer::IPipelineState* OpenGLRenderer::createPipelineState(const Renderer::PipelineState & pipelineState)
+	Renderer::IPipelineState* OpenGLRenderer::createPipelineState(const Renderer::PipelineState& pipelineState)
 	{
 		return new PipelineState(*this, pipelineState);
 	}

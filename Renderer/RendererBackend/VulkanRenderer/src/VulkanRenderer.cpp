@@ -316,8 +316,6 @@ namespace VulkanRenderer
 			#else
 				#error "Unsupported platform"
 			#endif
-
-			// We're using "this" in here, so we are not allowed to write the following within the initializer list
 			mExtensions = new Extensions(*mVulkanContext);
 
 			// Is the Vulkan context initialized?
@@ -330,11 +328,11 @@ namespace VulkanRenderer
 					// TODO(co) Implement me
 				#endif
 
-				// Create the default sampler state
-				mDefaultSamplerState = createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
-
 				// Initialize the capabilities
 				initializeCapabilities();
+
+				// Create the default sampler state
+				mDefaultSamplerState = createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
 
 				// Add references to the default sampler state and set it
 				if (nullptr != mDefaultSamplerState)
@@ -878,7 +876,7 @@ namespace VulkanRenderer
 		return new RootSignature(*this, rootSignature);
 	}
 
-	Renderer::IPipelineState* VulkanRenderer::createPipelineState(const Renderer::PipelineState & pipelineState)
+	Renderer::IPipelineState* VulkanRenderer::createPipelineState(const Renderer::PipelineState& pipelineState)
 	{
 		return new PipelineState(*this, pipelineState);
 	}
@@ -892,13 +890,13 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Resource handling                                     ]
 	//[-------------------------------------------------------]
-	bool VulkanRenderer::map(Renderer::IResource &, uint32_t, Renderer::MapType, uint32_t, Renderer::MappedSubresource &)
+	bool VulkanRenderer::map(Renderer::IResource&, uint32_t, Renderer::MapType, uint32_t, Renderer::MappedSubresource&)
 	{
 		// TODO(co) Implement me
 		return false;
 	}
 
-	void VulkanRenderer::unmap(Renderer::IResource &, uint32_t)
+	void VulkanRenderer::unmap(Renderer::IResource&, uint32_t)
 	{
 		// TODO(co) Implement me
 	}

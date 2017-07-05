@@ -712,13 +712,13 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Resource handling                                     ]
 	//[-------------------------------------------------------]
-	bool NullRenderer::map(Renderer::IResource &, uint32_t, Renderer::MapType, uint32_t, Renderer::MappedSubresource &)
+	bool NullRenderer::map(Renderer::IResource&, uint32_t, Renderer::MapType, uint32_t, Renderer::MappedSubresource&)
 	{
 		// Not supported by the null renderer
 		return false;
 	}
 
-	void NullRenderer::unmap(Renderer::IResource &, uint32_t)
+	void NullRenderer::unmap(Renderer::IResource&, uint32_t)
 	{
 		// Nothing here
 	}

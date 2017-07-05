@@ -35,6 +35,7 @@
 	#define VK_USE_PLATFORM_XLIB_KHR
 #endif
 #define VK_NO_PROTOTYPES
+
 // Disable warnings in external headers, we can't fix them
 #pragma warning(push)
 	#pragma warning(disable: 4668)	// Warning	C4668	'<x>' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
@@ -95,7 +96,7 @@ namespace VulkanRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~VulkanRuntimeLinking();
+		~VulkanRuntimeLinking();
 
 		/**
 		*  @brief
