@@ -43,6 +43,47 @@
 
 
 //[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global definitions                                    ]
+		//[-------------------------------------------------------]
+		typedef std::vector<VkExtensionProperties> VkExtensionPropertiesVector;
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		bool isExtensionAvailable(const char* extensionName, const VkExtensionPropertiesVector& vkExtensionPropertiesVector)
+		{
+			for (const VkExtensionProperties& vkExtensionProperties : vkExtensionPropertiesVector)
+			{
+				if (strcmp(vkExtensionProperties.extensionName, extensionName) == 0)
+				{
+					// The extension is available
+					return true;
+				}
+			}
+
+			// The extension isn't available
+			return false;
+		}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	}
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace VulkanRenderer
@@ -52,19 +93,27 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	const uint32_t VulkanRuntimeLinking::NUMBER_OF_VALIDATION_LAYERS = 9;	// TODO(co) Introduce and use "countof()"
-	const char*    VulkanRuntimeLinking::VALIDATION_LAYER_NAMES[] =
-	{
-		"VK_LAYER_GOOGLE_threading",
-		"VK_LAYER_LUNARG_mem_tracker",
-		"VK_LAYER_LUNARG_object_tracker",
-		"VK_LAYER_LUNARG_draw_state",
-		"VK_LAYER_LUNARG_param_checker",
-		"VK_LAYER_LUNARG_swapchain",
-		"VK_LAYER_LUNARG_device_limits",
-		"VK_LAYER_LUNARG_image",
-		"VK_LAYER_GOOGLE_unique_objects",
-	};
+	#if defined(__ANDROID__)
+		// On Android we need to explicitly select all layers
+		#warning "TODO(co) Not tested"
+		const uint32_t VulkanRuntimeLinking::NUMBER_OF_VALIDATION_LAYERS = 6;
+		const char*    VulkanRuntimeLinking::VALIDATION_LAYER_NAMES[] =
+		{
+			"VK_LAYER_GOOGLE_threading",
+			"VK_LAYER_LUNARG_parameter_validation",
+			"VK_LAYER_LUNARG_object_tracker",
+			"VK_LAYER_LUNARG_core_validation",
+			"VK_LAYER_LUNARG_swapchain",
+			"VK_LAYER_GOOGLE_unique_objects"
+		};
+	#else
+		// On desktop the LunarG loaders exposes a meta layer that contains all layers
+		const uint32_t VulkanRuntimeLinking::NUMBER_OF_VALIDATION_LAYERS = 1;
+		const char*    VulkanRuntimeLinking::VALIDATION_LAYER_NAMES[] =
+		{
+			"VK_LAYER_LUNARG_standard_validation"
+		};
+	#endif
 
 
 	//[-------------------------------------------------------]
@@ -232,45 +281,78 @@ namespace VulkanRenderer
 
 	VkResult VulkanRuntimeLinking::createVulkanInstance(bool enableValidation)
 	{
-		// TODO(co) Make it possible for the user to provide application related information?
-		VkApplicationInfo vkApplicationInfo = {};
-		vkApplicationInfo.sType				 = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-		vkApplicationInfo.pApplicationName	 = "Unrimp Application";
-		vkApplicationInfo.applicationVersion = VK_MAKE_VERSION(0, 0, 0);
-		vkApplicationInfo.pEngineName		 = "Unrimp";
-		vkApplicationInfo.engineVersion		 = VK_MAKE_VERSION(0, 0, 0);
-		vkApplicationInfo.apiVersion		 = VK_API_VERSION_1_0;
-
 		// Enable surface extensions depending on OS
 		std::vector<const char*> enabledExtensions = { VK_KHR_SURFACE_EXTENSION_NAME };
-		#if defined(_WIN32)
+		#ifdef VK_USE_PLATFORM_WIN32_KHR
 			enabledExtensions.push_back(VK_KHR_WIN32_SURFACE_EXTENSION_NAME);
-		#elif defined(__ANDROID__)
+		#elif defined VK_USE_PLATFORM_ANDROID_KHR
+			#warning "TODO(co) Not tested"
 			enabledExtensions.push_back(VK_KHR_ANDROID_SURFACE_EXTENSION_NAME);
-		#elif defined(__linux__)
+		#elif defined VK_USE_PLATFORM_XLIB_KHR
+			#warning "TODO(co) Not tested"
+			enabledExtensions.push_back(VK_KHR_XLIB_SURFACE_EXTENSION_NAME);
+		#elif defined VK_USE_PLATFORM_XCB_KHR
+			#warning "TODO(co) Not tested"
 			enabledExtensions.push_back(VK_KHR_XCB_SURFACE_EXTENSION_NAME);
+		#else
+			#error "Unsupported platform"
 		#endif
-
-		VkInstanceCreateInfo vkInstanceCreateInfo = {};
-		vkInstanceCreateInfo.sType			  = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-		vkInstanceCreateInfo.pNext			  = nullptr;
-		vkInstanceCreateInfo.pApplicationInfo = &vkApplicationInfo;
 		if (enableValidation)
 		{
 			enabledExtensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
 		}
-		vkInstanceCreateInfo.enabledExtensionCount = static_cast<uint32_t>(enabledExtensions.size());
-		vkInstanceCreateInfo.ppEnabledExtensionNames = enabledExtensions.data();
-		if (enableValidation)
-		{
-			vkInstanceCreateInfo.enabledLayerCount   = NUMBER_OF_VALIDATION_LAYERS;
-			vkInstanceCreateInfo.ppEnabledLayerNames = VALIDATION_LAYER_NAMES;
+
+		{ // Ensure the extensions we need are supported
+			uint32_t propertyCount = 0;
+			if ((vkEnumerateInstanceExtensionProperties(nullptr, &propertyCount, nullptr) != VK_SUCCESS) || (0 == propertyCount))
+			{
+				RENDERER_LOG(mVulkanRenderer.getContext(), CRITICAL, "Failed to enumerate Vulkan instance extension properties")
+				return VK_ERROR_EXTENSION_NOT_PRESENT;
+			}
+			::detail::VkExtensionPropertiesVector vkExtensionPropertiesVector(propertyCount);
+			if (vkEnumerateInstanceExtensionProperties(nullptr, &propertyCount, &vkExtensionPropertiesVector[0]) != VK_SUCCESS)
+			{
+				RENDERER_LOG(mVulkanRenderer.getContext(), CRITICAL, "Failed to enumerate Vulkan instance extension properties")
+				return VK_ERROR_EXTENSION_NOT_PRESENT;
+			}
+			for (const char* enabledExtension : enabledExtensions)
+			{
+				if (!::detail::isExtensionAvailable(enabledExtension, vkExtensionPropertiesVector))
+				{
+					RENDERER_LOG(mVulkanRenderer.getContext(), CRITICAL, "Couldn't find Vulkan instance extension named \"%s\"", enabledExtension)
+					return VK_ERROR_EXTENSION_NOT_PRESENT;
+				}
+			}
 		}
+
+		// TODO(co) Make it possible for the user to provide application related information?
+		const VkApplicationInfo vkApplicationInfo =
+		{
+			VK_STRUCTURE_TYPE_APPLICATION_INFO,	// sType (VkStructureType)
+			nullptr,							// pNext (const void*)
+			"Unrimp Application",				// pApplicationName (const char*)
+			VK_MAKE_VERSION(0, 0, 0),			// applicationVersion (uint32_t)
+			"Unrimp",							// pEngineName (const char*)
+			VK_MAKE_VERSION(0, 0, 0),			// engineVersion (uint32_t)
+			VK_API_VERSION_1_0					// apiVersion (uint32_t)
+		};
+
+		const VkInstanceCreateInfo vkInstanceCreateInfo =
+		{
+			VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,					// sType (VkStructureType)
+			nullptr,												// pNext (const void*)
+			0,														// flags (VkInstanceCreateFlags)
+			&vkApplicationInfo,										// pApplicationInfo (const VkApplicationInfo*)
+			enableValidation ? NUMBER_OF_VALIDATION_LAYERS : 0,		// enabledLayerCount (uint32_t)
+			enableValidation ? VALIDATION_LAYER_NAMES : nullptr,	// ppEnabledLayerNames (const char* const*)
+			static_cast<uint32_t>(enabledExtensions.size()),		// enabledExtensionCount (uint32_t)
+			enabledExtensions.data()								// ppEnabledExtensionNames (const char* const*)
+		};
 		VkResult vkResult = vkCreateInstance(&vkInstanceCreateInfo, nullptr, &mVkInstance);
 		if (VK_ERROR_LAYER_NOT_PRESENT == vkResult && enableValidation)
 		{
 			// Error! Since the show must go on, try creating a Vulkan instance without validation enabled...
-			RENDERER_LOG(mVulkanRenderer.getContext(), WARNING, "Failed to create the Vulkan instance with validation enabled, layer is not present. Install e.g. the LunarG Vulkan SDK.")
+			RENDERER_LOG(mVulkanRenderer.getContext(), WARNING, "Failed to create the Vulkan instance with validation enabled, layer is not present. Install e.g. the LunarG Vulkan SDK and see e.g. https://vulkan.lunarg.com/doc/view/1.0.51.0/windows/layers.html .")
 			mValidationEnabled = false;
 			vkResult = createVulkanInstance(mValidationEnabled);
 		}
@@ -395,14 +477,19 @@ namespace VulkanRenderer
 		IMPORT_FUNC(vkGetPhysicalDeviceSurfaceFormatsKHR);
 		IMPORT_FUNC(vkGetPhysicalDeviceSurfaceCapabilitiesKHR);
 		IMPORT_FUNC(vkGetPhysicalDeviceSurfacePresentModesKHR);
-		#ifdef _WIN32
+		#ifdef VK_USE_PLATFORM_WIN32_KHR
 			IMPORT_FUNC(vkCreateWin32SurfaceKHR);
+		#elif defined VK_USE_PLATFORM_ANDROID_KHR
+			#warning "TODO(co) Not tested"
+			IMPORT_FUNC(vkCreateAndroidSurfaceKHR);
+		#elif defined VK_USE_PLATFORM_XLIB_KHR
+			#warning "TODO(co) Not tested"
+			IMPORT_FUNC(vkCreateXlibSurfaceKHR);
+		#elif defined VK_USE_PLATFORM_XCB_KHR
+			#warning "TODO(co) Not tested"
+			IMPORT_FUNC(vkCreateXcbSurfaceKHR);
 		#else
-			#ifdef __ANDROID__
-				IMPORT_FUNC(vkCreateAndroidSurfaceKHR);
-			#else
-				IMPORT_FUNC(vkCreateXcbSurfaceKHR);
-			#endif
+			#error "Unsupported platform"
 		#endif
 
 		// Undefine the helper macro

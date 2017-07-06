@@ -846,6 +846,11 @@ namespace Direct3D10Renderer
 			}
 			mD3D10Device->RSSetViewports(numberOfViewports, d3dViewports);
 		}
+		else
+		{
+			// Error!
+			assert(false);
+		}
 	}
 
 	void Direct3D10Renderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles)
@@ -857,6 +862,11 @@ namespace Direct3D10Renderer
 			// -> "Renderer::ScissorRectangle" directly maps to Direct3D 9 & 10 & 11, do not change it
 			// -> Let Direct3D 10 perform the index validation for us (the Direct3D 10 debug features are pretty good)
 			mD3D10Device->RSSetScissorRects(numberOfScissorRectangles, reinterpret_cast<const D3D10_RECT*>(scissorRectangles));
+		}
+		else
+		{
+			// Error!
+			assert(false);
 		}
 	}
 

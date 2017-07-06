@@ -1102,6 +1102,11 @@ namespace OpenGLRenderer
 			glViewport(static_cast<GLint>(viewports->topLeftX), static_cast<GLint>(renderTargetHeight - viewports->topLeftY - viewports->height), static_cast<GLsizei>(viewports->width), static_cast<GLsizei>(viewports->height));
 			glDepthRange(static_cast<GLclampf>(viewports->minDepth), static_cast<GLclampf>(viewports->maxDepth));
 		}
+		else
+		{
+			// Error!
+			assert(false);
+		}
 	}
 
 	void OpenGLRenderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles)
@@ -1132,6 +1137,11 @@ namespace OpenGLRenderer
 			const GLsizei width  = scissorRectangles->bottomRightX - scissorRectangles->topLeftX;
 			const GLsizei height = scissorRectangles->bottomRightY - scissorRectangles->topLeftY;
 			glScissor(static_cast<GLint>(scissorRectangles->topLeftX), static_cast<GLint>(renderTargetHeight - scissorRectangles->topLeftY - height), width, height);
+		}
+		else
+		{
+			// Error!
+			assert(false);
 		}
 	}
 

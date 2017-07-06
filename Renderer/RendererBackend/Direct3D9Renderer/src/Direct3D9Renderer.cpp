@@ -793,6 +793,11 @@ namespace Direct3D9Renderer
 			};
 			mDirect3DDevice9->SetViewport(&direct3D9Viewport);
 		}
+		else
+		{
+			// Error!
+			assert(false);
+		}
 	}
 
 	void Direct3D9Renderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles)
@@ -810,6 +815,11 @@ namespace Direct3D9Renderer
 			}
 		#endif
 			mDirect3DDevice9->SetScissorRect(reinterpret_cast<const RECT*>(scissorRectangles));
+		}
+		else
+		{
+			// Error!
+			assert(false);
 		}
 	}
 

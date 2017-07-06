@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 #include "VulkanRenderer/RenderTarget/SwapChain.h"
 #include "VulkanRenderer/VulkanRenderer.h"
-#include "VulkanRenderer/IVulkanContext.h"
+#include "VulkanRenderer/VulkanContext.h"
 #include "VulkanRenderer/Helper.h"
 
 
@@ -47,32 +47,34 @@ namespace VulkanRenderer
 	{
 		// Get the Vulkan instance and the Vulkan physical device
 		const VkInstance vkInstance = vulkanRenderer.getVulkanRuntimeLinking().getVkInstance();
-		const IVulkanContext& vulkanContext = vulkanRenderer.getVulkanContext();
+		const VulkanContext& vulkanContext = vulkanRenderer.getVulkanContext();
 		const VkPhysicalDevice vkPhysicalDevice = vulkanContext.getVkPhysicalDevice();
 		const VkDevice vkDevice = vulkanContext.getVkDevice();
 
 		// Create Vulkan surface instance depending on OS
-		#ifdef _WIN32
+		#ifdef VK_USE_PLATFORM_WIN32_KHR
 			VkWin32SurfaceCreateInfoKHR vkWin32SurfaceCreateInfoKHR = {};
 			vkWin32SurfaceCreateInfoKHR.sType	  = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
 			vkWin32SurfaceCreateInfoKHR.hinstance = reinterpret_cast<HINSTANCE>(::GetWindowLongPtr(reinterpret_cast<HWND>(nativeWindowHandle), GWLP_HINSTANCE));
 			vkWin32SurfaceCreateInfoKHR.hwnd	  = reinterpret_cast<HWND>(nativeWindowHandle);
 			VkResult vkResult = vkCreateWin32SurfaceKHR(vkInstance, &vkWin32SurfaceCreateInfoKHR, nullptr, &mVkSurfaceKHR);
+		#elif defined VK_USE_PLATFORM_ANDROID_KHR
+			#warning "TODO(co) Not tested"	// See https://github.com/SaschaWillems/Vulkan
+			VkAndroidSurfaceCreateInfoKHR vkAndroidSurfaceCreateInfoKHR = {};
+			vkAndroidSurfaceCreateInfoKHR.sType  = VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR;
+			vkAndroidSurfaceCreateInfoKHR.window = window;
+			VkResult vkResult = vkCreateAndroidSurfaceKHR(vkInstance, &vkAndroidSurfaceCreateInfoKHR, nullptr, &mVkSurfaceKHR);
+		#elif defined VK_USE_PLATFORM_XLIB_KHR
+			#error "TODO(co) Implement me"
+		#elif defined VK_USE_PLATFORM_XCB_KHR
+			#warning "TODO(co) Not tested"	// See https://github.com/SaschaWillems/Vulkan
+			VkXcbSurfaceCreateInfoKHR vkXcbSurfaceCreateInfoKHR = {};
+			vkXcbSurfaceCreateInfoKHR.sType		 = VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR;
+			vkXcbSurfaceCreateInfoKHR.connection = connection;
+			vkXcbSurfaceCreateInfoKHR.window	 = window;
+			VkResult vkResult = vkCreateXcbSurfaceKHR(vkInstance, &vkXcbSurfaceCreateInfoKHR, nullptr, &mVkSurfaceKHR);
 		#else
-			#ifdef __ANDROID__
-				// TODO(co) Not tested - see https://github.com/SaschaWillems/Vulkan
-				VkAndroidSurfaceCreateInfoKHR vkAndroidSurfaceCreateInfoKHR = {};
-				vkAndroidSurfaceCreateInfoKHR.sType  = VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR;
-				vkAndroidSurfaceCreateInfoKHR.window = window;
-				VkResult vkResult = vkCreateAndroidSurfaceKHR(vkInstance, &vkAndroidSurfaceCreateInfoKHR, nullptr, &mVkSurfaceKHR);
-			#else
-				// TODO(co) Not tested - see https://github.com/SaschaWillems/Vulkan
-				VkXcbSurfaceCreateInfoKHR vkXcbSurfaceCreateInfoKHR = {};
-				vkXcbSurfaceCreateInfoKHR.sType		 = VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR;
-				vkXcbSurfaceCreateInfoKHR.connection = connection;
-				vkXcbSurfaceCreateInfoKHR.window	 = window;
-				VkResult vkResult = vkCreateXcbSurfaceKHR(vkInstance, &vkXcbSurfaceCreateInfoKHR, nullptr, &mVkSurfaceKHR);
-			#endif
+			#error "Unsupported platform"
 		#endif
 
 		// Get list of supported surface formats

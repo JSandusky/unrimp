@@ -44,6 +44,8 @@
 #include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
 
+#include <tuple>	// For "std::ignore"
+
 
 //[-------------------------------------------------------]
 //[ Global functions                                      ]
@@ -458,14 +460,18 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Rasterizer (RS) stage                                 ]
 	//[-------------------------------------------------------]
-	void NullRenderer::rsSetViewports(uint32_t, const Renderer::Viewport*)
+	void NullRenderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport* viewports)
 	{
-		// Nothing here
+		std::ignore = numberOfViewports;
+		std::ignore = viewports;
+		assert(numberOfViewports > 0 && nullptr != viewports);
 	}
 
-	void NullRenderer::rsSetScissorRectangles(uint32_t, const Renderer::ScissorRectangle*)
+	void NullRenderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles)
 	{
-		// Nothing here
+		std::ignore = numberOfScissorRectangles;
+		std::ignore = scissorRectangles;
+		assert(numberOfScissorRectangles > 0 && nullptr != scissorRectangles);
 	}
 
 

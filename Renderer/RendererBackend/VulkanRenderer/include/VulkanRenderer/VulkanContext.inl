@@ -28,9 +28,34 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline HDC VulkanContextWindows::getDeviceContext() const
+	bool VulkanContext::isInitialized() const
 	{
-		return mWindowDeviceContext;
+		return (VK_NULL_HANDLE != mSetupVkCommandBuffer);
+	}
+
+	inline VkPhysicalDevice VulkanContext::getVkPhysicalDevice() const
+	{
+		return mVkPhysicalDevice;
+	}
+
+	inline VkDevice VulkanContext::getVkDevice() const
+	{
+		return mVkDevice;
+	}
+
+	inline VkQueue VulkanContext::getGraphicsVkQueue() const
+	{
+		return mGraphicsVkQueue;
+	}
+
+	inline VkCommandPool VulkanContext::getVkCommandPool() const
+	{
+		return mVkCommandPool;
+	}
+
+	inline VkCommandBuffer VulkanContext::getSetupVkCommandBuffer() const
+	{
+		return mSetupVkCommandBuffer;
 	}
 
 

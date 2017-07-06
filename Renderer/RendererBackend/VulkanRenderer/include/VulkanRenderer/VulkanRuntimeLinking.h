@@ -29,21 +29,7 @@
 //[-------------------------------------------------------]
 #include <Renderer/PlatformTypes.h>
 
-#if defined(_WIN32)
-	#define VK_USE_PLATFORM_WIN32_KHR
-#elif defined(__ANDROID__)
-	#define VK_USE_PLATFORM_ANDROID_KHR
-#elif defined(__linux__)
-	#define VK_USE_PLATFORM_XLIB_KHR
-#endif
-#define VK_NO_PROTOTYPES
-
-// Disable warnings in external headers, we can't fix them
-PRAGMA_WARNING_PUSH
-	PRAGMA_WARNING_DISABLE_MSVC(4668)	// Warning	C4668	'<x>' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
-	#include <vulkan/vulkan.h>
-	#undef max	// Get rid of nasty OS macro
-PRAGMA_WARNING_POP
+#include "VulkanRenderer/Vulkan.h"
 
 
 //[-------------------------------------------------------]
@@ -315,14 +301,19 @@ FNPTR(vkDestroySurfaceKHR)
 FNPTR(vkGetPhysicalDeviceSurfaceFormatsKHR)
 FNPTR(vkGetPhysicalDeviceSurfaceCapabilitiesKHR)
 FNPTR(vkGetPhysicalDeviceSurfacePresentModesKHR)
-#ifdef _WIN32
+#ifdef VK_USE_PLATFORM_WIN32_KHR
 	FNPTR(vkCreateWin32SurfaceKHR)
+#elif defined VK_USE_PLATFORM_ANDROID_KHR
+	#warning "TODO(co) Not tested"
+	FNPTR(vkCreateAndroidSurfaceKHR)
+#elif defined VK_USE_PLATFORM_XLIB_KHR
+	#warning "TODO(co) Not tested"
+	FNPTR(vkCreateXlibSurfaceKHR)
+#elif defined VK_USE_PLATFORM_XCB_KHR
+	#warning "TODO(co) Not tested"
+	FNPTR(vkCreateXcbSurfaceKHR)
 #else
-	#ifdef __ANDROID__
-		FNPTR(vkCreateAndroidSurfaceKHR)
-	#else
-		FNPTR(vkCreateXcbSurfaceKHR)
-	#endif
+	#error "Unsupported platform"
 #endif
 
 

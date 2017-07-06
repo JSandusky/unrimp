@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include <Renderer/State/ISamplerState.h>
 
+#include "VulkanRenderer/Vulkan.h"
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -85,6 +87,13 @@ namespace VulkanRenderer
 	private:
 		explicit SamplerState(const SamplerState& source) = delete;
 		SamplerState& operator =(const SamplerState& source) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		VkSampler mVkSampler;	///< Vulkan sampler instance, "VK_NULL_HANDLE" in case of error
 
 
 	};

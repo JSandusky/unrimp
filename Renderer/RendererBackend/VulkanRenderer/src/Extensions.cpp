@@ -42,7 +42,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Extensions::Extensions(IVulkanContext& vulkanContext) :
+	Extensions::Extensions(VulkanContext& vulkanContext) :
 		mVulkanContext(&vulkanContext),
 		mInitialized(false)
 	{

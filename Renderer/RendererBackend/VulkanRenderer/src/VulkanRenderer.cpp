@@ -26,6 +26,7 @@
 #include "VulkanRenderer/Mapping.h"
 #include "VulkanRenderer/Extensions.h"
 #include "VulkanRenderer/RootSignature.h"
+#include "VulkanRenderer/VulkanContext.h"
 #include "VulkanRenderer/VulkanRuntimeLinking.h"
 #include "VulkanRenderer/RenderTarget/SwapChain.h"
 #include "VulkanRenderer/RenderTarget/Framebuffer.h"
@@ -43,11 +44,6 @@
 #include "VulkanRenderer/State/PipelineState.h"
 #include "VulkanRenderer/Shader/ShaderLanguageGlsl.h"
 #include "VulkanRenderer/Shader/ProgramGlsl.h"
-#ifdef WIN32
-	#include "VulkanRenderer/Windows/VulkanContextWindows.h"
-#elif defined LINUX
-	#include "VulkanRenderer/Linux/VulkanContextLinux.h"
-#endif
 
 #include <Renderer/ILog.h>
 #include <Renderer/Buffer/CommandBuffer.h>
@@ -299,6 +295,7 @@ namespace VulkanRenderer
 		mShaderLanguageGlsl(nullptr),
 		mGraphicsRootSignature(nullptr),
 		mDefaultSamplerState(nullptr),
+		mVkCommandBuffer(VK_NULL_HANDLE),
 		mVertexArray(nullptr),
 		mMainSwapChain(nullptr),
 		mRenderTarget(nullptr)
@@ -314,15 +311,8 @@ namespace VulkanRenderer
 		mVulkanRuntimeLinking = new VulkanRuntimeLinking(*this, enableValidation);
 		if (mVulkanRuntimeLinking->isVulkanAvaiable())
 		{
-			const handle nativeWindowHandle = mContext.getNativeWindowHandle();
-			#ifdef WIN32
-				// TODO(co) Add external Vulkan context support
-				mVulkanContext = new VulkanContextWindows(*this, nativeWindowHandle);
-			#elif defined LINUX
-				mVulkanContext = new VulkanContextLinux(*this, nativeWindowHandle, mContext.isUsingExternalContext());
-			#else
-				#error "Unsupported platform"
-			#endif
+			// TODO(co) Add external Vulkan context support
+			mVulkanContext = new VulkanContext(*this);
 
 			// Is the Vulkan context initialized?
 			if (mVulkanContext->isInitialized())
@@ -338,6 +328,39 @@ namespace VulkanRenderer
 				// Initialize the capabilities
 				initializeCapabilities();
 
+				{ // Create Vulkan command buffer instance
+					const VkCommandBufferAllocateInfo vkCommandBufferAllocateInfo =
+					{
+						VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,	// sType (VkStructureType)
+						nullptr,										// pNext (const void*)
+						mVulkanContext->getVkCommandPool(),				// commandPool (VkCommandPool)
+						VK_COMMAND_BUFFER_LEVEL_PRIMARY,				// level (VkCommandBufferLevel)
+						1												// commandBufferCount (uint32_t)
+					};
+					VkResult vkResult = vkAllocateCommandBuffers(mVulkanContext->getVkDevice(), &vkCommandBufferAllocateInfo, &mVkCommandBuffer);
+					if (VK_SUCCESS == vkResult)
+					{
+						const VkCommandBufferBeginInfo vkCommandBufferBeginInfo =
+						{
+							VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,	// sType (VkStructureType)
+							nullptr,										// pNext (const void*)
+							0,												// flags (VkCommandBufferUsageFlags)
+							nullptr,										// pInheritanceInfo (const VkCommandBufferInheritanceInfo*)
+						};
+						vkResult = vkBeginCommandBuffer(mVkCommandBuffer, &vkCommandBufferBeginInfo);
+						if (VK_SUCCESS != vkResult)
+						{
+							// Error!
+							RENDERER_LOG(mContext, CRITICAL, "Failed to begin Vulkan command buffer instance")
+						}
+					}
+					else
+					{
+						// Error!
+						RENDERER_LOG(mContext, CRITICAL, "Failed to create Vulkan command buffer instance")
+					}
+				}
+
 				// Create the default sampler state
 				mDefaultSamplerState = createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
 
@@ -349,6 +372,7 @@ namespace VulkanRenderer
 				}
 
 				// Create a main swap chain instance?
+				const handle nativeWindowHandle = mContext.getNativeWindowHandle();
 				if (NULL_HANDLE != nativeWindowHandle)
 				{
 					// Create a main swap chain instance
@@ -365,6 +389,44 @@ namespace VulkanRenderer
 
 	VulkanRenderer::~VulkanRenderer()
 	{
+		// Destroy Vulkan command buffer instance
+		VkResult vkResult = vkEndCommandBuffer(mVkCommandBuffer);
+		if (VK_SUCCESS == vkResult)
+		{
+			const VkSubmitInfo vkSubmitInfo =
+			{
+				VK_STRUCTURE_TYPE_SUBMIT_INFO,	// sType (VkStructureType)
+				nullptr,						// pNext (const void*)
+				0,								// waitSemaphoreCount (uint32_t)
+				nullptr,						// pWaitSemaphores (const VkSemaphore*)
+				nullptr,						// pWaitDstStageMask (const VkPipelineStageFlags*)
+				1,								// commandBufferCount (uint32_t)
+				&mVkCommandBuffer,				// pCommandBuffers (const VkCommandBuffer*)
+				0,								// signalSemaphoreCount (uint32_t)
+				nullptr							// pSignalSemaphores (const VkSemaphore*)
+			};
+			vkResult = vkQueueSubmit(mVulkanContext->getGraphicsVkQueue(), 1, &vkSubmitInfo, VK_NULL_HANDLE);
+			if (VK_SUCCESS == vkResult)
+			{
+				vkResult = vkQueueWaitIdle(mVulkanContext->getGraphicsVkQueue());
+				if (VK_SUCCESS != vkResult)
+				{
+					// Error!
+					RENDERER_LOG(mContext, CRITICAL, "Failed to wait for Vulkan command buffer instance flush")
+				}
+			}
+			else
+			{
+				// Error!
+				RENDERER_LOG(mContext, CRITICAL, "Failed to submit the Vulkan command buffer instance")
+			}
+		}
+		else
+		{
+			// Error!
+			RENDERER_LOG(mContext, CRITICAL, "Failed to end the Vulkan command buffer instance")
+		}
+
 		// Set no vertex array reference, in case we have one
 		if (nullptr != mVertexArray)
 		{
@@ -624,7 +686,12 @@ namespace VulkanRenderer
 		// Are the given viewports valid?
 		if (numberOfViewports > 0 && nullptr != viewports)
 		{
-			// TODO(co) Implement me
+			vkCmdSetViewport(mVkCommandBuffer, 0, numberOfViewports, reinterpret_cast<const VkViewport*>(viewports));
+		}
+		else
+		{
+			// Error!
+			assert(false);
 		}
 	}
 
@@ -633,7 +700,18 @@ namespace VulkanRenderer
 		// Are the given scissor rectangles valid?
 		if (numberOfScissorRectangles > 0 && nullptr != scissorRectangles)
 		{
-			// TODO(co) Implement me
+			// TODO(co) Add support for multiple scissor rectangles. Change "Renderer::ScissorRectangle" to Vulkan style to make it the primary API on the long run?
+			const VkRect2D vkRect2D =
+			{
+				{ static_cast<int32_t>(scissorRectangles[0].topLeftX), static_cast<int32_t>(scissorRectangles[0].topLeftY) },
+				{ static_cast<uint32_t>(scissorRectangles[0].bottomRightX - scissorRectangles[0].topLeftX), static_cast<uint32_t>(scissorRectangles[0].bottomRightY - scissorRectangles[0].topLeftY) }
+			};
+			vkCmdSetScissor(mVkCommandBuffer, 0, 1, &vkRect2D);
+		}
+		else
+		{
+			// Error!
+			assert(false);
 		}
 	}
 

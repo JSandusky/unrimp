@@ -29,7 +29,7 @@
 //[-------------------------------------------------------]
 namespace VulkanRenderer
 {
-	class IVulkanContext;
+	class VulkanContext;
 }
 
 
@@ -71,7 +71,7 @@ namespace VulkanRenderer
 		*  @param[in] vulkanContext
 		*    Owner Vulkan context
 		*/
-		explicit Extensions(IVulkanContext& vulkanContext);
+		explicit Extensions(VulkanContext& vulkanContext);
 
 		/**
 		*  @brief
@@ -163,8 +163,8 @@ namespace VulkanRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IVulkanContext* mVulkanContext;	///< Owner Vulkan context, always valid!
-		bool			mInitialized;	///< Are the extensions initialized?
+		VulkanContext* mVulkanContext;	///< Owner Vulkan context, always valid!
+		bool		   mInitialized;	///< Are the extensions initialized?
 
 		// Supported extensions
 		// TODO(co) Implement me

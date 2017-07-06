@@ -27,10 +27,18 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "VulkanRenderer/IVulkanContext.h"
-
 #include <Renderer/PlatformTypes.h>
-#include <Renderer/LinuxHeader.h>
+
+#include "VulkanRenderer/VulkanRuntimeLinking.h"
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace VulkanRenderer
+{
+	class VulkanRenderer;
+}
 
 
 //[-------------------------------------------------------]
@@ -45,9 +53,9 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Linux Vulkan context class
+	*    Vulkan context class
 	*/
-	class VulkanContextLinux : public IVulkanContext
+	class VulkanContext
 	{
 
 
@@ -61,55 +69,94 @@ namespace VulkanRenderer
 		*
 		*  @param[in] vulkanRenderer
 		*    Owner Vulkan renderer instance
-		*  @param[in] nativeWindowHandle
-		*    Optional native main window handle, can be a null handle
-		*  @param[in] useExternalContext
-		*    When true an own Vulkan context won't be created
 		*/
-		VulkanContextLinux(VulkanRenderer& vulkanRenderer, handle nativeWindowHandle, bool useExternalContext);
+		explicit VulkanContext(VulkanRenderer& vulkanRenderer);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~VulkanContextLinux();
+		~VulkanContext();
 
 		/**
 		*  @brief
-		*    Return the primary device context
+		*    Return whether or not the content is initialized
 		*
 		*  @return
-		*    The primary device context, null pointer on error
+		*    "true" if the context is initialized, else "false"
 		*/
-		inline Display *getDisplay() const;
+		inline bool isInitialized() const;
 
 		/**
 		*  @brief
-		*    Return the primary render context
+		*    Return the Vulkan physical device this context is using
 		*
 		*  @return
-		*    The primary render context, null pointer on error
+		*    The Vulkan physical device this context is using
 		*/
-		inline GLXContext getRenderContext() const;
+		inline VkPhysicalDevice getVkPhysicalDevice() const;
+
+		/**
+		*  @brief
+		*    Return the Vulkan device this context is using
+		*
+		*  @return
+		*    The Vulkan device this context is using
+		*/
+		inline VkDevice getVkDevice() const;
+
+		/**
+		*  @brief
+		*    Return the handle to the Vulkan device graphics queue that command buffers are submitted to
+		*
+		*  @return
+		*    Handle to the Vulkan device graphics queue that command buffers are submitted to
+		*/
+		inline VkQueue getGraphicsVkQueue() const;
+
+		/**
+		*  @brief
+		*    Return the used Vulkan command buffer pool instance
+		*
+		*  @return
+		*    The used Vulkan command buffer pool instance
+		*/
+		inline VkCommandPool getVkCommandPool() const;
+
+		/**
+		*  @brief
+		*    Return the Vulkan command buffer instance used for setup
+		*
+		*  @return
+		*    The Vulkan command buffer instance used for setup
+		*/
+		inline VkCommandBuffer getSetupVkCommandBuffer() const;
+
+		/**
+		*  @brief
+		*    Flush the used Vulkan command buffer instance
+		*/
+		void flushSetupVkCommandBuffer() const;
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual VulkanRenderer::IVulkanContext methods ]
+	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	public:
-		inline virtual bool isInitialized() const override;
-		virtual void makeCurrent() const override;
+	protected:
+		explicit VulkanContext(const VulkanContext& source) = delete;
+		VulkanContext& operator =(const VulkanContext& source) = delete;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		handle		 mNativeWindowHandle;	///< Vulkan window, can be a null pointer (Window)
-		handle		 mDummyWindow;			///< Vulkan dummy window, can be a null pointer (Window)
-		Display		*mDisplay;				///< The device context of the Vulkan dummy window, can be a null pointer
-		XVisualInfo *m_pDummyVisualInfo;
-		bool		 mUseExternalContext;
+		VulkanRenderer&  mVulkanRenderer;		///< Owner Vulkan renderer instance
+		VkPhysicalDevice mVkPhysicalDevice;		///< Vulkan physical device this context is using
+		VkDevice		 mVkDevice;				///< Vulkan device instance this context is using (equivalent of a OpenGL context or Direct3D 11 device)
+		VkQueue			 mGraphicsVkQueue;		///< Handle to the Vulkan device graphics queue that command buffers are submitted to
+		VkCommandPool	 mVkCommandPool;		///< Vulkan command buffer pool instance
+		VkCommandBuffer  mSetupVkCommandBuffer;	///< Vulkan command buffer instance used for setup
 
 
 	};
@@ -124,4 +171,4 @@ namespace VulkanRenderer
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "VulkanRenderer/Linux/VulkanContextLinux.inl"
+#include "VulkanRenderer/VulkanContext.inl"

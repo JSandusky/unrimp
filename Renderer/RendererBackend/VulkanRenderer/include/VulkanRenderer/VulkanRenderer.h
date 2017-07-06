@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include <Renderer/IRenderer.h>
 
+#include "VulkanRenderer/Vulkan.h"
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -43,7 +45,7 @@ namespace VulkanRenderer
 	class Extensions;
 	class VertexArray;
 	class RootSignature;
-	class IVulkanContext;
+	class VulkanContext;
 	class VulkanRuntimeLinking;
 }
 
@@ -124,7 +126,7 @@ namespace VulkanRenderer
 		*  @return
 		*    The Vulkan context instance, do not free the memory the reference is pointing to
 		*/
-		inline const IVulkanContext& getVulkanContext() const;
+		inline const VulkanContext& getVulkanContext() const;
 
 		/**
 		*  @brief
@@ -259,11 +261,12 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	private:
 		VulkanRuntimeLinking*	   mVulkanRuntimeLinking;	///< Vulkan runtime linking instance, always valid
-		IVulkanContext*			   mVulkanContext;			///< Vulkan context instance, always valid
+		VulkanContext*			   mVulkanContext;			///< Vulkan context instance, always valid
 		Extensions*				   mExtensions;				///< Extensions instance, always valid
 		Renderer::IShaderLanguage* mShaderLanguageGlsl;		///< GLSL shader language instance (we keep a reference to it), can be a null pointer
 		RootSignature*			   mGraphicsRootSignature;	///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
 		Renderer::ISamplerState*   mDefaultSamplerState;	///< Default rasterizer state (we keep a reference to it), can be a null pointer
+		VkCommandBuffer			   mVkCommandBuffer;		///< Vulkan command buffer instance
 		//[-------------------------------------------------------]
 		//[ Input-assembler (IA) stage                            ]
 		//[-------------------------------------------------------]

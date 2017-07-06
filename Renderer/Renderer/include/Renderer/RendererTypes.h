@@ -204,10 +204,10 @@ namespace Renderer
 	*    Viewport
 	*
 	*  @note
-	*    - This structure directly maps to Direct3D 11 & 12, do not change it
+	*    - This structure directly maps to Direct3D 11 & 12 as well as Vulkan, do not change it
 	*
 	*  @see
-	*    - "D3D12_VIEWPORT"-documentation for details
+	*    - "D3D12_VIEWPORT" or "VkViewport" documentation for details
 	*/
 	struct Viewport
 	{

@@ -74,17 +74,16 @@ set(SOURCE_CODES
 	src/Texture/TextureManager.cpp
 	src/Extensions.cpp
 	src/Helper.cpp
-	src/IVulkanContext.cpp
 	src/Mapping.cpp
 	src/RootSignature.cpp
 	src/VulkanRenderer.cpp
+	src/VulkanContext.cpp
 	src/VulkanRuntimeLinking.cpp
 )
 if(WIN32)
 	# Windows source codes
 	set(SOURCE_CODES
 		${SOURCE_CODES}
-		src/Windows/VulkanContextWindows.cpp
 		src/Windows/ExtensionsWindows.cpp
 	)
 endif()
@@ -92,7 +91,6 @@ if(UNIX)
 	# Linux source codes
 	set(SOURCE_CODES
 		${SOURCE_CODES}
-		src/Linux/VulkanContextLinux.cpp
 		src/Linux/ExtensionsLinux.cpp
 	)
 endif()

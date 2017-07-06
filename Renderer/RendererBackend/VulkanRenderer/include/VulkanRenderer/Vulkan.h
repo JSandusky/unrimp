@@ -19,51 +19,27 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "VulkanRenderer/Linux/VulkanContextLinux.h"
-#include "VulkanRenderer/Extensions.h"
-#include "VulkanRenderer/VulkanRuntimeLinking.h"
+#if defined(_WIN32)
+	#define VK_USE_PLATFORM_WIN32_KHR
+#elif defined(__ANDROID__)
+	#define VK_USE_PLATFORM_ANDROID_KHR
+#elif defined(LINUX)
+	#warning "TODO(co) Not tested. Use XLIB or XCB?"
+	#define VK_USE_PLATFORM_XLIB_KHR
+#endif
+#define VK_NO_PROTOTYPES
 
-
-//[-------------------------------------------------------]
-//[ Namespace                                             ]
-//[-------------------------------------------------------]
-namespace VulkanRenderer
-{
-
-
-	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	VulkanContextLinux::VulkanContextLinux(VulkanRenderer& vulkanRenderer, handle nativeWindowHandle, bool useExternalContext) :
-		IVulkanContext(vulkanRenderer),
-		mNativeWindowHandle(nativeWindowHandle),
-		mDummyWindow(NULL_HANDLE),
-		mDisplay(nullptr),
-		m_pDummyVisualInfo(nullptr),
-		mWindowRenderContext(NULL_HANDLE),
-		mUseExternalContext(useExternalContext)
-	{
-		// TODO(co) Implement me
-	}
-
-	VulkanContextLinux::~VulkanContextLinux()
-	{
-		// TODO(co) Implement me
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual VulkanRenderer::IVulkanContext methods ]
-	//[-------------------------------------------------------]
-	void VulkanContextLinux::makeCurrent() const
-	{
-		// TODO(co) Implement me
-	}
-
-
-//[-------------------------------------------------------]
-//[ Namespace                                             ]
-//[-------------------------------------------------------]
-} // VulkanRenderer
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4668)	// Warning	C4668	'<x>' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+	#include <vulkan/vulkan.h>
+	#undef max	// Get rid of nasty OS macro
+PRAGMA_WARNING_POP
