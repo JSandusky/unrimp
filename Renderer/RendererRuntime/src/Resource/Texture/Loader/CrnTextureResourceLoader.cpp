@@ -71,7 +71,7 @@ namespace RendererRuntime
 			delete [] mFileData;
 			mFileData = new uint8_t[mNumberOfFileDataBytes];
 		}
-		file.read(mFileData, mNumberOfFileDataBytes);
+		file.read(mFileData, mNumberOfUsedFileDataBytes);
 	}
 
 	void CrnTextureResourceLoader::onProcessing()
@@ -80,7 +80,7 @@ namespace RendererRuntime
 
 		// Decompress/transcode CRN to DDS
 		crnd::crn_texture_info crnTextureInfo;
-		if (!crnd::crnd_get_texture_info(mFileData, mNumberOfFileDataBytes, &crnTextureInfo))
+		if (!crnd::crnd_get_texture_info(mFileData, mNumberOfUsedFileDataBytes, &crnTextureInfo))
 		{
 			//return error("crnd_get_texture_info() failed!\n");
 			assert(false);
@@ -135,7 +135,7 @@ namespace RendererRuntime
 		// Does the data contain mipmaps?
 		mDataContainsMipmaps = (crnTextureInfo.m_levels > 1);
 
-		crnd::crnd_unpack_context crndUnpackContext = crnd::crnd_unpack_begin(mFileData, mNumberOfFileDataBytes);
+		crnd::crnd_unpack_context crndUnpackContext = crnd::crnd_unpack_begin(mFileData, mNumberOfUsedFileDataBytes);
 		if (nullptr == crndUnpackContext)
 		{
 		//	return error("crnd_unpack_begin() failed!\n");
