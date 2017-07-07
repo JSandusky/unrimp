@@ -214,7 +214,7 @@ namespace OpenGLRenderer
 									RENDERER_LOG(mOpenGLRenderer.getContext(), DEBUG, "Number of supported OpenGL extensions: %d", numberOfExtensions)
 									for (GLuint extensionIndex = 0; extensionIndex < static_cast<GLuint>(numberOfExtensions); ++extensionIndex)
 									{
-										RENDERER_LOG(mOpenGLRenderer.getContext(), DEBUG, glGetStringi(GL_EXTENSIONS, extensionIndex))
+										RENDERER_LOG(mOpenGLRenderer.getContext(), DEBUG, "%s", glGetStringi(GL_EXTENSIONS, extensionIndex))
 									}
 								}
 							}
@@ -269,6 +269,7 @@ namespace OpenGLRenderer
 					GLX_CONTEXT_MAJOR_VERSION_ARB, 4,
 					GLX_CONTEXT_MINOR_VERSION_ARB, 1,
 					// -> "GLX_CONTEXT_DEBUG_BIT_ARB" comes from the "GL_ARB_debug_output"-extension
+					GLX_CONTEXT_FLAGS_ARB, GLX_CONTEXT_DEBUG_BIT_ARB,
 					// TODO(co) Make it possible to activate "GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB" from the outside
 					#ifdef RENDERER_OUTPUT_DEBUG
 					//	GLX_CONTEXT_FLAGS_ARB, GLX_CONTEXT_DEBUG_BIT_ARB,

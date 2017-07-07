@@ -24,7 +24,7 @@
 #include "PrecompiledHeader.h"
 #include "ConsoleExampleRunner.h"
 #include "Framework/PlatformTypes.h"
-#include "Framework/CmdLineArgs.h"
+#include "Framework/CommandLineArguments.h"
 
 #include <iostream>
 
@@ -45,7 +45,7 @@ void ConsoleExampleRunner::printUsage(const ExampleRunner::AvailableExamplesMap&
 		std::cout << "\t" << *it << '\n';
 }
 
-int ConsoleExampleRunner::run(const CmdLineArgs& args)
+int ConsoleExampleRunner::run(const CommandLineArguments& args)
 {
 	if(!parseArgs(args)) {
 		printUsage(m_availableExamples, m_availableRenderer);
@@ -54,17 +54,17 @@ int ConsoleExampleRunner::run(const CmdLineArgs& args)
 	return runExample(m_rendererName, m_exampleName);
 }
 
-bool ConsoleExampleRunner::parseArgs(const CmdLineArgs &args) {
-	unsigned int length = args.GetCount();
+bool ConsoleExampleRunner::parseArgs(const CommandLineArguments &args) {
+	uint32_t length = args.getCount();
 	for(unsigned int i = 0; i < length; ++i) {
-		std::string arg = args.GetArg(i); 
+		std::string arg = args.getArgumentAtIndex(i); 
 		if (arg != "-r") {
 			m_exampleName = arg;
 		}
 		else {
 			if (i+1 < length) {
 				++i;
-				m_rendererName = args.GetArg(i);
+				m_rendererName = args.getArgumentAtIndex(i);
 			}
 			else
 			{

@@ -24,7 +24,7 @@
 #include "PrecompiledHeader.h"
 #include "ExampleRunner.h"
 #include "Framework/PlatformTypes.h"
-#include "Framework/CmdLineArgs.h"
+#include "Framework/CommandLineArguments.h"
 #include "IApplicationRenderer.h"
 #include "IApplicationRendererRuntime.h"
 // Basics
