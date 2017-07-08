@@ -33,6 +33,11 @@ namespace VulkanRenderer
 		return (VK_NULL_HANDLE != mSetupVkCommandBuffer);
 	}
 
+	inline VulkanRenderer& VulkanContext::getVulkanRenderer() const
+	{
+		return mVulkanRenderer;
+	}
+
 	inline VkPhysicalDevice VulkanContext::getVkPhysicalDevice() const
 	{
 		return mVkPhysicalDevice;
@@ -41,6 +46,11 @@ namespace VulkanRenderer
 	inline VkDevice VulkanContext::getVkDevice() const
 	{
 		return mVkDevice;
+	}
+
+	inline uint32_t VulkanContext::getGraphicsQueueFamilyIndex() const
+	{
+		return mGraphicsQueueFamilyIndex;
 	}
 
 	inline VkQueue VulkanContext::getGraphicsVkQueue() const

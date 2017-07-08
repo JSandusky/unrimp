@@ -89,6 +89,15 @@ namespace VulkanRenderer
 
 		/**
 		*  @brief
+		*    Return the owner Vulkan renderer instance
+		*
+		*  @return
+		*    Owner Vulkan renderer instance
+		*/
+		inline VulkanRenderer& getVulkanRenderer() const;
+
+		/**
+		*  @brief
 		*    Return the Vulkan physical device this context is using
 		*
 		*  @return
@@ -104,6 +113,15 @@ namespace VulkanRenderer
 		*    The Vulkan device this context is using
 		*/
 		inline VkDevice getVkDevice() const;
+
+		/**
+		*  @brief
+		*    Return the used graphics queue family index
+		*
+		*  @return
+		*    Graphics queue family index, ~0u if invalid
+		*/
+		inline uint32_t getGraphicsQueueFamilyIndex() const;
 
 		/**
 		*  @brief
@@ -151,12 +169,13 @@ namespace VulkanRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		VulkanRenderer&  mVulkanRenderer;		///< Owner Vulkan renderer instance
-		VkPhysicalDevice mVkPhysicalDevice;		///< Vulkan physical device this context is using
-		VkDevice		 mVkDevice;				///< Vulkan device instance this context is using (equivalent of a OpenGL context or Direct3D 11 device)
-		VkQueue			 mGraphicsVkQueue;		///< Handle to the Vulkan device graphics queue that command buffers are submitted to
-		VkCommandPool	 mVkCommandPool;		///< Vulkan command buffer pool instance
-		VkCommandBuffer  mSetupVkCommandBuffer;	///< Vulkan command buffer instance used for setup
+		VulkanRenderer&  mVulkanRenderer;			///< Owner Vulkan renderer instance
+		VkPhysicalDevice mVkPhysicalDevice;			///< Vulkan physical device this context is using
+		VkDevice		 mVkDevice;					///< Vulkan device instance this context is using (equivalent of a OpenGL context or Direct3D 11 device)
+		uint32_t		 mGraphicsQueueFamilyIndex;	///< Graphics queue family index, ~0u if invalid
+		VkQueue			 mGraphicsVkQueue;			///< Handle to the Vulkan device graphics queue that command buffers are submitted to
+		VkCommandPool	 mVkCommandPool;			///< Vulkan command buffer pool instance
+		VkCommandBuffer  mSetupVkCommandBuffer;		///< Vulkan command buffer instance used for setup
 
 
 	};

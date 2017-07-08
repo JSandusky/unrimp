@@ -103,35 +103,41 @@ namespace VulkanRenderer
 
 
 	//[-------------------------------------------------------]
-	//[ Private definitions                                   ]
-	//[-------------------------------------------------------]
-	private:
-		typedef struct _SwapChainBuffers
-		{
-			VkImage		image;
-			VkImageView view;
-		} SwapChainBuffer;
-
-
-	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
 		explicit SwapChain(const SwapChain& source) = delete;
 		SwapChain& operator =(const SwapChain& source) = delete;
+		void createVulkanSwapChain();
+		void destroyVulkanSwapChain();
+
+
+	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		struct SwapChainBuffer
+		{
+			VkImage		  vkImage		= VK_NULL_HANDLE;	///< Vulkan image, don't destroy since we don't own it
+			VkImageView   vkImageView	= VK_NULL_HANDLE;	///< Vulkan image view, destroy if no longer needed
+			VkFramebuffer vkFramebuffer	= VK_NULL_HANDLE;	///< Vulkan framebuffer, destroy if no longer needed
+		};
+		typedef std::vector<SwapChainBuffer> SwapChainBuffers;
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		handle						 mNativeWindowHandle;	///< Native window handle window, can be a null handle
-		VkSurfaceKHR				 mVkSurfaceKHR;
-		VkSwapchainKHR				 mVkSwapchainKHR;
-		uint32_t					 mSwapchainImageCount;
-		std::vector<VkImage>		 mVkImages;
-		std::vector<SwapChainBuffer> mSwapChainBuffer;
-		Renderer::IRenderWindow*	 mRenderWindow;			///< Render window instance, can be a null pointer, don't destroy the instance since we don't own it
+		// Operation system window
+		handle					 mNativeWindowHandle;	///< Native window handle window, can be a null handle
+		Renderer::IRenderWindow* mRenderWindow;			///< Render window instance, can be a null pointer, don't destroy the instance since we don't own it
+		// Vulkan presentation surface
+		VkSurfaceKHR			 mVkSurfaceKHR;			///< Vulkan presentation surface, destroy if no longer needed
+		// Vulkan swap chain and render target related
+		VkSwapchainKHR			 mVkSwapchainKHR;		///< Vulkan swap chain, destroy if no longer needed
+		VkRenderPass			 mVkRenderPass;			///< Vulkan render pass, destroy if no longer needed
+		SwapChainBuffers		 mSwapChainBuffer;
 
 
 	};

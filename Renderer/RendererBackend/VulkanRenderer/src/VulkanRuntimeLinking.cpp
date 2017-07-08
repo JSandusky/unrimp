@@ -40,6 +40,7 @@
 #endif
 
 #include <vector>
+#include <sstream>
 
 
 //[-------------------------------------------------------]
@@ -73,6 +74,102 @@ namespace
 
 			// The extension isn't available
 			return false;
+		}
+
+		const char* vkDebugReportObjectTypeToString(VkDebugReportObjectTypeEXT vkDebugReportObjectTypeEXT)
+		{
+			// Define helper macro
+			#define VALUE(value) case value: return #value;
+
+			// Evaluate
+			switch (vkDebugReportObjectTypeEXT)
+			{
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_SEMAPHORE_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_FENCE_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_EVENT_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_QUERY_POOL_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_VIEW_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_SHADER_MODULE_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_CACHE_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_LAYOUT_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_FRAMEBUFFER_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_POOL_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_SURFACE_KHR_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_SWAPCHAIN_KHR_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_OBJECT_TABLE_NVX_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_KHR_EXT)
+				// VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_BEGIN_RANGE_EXT)	- Not possible due to identical value
+				// VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_END_RANGE_EXT)		- Not possible due to identical value
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_RANGE_SIZE_EXT)
+				VALUE(VK_DEBUG_REPORT_OBJECT_TYPE_MAX_ENUM_EXT)
+			}
+
+			// Undefine helper macro
+			#undef VALUE
+
+			// Error!
+			return nullptr;
+		}
+
+		VKAPI_ATTR VkBool32 VKAPI_CALL debugReportCallback(VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT objectType, uint64_t object, size_t location, int32_t messageCode, const char* pLayerPrefix, const char* pMessage, void* pUserData)
+		{
+			const Renderer::Context* context = static_cast<const Renderer::Context*>(pUserData);
+
+			// Get log message type
+			// -> Vulkan is using a flags combination, map it to our log message type enumeration
+			Renderer::ILog::Type type = Renderer::ILog::Type::TRACE;
+			if ((flags & VK_DEBUG_REPORT_ERROR_BIT_EXT) != 0)
+			{
+				type = Renderer::ILog::Type::CRITICAL;
+			}
+			else if ((flags & VK_DEBUG_REPORT_WARNING_BIT_EXT) != 0 || (flags & VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT) != 0)
+			{
+				type = Renderer::ILog::Type::WARNING;
+			}
+			else if ((flags & VK_DEBUG_REPORT_INFORMATION_BIT_EXT) != 0)
+			{
+				type = Renderer::ILog::Type::INFORMATION;
+			}
+			else if ((flags & VK_DEBUG_REPORT_DEBUG_BIT_EXT) != 0)
+			{
+				type = Renderer::ILog::Type::DEBUG;
+			}
+
+			// Construct the log message
+			std::stringstream message;
+			message << "Vulkan debug report callback: ";
+			message << "Object type: \"" << vkDebugReportObjectTypeToString(objectType) << "\" ";
+			message << "Object: \"" << object << "\" ";
+			message << "Location: \"" << location << "\" ";
+			message << "Message code: \"" << messageCode << "\" ";
+			message << "Layer prefix: \"" << pLayerPrefix << "\" ";
+			message << "Message: \"" << pMessage << "\" ";
+
+			// Print log message
+			context->getLog().print(type, message.str().c_str());
+
+			// The Vulkan call should not be aborted to have the same behavior with and without validation layers enabled
+			return VK_FALSE;
 		}
 
 
@@ -125,6 +222,7 @@ namespace VulkanRenderer
 		mVulkanSharedLibrary(nullptr),
 		mEntryPointsRegistered(false),
 		mVkInstance(VK_NULL_HANDLE),
+		mVkDebugReportCallbackEXT(VK_NULL_HANDLE),
 		mFunctionsRegistered(false),
 		mInitialized(false)
 	{
@@ -133,6 +231,12 @@ namespace VulkanRenderer
 
 	VulkanRuntimeLinking::~VulkanRuntimeLinking()
 	{
+		// Destroy the Vulkan debug report callback
+		if (VK_NULL_HANDLE != mVkDebugReportCallbackEXT)
+		{
+			vkDestroyDebugReportCallbackEXT(mVkInstance, mVkDebugReportCallbackEXT, nullptr);
+		}
+
 		// Destroy the Vulkan instance
 		if (VK_NULL_HANDLE != mVkInstance)
 		{
@@ -176,6 +280,12 @@ namespace VulkanRenderer
 					{
 						// Load instance based Vulkan function pointers
 						mFunctionsRegistered = loadVulkanFunctions();
+
+						// Setup debug callback
+						if (mFunctionsRegistered && mValidationEnabled)
+						{
+							setupDebugCallback();
+						}
 					}
 					else
 					{
@@ -468,29 +578,42 @@ namespace VulkanRenderer
 		IMPORT_FUNC(vkCmdEndQuery);
 		IMPORT_FUNC(vkCmdResetQueryPool);
 		IMPORT_FUNC(vkCmdCopyQueryPoolResults);
-		IMPORT_FUNC(vkCreateSwapchainKHR);
-		IMPORT_FUNC(vkDestroySwapchainKHR);
-		IMPORT_FUNC(vkGetSwapchainImagesKHR);
-		IMPORT_FUNC(vkAcquireNextImageKHR);
-		IMPORT_FUNC(vkQueuePresentKHR);
+
+		// "VK_EXT_debug_report"-extension
+		IMPORT_FUNC(vkCreateDebugReportCallbackEXT);
+		IMPORT_FUNC(vkDestroyDebugReportCallbackEXT);
+
+		// "VK_KHR_surface"-extension
 		IMPORT_FUNC(vkDestroySurfaceKHR);
+		IMPORT_FUNC(vkGetPhysicalDeviceSurfaceSupportKHR);
 		IMPORT_FUNC(vkGetPhysicalDeviceSurfaceFormatsKHR);
 		IMPORT_FUNC(vkGetPhysicalDeviceSurfaceCapabilitiesKHR);
 		IMPORT_FUNC(vkGetPhysicalDeviceSurfacePresentModesKHR);
 		#ifdef VK_USE_PLATFORM_WIN32_KHR
+			// "VK_KHR_win32_surface"-extension
 			IMPORT_FUNC(vkCreateWin32SurfaceKHR);
 		#elif defined VK_USE_PLATFORM_ANDROID_KHR
+			// "VK_KHR_android_surface"-extension
 			#warning "TODO(co) Not tested"
 			IMPORT_FUNC(vkCreateAndroidSurfaceKHR);
 		#elif defined VK_USE_PLATFORM_XLIB_KHR
+			// "VK_KHR_xlib_surface"-extension
 			#warning "TODO(co) Not tested"
 			IMPORT_FUNC(vkCreateXlibSurfaceKHR);
 		#elif defined VK_USE_PLATFORM_XCB_KHR
+			// "VK_KHR_xcb_surface"-extension
 			#warning "TODO(co) Not tested"
 			IMPORT_FUNC(vkCreateXcbSurfaceKHR);
 		#else
 			#error "Unsupported platform"
 		#endif
+
+		// "VK_KHR_swapchain"-extension
+		IMPORT_FUNC(vkCreateSwapchainKHR);
+		IMPORT_FUNC(vkDestroySwapchainKHR);
+		IMPORT_FUNC(vkGetSwapchainImagesKHR);
+		IMPORT_FUNC(vkAcquireNextImageKHR);
+		IMPORT_FUNC(vkQueuePresentKHR);
 
 		// Undefine the helper macro
 		#undef IMPORT_FUNC
@@ -498,6 +621,30 @@ namespace VulkanRenderer
 
 		// Done
 		return result;
+	}
+
+	void VulkanRuntimeLinking::setupDebugCallback()
+	{
+		// Sanity check
+		assert(mValidationEnabled && "Do only call this method if validation is enabled");
+
+		// The report flags determine what type of messages for the layers will be displayed
+		// -> Use "VK_DEBUG_REPORT_FLAG_BITS_MAX_ENUM_EXT" to get everything, quite verbose
+		const VkDebugReportFlagsEXT vkDebugReportFlagsEXT = VK_DEBUG_REPORT_WARNING_BIT_EXT | VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT | VK_DEBUG_REPORT_ERROR_BIT_EXT;
+
+		// Setup debug callback
+		const VkDebugReportCallbackCreateInfoEXT vkDebugReportCallbackCreateInfoEXT =
+		{
+			VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT,		// sType (VkStructureType)
+			nullptr,														// pNext (const void*)
+			vkDebugReportFlagsEXT,											// flags (VkDebugReportFlagsEXT)
+			::detail::debugReportCallback,									// pfnCallback (PFN_vkDebugReportCallbackEXT)
+			const_cast<Renderer::Context*>(&mVulkanRenderer.getContext())	// pUserData (void*)
+		};
+		if (vkCreateDebugReportCallbackEXT(mVkInstance, &vkDebugReportCallbackCreateInfoEXT, nullptr, &mVkDebugReportCallbackEXT) != VK_SUCCESS)
+		{
+			RENDERER_LOG(mVulkanRenderer.getContext(), WARNING, "Failed to create the Vulkan debug report callback")
+		}
 	}
 
 

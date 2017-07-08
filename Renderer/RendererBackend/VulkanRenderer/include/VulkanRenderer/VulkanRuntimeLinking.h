@@ -162,18 +162,25 @@ namespace VulkanRenderer
 		*/
 		bool loadVulkanFunctions();
 
+		/**
+		*  @brief
+		*    Setup debug callback
+		*/
+		void setupDebugCallback();
+
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		VulkanRenderer&	mVulkanRenderer;		///< Owner Vulkan renderer instance
-		bool			mValidationEnabled;		///< Validation enabled?
-		void*			mVulkanSharedLibrary;	///< Vulkan shared library, can be a null pointer
-		bool			mEntryPointsRegistered;	///< Entry points successfully registered?
-		VkInstance		mVkInstance;			///< Vulkan instance, stores all per-application states
-		bool			mFunctionsRegistered;	///< Instance based Vulkan function pointers registered?
-		bool			mInitialized;			///< Already initialized?
+		VulkanRenderer&			 mVulkanRenderer;			///< Owner Vulkan renderer instance
+		bool					 mValidationEnabled;		///< Validation enabled?
+		void*					 mVulkanSharedLibrary;		///< Vulkan shared library, can be a null pointer
+		bool					 mEntryPointsRegistered;	///< Entry points successfully registered?
+		VkInstance				 mVkInstance;				///< Vulkan instance, stores all per-application states
+		VkDebugReportCallbackEXT mVkDebugReportCallbackEXT;	///< Vulkan debug report callback, can be a null handle
+		bool					 mFunctionsRegistered;		///< Instance based Vulkan function pointers registered?
+		bool					 mInitialized;				///< Already initialized?
 
 
 	};
@@ -292,29 +299,42 @@ FNPTR(vkCmdBeginQuery)
 FNPTR(vkCmdEndQuery)
 FNPTR(vkCmdResetQueryPool)
 FNPTR(vkCmdCopyQueryPoolResults)
-FNPTR(vkCreateSwapchainKHR)
-FNPTR(vkDestroySwapchainKHR)
-FNPTR(vkGetSwapchainImagesKHR)
-FNPTR(vkAcquireNextImageKHR)
-FNPTR(vkQueuePresentKHR)
+
+// "VK_EXT_debug_report"-extension
+FNPTR(vkCreateDebugReportCallbackEXT)
+FNPTR(vkDestroyDebugReportCallbackEXT)
+
+// "VK_KHR_surface"-extension
 FNPTR(vkDestroySurfaceKHR)
+FNPTR(vkGetPhysicalDeviceSurfaceSupportKHR)
 FNPTR(vkGetPhysicalDeviceSurfaceFormatsKHR)
 FNPTR(vkGetPhysicalDeviceSurfaceCapabilitiesKHR)
 FNPTR(vkGetPhysicalDeviceSurfacePresentModesKHR)
 #ifdef VK_USE_PLATFORM_WIN32_KHR
+	// "VK_KHR_win32_surface"-extension
 	FNPTR(vkCreateWin32SurfaceKHR)
 #elif defined VK_USE_PLATFORM_ANDROID_KHR
+	// "VK_KHR_android_surface"-extension
 	#warning "TODO(co) Not tested"
 	FNPTR(vkCreateAndroidSurfaceKHR)
 #elif defined VK_USE_PLATFORM_XLIB_KHR
+	// "VK_KHR_xlib_surface"-extension
 	#warning "TODO(co) Not tested"
 	FNPTR(vkCreateXlibSurfaceKHR)
 #elif defined VK_USE_PLATFORM_XCB_KHR
+	// "VK_KHR_xcb_surface"-extension
 	#warning "TODO(co) Not tested"
 	FNPTR(vkCreateXcbSurfaceKHR)
 #else
 	#error "Unsupported platform"
 #endif
+
+// "VK_KHR_swapchain"-extension
+FNPTR(vkCreateSwapchainKHR)
+FNPTR(vkDestroySwapchainKHR)
+FNPTR(vkGetSwapchainImagesKHR)
+FNPTR(vkAcquireNextImageKHR)
+FNPTR(vkQueuePresentKHR)
 
 
 //[-------------------------------------------------------]
