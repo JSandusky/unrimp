@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "VulkanRenderer/Shader/FragmentShaderGlsl.h"
 #include "VulkanRenderer/Shader/ShaderLanguageGlsl.h"
+#include "VulkanRenderer/VulkanRenderer.h"
+#include "VulkanRenderer/VulkanContext.h"
 #include "VulkanRenderer/Extensions.h"
 
 
@@ -36,21 +38,26 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	FragmentShaderGlsl::FragmentShaderGlsl(VulkanRenderer& vulkanRenderer, const Renderer::ShaderBytecode&) :
-		IFragmentShader(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
+	FragmentShaderGlsl::FragmentShaderGlsl(VulkanRenderer& vulkanRenderer, const Renderer::ShaderBytecode& shaderBytecode) :
+		IFragmentShader(vulkanRenderer),
+		mVkShaderModule(ShaderLanguageGlsl::createVkShaderModuleFromBytecode(vulkanRenderer, shaderBytecode))
 	{
-		// TODO(co) Implement me
+		// Nothing here
 	}
 
-	FragmentShaderGlsl::FragmentShaderGlsl(VulkanRenderer& vulkanRenderer, const char*, Renderer::ShaderBytecode*) :
-		IFragmentShader(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
+	FragmentShaderGlsl::FragmentShaderGlsl(VulkanRenderer& vulkanRenderer, const char* sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
+		IFragmentShader(vulkanRenderer),
+		mVkShaderModule(ShaderLanguageGlsl::createVkShaderModuleFromSourceCode(vulkanRenderer, VK_SHADER_STAGE_FRAGMENT_BIT, sourceCode, shaderBytecode))
 	{
-		// TODO(co) Implement me
+		// Nothing here
 	}
 
 	FragmentShaderGlsl::~FragmentShaderGlsl()
 	{
-		// TODO(co) Implement me
+		if (VK_NULL_HANDLE != mVkShaderModule)
+		{
+			vkDestroyShaderModule(static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), mVkShaderModule, nullptr);
+		}
 	}
 
 

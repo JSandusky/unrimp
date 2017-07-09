@@ -58,7 +58,7 @@ namespace Direct3D9Renderer
 		// Nothing here
 	}
 
-	ID3DXBuffer* ShaderLanguageHlsl::loadShaderFromSourcecode(const char* shaderModel, const char* shaderSource, const char* entryPoint, ID3DXConstantTable** d3dXConstantTable) const
+	ID3DXBuffer* ShaderLanguageHlsl::loadShaderFromSourcecode(const char* shaderModel, const char* sourceCode, const char* entryPoint, ID3DXConstantTable** d3dXConstantTable) const
 	{
 		// TODO(co) Error handling
 
@@ -98,7 +98,7 @@ namespace Direct3D9Renderer
 
 		ID3DXBuffer* d3dXBuffer = nullptr;
 		ID3DXBuffer* d3dXBufferErrorMessages = nullptr;
-		if (D3D_OK != D3DXCompileShader(shaderSource, static_cast<UINT>(strlen(shaderSource)), nullptr, nullptr, entryPoint ? entryPoint : "main", shaderModel, compileFlags, &d3dXBuffer, &d3dXBufferErrorMessages, d3dXConstantTable))
+		if (D3D_OK != D3DXCompileShader(sourceCode, static_cast<UINT>(strlen(sourceCode)), nullptr, nullptr, entryPoint ? entryPoint : "main", shaderModel, compileFlags, &d3dXBuffer, &d3dXBufferErrorMessages, d3dXConstantTable))
 		{
 			RENDERER_LOG(static_cast<Direct3D9Renderer&>(getRenderer()).getContext(), CRITICAL, static_cast<char*>(d3dXBufferErrorMessages->GetBufferPointer()))
 			d3dXBufferErrorMessages->Release();

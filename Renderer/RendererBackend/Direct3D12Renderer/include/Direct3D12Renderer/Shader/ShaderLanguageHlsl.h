@@ -91,7 +91,7 @@ namespace Direct3D12Renderer
 		*
 		*  @param[in] shaderModel
 		*    ASCII shader model (for example "vs_4_0", "gs_4_0", "ps_4_0"), must be a valid pointer
-		*  @param[in] shaderSource
+		*  @param[in] sourceCode
 		*    ASCII shader ASCII source code, must be a valid pointer
 		*  @param[in] entryPoint
 		*    Optional ASCII entry point, if null pointer "main" is used
@@ -99,7 +99,7 @@ namespace Direct3D12Renderer
 		*  @return
 		*    The loaded and compiled shader, can be a null pointer, release the instance if you no longer need it
 		*/
-		ID3DBlob* loadShaderFromSourcecode(const char* shaderModel, const char* shaderSource, const char* entryPoint) const;
+		ID3DBlob* loadShaderFromSourcecode(const char* shaderModel, const char* sourceCode, const char* entryPoint) const;
 
 
 	//[-------------------------------------------------------]

@@ -82,6 +82,15 @@ namespace VulkanRenderer
 		*/
 		virtual ~SwapChain();
 
+		/**
+		*  @brief
+		*    Return the Vulkan render pass
+		*
+		*  @return
+		*    The Vulkan render pass
+		*/
+		inline VkRenderPass getVkRenderPass() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
@@ -130,14 +139,16 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	private:
 		// Operation system window
-		handle					 mNativeWindowHandle;	///< Native window handle window, can be a null handle
-		Renderer::IRenderWindow* mRenderWindow;			///< Render window instance, can be a null pointer, don't destroy the instance since we don't own it
+		handle					 mNativeWindowHandle;			///< Native window handle window, can be a null handle
+		Renderer::IRenderWindow* mRenderWindow;					///< Render window instance, can be a null pointer, don't destroy the instance since we don't own it
 		// Vulkan presentation surface
-		VkSurfaceKHR			 mVkSurfaceKHR;			///< Vulkan presentation surface, destroy if no longer needed
+		VkSurfaceKHR			 mVkSurfaceKHR;					///< Vulkan presentation surface, destroy if no longer needed
 		// Vulkan swap chain and render target related
-		VkSwapchainKHR			 mVkSwapchainKHR;		///< Vulkan swap chain, destroy if no longer needed
-		VkRenderPass			 mVkRenderPass;			///< Vulkan render pass, destroy if no longer needed
+		VkSwapchainKHR			 mVkSwapchainKHR;				///< Vulkan swap chain, destroy if no longer needed
+		VkRenderPass			 mVkRenderPass;					///< Vulkan render pass, destroy if no longer needed
 		SwapChainBuffers		 mSwapChainBuffer;
+		VkSemaphore				 mImageAvailableVkSemaphore;	///< Vulkan semaphore, destroy if no longer needed
+		VkSemaphore				 mRenderingFinishedVkSemaphore;	///< Vulkan semaphore, destroy if no longer needed
 
 
 	};

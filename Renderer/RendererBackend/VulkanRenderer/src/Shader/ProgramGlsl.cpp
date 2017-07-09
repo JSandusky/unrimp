@@ -46,45 +46,58 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	ProgramGlsl::ProgramGlsl(VulkanRenderer& vulkanRenderer, const Renderer::IRootSignature&, const Renderer::VertexAttributes&, VertexShaderGlsl *vertexShaderGlsl, TessellationControlShaderGlsl *tessellationControlShaderGlsl, TessellationEvaluationShaderGlsl *tessellationEvaluationShaderGlsl, GeometryShaderGlsl *geometryShaderGlsl, FragmentShaderGlsl *fragmentShaderGlsl) :
 		IProgram(vulkanRenderer),
-		mNumberOfRootSignatureParameters(0)
+		mVertexShaderGlsl(vertexShaderGlsl),
+		mTessellationControlShaderGlsl(tessellationControlShaderGlsl),
+		mTessellationEvaluationShaderGlsl(tessellationEvaluationShaderGlsl),
+		mGeometryShaderGlsl(geometryShaderGlsl),
+		mFragmentShaderGlsl(fragmentShaderGlsl)
 	{
-		// Attach the shaders to the program
-		// -> We don't need to keep a reference to the shader, to add and release at once to ensure a nice behaviour
-		if (nullptr != vertexShaderGlsl)
+		// Add references to the provided shaders
+		if (nullptr != mVertexShaderGlsl)
 		{
-			vertexShaderGlsl->addReference();
-			// TODO(co) Implement me
-			vertexShaderGlsl->releaseReference();
+			mVertexShaderGlsl->addReference();
 		}
-		if (nullptr != tessellationControlShaderGlsl)
+		if (nullptr != mTessellationControlShaderGlsl)
 		{
-			tessellationControlShaderGlsl->addReference();
-			// TODO(co) Implement me
-			tessellationControlShaderGlsl->releaseReference();
+			mTessellationControlShaderGlsl->addReference();
 		}
-		if (nullptr != tessellationEvaluationShaderGlsl)
+		if (nullptr != mTessellationEvaluationShaderGlsl)
 		{
-			tessellationEvaluationShaderGlsl->addReference();
-			// TODO(co) Implement me
-			tessellationEvaluationShaderGlsl->releaseReference();
+			mTessellationEvaluationShaderGlsl->addReference();
 		}
-		if (nullptr != geometryShaderGlsl)
+		if (nullptr != mGeometryShaderGlsl)
 		{
-			geometryShaderGlsl->addReference();
-			// TODO(co) Implement me
-			geometryShaderGlsl->releaseReference();
+			mGeometryShaderGlsl->addReference();
 		}
-		if (nullptr != fragmentShaderGlsl)
+		if (nullptr != mFragmentShaderGlsl)
 		{
-			fragmentShaderGlsl->addReference();
-			// TODO(co) Implement me
-			fragmentShaderGlsl->releaseReference();
+			mFragmentShaderGlsl->addReference();
 		}
 	}
 
 	ProgramGlsl::~ProgramGlsl()
 	{
-		// TODO(co) Implement me		
+		// Release the shader references
+		if (nullptr != mVertexShaderGlsl)
+		{
+			mVertexShaderGlsl->releaseReference();
+		}
+		if (nullptr != mTessellationControlShaderGlsl)
+		{
+			mTessellationControlShaderGlsl->releaseReference();
+		}
+		if (nullptr != mTessellationEvaluationShaderGlsl)
+		{
+			mTessellationEvaluationShaderGlsl->releaseReference();
+		}
+		if (nullptr != mGeometryShaderGlsl)
+		{
+			mGeometryShaderGlsl->releaseReference();
+		}
+		if (nullptr != mFragmentShaderGlsl)
+		{
+			mFragmentShaderGlsl->releaseReference();
+		}
 	}
 
 

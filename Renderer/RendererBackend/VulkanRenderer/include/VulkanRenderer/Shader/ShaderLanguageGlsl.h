@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include <Renderer/Shader/IShaderLanguage.h>
 
+#include "VulkanRenderer/Vulkan.h"
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -70,17 +72,35 @@ namespace VulkanRenderer
 	public:
 		/**
 		*  @brief
-		*    Creates, loads and compiles a shader from source code
+		*    Create Vulkan shader module from bytecode
 		*
-		*  @param[in] shaderType
-		*    Shader type (for example "GL_VERTEX_SHADER_ARB", type GLenum not used in here in order to keep the header slim)
-		*  @param[in] shaderSource
-		*    Shader ASCII source code, must be a valid pointer (type GLchar not used in here in order to keep the header slim)
+		*  @param[in] vulkanRenderer
+		*    Owner Vulkan renderer instance
+		*  @param[in] shaderBytecode
+		*    Shader SPIR-V bytecode compressed via SMOL-V
 		*
 		*  @return
-		*    The Vulkan shader, 0 on error, destroy the resource if you no longer need it (type "GLuint" not used in here in order to keep the header slim)
+		*    The Vulkan shader module, null handle on error
 		*/
-		static uint32_t loadShaderFromSourcecode(uint32_t shaderType, const char* shaderSource);
+		static VkShaderModule createVkShaderModuleFromBytecode(VulkanRenderer& vulkanRenderer, const Renderer::ShaderBytecode& shaderBytecode);
+
+		/**
+		*  @brief
+		*    Create Vulkan shader module from source code
+		*
+		*  @param[in] vulkanRenderer
+		*    Owner Vulkan renderer instance
+		*  @param[in] vkShaderStageFlagBits
+		*    Vulkan shader stage flag bits (only a single set bit allowed)
+		*  @param[in] sourceCode
+		*    Shader ASCII source code, must be a valid pointer
+		*  @param[out] shaderBytecode
+		*    If not a null pointer, this receives the shader SPIR-V bytecode compressed via SMOL-V
+		*
+		*  @return
+		*    The Vulkan shader module, null handle on error
+		*/
+		static VkShaderModule createVkShaderModuleFromSourceCode(VulkanRenderer& vulkanRenderer, VkShaderStageFlagBits vkShaderStageFlagBits, const char* sourceCode, Renderer::ShaderBytecode* shaderBytecode);
 
 
 	//[-------------------------------------------------------]

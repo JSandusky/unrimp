@@ -43,6 +43,9 @@ namespace Renderer
 	/**
 	*  @brief
 	*    Abstract root signature ("pipeline layout" in Vulkan terminology) interface
+	*
+	*  @note
+	*    - Overview of the binding models of explicit APIs: "Choosing a binding model" - https://github.com/gpuweb/gpuweb/issues/19
 	*/
 	class IRootSignature : public IResource
 	{

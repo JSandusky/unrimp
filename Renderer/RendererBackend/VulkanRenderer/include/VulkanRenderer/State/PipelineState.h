@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include <Renderer/State/IPipelineState.h>
 
+#include "VulkanRenderer/Vulkan.h"
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -88,6 +90,15 @@ namespace VulkanRenderer
 
 		/**
 		*  @brief
+		*    Return the Vulkan graphics pipeline
+		*
+		*  @return
+		*    The Vulkan graphics pipeline
+		*/
+		inline VkPipeline getVkPipeline() const;
+
+		/**
+		*  @brief
 		*    Bind the pipeline state
 		*/
 		void bindPipelineState() const;
@@ -109,6 +120,7 @@ namespace VulkanRenderer
 		RasterizerState*	mRasterizerState;
 		DepthStencilState*	mDepthStencilState;
 		BlendState*			mBlendState;
+		VkPipeline			mVkPipeline;	///< The Vulkan graphics pipeline
 
 
 	};

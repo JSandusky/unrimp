@@ -511,6 +511,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
     <ClInclude Include="src\Basics\FirstTexture\FirstTexture_Null.h" />
     <ClInclude Include="src\Basics\FirstTriangle\FirstTriangle.h" />
     <ClInclude Include="src\Basics\FirstTriangle\FirstTriangle_GLSL_410.h" />
+    <ClInclude Include="src\Basics\FirstTriangle\FirstTriangle_GLSL_450.h" />
     <ClInclude Include="src\Basics\FirstTriangle\FirstTriangle_GLSL_ES3.h" />
     <ClInclude Include="src\Basics\FirstTriangle\FirstTriangle_HLSL_D3D9_D3D10_D3D11_D3D12.h" />
     <ClInclude Include="src\Basics\FirstTriangle\FirstTriangle_Null.h" />

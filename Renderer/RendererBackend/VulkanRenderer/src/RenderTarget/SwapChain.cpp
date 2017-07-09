@@ -332,7 +332,6 @@ namespace
 			VkRenderPass vkRenderPass = VK_NULL_HANDLE;
 			if (vkCreateRenderPass(vkDevice, &vkRenderPassCreateInfo, nullptr, &vkRenderPass) != VK_SUCCESS)
 			{
-				vkRenderPass = VK_NULL_HANDLE;
 				RENDERER_LOG(context, CRITICAL, "Failed to create Vulkan render pass")
 			}
 
@@ -364,7 +363,9 @@ namespace VulkanRenderer
 		mRenderWindow(nullptr),
 		mVkSurfaceKHR(VK_NULL_HANDLE),
 		mVkSwapchainKHR(VK_NULL_HANDLE),
-		mVkRenderPass(VK_NULL_HANDLE)
+		mVkRenderPass(VK_NULL_HANDLE),
+		mImageAvailableVkSemaphore(VK_NULL_HANDLE),
+		mRenderingFinishedVkSemaphore(VK_NULL_HANDLE)
 	{
 		// Create the Vulkan presentation surface instance depending on the operation system
 		const VulkanContext&   vulkanContext	= vulkanRenderer.getVulkanContext();
@@ -375,6 +376,21 @@ namespace VulkanRenderer
 		{
 			// Create the Vulkan swap chain
 			createVulkanSwapChain();
+
+			{ // Create the Vulkan semaphores
+				const VkSemaphoreCreateInfo vkSemaphoreCreateInfo =
+				{
+					VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,	// sType (VkStructureType)
+					nullptr,									// pNext (const void*)
+					0											// flags (VkSemaphoreCreateFlags)
+				};
+				const VkDevice vkDevice = vulkanContext.getVkDevice();
+				if ((vkCreateSemaphore(vkDevice, &vkSemaphoreCreateInfo, nullptr, &mImageAvailableVkSemaphore) != VK_SUCCESS) ||
+					(vkCreateSemaphore(vkDevice, &vkSemaphoreCreateInfo, nullptr, &mRenderingFinishedVkSemaphore) != VK_SUCCESS))
+				{
+					RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create Vulkan semaphore")
+				}
+			}
 		}
 		else
 		{
@@ -387,6 +403,14 @@ namespace VulkanRenderer
 	{
 		if (VK_NULL_HANDLE != mVkSurfaceKHR)
 		{
+			if (VK_NULL_HANDLE != mImageAvailableVkSemaphore)
+			{
+				vkDestroySemaphore(static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), mImageAvailableVkSemaphore, nullptr);
+			}
+			if (VK_NULL_HANDLE != mRenderingFinishedVkSemaphore)
+			{
+				vkDestroySemaphore(static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), mRenderingFinishedVkSemaphore, nullptr);
+			}
 			destroyVulkanSwapChain();
 			vkDestroySurfaceKHR(static_cast<VulkanRenderer&>(getRenderer()).getVulkanRuntimeLinking().getVkInstance(), mVkSurfaceKHR, nullptr);
 		}

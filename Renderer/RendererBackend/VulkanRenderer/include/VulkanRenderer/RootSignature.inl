@@ -33,6 +33,11 @@ namespace VulkanRenderer
 		return mRootSignature;
 	}
 
+	inline VkPipelineLayout RootSignature::getVkPipelineLayout() const
+	{
+		return mVkPipelineLayout;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

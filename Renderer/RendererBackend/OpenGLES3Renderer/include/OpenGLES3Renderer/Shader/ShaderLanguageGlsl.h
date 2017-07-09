@@ -76,13 +76,13 @@ namespace OpenGLES3Renderer
 		*    Owner OpenGL ES 3 renderer instance
 		*  @param[in] shaderType
 		*    Shader type (for example "GL_VERTEX_SHADER", type "GLenum" not used in here in order to keep the header slim)
-		*  @param[in] shaderSource
+		*  @param[in] sourceCode
 		*    Shader ASCII source code, must be a valid pointer (type "GLchar" not used in here in order to keep the header slim)
 		*
 		*  @return
 		*    The OpenGL ES 3 shader, 0 on error, destroy the returned resource if you no longer need it (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		static uint32_t loadShaderFromSourcecode(OpenGLES3Renderer& openGLES3Renderer, uint32_t shaderType, const char* shaderSource);
+		static uint32_t loadShaderFromSourcecode(OpenGLES3Renderer& openGLES3Renderer, uint32_t shaderType, const char* sourceCode);
 
 
 	//[-------------------------------------------------------]

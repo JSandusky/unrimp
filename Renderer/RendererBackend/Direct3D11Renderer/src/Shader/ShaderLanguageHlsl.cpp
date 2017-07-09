@@ -61,7 +61,7 @@ namespace Direct3D11Renderer
 		// Nothing here
 	}
 
-	ID3DBlob* ShaderLanguageHlsl::loadShaderFromSourcecode(const char* shaderModel, const char* shaderSource, const char* entryPoint) const
+	ID3DBlob* ShaderLanguageHlsl::loadShaderFromSourcecode(const char* shaderModel, const char* sourceCode, const char* entryPoint) const
 	{
 		// TODO(co) Cleanup
 		ID3DBlob* d3dBlob;
@@ -103,7 +103,7 @@ namespace Direct3D11Renderer
 		}
 
 		ID3DBlob* errorBlob;
-		hr = D3DX11CompileFromMemory(shaderSource, strlen(shaderSource), nullptr, nullptr, nullptr, entryPoint ? entryPoint : "main", shaderModel, 
+		hr = D3DX11CompileFromMemory(sourceCode, strlen(sourceCode), nullptr, nullptr, nullptr, entryPoint ? entryPoint : "main", shaderModel, 
 			compileFlags, 0, nullptr, &d3dBlob, &errorBlob, nullptr );
 
 		if (FAILED(hr))
