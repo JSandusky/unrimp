@@ -68,7 +68,7 @@ set(SOURCE_CODES
 	src/IApplicationRenderer.cpp
 	src/ConsoleExampleRunner.cpp
 	src/ExampleRunner.cpp
-	${UNRIMP_EXAMPLES_BASE_PATH}/src/Framework/CmdLineArgs.cpp
+	${UNRIMP_EXAMPLES_BASE_PATH}/src/Framework/CommandLineArguments.cpp
 	${UNRIMP_EXAMPLES_BASE_PATH}/src/Framework/ExampleBase.cpp
 	${UNRIMP_EXAMPLES_BASE_PATH}/src/Framework/Color4.cpp
 )

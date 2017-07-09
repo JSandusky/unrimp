@@ -36,6 +36,7 @@
 namespace RendererRuntime
 {
 	class IFileManager;
+	class Context;
 	class IRendererRuntime;
 	class RendererRuntimeInstance;
 }
@@ -159,6 +160,7 @@ private:
 //[-------------------------------------------------------]
 private:
 	RendererRuntime::IFileManager*			  mFileManager;				///< File manager instance, can be a null pointer
+	RendererRuntime::Context*				  mRendererRuntimeContext;	///< Renderer runtime context instance, can be a null pointer
 	RendererRuntime::RendererRuntimeInstance* mRendererRuntimeInstance;	///< Renderer runtime instance, can be a null pointer
 	#ifdef SHARED_LIBRARIES
 		RendererToolkit::RendererToolkitInstance* mRendererToolkitInstance;	///< Renderer toolkit instance, can be a null pointer

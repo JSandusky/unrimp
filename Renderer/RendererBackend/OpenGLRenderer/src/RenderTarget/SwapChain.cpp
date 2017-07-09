@@ -50,7 +50,7 @@ namespace OpenGLRenderer
 		#ifdef WIN32
 			mOpenGLContext(new OpenGLContextWindows(nativeWindowHandle, static_cast<const OpenGLContextWindows*>(&openGLRenderer.getOpenGLContext()))),
 		#elif defined LINUX
-			mOpenGLContext(new OpenGLContextLinux(nativeWindowHandle, useExternalContext, static_cast<const OpenGLContextLinux*>(&openGLRenderer.getOpenGLContext()))),
+			mOpenGLContext(new OpenGLContextLinux(openGLRenderer, nativeWindowHandle, useExternalContext, static_cast<const OpenGLContextLinux*>(&openGLRenderer.getOpenGLContext()))),
 		#else
 			#error "Unsupported platform"
 		#endif

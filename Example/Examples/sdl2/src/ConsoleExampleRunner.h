@@ -30,14 +30,14 @@
 class ConsoleExampleRunner :  ExampleRunner
 {
 public:
-	virtual int run(const CmdLineArgs& args) override;
+	virtual int run(const CommandLineArguments& args) override;
 
 protected:
 	virtual void showError(const std::string& errorMsg) override;
 	virtual void printUsage(const ExampleRunner::AvailableExamplesMap& knownExamples, const ExampleRunner::AvailableRendererMap& availableRenderer) override;
 
 private:
-	bool parseArgs(const CmdLineArgs &args);
+	bool parseArgs(const CommandLineArguments &args);
 
 private:
 	std::string m_rendererName;

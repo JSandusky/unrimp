@@ -26,12 +26,12 @@
 #include <vector>
 
 
-class CmdLineArgs;
+class CommandLineArguments;
 
 class ExampleRunner
 {
 public:
-	virtual int run(const CmdLineArgs &args) = 0;
+	virtual int run(const CommandLineArguments &args) = 0;
 	virtual ~ExampleRunner();
 
 protected:

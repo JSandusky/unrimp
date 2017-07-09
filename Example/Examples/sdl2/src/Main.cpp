@@ -46,7 +46,7 @@
 //[-------------------------------------------------------]
 //[ Platform independent program entry point              ]
 //[-------------------------------------------------------]
-int programEntryPoint(CmdLineArgs &args)
+int programEntryPoint(CommandLineArguments &args)
 {
 	return ConsoleExampleRunner().run(args);
 }

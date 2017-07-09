@@ -432,7 +432,7 @@ namespace OpenGLRenderer
 				// TODO(co) Add external OpenGL context support
 				mOpenGLContext = new OpenGLContextWindows(mOpenGLRuntimeLinking, nativeWindowHandle);
 			#elif defined LINUX
-				mOpenGLContext = new OpenGLContextLinux(mOpenGLRuntimeLinking, nativeWindowHandle, mContext.isUsingExternalContext());
+				mOpenGLContext = new OpenGLContextLinux(*this, mOpenGLRuntimeLinking, nativeWindowHandle, mContext.isUsingExternalContext());
 			#else
 				#error "Unsupported platform"
 			#endif

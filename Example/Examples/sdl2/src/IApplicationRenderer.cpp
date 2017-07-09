@@ -25,6 +25,7 @@
 #include "IApplicationRenderer.h"
 #include "Framework/ExampleBase.h"
 
+#include <Renderer/Public/StdLog.h>
 #include <Renderer/Public/RendererInstance.h>
 
 #include <SDL2/SDL_syswm.h>
@@ -34,11 +35,34 @@
 
 
 //[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global variables                                      ]
+		//[-------------------------------------------------------]
+		Renderer::StdLog g_RendererLog;
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
+
+
+//[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
 IApplicationRenderer::IApplicationRenderer(const std::string& rendererName, ExampleBase* example) :
 	mRendererName(rendererName),
 	mWindowTitle("SDL2 " + mRendererName),
+	mRendererContext(nullptr),
 	mRendererInstance(nullptr),
 	mRenderer(nullptr),
 	mExample(example),
@@ -112,6 +136,8 @@ void IApplicationRenderer::onDeinitialization()
 	mRenderer = nullptr;
 	delete mRendererInstance;
 	mRendererInstance = nullptr;
+	delete mRendererContext;
+	mRendererContext = nullptr;
 	
 	// Destroy the OS window instance, in case there's one
 	if (nullptr != mMainWindow)
@@ -407,7 +433,8 @@ Renderer::IRenderer *IApplicationRenderer::createRendererInstance(const std::str
 	// Is the given pointer valid?
 	if (!rendererName.empty())
 	{
-		mRendererInstance = new Renderer::RendererInstance(rendererName.c_str(), getNativeWindowHandle(), true);
+		mRendererContext = new Renderer::Context(::detail::g_RendererLog, getNativeWindowHandle(), true);
+		mRendererInstance = new Renderer::RendererInstance(rendererName.c_str(), *mRendererContext);
 	}
 	Renderer::IRenderer *renderer = (nullptr != mRendererInstance) ? mRendererInstance->getRenderer() : nullptr;
 
