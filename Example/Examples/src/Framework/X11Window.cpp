@@ -92,6 +92,7 @@ bool X11Window::HandleEvent(XEvent &event)
 			if (WM_DELETE_WINDOW == static_cast<Atom>(event.xclient.data.l[0]))
 			{
 				XDestroyWindow(event.xany.display, mWindowId);
+				mWindowId = 0;
 				mDestroyed = true;
 			}
 			break;
