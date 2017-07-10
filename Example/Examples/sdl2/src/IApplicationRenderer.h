@@ -263,7 +263,7 @@ private:
 	Renderer::IRenderer *createRendererInstance(const std::string& rendererName);
 
 	bool processMessages();
-	handle getNativeWindowHandle() const;
+	Renderer::Context* createRendererContext() const;
 	void getWindowSize(uint32_t &width, uint32_t &height) const;
 
 
@@ -273,7 +273,7 @@ private:
 private:
 	std::string					mRendererName;		///< Case sensitive ASCII name of the renderer to instance
 	std::string					mWindowTitle;
-	const Renderer::Context*	mRendererContext;	///< Renderer context, can be a null pointer
+	Renderer::Context*			mRendererContext;	///< Renderer context, can be a null pointer
 	Renderer::RendererInstance* mRendererInstance;	///< Renderer instance, can be a null pointer
 	Renderer::IRenderer*		mRenderer;			///< Renderer instance, can be a null pointer, do not destroy the instance
 	Renderer::CommandBuffer		mCommandBuffer;		///< Command buffer

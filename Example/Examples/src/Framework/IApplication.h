@@ -28,12 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Framework/PlatformTypes.h"
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-class IApplicationImpl;
+#include "Framework/IApplicationImpl.h"
 
 
 //[-------------------------------------------------------]
@@ -91,6 +86,17 @@ public:
 	*    Redraw request
 	*/
 	inline void redraw();
+
+#ifdef LINUX
+	/**
+	*  @brief
+	*    Return the X11 display connection object
+	*
+	*  @remarks
+	*    The X11 display connection object, can be a nullptr
+	*/
+	inline Display* getX11Display() const;
+#endif
 
 
 //[-------------------------------------------------------]

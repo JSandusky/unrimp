@@ -101,6 +101,15 @@ void IApplicationRenderer::onDeinitialization()
 
 	// Delete the renderer instance
 	mRenderer = nullptr;
+	if (nullptr != mRendererInstance)
+	{
+		mRendererInstance->destroyRenderer();
+	}
+
+	// Call base implementation after renderer was destroyed, needed at least under linux see comments in private method RendererInstance::loadRendererApiSharedLibrary for more details
+	IApplication::onDeinitialization();
+
+	// Delete the renderer instance
 	delete mRendererInstance;
 	mRendererInstance = nullptr;
 	delete mRendererContext;
@@ -295,8 +304,16 @@ Renderer::IRenderer* IApplicationRenderer::createRendererInstance(const char* re
 	// Is the given pointer valid?
 	if (nullptr != rendererName)
 	{
-		mRendererContext = new Renderer::Context(::detail::g_RendererLog, getNativeWindowHandle());
-		mRendererInstance = new Renderer::RendererInstance(rendererName, *mRendererContext);
+		bool loadRendererApiSharedLibrary = false;
+#ifdef WIN32
+		mRendererContext = new Renderer::Context(Renderer::Context::ContextType::WIN32, ::detail::g_RendererLog, getNativeWindowHandle());
+#elif LINUX
+		// Under linux the opengl library interacts with the library fro X11 so we need to load the library ourself instead letting it be loaded by the renderer instance
+		// See http://dri.sourceforge.net/doc/DRIuserguide.html "11.5 libGL.so and dlopen()"
+		loadRendererApiSharedLibrary = true;
+		mRendererContext = new Renderer::X11Context(::detail::g_RendererLog, getX11Display(), getNativeWindowHandle());
+#endif
+		mRendererInstance = new Renderer::RendererInstance(rendererName, *mRendererContext, loadRendererApiSharedLibrary);
 	}
 	Renderer::IRenderer* renderer = (nullptr != mRendererInstance) ? mRendererInstance->getRenderer() : nullptr;
 

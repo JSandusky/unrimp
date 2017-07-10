@@ -61,7 +61,9 @@ int FirstGpgpu::run()
 {
 	// Create renderer instance
 	Renderer::StdLog rendererLog;
-	Renderer::Context rendererContext(rendererLog);
+	
+	// TODO(sw) Wie misuse the win32 context type here because no window handle is given
+	Renderer::Context rendererContext(Renderer::Context::ContextType::WIN32, rendererLog);
 	mRendererInstance = new Renderer::RendererInstance(mRendererName, rendererContext);
 
 	// Get the renderer instance and ensure it's valid
