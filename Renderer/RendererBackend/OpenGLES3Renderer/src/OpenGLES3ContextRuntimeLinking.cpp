@@ -48,7 +48,7 @@ namespace OpenGLES3Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	OpenGLES3ContextRuntimeLinking::OpenGLES3ContextRuntimeLinking(OpenGLES3Renderer& openGLES3Renderer, handle nativeWindowHandle, bool useExternalContext) :
-		IOpenGLES3Context(nativeWindowHandle, useExternalContext),
+		IOpenGLES3Context(openGLES3Renderer, nativeWindowHandle, useExternalContext),
 		mOpenGLES3Renderer(openGLES3Renderer),
 		mEGLSharedLibrary(nullptr),
 		mGLESSharedLibrary(nullptr),

@@ -39,15 +39,12 @@
 		#include <EGL/egl.h>
 	__pragma(warning(pop))
 #else
-	#if (defined(LINUX) && !defined(ANDROID))
-		#include <X11/Xutil.h>	// For "Display"
-	#endif
 	#include <EGL/egl.h>
 #endif
 
 // Get rid of some nasty OS macros
+#undef None	// Linux: Undefine "None", this name is used inside enums defined by Unrimp (which gets defined inside Xlib.h pulled in by egl.h)
 #undef max
-#undef None	// Linux: Undefine "None", this name is used inside enums defined by Unrimp (which gets defined inside Xlib.h pulled in by glx.h)
 
 
 //[-------------------------------------------------------]
@@ -56,6 +53,7 @@
 namespace OpenGLES3Renderer
 {
 	class IExtensions;
+	class OpenGLES3Renderer;
 }
 
 
@@ -192,12 +190,14 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Constructor
 		*
+		*  @param[in] openGLES3Renderer
+		*    Owner OpenGL ES 3 renderer instance
 		*  @param[in] nativeWindowHandle
 		*    Handle of a native OS window which is valid as long as the renderer instance exists, "NULL_HANDLE" if there's no such window
 		*  @param[in] useExternalContext
 		*    When true an own OpenGL ES context won't be created
 		*/
-		explicit IOpenGLES3Context(handle nativeWindowHandle, bool useExternalContext);
+		explicit IOpenGLES3Context(OpenGLES3Renderer& openGLES3Renderer, handle nativeWindowHandle, bool useExternalContext);
 
 		/**
 		*  @brief
@@ -255,6 +255,7 @@ namespace OpenGLES3Renderer
 		// X11
 		#if (defined(LINUX) && !defined(ANDROID))
 			::Display	   *mX11Display;
+			bool 			mOwnsX11Display;
 		#endif
 		// EGL
 		EGLDisplay			mEGLDisplay;
