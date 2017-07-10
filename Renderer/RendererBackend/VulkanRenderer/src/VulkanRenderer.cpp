@@ -913,18 +913,26 @@ namespace VulkanRenderer
 
 	Renderer::IShaderLanguage* VulkanRenderer::getShaderLanguage(const char* shaderLanguageName)
 	{
-		// Optimization: Check for shader language name pointer match, first
-		if (nullptr != shaderLanguageName && (shaderLanguageName == ShaderLanguageGlsl::NAME || !stricmp(shaderLanguageName, ShaderLanguageGlsl::NAME)))
+		// In case "shaderLanguage" is a null pointer, use the default shader language
+		if (nullptr != shaderLanguageName)
 		{
-			// If required, create the GLSL shader language instance right now
-			if (nullptr == mShaderLanguageGlsl)
+			// Optimization: Check for shader language name pointer match, first
+			// -> "ShaderLanguageSeparate::NAME" has the same value
+			if (shaderLanguageName == ShaderLanguageGlsl::NAME || !stricmp(shaderLanguageName, ShaderLanguageGlsl::NAME))
 			{
-				mShaderLanguageGlsl = new ShaderLanguageGlsl(*this);
-				mShaderLanguageGlsl->addReference();	// Internal renderer reference
+				// If required, create the GLSL shader language instance right now
+				if (nullptr == mShaderLanguageGlsl)
+				{
+					mShaderLanguageGlsl = new ShaderLanguageGlsl(*this);
+					mShaderLanguageGlsl->addReference();	// Internal renderer reference
+				}
+				return mShaderLanguageGlsl;
 			}
-
-			// Return the shader language instance
-			return mShaderLanguageGlsl;
+		}
+		else
+		{
+			// Return the shader language instance as default
+			return getShaderLanguage(ShaderLanguageGlsl::NAME);
 		}
 
 		// Error!

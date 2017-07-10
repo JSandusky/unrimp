@@ -30,6 +30,8 @@
 #include <Renderer/IRootSignature.h>
 #include <Renderer/RootSignatureTypes.h>
 
+#include "VulkanRenderer/Vulkan.h"
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -109,6 +111,15 @@ namespace VulkanRenderer
 		*/
 		void setSamplerState(uint32_t samplerRootParameterIndex, SamplerState* samplerState) const;
 
+		/**
+		*  @brief
+		*    Return the Vulkan pipeline layout
+		*
+		*  @return
+		*    The Vulkan pipeline layout
+		*/
+		inline VkPipelineLayout getVkPipelineLayout() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
@@ -124,6 +135,7 @@ namespace VulkanRenderer
 	private:
 		Renderer::RootSignature	mRootSignature;
 		SamplerState**			mSamplerStates;
+		VkPipelineLayout		mVkPipelineLayout;
 
 
 	};

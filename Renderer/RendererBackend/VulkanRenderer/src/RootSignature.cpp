@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "VulkanRenderer/RootSignature.h"
+#include "VulkanRenderer/VulkanContext.h"
 #include "VulkanRenderer/VulkanRenderer.h"
 #include "VulkanRenderer/State/SamplerState.h"
 
@@ -92,7 +93,8 @@ namespace VulkanRenderer
 	RootSignature::RootSignature(VulkanRenderer& vulkanRenderer, const Renderer::RootSignature& rootSignature) :
 		IRootSignature(vulkanRenderer),
 		mRootSignature(rootSignature),
-		mSamplerStates(nullptr)
+		mSamplerStates(nullptr),
+		mVkPipelineLayout(VK_NULL_HANDLE)
 	{
 		{ // Copy the parameter data
 			const uint32_t numberOfParameters = mRootSignature.numberOfParameters;
@@ -132,10 +134,33 @@ namespace VulkanRenderer
 			mSamplerStates = new SamplerState*[mRootSignature.numberOfParameters];
 			memset(mSamplerStates, 0, sizeof(SamplerState*) * mRootSignature.numberOfParameters);
 		}
+
+		// Create the Vulkan pipeline layout
+		// TODO(co) Implement "VkPipelineLayout" creation, this here is just a dummy for the first triangle on screen
+		const VkPipelineLayoutCreateInfo vkPipelineLayoutCreateInfo =
+		{
+			VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,	// sType (VkStructureType)
+			nullptr,										// pNext (const void*)
+			0,												// flags (VkPipelineLayoutCreateFlags)
+			0,												// setLayoutCount (uint32_t)
+			nullptr,										// pSetLayouts (const VkDescriptorSetLayout*)
+			0,												// pushConstantRangeCount (uint32_t)
+			nullptr											// pPushConstantRanges (const VkPushConstantRange*)
+		};
+		if (vkCreatePipelineLayout(vulkanRenderer.getVulkanContext().getVkDevice(), &vkPipelineLayoutCreateInfo, nullptr, &mVkPipelineLayout) != VK_SUCCESS)
+		{
+			RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create the Vulkan pipeline layout")
+		}
 	}
 
 	RootSignature::~RootSignature()
 	{
+		// Destroy the Vulkan pipeline layout
+		if (VK_NULL_HANDLE != mVkPipelineLayout)
+		{
+			vkDestroyPipelineLayout(static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), mVkPipelineLayout, nullptr);
+		}
+
 		// Release all sampler state references
 		if (nullptr != mSamplerStates)
 		{

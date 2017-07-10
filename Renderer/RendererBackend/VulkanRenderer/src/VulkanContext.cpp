@@ -43,6 +43,7 @@ namespace
 		//[ Global definitions                                    ]
 		//[-------------------------------------------------------]
 		typedef std::vector<VkPhysicalDevice> VkPhysicalDevices;
+		typedef std::vector<VkExtensionProperties> VkExtensionPropertiesVector;
 
 
 		//[-------------------------------------------------------]
@@ -79,11 +80,64 @@ namespace
 			}
 		}
 
+		bool isExtensionAvailable(const char* extensionName, const VkExtensionPropertiesVector& vkExtensionPropertiesVector)
+		{
+			for (const VkExtensionProperties& vkExtensionProperties : vkExtensionPropertiesVector)
+			{
+				if (strcmp(vkExtensionProperties.extensionName, extensionName) == 0)
+				{
+					// The extension is available
+					return true;
+				}
+			}
+
+			// The extension isn't available
+			return false;
+		}
+
 		VkPhysicalDevice selectPhysicalDevice(VulkanRenderer::VulkanRenderer& vulkanRenderer, const VkPhysicalDevices& vkPhysicalDevices)
 		{
-			// TODO(co) I'am sure this selection can be improved
+			// TODO(co) I'am sure this selection can be improved (rating etc.)
 			for (const VkPhysicalDevice& vkPhysicalDevice : vkPhysicalDevices)
 			{
+				{ // Reject physical Vulkan devices basing on swap chain support
+					// Get number of device extensions
+					uint32_t propertyCount = 0;
+					if ((vkEnumerateDeviceExtensionProperties(vkPhysicalDevice, nullptr, &propertyCount, nullptr) != VK_SUCCESS) || (0 == propertyCount))
+					{
+						// Reject physical Vulkan device
+						continue;
+					}
+
+					// Get of device extensions
+					VkExtensionPropertiesVector vkExtensionPropertiesVector(propertyCount);
+					if (vkEnumerateDeviceExtensionProperties(vkPhysicalDevice, nullptr, &propertyCount, vkExtensionPropertiesVector.data()) != VK_SUCCESS)
+					{
+						// Reject physical Vulkan device
+						continue;
+					}
+
+					// Check device extensions
+					const std::array<const char*, 1> deviceExtensions =
+					{
+						VK_KHR_SWAPCHAIN_EXTENSION_NAME
+					};
+					bool rejectDevice = false;
+					for (const char* deviceExtension : deviceExtensions)
+					{
+						if (!isExtensionAvailable(deviceExtension, vkExtensionPropertiesVector))
+						{
+							rejectDevice = true;
+							break;
+						}
+					}
+					if (rejectDevice)
+					{
+						// Reject physical Vulkan device
+						continue;
+					}
+				}
+
 				{ // Reject physical Vulkan devices basing on supported API version and some basic limits
 					VkPhysicalDeviceProperties vkPhysicalDeviceProperties;
 					vkGetPhysicalDeviceProperties(vkPhysicalDevice, &vkPhysicalDeviceProperties);
@@ -158,7 +212,7 @@ namespace
 				{
 					if (vkQueueFamilyProperties[graphicsQueueIndex].queueFlags & VK_QUEUE_GRAPHICS_BIT)
 					{
-						// Create Vulkan device instance
+						// Create logical Vulkan device instance
 						const std::array<float, 1> queuePriorities = { 0.0f };
 						const VkDeviceQueueCreateInfo vkDeviceQueueCreateInfo =
 						{
@@ -279,6 +333,7 @@ namespace VulkanRenderer
 		mVulkanRenderer(vulkanRenderer),
 		mVkPhysicalDevice(VK_NULL_HANDLE),
 		mVkDevice(VK_NULL_HANDLE),
+		mGraphicsQueueFamilyIndex(~0u),
 		mGraphicsVkQueue(VK_NULL_HANDLE),
 		mVkCommandPool(VK_NULL_HANDLE),
 		mSetupVkCommandBuffer(VK_NULL_HANDLE)
@@ -294,19 +349,18 @@ namespace VulkanRenderer
 			}
 		}
 
-		// Create the Vulkan device instance
+		// Create the logical Vulkan device instance
 		if (VK_NULL_HANDLE != mVkPhysicalDevice)
 		{
-			uint32_t graphicsQueueFamilyIndex = 0;
-			mVkDevice = ::detail::createVkDevice(mVulkanRenderer, mVkPhysicalDevice, vulkanRuntimeLinking.isValidationEnabled(), graphicsQueueFamilyIndex);
+			mVkDevice = ::detail::createVkDevice(mVulkanRenderer, mVkPhysicalDevice, vulkanRuntimeLinking.isValidationEnabled(), mGraphicsQueueFamilyIndex);
 			if (VK_NULL_HANDLE != mVkDevice)
 			{
 				// Get the Vulkan device graphics queue that command buffers are submitted to
-				vkGetDeviceQueue(mVkDevice, graphicsQueueFamilyIndex, 0, &mGraphicsVkQueue);
+				vkGetDeviceQueue(mVkDevice, mGraphicsQueueFamilyIndex, 0, &mGraphicsVkQueue);
 				if (VK_NULL_HANDLE != mGraphicsVkQueue)
 				{
 					// Create Vulkan command pool instance
-					mVkCommandPool = ::detail::createVkCommandPool(mVulkanRenderer, mVkDevice, graphicsQueueFamilyIndex);
+					mVkCommandPool = ::detail::createVkCommandPool(mVulkanRenderer, mVkDevice, mGraphicsQueueFamilyIndex);
 					if (VK_NULL_HANDLE != mVkCommandPool)
 					{
 						// Create setup Vulkan command buffer instance

@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "VulkanRenderer/Shader/TessellationControlShaderGlsl.h"
 #include "VulkanRenderer/Shader/ShaderLanguageGlsl.h"
+#include "VulkanRenderer/VulkanRenderer.h"
+#include "VulkanRenderer/VulkanContext.h"
 #include "VulkanRenderer/Extensions.h"
 
 
@@ -36,21 +38,26 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TessellationControlShaderGlsl::TessellationControlShaderGlsl(VulkanRenderer& vulkanRenderer, const Renderer::ShaderBytecode&) :
-		ITessellationControlShader(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
+	TessellationControlShaderGlsl::TessellationControlShaderGlsl(VulkanRenderer& vulkanRenderer, const Renderer::ShaderBytecode& shaderBytecode) :
+		ITessellationControlShader(vulkanRenderer),
+		mVkShaderModule(ShaderLanguageGlsl::createVkShaderModuleFromBytecode(vulkanRenderer, shaderBytecode))
 	{
-		// TODO(co) Implement me
+		// Nothing here
 	}
 
-	TessellationControlShaderGlsl::TessellationControlShaderGlsl(VulkanRenderer& vulkanRenderer, const char*, Renderer::ShaderBytecode*) :
-		ITessellationControlShader(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
+	TessellationControlShaderGlsl::TessellationControlShaderGlsl(VulkanRenderer& vulkanRenderer, const char* sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
+		ITessellationControlShader(vulkanRenderer),
+		mVkShaderModule(ShaderLanguageGlsl::createVkShaderModuleFromSourceCode(vulkanRenderer, VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT, sourceCode, shaderBytecode))
 	{
-		// TODO(co) Implement me
+		// Nothing here
 	}
 
 	TessellationControlShaderGlsl::~TessellationControlShaderGlsl()
 	{
-		// TODO(co) Implement me
+		if (VK_NULL_HANDLE != mVkShaderModule)
+		{
+			vkDestroyShaderModule(static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), mVkShaderModule, nullptr);
+		}
 	}
 
 

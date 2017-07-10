@@ -24,7 +24,327 @@
 #include "VulkanRenderer/RenderTarget/SwapChain.h"
 #include "VulkanRenderer/VulkanRenderer.h"
 #include "VulkanRenderer/VulkanContext.h"
-#include "VulkanRenderer/Helper.h"
+
+#include <sstream>
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		VkSurfaceKHR createPresentationSurface(const VulkanRenderer::VulkanContext& vulkanContext, VkInstance vkInstance, VkPhysicalDevice vkPhysicalDevice, handle nativeWindowHandle)
+		{
+			VkSurfaceKHR vkSurfaceKHR = VK_NULL_HANDLE;
+
+			#ifdef VK_USE_PLATFORM_WIN32_KHR
+				const VkWin32SurfaceCreateInfoKHR vkWin32SurfaceCreateInfoKHR =
+				{
+					VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR,																// sType (VkStructureType)
+					nullptr,																										// pNext (const void*)
+					0,																												// flags (VkWin32SurfaceCreateFlagsKHR)
+					reinterpret_cast<HINSTANCE>(::GetWindowLongPtr(reinterpret_cast<HWND>(nativeWindowHandle), GWLP_HINSTANCE)),	// hinstance (HINSTANCE)
+					reinterpret_cast<HWND>(nativeWindowHandle)																		// hwnd (HWND)
+				};
+				if (vkCreateWin32SurfaceKHR(vkInstance, &vkWin32SurfaceCreateInfoKHR, nullptr, &vkSurfaceKHR) != VK_SUCCESS)
+				{
+					// TODO(co) Can we ensure "vkSurfaceKHR" doesn't get touched by "vkCreateWin32SurfaceKHR()" in case of failure?
+					vkSurfaceKHR = VK_NULL_HANDLE;
+				}
+			#elif defined VK_USE_PLATFORM_ANDROID_KHR
+				#warning "TODO(co) Not tested"
+				const VkAndroidSurfaceCreateInfoKHR vkAndroidSurfaceCreateInfoKHR =
+				{
+					VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR,		// sType (VkStructureType)
+					nullptr,												// pNext (const void*)
+					0,														// flags (VkAndroidSurfaceCreateFlagsKHR)
+					reinterpret_cast<ANativeWindow*>(nativeWindowHandle)	// window (ANativeWindow*)
+				};
+				if (vkCreateAndroidSurfaceKHR(vkInstance, &vkAndroidSurfaceCreateInfoKHR, nullptr, &vkSurfaceKHR) != VK_SUCCESS)
+				{
+					// TODO(co) Can we ensure "vkSurfaceKHR" doesn't get touched by "vkCreateAndroidSurfaceKHR()" in case of failure?
+					vkSurfaceKHR = VK_NULL_HANDLE;
+				}
+			#elif defined VK_USE_PLATFORM_XLIB_KHR
+				#error "TODO(co) Complete implementation"
+				const VkXlibSurfaceCreateInfoKHR vkXlibSurfaceCreateInfoKHR =
+				{
+					VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR,	// sType (VkStructureType)
+					nullptr,										// pNext (const void*)
+					0,												// flags (VkXlibSurfaceCreateFlagsKHR)
+					TODO(co)										// dpy (Display*)
+					TODO(co)										// window (Window)
+				};
+				if (vkCreateXlibSurfaceKHR(vkInstance, &vkXlibSurfaceCreateInfoKHR, nullptr, &vkSurfaceKHR) != VK_SUCCESS)
+				{
+					// TODO(co) Can we ensure "vkSurfaceKHR" doesn't get touched by "vkCreateXlibSurfaceKHR()" in case of failure?
+					vkSurfaceKHR = VK_NULL_HANDLE;
+				}
+			#elif defined VK_USE_PLATFORM_XCB_KHR
+				#error "TODO(co) Complete implementation"
+				const VkXcbSurfaceCreateInfoKHR vkXcbSurfaceCreateInfoKHR =
+				{
+					VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR,	// sType (VkStructureType)
+					nullptr,										// pNext (const void*)
+					0,												// flags (VkXcbSurfaceCreateFlagsKHR)
+					TODO(co)										// connection (xcb_connection_t*)
+					TODO(co)										// window (xcb_window_t)
+				};
+				if (vkCreateXcbSurfaceKHR(vkInstance, &vkXcbSurfaceCreateInfoKHR, nullptr, &vkSurfaceKHR) != VK_SUCCESS)
+				{
+					// TODO(co) Can we ensure "vkSurfaceKHR" doesn't get touched by "vkCreateXcbSurfaceKHR()" in case of failure?
+					vkSurfaceKHR = VK_NULL_HANDLE;
+				}
+			#else
+				#error "Unsupported platform"
+			#endif
+
+			{ // Sanity check: Does the physical Vulkan device support the Vulkan presentation surface?
+			  // TODO(co) Inside our renderer API the swap chain is physical device independent, which is a nice thing usability wise.
+			  //          On the other hand, the sanity check here can only detect issues but it would be better to not get into such issues in the first place.
+				VkBool32 queuePresentSupport = VK_FALSE;
+				vkGetPhysicalDeviceSurfaceSupportKHR(vkPhysicalDevice, vulkanContext.getGraphicsQueueFamilyIndex(), vkSurfaceKHR, &queuePresentSupport);
+				if (VK_FALSE == queuePresentSupport)
+				{
+					RENDERER_LOG(vulkanContext.getVulkanRenderer().getContext(), CRITICAL, "The created Vulkan presentation surface has no queue present support")
+				}
+			}
+
+			// Done
+			return vkSurfaceKHR;
+		}
+
+		uint32_t getNumberOfSwapChainImages(const VkSurfaceCapabilitiesKHR& vkSurfaceCapabilitiesKHR)
+		{
+			// Set of images defined in a swap chain may not always be available for application to render to:
+			// - One may be displayed and one may wait in a queue to be presented
+			// - If application wants to use more images at the same time it must ask for more images
+			uint32_t numberOfImages = vkSurfaceCapabilitiesKHR.minImageCount + 1;
+			if ((vkSurfaceCapabilitiesKHR.maxImageCount > 0) && (numberOfImages > vkSurfaceCapabilitiesKHR.maxImageCount))
+			{
+				numberOfImages = vkSurfaceCapabilitiesKHR.maxImageCount;
+			}
+			return numberOfImages;
+		}
+
+		VkSurfaceFormatKHR getSwapChainFormat(const Renderer::Context& context, VkPhysicalDevice vkPhysicalDevice, VkSurfaceKHR vkSurfaceKHR)
+		{
+			uint32_t surfaceFormatCount = 0;
+			if ((vkGetPhysicalDeviceSurfaceFormatsKHR(vkPhysicalDevice, vkSurfaceKHR, &surfaceFormatCount, nullptr) != VK_SUCCESS) || (0 == surfaceFormatCount))
+			{
+				RENDERER_LOG(context, CRITICAL, "Failed to get physical Vulkan device surface formats")
+				return { VK_FORMAT_UNDEFINED, VK_COLOR_SPACE_MAX_ENUM_KHR };
+			}
+
+			std::vector<VkSurfaceFormatKHR> surfaceFormats(surfaceFormatCount);
+			if (vkGetPhysicalDeviceSurfaceFormatsKHR(vkPhysicalDevice, vkSurfaceKHR, &surfaceFormatCount, surfaceFormats.data()) != VK_SUCCESS)
+			{
+				RENDERER_LOG(context, CRITICAL, "Failed to get physical Vulkan device surface formats")
+				return { VK_FORMAT_UNDEFINED, VK_COLOR_SPACE_MAX_ENUM_KHR };
+			}
+
+			// If the list contains only one entry with undefined format it means that there are no preferred surface formats and any can be chosen
+			if ((surfaceFormats.size() == 1) && (VK_FORMAT_UNDEFINED == surfaceFormats[0].format))
+			{
+				return { VK_FORMAT_R8G8B8A8_UNORM, VK_COLORSPACE_SRGB_NONLINEAR_KHR };
+			}
+
+			// Check if list contains most widely used R8 G8 B8 A8 format with nonlinear color space
+			for (const VkSurfaceFormatKHR& surfaceFormat : surfaceFormats)
+			{
+				if (VK_FORMAT_R8G8B8A8_UNORM == surfaceFormat.format)
+				{
+					return surfaceFormat;
+				}
+			}
+
+			// Return the first format from the list
+			return surfaceFormats[0];
+		}
+
+		VkExtent2D getSwapChainExtent(const VkSurfaceCapabilitiesKHR& vkSurfaceCapabilitiesKHR)
+		{
+			// Special value of surface extent is width == height == -1
+			// -> If this is so we define the size by ourselves but it must fit within defined confines, else it's already set to the operation window dimension
+			if (-1 == vkSurfaceCapabilitiesKHR.currentExtent.width)
+			{
+				VkExtent2D swapChainExtent = { 640, 480 };
+				if (swapChainExtent.width < vkSurfaceCapabilitiesKHR.minImageExtent.width)
+				{
+					swapChainExtent.width = vkSurfaceCapabilitiesKHR.minImageExtent.width;
+				}
+				if (swapChainExtent.height < vkSurfaceCapabilitiesKHR.minImageExtent.height)
+				{
+					swapChainExtent.height = vkSurfaceCapabilitiesKHR.minImageExtent.height;
+				}
+				if (swapChainExtent.width > vkSurfaceCapabilitiesKHR.maxImageExtent.width)
+				{
+					swapChainExtent.width = vkSurfaceCapabilitiesKHR.maxImageExtent.width;
+				}
+				if (swapChainExtent.height > vkSurfaceCapabilitiesKHR.maxImageExtent.height)
+				{
+					swapChainExtent.height = vkSurfaceCapabilitiesKHR.maxImageExtent.height;
+				}
+				return swapChainExtent;
+			}
+
+			// Most of the cases we define size of the swap_chain images equal to current window's size
+			return vkSurfaceCapabilitiesKHR.currentExtent;
+		}
+
+		VkImageUsageFlags getSwapChainUsageFlags(const Renderer::Context& context, const VkSurfaceCapabilitiesKHR& vkSurfaceCapabilitiesKHR)
+		{
+			// Color attachment flag must always be supported. We can define other usage flags but we always need to check if they are supported.
+			if (vkSurfaceCapabilitiesKHR.supportedUsageFlags & VK_IMAGE_USAGE_TRANSFER_DST_BIT)
+			{
+				return VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+			}
+
+			// Construct the log message
+			std::stringstream message;
+			message << "VK_IMAGE_USAGE_TRANSFER_DST image usage is not supported by the swap chain: Supported swap chain image usages include:\n";
+			message << (vkSurfaceCapabilitiesKHR.supportedUsageFlags & VK_IMAGE_USAGE_TRANSFER_SRC_BIT)				? "  VK_IMAGE_USAGE_TRANSFER_SRC\n" : "";
+			message << (vkSurfaceCapabilitiesKHR.supportedUsageFlags & VK_IMAGE_USAGE_TRANSFER_DST_BIT)				? "  VK_IMAGE_USAGE_TRANSFER_DST\n" : "";
+			message << (vkSurfaceCapabilitiesKHR.supportedUsageFlags & VK_IMAGE_USAGE_SAMPLED_BIT)					? "  VK_IMAGE_USAGE_SAMPLED\n" : "";
+			message << (vkSurfaceCapabilitiesKHR.supportedUsageFlags & VK_IMAGE_USAGE_STORAGE_BIT)					? "  VK_IMAGE_USAGE_STORAGE\n" : "";
+			message << (vkSurfaceCapabilitiesKHR.supportedUsageFlags & VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT)			? "  VK_IMAGE_USAGE_COLOR_ATTACHMENT\n" : "";
+			message << (vkSurfaceCapabilitiesKHR.supportedUsageFlags & VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)	? "  VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT\n" : "";
+			message << (vkSurfaceCapabilitiesKHR.supportedUsageFlags & VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT)		? "  VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT\n" : "";
+			message << (vkSurfaceCapabilitiesKHR.supportedUsageFlags & VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT)			? "  VK_IMAGE_USAGE_INPUT_ATTACHMENT" : "";
+
+			// Print log message
+			RENDERER_LOG(context, CRITICAL, message.str().c_str())
+
+			// Error!
+			return static_cast<VkImageUsageFlags>(-1);
+		}
+
+		VkSurfaceTransformFlagBitsKHR getSwapChainTransform(const VkSurfaceCapabilitiesKHR& vkSurfaceCapabilitiesKHR)
+		{
+			// - Sometimes images must be transformed before they are presented (i.e. due to device's orientation being other than default orientation)
+			// - If the specified transform is other than current transform, presentation engine will transform image during presentation operation; this operation may hit performance on some platforms
+			// - Here we don't want any transformations to occur so if the identity transform is supported use it otherwise just use the same transform as current transform
+			return (vkSurfaceCapabilitiesKHR.supportedTransforms & VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR) ? VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR : vkSurfaceCapabilitiesKHR.currentTransform;
+		}
+
+		VkPresentModeKHR getSwapChainPresentMode(const Renderer::Context& context, VkPhysicalDevice vkPhysicalDevice, VkSurfaceKHR vkSurfaceKHR)
+		{
+			uint32_t presentModeCount = 0;
+			if ((vkGetPhysicalDeviceSurfacePresentModesKHR(vkPhysicalDevice, vkSurfaceKHR, &presentModeCount, nullptr) != VK_SUCCESS) || (0 == presentModeCount))
+			{
+				RENDERER_LOG(context, CRITICAL, "Failed to get physical Vulkan device surface present modes")
+				return VK_PRESENT_MODE_MAX_ENUM_KHR;
+			}
+
+			std::vector<VkPresentModeKHR> presentModes(presentModeCount);
+			if (vkGetPhysicalDeviceSurfacePresentModesKHR(vkPhysicalDevice, vkSurfaceKHR, &presentModeCount, presentModes.data()) != VK_SUCCESS)
+			{
+				RENDERER_LOG(context, CRITICAL, "Failed to get physical Vulkan device surface present modes")
+				return VK_PRESENT_MODE_MAX_ENUM_KHR;
+			}
+
+			// - FIFO present mode is always available
+			// - MAILBOX is the lowest latency V-Sync enabled mode (something like triple-buffering) so use it if available
+			for (const VkPresentModeKHR& presentMode : presentModes)
+			{
+				if (VK_PRESENT_MODE_MAILBOX_KHR == presentMode)
+				{
+					return presentMode;
+				}
+			}
+			for (const VkPresentModeKHR& presentMode : presentModes)
+			{
+				if (VK_PRESENT_MODE_FIFO_KHR == presentMode)
+				{
+					return presentMode;
+				}
+			}
+
+			// Error!
+			RENDERER_LOG(context, CRITICAL, "FIFO present mode is not supported by the Vulkan swap chain")
+			return VK_PRESENT_MODE_MAX_ENUM_KHR;
+		}
+		
+		VkRenderPass createRenderPass(const Renderer::Context& context, VkDevice vkDevice, VkFormat vkFormat)
+		{
+			// Render pass configuration
+			const VkAttachmentDescription colorVkAttachmentDescription =
+			{
+				0,									// flags (VkAttachmentDescriptionFlags)
+				vkFormat,							// format (VkFormat)
+				VK_SAMPLE_COUNT_1_BIT,				// samples (VkSampleCountFlagBits)
+				VK_ATTACHMENT_LOAD_OP_CLEAR,		// loadOp (VkAttachmentLoadOp)
+				VK_ATTACHMENT_STORE_OP_STORE,		// storeOp (VkAttachmentStoreOp)
+				VK_ATTACHMENT_LOAD_OP_DONT_CARE,	// stencilLoadOp (VkAttachmentLoadOp)
+				VK_ATTACHMENT_STORE_OP_DONT_CARE,	// stencilStoreOp (VkAttachmentStoreOp)
+				VK_IMAGE_LAYOUT_UNDEFINED,			// initialLayout (VkImageLayout)
+				VK_IMAGE_LAYOUT_PRESENT_SRC_KHR		// finalLayout (VkImageLayout)
+			};
+			const VkAttachmentReference colorVkAttachmentReference =
+			{
+				0,											// attachment (uint32_t)
+				VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL	// layout (VkImageLayout)
+			};
+			const VkSubpassDescription vkSubpassDescription =
+			{
+				0,									// flags (VkSubpassDescriptionFlags)
+				VK_PIPELINE_BIND_POINT_GRAPHICS,	// pipelineBindPoint (VkPipelineBindPoint)
+				0,									// inputAttachmentCount (uint32_t)
+				nullptr,							// pInputAttachments (const VkAttachmentReference*)
+				1,									// colorAttachmentCount (uint32_t)
+				&colorVkAttachmentReference,		// pColorAttachments (const VkAttachmentReference*)
+				nullptr,							// pResolveAttachments (const VkAttachmentReference*)
+				nullptr,							// pDepthStencilAttachment (const VkAttachmentReference*)
+				0,									// preserveAttachmentCount (uint32_t)
+				nullptr								// pPreserveAttachments (const uint32_t*)
+			};
+			const VkSubpassDependency vkSubpassDependency =
+			{
+				VK_SUBPASS_EXTERNAL,														// srcSubpass (uint32_t)
+				0,																			// dstSubpass (uint32_t)
+				VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,								// srcStageMask (VkPipelineStageFlags)
+				VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,								// dstStageMask (VkPipelineStageFlags)
+				0,																			// srcAccessMask (VkAccessFlags)
+				VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,	// dstAccessMask (VkAccessFlags)
+				0																			// dependencyFlags (VkDependencyFlags)
+			};
+			const VkRenderPassCreateInfo vkRenderPassCreateInfo =
+			{
+				VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO,	// sType (VkStructureType)
+				nullptr,									// pNext (const void*)
+				0,											// flags (VkRenderPassCreateFlags)
+				1,											// attachmentCount (uint32_t)
+				&colorVkAttachmentDescription,				// pAttachments (const VkAttachmentDescription*)
+				1,											// subpassCount (uint32_t)
+				&vkSubpassDescription,						// pSubpasses (const VkSubpassDescription*)
+				1,											// dependencyCount (uint32_t)
+				&vkSubpassDependency						// pDependencies (const VkSubpassDependency*)
+			};
+
+			// Create render pass
+			VkRenderPass vkRenderPass = VK_NULL_HANDLE;
+			if (vkCreateRenderPass(vkDevice, &vkRenderPassCreateInfo, nullptr, &vkRenderPass) != VK_SUCCESS)
+			{
+				RENDERER_LOG(context, CRITICAL, "Failed to create Vulkan render pass")
+			}
+
+			// Done
+			return vkRenderPass;
+		}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	}
+}
 
 
 //[-------------------------------------------------------]
@@ -40,231 +360,42 @@ namespace VulkanRenderer
 	SwapChain::SwapChain(VulkanRenderer& vulkanRenderer, handle nativeWindowHandle) :
 		ISwapChain(vulkanRenderer),
 		mNativeWindowHandle(nativeWindowHandle),
+		mRenderWindow(nullptr),
 		mVkSurfaceKHR(VK_NULL_HANDLE),
 		mVkSwapchainKHR(VK_NULL_HANDLE),
-		mSwapchainImageCount(0),
-		mRenderWindow(nullptr)
+		mVkRenderPass(VK_NULL_HANDLE),
+		mImageAvailableVkSemaphore(VK_NULL_HANDLE),
+		mRenderingFinishedVkSemaphore(VK_NULL_HANDLE)
 	{
-		// Get the Vulkan instance and the Vulkan physical device
-		const VkInstance vkInstance = vulkanRenderer.getVulkanRuntimeLinking().getVkInstance();
-		const VulkanContext& vulkanContext = vulkanRenderer.getVulkanContext();
-		const VkPhysicalDevice vkPhysicalDevice = vulkanContext.getVkPhysicalDevice();
-		const VkDevice vkDevice = vulkanContext.getVkDevice();
-
-		// Create Vulkan surface instance depending on OS
-		#ifdef VK_USE_PLATFORM_WIN32_KHR
-			VkWin32SurfaceCreateInfoKHR vkWin32SurfaceCreateInfoKHR = {};
-			vkWin32SurfaceCreateInfoKHR.sType	  = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
-			vkWin32SurfaceCreateInfoKHR.hinstance = reinterpret_cast<HINSTANCE>(::GetWindowLongPtr(reinterpret_cast<HWND>(nativeWindowHandle), GWLP_HINSTANCE));
-			vkWin32SurfaceCreateInfoKHR.hwnd	  = reinterpret_cast<HWND>(nativeWindowHandle);
-			VkResult vkResult = vkCreateWin32SurfaceKHR(vkInstance, &vkWin32SurfaceCreateInfoKHR, nullptr, &mVkSurfaceKHR);
-		#elif defined VK_USE_PLATFORM_ANDROID_KHR
-			#warning "TODO(co) Not tested"	// See https://github.com/SaschaWillems/Vulkan
-			VkAndroidSurfaceCreateInfoKHR vkAndroidSurfaceCreateInfoKHR = {};
-			vkAndroidSurfaceCreateInfoKHR.sType  = VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR;
-			vkAndroidSurfaceCreateInfoKHR.window = window;
-			VkResult vkResult = vkCreateAndroidSurfaceKHR(vkInstance, &vkAndroidSurfaceCreateInfoKHR, nullptr, &mVkSurfaceKHR);
-		#elif defined VK_USE_PLATFORM_XLIB_KHR
-			#error "TODO(co) Implement me"
-		#elif defined VK_USE_PLATFORM_XCB_KHR
-			#warning "TODO(co) Not tested"	// See https://github.com/SaschaWillems/Vulkan
-			VkXcbSurfaceCreateInfoKHR vkXcbSurfaceCreateInfoKHR = {};
-			vkXcbSurfaceCreateInfoKHR.sType		 = VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR;
-			vkXcbSurfaceCreateInfoKHR.connection = connection;
-			vkXcbSurfaceCreateInfoKHR.window	 = window;
-			VkResult vkResult = vkCreateXcbSurfaceKHR(vkInstance, &vkXcbSurfaceCreateInfoKHR, nullptr, &mVkSurfaceKHR);
-		#else
-			#error "Unsupported platform"
-		#endif
-
-		// Get list of supported surface formats
-		uint32_t surfaceFormatCount = 0;
-		vkResult = vkGetPhysicalDeviceSurfaceFormatsKHR(vkPhysicalDevice, mVkSurfaceKHR, &surfaceFormatCount, nullptr);
-	//	assert(!vkResult);
-	//	assert(surfaceFormatCount > 0);
-
-		std::vector<VkSurfaceFormatKHR> vkSurfaceFormatKHRs(surfaceFormatCount);
-		vkResult = vkGetPhysicalDeviceSurfaceFormatsKHR(vkPhysicalDevice, mVkSurfaceKHR, &surfaceFormatCount, vkSurfaceFormatKHRs.data());
-	//	assert(!vkResult);
-
-		// If the surface format list only includes one entry with VK_FORMAT_UNDEFINED,
-		// there is no preferred format, so we assume VK_FORMAT_B8G8R8A8_UNORM
-		VkFormat colorVkFormat;
-		if ((surfaceFormatCount == 1) && (vkSurfaceFormatKHRs[0].format == VK_FORMAT_UNDEFINED))
+		// Create the Vulkan presentation surface instance depending on the operation system
+		const VulkanContext&   vulkanContext	= vulkanRenderer.getVulkanContext();
+		const VkInstance	   vkInstance		= vulkanRenderer.getVulkanRuntimeLinking().getVkInstance();
+		const VkPhysicalDevice vkPhysicalDevice	= vulkanContext.getVkPhysicalDevice();
+		mVkSurfaceKHR = detail::createPresentationSurface(vulkanContext, vkInstance, vkPhysicalDevice, mNativeWindowHandle);
+		if (VK_NULL_HANDLE != mVkSurfaceKHR)
 		{
-			colorVkFormat = VK_FORMAT_B8G8R8A8_UNORM;
+			// Create the Vulkan swap chain
+			createVulkanSwapChain();
+
+			{ // Create the Vulkan semaphores
+				const VkSemaphoreCreateInfo vkSemaphoreCreateInfo =
+				{
+					VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,	// sType (VkStructureType)
+					nullptr,									// pNext (const void*)
+					0											// flags (VkSemaphoreCreateFlags)
+				};
+				const VkDevice vkDevice = vulkanContext.getVkDevice();
+				if ((vkCreateSemaphore(vkDevice, &vkSemaphoreCreateInfo, nullptr, &mImageAvailableVkSemaphore) != VK_SUCCESS) ||
+					(vkCreateSemaphore(vkDevice, &vkSemaphoreCreateInfo, nullptr, &mRenderingFinishedVkSemaphore) != VK_SUCCESS))
+				{
+					RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create Vulkan semaphore")
+				}
+			}
 		}
 		else
 		{
-			// Always select the first available color format
-			// If you need a specific format (e.g. SRGB) you'd need to
-			// iterate over the list of available surface format and
-			// check for it's presence
-			colorVkFormat = vkSurfaceFormatKHRs[0].format;
-		}
-		VkColorSpaceKHR vkColorSpaceKHR = vkSurfaceFormatKHRs[0].colorSpace;
-
-		// Get the width and height of the given native window and ensure they are never ever zero
-		// -> See "getSafeWidthAndHeight()"-method comments for details
-		uint32_t width  = 1;
-		uint32_t height = 1;
-		#ifdef _WIN32
-		{
-			// Get the client rectangle of the given native window
-			RECT rect;
-			::GetClientRect(reinterpret_cast<HWND>(nativeWindowHandle), &rect);
-
-			// Get the width and height...
-			width  = static_cast<uint32_t>(rect.right  - rect.left);
-			height = static_cast<uint32_t>(rect.bottom - rect.top);
-
-			// ... and ensure that none of them is ever zero
-			if (width < 1)
-			{
-				width = 1;
-			}
-			if (height < 1)
-			{
-				height = 1;
-			}
-		}
-		#endif
-
-
-
-
-		// TODO(co) Move the rest into a method
-		VkSwapchainKHR oldVkSwapchainKHR = mVkSwapchainKHR;
-
-		// Get physical device surface properties and formats
-		VkSurfaceCapabilitiesKHR vkSurfaceCapabilitiesKHR;
-		vkResult = vkGetPhysicalDeviceSurfaceCapabilitiesKHR(vkPhysicalDevice, mVkSurfaceKHR, &vkSurfaceCapabilitiesKHR);
-	//	assert(!vkResult);
-
-		// Get available present modes
-		uint32_t presentModeCount = 0;
-		vkResult = vkGetPhysicalDeviceSurfacePresentModesKHR(vkPhysicalDevice, mVkSurfaceKHR, &presentModeCount, nullptr);
-	//	assert(!vkResult);
-	//	assert(presentModeCount > 0);
-
-		std::vector<VkPresentModeKHR> vkPresentModeKHRs(presentModeCount);
-		vkResult = vkGetPhysicalDeviceSurfacePresentModesKHR(vkPhysicalDevice, mVkSurfaceKHR, &presentModeCount, vkPresentModeKHRs.data());
-	//	assert(!vkResult);
-
-		// Width and height are either both -1, or both not -1.
-		VkExtent2D swapchainExtent = {};
-		if (vkSurfaceCapabilitiesKHR.currentExtent.width == -1)
-		{
-			// If the surface size is undefined, the size is set to
-			// the size of the images requested.
-			swapchainExtent.width = width;
-			swapchainExtent.height = height;
-		}
-		else
-		{
-			// If the surface size is defined, the swap chain size must match
-			swapchainExtent = vkSurfaceCapabilitiesKHR.currentExtent;
-			width = vkSurfaceCapabilitiesKHR.currentExtent.width;
-			height = vkSurfaceCapabilitiesKHR.currentExtent.height;
-		}
-
-		// Prefer mailbox mode if present, it's the lowest latency non-tearing present  mode
-		VkPresentModeKHR swapchainPresentMode = VK_PRESENT_MODE_FIFO_KHR;
-		for (size_t i = 0; i < presentModeCount; ++i)
-		{
-			if (vkPresentModeKHRs[i] == VK_PRESENT_MODE_MAILBOX_KHR)
-			{
-				swapchainPresentMode = VK_PRESENT_MODE_MAILBOX_KHR;
-				break;
-			}
-			if ((swapchainPresentMode != VK_PRESENT_MODE_MAILBOX_KHR) && (vkPresentModeKHRs[i] == VK_PRESENT_MODE_IMMEDIATE_KHR))
-			{
-				swapchainPresentMode = VK_PRESENT_MODE_IMMEDIATE_KHR;
-			}
-		}
-
-		// Determine the number of images
-		uint32_t desiredNumberOfSwapchainImages = vkSurfaceCapabilitiesKHR.minImageCount + 1;
-		if ((vkSurfaceCapabilitiesKHR.maxImageCount > 0) && (desiredNumberOfSwapchainImages > vkSurfaceCapabilitiesKHR.maxImageCount))
-		{
-			desiredNumberOfSwapchainImages = vkSurfaceCapabilitiesKHR.maxImageCount;
-		}
-
-		VkSurfaceTransformFlagsKHR vkSurfaceTransformFlagsKHR;
-		if (vkSurfaceCapabilitiesKHR.supportedTransforms & VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR)
-		{
-			vkSurfaceTransformFlagsKHR = VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR;
-		}
-		else 
-		{
-			vkSurfaceTransformFlagsKHR = vkSurfaceCapabilitiesKHR.currentTransform;
-		}
-
-		VkSwapchainCreateInfoKHR vkSwapchainCreateInfoKHR = {};
-		vkSwapchainCreateInfoKHR.sType			  = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-		vkSwapchainCreateInfoKHR.surface		  = mVkSurfaceKHR;
-		vkSwapchainCreateInfoKHR.minImageCount	  = desiredNumberOfSwapchainImages;
-		vkSwapchainCreateInfoKHR.imageFormat	  = colorVkFormat;
-		vkSwapchainCreateInfoKHR.imageColorSpace  = vkColorSpaceKHR;
-		vkSwapchainCreateInfoKHR.imageExtent	  = { swapchainExtent.width, swapchainExtent.height };
-		vkSwapchainCreateInfoKHR.imageUsage		  = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
-		vkSwapchainCreateInfoKHR.preTransform	  = static_cast<VkSurfaceTransformFlagBitsKHR>(vkSurfaceTransformFlagsKHR);
-		vkSwapchainCreateInfoKHR.imageArrayLayers = 1;
-		vkSwapchainCreateInfoKHR.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
-		vkSwapchainCreateInfoKHR.presentMode	  = swapchainPresentMode;
-		vkSwapchainCreateInfoKHR.oldSwapchain	  = oldVkSwapchainKHR;
-		vkSwapchainCreateInfoKHR.clipped		  = true;
-		vkSwapchainCreateInfoKHR.compositeAlpha   = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-
-		vkResult = vkCreateSwapchainKHR(vkDevice, &vkSwapchainCreateInfoKHR, nullptr, &mVkSwapchainKHR);
-	//	assert(!vkResult);
-
-		// If an existing swap chain is re-created, destroy the old swap chain
-		// This also cleans up all the presentable images
-		if (VK_NULL_HANDLE != oldVkSwapchainKHR)
-		{
-			for (uint32_t i = 0; i < mSwapchainImageCount; ++i)
-			{
-				vkDestroyImageView(vkDevice, mSwapChainBuffer[i].view, nullptr);
-			}
-			vkDestroySwapchainKHR(vkDevice, oldVkSwapchainKHR, nullptr);
-		}
-
-		vkResult = vkGetSwapchainImagesKHR(vkDevice, mVkSwapchainKHR, &mSwapchainImageCount, nullptr);
-	//	assert(!vkResult);
-
-		// Get the swap chain images
-		mVkImages.resize(mSwapchainImageCount);
-		vkResult = vkGetSwapchainImagesKHR(vkDevice, mVkSwapchainKHR, &mSwapchainImageCount, mVkImages.data());
-	//	assert(!vkResult);
-
-		// Get the swap chain buffers containing the image and image view
-		mSwapChainBuffer.resize(mSwapchainImageCount);
-		for (uint32_t i = 0; i < mSwapchainImageCount; ++i)
-		{
-			VkImageViewCreateInfo colorAttachmentView = {};
-			colorAttachmentView.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-			colorAttachmentView.format = colorVkFormat;
-			colorAttachmentView.components = {
-				VK_COMPONENT_SWIZZLE_R,
-				VK_COMPONENT_SWIZZLE_G,
-				VK_COMPONENT_SWIZZLE_B,
-				VK_COMPONENT_SWIZZLE_A
-			};
-			colorAttachmentView.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-			colorAttachmentView.subresourceRange.levelCount = 1;
-			colorAttachmentView.subresourceRange.layerCount = 1;
-			colorAttachmentView.viewType = VK_IMAGE_VIEW_TYPE_2D;
-
-			mSwapChainBuffer[i].image = mVkImages[i];
-
-			// Transform images from initial (undefined) to present layout
-			Helper::setImageLayout(vulkanContext.getSetupVkCommandBuffer(), mSwapChainBuffer[i].image, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, VK_IMAGE_ASPECT_COLOR_BIT);
-
-			colorAttachmentView.image = mSwapChainBuffer[i].image;
-
-			vkResult = vkCreateImageView(vkDevice, &colorAttachmentView, nullptr, &mSwapChainBuffer[i].view);
-		//	assert(!vkResult);
+			// Error!
+			RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "The swap chain failed to create the Vulkan presentation surface")
 		}
 	}
 
@@ -272,17 +403,16 @@ namespace VulkanRenderer
 	{
 		if (VK_NULL_HANDLE != mVkSurfaceKHR)
 		{
-			const VulkanRenderer& vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
-			const VkDevice vkDevice = vulkanRenderer.getVulkanContext().getVkDevice();
-			for (uint32_t i = 0; i < mSwapchainImageCount; ++i)
+			if (VK_NULL_HANDLE != mImageAvailableVkSemaphore)
 			{
-				vkDestroyImageView(vkDevice, mSwapChainBuffer[i].view, nullptr);
+				vkDestroySemaphore(static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), mImageAvailableVkSemaphore, nullptr);
 			}
-			if (VK_NULL_HANDLE != mVkSwapchainKHR)
+			if (VK_NULL_HANDLE != mRenderingFinishedVkSemaphore)
 			{
-				vkDestroySwapchainKHR(vkDevice, mVkSwapchainKHR, nullptr);
+				vkDestroySemaphore(static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), mRenderingFinishedVkSemaphore, nullptr);
 			}
-			vkDestroySurfaceKHR(vulkanRenderer.getVulkanRuntimeLinking().getVkInstance(), mVkSurfaceKHR, nullptr);
+			destroyVulkanSwapChain();
+			vkDestroySurfaceKHR(static_cast<VulkanRenderer&>(getRenderer()).getVulkanRuntimeLinking().getVkInstance(), mVkSurfaceKHR, nullptr);
 		}
 	}
 
@@ -389,12 +519,18 @@ namespace VulkanRenderer
 			return;
 		}
 		#ifdef WIN32
+			// TODO(co) Implement me
+			/*
 			HDC hDC = ::GetDC(reinterpret_cast<HWND>(mNativeWindowHandle));
 			::SwapBuffers(hDC);
 			::ReleaseDC(reinterpret_cast<HWND>(mNativeWindowHandle), hDC);
+			*/
 		#elif defined LINUX
+			// TODO(co) Implement me
+			/*
 			VulkanRenderer& vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
 			glXSwapBuffers(static_cast<const VulkanContextLinux&>(vulkanRenderer.getVulkanContext()).getDisplay(), mNativeWindowHandle);
+			*/
 		#else
 			#error "Unsupported platform"
 		#endif
@@ -402,7 +538,8 @@ namespace VulkanRenderer
 
 	void SwapChain::resizeBuffers()
 	{
-		// Nothing here
+		// Recreate the Vulkan swap chain
+		createVulkanSwapChain();
 	}
 
 	bool SwapChain::getFullscreenState() const
@@ -414,6 +551,199 @@ namespace VulkanRenderer
 	void SwapChain::setFullscreenState(bool)
 	{
 		// TODO(co) Implement me
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	void SwapChain::createVulkanSwapChain()
+	{
+		const Renderer::Context& context = getRenderer().getContext();
+
+		// Get the Vulkan physical device
+		const VulkanContext&   vulkanContext	= static_cast<const VulkanRenderer&>(getRenderer()).getVulkanContext();
+		const VkPhysicalDevice vkPhysicalDevice	= vulkanContext.getVkPhysicalDevice();
+		const VkDevice		   vkDevice			= vulkanContext.getVkDevice();
+
+		// Sanity checks
+		assert(VK_NULL_HANDLE != vkPhysicalDevice);
+		assert(VK_NULL_HANDLE != vkDevice);
+
+		// Wait for the Vulkan device to become idle
+		vkDeviceWaitIdle(vkDevice);
+
+		// Get Vulkan surface capabilities
+		VkSurfaceCapabilitiesKHR vkSurfaceCapabilitiesKHR;
+		if (vkGetPhysicalDeviceSurfaceCapabilitiesKHR(vkPhysicalDevice, mVkSurfaceKHR, &vkSurfaceCapabilitiesKHR) != VK_SUCCESS)
+		{
+			RENDERER_LOG(context, CRITICAL, "Failed to get physical Vulkan device surface capabilities")
+			return;
+		}
+
+		// Get Vulkan swap chain settings
+		const uint32_t                      desiredNumberOfImages				 = ::detail::getNumberOfSwapChainImages(vkSurfaceCapabilitiesKHR);
+		const VkSurfaceFormatKHR            desiredVkSurfaceFormatKHR			 = ::detail::getSwapChainFormat(context, vkPhysicalDevice, mVkSurfaceKHR);
+		const VkExtent2D                    desiredVkExtent2D					 = ::detail::getSwapChainExtent(vkSurfaceCapabilitiesKHR);
+		const VkImageUsageFlags             desiredVkImageUsageFlags			 = ::detail::getSwapChainUsageFlags(context, vkSurfaceCapabilitiesKHR);
+		const VkSurfaceTransformFlagBitsKHR desiredVkSurfaceTransformFlagBitsKHR = ::detail::getSwapChainTransform(vkSurfaceCapabilitiesKHR);
+		const VkPresentModeKHR              desiredVkPresentModeKHR				 = ::detail::getSwapChainPresentMode(context, vkPhysicalDevice, mVkSurfaceKHR);
+
+		// Validate Vulkan swap chain settings
+		if (-1 == static_cast<int>(desiredVkImageUsageFlags))
+		{
+			RENDERER_LOG(context, CRITICAL, "Invalid desired Vulkan image usage flags")
+			return;
+		}
+		if (VK_PRESENT_MODE_MAX_ENUM_KHR == desiredVkPresentModeKHR)
+		{
+			RENDERER_LOG(context, CRITICAL, "Invalid desired Vulkan presentation mode")
+			return;
+		}
+		if ((0 == desiredVkExtent2D.width) || (0 == desiredVkExtent2D.height))
+		{
+			// Current surface size is (0, 0) so we can't create a swap chain and render anything (CanRender == false)
+			// But we don't wont to kill the application as this situation may occur i.e. when window gets minimized
+			destroyVulkanSwapChain();
+			return;
+		}
+
+		{ // Create Vulkan swap chain
+			VkSwapchainKHR newVkSwapchainKHR = VK_NULL_HANDLE;
+			const VkSwapchainCreateInfoKHR vkSwapchainCreateInfoKHR =
+			{
+				VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,	// sType (VkStructureType)
+				nullptr,										// pNext (const void*)
+				0,												// flags (VkSwapchainCreateFlagsKHR)
+				mVkSurfaceKHR,									// surface (VkSurfaceKHR)
+				desiredNumberOfImages,							// minImageCount (uint32_t)
+				desiredVkSurfaceFormatKHR.format,				// imageFormat (VkFormat)
+				desiredVkSurfaceFormatKHR.colorSpace,			// imageColorSpace (VkColorSpaceKHR)
+				desiredVkExtent2D,								// imageExtent (VkExtent2D)
+				1,												// imageArrayLayers (uint32_t)
+				desiredVkImageUsageFlags,						// imageUsage (VkImageUsageFlags)
+				VK_SHARING_MODE_EXCLUSIVE,						// imageSharingMode (VkSharingMode)
+				0,												// queueFamilyIndexCount (uint32_t)
+				nullptr,										// pQueueFamilyIndices (const uint32_t*)
+				desiredVkSurfaceTransformFlagBitsKHR,			// preTransform (VkSurfaceTransformFlagBitsKHR)
+				VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,				// compositeAlpha (VkCompositeAlphaFlagBitsKHR)
+				desiredVkPresentModeKHR,						// presentMode (VkPresentModeKHR)
+				VK_TRUE,										// clipped (VkBool32)
+				mVkSwapchainKHR									// oldSwapchain (VkSwapchainKHR)
+			};
+			if (vkCreateSwapchainKHR(vkDevice, &vkSwapchainCreateInfoKHR, nullptr, &newVkSwapchainKHR) != VK_SUCCESS)
+			{
+				RENDERER_LOG(context, CRITICAL, "Failed to create Vulkan swap chain")
+				return;
+			}
+			destroyVulkanSwapChain();
+			mVkSwapchainKHR = newVkSwapchainKHR;
+		}
+
+		// Create render pass
+		mVkRenderPass = ::detail::createRenderPass(context, vkDevice, desiredVkSurfaceFormatKHR.format);
+
+		// Vulkan swap chain image handling
+		if (VK_NULL_HANDLE != mVkRenderPass)
+		{
+			// Get the swap chain images
+			uint32_t swapchainImageCount = 0;
+			if (vkGetSwapchainImagesKHR(vkDevice, mVkSwapchainKHR, &swapchainImageCount, nullptr) != VK_SUCCESS)
+			{
+				RENDERER_LOG(context, CRITICAL, "Failed to get Vulkan swap chain images")
+				return;
+			}
+			std::vector<VkImage> vkImages(swapchainImageCount);
+			if (vkGetSwapchainImagesKHR(vkDevice, mVkSwapchainKHR, &swapchainImageCount, vkImages.data()) != VK_SUCCESS)
+			{
+				RENDERER_LOG(context, CRITICAL, "Failed to get Vulkan swap chain images")
+				return;
+			}
+
+			// Get the swap chain buffers containing the image and image view
+			mSwapChainBuffer.resize(swapchainImageCount);
+			for (uint32_t i = 0; i < swapchainImageCount; ++i)
+			{
+				SwapChainBuffer& swapChainBuffer = mSwapChainBuffer[i];
+				swapChainBuffer.vkImage = vkImages[i];
+
+				{ // Create the Vulkan image view
+					const VkImageViewCreateInfo vkImageViewCreateInfo =
+					{
+						VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,	// sType (VkStructureType)
+						nullptr,									// pNext (const void*)
+						0,											// flags (VkImageViewCreateFlags)
+						swapChainBuffer.vkImage,						// image (VkImage)
+						VK_IMAGE_VIEW_TYPE_2D,						// viewType (VkImageViewType)
+						desiredVkSurfaceFormatKHR.format,			// format (VkFormat)
+						{ // components (VkComponentMapping)
+							VK_COMPONENT_SWIZZLE_IDENTITY,			// r (VkComponentSwizzle)
+							VK_COMPONENT_SWIZZLE_IDENTITY,			// g (VkComponentSwizzle)
+							VK_COMPONENT_SWIZZLE_IDENTITY,			// b (VkComponentSwizzle)
+							VK_COMPONENT_SWIZZLE_IDENTITY			// a (VkComponentSwizzle)
+						},
+						{ // subresourceRange (VkImageSubresourceRange)
+							VK_IMAGE_ASPECT_COLOR_BIT,				// aspectMask (VkImageAspectFlags)
+							0,										// baseMipLevel (uint32_t)
+							1,										// levelCount (uint32_t)
+							0,										// baseArrayLayer (uint32_t)
+							1										// layerCount (uint32_t)
+						}
+					};
+					if (vkCreateImageView(vkDevice, &vkImageViewCreateInfo, nullptr, &swapChainBuffer.vkImageView) != VK_SUCCESS)
+					{
+						RENDERER_LOG(context, CRITICAL, "Failed to create Vulkan image view")
+					}
+				}
+
+				{ // Create the Vulkan framebuffer
+					const VkFramebufferCreateInfo vkFramebufferCreateInfo =
+					{
+						VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,	// sType (VkStructureType)
+						nullptr,									// pNext (const void*)
+						0,											// flags (VkFramebufferCreateFlags)
+						mVkRenderPass,								// renderPass (VkRenderPass)
+						1,											// attachmentCount (uint32_t)
+						&swapChainBuffer.vkImageView,				// pAttachments (const VkImageView*)
+						desiredVkExtent2D.width,					// width (uint32_t)
+						desiredVkExtent2D.height,					// height (uint32_t)
+						1											// layers (uint32_t)
+					};
+					if (vkCreateFramebuffer(vkDevice, &vkFramebufferCreateInfo, nullptr, &swapChainBuffer.vkFramebuffer) != VK_SUCCESS)
+					{
+						RENDERER_LOG(context, CRITICAL, "Failed to create Vulkan framebuffer")
+					}
+				}
+			}
+		}
+	}
+
+	void SwapChain::destroyVulkanSwapChain()
+	{
+		if (VK_NULL_HANDLE != mVkRenderPass || !mSwapChainBuffer.empty() || VK_NULL_HANDLE != mVkSwapchainKHR)
+		{
+			const VkDevice vkDevice = static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice();
+			vkDeviceWaitIdle(vkDevice);
+			if (VK_NULL_HANDLE != mVkRenderPass)
+			{
+				vkDestroyRenderPass(vkDevice, mVkRenderPass, nullptr);
+				mVkRenderPass = VK_NULL_HANDLE;
+			}
+			if (!mSwapChainBuffer.empty())
+			{
+				for (const SwapChainBuffer& swapChainBuffer : mSwapChainBuffer)
+				{
+					vkDestroyFramebuffer(vkDevice, swapChainBuffer.vkFramebuffer, nullptr);
+					vkDestroyImageView(vkDevice, swapChainBuffer.vkImageView, nullptr);
+				}
+				mSwapChainBuffer.clear();
+			}
+			if (VK_NULL_HANDLE != mVkSwapchainKHR)
+			{
+				vkDestroySwapchainKHR(vkDevice, mVkSwapchainKHR, nullptr);
+				mVkSwapchainKHR = VK_NULL_HANDLE;
+			}
+		}
 	}
 
 

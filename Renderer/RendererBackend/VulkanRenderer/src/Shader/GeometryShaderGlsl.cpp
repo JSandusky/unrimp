@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "VulkanRenderer/Shader/GeometryShaderGlsl.h"
 #include "VulkanRenderer/Shader/ShaderLanguageGlsl.h"
+#include "VulkanRenderer/VulkanRenderer.h"
+#include "VulkanRenderer/VulkanContext.h"
 #include "VulkanRenderer/Extensions.h"
 
 
@@ -36,21 +38,28 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	GeometryShaderGlsl::GeometryShaderGlsl(VulkanRenderer& vulkanRenderer, const Renderer::ShaderBytecode&, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t) :
-		IGeometryShader(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
+	// TODO(co) Remove unused parameters
+	GeometryShaderGlsl::GeometryShaderGlsl(VulkanRenderer& vulkanRenderer, const Renderer::ShaderBytecode& shaderBytecode, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t) :
+		IGeometryShader(vulkanRenderer),
+		mVkShaderModule(ShaderLanguageGlsl::createVkShaderModuleFromBytecode(vulkanRenderer, shaderBytecode))
 	{
-		// TODO(co) Implement me
+		// Nothing here
 	}
 
-	GeometryShaderGlsl::GeometryShaderGlsl(VulkanRenderer& vulkanRenderer, const char*, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t, Renderer::ShaderBytecode*) :
-		IGeometryShader(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
+	// TODO(co) Remove unused parameters
+	GeometryShaderGlsl::GeometryShaderGlsl(VulkanRenderer& vulkanRenderer, const char* sourceCode, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t, Renderer::ShaderBytecode* shaderBytecode) :
+		IGeometryShader(vulkanRenderer),
+		mVkShaderModule(ShaderLanguageGlsl::createVkShaderModuleFromSourceCode(vulkanRenderer, VK_SHADER_STAGE_GEOMETRY_BIT, sourceCode, shaderBytecode))
 	{
-		// TODO(co) Implement me
+		// Nothing here
 	}
 
 	GeometryShaderGlsl::~GeometryShaderGlsl()
 	{
-		// TODO(co) Implement me
+		if (VK_NULL_HANDLE != mVkShaderModule)
+		{
+			vkDestroyShaderModule(static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), mVkShaderModule, nullptr);
+		}
 	}
 
 

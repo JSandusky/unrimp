@@ -36,10 +36,14 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	void Helper::setImageLayout(VkCommandBuffer vkCommandBuffer, VkImage vkImage, VkImageLayout oldVkImageLayout, VkImageLayout newVkImageLayout, VkImageAspectFlags vkImageAspectFlags)
 	{
-		VkImageSubresourceRange vkImageSubresourceRange = {};
-		vkImageSubresourceRange.aspectMask	 = vkImageAspectFlags;
-		vkImageSubresourceRange.levelCount	 = 1;
-		vkImageSubresourceRange.layerCount	 = 1;
+		const VkImageSubresourceRange vkImageSubresourceRange =
+		{
+			vkImageAspectFlags,	// aspectMask (VkImageAspectFlags)
+			0,					// baseMipLevel (uint32_t)
+			1,					// levelCount (uint32_t)
+			0,					// baseArrayLayer (uint32_t)
+			1					// layerCount (uint32_t)
+		};
 		setImageLayout(vkCommandBuffer, vkImage, oldVkImageLayout, newVkImageLayout, vkImageSubresourceRange);
 	}
 

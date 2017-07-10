@@ -28,7 +28,10 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	// TODO(co) Implement me
+	inline VkShaderModule TessellationControlShaderGlsl::getVkShaderModule() const
+	{
+		return mVkShaderModule;
+	}
 
 
 //[-------------------------------------------------------]

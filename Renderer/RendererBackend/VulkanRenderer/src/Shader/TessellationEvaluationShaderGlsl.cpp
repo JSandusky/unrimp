@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "VulkanRenderer/Shader/TessellationEvaluationShaderGlsl.h"
 #include "VulkanRenderer/Shader/ShaderLanguageGlsl.h"
+#include "VulkanRenderer/VulkanRenderer.h"
+#include "VulkanRenderer/VulkanContext.h"
 #include "VulkanRenderer/Extensions.h"
 
 
@@ -36,21 +38,26 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TessellationEvaluationShaderGlsl::TessellationEvaluationShaderGlsl(VulkanRenderer& vulkanRenderer, const Renderer::ShaderBytecode&):
-		ITessellationEvaluationShader(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
+	TessellationEvaluationShaderGlsl::TessellationEvaluationShaderGlsl(VulkanRenderer& vulkanRenderer, const Renderer::ShaderBytecode& shaderBytecode):
+		ITessellationEvaluationShader(vulkanRenderer),
+		mVkShaderModule(ShaderLanguageGlsl::createVkShaderModuleFromBytecode(vulkanRenderer, shaderBytecode))
 	{
-		// TODO(co) Implement me
+		// Nothing here
 	}
 
-	TessellationEvaluationShaderGlsl::TessellationEvaluationShaderGlsl(VulkanRenderer& vulkanRenderer, const char*, Renderer::ShaderBytecode*) :
-		ITessellationEvaluationShader(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
+	TessellationEvaluationShaderGlsl::TessellationEvaluationShaderGlsl(VulkanRenderer& vulkanRenderer, const char* sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
+		ITessellationEvaluationShader(vulkanRenderer),
+		mVkShaderModule(ShaderLanguageGlsl::createVkShaderModuleFromSourceCode(vulkanRenderer, VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT, sourceCode, shaderBytecode))
 	{
-		// TODO(co) Implement me
+		// Nothing here
 	}
 
 	TessellationEvaluationShaderGlsl::~TessellationEvaluationShaderGlsl()
 	{
-		// TODO(co) Implement me
+		if (VK_NULL_HANDLE != mVkShaderModule)
+		{
+			vkDestroyShaderModule(static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), mVkShaderModule, nullptr);
+		}
 	}
 
 

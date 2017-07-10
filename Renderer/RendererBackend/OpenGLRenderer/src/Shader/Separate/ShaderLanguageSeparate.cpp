@@ -160,7 +160,8 @@ namespace
 					1,	///< generalSamplerIndexing
 					1,	///< generalVariableIndexing
 					1,	///< generalConstantMatrixVectorIndexing
-			}};
+				}
+			};
 		#endif
 
 

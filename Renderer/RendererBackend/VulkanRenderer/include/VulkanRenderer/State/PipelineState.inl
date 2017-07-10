@@ -28,7 +28,10 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	// TODO(co) Implement or remove me
+	inline VkPipeline PipelineState::getVkPipeline() const
+	{
+		return mVkPipeline;
+	}
 
 
 //[-------------------------------------------------------]

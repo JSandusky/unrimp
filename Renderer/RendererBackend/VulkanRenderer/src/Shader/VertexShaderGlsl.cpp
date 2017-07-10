@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "VulkanRenderer/Shader/VertexShaderGlsl.h"
 #include "VulkanRenderer/Shader/ShaderLanguageGlsl.h"
+#include "VulkanRenderer/VulkanRenderer.h"
+#include "VulkanRenderer/VulkanContext.h"
 #include "VulkanRenderer/Extensions.h"
 
 
@@ -36,21 +38,26 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexShaderGlsl::VertexShaderGlsl(VulkanRenderer& vulkanRenderer, const Renderer::ShaderBytecode&) :
-		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
+	VertexShaderGlsl::VertexShaderGlsl(VulkanRenderer& vulkanRenderer, const Renderer::ShaderBytecode& shaderBytecode) :
+		IVertexShader(vulkanRenderer),
+		mVkShaderModule(ShaderLanguageGlsl::createVkShaderModuleFromBytecode(vulkanRenderer, shaderBytecode))
 	{
-		// TODO(co) Implement me
+		// Nothing here
 	}
 
-	VertexShaderGlsl::VertexShaderGlsl(VulkanRenderer& vulkanRenderer, const char*, Renderer::ShaderBytecode*) :
-		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
+	VertexShaderGlsl::VertexShaderGlsl(VulkanRenderer& vulkanRenderer, const char* sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
+		IVertexShader(vulkanRenderer),
+		mVkShaderModule(ShaderLanguageGlsl::createVkShaderModuleFromSourceCode(vulkanRenderer, VK_SHADER_STAGE_VERTEX_BIT, sourceCode, shaderBytecode))
 	{
-		// TODO(co) Implement me
+		// Nothing here
 	}
 
 	VertexShaderGlsl::~VertexShaderGlsl()
 	{
-		// TODO(co) Implement me
+		if (VK_NULL_HANDLE != mVkShaderModule)
+		{
+			vkDestroyShaderModule(static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), mVkShaderModule, nullptr);
+		}
 	}
 
 

@@ -414,6 +414,9 @@
     <ClInclude Include="src\Framework\CommandLineArguments.h">
       <Filter>Framework</Filter>
     </ClInclude>
+    <ClInclude Include="src\Basics\FirstTriangle\FirstTriangle_GLSL_450.h">
+      <Filter>Basics\FirstTriangle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Framework\IApplication.cpp">

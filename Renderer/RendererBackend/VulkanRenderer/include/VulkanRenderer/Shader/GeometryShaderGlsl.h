@@ -30,6 +30,8 @@
 #include <Renderer/Shader/IGeometryShader.h>
 #include <Renderer/Shader/ShaderTypes.h>
 
+#include "VulkanRenderer/Vulkan.h"
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -106,6 +108,15 @@ namespace VulkanRenderer
 		*/
 		virtual ~GeometryShaderGlsl();
 
+		/**
+		*  @brief
+		*    Return the Vulkan shader module
+		*
+		*  @return
+		*    The Vulkan shader module
+		*/
+		inline VkShaderModule getVkShaderModule() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
@@ -126,7 +137,7 @@ namespace VulkanRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		// TODO(co) Implement me
+		VkShaderModule mVkShaderModule;	///< Vulkan shader module, destroy it if you no longer need it
 
 
 	};

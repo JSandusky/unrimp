@@ -59,7 +59,7 @@ namespace Direct3D10Renderer
 		// Nothing here
 	}
 
-	ID3DBlob* ShaderLanguageHlsl::loadShaderFromSourcecode(const char* shaderModel, const char* shaderSource, const char* entryPoint) const
+	ID3DBlob* ShaderLanguageHlsl::loadShaderFromSourcecode(const char* shaderModel, const char* sourceCode, const char* entryPoint) const
 	{
 		// Get compile flags
 		UINT compileFlags = D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_WARNINGS_ARE_ERRORS;
@@ -97,7 +97,7 @@ namespace Direct3D10Renderer
 
 		ID3DBlob* d3dBlob = nullptr;
 		ID3DBlob* errorBlob = nullptr;
-		if (FAILED(D3DX10CompileFromMemory(shaderSource, strlen(shaderSource), nullptr, nullptr, nullptr, entryPoint ? entryPoint : "main", shaderModel, compileFlags, 0, nullptr, &d3dBlob, &errorBlob, nullptr)))
+		if (FAILED(D3DX10CompileFromMemory(sourceCode, strlen(sourceCode), nullptr, nullptr, nullptr, entryPoint ? entryPoint : "main", shaderModel, compileFlags, 0, nullptr, &d3dBlob, &errorBlob, nullptr)))
 		{
 			if (nullptr != errorBlob)
 			{

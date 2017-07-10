@@ -35,6 +35,50 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\External\glslang\src\glslang\Include\arrays.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\glslang\Include\BaseTypes.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\glslang\Include\Common.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\glslang\Include\ConstantUnion.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\glslang\Include\InfoSink.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\glslang\Include\InitializeGlobals.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\glslang\Include\intermediate.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\glslang\Include\PoolAlloc.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\glslang\Include\ResourceLimits.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\glslang\Include\revision.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\glslang\Include\ShHandle.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\glslang\Include\Types.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\glslang\MachineIndependent\glslang_tab.cpp.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\glslang\MachineIndependent\gl_types.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\glslang\MachineIndependent\Initialize.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\glslang\MachineIndependent\iomapper.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\glslang\MachineIndependent\LiveTraverser.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\glslang\MachineIndependent\localintermediate.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\glslang\MachineIndependent\ParseHelper.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\glslang\MachineIndependent\parseVersions.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\glslang\MachineIndependent\preprocessor\PpContext.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\glslang\MachineIndependent\preprocessor\PpTokens.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\glslang\MachineIndependent\propagateNoContraction.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\glslang\MachineIndependent\reflection.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\glslang\MachineIndependent\RemoveTree.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\glslang\MachineIndependent\Scan.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\glslang\MachineIndependent\ScanContext.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\glslang\MachineIndependent\SymbolTable.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\glslang\MachineIndependent\Versions.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\glslang\OSDependent\osinclude.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\glslang\Public\ShaderLang.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\OGLCompilersDLL\InitializeDll.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\SPIRV\bitutils.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\SPIRV\GLSL.ext.AMD.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\SPIRV\GLSL.ext.KHR.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\SPIRV\GLSL.ext.NV.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\SPIRV\GLSL.std.450.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\SPIRV\GlslangToSpv.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\SPIRV\hex_float.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\SPIRV\Logger.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\SPIRV\spirv.hpp" />
+    <ClInclude Include="..\..\..\External\glslang\src\SPIRV\SpvBuilder.h" />
+    <ClInclude Include="..\..\..\External\glslang\src\SPIRV\spvIR.h" />
+    <ClInclude Include="..\..\..\External\smol-v\include\smol-v\smolv.h" />
     <ClInclude Include="include\VulkanRenderer\Buffer\BufferManager.h" />
     <ClInclude Include="include\VulkanRenderer\Buffer\IndexBuffer.h" />
     <ClInclude Include="include\VulkanRenderer\Buffer\IndirectBuffer.h" />
@@ -74,6 +118,386 @@
     <ClInclude Include="include\VulkanRenderer\Shader\VertexShaderGlsl.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\External\glslang\src\glslang\GenericCodeGen\CodeGen.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\glslang\GenericCodeGen\Link.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\Constant.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\glslang_tab.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\InfoSink.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\Initialize.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\Intermediate.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\intermOut.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\IntermTraverse.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\iomapper.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\limits.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\linkValidate.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\parseConst.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\ParseContextBase.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\ParseHelper.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\PoolAlloc.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\preprocessor\Pp.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\preprocessor\PpAtom.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\preprocessor\PpContext.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\preprocessor\PpMemory.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\preprocessor\PpScanner.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\preprocessor\PpSymbols.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\preprocessor\PpTokens.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\propagateNoContraction.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\reflection.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\RemoveTree.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\Scan.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\ShaderLang.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\SymbolTable.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\Versions.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\glslang\OSDependent\Unix\ossource.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\glslang\OSDependent\Windows\ossource.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\OGLCompilersDLL\InitializeDll.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\SPIRV\GlslangToSpv.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\SPIRV\InReadableOrder.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\SPIRV\Logger.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\glslang\src\SPIRV\SpvBuilder.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\External\smol-v\src\smolv.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+    </ClCompile>
     <ClCompile Include="src\Buffer\BufferManager.cpp" />
     <ClCompile Include="src\Buffer\IndexBuffer.cpp" />
     <ClCompile Include="src\Buffer\IndirectBuffer.cpp" />
@@ -121,6 +545,8 @@
     <ClCompile Include="src\Windows\ExtensionsWindows.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\External\glslang\src\glslang\Include\revision.template" />
+    <None Include="..\..\..\External\glslang\src\glslang\MachineIndependent\glslang.y" />
     <None Include="CMakeLists.txt" />
     <None Include="include\VulkanRenderer\Buffer\BufferManager.inl" />
     <None Include="include\VulkanRenderer\Buffer\IndexBuffer.inl" />
@@ -289,8 +715,8 @@
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\Vulkan\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\Vulkan\include\;..\..\..\External\glslang\src\;..\..\..\External\smol-v\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>VULKANRENDERER_GLSLTOSPIRV;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -314,8 +740,8 @@ copy $(OutDir)\$(TargetName).lib ..\..\..\lib\$(PlatformTarget)d_static\
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\Vulkan\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;X64_ARCHITECTURE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\Vulkan\include\;..\..\..\External\glslang\src\;..\..\..\External\smol-v\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>VULKANRENDERER_GLSLTOSPIRV;WIN32;X64_ARCHITECTURE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -339,8 +765,8 @@ copy $(OutDir)\$(TargetName).lib ..\..\..\lib\$(PlatformTarget)d_static\
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\Vulkan\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;SHARED_LIBRARIES;VULKANRENDERER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\Vulkan\include\;..\..\..\External\glslang\src\;..\..\..\External\smol-v\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>VULKANRENDERER_GLSLTOSPIRV;WIN32;SHARED_LIBRARIES;VULKANRENDERER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -367,8 +793,8 @@ copy $(OutDir)\$(TargetName).dll ..\..\..\bin\$(PlatformTarget)d_dynamic\
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\Vulkan\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;X64_ARCHITECTURE;SHARED_LIBRARIES;VULKANRENDERER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\Vulkan\include\;..\..\..\External\glslang\src\;..\..\..\External\smol-v\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>VULKANRENDERER_GLSLTOSPIRV;WIN32;X64_ARCHITECTURE;SHARED_LIBRARIES;VULKANRENDERER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -397,8 +823,8 @@ copy $(OutDir)\$(TargetName).dll ..\..\..\bin\$(PlatformTarget)d_dynamic\
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\Vulkan\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;VULKANRENDERER_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\Vulkan\include\;..\..\..\External\glslang\src\;..\..\..\External\smol-v\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>VULKANRENDERER_GLSLTOSPIRV;NDEBUG;WIN32;VULKANRENDERER_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -432,8 +858,8 @@ copy $(OutDir)\$(TargetName).lib ..\..\..\lib\$(PlatformTarget)_static\
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\Vulkan\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;X64_ARCHITECTURE;VULKANRENDERER_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\Vulkan\include\;..\..\..\External\glslang\src\;..\..\..\External\smol-v\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>VULKANRENDERER_GLSLTOSPIRV;NDEBUG;WIN32;X64_ARCHITECTURE;VULKANRENDERER_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -466,8 +892,8 @@ copy $(OutDir)\$(TargetName).lib ..\..\..\lib\$(PlatformTarget)_static\
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\Vulkan\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;SHARED_LIBRARIES;VULKANRENDERER_EXPORTS;VULKANRENDERER_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\Vulkan\include\;..\..\..\External\glslang\src\;..\..\..\External\smol-v\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>VULKANRENDERER_GLSLTOSPIRV;NDEBUG;WIN32;SHARED_LIBRARIES;VULKANRENDERER_EXPORTS;VULKANRENDERER_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -504,8 +930,8 @@ copy $(OutDir)\$(TargetName).dll ..\..\..\bin\$(PlatformTarget)_dynamic\
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\Vulkan\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;X64_ARCHITECTURE;SHARED_LIBRARIES;VULKANRENDERER_EXPORTS;VULKANRENDERER_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>include\;..\..\Renderer\include\;..\..\..\External\Vulkan\include\;..\..\..\External\glslang\src\;..\..\..\External\smol-v\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>VULKANRENDERER_GLSLTOSPIRV;NDEBUG;WIN32;X64_ARCHITECTURE;SHARED_LIBRARIES;VULKANRENDERER_EXPORTS;VULKANRENDERER_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>

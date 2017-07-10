@@ -28,7 +28,30 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	// TODO(co) Implement me
+	inline VertexShaderGlsl* ProgramGlsl::getVertexShaderGlsl() const
+	{
+		return mVertexShaderGlsl;
+	}
+
+	inline TessellationControlShaderGlsl* ProgramGlsl::getTessellationControlShaderGlsl() const
+	{
+		return mTessellationControlShaderGlsl;
+	}
+
+	inline TessellationEvaluationShaderGlsl* ProgramGlsl::getTessellationEvaluationShaderGlsl() const
+	{
+		return mTessellationEvaluationShaderGlsl;
+	}
+
+	inline GeometryShaderGlsl* ProgramGlsl::getGeometryShaderGlsl() const
+	{
+		return mGeometryShaderGlsl;
+	}
+
+	inline FragmentShaderGlsl* ProgramGlsl::getFragmentShaderGlsl() const
+	{
+		return mFragmentShaderGlsl;
+	}
 
 
 //[-------------------------------------------------------]

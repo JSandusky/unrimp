@@ -103,6 +103,51 @@ namespace VulkanRenderer
 		*/
 		virtual ~ProgramGlsl();
 
+		/**
+		*  @brief
+		*    Return the GLSL vertex shader the program is using
+		*
+		*  @return
+		*    The GLSL vertex shader the program is using, can be a null pointer, do not release the returned instance unless you added an own reference to it
+		*/
+		inline VertexShaderGlsl* getVertexShaderGlsl() const;
+
+		/**
+		*  @brief
+		*    Return the GLSL tessellation control shader the program is using
+		*
+		*  @return
+		*    The GLSL tessellation control shader the program is using, can be a null pointer, do not release the returned instance unless you added an own reference to it
+		*/
+		inline TessellationControlShaderGlsl* getTessellationControlShaderGlsl() const;
+
+		/**
+		*  @brief
+		*    Return the GLSL tessellation evaluation shader the program is using
+		*
+		*  @return
+		*    The GLSL tessellation evaluation shader the program is using, can be a null pointer, do not release the returned instance unless you added an own reference to it
+		*/
+		inline TessellationEvaluationShaderGlsl* getTessellationEvaluationShaderGlsl() const;
+
+		/**
+		*  @brief
+		*    Return the GLSL geometry shader the program is using
+		*
+		*  @return
+		*    The GLSL geometry shader the program is using, can be a null pointer, do not release the returned instance unless you added an own reference to it
+		*/
+		inline GeometryShaderGlsl* getGeometryShaderGlsl() const;
+
+		/**
+		*  @brief
+		*    Return the GLSL fragment shader the program is using
+		*
+		*  @return
+		*    The GLSL fragment shader the program is using, can be a null pointer, do not release the returned instance unless you added an own reference to it
+		*/
+		inline FragmentShaderGlsl* getFragmentShaderGlsl() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
@@ -116,7 +161,11 @@ namespace VulkanRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		uint32_t mNumberOfRootSignatureParameters;	///< Number of root signature parameters
+		VertexShaderGlsl*				  mVertexShaderGlsl;					///< Vertex shader the program is using (we keep a reference to it), can be a null pointer
+		TessellationControlShaderGlsl*	  mTessellationControlShaderGlsl;		///< Tessellation control shader the program is using (we keep a reference to it), can be a null pointer
+		TessellationEvaluationShaderGlsl* mTessellationEvaluationShaderGlsl;	///< Tessellation evaluation shader the program is using (we keep a reference to it), can be a null pointer
+		GeometryShaderGlsl*				  mGeometryShaderGlsl;					///< Geometry shader the program is using (we keep a reference to it), can be a null pointer
+		FragmentShaderGlsl*				  mFragmentShaderGlsl;					///< Fragment shader the program is using (we keep a reference to it), can be a null pointer
 
 
 	};

@@ -23,10 +23,13 @@ Vulkan renderer implementation.
 
 
 == Dependencies ==
-Vulkan capable graphics driver, nothing else.
+- Vulkan capable graphics driver
+- smol-v (directly compiled and linked in)
+- glslang if "VULKANRENDERER_GLSLTOSPIRV" is set (directly compiled and linked in)
 
 
 == Preprocessor Definitions ==
 - Set "VULKANRENDERER_EXPORTS" as preprocessor definition when building this library as shared library
 - Set "VULKANRENDERER_NO_RENDERERMATCHCHECK" as preprocessor definition when building this library to remove renderer<->resource matches (better performance, reduces the binary size slightly, but you will receive no hint when using a resource from another renderer instance)
+- Set "VULKANRENDERER_GLSLTOSPIRV" as preprocessor definition when building this library to add support for compiling GLSL into SPIR-V, increases the binary size around one MiB
 - Do also have a look into the renderer readme file
