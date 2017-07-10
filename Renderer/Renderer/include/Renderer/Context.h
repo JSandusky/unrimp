@@ -38,6 +38,11 @@ namespace Renderer
 	class ILog;
 }
 
+#ifdef LINUX
+	// Copied from Xlib.h
+	struct _XDisplay;
+#endif
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -58,6 +63,18 @@ namespace Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		enum class ContextType
+		{
+			WIN32,
+			X11,
+			WAYLAND
+		};
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
@@ -65,6 +82,8 @@ namespace Renderer
 		*  @brief
 		*    Constructor
 		*
+		*  @param[in] contextType
+		*    The type of the context
 		*  @param[in] log
 		*    Log instance to use, the log instance must stay valid as long as the renderer instance exists
 		*  @param[in] nativeWindowHandle
@@ -72,13 +91,22 @@ namespace Renderer
 		*  @param[in] useExternalContext
 		*    Indicates if an external renderer context is used; in this case the renderer itself has nothing to do with the creation/managing of an renderer context
 		*/
-		inline Context(ILog& log, handle nativeWindowHandle = 0, bool useExternalContext = false);
+		inline Context(ContextType contextType, ILog& log, handle nativeWindowHandle = 0, bool useExternalContext = false);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		inline ~Context();
+		inline virtual ~Context();
+
+		/**
+		*  @brief
+		*    Return the type of the context
+		*
+		*  @return
+		*    The context type
+		*/
+		inline ContextType getType() const;
 
 		/**
 		*  @brief
@@ -107,6 +135,24 @@ namespace Renderer
 		*/
 		inline bool isUsingExternalContext() const;
 
+		/**
+		*  @brief
+		*    Return an handle to the renderer api shared library
+		*
+		*  @return
+		*    The handle to the renderer api shared library
+		*/
+		inline void* getRendererApiSharedLibrary() const;
+
+		/**
+		*  @brief
+		*    Sets the handle for the renderer api shared library to use instead of let it load by the renderer instance
+		*
+		*  @param[in] rendererApiSharedLibrary
+		*    An handle to the renderer api shared library. The renderer will use this handle instead of loading the renderer api shared library itself
+		*/
+		inline void setRendererApiSharedLibrary(void* rendererApiSharedLibrary);
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
@@ -120,12 +166,63 @@ namespace Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		ContextType mContextType;
 		ILog&  mLog;
 		handle mNativeWindowHandle;
 		bool   mUseExternalContext;
+		void*  mRendererApiSharedLibrary;	///< An handle to the renderer api shared library (e.g. optained via dlopen and co
 
 
 	};
+
+// TODO(sw) Hide it via an define for non linux builds? This definition doesn't use any platform specific headers
+#ifdef LINUX
+	/**
+	*  @brief
+	*    X11 Version of the context class
+	*/
+	class X11Context : public Context
+	{
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Constructor
+		*
+		*  @param[in] log
+		*    Log instance to use, the log instance must stay valid as long as the renderer instance exists
+		*  @param[in] display
+		*    The X11 display connection
+		*  @param[in] nativeWindowHandle
+		*    Native window handle
+		*  @param[in] useExternalContext
+		*    Indicates if an external renderer context is used; in this case the renderer itself has nothing to do with the creation/managing of an renderer context
+		*/
+		inline X11Context(ILog& log, _XDisplay* display, handle nativeWindowHandle = 0, bool useExternalContext = false);
+
+		/**
+		*  @brief
+		*    Return the type of the context
+		*
+		*  @return
+		*    The context type
+		*/
+		inline _XDisplay* getDisplay() const;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		_XDisplay* mDisplay;
+
+
+	};
+#endif
 
 
 //[-------------------------------------------------------]

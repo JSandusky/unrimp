@@ -36,7 +36,6 @@
 #else
 	#ifdef LINUX
 		#include <GL/glx.h>
-		#include <X11/Xlib.h>
 	#endif
 	#include <GL/gl.h>
 #endif
@@ -147,10 +146,11 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		OpenGLRenderer&	mOpenGLRenderer;		///< Owner OpenGL renderer instance
-		void*			mOpenGLSharedLibrary;	///< OpenGL shared library, can be a null pointer
-		bool			mEntryPointsRegistered;	///< Entry points successfully registered?
-		bool			mInitialized;			///< Already initialized?
+		OpenGLRenderer&	mOpenGLRenderer;			///< Owner OpenGL renderer instance
+		void*			mOpenGLSharedLibrary;		///< OpenGL shared library, can be a null pointer
+		bool			mOwnsOpenGLSharedLibrary;	///< Indicates if the opengl shared library was loaded from ourself or provided from external
+		bool			mEntryPointsRegistered;		///< Entry points successfully registered?
+		bool			mInitialized;				///< Already initialized?
 
 
 	};

@@ -36,6 +36,10 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace Renderer
+{
+	class Context;
+}
 namespace OpenGLRenderer
 {
 	class OpenGLRenderer;
@@ -159,7 +163,8 @@ namespace OpenGLRenderer
 		OpenGLRenderer&	mOpenGLRenderer;		///< Owner OpenGL renderer instance
 		handle			mNativeWindowHandle;	///< OpenGL window, can be a null pointer (Window)
 		handle			mDummyWindow;			///< OpenGL dummy window, can be a null pointer (Window)
-		Display*		mDisplay;				///< The device context of the OpenGL dummy window, can be a null pointer
+		Display*		mDisplay;				///< The x11 display connection, can be a null pointer
+		bool			mOwnsX11Display;		///< Indicates if this instance owns the X11 display 
 		XVisualInfo*	m_pDummyVisualInfo;
 		GLXContext		mWindowRenderContext;	///< The render context of the OpenGL dummy window, can be a null pointer
 		bool			mUseExternalContext;

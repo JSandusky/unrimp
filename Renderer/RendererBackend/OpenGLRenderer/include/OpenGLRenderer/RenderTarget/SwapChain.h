@@ -33,6 +33,10 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace Renderer
+{
+	class Context;
+}
 namespace OpenGLRenderer
 {
 	class IOpenGLContext;

@@ -38,6 +38,10 @@
 #ifndef RENDERER_NO_STATISTICS
 	#include <atomic>	// For "std::atomic<>"
 #endif
+#ifdef LINUX
+	// Copied from Xlib.h
+	struct _XDisplay;
+#endif
 
 
 //[-------------------------------------------------------]
@@ -154,13 +158,26 @@ namespace Renderer
 		class Context
 		{
 		public:
-			inline Context(ILog& log, handle nativeWindowHandle = 0, bool useExternalContext = false) :
+			enum class ContextType
+			{
+				WIN32,
+				X11,
+				WAYLAND
+			};
+		public:
+			inline Context(ContextType contextType, ILog& log, handle nativeWindowHandle = 0, bool useExternalContext = false) :
+				mContextType(contextType),
 				mLog(log),
 				mNativeWindowHandle(nativeWindowHandle),
-				mUseExternalContext(useExternalContext)
+				mUseExternalContext(useExternalContext),
+				mRendererApiSharedLibrary(nullptr)
 			{}
-			inline ~Context()
+			inline virtual ~Context()
 			{}
+			inline ContextType getType() const
+			{
+				return mContextType;
+			}
 			inline ILog& getLog() const
 			{
 				return mLog;
@@ -173,14 +190,41 @@ namespace Renderer
 			{
 				return mUseExternalContext;
 			}
+			inline void* getRendererApiSharedLibrary() const
+			{
+				return mRendererApiSharedLibrary;
+			}
+			inline void setRendererApiSharedLibrary(void* rendererApiSharedLibrary)
+			{
+				mRendererApiSharedLibrary = rendererApiSharedLibrary;
+			}
 		private:
 			explicit Context(const Context&) = delete;
 			Context& operator=(const Context&) = delete;
 		private:
+			ContextType mContextType;
 			ILog&  mLog;
 			handle mNativeWindowHandle;
 			bool   mUseExternalContext;
+			void*  mRendererApiSharedLibrary;
 		};
+		
+	#ifdef LINUX
+		class X11Context : public Context
+		{
+		public:
+			inline X11Context(ILog& log, _XDisplay* display, handle nativeWindowHandle = 0, bool useExternalContext = false) :
+				Context(Context::ContextType::X11, log, nativeWindowHandle, useExternalContext),
+				mDisplay(display)
+			{}
+			inline _XDisplay* getDisplay() const
+			{
+				return mDisplay;
+			}
+		private:
+			_XDisplay* mDisplay;
+		};
+	#endif
 		#define RENDERER_LOG(context, type, format, ...) (context).getLog().print(Renderer::ILog::Type::type, format, ##__VA_ARGS__);
 	#endif
 

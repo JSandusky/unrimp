@@ -27,6 +27,7 @@
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/Context.h>
 
 #include <GL/glext.h>
 
@@ -70,13 +71,18 @@ namespace OpenGLRenderer
 			{
 				glXDestroyContext(mDisplay, mWindowRenderContext);
 			}
-		}
 
-		// Destroy the OpenGL dummy window, in case there's one
-		if (NULL_HANDLE != mDummyWindow)
-		{
-			// Destroy the OpenGL dummy window
-			::XDestroyWindow(mDisplay, mDummyWindow);
+			// Destroy the OpenGL dummy window, in case there's one
+			if (NULL_HANDLE != mDummyWindow)
+			{
+				// Destroy the OpenGL dummy window
+				::XDestroyWindow(mDisplay, mDummyWindow);
+			}
+
+			if (mOwnsX11Display)
+			{
+				XCloseDisplay(mDisplay);
+			}
 		}
 	}
 
@@ -112,6 +118,7 @@ namespace OpenGLRenderer
 		mNativeWindowHandle(nativeWindowHandle),
 		mDummyWindow(NULL_HANDLE),
 		mDisplay(nullptr),
+		mOwnsX11Display(true),
 		m_pDummyVisualInfo(nullptr),
 		mWindowRenderContext(NULL_HANDLE),
 		mUseExternalContext(useExternalContext),
@@ -124,8 +131,20 @@ namespace OpenGLRenderer
 		}
 		else
 		{
-			// Get X server display connection
-			mDisplay = XOpenDisplay(nullptr);
+			const Renderer::Context& context = openGLRenderer.getContext();
+			assert(context.getType() == Renderer::Context::ContextType::X11);
+
+			// If the given renderer context is an x11 context use the display connection object provided by the context
+			if (context.getType() == Renderer::Context::ContextType::X11)
+			{
+				mDisplay = static_cast<const Renderer::X11Context&>(context).getDisplay();
+				mOwnsX11Display = mDisplay == nullptr;
+			}
+
+			if (mOwnsX11Display)
+			{
+				mDisplay = XOpenDisplay(0);
+			}
 		}
 		if (nullptr != mDisplay)
 		{
@@ -143,6 +162,7 @@ namespace OpenGLRenderer
 				0	// = "None"
 			};
 
+			// TODO(sw) We don't need a dummy context to load gl/glx entry points see "Misconception #2" from https://dri.freedesktop.org/wiki/glXGetProcAddressNeverReturnsNULL/
 			m_pDummyVisualInfo = glXChooseVisual(mDisplay, DefaultScreen(mDisplay), attributeList);
 			if (nullptr != m_pDummyVisualInfo)
 			{
