@@ -295,7 +295,7 @@ namespace VulkanRenderer
 		mShaderLanguageGlsl(nullptr),
 		mGraphicsRootSignature(nullptr),
 		mDefaultSamplerState(nullptr),
-		mVkCommandBuffer(VK_NULL_HANDLE),
+		mInsideVulkanRenderPass(false),
 		mVertexArray(nullptr),
 		mMainSwapChain(nullptr),
 		mRenderTarget(nullptr)
@@ -328,39 +328,6 @@ namespace VulkanRenderer
 				// Initialize the capabilities
 				initializeCapabilities();
 
-				{ // Create Vulkan command buffer instance
-					const VkCommandBufferAllocateInfo vkCommandBufferAllocateInfo =
-					{
-						VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,	// sType (VkStructureType)
-						nullptr,										// pNext (const void*)
-						mVulkanContext->getVkCommandPool(),				// commandPool (VkCommandPool)
-						VK_COMMAND_BUFFER_LEVEL_PRIMARY,				// level (VkCommandBufferLevel)
-						1												// commandBufferCount (uint32_t)
-					};
-					VkResult vkResult = vkAllocateCommandBuffers(mVulkanContext->getVkDevice(), &vkCommandBufferAllocateInfo, &mVkCommandBuffer);
-					if (VK_SUCCESS == vkResult)
-					{
-						const VkCommandBufferBeginInfo vkCommandBufferBeginInfo =
-						{
-							VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,	// sType (VkStructureType)
-							nullptr,										// pNext (const void*)
-							0,												// flags (VkCommandBufferUsageFlags)
-							nullptr,										// pInheritanceInfo (const VkCommandBufferInheritanceInfo*)
-						};
-						vkResult = vkBeginCommandBuffer(mVkCommandBuffer, &vkCommandBufferBeginInfo);
-						if (VK_SUCCESS != vkResult)
-						{
-							// Error!
-							RENDERER_LOG(mContext, CRITICAL, "Failed to begin Vulkan command buffer instance")
-						}
-					}
-					else
-					{
-						// Error!
-						RENDERER_LOG(mContext, CRITICAL, "Failed to create Vulkan command buffer instance")
-					}
-				}
-
 				// Create the default sampler state
 				mDefaultSamplerState = createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
 
@@ -379,9 +346,6 @@ namespace VulkanRenderer
 					mMainSwapChain = new SwapChain(*this, nativeWindowHandle);
 					RENDERER_SET_RESOURCE_DEBUG_NAME(mMainSwapChain, "Main swap chain")
 					mMainSwapChain->addReference();	// Internal renderer reference
-
-					// Done
-					mVulkanContext->flushSetupVkCommandBuffer();
 				}
 			}
 		}
@@ -389,44 +353,6 @@ namespace VulkanRenderer
 
 	VulkanRenderer::~VulkanRenderer()
 	{
-		// Destroy Vulkan command buffer instance
-		VkResult vkResult = vkEndCommandBuffer(mVkCommandBuffer);
-		if (VK_SUCCESS == vkResult)
-		{
-			const VkSubmitInfo vkSubmitInfo =
-			{
-				VK_STRUCTURE_TYPE_SUBMIT_INFO,	// sType (VkStructureType)
-				nullptr,						// pNext (const void*)
-				0,								// waitSemaphoreCount (uint32_t)
-				nullptr,						// pWaitSemaphores (const VkSemaphore*)
-				nullptr,						// pWaitDstStageMask (const VkPipelineStageFlags*)
-				1,								// commandBufferCount (uint32_t)
-				&mVkCommandBuffer,				// pCommandBuffers (const VkCommandBuffer*)
-				0,								// signalSemaphoreCount (uint32_t)
-				nullptr							// pSignalSemaphores (const VkSemaphore*)
-			};
-			vkResult = vkQueueSubmit(mVulkanContext->getGraphicsVkQueue(), 1, &vkSubmitInfo, VK_NULL_HANDLE);
-			if (VK_SUCCESS == vkResult)
-			{
-				vkResult = vkQueueWaitIdle(mVulkanContext->getGraphicsVkQueue());
-				if (VK_SUCCESS != vkResult)
-				{
-					// Error!
-					RENDERER_LOG(mContext, CRITICAL, "Failed to wait for Vulkan command buffer instance flush")
-				}
-			}
-			else
-			{
-				// Error!
-				RENDERER_LOG(mContext, CRITICAL, "Failed to submit the Vulkan command buffer instance")
-			}
-		}
-		else
-		{
-			// Error!
-			RENDERER_LOG(mContext, CRITICAL, "Failed to end the Vulkan command buffer instance")
-		}
-
 		// Set no vertex array reference, in case we have one
 		if (nullptr != mVertexArray)
 		{
@@ -683,36 +609,26 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	void VulkanRenderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport* viewports)
 	{
-		// Are the given viewports valid?
-		if (numberOfViewports > 0 && nullptr != viewports)
-		{
-			vkCmdSetViewport(mVkCommandBuffer, 0, numberOfViewports, reinterpret_cast<const VkViewport*>(viewports));
-		}
-		else
-		{
-			// Error!
-			assert(false);
-		}
+		// Sanity check
+		assert((numberOfViewports > 0 && nullptr != viewports) && "Invalid rasterizer state viewports");
+
+		// Set Vulkan viewport
+		vkCmdSetViewport(getVulkanContext().getVkCommandBuffer(), 0, numberOfViewports, reinterpret_cast<const VkViewport*>(viewports));
 	}
 
 	void VulkanRenderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles)
 	{
-		// Are the given scissor rectangles valid?
-		if (numberOfScissorRectangles > 0 && nullptr != scissorRectangles)
+		// Sanity check
+		assert((numberOfScissorRectangles > 0 && nullptr != scissorRectangles) && "Invalid rasterizer state scissor rectangles");
+
+		// Set Vulkan scissor
+		// TODO(co) Add support for multiple scissor rectangles. Change "Renderer::ScissorRectangle" to Vulkan style to make it the primary API on the long run?
+		const VkRect2D vkRect2D =
 		{
-			// TODO(co) Add support for multiple scissor rectangles. Change "Renderer::ScissorRectangle" to Vulkan style to make it the primary API on the long run?
-			const VkRect2D vkRect2D =
-			{
-				{ static_cast<int32_t>(scissorRectangles[0].topLeftX), static_cast<int32_t>(scissorRectangles[0].topLeftY) },
-				{ static_cast<uint32_t>(scissorRectangles[0].bottomRightX - scissorRectangles[0].topLeftX), static_cast<uint32_t>(scissorRectangles[0].bottomRightY - scissorRectangles[0].topLeftY) }
-			};
-			vkCmdSetScissor(mVkCommandBuffer, 0, 1, &vkRect2D);
-		}
-		else
-		{
-			// Error!
-			assert(false);
-		}
+			{ static_cast<int32_t>(scissorRectangles[0].topLeftX), static_cast<int32_t>(scissorRectangles[0].topLeftY) },
+			{ static_cast<uint32_t>(scissorRectangles[0].bottomRightX - scissorRectangles[0].topLeftX), static_cast<uint32_t>(scissorRectangles[0].bottomRightY - scissorRectangles[0].topLeftY) }
+		};
+		vkCmdSetScissor(getVulkanContext().getVkCommandBuffer(), 0, 1, &vkRect2D);
 	}
 
 
@@ -724,32 +640,126 @@ namespace VulkanRenderer
 		// New render target?
 		if (mRenderTarget != renderTarget)
 		{
+			// Release the render target reference, in case we have one
+			if (nullptr != mRenderTarget)
+			{
+				// End Vulkan render pass if necessary
+				if (mInsideVulkanRenderPass)
+				{
+					vkCmdEndRenderPass(getVulkanContext().getVkCommandBuffer());
+					mInsideVulkanRenderPass = false;
+				}
+				else
+				{
+					// Handle Vulkan image memory barrier
+					// -> Only needed when there's no Vulkan render pass
+					switch (mRenderTarget->getResourceType())
+					{
+						case Renderer::ResourceType::SWAP_CHAIN:
+						{
+							// Vulkan image memory barrier: Writing to present transition
+							const SwapChain* swapChain = static_cast<SwapChain*>(mRenderTarget);
+							const VkImageSubresourceRange vkImageSubresourceRange =
+							{
+								VK_IMAGE_ASPECT_COLOR_BIT,	// aspectMask (VkImageAspectFlags)
+								0,							// baseMipLevel (uint32_t)
+								1,							// levelCount (uint32_t)
+								0,							// baseArrayLayer (uint32_t)
+								1							// layerCount (uint32_t)
+							};
+							const VkImageMemoryBarrier vkImageMemoryBarrier =
+							{
+								VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,	// sType (VkStructureType)
+								nullptr,								// pNext (const void*)
+								VK_ACCESS_TRANSFER_WRITE_BIT,			// srcAccessMask (VkAccessFlags)
+								VK_ACCESS_MEMORY_READ_BIT,				// dstAccessMask (VkAccessFlags)
+								VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,	// oldLayout (VkImageLayout)
+								VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,		// newLayout (VkImageLayout)
+								VK_QUEUE_FAMILY_IGNORED,				// srcQueueFamilyIndex (uint32_t)
+								VK_QUEUE_FAMILY_IGNORED,				// dstQueueFamilyIndex (uint32_t)
+								swapChain->getCurrentVkImage(),			// image (VkImage)
+								vkImageSubresourceRange					// subresourceRange (VkImageSubresourceRange)
+							};
+							vkCmdPipelineBarrier(getVulkanContext().getVkCommandBuffer(), VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 1, &vkImageMemoryBarrier);
+							break;
+						}
+
+						case Renderer::ResourceType::FRAMEBUFFER:
+						{
+							// TODO(co) Implement me
+							break;
+						}
+
+						case Renderer::ResourceType::ROOT_SIGNATURE:
+						case Renderer::ResourceType::PROGRAM:
+						case Renderer::ResourceType::VERTEX_ARRAY:
+						case Renderer::ResourceType::INDEX_BUFFER:
+						case Renderer::ResourceType::VERTEX_BUFFER:
+						case Renderer::ResourceType::UNIFORM_BUFFER:
+						case Renderer::ResourceType::TEXTURE_BUFFER:
+						case Renderer::ResourceType::INDIRECT_BUFFER:
+						case Renderer::ResourceType::TEXTURE_1D:
+						case Renderer::ResourceType::TEXTURE_2D:
+						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+						case Renderer::ResourceType::TEXTURE_3D:
+						case Renderer::ResourceType::TEXTURE_CUBE:
+						case Renderer::ResourceType::PIPELINE_STATE:
+						case Renderer::ResourceType::SAMPLER_STATE:
+						case Renderer::ResourceType::VERTEX_SHADER:
+						case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+						case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+						case Renderer::ResourceType::GEOMETRY_SHADER:
+						case Renderer::ResourceType::FRAGMENT_SHADER:
+						default:
+							// Not handled in here
+							break;
+					}
+				}
+
+				// Release
+				mRenderTarget->releaseReference();
+				mRenderTarget = nullptr;
+			}
+
 			// Set a render target?
 			if (nullptr != renderTarget)
 			{
 				// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 				VULKANRENDERER_RENDERERMATCHCHECK_RETURN(*this, *renderTarget)
 
-				// Release the render target reference, in case we have one
-				if (nullptr != mRenderTarget)
-				{
-					// TODO(co) Implement me
-
-					// Release
-					mRenderTarget->releaseReference();
-				}
-
 				// Set new render target and add a reference to it
 				mRenderTarget = renderTarget;
 				mRenderTarget->addReference();
 
-				// Evaluate the render target type
+				// Handle Vulkan image memory barrier
 				switch (mRenderTarget->getResourceType())
 				{
 					case Renderer::ResourceType::SWAP_CHAIN:
 					{
-						// TODO(co) Implement me
-						// static_cast<SwapChain*>(mRenderTarget)->getVulkanContext().makeCurrent();
+						// Vulkan image memory barrier: Present to writing transition
+						const SwapChain* swapChain = static_cast<SwapChain*>(mRenderTarget);
+						const VkImageSubresourceRange vkImageSubresourceRange =
+						{
+							VK_IMAGE_ASPECT_COLOR_BIT,	// aspectMask (VkImageAspectFlags)
+							0,							// baseMipLevel (uint32_t)
+							1,							// levelCount (uint32_t)
+							0,							// baseArrayLayer (uint32_t)
+							1							// layerCount (uint32_t)
+						};
+						const VkImageMemoryBarrier vkImageMemoryBarrier =
+						{
+							VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,	// sType (VkStructureType)
+							nullptr,								// pNext (const void*)
+							0,										// srcAccessMask (VkAccessFlags)
+							VK_ACCESS_TRANSFER_WRITE_BIT,			// dstAccessMask (VkAccessFlags)
+							VK_IMAGE_LAYOUT_UNDEFINED,				// oldLayout (VkImageLayout)
+							VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,	// newLayout (VkImageLayout)
+							VK_QUEUE_FAMILY_IGNORED,				// srcQueueFamilyIndex (uint32_t)
+							VK_QUEUE_FAMILY_IGNORED,				// dstQueueFamilyIndex (uint32_t)
+							swapChain->getCurrentVkImage(),			// image (VkImage)
+							vkImageSubresourceRange					// subresourceRange (VkImageSubresourceRange)
+						};
+						vkCmdPipelineBarrier(getVulkanContext().getVkCommandBuffer(), VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, nullptr, 0, nullptr, 1, &vkImageMemoryBarrier);
 						break;
 					}
 
@@ -784,17 +794,6 @@ namespace VulkanRenderer
 						break;
 				}
 			}
-			else
-			{
-				// TODO(co) Set no active render target
-
-				// Release the render target reference, in case we have one
-				if (nullptr != mRenderTarget)
-				{
-					mRenderTarget->releaseReference();
-					mRenderTarget = nullptr;
-				}
-			}
 		}
 	}
 
@@ -802,9 +801,84 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Operations                                            ]
 	//[-------------------------------------------------------]
-	void VulkanRenderer::clear(uint32_t, const float[4], float, uint32_t)
+	void VulkanRenderer::clear(uint32_t flags, const float color[4], float, uint32_t)
 	{
-		// TODO(co) Implement me
+		// Sanity check
+		assert(nullptr != mRenderTarget && "Can't execute clear command without a render target set");
+		assert(!mInsideVulkanRenderPass && "Can't execute clear command inside a Vulkan render pass");
+
+		// Clear color
+		if (flags & Renderer::ClearFlag::COLOR)
+		{
+			// Get the Vulkan image to clear
+			VkImage vkImage = VK_NULL_HANDLE;
+			switch (mRenderTarget->getResourceType())
+			{
+				case Renderer::ResourceType::SWAP_CHAIN:
+					vkImage = static_cast<SwapChain*>(mRenderTarget)->getCurrentVkImage();
+					break;
+
+				case Renderer::ResourceType::FRAMEBUFFER:
+					// TODO(co) Implement me
+					break;
+
+				case Renderer::ResourceType::ROOT_SIGNATURE:
+				case Renderer::ResourceType::PROGRAM:
+				case Renderer::ResourceType::VERTEX_ARRAY:
+				case Renderer::ResourceType::INDEX_BUFFER:
+				case Renderer::ResourceType::VERTEX_BUFFER:
+				case Renderer::ResourceType::UNIFORM_BUFFER:
+				case Renderer::ResourceType::TEXTURE_BUFFER:
+				case Renderer::ResourceType::INDIRECT_BUFFER:
+				case Renderer::ResourceType::TEXTURE_1D:
+				case Renderer::ResourceType::TEXTURE_2D:
+				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+				case Renderer::ResourceType::TEXTURE_3D:
+				case Renderer::ResourceType::TEXTURE_CUBE:
+				case Renderer::ResourceType::PIPELINE_STATE:
+				case Renderer::ResourceType::SAMPLER_STATE:
+				case Renderer::ResourceType::VERTEX_SHADER:
+				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+				case Renderer::ResourceType::GEOMETRY_SHADER:
+				case Renderer::ResourceType::FRAGMENT_SHADER:
+				default:
+					// Not handled in here
+					break;
+			}
+			assert(VK_NULL_HANDLE != vkImage && "Failed to get a Vulkan image");
+
+			// Clear the Vulkan color image
+			const VkClearColorValue vkClearColorValue =
+			{
+				color[0], color[1], color[2], color[3]
+			};
+			const VkImageSubresourceRange vkImageSubresourceRange =
+			{
+				VK_IMAGE_ASPECT_COLOR_BIT,	// aspectMask (VkImageAspectFlags)
+				0,							// baseMipLevel (uint32_t)
+				1,							// levelCount (uint32_t)
+				0,							// baseArrayLayer (uint32_t)
+				1							// layerCount (uint32_t)
+			};
+			vkCmdClearColorImage(getVulkanContext().getVkCommandBuffer(), vkImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, &vkClearColorValue, 1, &vkImageSubresourceRange);
+		}
+
+		// Clear depth stencil
+		if ((flags & Renderer::ClearFlag::DEPTH) || (flags & Renderer::ClearFlag::STENCIL))
+		{
+			// TODO(co) Implement me
+			NOP;
+			/*
+			VKAPI_ATTR void VKAPI_CALL vkCmdClearDepthStencilImage(
+				VkCommandBuffer                             commandBuffer,
+				VkImage                                     image,
+				VkImageLayout                               imageLayout,
+				const VkClearDepthStencilValue*             pDepthStencil,
+				uint32_t                                    rangeCount,
+				const VkImageSubresourceRange*              pRanges);
+			*/
+		}
 	}
 
 	void VulkanRenderer::resolveMultisampleFramebuffer(Renderer::IRenderTarget&, Renderer::IFramebuffer&)
@@ -826,12 +900,13 @@ namespace VulkanRenderer
 		// Is currently an vertex array set?
 		if (nullptr != mVertexArray)
 		{
-			// Get the used index buffer
-			IndexBuffer* indexBuffer = mVertexArray->getIndexBuffer();
-			if (nullptr != indexBuffer)
+			// Start Vulkan render pass, if necessary
+			if (!mInsideVulkanRenderPass)
 			{
-				// TODO(co) Implement me
+				beginVulkanRenderPass();
 			}
+
+			// TODO(co) Implement me
 		}
 	}
 
@@ -844,6 +919,12 @@ namespace VulkanRenderer
 			IndexBuffer* indexBuffer = mVertexArray->getIndexBuffer();
 			if (nullptr != indexBuffer)
 			{
+				// Start Vulkan render pass, if necessary
+				if (!mInsideVulkanRenderPass)
+				{
+					beginVulkanRenderPass();
+				}
+
 				// TODO(co) Implement me
 			}
 		}
@@ -1000,10 +1081,26 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	bool VulkanRenderer::beginScene()
 	{
-		// Not required when using Vulkan
-
-		// Done
-		return true;
+		// Begin Vulkan command buffer
+		// -> This automatically resets the Vulkan command buffer in case it was previously already recorded
+		const VkCommandBufferBeginInfo vkCommandBufferBeginInfo =
+		{
+			VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,	// sType (VkStructureType)
+			nullptr,										// pNext (const void*)
+			0,												// flags (VkCommandBufferUsageFlags)
+			nullptr,										// pInheritanceInfo (const VkCommandBufferInheritanceInfo*)
+		};
+		if (vkBeginCommandBuffer(getVulkanContext().getVkCommandBuffer(), &vkCommandBufferBeginInfo) == VK_SUCCESS)
+		{
+			// Done
+			return true;
+		}
+		else
+		{
+			// Error!
+			RENDERER_LOG(getContext(), CRITICAL, "Failed to begin Vulkan command buffer instance")
+			return false;
+		}
 	}
 
 	void VulkanRenderer::submitCommandBuffer(const Renderer::CommandBuffer& commandBuffer)
@@ -1033,6 +1130,13 @@ namespace VulkanRenderer
 
 		// We need to forget about the currently set vertex array
 		iaUnsetVertexArray();
+
+		// End Vulkan command buffer
+		if (vkEndCommandBuffer(getVulkanContext().getVkCommandBuffer()) != VK_SUCCESS)
+		{
+			// Error!
+			RENDERER_LOG(getContext(), CRITICAL, "Failed to end Vulkan command buffer instance")
+		}
 	}
 
 
@@ -1152,6 +1256,75 @@ namespace VulkanRenderer
 			// TODO(co) GLSL buffer settings
 			// TODO(co) Implement me
 		}
+	}
+
+	void VulkanRenderer::beginVulkanRenderPass()
+	{
+		// Sanity checks
+		assert(!mInsideVulkanRenderPass && "We're already inside a Vulkan render pass");
+		assert(nullptr != mRenderTarget && "Can't begin a Vulkan render pass without a render target set");
+
+		// Start Vulkan render pass
+		switch (mRenderTarget->getResourceType())
+		{
+			case Renderer::ResourceType::SWAP_CHAIN:
+			{
+				const SwapChain* swapChain = static_cast<SwapChain*>(mRenderTarget);
+
+				// Get render target dimension
+				uint32_t width = 1;
+				uint32_t height = 1;
+				mRenderTarget->getWidthAndHeight(width, height);
+
+				// Begin Vulkan render pass
+				const VkRenderPassBeginInfo vkRenderPassBeginInfo =
+				{
+					VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,	// sType (VkStructureType)
+					nullptr,									// pNext (const void*)
+					swapChain->getVkRenderPass(),				// renderPass (VkRenderPass)
+					swapChain->getCurrentVkFramebuffer(),		// framebuffer (VkFramebuffer)
+					{ // renderArea (VkRect2D)
+						{ 0, 0 },								// offset (VkOffset2D)
+						{ width, height }						// extent (VkExtent2D)
+					},
+					0,											// clearValueCount (uint32_t)
+					nullptr										// pClearValues (const VkClearValue*)
+				};
+				vkCmdBeginRenderPass(getVulkanContext().getVkCommandBuffer(), &vkRenderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+				break;
+			}
+
+			case Renderer::ResourceType::FRAMEBUFFER:
+			{
+				// TODO(co) Implement me
+				break;
+			}
+
+			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::PROGRAM:
+			case Renderer::ResourceType::VERTEX_ARRAY:
+			case Renderer::ResourceType::INDEX_BUFFER:
+			case Renderer::ResourceType::VERTEX_BUFFER:
+			case Renderer::ResourceType::UNIFORM_BUFFER:
+			case Renderer::ResourceType::TEXTURE_BUFFER:
+			case Renderer::ResourceType::INDIRECT_BUFFER:
+			case Renderer::ResourceType::TEXTURE_1D:
+			case Renderer::ResourceType::TEXTURE_2D:
+			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+			case Renderer::ResourceType::TEXTURE_3D:
+			case Renderer::ResourceType::TEXTURE_CUBE:
+			case Renderer::ResourceType::PIPELINE_STATE:
+			case Renderer::ResourceType::SAMPLER_STATE:
+			case Renderer::ResourceType::VERTEX_SHADER:
+			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+			case Renderer::ResourceType::GEOMETRY_SHADER:
+			case Renderer::ResourceType::FRAGMENT_SHADER:
+			default:
+				// Not handled in here
+				break;
+		}
+		mInsideVulkanRenderPass = true;
 	}
 
 

@@ -771,56 +771,44 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	void Direct3D9Renderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport* viewports)
 	{
-		// Are the given viewports valid?
-		if (numberOfViewports > 0 && nullptr != viewports)
+		// Sanity check
+		assert((numberOfViewports > 0 && nullptr != viewports) && "Invalid rasterizer state viewports");
+
+		// Set the Direct3D 9 viewport
+		// -> Direct3D 9 supports only one viewport
+	#ifndef RENDERER_NO_DEBUG
+		if (numberOfViewports > 1)
 		{
-			// Set the Direct3D 9 viewport
-			// -> Direct3D 9 supports only one viewport
-		#ifndef RENDERER_NO_DEBUG
-			if (numberOfViewports > 1)
-			{
-				RENDERER_LOG(mContext, CRITICAL, "Direct3D 9 supports only one viewport")
-			}
-		#endif
-			const D3DVIEWPORT9 direct3D9Viewport =
-			{
-				static_cast<DWORD>(viewports->topLeftX),	// X (DWORD)
-				static_cast<DWORD>(viewports->topLeftY),	// Y (DWORD)
-				static_cast<DWORD>(viewports->width),		// Width (DWORD)
-				static_cast<DWORD>(viewports->height),		// Height (DWORD)
-				viewports->minDepth,						// MinZ (float)
-				viewports->maxDepth							// MaxZ (float)
-			};
-			mDirect3DDevice9->SetViewport(&direct3D9Viewport);
+			RENDERER_LOG(mContext, CRITICAL, "Direct3D 9 supports only one viewport")
 		}
-		else
+	#endif
+		const D3DVIEWPORT9 direct3D9Viewport =
 		{
-			// Error!
-			assert(false);
-		}
+			static_cast<DWORD>(viewports->topLeftX),	// X (DWORD)
+			static_cast<DWORD>(viewports->topLeftY),	// Y (DWORD)
+			static_cast<DWORD>(viewports->width),		// Width (DWORD)
+			static_cast<DWORD>(viewports->height),		// Height (DWORD)
+			viewports->minDepth,						// MinZ (float)
+			viewports->maxDepth							// MaxZ (float)
+		};
+		mDirect3DDevice9->SetViewport(&direct3D9Viewport);
 	}
 
 	void Direct3D9Renderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles)
 	{
-		// Are the given scissor rectangles valid?
-		if (numberOfScissorRectangles > 0 && nullptr != scissorRectangles)
+		// Sanity check
+		assert((numberOfScissorRectangles > 0 && nullptr != scissorRectangles) && "Invalid rasterizer state scissor rectangles");
+
+		// Set the Direct3D 9 scissor rectangles
+		// -> "Renderer::ScissorRectangle" directly maps to Direct3D 9 & 10 & 11, do not change it
+		// -> Direct3D 9 supports only one viewport
+	#ifndef RENDERER_NO_DEBUG
+		if (numberOfScissorRectangles > 1)
 		{
-			// Set the Direct3D 9 scissor rectangles
-			// -> "Renderer::ScissorRectangle" directly maps to Direct3D 9 & 10 & 11, do not change it
-			// -> Direct3D 9 supports only one viewport
-		#ifndef RENDERER_NO_DEBUG
-			if (numberOfScissorRectangles > 1)
-			{
-				RENDERER_LOG(mContext, CRITICAL, "Direct3D 9 supports only one scissor rectangle")
-			}
-		#endif
-			mDirect3DDevice9->SetScissorRect(reinterpret_cast<const RECT*>(scissorRectangles));
+			RENDERER_LOG(mContext, CRITICAL, "Direct3D 9 supports only one scissor rectangle")
 		}
-		else
-		{
-			// Error!
-			assert(false);
-		}
+	#endif
+		mDirect3DDevice9->SetScissorRect(reinterpret_cast<const RECT*>(scissorRectangles));
 	}
 
 

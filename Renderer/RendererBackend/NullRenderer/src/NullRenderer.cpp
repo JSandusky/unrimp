@@ -462,16 +462,18 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	void NullRenderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport* viewports)
 	{
+		// Sanity check
+		assert((numberOfViewports > 0 && nullptr != viewports) && "Invalid rasterizer state viewports");
 		std::ignore = numberOfViewports;
 		std::ignore = viewports;
-		assert(numberOfViewports > 0 && nullptr != viewports);
 	}
 
 	void NullRenderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles)
 	{
+		// Sanity check
+		assert((numberOfScissorRectangles > 0 && nullptr != scissorRectangles) && "Invalid rasterizer state scissor rectangles");
 		std::ignore = numberOfScissorRectangles;
 		std::ignore = scissorRectangles;
-		assert(numberOfScissorRectangles > 0 && nullptr != scissorRectangles);
 	}
 
 

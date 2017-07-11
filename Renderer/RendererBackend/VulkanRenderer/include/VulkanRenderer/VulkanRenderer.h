@@ -255,6 +255,12 @@ namespace VulkanRenderer
 		*/
 		void setProgram(Renderer::IProgram* program);
 
+		/**
+		*  @brief
+		*    Begin Vulkan render pass
+		*/
+		void beginVulkanRenderPass();
+
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
@@ -266,7 +272,7 @@ namespace VulkanRenderer
 		Renderer::IShaderLanguage* mShaderLanguageGlsl;		///< GLSL shader language instance (we keep a reference to it), can be a null pointer
 		RootSignature*			   mGraphicsRootSignature;	///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
 		Renderer::ISamplerState*   mDefaultSamplerState;	///< Default rasterizer state (we keep a reference to it), can be a null pointer
-		VkCommandBuffer			   mVkCommandBuffer;		///< Vulkan command buffer instance
+		bool					   mInsideVulkanRenderPass;	///< Some Vulkan commands like "vkCmdClearColorImage()" can only be executed outside a Vulkan render pass, so need to delay starting a Vulkan render pass
 		//[-------------------------------------------------------]
 		//[ Input-assembler (IA) stage                            ]
 		//[-------------------------------------------------------]

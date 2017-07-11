@@ -561,6 +561,8 @@ namespace VulkanRenderer
 		IMPORT_FUNC(vkCmdDrawIndexed);
 		IMPORT_FUNC(vkCmdDraw);
 		IMPORT_FUNC(vkCmdDispatch);
+		IMPORT_FUNC(vkCmdClearColorImage);
+		IMPORT_FUNC(vkCmdClearDepthStencilImage);
 		IMPORT_FUNC(vkDestroyPipeline);
 		IMPORT_FUNC(vkDestroyPipelineLayout);
 		IMPORT_FUNC(vkDestroyDescriptorSetLayout);

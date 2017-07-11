@@ -141,7 +141,7 @@ namespace VulkanRenderer
 			}
 		}
 
-		// Put barrier inside setup command buffer
+		// Put barrier inside command buffer
 		vkCmdPipelineBarrier(vkCommandBuffer, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 1, &vkImageMemoryBarrier);
 	}
 

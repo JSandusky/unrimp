@@ -193,7 +193,7 @@ namespace
 			return vkCreateDevice(vkPhysicalDevice, &vkDeviceCreateInfo, nullptr, &vkDevice);
 		}
 
-		VkDevice createVkDevice(VulkanRenderer::VulkanRenderer& vulkanRenderer, VkPhysicalDevice vkPhysicalDevice, bool enableValidation, uint32_t& graphicsQueueFamilyIndex)
+		VkDevice createVkDevice(VulkanRenderer::VulkanRenderer& vulkanRenderer, VkPhysicalDevice vkPhysicalDevice, bool enableValidation, uint32_t& graphicsQueueFamilyIndex, uint32_t& presentQueueFamilyIndex)
 		{
 			VkDevice vkDevice = VK_NULL_HANDLE;
 
@@ -232,6 +232,7 @@ namespace
 						}
 						// TODO(co) Error handling: Evaluate "vkResult"?
 						graphicsQueueFamilyIndex = graphicsQueueIndex;
+						presentQueueFamilyIndex = graphicsQueueIndex;	// TODO(co) Handle the case of the graphics queue doesn't support present
 
 						// We're done, get us out of the loop
 						graphicsQueueIndex = queueFamilyPropertyCount;
@@ -271,11 +272,11 @@ namespace
 			return vkCommandPool;
 		}
 
-		VkCommandBuffer createSetupVkCommandBuffer(VulkanRenderer::VulkanRenderer& vulkanRenderer, VkDevice vkDevice, VkCommandPool vkCommandPool)
+		VkCommandBuffer createVkCommandBuffer(VulkanRenderer::VulkanRenderer& vulkanRenderer, VkDevice vkDevice, VkCommandPool vkCommandPool)
 		{
 			VkCommandBuffer vkCommandBuffer = VK_NULL_HANDLE;
 
-			// Create setup Vulkan command buffer instance
+			// Create Vulkan command buffer instance
 			const VkCommandBufferAllocateInfo vkCommandBufferAllocateInfo =
 			{
 				VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,	// sType (VkStructureType)
@@ -285,26 +286,10 @@ namespace
 				1												// commandBufferCount (uint32_t)
 			};
 			VkResult vkResult = vkAllocateCommandBuffers(vkDevice, &vkCommandBufferAllocateInfo, &vkCommandBuffer);
-			if (VK_SUCCESS == vkResult)
-			{
-				const VkCommandBufferBeginInfo vkCommandBufferBeginInfo =
-				{
-					VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,	// sType (VkStructureType)
-					nullptr,										// pNext (const void*)
-					0,												// flags (VkCommandBufferUsageFlags)
-					nullptr,										// pInheritanceInfo (const VkCommandBufferInheritanceInfo*)
-				};
-				vkResult = vkBeginCommandBuffer(vkCommandBuffer, &vkCommandBufferBeginInfo);
-				if (VK_SUCCESS != vkResult)
-				{
-					// Error!
-					RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to begin setup Vulkan command buffer instance")
-				}
-			}
-			else
+			if (VK_SUCCESS != vkResult)
 			{
 				// Error!
-				RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create setup Vulkan command buffer instance")
+				RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create Vulkan command buffer instance")
 			}
 
 			// Done
@@ -334,9 +319,11 @@ namespace VulkanRenderer
 		mVkPhysicalDevice(VK_NULL_HANDLE),
 		mVkDevice(VK_NULL_HANDLE),
 		mGraphicsQueueFamilyIndex(~0u),
+		mPresentQueueFamilyIndex(~0u),
 		mGraphicsVkQueue(VK_NULL_HANDLE),
+		mPresentVkQueue(VK_NULL_HANDLE),
 		mVkCommandPool(VK_NULL_HANDLE),
-		mSetupVkCommandBuffer(VK_NULL_HANDLE)
+		mVkCommandBuffer(VK_NULL_HANDLE)
 	{
 		const VulkanRuntimeLinking& vulkanRuntimeLinking = mVulkanRenderer.getVulkanRuntimeLinking();
 
@@ -352,24 +339,29 @@ namespace VulkanRenderer
 		// Create the logical Vulkan device instance
 		if (VK_NULL_HANDLE != mVkPhysicalDevice)
 		{
-			mVkDevice = ::detail::createVkDevice(mVulkanRenderer, mVkPhysicalDevice, vulkanRuntimeLinking.isValidationEnabled(), mGraphicsQueueFamilyIndex);
+			mVkDevice = ::detail::createVkDevice(mVulkanRenderer, mVkPhysicalDevice, vulkanRuntimeLinking.isValidationEnabled(), mGraphicsQueueFamilyIndex, mPresentQueueFamilyIndex);
 			if (VK_NULL_HANDLE != mVkDevice)
 			{
 				// Get the Vulkan device graphics queue that command buffers are submitted to
 				vkGetDeviceQueue(mVkDevice, mGraphicsQueueFamilyIndex, 0, &mGraphicsVkQueue);
 				if (VK_NULL_HANDLE != mGraphicsVkQueue)
 				{
-					// Create Vulkan command pool instance
-					mVkCommandPool = ::detail::createVkCommandPool(mVulkanRenderer, mVkDevice, mGraphicsQueueFamilyIndex);
-					if (VK_NULL_HANDLE != mVkCommandPool)
+					// Get the Vulkan device present queue
+					vkGetDeviceQueue(mVkDevice, mPresentQueueFamilyIndex, 0, &mPresentVkQueue);
+					if (VK_NULL_HANDLE != mPresentVkQueue)
 					{
-						// Create setup Vulkan command buffer instance
-						mSetupVkCommandBuffer = ::detail::createSetupVkCommandBuffer(mVulkanRenderer, mVkDevice, mVkCommandPool);
-					}
-					else
-					{
-						// Error!
-						RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create Vulkan command pool instance")
+						// Create Vulkan command pool instance
+						mVkCommandPool = ::detail::createVkCommandPool(mVulkanRenderer, mVkDevice, mGraphicsQueueFamilyIndex);
+						if (VK_NULL_HANDLE != mVkCommandPool)
+						{
+							// Create Vulkan command buffer instance
+							mVkCommandBuffer = ::detail::createVkCommandBuffer(mVulkanRenderer, mVkDevice, mVkCommandPool);
+						}
+						else
+						{
+							// Error!
+							RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create Vulkan command pool instance")
+						}
 					}
 				}
 				else
@@ -387,71 +379,14 @@ namespace VulkanRenderer
 		{
 			if (VK_NULL_HANDLE != mVkCommandPool)
 			{
-				if (VK_NULL_HANDLE != mSetupVkCommandBuffer)
+				if (VK_NULL_HANDLE != mVkCommandBuffer)
 				{
-					flushSetupVkCommandBuffer();
-					vkFreeCommandBuffers(mVkDevice, mVkCommandPool, 1, &mSetupVkCommandBuffer);
+					vkFreeCommandBuffers(mVkDevice, mVkCommandPool, 1, &mVkCommandBuffer);
 				}
 				vkDestroyCommandPool(mVkDevice, mVkCommandPool, nullptr);
 			}
 			vkDeviceWaitIdle(mVkDevice);
 			vkDestroyDevice(mVkDevice, nullptr);
-		}
-	}
-
-	void VulkanContext::flushSetupVkCommandBuffer() const
-	{
-		VkResult vkResult = vkEndCommandBuffer(mSetupVkCommandBuffer);
-		if (VK_SUCCESS == vkResult)
-		{
-			const VkSubmitInfo vkSubmitInfo =
-			{
-				VK_STRUCTURE_TYPE_SUBMIT_INFO,	// sType (VkStructureType)
-				nullptr,						// pNext (const void*)
-				0,								// waitSemaphoreCount (uint32_t)
-				nullptr,						// pWaitSemaphores (const VkSemaphore*)
-				nullptr,						// pWaitDstStageMask (const VkPipelineStageFlags*)
-				1,								// commandBufferCount (uint32_t)
-				&mSetupVkCommandBuffer,			// pCommandBuffers (const VkCommandBuffer*)
-				0,								// signalSemaphoreCount (uint32_t)
-				nullptr							// pSignalSemaphores (const VkSemaphore*)
-			};
-			vkResult = vkQueueSubmit(mGraphicsVkQueue, 1, &vkSubmitInfo, VK_NULL_HANDLE);
-			if (VK_SUCCESS == vkResult)
-			{
-				vkResult = vkQueueWaitIdle(mGraphicsVkQueue);
-				if (VK_SUCCESS == vkResult)
-				{
-					const VkCommandBufferBeginInfo vkCommandBufferBeginInfo =
-					{
-						VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,	// sType (VkStructureType)
-						nullptr,										// pNext (const void*)
-						0,												// flags (VkCommandBufferUsageFlags)
-						nullptr,										// pInheritanceInfo (const VkCommandBufferInheritanceInfo*)
-					};
-					vkResult = vkBeginCommandBuffer(mSetupVkCommandBuffer, &vkCommandBufferBeginInfo);
-					if (VK_SUCCESS != vkResult)
-					{
-						// Error!
-						RENDERER_LOG(mVulkanRenderer.getContext(), CRITICAL, "Failed to begin setup Vulkan command buffer instance")
-					}
-				}
-				else
-				{
-					// Error!
-					RENDERER_LOG(mVulkanRenderer.getContext(), CRITICAL, "Failed to wait for setup Vulkan command buffer instance flush")
-				}
-			}
-			else
-			{
-				// Error!
-				RENDERER_LOG(mVulkanRenderer.getContext(), CRITICAL, "Failed to submit the setup Vulkan command buffer instance")
-			}
-		}
-		else
-		{
-			// Error!
-			RENDERER_LOG(mVulkanRenderer.getContext(), CRITICAL, "Failed to end the setup Vulkan command buffer instance")
 		}
 	}
 

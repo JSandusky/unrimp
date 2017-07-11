@@ -308,27 +308,7 @@
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
     </ClCompile>
-    <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\preprocessor\PpMemory.cpp">
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
-    </ClCompile>
     <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\preprocessor\PpScanner.cpp">
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
-    </ClCompile>
-    <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\preprocessor\PpSymbols.cpp">
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>

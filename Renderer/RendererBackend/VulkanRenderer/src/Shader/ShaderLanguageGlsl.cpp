@@ -324,7 +324,17 @@ namespace VulkanRenderer
 
 	ShaderLanguageGlsl::~ShaderLanguageGlsl()
 	{
-		// Nothing here
+		// De-initialize glslang, if necessary
+		#ifdef VULKANRENDERER_GLSLTOSPIRV
+			if (::detail::GlslangInitialized)
+			{
+				// TODO(co) Fix glslang related memory leaks. See also
+				//		    - "Fix a few memory leaks #916" - https://github.com/KhronosGroup/glslang/pull/916
+				//		    - "FreeGlobalPools is never called in glslang::FinalizeProcess()'s path. #928" - https://github.com/KhronosGroup/glslang/issues/928
+				glslang::FinalizeProcess();
+				::detail::GlslangInitialized = false;
+			}
+		#endif
 	}
 
 

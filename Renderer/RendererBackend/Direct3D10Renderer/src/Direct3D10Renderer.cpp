@@ -820,54 +820,42 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	void Direct3D10Renderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport* viewports)
 	{
-		// Are the given viewports valid?
-		if (numberOfViewports > 0 && nullptr != viewports)
-		{
-			#ifndef RENDERER_NO_DEBUG
-				// Is the given number of viewports valid?
-				if (numberOfViewports > (D3D10_VIEWPORT_AND_SCISSORRECT_MAX_INDEX + 1))
-				{
-					RENDERER_LOG(mContext, CRITICAL, "Direct3D 10 supports only %d viewports", D3D10_VIEWPORT_AND_SCISSORRECT_MAX_INDEX)
-					numberOfViewports = D3D10_VIEWPORT_AND_SCISSORRECT_MAX_INDEX + 1;
-				}
-			#endif
+		// Sanity check
+		assert((numberOfViewports > 0 && nullptr != viewports) && "Invalid rasterizer state viewports");
 
-			// Set the Direct3D 10 viewports
-			D3D10_VIEWPORT d3dViewports[D3D10_VIEWPORT_AND_SCISSORRECT_MAX_INDEX];
-			D3D10_VIEWPORT* d3dViewport = d3dViewports;
-			for (uint32_t i = 0; i < numberOfViewports; ++i, ++d3dViewport, ++viewports)
+		#ifndef RENDERER_NO_DEBUG
+			// Is the given number of viewports valid?
+			if (numberOfViewports > (D3D10_VIEWPORT_AND_SCISSORRECT_MAX_INDEX + 1))
 			{
-				d3dViewport->TopLeftX = static_cast<INT> (viewports->topLeftX);
-				d3dViewport->TopLeftY = static_cast<INT> (viewports->topLeftY);
-				d3dViewport->Width    = static_cast<UINT>(viewports->width);
-				d3dViewport->Height   = static_cast<UINT>(viewports->height);
-				d3dViewport->MinDepth = viewports->minDepth;
-				d3dViewport->MaxDepth = viewports->maxDepth;
+				RENDERER_LOG(mContext, CRITICAL, "Direct3D 10 supports only %d viewports", D3D10_VIEWPORT_AND_SCISSORRECT_MAX_INDEX)
+				numberOfViewports = D3D10_VIEWPORT_AND_SCISSORRECT_MAX_INDEX + 1;
 			}
-			mD3D10Device->RSSetViewports(numberOfViewports, d3dViewports);
-		}
-		else
+		#endif
+
+		// Set the Direct3D 10 viewports
+		D3D10_VIEWPORT d3dViewports[D3D10_VIEWPORT_AND_SCISSORRECT_MAX_INDEX];
+		D3D10_VIEWPORT* d3dViewport = d3dViewports;
+		for (uint32_t i = 0; i < numberOfViewports; ++i, ++d3dViewport, ++viewports)
 		{
-			// Error!
-			assert(false);
+			d3dViewport->TopLeftX = static_cast<INT> (viewports->topLeftX);
+			d3dViewport->TopLeftY = static_cast<INT> (viewports->topLeftY);
+			d3dViewport->Width    = static_cast<UINT>(viewports->width);
+			d3dViewport->Height   = static_cast<UINT>(viewports->height);
+			d3dViewport->MinDepth = viewports->minDepth;
+			d3dViewport->MaxDepth = viewports->maxDepth;
 		}
+		mD3D10Device->RSSetViewports(numberOfViewports, d3dViewports);
 	}
 
 	void Direct3D10Renderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles)
 	{
-		// Are the given scissor rectangles valid?
-		if (numberOfScissorRectangles > 0 && nullptr != scissorRectangles)
-		{
-			// Set the Direct3D 10 scissor rectangles
-			// -> "Renderer::ScissorRectangle" directly maps to Direct3D 9 & 10 & 11, do not change it
-			// -> Let Direct3D 10 perform the index validation for us (the Direct3D 10 debug features are pretty good)
-			mD3D10Device->RSSetScissorRects(numberOfScissorRectangles, reinterpret_cast<const D3D10_RECT*>(scissorRectangles));
-		}
-		else
-		{
-			// Error!
-			assert(false);
-		}
+		// Sanity check
+		assert((numberOfScissorRectangles > 0 && nullptr != scissorRectangles) && "Invalid rasterizer state scissor rectangles");
+
+		// Set the Direct3D 10 scissor rectangles
+		// -> "Renderer::ScissorRectangle" directly maps to Direct3D 9 & 10 & 11, do not change it
+		// -> Let Direct3D 10 perform the index validation for us (the Direct3D 10 debug features are pretty good)
+		mD3D10Device->RSSetScissorRects(numberOfScissorRectangles, reinterpret_cast<const D3D10_RECT*>(scissorRectangles));
 	}
 
 

@@ -724,36 +724,24 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	void Direct3D12Renderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport* viewports)
 	{
-		// Are the given viewports valid?
-		if (numberOfViewports > 0 && nullptr != viewports)
-		{
-			// Set the Direct3D 12 viewports
-			// -> "Renderer::Viewport" directly maps to Direct3D 12, do not change it
-			// -> Let Direct3D 12 perform the index validation for us (the Direct3D 12 debug features are pretty good)
-			mD3D12GraphicsCommandList->RSSetViewports(numberOfViewports, reinterpret_cast<const D3D12_VIEWPORT*>(viewports));
-		}
-		else
-		{
-			// Error!
-			assert(false);
-		}
+		// Sanity check
+		assert((numberOfViewports > 0 && nullptr != viewports) && "Invalid rasterizer state viewports");
+
+		// Set the Direct3D 12 viewports
+		// -> "Renderer::Viewport" directly maps to Direct3D 12, do not change it
+		// -> Let Direct3D 12 perform the index validation for us (the Direct3D 12 debug features are pretty good)
+		mD3D12GraphicsCommandList->RSSetViewports(numberOfViewports, reinterpret_cast<const D3D12_VIEWPORT*>(viewports));
 	}
 
 	void Direct3D12Renderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles)
 	{
-		// Are the given scissor rectangles valid?
-		if (numberOfScissorRectangles > 0 && nullptr != scissorRectangles)
-		{
-			// Set the Direct3D 12 scissor rectangles
-			// -> "Renderer::ScissorRectangle" directly maps to Direct3D 9 & 10 & 11 & 12, do not change it
-			// -> Let Direct3D 12 perform the index validation for us (the Direct3D 12 debug features are pretty good)
-			mD3D12GraphicsCommandList->RSSetScissorRects(numberOfScissorRectangles, reinterpret_cast<const D3D12_RECT*>(scissorRectangles));
-		}
-		else
-		{
-			// Error!
-			assert(false);
-		}
+		// Sanity check
+		assert((numberOfScissorRectangles > 0 && nullptr != scissorRectangles) && "Invalid rasterizer state scissor rectangles");
+
+		// Set the Direct3D 12 scissor rectangles
+		// -> "Renderer::ScissorRectangle" directly maps to Direct3D 9 & 10 & 11 & 12, do not change it
+		// -> Let Direct3D 12 perform the index validation for us (the Direct3D 12 debug features are pretty good)
+		mD3D12GraphicsCommandList->RSSetScissorRects(numberOfScissorRectangles, reinterpret_cast<const D3D12_RECT*>(scissorRectangles));
 	}
 
 

@@ -1076,73 +1076,61 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	void OpenGLRenderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport* viewports)
 	{
-		// Are the given viewports valid?
-		if (numberOfViewports > 0 && nullptr != viewports)
-		{
-			// In OpenGL, the origin of the viewport is left bottom while Direct3D is using a left top origin. To make the
-			// Direct3D 11 implementation as efficient as possible the Direct3D convention is used and we have to convert in here.
+		// Sanity check
+		assert((numberOfViewports > 0 && nullptr != viewports) && "Invalid rasterizer state viewports");
 
-			// Get the width and height of the current render target
-			uint32_t renderTargetHeight = 1;
-			if (nullptr != mRenderTarget)
+		// In OpenGL, the origin of the viewport is left bottom while Direct3D is using a left top origin. To make the
+		// Direct3D 11 implementation as efficient as possible the Direct3D convention is used and we have to convert in here.
+
+		// Get the width and height of the current render target
+		uint32_t renderTargetHeight = 1;
+		if (nullptr != mRenderTarget)
+		{
+			uint32_t renderTargetWidth = 1;
+			mRenderTarget->getWidthAndHeight(renderTargetWidth, renderTargetHeight);
+		}
+
+		// Set the OpenGL viewport
+		// TODO(co) "GL_ARB_viewport_array" support ("OpenGLRenderer::rsSetViewports()")
+		// TODO(co) Check for "numberOfViewports" out of range or are the debug events good enough?
+		#ifndef RENDERER_NO_DEBUG
+			if (numberOfViewports > 1)
 			{
-				uint32_t renderTargetWidth = 1;
-				mRenderTarget->getWidthAndHeight(renderTargetWidth, renderTargetHeight);
+				RENDERER_LOG(mContext, CRITICAL, "OpenGL supports only one viewport")
 			}
-
-			// Set the OpenGL viewport
-			// TODO(co) "GL_ARB_viewport_array" support ("OpenGLRenderer::rsSetViewports()")
-			// TODO(co) Check for "numberOfViewports" out of range or are the debug events good enough?
-			#ifndef RENDERER_NO_DEBUG
-				if (numberOfViewports > 1)
-				{
-					RENDERER_LOG(mContext, CRITICAL, "OpenGL supports only one viewport")
-				}
-			#endif
-			glViewport(static_cast<GLint>(viewports->topLeftX), static_cast<GLint>(renderTargetHeight - viewports->topLeftY - viewports->height), static_cast<GLsizei>(viewports->width), static_cast<GLsizei>(viewports->height));
-			glDepthRange(static_cast<GLclampf>(viewports->minDepth), static_cast<GLclampf>(viewports->maxDepth));
-		}
-		else
-		{
-			// Error!
-			assert(false);
-		}
+		#endif
+		glViewport(static_cast<GLint>(viewports->topLeftX), static_cast<GLint>(renderTargetHeight - viewports->topLeftY - viewports->height), static_cast<GLsizei>(viewports->width), static_cast<GLsizei>(viewports->height));
+		glDepthRange(static_cast<GLclampf>(viewports->minDepth), static_cast<GLclampf>(viewports->maxDepth));
 	}
 
 	void OpenGLRenderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles)
 	{
-		// Are the given scissor rectangles valid?
-		if (numberOfScissorRectangles > 0 && nullptr != scissorRectangles)
-		{
-			// In OpenGL, the origin of the scissor rectangle is left bottom while Direct3D is using a left top origin. To make the
-			// Direct3D 9 & 10 & 11 implementation as efficient as possible the Direct3D convention is used and we have to convert in here.
+		// Sanity check
+		assert((numberOfScissorRectangles > 0 && nullptr != scissorRectangles) && "Invalid rasterizer state scissor rectangles");
 
-			// Get the width and height of the current render target
-			uint32_t renderTargetHeight = 1;
-			if (nullptr != mRenderTarget)
+		// In OpenGL, the origin of the scissor rectangle is left bottom while Direct3D is using a left top origin. To make the
+		// Direct3D 9 & 10 & 11 implementation as efficient as possible the Direct3D convention is used and we have to convert in here.
+
+		// Get the width and height of the current render target
+		uint32_t renderTargetHeight = 1;
+		if (nullptr != mRenderTarget)
+		{
+			uint32_t renderTargetWidth = 1;
+			mRenderTarget->getWidthAndHeight(renderTargetWidth, renderTargetHeight);
+		}
+
+		// Set the OpenGL scissor rectangle
+		// TODO(co) "GL_ARB_viewport_array" support ("OpenGLRenderer::rsSetViewports()")
+		// TODO(co) Check for "numberOfViewports" out of range or are the debug events good enough?
+		#ifndef RENDERER_NO_DEBUG
+			if (numberOfScissorRectangles > 1)
 			{
-				uint32_t renderTargetWidth = 1;
-				mRenderTarget->getWidthAndHeight(renderTargetWidth, renderTargetHeight);
+				RENDERER_LOG(mContext, CRITICAL, "OpenGL supports only one scissor rectangle")
 			}
-
-			// Set the OpenGL scissor rectangle
-			// TODO(co) "GL_ARB_viewport_array" support ("OpenGLRenderer::rsSetViewports()")
-			// TODO(co) Check for "numberOfViewports" out of range or are the debug events good enough?
-			#ifndef RENDERER_NO_DEBUG
-				if (numberOfScissorRectangles > 1)
-				{
-					RENDERER_LOG(mContext, CRITICAL, "OpenGL supports only one scissor rectangle")
-				}
-			#endif
-			const GLsizei width  = scissorRectangles->bottomRightX - scissorRectangles->topLeftX;
-			const GLsizei height = scissorRectangles->bottomRightY - scissorRectangles->topLeftY;
-			glScissor(static_cast<GLint>(scissorRectangles->topLeftX), static_cast<GLint>(renderTargetHeight - scissorRectangles->topLeftY - height), width, height);
-		}
-		else
-		{
-			// Error!
-			assert(false);
-		}
+		#endif
+		const GLsizei width  = scissorRectangles->bottomRightX - scissorRectangles->topLeftX;
+		const GLsizei height = scissorRectangles->bottomRightY - scissorRectangles->topLeftY;
+		glScissor(static_cast<GLint>(scissorRectangles->topLeftX), static_cast<GLint>(renderTargetHeight - scissorRectangles->topLeftY - height), width, height);
 	}
 
 
