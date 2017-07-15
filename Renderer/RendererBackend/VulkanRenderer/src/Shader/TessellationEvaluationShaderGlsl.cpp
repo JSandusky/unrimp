@@ -25,7 +25,6 @@
 #include "VulkanRenderer/Shader/ShaderLanguageGlsl.h"
 #include "VulkanRenderer/VulkanRenderer.h"
 #include "VulkanRenderer/VulkanContext.h"
-#include "VulkanRenderer/Extensions.h"
 
 
 //[-------------------------------------------------------]

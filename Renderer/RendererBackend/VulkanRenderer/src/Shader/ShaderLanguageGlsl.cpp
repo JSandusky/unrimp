@@ -30,7 +30,8 @@
 #include "VulkanRenderer/Shader/TessellationEvaluationShaderGlsl.h"
 #include "VulkanRenderer/VulkanRenderer.h"
 #include "VulkanRenderer/VulkanContext.h"
-#include "VulkanRenderer/Extensions.h"
+
+#include <Renderer/ILog.h>
 
 #ifdef VULKANRENDERER_GLSLTOSPIRV
 	// Disable warnings in external headers, we can't fix them

@@ -22,7 +22,9 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "VulkanRenderer/Buffer/UniformBuffer.h"
-#include "VulkanRenderer/Extensions.h"
+#include "VulkanRenderer/VulkanRenderer.h"
+#include "VulkanRenderer/VulkanContext.h"
+#include "VulkanRenderer/Helper.h"
 
 
 //[-------------------------------------------------------]
@@ -35,24 +37,36 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	UniformBuffer::UniformBuffer(VulkanRenderer& vulkanRenderer, uint32_t, const void*, Renderer::BufferUsage) :
-		IUniformBuffer(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
+	UniformBuffer::UniformBuffer(VulkanRenderer& vulkanRenderer, uint32_t numberOfBytes, const void* data, Renderer::BufferUsage) :
+		IUniformBuffer(vulkanRenderer),
+		mVkBuffer(VK_NULL_HANDLE),
+		mVkDeviceMemory(VK_NULL_HANDLE)
 	{
-		// TODO(co) Implement me
+		Helper::createAndAllocateVkBuffer(vulkanRenderer, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, numberOfBytes, data, mVkBuffer, mVkDeviceMemory);
 	}
 
 	UniformBuffer::~UniformBuffer()
 	{
-		// TODO(co) Implement me
+		Helper::destroyAndFreeVkBuffer(static_cast<const VulkanRenderer&>(getRenderer()), mVkBuffer, mVkDeviceMemory);
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IUniformBuffer methods       ]
 	//[-------------------------------------------------------]
-	void UniformBuffer::copyDataFrom(uint32_t, const void*)
+	void UniformBuffer::copyDataFrom(uint32_t numberOfBytes, const void* data)
 	{
-		// TODO(co) Implement me
+		// Sanity checks
+		assert(0 != numberOfBytes);
+		assert(nullptr != data);
+		assert(VK_NULL_HANDLE != mVkDeviceMemory);
+
+		// Upload data
+		const VkDevice vkDevice = static_cast<const VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice();
+		void* mappedData = nullptr;
+		vkMapMemory(vkDevice, mVkDeviceMemory, 0, numberOfBytes, 0, &mappedData);
+			memcpy(mappedData, data, numberOfBytes);
+		vkUnmapMemory(vkDevice, mVkDeviceMemory);
 	}
 
 

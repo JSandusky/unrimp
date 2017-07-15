@@ -54,6 +54,8 @@
 
 #include <GLES3/gl2ext.h>
 
+#include <tuple>	// For "std::ignore"
+
 
 //[-------------------------------------------------------]
 //[ Global functions                                      ]
@@ -798,6 +800,7 @@ namespace OpenGLES3Renderer
 	{
 		// Sanity check
 		assert((numberOfViewports > 0 && nullptr != viewports) && "Invalid rasterizer state viewports");
+		std::ignore = numberOfViewports;
 
 		// In OpenGL ES 3, the origin of the viewport is left bottom while Direct3D is using a left top origin. To make the
 		// Direct3D 11 implementation as efficient as possible the Direct3D convention is used and we have to convert in here.
@@ -826,6 +829,7 @@ namespace OpenGLES3Renderer
 	{
 		// Sanity check
 		assert((numberOfScissorRectangles > 0 && nullptr != scissorRectangles) && "Invalid rasterizer state scissor rectangles");
+		std::ignore = numberOfScissorRectangles;
 
 		// In OpenGL ES 3, the origin of the scissor rectangle is left bottom while Direct3D is using a left top origin. To make the
 		// Direct3D 9 & 10 & 11 implementation as efficient as possible the Direct3D convention is used and we have to convert in here.

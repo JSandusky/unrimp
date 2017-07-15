@@ -390,6 +390,23 @@ namespace VulkanRenderer
 		}
 	}
 
+	uint32_t VulkanContext::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags vkMemoryPropertyFlags) const
+	{
+		VkPhysicalDeviceMemoryProperties vkPhysicalDeviceMemoryProperties;
+		vkGetPhysicalDeviceMemoryProperties(mVkPhysicalDevice, &vkPhysicalDeviceMemoryProperties);
+		for (uint32_t i = 0; i < vkPhysicalDeviceMemoryProperties.memoryTypeCount; ++i)
+		{
+			if ((typeFilter & (1 << i)) && (vkPhysicalDeviceMemoryProperties.memoryTypes[i].propertyFlags & vkMemoryPropertyFlags) == vkMemoryPropertyFlags)
+			{
+				return i;
+			}
+		}
+
+		// Error!
+		RENDERER_LOG(mVulkanRenderer.getContext(), CRITICAL, "Failed to find suitable Vulkan memory type")
+		return ~0u;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

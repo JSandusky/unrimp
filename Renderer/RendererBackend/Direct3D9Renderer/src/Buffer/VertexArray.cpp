@@ -144,7 +144,7 @@ namespace Direct3D9Renderer
 			}
 		}
 
-		// Get the used index buffer
+		// Set the used index buffer
 		// -> In case of no index buffer we don't set null indices, there's not really a point in it
 		if (nullptr != mIndexBuffer)
 		{

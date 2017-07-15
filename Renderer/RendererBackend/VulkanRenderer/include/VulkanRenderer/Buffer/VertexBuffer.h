@@ -85,6 +85,15 @@ namespace VulkanRenderer
 		*/
 		virtual ~VertexBuffer();
 
+		/**
+		*  @brief
+		*    Return the Vulkan vertex buffer
+		*
+		*  @return
+		*    The Vulkan vertex buffer
+		*/
+		inline VkBuffer getVkBuffer() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
@@ -98,7 +107,8 @@ namespace VulkanRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		// TODO(co) Implement me
+		VkBuffer	   mVkBuffer;		///< Vulkan vertex buffer
+		VkDeviceMemory mVkDeviceMemory;	///< Vulkan vertex memory
 
 
 	};

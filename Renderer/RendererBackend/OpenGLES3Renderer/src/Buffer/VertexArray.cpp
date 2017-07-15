@@ -116,7 +116,7 @@ namespace OpenGLES3Renderer
 				glEnableVertexAttribArray(attributeLocation);
 			}
 
-			// Get the used index buffer
+			// Set the used index buffer
 			// -> In case of no index buffer we don't bind buffer 0, there's not really a point in it
 			if (nullptr != indexBuffer)
 			{

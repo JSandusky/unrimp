@@ -48,6 +48,8 @@
 #include <Renderer/ILog.h>
 #include <Renderer/Buffer/CommandBuffer.h>
 
+#include <tuple>	// For "std::ignore"
+
 
 //[-------------------------------------------------------]
 //[ Global functions                                      ]
@@ -574,7 +576,8 @@ namespace VulkanRenderer
 				mVertexArray = static_cast<VertexArray*>(vertexArray);
 				mVertexArray->addReference();
 
-				// TODO(co) Implement me
+				// Bind Vulkan buffers
+				static_cast<VertexArray*>(vertexArray)->bindVulkanBuffers(getVulkanContext().getVkCommandBuffer());
 			}
 			else
 			{
@@ -620,6 +623,7 @@ namespace VulkanRenderer
 	{
 		// Sanity check
 		assert((numberOfScissorRectangles > 0 && nullptr != scissorRectangles) && "Invalid rasterizer state scissor rectangles");
+		std::ignore = numberOfScissorRectangles;
 
 		// Set Vulkan scissor
 		// TODO(co) Add support for multiple scissor rectangles. Change "Renderer::ScissorRectangle" to Vulkan style to make it the primary API on the long run?
@@ -646,13 +650,14 @@ namespace VulkanRenderer
 				// End Vulkan render pass if necessary
 				if (mInsideVulkanRenderPass)
 				{
+					// Implicit image layout change transition
 					vkCmdEndRenderPass(getVulkanContext().getVkCommandBuffer());
 					mInsideVulkanRenderPass = false;
 				}
 				else
 				{
-					// Handle Vulkan image memory barrier
-					// -> Only needed when there's no Vulkan render pass
+					// Explicit image layout change transition: Handle Vulkan image memory barrier
+					// -> Only needed when there's no Vulkan render pass which performs this implicit
 					switch (mRenderTarget->getResourceType())
 					{
 						case Renderer::ResourceType::SWAP_CHAIN:
@@ -919,7 +924,7 @@ namespace VulkanRenderer
 			}
 
 			// Vulkan draw indirect command
-			vkCmdDrawIndirect(getVulkanContext().getVkCommandBuffer(), static_cast<const IndirectBuffer&>(indirectBuffer).getVulkanIndirectBuffer(), indirectBufferOffset, numberOfDraws, sizeof(VkDrawIndirectCommand));
+			vkCmdDrawIndirect(getVulkanContext().getVkCommandBuffer(), static_cast<const IndirectBuffer&>(indirectBuffer).getVkBuffer(), indirectBufferOffset, numberOfDraws, sizeof(VkDrawIndirectCommand));
 		}
 	}
 
@@ -975,7 +980,7 @@ namespace VulkanRenderer
 			}
 
 			// Vulkan draw indexed indirect command
-			vkCmdDrawIndexedIndirect(getVulkanContext().getVkCommandBuffer(), static_cast<const IndirectBuffer&>(indirectBuffer).getVulkanIndirectBuffer(), indirectBufferOffset, numberOfDraws, sizeof(VkDrawIndexedIndirectCommand));
+			vkCmdDrawIndexedIndirect(getVulkanContext().getVkCommandBuffer(), static_cast<const IndirectBuffer&>(indirectBuffer).getVkBuffer(), indirectBufferOffset, numberOfDraws, sizeof(VkDrawIndexedIndirectCommand));
 		}
 	}
 
@@ -1308,7 +1313,8 @@ namespace VulkanRenderer
 		// Release the currently used vertex array reference, in case we have one
 		if (nullptr != mVertexArray)
 		{
-			// TODO(co) Implement me
+			// Do nothing since the Vulkan specification says "bindingCount must be greater than 0"
+			// vkCmdBindVertexBuffers(getVulkanContext().getVkCommandBuffer(), 0, 0, nullptr, nullptr);
 
 			// Release reference
 			mVertexArray->releaseReference();

@@ -49,6 +49,8 @@
 #include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
 
+#include <tuple>	// For "std::ignore"
+
 
 //[-------------------------------------------------------]
 //[ Global functions                                      ]
@@ -773,6 +775,7 @@ namespace Direct3D9Renderer
 	{
 		// Sanity check
 		assert((numberOfViewports > 0 && nullptr != viewports) && "Invalid rasterizer state viewports");
+		std::ignore = numberOfViewports;
 
 		// Set the Direct3D 9 viewport
 		// -> Direct3D 9 supports only one viewport
@@ -798,6 +801,7 @@ namespace Direct3D9Renderer
 	{
 		// Sanity check
 		assert((numberOfScissorRectangles > 0 && nullptr != scissorRectangles) && "Invalid rasterizer state scissor rectangles");
+		std::ignore = numberOfScissorRectangles;
 
 		// Set the Direct3D 9 scissor rectangles
 		// -> "Renderer::ScissorRectangle" directly maps to Direct3D 9 & 10 & 11, do not change it

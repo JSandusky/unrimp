@@ -22,8 +22,9 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "VulkanRenderer/Buffer/IndexBuffer.h"
+#include "VulkanRenderer/VulkanRenderer.h"
 #include "VulkanRenderer/Mapping.h"
-#include "VulkanRenderer/Extensions.h"
+#include "VulkanRenderer/Helper.h"
 
 
 //[-------------------------------------------------------]
@@ -36,15 +37,18 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	IndexBuffer::IndexBuffer(VulkanRenderer& vulkanRenderer, uint32_t, Renderer::IndexBufferFormat::Enum, const void*, Renderer::BufferUsage) :
-		IIndexBuffer(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
+	IndexBuffer::IndexBuffer(VulkanRenderer& vulkanRenderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void* data, Renderer::BufferUsage) :
+		IIndexBuffer(vulkanRenderer),
+		mVkIndexType(Mapping::getVulkanType(indexBufferFormat)),
+		mVkBuffer(VK_NULL_HANDLE),
+		mVkDeviceMemory(VK_NULL_HANDLE)
 	{
-		// TODO(co) Implement me
+		Helper::createAndAllocateVkBuffer(vulkanRenderer, VK_BUFFER_USAGE_INDEX_BUFFER_BIT, numberOfBytes, data, mVkBuffer, mVkDeviceMemory);
 	}
 
 	IndexBuffer::~IndexBuffer()
 	{
-		// TODO(co) Implement me
+		Helper::destroyAndFreeVkBuffer(static_cast<const VulkanRenderer&>(getRenderer()), mVkBuffer, mVkDeviceMemory);
 	}
 
 

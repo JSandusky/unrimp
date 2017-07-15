@@ -32,6 +32,9 @@
 #include "VulkanRenderer/RootSignature.h"
 #include "VulkanRenderer/VulkanRenderer.h"
 #include "VulkanRenderer/VulkanContext.h"
+#include "VulkanRenderer/Mapping.h"
+
+#include <Renderer/ILog.h>
 
 #include <array>
 
@@ -92,17 +95,41 @@ namespace VulkanRenderer
 			}
 		};
 
+		// Vertex attributes
+		const uint32_t numberOfAttributes = pipelineState.vertexAttributes.numberOfAttributes;
+		std::vector<VkVertexInputBindingDescription> vkVertexInputBindingDescriptions(numberOfAttributes);
+		std::vector<VkVertexInputAttributeDescription> vkVertexInputAttributeDescriptions(numberOfAttributes);
+		for (uint32_t attribute = 0; attribute < numberOfAttributes; ++attribute)
+		{
+			const Renderer::VertexAttribute* attributes = &pipelineState.vertexAttributes.attributes[attribute];
+
+			{ // Map to Vulkan vertex input binding description
+				VkVertexInputBindingDescription& vkVertexInputBindingDescription = vkVertexInputBindingDescriptions[attribute];
+				vkVertexInputBindingDescription.binding   = attributes->inputSlot;
+				vkVertexInputBindingDescription.stride    = sizeof(float) * 2;	// TODO(co) Need this information inside "Renderer::VertexAttribute"
+				vkVertexInputBindingDescription.inputRate = (attributes->instancesPerElement > 0) ? VK_VERTEX_INPUT_RATE_INSTANCE : VK_VERTEX_INPUT_RATE_VERTEX;
+			}
+
+			{ // Map to Vulkan vertex input attribute description
+				VkVertexInputAttributeDescription& vkVertexInputAttributeDescription = vkVertexInputAttributeDescriptions[attribute];
+				vkVertexInputAttributeDescription.location = 0;	// TODO(co) This information can be read from the root signature
+				vkVertexInputAttributeDescription.binding  = attributes->inputSlot;
+				vkVertexInputAttributeDescription.format   = Mapping::getVulkanFormat(attributes->vertexAttributeFormat);
+				vkVertexInputAttributeDescription.offset   = attributes->alignedByteOffset;
+			}
+		}
+
 		// Create the Vulkan graphics pipeline
 		// TODO(co) Implement "VkPipeline" creation, this here is just a dummy for the first triangle on screen
 		const VkPipelineVertexInputStateCreateInfo vkPipelineVertexInputStateCreateInfo =
 		{
-			VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,	// sType (VkStructureType)
-			nullptr,													// pNext (const void*)
-			0,															// flags (VkPipelineVertexInputStateCreateFlags)
-			0,															// vertexBindingDescriptionCount (uint32_t)
-			nullptr,													// pVertexBindingDescriptions (const VkVertexInputBindingDescription*)
-			0,															// vertexAttributeDescriptionCount (uint32_t)
-			nullptr														// pVertexAttributeDescriptions (const VkVertexInputAttributeDescription*)
+			VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,			// sType (VkStructureType)
+			nullptr,															// pNext (const void*)
+			0,																	// flags (VkPipelineVertexInputStateCreateFlags)
+			static_cast<uint32_t>(vkVertexInputBindingDescriptions.size()),		// vertexBindingDescriptionCount (uint32_t)
+			vkVertexInputBindingDescriptions.data(),							// pVertexBindingDescriptions (const VkVertexInputBindingDescription*)
+			static_cast<uint32_t>(vkVertexInputAttributeDescriptions.size()),	// vertexAttributeDescriptionCount (uint32_t)
+			vkVertexInputAttributeDescriptions.data()							// pVertexAttributeDescriptions (const VkVertexInputAttributeDescription*)
 		};
 		const VkPipelineInputAssemblyStateCreateInfo vkPipelineInputAssemblyStateCreateInfo =
 		{

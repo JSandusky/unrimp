@@ -109,7 +109,7 @@ namespace Direct3D12Renderer
 	{
 		d3d12GraphicsCommandList.IASetVertexBuffers(0, mNumberOfSlots, mD3D12VertexBufferViews);
 
-		// Get the used index buffer
+		// Set the used index buffer
 		// -> In case of no index buffer we don't set null indices, there's not really a point in it
 		if (nullptr != mIndexBuffer)
 		{

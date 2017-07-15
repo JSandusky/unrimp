@@ -34,7 +34,34 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	// TODO(co) Implement me
+	VkFormat Mapping::getVulkanFormat(Renderer::VertexAttributeFormat vertexAttributeFormat)
+	{
+		static const VkFormat MAPPING[] =
+		{
+			VK_FORMAT_R32_SFLOAT,			// Renderer::VertexAttributeFormat::FLOAT_1
+			VK_FORMAT_R32G32_SFLOAT,		// Renderer::VertexAttributeFormat::FLOAT_2
+			VK_FORMAT_R32G32B32_SFLOAT,		// Renderer::VertexAttributeFormat::FLOAT_3
+			VK_FORMAT_R32G32B32A32_SFLOAT,	// Renderer::VertexAttributeFormat::FLOAT_4
+			VK_FORMAT_R8G8B8A8_UNORM,		// Renderer::VertexAttributeFormat::R8G8B8A8_UNORM
+			VK_FORMAT_R8G8B8A8_UINT,		// Renderer::VertexAttributeFormat::R8G8B8A8_UINT
+			VK_FORMAT_R16G16_SINT,			// Renderer::VertexAttributeFormat::SHORT_2
+			VK_FORMAT_R16G16B16A16_SINT,	// Renderer::VertexAttributeFormat::SHORT_4
+			VK_FORMAT_R32_UINT				// Renderer::VertexAttributeFormat::UINT_1
+		};
+		return MAPPING[static_cast<int>(vertexAttributeFormat)];
+	}
+
+	VkIndexType Mapping::getVulkanType(Renderer::IndexBufferFormat::Enum indexBufferFormat)
+	{
+		assert(Renderer::IndexBufferFormat::UNSIGNED_CHAR != indexBufferFormat && "One byte per element index buffer format isn't supported by Vulkan");
+		static const VkIndexType MAPPING[] =
+		{
+			VK_INDEX_TYPE_MAX_ENUM,	// Renderer::IndexBufferFormat::UNSIGNED_CHAR  - One byte per element, uint8_t (may not be supported by each API) - Not supported by Vulkan
+			VK_INDEX_TYPE_UINT16,	// Renderer::IndexBufferFormat::UNSIGNED_SHORT - Two bytes per element, uint16_t
+			VK_INDEX_TYPE_UINT32	// Renderer::IndexBufferFormat::UNSIGNED_INT   - Four bytes per element, uint32_t (may not be supported by each API)
+		};
+		return MAPPING[indexBufferFormat];
+	}
 
 
 //[-------------------------------------------------------]

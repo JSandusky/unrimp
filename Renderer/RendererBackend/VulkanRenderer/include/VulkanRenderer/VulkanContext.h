@@ -168,6 +168,9 @@ namespace VulkanRenderer
 		*/
 		inline VkCommandBuffer getVkCommandBuffer() const;
 
+		// TODO(co) Trivial implementation to have something to start with. Need to use more clever memory management and stating buffers later on.
+		uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags vkMemoryPropertyFlags) const;
+
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]

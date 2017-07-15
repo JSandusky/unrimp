@@ -92,7 +92,7 @@ namespace VulkanRenderer
 		*  @return
 		*    The Vulkan indirect buffer
 		*/
-		inline VkBuffer getVulkanIndirectBuffer() const;
+		inline VkBuffer getVkBuffer() const;
 
 
 	//[-------------------------------------------------------]
@@ -115,7 +115,8 @@ namespace VulkanRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		VkBuffer mVulkanIndirectBuffer;	///< The Vulkan indirect buffer
+		VkBuffer	   mVkBuffer;		///< Vulkan indirect buffer
+		VkDeviceMemory mVkDeviceMemory;	///< Vulkan indirect memory
 
 
 	};

@@ -22,8 +22,8 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "VulkanRenderer/Buffer/TextureBuffer.h"
-#include "VulkanRenderer/Extensions.h"
-#include "VulkanRenderer/VulkanRuntimeLinking.h"
+#include "VulkanRenderer/VulkanRenderer.h"
+#include "VulkanRenderer/VulkanContext.h"
 
 
 //[-------------------------------------------------------]
@@ -37,14 +37,18 @@ namespace VulkanRenderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	TextureBuffer::TextureBuffer(VulkanRenderer& vulkanRenderer, uint32_t, Renderer::TextureFormat::Enum, const void*, Renderer::BufferUsage) :
-		ITextureBuffer(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
+		ITextureBuffer(vulkanRenderer),
+		mVkBuffer(VK_NULL_HANDLE)
 	{
 		// TODO(co) Implement me
 	}
 
 	TextureBuffer::~TextureBuffer()
 	{
-		// TODO(co) Implement me
+		if (VK_NULL_HANDLE != mVkBuffer)
+		{
+			vkDestroyBuffer(static_cast<const VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), mVkBuffer, nullptr);
+		}
 	}
 
 

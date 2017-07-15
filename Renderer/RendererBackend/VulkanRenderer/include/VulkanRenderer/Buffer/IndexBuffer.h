@@ -88,6 +88,24 @@ namespace VulkanRenderer
 		*/
 		virtual ~IndexBuffer();
 
+		/**
+		*  @brief
+		*    Return the Vulkan index type
+		*
+		*  @return
+		*    The Vulkan index type
+		*/
+		inline VkIndexType getVkIndexType() const;
+
+		/**
+		*  @brief
+		*    Return the Vulkan index buffer
+		*
+		*  @return
+		*    The Vulkan index buffer
+		*/
+		inline VkBuffer getVkBuffer() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
@@ -101,7 +119,9 @@ namespace VulkanRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		// TODO(co) Implement me
+		VkIndexType	   mVkIndexType;	///< Vulkan vertex type
+		VkBuffer	   mVkBuffer;		///< Vulkan vertex buffer
+		VkDeviceMemory mVkDeviceMemory;	///< Vulkan vertex memory
 
 
 	};

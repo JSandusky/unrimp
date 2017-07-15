@@ -25,6 +25,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include <Renderer/Buffer/VertexArrayTypes.h>
+#include <Renderer/Buffer/IndexBufferTypes.h>
+
+#include "VulkanRenderer/Vulkan.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace VulkanRenderer
@@ -46,7 +55,35 @@ namespace VulkanRenderer
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
 	public:
-		// TODO(co) Implement me
+		//[-------------------------------------------------------]
+		//[ Renderer::VertexAttributeFormat and semantic          ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    "Renderer::VertexAttributeFormat" to Vulkan format
+		*
+		*  @param[in] vertexAttributeFormat
+		*    "Renderer::VertexAttributeFormat" to map
+		*
+		*  @return
+		*    Vulkan format
+		*/
+		static VkFormat getVulkanFormat(Renderer::VertexAttributeFormat vertexAttributeFormat);
+
+		//[-------------------------------------------------------]
+		//[ Renderer::IndexBufferFormat                           ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    "Renderer::IndexBufferFormat" to Vulkan type
+		*
+		*  @param[in] indexBufferFormat
+		*    "Renderer::IndexBufferFormat" to map
+		*
+		*  @return
+		*    Vulkan index type
+		*/
+		static VkIndexType getVulkanType(Renderer::IndexBufferFormat::Enum indexBufferFormat);
 
 
 	};

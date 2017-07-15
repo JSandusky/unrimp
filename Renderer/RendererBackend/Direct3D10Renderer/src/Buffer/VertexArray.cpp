@@ -134,7 +134,7 @@ namespace Direct3D10Renderer
 			// -> Direct3D 10 does not give us this message, but it's probably still no good thing to do
 		}
 
-		// Get the used index buffer
+		// Set the used index buffer
 		// -> In case of no index buffer we don't set null indices, there's not really a point in it
 		if (nullptr != mIndexBuffer)
 		{

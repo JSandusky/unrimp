@@ -22,6 +22,10 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "VulkanRenderer/Helper.h"
+#include "VulkanRenderer/VulkanRenderer.h"
+#include "VulkanRenderer/VulkanContext.h"
+
+#include <Renderer/ILog.h>
 
 
 //[-------------------------------------------------------]
@@ -143,6 +147,67 @@ namespace VulkanRenderer
 
 		// Put barrier inside command buffer
 		vkCmdPipelineBarrier(vkCommandBuffer, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 1, &vkImageMemoryBarrier);
+	}
+
+	void Helper::createAndAllocateVkBuffer(const VulkanRenderer& vulkanRenderer, VkBufferUsageFlagBits vkBufferUsageFlagBits, uint32_t numberOfBytes, const void* data, VkBuffer& vkBuffer, VkDeviceMemory& vkDeviceMemory)
+	{
+		const VulkanContext& vulkanContext = vulkanRenderer.getVulkanContext();
+		const VkDevice vkDevice = vulkanContext.getVkDevice();
+
+		// Create the Vulkan buffer
+		const VkBufferCreateInfo vkBufferCreateInfo =
+		{
+			VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,					// sType (VkStructureType)
+			nullptr,												// pNext (const void*)
+			0,														// flags (VkBufferCreateFlags)
+			numberOfBytes,											// size (VkDeviceSize)
+			static_cast<VkBufferUsageFlags>(vkBufferUsageFlagBits),	// usage (VkBufferUsageFlags)
+			VK_SHARING_MODE_EXCLUSIVE,								// sharingMode (VkSharingMode)
+			0,														// queueFamilyIndexCount (uint32_t)
+			nullptr													// pQueueFamilyIndices (const uint32_t*)
+		};
+		if (vkCreateBuffer(vkDevice, &vkBufferCreateInfo, nullptr, &vkBuffer) != VK_SUCCESS)
+		{
+			RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create the Vulkan buffer")
+		}
+
+		// Allocate memory for the Vulkan buffer
+		VkMemoryRequirements vkMemoryRequirements = {};
+		vkGetBufferMemoryRequirements(vkDevice, vkBuffer, &vkMemoryRequirements);
+		const VkMemoryAllocateInfo vkMemoryAllocateInfo =
+		{
+			VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,																											// sType (VkStructureType)
+			nullptr,																																		// pNext (const void*)
+			vkMemoryRequirements.size,																														// allocationSize (VkDeviceSize)
+			vulkanContext.findMemoryType(vkMemoryRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT)	// memoryTypeIndex (uint32_t)
+		};
+		if (vkAllocateMemory(vkDevice, &vkMemoryAllocateInfo, nullptr, &vkDeviceMemory) != VK_SUCCESS)
+		{
+			RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to allocate the Vulkan buffer memory")
+		}
+
+		// Bind and fill memory
+		vkBindBufferMemory(vkDevice, vkBuffer, vkDeviceMemory, 0);
+		if (nullptr != data)
+		{
+			void* mappedData = nullptr;
+			vkMapMemory(vkDevice, vkDeviceMemory, 0, vkBufferCreateInfo.size, 0, &mappedData);
+				memcpy(mappedData, data, static_cast<size_t>(vkBufferCreateInfo.size));
+			vkUnmapMemory(vkDevice, vkDeviceMemory);
+		}
+	}
+
+	void Helper::destroyAndFreeVkBuffer(const VulkanRenderer& vulkanRenderer, VkBuffer& vkBuffer, VkDeviceMemory& vkDeviceMemory)
+	{
+		if (VK_NULL_HANDLE != vkBuffer)
+		{
+			const VkDevice vkDevice = vulkanRenderer.getVulkanContext().getVkDevice();
+			vkDestroyBuffer(vkDevice, vkBuffer, nullptr);
+			if (VK_NULL_HANDLE != vkDeviceMemory)
+			{
+				vkFreeMemory(vkDevice, vkDeviceMemory, nullptr);
+			}
+		}
 	}
 
 

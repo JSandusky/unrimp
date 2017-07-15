@@ -140,7 +140,7 @@ namespace OpenGLRenderer
 			glBindBufferARB(GL_ARRAY_BUFFER_ARB, static_cast<GLuint>(openGLArrayBufferBackup));
 		#endif
 
-		// Get the used index buffer
+		// Set the used index buffer
 		// -> In case of no index buffer we don't bind buffer 0, there's not really a point in it
 		const IndexBuffer* indexBuffer = getIndexBuffer();
 		if (nullptr != indexBuffer)

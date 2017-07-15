@@ -28,9 +28,9 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline VkBuffer IndirectBuffer::getVulkanIndirectBuffer() const
+	inline VkBuffer IndirectBuffer::getVkBuffer() const
 	{
-		return mVulkanIndirectBuffer;
+		return mVkBuffer;
 	}
 
 
