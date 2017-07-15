@@ -188,8 +188,7 @@ namespace
 				const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
 				if (nullptr != realData->indirectBuffer)
 				{
-					// No resource owner security check in here, we only support emulated indirect buffer
-					static_cast<VulkanRenderer::VulkanRenderer&>(renderer).drawEmulated(realData->indirectBuffer->getEmulationData(), realData->indirectBufferOffset, realData->numberOfDraws);
+					static_cast<VulkanRenderer::VulkanRenderer&>(renderer).draw(*realData->indirectBuffer, realData->indirectBufferOffset, realData->numberOfDraws);
 				}
 				else
 				{
@@ -202,8 +201,7 @@ namespace
 				const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
 				if (nullptr != realData->indirectBuffer)
 				{
-					// No resource owner security check in here, we only support emulated indirect buffer
-					static_cast<VulkanRenderer::VulkanRenderer&>(renderer).drawIndexedEmulated(realData->indirectBuffer->getEmulationData(), realData->indirectBufferOffset, realData->numberOfDraws);
+					static_cast<VulkanRenderer::VulkanRenderer&>(renderer).drawIndexed(*realData->indirectBuffer, realData->indirectBufferOffset, realData->numberOfDraws);
 				}
 				else
 				{
@@ -545,8 +543,8 @@ namespace VulkanRenderer
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			VULKANRENDERER_RENDERERMATCHCHECK_RETURN(*this, *pipelineState)
 
-			// Set pipeline state
-			static_cast<PipelineState*>(pipelineState)->bindPipelineState();
+			// Bind Vulkan pipeline
+			vkCmdBindPipeline(getVulkanContext().getVkCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, static_cast<PipelineState*>(pipelineState)->getVkPipeline());
 		}
 		else
 		{
@@ -588,6 +586,8 @@ namespace VulkanRenderer
 
 	void VulkanRenderer::iaSetPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology)
 	{
+		// TODO(co) In Vulkan this is part of the pipeline state, "VkPipelineInputAssemblyStateCreateInfo"-part. So we need to update our interface to be efficient.
+
 		// Tessellation support: Up to 32 vertices per patch are supported "Renderer::PrimitiveTopology::PATCH_LIST_1" ... "Renderer::PrimitiveTopology::PATCH_LIST_32"
 		if (primitiveTopology >= Renderer::PrimitiveTopology::PATCH_LIST_1)
 		{
@@ -895,38 +895,115 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Draw call                                             ]
 	//[-------------------------------------------------------]
-	void VulkanRenderer::drawEmulated(const uint8_t*, uint32_t, uint32_t)
+	void VulkanRenderer::draw(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		// Is currently an vertex array set?
-		if (nullptr != mVertexArray)
+		// Sanity check
+		assert(numberOfDraws > 0 && "Number of draws must not be zero");
+		// It's possible to draw without "mVertexArray"
+
+		// Before doing anything else: If there's emulation data, use it (for example "Renderer::IndirectBuffer" might have been used to generate the data)
+		const uint8_t* emulationData = indirectBuffer.getEmulationData();
+		if (nullptr != emulationData)
 		{
+			drawEmulated(emulationData, indirectBufferOffset, numberOfDraws);
+		}
+		else
+		{
+			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+			VULKANRENDERER_RENDERERMATCHCHECK_RETURN(*this, indirectBuffer)
+
 			// Start Vulkan render pass, if necessary
 			if (!mInsideVulkanRenderPass)
 			{
 				beginVulkanRenderPass();
 			}
 
-			// TODO(co) Implement me
+			// Vulkan draw indirect command
+			vkCmdDrawIndirect(getVulkanContext().getVkCommandBuffer(), static_cast<const IndirectBuffer&>(indirectBuffer).getVulkanIndirectBuffer(), indirectBufferOffset, numberOfDraws, sizeof(VkDrawIndirectCommand));
 		}
 	}
 
-	void VulkanRenderer::drawIndexedEmulated(const uint8_t*, uint32_t, uint32_t)
+	void VulkanRenderer::drawEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		// Is currently an vertex array set?
-		if (nullptr != mVertexArray)
-		{
-			// Get the used index buffer
-			IndexBuffer* indexBuffer = mVertexArray->getIndexBuffer();
-			if (nullptr != indexBuffer)
-			{
-				// Start Vulkan render pass, if necessary
-				if (!mInsideVulkanRenderPass)
-				{
-					beginVulkanRenderPass();
-				}
+		// Sanity checks
+		assert(nullptr != emulationData);
+		assert(numberOfDraws > 0 && "Number of draws must not be zero");
+		// It's possible to draw without "mVertexArray"
 
-				// TODO(co) Implement me
+		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
+		emulationData += indirectBufferOffset;
+
+		// Start Vulkan render pass, if necessary
+		if (!mInsideVulkanRenderPass)
+		{
+			beginVulkanRenderPass();
+		}
+
+		// Emit the draw calls
+		const VkCommandBuffer vkCommandBuffer = getVulkanContext().getVkCommandBuffer();
+		for (uint32_t i = 0; i < numberOfDraws; ++i)
+		{
+			// Draw and advance
+			const Renderer::DrawInstancedArguments& drawInstancedArguments = *reinterpret_cast<const Renderer::DrawInstancedArguments*>(emulationData);
+			vkCmdDraw(vkCommandBuffer, drawInstancedArguments.vertexCountPerInstance, drawInstancedArguments.instanceCount, drawInstancedArguments.startVertexLocation, drawInstancedArguments.startInstanceLocation);
+			emulationData += sizeof(Renderer::DrawInstancedArguments);
+		}
+	}
+
+	void VulkanRenderer::drawIndexed(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
+	{
+		// Sanity checks
+		assert(numberOfDraws > 0 && "Number of draws must not be zero");
+		assert(nullptr != mVertexArray && "Draw indexed needs a set vertex array");
+		assert(nullptr != mVertexArray->getIndexBuffer() && "Draw indexed needs a set vertex array which contains an index buffer");
+
+		// Before doing anything else: If there's emulation data, use it (for example "Renderer::IndirectBuffer" might have been used to generate the data)
+		const uint8_t* emulationData = indirectBuffer.getEmulationData();
+		if (nullptr != emulationData)
+		{
+			drawIndexedEmulated(emulationData, indirectBufferOffset, numberOfDraws);
+		}
+		else
+		{
+			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+			VULKANRENDERER_RENDERERMATCHCHECK_RETURN(*this, indirectBuffer)
+
+			// Start Vulkan render pass, if necessary
+			if (!mInsideVulkanRenderPass)
+			{
+				beginVulkanRenderPass();
 			}
+
+			// Vulkan draw indexed indirect command
+			vkCmdDrawIndexedIndirect(getVulkanContext().getVkCommandBuffer(), static_cast<const IndirectBuffer&>(indirectBuffer).getVulkanIndirectBuffer(), indirectBufferOffset, numberOfDraws, sizeof(VkDrawIndexedIndirectCommand));
+		}
+	}
+
+	void VulkanRenderer::drawIndexedEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
+	{
+		// Sanity checks
+		assert(nullptr != emulationData);
+		assert(numberOfDraws > 0 && "Number of draws must not be zero");
+		assert(nullptr != mVertexArray && "Draw indexed needs a set vertex array");
+		assert(nullptr != mVertexArray->getIndexBuffer() && "Draw indexed needs a set vertex array which contains an index buffer");
+
+		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
+		emulationData += indirectBufferOffset;
+
+		// Start Vulkan render pass, if necessary
+		if (!mInsideVulkanRenderPass)
+		{
+			beginVulkanRenderPass();
+		}
+
+		// Emit the draw calls
+		const VkCommandBuffer vkCommandBuffer = getVulkanContext().getVkCommandBuffer();
+		for (uint32_t i = 0; i < numberOfDraws; ++i)
+		{
+			// Draw and advance
+			const Renderer::DrawIndexedInstancedArguments& drawIndexedInstancedArguments = *reinterpret_cast<const Renderer::DrawIndexedInstancedArguments*>(emulationData);
+			vkCmdDrawIndexed(vkCommandBuffer, drawIndexedInstancedArguments.indexCountPerInstance, drawIndexedInstancedArguments.instanceCount, drawIndexedInstancedArguments.startIndexLocation, drawIndexedInstancedArguments.baseVertexLocation, drawIndexedInstancedArguments.startInstanceLocation);
+			emulationData += sizeof(Renderer::DrawIndexedInstancedArguments);
 		}
 	}
 
@@ -1088,7 +1165,7 @@ namespace VulkanRenderer
 			VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,	// sType (VkStructureType)
 			nullptr,										// pNext (const void*)
 			0,												// flags (VkCommandBufferUsageFlags)
-			nullptr,										// pInheritanceInfo (const VkCommandBufferInheritanceInfo*)
+			nullptr											// pInheritanceInfo (const VkCommandBufferInheritanceInfo*)
 		};
 		if (vkBeginCommandBuffer(getVulkanContext().getVkCommandBuffer(), &vkCommandBufferBeginInfo) == VK_SUCCESS)
 		{
@@ -1236,25 +1313,6 @@ namespace VulkanRenderer
 			// Release reference
 			mVertexArray->releaseReference();
 			mVertexArray = nullptr;
-		}
-	}
-
-	void VulkanRenderer::setProgram(Renderer::IProgram* program)
-	{
-		// TODO(co) Avoid changing already set program
-
-		if (nullptr != program)
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			VULKANRENDERER_RENDERERMATCHCHECK_RETURN(*this, *program)
-
-			// TODO(co) GLSL buffer settings, unset previous program
-			// TODO(co) Implement me
-		}
-		else
-		{
-			// TODO(co) GLSL buffer settings
-			// TODO(co) Implement me
 		}
 	}
 

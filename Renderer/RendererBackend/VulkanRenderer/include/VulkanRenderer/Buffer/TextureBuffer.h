@@ -31,6 +31,8 @@
 #include <Renderer/Buffer/BufferTypes.h>
 #include <Renderer/Texture/TextureTypes.h>
 
+#include "VulkanRenderer/Vulkan.h"
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]

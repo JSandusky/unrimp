@@ -22,7 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Direct3D11Renderer/Direct3D11Renderer.h"
-#include "Direct3D11Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
+#include "Direct3D11Renderer/Guid.h"			// For "WKPDID_D3DDebugObjectName"
 #include "Direct3D11Renderer/Direct3D11Debug.h"	// For "DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN()"
 #include "Direct3D11Renderer/Direct3D11RuntimeLinking.h"
 #include "Direct3D11Renderer/RootSignature.h"
@@ -1233,8 +1233,9 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	void Direct3D11Renderer::drawEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		// Get indirect buffer data and perform security checks
+		// Sanity checks
 		assert(nullptr != emulationData);
+		assert(numberOfDraws > 0 && "Number of draws must not be zero");
 
 		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
 		emulationData += indirectBufferOffset;
@@ -1271,8 +1272,9 @@ namespace Direct3D11Renderer
 
 	void Direct3D11Renderer::drawIndexedEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		// Get indirect buffer data and perform security checks
+		// Sanity checks
 		assert(nullptr != emulationData);
+		assert(numberOfDraws > 0 && "Number of draws must not be zero");
 
 		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
 		emulationData += indirectBufferOffset;

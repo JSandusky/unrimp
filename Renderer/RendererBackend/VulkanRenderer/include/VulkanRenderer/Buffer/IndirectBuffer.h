@@ -30,6 +30,8 @@
 #include <Renderer/Buffer/IIndirectBuffer.h>
 #include <Renderer/Buffer/BufferTypes.h>
 
+#include "VulkanRenderer/Vulkan.h"
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -83,6 +85,15 @@ namespace VulkanRenderer
 		*/
 		virtual ~IndirectBuffer();
 
+		/**
+		*  @brief
+		*    Return the Vulkan indirect buffer
+		*
+		*  @return
+		*    The Vulkan indirect buffer
+		*/
+		inline VkBuffer getVulkanIndirectBuffer() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IIndirectBuffer methods      ]
@@ -104,7 +115,7 @@ namespace VulkanRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		// TODO(co) Implement me
+		VkBuffer mVulkanIndirectBuffer;	///< The Vulkan indirect buffer
 
 
 	};

@@ -35,7 +35,8 @@ namespace VulkanRenderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	IndirectBuffer::IndirectBuffer(VulkanRenderer& vulkanRenderer, uint32_t, const void*, Renderer::BufferUsage) :
-		IIndirectBuffer(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
+		IIndirectBuffer(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer)),
+		mVulkanIndirectBuffer(VK_NULL_HANDLE)
 	{
 		// TODO(co) Implement me
 	}

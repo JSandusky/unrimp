@@ -558,8 +558,10 @@ namespace VulkanRenderer
 		IMPORT_FUNC(vkCmdSetLineWidth);
 		IMPORT_FUNC(vkCmdSetDepthBias);
 		IMPORT_FUNC(vkCmdPushConstants);
-		IMPORT_FUNC(vkCmdDrawIndexed);
 		IMPORT_FUNC(vkCmdDraw);
+		IMPORT_FUNC(vkCmdDrawIndexed);
+		IMPORT_FUNC(vkCmdDrawIndirect);
+		IMPORT_FUNC(vkCmdDrawIndexedIndirect);
 		IMPORT_FUNC(vkCmdDispatch);
 		IMPORT_FUNC(vkCmdClearColorImage);
 		IMPORT_FUNC(vkCmdClearDepthStencilImage);

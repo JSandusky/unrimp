@@ -30,6 +30,8 @@
 #include <Renderer/Buffer/IVertexBuffer.h>
 #include <Renderer/Buffer/BufferTypes.h>
 
+#include "VulkanRenderer/Vulkan.h"
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]

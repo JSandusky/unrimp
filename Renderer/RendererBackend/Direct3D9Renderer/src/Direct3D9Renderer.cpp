@@ -22,7 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
-#include "Direct3D9Renderer/d3d9.h"	// For "DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN()"
+#include "Direct3D9Renderer/d3d9.h"				// For "DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN()"
 #include "Direct3D9Renderer/Direct3D9Debug.h"	// For "DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN()"
 #include "Direct3D9Renderer/Direct3D9RuntimeLinking.h"
 #include "Direct3D9Renderer/RootSignature.h"
@@ -1053,8 +1053,9 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	void Direct3D9Renderer::drawEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		// Get indirect buffer data and perform security checks
+		// Sanity checks
 		assert(nullptr != emulationData);
+		assert(numberOfDraws > 0 && "Number of draws must not be zero");
 
 		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
 		emulationData += indirectBufferOffset;
@@ -1144,12 +1145,13 @@ namespace Direct3D9Renderer
 
 	void Direct3D9Renderer::drawIndexedEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
-		if (numberOfDraws > 0 && mCapabilities.instancedArrays)
-		{
-			// Get indirect buffer data and perform security checks
-			assert(nullptr != emulationData);
+		// Sanity checks
+		assert(nullptr != emulationData);
+		assert(numberOfDraws > 0 && "Number of draws must not be zero");
 
+		// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
+		if (mCapabilities.instancedArrays)
+		{
 			// TODO(co) Currently no buffer overflow check due to lack of interface provided data
 			emulationData += indirectBufferOffset;
 

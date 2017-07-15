@@ -22,9 +22,9 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Direct3D10Renderer/Direct3D10Renderer.h"
-#include "Direct3D10Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
-#include "Direct3D10Renderer/Direct3D10Debug.h"	// For "DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN()"
-#include "Direct3D10Renderer/Direct3D9RuntimeLinking.h"	//  For the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box) used for debugging, also works directly within VisualStudio 2012 out-of-the-box
+#include "Direct3D10Renderer/Guid.h"					// For "WKPDID_D3DDebugObjectName"
+#include "Direct3D10Renderer/Direct3D10Debug.h"			// For "DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN()"
+#include "Direct3D10Renderer/Direct3D9RuntimeLinking.h"	// For the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box) used for debugging, also works directly within VisualStudio 2012 out-of-the-box
 #include "Direct3D10Renderer/Direct3D10RuntimeLinking.h"
 #include "Direct3D10Renderer/RootSignature.h"
 #include "Direct3D10Renderer/Mapping.h"
@@ -1219,8 +1219,9 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	void Direct3D10Renderer::drawEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		// Get indirect buffer data and perform security checks
+		// Sanity checks
 		assert(nullptr != emulationData);
+		assert(numberOfDraws > 0 && "Number of draws must not be zero");
 
 		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
 		emulationData += indirectBufferOffset;
@@ -1257,8 +1258,9 @@ namespace Direct3D10Renderer
 
 	void Direct3D10Renderer::drawIndexedEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		// Get indirect buffer data and perform security checks
+		// Sanity checks
 		assert(nullptr != emulationData);
+		assert(numberOfDraws > 0 && "Number of draws must not be zero");
 
 		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
 		emulationData += indirectBufferOffset;

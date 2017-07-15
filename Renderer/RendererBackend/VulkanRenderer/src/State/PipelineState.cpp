@@ -284,11 +284,6 @@ namespace VulkanRenderer
 		}
 	}
 
-	void PipelineState::bindPipelineState() const
-	{
-		// TODO(co) Implement me
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

@@ -540,14 +540,22 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Draw call                                             ]
 	//[-------------------------------------------------------]
-	void NullRenderer::drawEmulated(const uint8_t*, uint32_t, uint32_t)
+	void NullRenderer::drawEmulated(const uint8_t* emulationData, uint32_t, uint32_t numberOfDraws)
 	{
-		// Nothing here
+		// Sanity checks
+		assert(nullptr != emulationData);
+		assert(numberOfDraws > 0 && "Number of draws must not be zero");
+		std::ignore = emulationData;
+		std::ignore = numberOfDraws;
 	}
 
-	void NullRenderer::drawIndexedEmulated(const uint8_t*, uint32_t, uint32_t)
+	void NullRenderer::drawIndexedEmulated(const uint8_t* emulationData, uint32_t, uint32_t numberOfDraws)
 	{
-		// Nothing here
+		// Sanity checks
+		assert(nullptr != emulationData);
+		assert(numberOfDraws > 0 && "Number of draws must not be zero");
+		std::ignore = emulationData;
+		std::ignore = numberOfDraws;
 	}
 
 

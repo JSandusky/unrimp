@@ -97,12 +97,6 @@ namespace VulkanRenderer
 		*/
 		inline VkPipeline getVkPipeline() const;
 
-		/**
-		*  @brief
-		*    Bind the pipeline state
-		*/
-		void bindPipelineState() const;
-
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
