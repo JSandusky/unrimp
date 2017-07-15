@@ -160,7 +160,7 @@ namespace Renderer
 		public:
 			enum class ContextType
 			{
-				WIN32,
+				WINDOWS,
 				X11,
 				WAYLAND
 			};
@@ -202,13 +202,13 @@ namespace Renderer
 			explicit Context(const Context&) = delete;
 			Context& operator=(const Context&) = delete;
 		private:
-			ContextType mContextType;
-			ILog&  mLog;
-			handle mNativeWindowHandle;
-			bool   mUseExternalContext;
-			void*  mRendererApiSharedLibrary;
+			ContextType	mContextType;
+			ILog&		mLog;
+			handle		mNativeWindowHandle;
+			bool		mUseExternalContext;
+			void*		mRendererApiSharedLibrary;
 		};
-		
+
 	#ifdef LINUX
 		class X11Context : public Context
 		{

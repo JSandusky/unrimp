@@ -106,7 +106,7 @@ void IApplicationRenderer::onDeinitialization()
 		mRendererInstance->destroyRenderer();
 	}
 
-	// Call base implementation after renderer was destroyed, needed at least under linux see comments in private method RendererInstance::loadRendererApiSharedLibrary for more details
+	// Call base implementation after renderer was destroyed, needed at least under Linux see comments in private method "RendererInstance::loadRendererApiSharedLibrary()" for more details
 	IApplication::onDeinitialization();
 
 	// Delete the renderer instance
@@ -305,14 +305,14 @@ Renderer::IRenderer* IApplicationRenderer::createRendererInstance(const char* re
 	if (nullptr != rendererName)
 	{
 		bool loadRendererApiSharedLibrary = false;
-#ifdef WIN32
-		mRendererContext = new Renderer::Context(Renderer::Context::ContextType::WIN32, ::detail::g_RendererLog, getNativeWindowHandle());
-#elif LINUX
-		// Under linux the opengl library interacts with the library fro X11 so we need to load the library ourself instead letting it be loaded by the renderer instance
-		// See http://dri.sourceforge.net/doc/DRIuserguide.html "11.5 libGL.so and dlopen()"
-		loadRendererApiSharedLibrary = true;
-		mRendererContext = new Renderer::X11Context(::detail::g_RendererLog, getX11Display(), getNativeWindowHandle());
-#endif
+		#ifdef WIN32
+			mRendererContext = new Renderer::Context(Renderer::Context::ContextType::WINDOWS, ::detail::g_RendererLog, getNativeWindowHandle());
+		#elif LINUX
+			// Under Linux the OpenGL library interacts with the library from X11 so we need to load the library ourself instead letting it be loaded by the renderer instance
+			// -> See http://dri.sourceforge.net/doc/DRIuserguide.html "11.5 libGL.so and dlopen()"
+			loadRendererApiSharedLibrary = true;
+			mRendererContext = new Renderer::X11Context(::detail::g_RendererLog, getX11Display(), getNativeWindowHandle());
+		#endif
 		mRendererInstance = new Renderer::RendererInstance(rendererName, *mRendererContext, loadRendererApiSharedLibrary);
 	}
 	Renderer::IRenderer* renderer = (nullptr != mRendererInstance) ? mRendererInstance->getRenderer() : nullptr;

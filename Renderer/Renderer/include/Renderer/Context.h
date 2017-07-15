@@ -37,7 +37,6 @@ namespace Renderer
 {
 	class ILog;
 }
-
 #ifdef LINUX
 	// Copied from Xlib.h
 	struct _XDisplay;
@@ -68,7 +67,7 @@ namespace Renderer
 	public:
 		enum class ContextType
 		{
-			WIN32,
+			WINDOWS,
 			X11,
 			WAYLAND
 		};
@@ -137,19 +136,19 @@ namespace Renderer
 
 		/**
 		*  @brief
-		*    Return an handle to the renderer api shared library
+		*    Return a handle to the renderer API shared library
 		*
 		*  @return
-		*    The handle to the renderer api shared library
+		*    The handle to the renderer API shared library
 		*/
 		inline void* getRendererApiSharedLibrary() const;
 
 		/**
 		*  @brief
-		*    Sets the handle for the renderer api shared library to use instead of let it load by the renderer instance
+		*    Set the handle for the renderer API shared library to use instead of let it load by the renderer instance
 		*
 		*  @param[in] rendererApiSharedLibrary
-		*    An handle to the renderer api shared library. The renderer will use this handle instead of loading the renderer api shared library itself
+		*    A handle to the renderer API shared library; the renderer will use this handle instead of loading the renderer API shared library itself
 		*/
 		inline void setRendererApiSharedLibrary(void* rendererApiSharedLibrary);
 
@@ -166,20 +165,20 @@ namespace Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ContextType mContextType;
-		ILog&  mLog;
-		handle mNativeWindowHandle;
-		bool   mUseExternalContext;
-		void*  mRendererApiSharedLibrary;	///< An handle to the renderer api shared library (e.g. optained via dlopen and co
+		ContextType	mContextType;
+		ILog&		mLog;
+		handle		mNativeWindowHandle;
+		bool		mUseExternalContext;
+		void*		mRendererApiSharedLibrary;	///< A handle to the renderer API shared library (e.g. obtained via "dlopen()" and co)
 
 
 	};
 
-// TODO(sw) Hide it via an define for non linux builds? This definition doesn't use any platform specific headers
+// TODO(sw) Hide it via an define for non Linux builds? This definition doesn't use any platform specific headers
 #ifdef LINUX
 	/**
 	*  @brief
-	*    X11 Version of the context class
+	*    X11 version of the context class
 	*/
 	class X11Context : public Context
 	{

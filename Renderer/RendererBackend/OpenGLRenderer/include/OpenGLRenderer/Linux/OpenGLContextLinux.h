@@ -162,8 +162,8 @@ namespace OpenGLRenderer
 	private:
 		OpenGLRenderer&	mOpenGLRenderer;		///< Owner OpenGL renderer instance
 		handle			mNativeWindowHandle;	///< OpenGL window, can be a null pointer (Window)
-		Display*		mDisplay;				///< The x11 display connection, can be a null pointer
-		bool			mOwnsX11Display;		///< Indicates if this instance owns the X11 display 
+		Display*		mDisplay;				///< The X11 display connection, can be a null pointer
+		bool			mOwnsX11Display;		///< Indicates if this instance owns the X11 display
 		GLXContext		mWindowRenderContext;	///< The render context of the OpenGL dummy window, can be a null pointer
 		bool			mUseExternalContext;
 		bool			mOwnsRenderContext;		///< Does this context own the OpenGL render context?

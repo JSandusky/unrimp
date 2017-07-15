@@ -129,8 +129,8 @@ public:
 	*  @brief
 	*    Return the X11 display connection object
 	*
-	*  @remarks
-	*    The X11 display connection object, can be a nullptr
+	*  @note
+	*    - The X11 display connection object, can be a null pointer
 	*/
 	virtual Display* getX11Display() const = 0;
 #endif

@@ -197,7 +197,7 @@ namespace OpenGLES3Renderer
 		*  @param[in] useExternalContext
 		*    When true an own OpenGL ES context won't be created
 		*/
-		explicit IOpenGLES3Context(OpenGLES3Renderer& openGLES3Renderer, handle nativeWindowHandle, bool useExternalContext);
+		IOpenGLES3Context(OpenGLES3Renderer& openGLES3Renderer, handle nativeWindowHandle, bool useExternalContext);
 
 		/**
 		*  @brief
