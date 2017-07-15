@@ -27,6 +27,7 @@
 #include "OpenGLRenderer/OpenGLRenderer.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/Context.h>
 #ifdef WIN32
 	// Nothing here
 #elif defined LINUX
@@ -104,7 +105,8 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	OpenGLRuntimeLinking::OpenGLRuntimeLinking(OpenGLRenderer& openGLRenderer) :
 		mOpenGLRenderer(openGLRenderer),
-		mOpenGLSharedLibrary(nullptr),
+		mOpenGLSharedLibrary(mOpenGLRenderer.getContext().getRendererApiSharedLibrary()),
+		mOwnsOpenGLSharedLibrary(nullptr == mOpenGLSharedLibrary), // We can do this here because mOpenGLSharedLibrary lays before this variable
 		mEntryPointsRegistered(false),
 		mInitialized(false)
 	{
@@ -113,20 +115,23 @@ namespace OpenGLRenderer
 
 	OpenGLRuntimeLinking::~OpenGLRuntimeLinking()
 	{
-		// Destroy the shared library instances
-		#ifdef WIN32
-			if (nullptr != mOpenGLSharedLibrary)
-			{
-				::FreeLibrary(static_cast<HMODULE>(mOpenGLSharedLibrary));
-			}
-		#elif defined LINUX
-			if (nullptr != mOpenGLSharedLibrary)
-			{
-				::dlclose(mOpenGLSharedLibrary);
-			}
-		#else
-			#error "Unsupported platform"
-		#endif
+		if (mOwnsOpenGLSharedLibrary)
+		{
+			// Destroy the shared library instances
+			#ifdef WIN32
+				if (nullptr != mOpenGLSharedLibrary)
+				{
+					::FreeLibrary(static_cast<HMODULE>(mOpenGLSharedLibrary));
+				}
+			#elif defined LINUX
+				if (nullptr != mOpenGLSharedLibrary)
+				{
+					::dlclose(mOpenGLSharedLibrary);
+				}
+			#else
+				#error "Unsupported platform"
+			#endif
+		}
 	}
 
 	bool OpenGLRuntimeLinking::isOpenGLAvaiable()
@@ -155,22 +160,25 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	bool OpenGLRuntimeLinking::loadSharedLibraries()
 	{
-		// Load the shared library
-		#ifdef WIN32
-			mOpenGLSharedLibrary = ::LoadLibraryExA("opengl32.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
-			if (nullptr == mOpenGLSharedLibrary)
-			{
-				RENDERER_LOG(mOpenGLRenderer.getContext(), CRITICAL, "Failed to load in the shared OpenGL library \"opengl32.dll\"")
-			}
-		#elif defined LINUX
-			mOpenGLSharedLibrary = ::dlopen("libGL.so", RTLD_NOW);
-			if (nullptr == mOpenGLSharedLibrary)
-			{
-				RENDERER_LOG(mOpenGLRenderer.getContext(), CRITICAL, "Failed to load in the shared OpenGL library \"libGL.so\"")
-			}
-		#else
-			#error "Unsupported platform"
-		#endif
+		if (mOwnsOpenGLSharedLibrary)
+		{
+			// Load the shared library
+			#ifdef WIN32
+				mOpenGLSharedLibrary = ::LoadLibraryExA("opengl32.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
+				if (nullptr == mOpenGLSharedLibrary)
+				{
+					RENDERER_LOG(mOpenGLRenderer.getContext(), CRITICAL, "Failed to load in the shared OpenGL library \"opengl32.dll\"")
+				}
+			#elif defined LINUX
+				mOpenGLSharedLibrary = ::dlopen("libGL.so", RTLD_NOW | RTLD_GLOBAL);
+				if (nullptr == mOpenGLSharedLibrary)
+				{
+					RENDERER_LOG(mOpenGLRenderer.getContext(), CRITICAL, "Failed to load in the shared OpenGL library \"libGL.so\"")
+				}
+			#else
+				#error "Unsupported platform"
+			#endif
+		}
 
 		// Done
 		return (nullptr != mOpenGLSharedLibrary);

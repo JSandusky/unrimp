@@ -28,10 +28,12 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline Context::Context(ILog& log, handle nativeWindowHandle, bool useExternalContext) :
+	inline Context::Context(ContextType contextType, ILog& log, handle nativeWindowHandle, bool useExternalContext) :
+		mContextType(contextType),
 		mLog(log),
 		mNativeWindowHandle(nativeWindowHandle),
-		mUseExternalContext(useExternalContext)
+		mUseExternalContext(useExternalContext),
+		mRendererApiSharedLibrary(nullptr)
 	{
 		// Nothing here
 	}
@@ -39,6 +41,11 @@ namespace Renderer
 	inline Context::~Context()
 	{
 		// Nothing here
+	}
+
+	inline Context::ContextType Context::getType() const
+	{
+		return mContextType;
 	}
 
 	inline ILog& Context::getLog() const
@@ -55,6 +62,29 @@ namespace Renderer
 	{
 		return mUseExternalContext;
 	}
+
+	inline void* Context::getRendererApiSharedLibrary() const
+	{
+		return mRendererApiSharedLibrary;
+	}
+
+	inline void Context::setRendererApiSharedLibrary(void* rendererApiSharedLibrary)
+	{
+		mRendererApiSharedLibrary = rendererApiSharedLibrary;
+	}
+
+#ifdef LINUX
+	inline X11Context::X11Context(ILog& log, _XDisplay* display, handle nativeWindowHandle, bool useExternalContext) :
+		Context(Context::ContextType::X11, log, nativeWindowHandle, useExternalContext),
+		mDisplay(display)
+	{
+	}
+
+	inline _XDisplay* X11Context::getDisplay() const
+	{
+		return mDisplay;
+	}
+#endif
 
 
 //[-------------------------------------------------------]

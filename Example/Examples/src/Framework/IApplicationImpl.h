@@ -35,6 +35,12 @@
 //[-------------------------------------------------------]
 class IApplication;
 
+#ifdef LINUX
+	// Copied from Xlib.h
+	struct _XDisplay;
+	typedef struct _XDisplay Display;
+#endif
+
 
 //[-------------------------------------------------------]
 //[ Classes                                               ]
@@ -117,6 +123,17 @@ public:
 	*    Redraw request
 	*/
 	virtual void redraw() = 0;
+
+#ifdef LINUX
+	/**
+	*  @brief
+	*    Return the X11 display connection object
+	*
+	*  @remarks
+	*    The X11 display connection object, can be a nullptr
+	*/
+	virtual Display* getX11Display() const = 0;
+#endif
 
 
 //[-------------------------------------------------------]

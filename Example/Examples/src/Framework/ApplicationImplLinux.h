@@ -82,6 +82,7 @@ public:
 	virtual void getWindowSize(int& width, int& height) const override;
 	virtual handle getNativeWindowHandle() const override;
 	virtual void redraw() override;
+	virtual Display* getX11Display() const override;
 
 
 //[-------------------------------------------------------]

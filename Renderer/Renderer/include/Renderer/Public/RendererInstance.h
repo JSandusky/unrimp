@@ -33,12 +33,15 @@
 	#ifdef WIN32
 		#include "Renderer/WindowsHeader.h"
 	#elif defined LINUX
-		#include <dlfcn.h>
 	#else
 		#error "Unsupported platform"
 	#endif
 
 	#include <stdio.h>
+#endif
+
+#ifdef LINUX
+	#include <dlfcn.h> // We need it also for the non shared libraries case
 #endif
 
 #include <string.h>
@@ -127,11 +130,21 @@ namespace Renderer
 		*    Example renderer names: "Null", "OpenGL", "OpenGLES3", "Vulkan", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12"
 		*  @param[in] context
 		*    Renderer context, the renderer context instance must stay valid as long as the renderer instance exists
+		*  @param[in] loadRendererApiSharedLibrary
+		*    Indicates if the renderer instance should should load the renderer api shared library (true) or not (false, default)
 		*/
-		RendererInstance(const char* rendererName, const Renderer::Context& context)
+		RendererInstance(const char* rendererName, Renderer::Context& context, bool loadRendererApiSharedLibrary = false) :
+			mRendererSharedLibrary(nullptr),
+			mRendererApiSharedLibrary(nullptr)
 		{
 			// In order to keep it simple in this test project the supported renderer backends are
 			// fixed typed in. For a real system a dynamic plugin system would be a good idea.
+			if (loadRendererApiSharedLibrary)
+			{
+				// User wants us to load the renderer api shared library
+				this->loadRendererApiSharedLibrary(rendererName);
+				context.setRendererApiSharedLibrary(mRendererApiSharedLibrary);
+			}
 			#ifdef SHARED_LIBRARIES
 				// Dynamically linked libraries
 				#ifdef WIN32
@@ -289,13 +302,19 @@ namespace Renderer
 			// Delete the renderer instance
 			mRenderer = nullptr;
 
-			// Destroy the shared library instance
+			// Unload the shared library instance
 			#ifdef SHARED_LIBRARIES
 				#ifdef WIN32
 					if (nullptr != mRendererSharedLibrary)
 					{
 						::FreeLibrary(static_cast<HMODULE>(mRendererSharedLibrary));
 						mRendererSharedLibrary = nullptr;
+					}
+
+					if (nullptr != mRendererApiSharedLibrary)
+					{
+						::FreeLibrary(static_cast<HMODULE>(mRendererApiSharedLibrary));
+						mRendererApiSharedLibrary = nullptr;
 					}
 				#elif defined LINUX
 					if (nullptr != mRendererSharedLibrary)
@@ -306,6 +325,21 @@ namespace Renderer
 				#else
 					#error "Unsupported platform"
 				#endif
+			#endif
+
+			// Unload the renderer api shared library instance
+			#ifdef WIN32
+				if (nullptr != mRendererApiSharedLibrary)
+				{
+					::FreeLibrary(static_cast<HMODULE>(mRendererApiSharedLibrary));
+					mRendererApiSharedLibrary = nullptr;
+				}
+			#elif defined LINUX
+				if (nullptr != mRendererApiSharedLibrary)
+				{
+					::dlclose(mRendererApiSharedLibrary);
+					mRendererApiSharedLibrary = nullptr;
+				}
 			#endif
 		}
 
@@ -321,13 +355,43 @@ namespace Renderer
 			return mRenderer;
 		}
 
+		/**
+		*  @brief
+		*    Destroy renderer instance
+		*/
+		inline void destroyRenderer()
+		{
+			mRenderer = nullptr;
+		}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		void loadRendererApiSharedLibrary(const char* rendererName)
+		{
+			// TODO(sw) Currently this is only needed for OpenGL (libGL.so) under linux. This interacts with the library libX11
+#ifdef LINUX
+			// Under linux the OpenGL library (libGL.so) registers callbacks in libX11 when loaded, which gets called on XCloseDisplay
+			// When the OpenGL library gets unloaded before the XCloseDisplay call then the X11 library wants to call the callbacks registered by the OpenGL library -> crash
+			// So we load it here. The user must make sure that an instance of this class gets destroyed after XCloseDisplay was called
+			// See http://dri.sourceforge.net/doc/DRIuserguide.html "11.5 libGL.so and dlopen()"
+			if (0 == strcmp(rendererName, "OpenGL"))
+			{
+				mRendererApiSharedLibrary = ::dlopen("libGL.so", RTLD_NOW | RTLD_GLOBAL);
+			}
+#endif
+		}
+
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		void*				   mRendererSharedLibrary;	///< Shared renderer library, can be a null pointer
-		Renderer::IRendererPtr mRenderer;				///< Renderer instance, can be a null pointer
+		void*				   mRendererSharedLibrary;		///< Shared renderer library, can be a null pointer
+		Renderer::IRendererPtr mRenderer;					///< Renderer instance, can be a null pointer
+		void*				   mRendererApiSharedLibrary;	///< Shared renderer api library, can be a null pointer
 
 
 	};

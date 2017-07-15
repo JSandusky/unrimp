@@ -22,6 +22,9 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLES3Renderer/IOpenGLES3Context.h"
+#include "OpenGLES3Renderer/OpenGLES3Renderer.h"
+
+#include "Renderer/Context.h"
 
 #include <EGL/eglext.h>
 
@@ -190,10 +193,11 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	IOpenGLES3Context::IOpenGLES3Context(handle nativeWindowHandle, bool useExternalContext) :
+	IOpenGLES3Context::IOpenGLES3Context(OpenGLES3Renderer& openGLES3Renderer, handle nativeWindowHandle, bool useExternalContext) :
 		mNativeWindowHandle(nativeWindowHandle),
 		#if (defined(LINUX) && !defined(ANDROID))
-			mX11Display(XOpenDisplay(nullptr)),
+			mX11Display(nullptr),
+			mOwnsX11Display(true),
 		#endif
 		mEGLDisplay(EGL_NO_DISPLAY),
 		mEGLConfig(nullptr),
@@ -202,7 +206,21 @@ namespace OpenGLES3Renderer
 		mDummySurface(EGL_NO_SURFACE),
 		mUseExternalContext(useExternalContext)
 	{
-		// Nothing here
+		#if (defined(LINUX) && !defined(ANDROID))
+			const Renderer::Context& context = openGLES3Renderer.getContext();
+
+			// If the given renderer context is an x11 context use the display connection object provided by the context
+			if (context.getType() == Renderer::Context::ContextType::X11)
+			{
+				mX11Display = static_cast<const Renderer::X11Context&>(context).getDisplay();
+				mOwnsX11Display = mX11Display == nullptr;
+			}
+
+			if (mOwnsX11Display)
+			{
+				mX11Display = XOpenDisplay(nullptr);
+			}
+		#endif
 	}
 
 	IOpenGLES3Context::IOpenGLES3Context(const IOpenGLES3Context&) :
@@ -279,7 +297,7 @@ namespace OpenGLES3Renderer
 				}
 
 				// Close the X server display connection
-				if (nullptr != mX11Display)
+				if (nullptr != mX11Display && mOwnsX11Display)
 				{
 					::XCloseDisplay(mX11Display);
 					mX11Display = nullptr;

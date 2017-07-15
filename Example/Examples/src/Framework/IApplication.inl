@@ -19,12 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "Framework/IApplicationImpl.h"
-
-
-//[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
 inline void IApplication::getWindowSize(int& width, int& height) const
@@ -40,4 +34,9 @@ inline handle IApplication::getNativeWindowHandle() const
 inline void IApplication::redraw()
 {
 	mApplicationImpl->redraw();
+}
+
+inline Display* IApplication::getX11Display() const
+{
+	return mApplicationImpl->getX11Display();
 }

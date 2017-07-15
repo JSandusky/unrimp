@@ -27,10 +27,9 @@
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/Context.h>
 
 #include <GL/glext.h>
-
-#include <iostream>	// TODO(co) Can we remove this?
 
 // Need to redefine "None"-macro (which got undefined in "Extensions.h" due name clashes used in enums)
 #ifndef None
@@ -70,13 +69,11 @@ namespace OpenGLRenderer
 			{
 				glXDestroyContext(mDisplay, mWindowRenderContext);
 			}
-		}
 
-		// Destroy the OpenGL dummy window, in case there's one
-		if (NULL_HANDLE != mDummyWindow)
-		{
-			// Destroy the OpenGL dummy window
-			::XDestroyWindow(mDisplay, mDummyWindow);
+			if (mOwnsX11Display)
+			{
+				XCloseDisplay(mDisplay);
+			}
 		}
 	}
 
@@ -87,7 +84,7 @@ namespace OpenGLRenderer
 	void OpenGLContextLinux::makeCurrent() const
 	{
 		// Only do something when have created our renderer context and don't use a external renderer context
-		if (!mUseExternalContext)
+		if (!mUseExternalContext && 0 != mNativeWindowHandle)
 		{
 			glXMakeCurrent(getDisplay(), mNativeWindowHandle, getRenderContext());
 		}
@@ -110,9 +107,8 @@ namespace OpenGLRenderer
 		IOpenGLContext(openGLRuntimeLinking),
 		mOpenGLRenderer(openGLRenderer),
 		mNativeWindowHandle(nativeWindowHandle),
-		mDummyWindow(NULL_HANDLE),
 		mDisplay(nullptr),
-		m_pDummyVisualInfo(nullptr),
+		mOwnsX11Display(true),
 		mWindowRenderContext(NULL_HANDLE),
 		mUseExternalContext(useExternalContext),
 		mOwnsRenderContext(true)
@@ -124,115 +120,74 @@ namespace OpenGLRenderer
 		}
 		else
 		{
-			// Get X server display connection
-			mDisplay = XOpenDisplay(nullptr);
+			const Renderer::Context& context = openGLRenderer.getContext();
+			assert(context.getType() == Renderer::Context::ContextType::X11);
+
+			// If the given renderer context is an x11 context use the display connection object provided by the context
+			if (context.getType() == Renderer::Context::ContextType::X11)
+			{
+				mDisplay = static_cast<const Renderer::X11Context&>(context).getDisplay();
+				mOwnsX11Display = mDisplay == nullptr;
+			}
+
+			if (mOwnsX11Display)
+			{
+				mDisplay = XOpenDisplay(0);
+			}
 		}
 		if (nullptr != mDisplay)
 		{
-			// Get an appropriate visual
-			int attributeList[] =
+			// Lookout! OpenGL context sharing chaos: https://www.opengl.org/wiki/OpenGL_Context
+			// "State" objects are not shared between contexts, including but not limited to:
+			// - Vertex Array Objects (VAOs)
+			// - Framebuffer Objects (FBOs)
+			// -> Keep away from the share context parameter of "glxCreateContextAttribsARB()" and just share the OpenGL render context instead
+			if (nullptr != shareContextLinux)
 			{
-				GLX_RGBA,
-				GLX_DOUBLEBUFFER,
-				GLX_RED_SIZE,		8,
-				GLX_GREEN_SIZE,		8,
-				GLX_BLUE_SIZE,		8,
-				GLX_ALPHA_SIZE,		8,
-				GLX_DEPTH_SIZE,		24,
-				GLX_STENCIL_SIZE,	8,
-				0	// = "None"
-			};
-
-			m_pDummyVisualInfo = glXChooseVisual(mDisplay, DefaultScreen(mDisplay), attributeList);
-			if (nullptr != m_pDummyVisualInfo)
-			{
-				if (NULL_HANDLE == mNativeWindowHandle)
-				{
-					// Create a color map
-					XSetWindowAttributes setWindowAttributes;
-					setWindowAttributes.colormap = XCreateColormap(mDisplay, RootWindow(mDisplay, m_pDummyVisualInfo->screen), m_pDummyVisualInfo->visual, AllocNone);
-
-					// Create a window
-					setWindowAttributes.border_pixel = 0;
-					setWindowAttributes.event_mask = 0;
-					mNativeWindowHandle = mDummyWindow = XCreateWindow(mDisplay, RootWindow(mDisplay, m_pDummyVisualInfo->screen), 0, 0, 300,
-																		300, 0, m_pDummyVisualInfo->depth, InputOutput, m_pDummyVisualInfo->visual,
-																		CWBorderPixel | CWColormap | CWEventMask, &setWindowAttributes);
-					RENDERER_LOG(mOpenGLRenderer.getContext(), DEBUG, "Create OpenGL dummy window")
-				}
-
-				// Lookout! OpenGL context sharing chaos: https://www.opengl.org/wiki/OpenGL_Context
-				// "State" objects are not shared between contexts, including but not limited to:
-				// - Vertex Array Objects (VAOs)
-				// - Framebuffer Objects (FBOs)
-				// -> Keep away from "wglShareLists()" and the share context parameter of "wglCreateContextAttribsARB()" and just share the OpenGL render context instead
-				if (nullptr != shareContextLinux)
-				{
-					mWindowRenderContext = shareContextLinux->getRenderContext();
-					mOwnsRenderContext = false;
-				}
-				else
-				{
-					// Create a GLX context
-					GLXContext legacyRenderContext = glXCreateContext(mDisplay, m_pDummyVisualInfo, 0, GL_TRUE);
-					if (nullptr != legacyRenderContext)
-					{
-						// Make the internal dummy to the current render target
-						const int result = glXMakeCurrent(mDisplay, mNativeWindowHandle, legacyRenderContext);
-						RENDERER_LOG(mOpenGLRenderer.getContext(), DEBUG, "Make OpenGL legacy context current: %d", result)
-
-						// Load the >= OpenGL 3.0 entry points
-						if (loadOpenGL3EntryPoints())
-						{
-							// Create the render context of the OpenGL window
-							mWindowRenderContext = createOpenGLContext();
-
-							// Destroy the legacy OpenGL render context
-							glXMakeCurrent(mDisplay, None, nullptr);
-							glXDestroyContext(mDisplay, legacyRenderContext);
-
-							// If there's an OpenGL context, do some final initialization steps
-							if (NULL_HANDLE != mWindowRenderContext)
-							{
-								// Make the OpenGL context to the current one
-								const int result = glXMakeCurrent(mDisplay, mNativeWindowHandle, mWindowRenderContext);
-								RENDERER_LOG(mOpenGLRenderer.getContext(), DEBUG, "Make new OpenGL context current: %d", result)
-								{
-									int major = 0;
-									glGetIntegerv(GL_MAJOR_VERSION, &major);
-
-									int minor = 0;
-									glGetIntegerv(GL_MINOR_VERSION, &minor);
-
-									GLint profile = 0;
-									glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &profile);
-									const bool isCoreProfile = (profile & GL_CONTEXT_CORE_PROFILE_BIT);
-
-									RENDERER_LOG(mOpenGLRenderer.getContext(), DEBUG, "OpenGL context version: %d.%d %s", major, minor, (isCoreProfile ? "core" : "noncore"))
-									int numberOfExtensions = 0;
-									glGetIntegerv(GL_NUM_EXTENSIONS, &numberOfExtensions);
-									RENDERER_LOG(mOpenGLRenderer.getContext(), DEBUG, "Number of supported OpenGL extensions: %d", numberOfExtensions)
-									for (GLuint extensionIndex = 0; extensionIndex < static_cast<GLuint>(numberOfExtensions); ++extensionIndex)
-									{
-										RENDERER_LOG(mOpenGLRenderer.getContext(), DEBUG, "%s", glGetStringi(GL_EXTENSIONS, extensionIndex))
-									}
-								}
-							}
-						}
-						else
-						{
-							// Error, failed to load >= OpenGL 3 entry points!
-						}
-					}
-					else
-					{
-						// Error, failed to create a GLX context!
-					}
-				}
+				mWindowRenderContext = shareContextLinux->getRenderContext();
+				mOwnsRenderContext = false;
 			}
 			else
 			{
-				// Error, failed to get an appropriate visual!
+				// TODO(sw) We don't need a dummy context to load gl/glx entry points see "Misconception #2" from https://dri.freedesktop.org/wiki/glXGetProcAddressNeverReturnsNULL/
+				// Load the >= OpenGL 3.0 entry points
+				if (loadOpenGL3EntryPoints())
+				{
+					// Create the render context of the OpenGL window
+					mWindowRenderContext = createOpenGLContext();
+
+					// If there's an OpenGL context, do some final initialization steps
+					if (NULL_HANDLE != mWindowRenderContext)
+					{
+						// Make the OpenGL context to the current one, native window handle can be zero -> thus only offscreen rendering is supported/wanted
+						const int result = glXMakeCurrent(mDisplay, mNativeWindowHandle, mWindowRenderContext);
+						RENDERER_LOG(mOpenGLRenderer.getContext(), DEBUG, "Make new OpenGL context current: %d", result)
+						{
+							int major = 0;
+							glGetIntegerv(GL_MAJOR_VERSION, &major);
+
+							int minor = 0;
+							glGetIntegerv(GL_MINOR_VERSION, &minor);
+
+							GLint profile = 0;
+							glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &profile);
+							const bool isCoreProfile = (profile & GL_CONTEXT_CORE_PROFILE_BIT);
+
+							RENDERER_LOG(mOpenGLRenderer.getContext(), DEBUG, "OpenGL context version: %d.%d %s", major, minor, (isCoreProfile ? "core" : "noncore"))
+							int numberOfExtensions = 0;
+							glGetIntegerv(GL_NUM_EXTENSIONS, &numberOfExtensions);
+							RENDERER_LOG(mOpenGLRenderer.getContext(), DEBUG, "Number of supported OpenGL extensions: %d", numberOfExtensions)
+							for (GLuint extensionIndex = 0; extensionIndex < static_cast<GLuint>(numberOfExtensions); ++extensionIndex)
+							{
+								RENDERER_LOG(mOpenGLRenderer.getContext(), DEBUG, "%s", glGetStringi(GL_EXTENSIONS, extensionIndex))
+							}
+						}
+					}
+				}
+				else
+				{
+					// Error, failed to load >= OpenGL 3 entry points!
+				}
 			}
 		}
 		else

@@ -74,7 +74,8 @@ void IApplication::onInitialization()
 
 void IApplication::onDeinitialization()
 {
-	// Nothing here
+	// Added the call to the implementation here so that a derived class can do the base deinit at a stage which fits better
+	mApplicationImpl->onDeinitialization();
 }
 
 void IApplication::onResize()

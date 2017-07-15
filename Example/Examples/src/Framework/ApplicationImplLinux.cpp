@@ -311,3 +311,8 @@ void ApplicationImplLinux::redraw()
 		mMainWindow->refresh();
 	}
 }
+
+Display* ApplicationImplLinux::getX11Display() const
+{
+	return mX11EventLoop->getDisplay();
+}
