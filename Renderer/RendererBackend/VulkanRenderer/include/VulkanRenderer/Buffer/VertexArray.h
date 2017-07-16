@@ -37,6 +37,7 @@
 //[-------------------------------------------------------]
 namespace Renderer
 {
+	struct VertexAttributes;
 	struct VertexArrayVertexBuffer;
 }
 namespace VulkanRenderer
@@ -75,6 +76,8 @@ namespace VulkanRenderer
 		*
 		*  @param[in] vulkanRenderer
 		*    Owner Vulkan renderer instance
+		*  @param[in] vertexAttributes
+		*    Vertex attributes ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology)
 		*  @param[in] numberOfVertexBuffers
 		*    Number of vertex buffers, having zero vertex buffers is valid
 		*  @param[in] vertexBuffers
@@ -82,7 +85,7 @@ namespace VulkanRenderer
 		*  @param[in] indexBuffer
 		*    Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
 		*/
-		VertexArray(VulkanRenderer& vulkanRenderer, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer* vertexBuffers, IndexBuffer* indexBuffer);
+		VertexArray(VulkanRenderer& vulkanRenderer, const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer* vertexBuffers, IndexBuffer* indexBuffer);
 
 		/**
 		*  @brief

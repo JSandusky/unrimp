@@ -37,6 +37,7 @@ struct D3D12_VERTEX_BUFFER_VIEW;
 struct ID3D12GraphicsCommandList;
 namespace Renderer
 {
+	struct VertexAttributes;
 	struct VertexArrayVertexBuffer;
 }
 namespace Direct3D12Renderer
@@ -75,6 +76,8 @@ namespace Direct3D12Renderer
 		*
 		*  @param[in] direct3D12Renderer
 		*    Owner Direct3D 12 renderer instance
+		*  @param[in] vertexAttributes
+		*    Vertex attributes ("vertex declaration" in Direct3D 9 terminology, "input layout" in Direct3D 10 & 11 terminology)
 		*  @param[in] numberOfVertexBuffers
 		*    Number of vertex buffers, having zero vertex buffers is valid
 		*  @param[in] vertexBuffers
@@ -82,7 +85,7 @@ namespace Direct3D12Renderer
 		*  @param[in] indexBuffer
 		*    Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
 		*/
-		VertexArray(Direct3D12Renderer& direct3D12Renderer, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer* vertexBuffers, IndexBuffer* indexBuffer);
+		VertexArray(Direct3D12Renderer& direct3D12Renderer, const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer* vertexBuffers, IndexBuffer* indexBuffer);
 
 		/**
 		*  @brief

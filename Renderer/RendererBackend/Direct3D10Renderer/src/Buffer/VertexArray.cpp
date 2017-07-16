@@ -40,7 +40,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArray::VertexArray(Direct3D10Renderer& direct3D10Renderer, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer* vertexBuffers, IndexBuffer* indexBuffer) :
+	VertexArray::VertexArray(Direct3D10Renderer& direct3D10Renderer, const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer* vertexBuffers, IndexBuffer* indexBuffer) :
 		IVertexArray(direct3D10Renderer),
 		mD3D10Device(direct3D10Renderer.getD3D10Device()),
 		mIndexBuffer(indexBuffer),
@@ -70,18 +70,26 @@ namespace Direct3D10Renderer
 			// Vertex buffer offset is not supported by OpenGL, so our renderer API doesn't support it either
 			memset(mOffsets, 0, sizeof(uint32_t) * mNumberOfSlots);
 
-			// Loop through all vertex buffers
-			ID3D10Buffer** currentD3D10Buffer = mD3D10Buffers;
-			UINT* currentStride = mStrides;
-			VertexBuffer** currentVertexBuffer = mVertexBuffers;
-			const Renderer::VertexArrayVertexBuffer* vertexBufferEnd = vertexBuffers + mNumberOfSlots;
-			for (const Renderer::VertexArrayVertexBuffer* vertexBuffer = vertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer, ++currentD3D10Buffer, ++currentStride, ++currentVertexBuffer)
-			{
-				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-				*currentStride = vertexBuffer->strideInBytes;
-				*currentVertexBuffer = static_cast<VertexBuffer*>(vertexBuffer->vertexBuffer);
-				*currentD3D10Buffer = (*currentVertexBuffer)->getD3D10Buffer();
-				(*currentVertexBuffer)->addReference();
+			{ // Loop through all vertex buffers
+				ID3D10Buffer** currentD3D10Buffer = mD3D10Buffers;
+				VertexBuffer** currentVertexBuffer = mVertexBuffers;
+				const Renderer::VertexArrayVertexBuffer* vertexBufferEnd = vertexBuffers + mNumberOfSlots;
+				for (const Renderer::VertexArrayVertexBuffer* vertexBuffer = vertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer, ++currentD3D10Buffer, ++currentVertexBuffer)
+				{
+					// TODO(co) Add security check: Is the given resource one of the currently used renderer?
+					*currentVertexBuffer = static_cast<VertexBuffer*>(vertexBuffer->vertexBuffer);
+					*currentD3D10Buffer = (*currentVertexBuffer)->getD3D10Buffer();
+					(*currentVertexBuffer)->addReference();
+				}
+			}
+
+			{ // Gather slot related data
+				const Renderer::VertexAttribute* attribute = vertexAttributes.attributes;
+				const Renderer::VertexAttribute* attributesEnd = attribute + vertexAttributes.numberOfAttributes;
+				for (; attribute < attributesEnd;  ++attribute)
+				{
+					mStrides[attribute->inputSlot] = attribute->strideInBytes;
+				}
 			}
 		}
 	}

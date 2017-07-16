@@ -112,7 +112,7 @@ namespace OpenGLRenderer
 				glVertexAttribIPointer(attributeLocation,
 									   Mapping::getOpenGLSize(attribute->vertexAttributeFormat),
 									   Mapping::getOpenGLType(attribute->vertexAttributeFormat),
-									   static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes),
+									   static_cast<GLsizei>(attribute->strideInBytes),
 									   reinterpret_cast<void*>(static_cast<uintptr_t>(attribute->alignedByteOffset)));
 			}
 			else
@@ -121,7 +121,7 @@ namespace OpenGLRenderer
 										 Mapping::getOpenGLSize(attribute->vertexAttributeFormat),
 										 Mapping::getOpenGLType(attribute->vertexAttributeFormat),
 										 static_cast<GLboolean>(Mapping::isOpenGLVertexAttributeFormatNormalized(attribute->vertexAttributeFormat)),
-										 static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes),
+										 static_cast<GLsizei>(attribute->strideInBytes),
 										 reinterpret_cast<void*>(static_cast<uintptr_t>(attribute->alignedByteOffset)));
 			}
 

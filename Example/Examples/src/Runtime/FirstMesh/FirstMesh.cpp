@@ -94,7 +94,7 @@ void FirstMesh::onInitialization()
 					// Data source
 					0,											// inputSlot (uint32_t)
 					0,											// alignedByteOffset (uint32_t)
-					// Data source, instancing part
+					sizeof(float) * 5 + sizeof(short) * 4,		// strideInBytes (uint32_t)
 					0											// instancesPerElement (uint32_t)
 				},
 				{ // Attribute 1
@@ -106,7 +106,7 @@ void FirstMesh::onInitialization()
 					// Data source
 					0,											// inputSlot (uint32_t)
 					sizeof(float) * 3,							// alignedByteOffset (uint32_t)
-					// Data source, instancing part
+					sizeof(float) * 5 + sizeof(short) * 4,		// strideInBytes (uint32_t)
 					0											// instancesPerElement (uint32_t)
 				},
 				{ // Attribute 2
@@ -117,8 +117,8 @@ void FirstMesh::onInitialization()
 					1,											// semanticIndex (uint32_t)
 					// Data source
 					0,											// inputSlot (uint32_t)
-					sizeof(float) * 3 + sizeof(float) * 2,		// alignedByteOffset (uint32_t)
-					// Data source, instancing part
+					sizeof(float) * 5,							// alignedByteOffset (uint32_t)
+					sizeof(float) * 5 + sizeof(short) * 4,		// strideInBytes (uint32_t)
 					0											// instancesPerElement (uint32_t)
 				}
 			};

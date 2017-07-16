@@ -93,7 +93,7 @@ namespace OpenGLES3Renderer
 					glVertexAttribIPointer(attributeLocation,
 										   Mapping::getOpenGLES3Size(attribute->vertexAttributeFormat),
 										   Mapping::getOpenGLES3Type(attribute->vertexAttributeFormat),
-										   static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes),
+										   static_cast<GLsizei>(attribute->strideInBytes),
 										   reinterpret_cast<void*>(static_cast<uintptr_t>(attribute->alignedByteOffset)));
 				}
 				else
@@ -102,7 +102,7 @@ namespace OpenGLES3Renderer
 										  Mapping::getOpenGLES3Size(attribute->vertexAttributeFormat),
 										  Mapping::getOpenGLES3Type(attribute->vertexAttributeFormat),
 										  static_cast<GLboolean>(Mapping::isOpenGLES3VertexAttributeFormatNormalized(attribute->vertexAttributeFormat)),
-										  static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes),
+										  static_cast<GLsizei>(attribute->strideInBytes),
 										  reinterpret_cast<void*>(static_cast<uintptr_t>(attribute->alignedByteOffset)));
 				}
 

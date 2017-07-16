@@ -97,23 +97,28 @@ namespace VulkanRenderer
 
 		// Vertex attributes
 		const uint32_t numberOfAttributes = pipelineState.vertexAttributes.numberOfAttributes;
-		std::vector<VkVertexInputBindingDescription> vkVertexInputBindingDescriptions(numberOfAttributes);
+		std::vector<VkVertexInputBindingDescription> vkVertexInputBindingDescriptions;
 		std::vector<VkVertexInputAttributeDescription> vkVertexInputAttributeDescriptions(numberOfAttributes);
 		for (uint32_t attribute = 0; attribute < numberOfAttributes; ++attribute)
 		{
 			const Renderer::VertexAttribute* attributes = &pipelineState.vertexAttributes.attributes[attribute];
+			const uint32_t inputSlot = attributes->inputSlot;
 
 			{ // Map to Vulkan vertex input binding description
-				VkVertexInputBindingDescription& vkVertexInputBindingDescription = vkVertexInputBindingDescriptions[attribute];
-				vkVertexInputBindingDescription.binding   = attributes->inputSlot;
-				vkVertexInputBindingDescription.stride    = sizeof(float) * 2;	// TODO(co) Need this information inside "Renderer::VertexAttribute"
+				if (vkVertexInputBindingDescriptions.size() <= inputSlot)
+				{
+					vkVertexInputBindingDescriptions.resize(inputSlot + 1);
+				}
+				VkVertexInputBindingDescription& vkVertexInputBindingDescription = vkVertexInputBindingDescriptions[inputSlot];
+				vkVertexInputBindingDescription.binding   = inputSlot;
+				vkVertexInputBindingDescription.stride    = attributes->strideInBytes;
 				vkVertexInputBindingDescription.inputRate = (attributes->instancesPerElement > 0) ? VK_VERTEX_INPUT_RATE_INSTANCE : VK_VERTEX_INPUT_RATE_VERTEX;
 			}
 
 			{ // Map to Vulkan vertex input attribute description
 				VkVertexInputAttributeDescription& vkVertexInputAttributeDescription = vkVertexInputAttributeDescriptions[attribute];
-				vkVertexInputAttributeDescription.location = 0;	// TODO(co) This information can be read from the root signature
-				vkVertexInputAttributeDescription.binding  = attributes->inputSlot;
+				vkVertexInputAttributeDescription.location = attribute;
+				vkVertexInputAttributeDescription.binding  = inputSlot;
 				vkVertexInputAttributeDescription.format   = Mapping::getVulkanFormat(attributes->vertexAttributeFormat);
 				vkVertexInputAttributeDescription.offset   = attributes->alignedByteOffset;
 			}

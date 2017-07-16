@@ -114,7 +114,7 @@ void FirstMultipleRenderTargets::onInitialization()
 					// Data source
 					0,											// inputSlot (uint32_t)
 					0,											// alignedByteOffset (uint32_t)
-					// Data source, instancing part
+					sizeof(float) * 2,							// strideInBytes (uint32_t)
 					0											// instancesPerElement (uint32_t)
 				}
 			};
@@ -137,13 +137,7 @@ void FirstMultipleRenderTargets::onInitialization()
 				// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
 				//    reference of the used vertex buffer objects (VBO). If the reference counter of a
 				//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
-				const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
-				{
-					{ // Vertex buffer 0
-						vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer*)
-						sizeof(float) * 2	// strideInBytes (uint32_t)
-					}
-				};
+				const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] = { vertexBuffer };
 				mVertexArray = mBufferManager->createVertexArray(vertexAttributes, static_cast<uint32_t>(glm::countof(vertexArrayVertexBuffers)), vertexArrayVertexBuffers);
 			}
 

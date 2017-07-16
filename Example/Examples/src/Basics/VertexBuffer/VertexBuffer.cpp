@@ -79,7 +79,7 @@ void VertexBuffer::onInitialization()
 				// Data source
 				0,											// inputSlot (uint32_t)
 				0,											// alignedByteOffset (uint32_t)
-				// Data source, instancing part
+				sizeof(float) * 5,							// strideInBytes (uint32_t)
 				0											// instancesPerElement (uint32_t)
 			},
 			{ // Attribute 1
@@ -91,7 +91,7 @@ void VertexBuffer::onInitialization()
 				// Data source
 				0,											// inputSlot (uint32_t)
 				sizeof(float) * 2,							// alignedByteOffset (uint32_t)
-				// Data source, instancing part
+				sizeof(float) * 5,							// strideInBytes (uint32_t)
 				0											// instancesPerElement (uint32_t)
 			}
 		};
@@ -107,7 +107,7 @@ void VertexBuffer::onInitialization()
 				// Data source
 				0,											// inputSlot (uint32_t)
 				0,											// alignedByteOffset (uint32_t)
-				// Data source, instancing part
+				sizeof(float) * 2,							// strideInBytes (uint32_t)
 				0											// instancesPerElement (uint32_t)
 			},
 			{ // Attribute 1
@@ -119,7 +119,7 @@ void VertexBuffer::onInitialization()
 				// Data source
 				1,											// inputSlot (uint32_t)
 				0,											// alignedByteOffset (uint32_t)
-				// Data source, instancing part
+				sizeof(float) * 3,							// strideInBytes (uint32_t)
 				0											// instancesPerElement (uint32_t)
 			}
 		};
@@ -145,13 +145,7 @@ void VertexBuffer::onInitialization()
 			Renderer::IVertexBufferPtr vertexBufferPositionColor(mBufferManager->createVertexBuffer(sizeof(VERTEX_POSITION_COLOR), VERTEX_POSITION_COLOR, Renderer::BufferUsage::STATIC_DRAW));
 
 			// Create vertex array object (VAO)
-			const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
-			{
-				{ // Vertex buffer 0
-					vertexBufferPositionColor,	// vertexBuffer (Renderer::IVertexBuffer*)
-					sizeof(float) * (2 + 3)		// strideInBytes (uint32_t)
-				}
-			};
+			const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] = { vertexBufferPositionColor };
 			mVertexArrayVBO = mBufferManager->createVertexArray(vertexAttributesVBO, static_cast<uint32_t>(glm::countof(vertexArrayVertexBuffers)), vertexArrayVertexBuffers);
 		}
 
@@ -177,17 +171,7 @@ void VertexBuffer::onInitialization()
 			Renderer::IVertexBufferPtr vertexBufferPosition(mBufferManager->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
 
 			// Create vertex array object (VAO)
-			const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
-			{
-				{ // Vertex buffer 0
-					vertexBufferPosition,	// vertexBuffer (Renderer::IVertexBuffer*)
-					sizeof(float) * 2		// strideInBytes (uint32_t)
-				},
-				{ // Vertex buffer 1
-					vertexBufferColor,		// vertexBuffer (Renderer::IVertexBuffer*)
-					sizeof(float) * 3		// strideInBytes (uint32_t)
-				}
-			};
+			const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] = { vertexBufferPosition, vertexBufferColor };
 			mVertexArrayVBOs = mBufferManager->createVertexArray(vertexAttributesVBOs, static_cast<uint32_t>(glm::countof(vertexArrayVertexBuffers)), vertexArrayVertexBuffers);
 		}
 
@@ -198,7 +182,8 @@ void VertexBuffer::onInitialization()
 			// Get the shader source code (outsourced to keep an overview)
 			const char* vertexShaderSourceCode = nullptr;
 			const char* fragmentShaderSourceCode = nullptr;
-			#include "VertexBuffer_GLSL_410.h"
+			#include "VertexBuffer_GLSL_450.h"	// For Vulkan
+			#include "VertexBuffer_GLSL_410.h"	// macOS 10.11 only supports OpenGL 4.1 hence it's our OpenGL minimum
 			#include "VertexBuffer_GLSL_ES3.h"
 			#include "VertexBuffer_HLSL_D3D9_D3D10_D3D11_D3D12.h"
 			#include "VertexBuffer_Null.h"

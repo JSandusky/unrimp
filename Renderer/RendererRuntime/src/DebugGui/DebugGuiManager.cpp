@@ -61,7 +61,7 @@ namespace
 				// Data source
 				0,											// inputSlot (uint32_t)
 				0,											// alignedByteOffset (uint32_t)
-				// Data source, instancing part
+				sizeof(float) * 4 + sizeof(uint8_t) * 4,	// strideInBytes (uint32_t)
 				0											// instancesPerElement (uint32_t)
 			},
 			{ // Attribute 1
@@ -73,7 +73,7 @@ namespace
 				// Data source
 				0,											// inputSlot (uint32_t)
 				sizeof(float) * 2,							// alignedByteOffset (uint32_t)
-				// Data source, instancing part
+				sizeof(float) * 4 + sizeof(uint8_t) * 4,	// strideInBytes (uint32_t)
 				0											// instancesPerElement (uint32_t)
 			},
 			{ // Attribute 2
@@ -84,8 +84,8 @@ namespace
 				0,													// semanticIndex (uint32_t)
 				// Data source
 				0,													// inputSlot (uint32_t)
-				sizeof(float) * 2 * 2,								// alignedByteOffset (uint32_t)
-				// Data source, instancing part
+				sizeof(float) * 4,									// alignedByteOffset (uint32_t)
+				sizeof(float) * 4 + sizeof(uint8_t) * 4,			// strideInBytes (uint32_t)
 				0													// instancesPerElement (uint32_t)
 			}
 		};
@@ -159,13 +159,7 @@ namespace RendererRuntime
 					assert(nullptr != mIndexBufferPtr);
 
 					// Create vertex array object (VAO)
-					const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
-					{
-						{ // Vertex buffer 0
-							mVertexBufferPtr,	// vertexBuffer (Renderer::IVertexBuffer*)
-							sizeof(ImDrawVert)	// strideInBytes (uint32_t)
-						}
-					};
+					const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] = { mVertexBufferPtr };
 					mVertexArrayPtr = bufferManager.createVertexArray(::detail::VertexAttributes, static_cast<uint32_t>(glm::countof(vertexArrayVertexBuffers)), vertexArrayVertexBuffers, mIndexBufferPtr);
 					RENDERER_SET_RESOURCE_DEBUG_NAME(mVertexArrayPtr, "Debug GUI")
 				}

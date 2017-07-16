@@ -417,6 +417,15 @@
     <ClInclude Include="src\Basics\FirstTriangle\FirstTriangle_GLSL_450.h">
       <Filter>Basics\FirstTriangle</Filter>
     </ClInclude>
+    <ClInclude Include="src\Basics\VertexBuffer\VertexBuffer_GLSL_450.h">
+      <Filter>Basics\VertexBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_InstancedArrays_GLSL_450.h">
+      <Filter>Basics\FirstInstancing</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_DrawInstanced_GLSL_450.h">
+      <Filter>Basics\FirstInstancing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Framework\IApplication.cpp">

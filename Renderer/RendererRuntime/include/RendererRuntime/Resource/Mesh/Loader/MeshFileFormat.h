@@ -57,7 +57,7 @@ namespace RendererRuntime
 		//[ Definitions                                           ]
 		//[-------------------------------------------------------]
 		static const uint32_t FORMAT_TYPE	 = StringId("Mesh");
-		static const uint32_t FORMAT_VERSION = 4;
+		static const uint32_t FORMAT_VERSION = 5;
 
 		#pragma pack(push)
 		#pragma pack(1)

@@ -55,7 +55,7 @@ namespace
 				// Data source
 				0,											// inputSlot (uint32_t)
 				0,											// alignedByteOffset (uint32_t)
-				// Data source, instancing part
+				sizeof(float) * 8,							// strideInBytes (uint32_t)
 				0											// instancesPerElement (uint32_t)
 			},
 			{ // Attribute 1
@@ -67,7 +67,7 @@ namespace
 				// Data source
 				0,											// inputSlot (uint32_t)
 				sizeof(float) * 3,							// alignedByteOffset (uint32_t)
-				// Data source, instancing part
+				sizeof(float) * 8,							// strideInBytes (uint32_t)
 				0											// instancesPerElement (uint32_t)
 			},
 			{ // Attribute 2
@@ -78,8 +78,8 @@ namespace
 				0,											// semanticIndex (uint32_t)
 				// Data source
 				0,											// inputSlot (uint32_t)
-				sizeof(float) * (3 + 2),					// alignedByteOffset (uint32_t)
-				// Data source, instancing part
+				sizeof(float) * 5,							// alignedByteOffset (uint32_t)
+				sizeof(float) * 8,							// strideInBytes (uint32_t)
 				0											// instancesPerElement (uint32_t)
 			}
 		};
@@ -268,13 +268,7 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer& render
 		// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
 		//    reference of the used vertex buffer objects (VBO). If the reference counter of a
 		//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
-		const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
-		{
-			{ // Vertex buffer 0
-				vertexBuffer,				// vertexBuffer (Renderer::IVertexBuffer*)
-				sizeof(float) * (3 + 2 + 3)	// strideInBytes (uint32_t)
-			}
-		};
+		const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] = { vertexBuffer };
 		mVertexArray = mBufferManager->createVertexArray(detail::VertexAttributes, static_cast<uint32_t>(glm::countof(vertexArrayVertexBuffers)), vertexArrayVertexBuffers, indexBuffer);
 	}
 

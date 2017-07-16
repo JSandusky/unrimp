@@ -97,7 +97,7 @@ void FirstInstancing::onInitialization()
 						// Data source
 						0,											// inputSlot (uint32_t)
 						0,											// alignedByteOffset (uint32_t)
-						// Data source, instancing part
+						sizeof(float) * 2,							// strideInBytes (uint32_t)
 						0											// instancesPerElement (uint32_t)
 					},
 					{ // Attribute 1
@@ -109,7 +109,7 @@ void FirstInstancing::onInitialization()
 						// Data source
 						1,											// inputSlot (uint32_t)
 						0,											// alignedByteOffset (uint32_t)
-						// Data source, instancing part
+						sizeof(float),								// strideInBytes (uint32_t)
 						1											// instancesPerElement (uint32_t)
 					}
 				};
@@ -150,17 +150,7 @@ void FirstInstancing::onInitialization()
 					// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
 					//    reference of the used vertex buffer objects (VBO). If the reference counter of a
 					//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
-					const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
-					{
-						{ // Vertex buffer 0
-							vertexBufferPosition,	// vertexBuffer (Renderer::IVertexBuffer*)
-							sizeof(float) * 2		// strideInBytes (uint32_t)
-						},
-						{ // Vertex buffer 1
-							vertexBufferInstanceId,	// vertexBuffer (Renderer::IVertexBuffer*)
-							sizeof(float)			// strideInBytes (uint32_t)
-						}
-					};
+					const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] = { vertexBufferPosition, vertexBufferInstanceId, };
 					mVertexArrayInstancedArrays = mBufferManager->createVertexArray(vertexAttributes, static_cast<uint32_t>(glm::countof(vertexArrayVertexBuffers)), vertexArrayVertexBuffers, indexBufferInstancedArrays);
 				}
 
@@ -170,7 +160,8 @@ void FirstInstancing::onInitialization()
 					// Get the shader source code (outsourced to keep an overview)
 					const char* vertexShaderSourceCode = nullptr;
 					const char* fragmentShaderSourceCode = nullptr;
-					#include "FirstInstancing_InstancedArrays_GLSL_410.h"
+					#include "FirstInstancing_InstancedArrays_GLSL_450.h"	// For Vulkan
+					#include "FirstInstancing_InstancedArrays_GLSL_410.h"	// macOS 10.11 only supports OpenGL 4.1 hence it's our OpenGL minimum
 					#include "FirstInstancing_InstancedArrays_GLSL_ES3.h"
 					#include "FirstInstancing_InstancedArrays_HLSL_D3D9_D3D10_D3D11_D3D12.h"
 					#include "FirstInstancing_InstancedArrays_Null.h"
@@ -205,7 +196,7 @@ void FirstInstancing::onInitialization()
 						// Data source
 						0,											// inputSlot (uint32_t)
 						0,											// alignedByteOffset (uint32_t)
-						// Data source, instancing part
+						sizeof(float) * 2,							// strideInBytes (uint32_t)
 						0											// instancesPerElement (uint32_t)
 					}
 				};
@@ -228,13 +219,7 @@ void FirstInstancing::onInitialization()
 					// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
 					//    reference of the used vertex buffer objects (VBO). If the reference counter of a
 					//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
-					const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
-					{
-						{ // Vertex buffer 0
-							vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer*)
-							sizeof(float) * 2	// strideInBytes (uint32_t)
-						}
-					};
+					const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] = { vertexBuffer };
 					mVertexArrayDrawInstanced = mBufferManager->createVertexArray(vertexAttributes, static_cast<uint32_t>(glm::countof(vertexArrayVertexBuffers)), vertexArrayVertexBuffers);
 				}
 
@@ -244,7 +229,8 @@ void FirstInstancing::onInitialization()
 					// Get the shader source code (outsourced to keep an overview)
 					const char* vertexShaderSourceCode = nullptr;
 					const char* fragmentShaderSourceCode = nullptr;
-					#include "FirstInstancing_DrawInstanced_GLSL_410.h"
+					#include "FirstInstancing_DrawInstanced_GLSL_450.h"	// For Vulkan
+					#include "FirstInstancing_DrawInstanced_GLSL_410.h"	// macOS 10.11 only supports OpenGL 4.1 hence it's our OpenGL minimum
 					#include "FirstInstancing_DrawInstanced_GLSL_ES3.h"
 					#include "FirstInstancing_DrawInstanced_HLSL_D3D10_D3D11_D3D12.h"
 					#include "FirstInstancing_DrawInstanced_Null.h"

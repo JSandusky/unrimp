@@ -475,10 +475,12 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
     <ClInclude Include="src\Basics\FirstIndirectBuffer\FirstIndirectBuffer.h" />
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing.h" />
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_DrawInstanced_GLSL_410.h" />
+    <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_DrawInstanced_GLSL_450.h" />
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_DrawInstanced_GLSL_ES3.h" />
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_DrawInstanced_HLSL_D3D10_D3D11_D3D12.h" />
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_DrawInstanced_Null.h" />
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_InstancedArrays_GLSL_410.h" />
+    <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_InstancedArrays_GLSL_450.h" />
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_InstancedArrays_GLSL_ES3.h" />
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_InstancedArrays_HLSL_D3D9_D3D10_D3D11_D3D12.h" />
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_InstancedArrays_Null.h" />
@@ -517,6 +519,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
     <ClInclude Include="src\Basics\FirstTriangle\FirstTriangle_Null.h" />
     <ClInclude Include="src\Basics\VertexBuffer\VertexBuffer.h" />
     <ClInclude Include="src\Basics\VertexBuffer\VertexBuffer_GLSL_410.h" />
+    <ClInclude Include="src\Basics\VertexBuffer\VertexBuffer_GLSL_450.h" />
     <ClInclude Include="src\Basics\VertexBuffer\VertexBuffer_GLSL_ES3.h" />
     <ClInclude Include="src\Basics\VertexBuffer\VertexBuffer_HLSL_D3D9_D3D10_D3D11_D3D12.h" />
     <ClInclude Include="src\Basics\VertexBuffer\VertexBuffer_Null.h" />

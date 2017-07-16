@@ -39,7 +39,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArray::VertexArray(VulkanRenderer& vulkanRenderer, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer* vertexBuffers, IndexBuffer* indexBuffer) :
+	VertexArray::VertexArray(VulkanRenderer& vulkanRenderer, const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer* vertexBuffers, IndexBuffer* indexBuffer) :
 		IVertexArray(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer)),
 		mIndexBuffer(indexBuffer),
 		mNumberOfSlots(numberOfVertexBuffers),
@@ -65,18 +65,26 @@ namespace VulkanRenderer
 			// Vertex buffer offset is not supported by OpenGL, so our renderer API doesn't support it either
 			memset(mOffsets, 0, sizeof(VkDeviceSize) * mNumberOfSlots);
 
-			// Loop through all vertex buffers
-			VkBuffer* currentVertexVkBuffer = mVertexVkBuffers;
-			uint32_t* currentStride = mStrides;
-			VertexBuffer** currentVertexBuffer = mVertexBuffers;
-			const Renderer::VertexArrayVertexBuffer* vertexBufferEnd = vertexBuffers + mNumberOfSlots;
-			for (const Renderer::VertexArrayVertexBuffer* vertexBuffer = vertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer, ++currentVertexVkBuffer, ++currentStride, ++currentVertexBuffer)
-			{
-				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-				*currentStride = vertexBuffer->strideInBytes;
-				*currentVertexBuffer = static_cast<VertexBuffer*>(vertexBuffer->vertexBuffer);
-				*currentVertexVkBuffer = (*currentVertexBuffer)->getVkBuffer();
-				(*currentVertexBuffer)->addReference();
+			{ // Loop through all vertex buffers
+				VkBuffer* currentVertexVkBuffer = mVertexVkBuffers;
+				VertexBuffer** currentVertexBuffer = mVertexBuffers;
+				const Renderer::VertexArrayVertexBuffer* vertexBufferEnd = vertexBuffers + mNumberOfSlots;
+				for (const Renderer::VertexArrayVertexBuffer* vertexBuffer = vertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer, ++currentVertexVkBuffer, ++currentVertexBuffer)
+				{
+					// TODO(co) Add security check: Is the given resource one of the currently used renderer?
+					*currentVertexBuffer = static_cast<VertexBuffer*>(vertexBuffer->vertexBuffer);
+					*currentVertexVkBuffer = (*currentVertexBuffer)->getVkBuffer();
+					(*currentVertexBuffer)->addReference();
+				}
+			}
+
+			{ // Gather slot related data
+				const Renderer::VertexAttribute* attribute = vertexAttributes.attributes;
+				const Renderer::VertexAttribute* attributesEnd = attribute + vertexAttributes.numberOfAttributes;
+				for (; attribute < attributesEnd;  ++attribute)
+				{
+					mStrides[attribute->inputSlot] = attribute->strideInBytes;
+				}
 			}
 		}
 	}

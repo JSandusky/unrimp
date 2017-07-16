@@ -1271,6 +1271,7 @@ namespace Renderer
 				uint32_t			  semanticIndex;
 				uint32_t			  inputSlot;
 				uint32_t			  alignedByteOffset;
+				uint32_t			  strideInBytes;
 				uint32_t			  instancesPerElement;
 			};
 			struct VertexAttributes
@@ -1290,7 +1291,6 @@ namespace Renderer
 		struct VertexArrayVertexBuffer
 		{
 			IVertexBuffer* vertexBuffer;
-			uint32_t	   strideInBytes;
 		};
 	#endif
 

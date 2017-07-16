@@ -84,7 +84,7 @@
 							// Data source
 							0,											// inputSlot (size_t)
 							0,											// alignedByteOffset (uint32_t)
-							// Data source, instancing part
+							sizeof(float) * 2,							// strideInBytes (uint32_t)
 							0											// instancesPerElement (uint32_t)
 						}
 					};
@@ -103,13 +103,7 @@
 							RENDERER_SET_RESOURCE_DEBUG_NAME(vertexBuffer, "Compositor instance pass VR hidden area mesh")
 
 							// Create vertex array object (VAO)
-							const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
-							{
-								{ // Vertex buffer 0
-									vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer*)
-									sizeof(float) * 2	// strideInBytes (uint32_t)
-								}
-							};
+							const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] = { vertexBuffer };
 							mVertexArrayPtr[i] = bufferManager.createVertexArray(vertexAttributes, static_cast<uint32_t>(glm::countof(vertexArrayVertexBuffers)), vertexArrayVertexBuffers);
 							RENDERER_SET_RESOURCE_DEBUG_NAME(mVertexArrayPtr[i], "Compositor instance pass VR hidden area mesh")
 						}

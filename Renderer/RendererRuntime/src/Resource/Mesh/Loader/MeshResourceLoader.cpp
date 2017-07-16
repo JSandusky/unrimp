@@ -251,18 +251,7 @@ namespace RendererRuntime
 		RENDERER_SET_RESOURCE_DEBUG_NAME(indexBuffer, getAsset().assetFilename)
 
 		// Create vertex array object (VAO)
-		const uint32_t numberOfVertices = mMeshResource->getNumberOfVertices();
-		const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
-		{
-			{ // Vertex buffer 0
-				vertexBuffer,																		// vertexBuffer (Renderer::IVertexBuffer*)
-				(numberOfVertices > 0) ? mNumberOfUsedVertexBufferDataBytes / numberOfVertices : 0	// strideInBytes (uint32_t)
-			},
-			{ // Vertex buffer 1
-				mRendererRuntime.getMeshResourceManager().getDrawIdVertexBufferPtr(),				// vertexBuffer (Renderer::IVertexBuffer*)
-				sizeof(uint32_t)																	// strideInBytes (uint32_t)
-			}
-		};
+		const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] = { vertexBuffer, mRendererRuntime.getMeshResourceManager().getDrawIdVertexBufferPtr() };
 		Renderer::IVertexArray* vertexArray = mBufferManager.createVertexArray(Renderer::VertexAttributes(mNumberOfUsedVertexAttributes, mVertexAttributes), static_cast<uint32_t>(glm::countof(vertexArrayVertexBuffers)), vertexArrayVertexBuffers, indexBuffer);
 		RENDERER_SET_RESOURCE_DEBUG_NAME(vertexArray, getAsset().assetFilename)
 
