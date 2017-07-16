@@ -149,7 +149,6 @@ namespace OpenGLRenderer
 		//[ Input-assembler (IA) stage                            ]
 		//[-------------------------------------------------------]
 		void iaSetVertexArray(Renderer::IVertexArray* vertexArray);
-		void iaSetPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology);
 		//[-------------------------------------------------------]
 		//[ Rasterizer (RS) stage                                 ]
 		//[-------------------------------------------------------]
@@ -302,6 +301,7 @@ namespace OpenGLRenderer
 		// Input-assembler (IA) stage
 		VertexArray* mVertexArray;				///< Currently set vertex array (we keep a reference to it), can be a null pointer
 		uint32_t	 mOpenGLPrimitiveTopology;	///< OpenGL primitive topology describing the type of primitive to render (type "GLenum" not used in here in order to keep the header slim)
+		int			 mNumberOfVerticesPerPatch;	///< Number of vertices per patch (type "GLint" not used in here in order to keep the header slim)
 		// Output-merger (OM) stage
 		SwapChain*				 mMainSwapChain;	///< In case the optional native main window handle within the "OpenGLRenderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
 		Renderer::IRenderTarget* mRenderTarget;		///< Currently set render target (we keep a reference to it), can be a null pointer

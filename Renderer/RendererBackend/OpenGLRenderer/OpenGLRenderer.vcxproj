@@ -642,6 +642,7 @@
     <None Include="include\OpenGLRenderer\State\BlendState.inl" />
     <None Include="include\OpenGLRenderer\State\DepthStencilState.inl" />
     <None Include="include\OpenGLRenderer\State\IState.inl" />
+    <None Include="include\OpenGLRenderer\State\PipelineState.inl" />
     <None Include="include\OpenGLRenderer\State\RasterizerState.inl" />
     <None Include="include\OpenGLRenderer\State\SamplerStateSo.inl" />
     <None Include="include\OpenGLRenderer\Texture\Texture1D.inl" />

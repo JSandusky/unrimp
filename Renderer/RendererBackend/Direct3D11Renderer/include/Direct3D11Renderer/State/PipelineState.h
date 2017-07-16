@@ -29,12 +29,12 @@
 //[-------------------------------------------------------]
 #include <Renderer/State/IPipelineState.h>
 
+#include "Direct3D11Renderer/D3D11.h"
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-struct ID3D11InputLayout;
-struct ID3D11DeviceContext;
 namespace Renderer
 {
 	class IProgram;
@@ -90,6 +90,15 @@ namespace Direct3D11Renderer
 
 		/**
 		*  @brief
+		*    Return the Direct3D 11 primitive topology
+		*
+		*  @return
+		*    The Direct3D 11 primitive topology
+		*/
+		inline D3D11_PRIMITIVE_TOPOLOGY getD3D11PrimitiveTopology() const;
+
+		/**
+		*  @brief
 		*    Return the Direct3D 11 input layout
 		*
 		*  @return
@@ -123,12 +132,13 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Renderer::IProgram*  mProgram;
-		ID3D11DeviceContext* mD3D11DeviceContext;	///< The Direct3D 11 device context instance (we keep a reference to it), null pointer on horrible error (so we don't check)
-		ID3D11InputLayout*   mD3D11InputLayout;		///< Direct3D 11 input layout, can be a null pointer
-		RasterizerState*	 mRasterizerState;
-		DepthStencilState*	 mDepthStencilState;
-		BlendState*			 mBlendState;
+		Renderer::IProgram*		 mProgram;
+		ID3D11DeviceContext*	 mD3D11DeviceContext;	///< The Direct3D 11 device context instance (we keep a reference to it), null pointer on horrible error (so we don't check)
+		D3D11_PRIMITIVE_TOPOLOGY mD3D11PrimitiveTopology;
+		ID3D11InputLayout*		 mD3D11InputLayout;		///< Direct3D 11 input layout, can be a null pointer
+		RasterizerState*		 mRasterizerState;
+		DepthStencilState*		 mDepthStencilState;
+		BlendState*				 mBlendState;
 
 
 	};

@@ -131,12 +131,6 @@ namespace
 				static_cast<VulkanRenderer::VulkanRenderer&>(renderer).iaSetVertexArray(realData->vertexArray);
 			}
 
-			void SetPrimitiveTopology(const void* data, Renderer::IRenderer& renderer)
-			{
-				const Renderer::Command::SetPrimitiveTopology* realData = static_cast<const Renderer::Command::SetPrimitiveTopology*>(data);
-				static_cast<VulkanRenderer::VulkanRenderer&>(renderer).iaSetPrimitiveTopology(realData->primitiveTopology);
-			}
-
 			//[-------------------------------------------------------]
 			//[ Rasterizer (RS) stage                                 ]
 			//[-------------------------------------------------------]
@@ -250,7 +244,6 @@ namespace
 			&BackendDispatch::SetPipelineState,
 			// Input-assembler (IA) stage
 			&BackendDispatch::SetVertexArray,
-			&BackendDispatch::SetPrimitiveTopology,
 			// Rasterizer (RS) stage
 			&BackendDispatch::SetViewports,
 			&BackendDispatch::SetScissorRectangles,
@@ -584,25 +577,6 @@ namespace VulkanRenderer
 				// Unset the currently used vertex array
 				iaUnsetVertexArray();
 			}
-		}
-	}
-
-	void VulkanRenderer::iaSetPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology)
-	{
-		// TODO(co) In Vulkan this is part of the pipeline state, "VkPipelineInputAssemblyStateCreateInfo"-part. So we need to update our interface to be efficient.
-
-		// Tessellation support: Up to 32 vertices per patch are supported "Renderer::PrimitiveTopology::PATCH_LIST_1" ... "Renderer::PrimitiveTopology::PATCH_LIST_32"
-		if (primitiveTopology >= Renderer::PrimitiveTopology::PATCH_LIST_1)
-		{
-			// Use tessellation
-
-			// TODO(co) Implement me
-		}
-		else
-		{
-			// Do not use tessellation
-
-			// TODO(co) Implement me
 		}
 	}
 

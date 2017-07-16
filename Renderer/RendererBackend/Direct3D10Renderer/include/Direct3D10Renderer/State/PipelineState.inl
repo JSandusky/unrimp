@@ -28,6 +28,11 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline D3D10_PRIMITIVE_TOPOLOGY PipelineState::getD3D10PrimitiveTopology() const
+	{
+		return mD3D10PrimitiveTopology;
+	}
+
 	inline ID3D10InputLayout* PipelineState::getD3D10InputLayout() const
 	{
 		return mD3D10InputLayout;

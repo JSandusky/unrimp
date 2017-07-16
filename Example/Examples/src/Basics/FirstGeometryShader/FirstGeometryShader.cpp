@@ -115,7 +115,8 @@ void FirstGeometryShader::onInitialization()
 				const char* vertexShaderSourceCode = nullptr;
 				const char* geometryShaderSourceCode = nullptr;
 				const char* fragmentShaderSourceCode = nullptr;
-				#include "FirstGeometryShader_GLSL_410.h"
+				#include "FirstGeometryShader_GLSL_450.h"	// For Vulkan
+				#include "FirstGeometryShader_GLSL_410.h"	// macOS 10.11 only supports OpenGL 4.1 hence it's our OpenGL minimum
 				#include "FirstGeometryShader_HLSL_D3D10_D3D11_D3D12.h"
 				#include "FirstGeometryShader_Null.h"
 
@@ -132,6 +133,7 @@ void FirstGeometryShader::onInitialization()
 			if (nullptr != program)
 			{
 				Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes);
+				pipelineState.primitiveTopology = Renderer::PrimitiveTopology::POINT_LIST;
 				pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::POINT;
 				mPipelineState = renderer->createPipelineState(pipelineState);
 			}
@@ -190,13 +192,8 @@ void FirstGeometryShader::fillCommandBuffer()
 	// Set the used pipeline state object (PSO)
 	Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineState);
 
-	{ // Setup input assembly (IA)
-		// Set the used vertex array
-		Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArray);
-
-		// Set the primitive topology used for draw calls
-		Renderer::Command::SetPrimitiveTopology::create(mCommandBuffer, Renderer::PrimitiveTopology::POINT_LIST);
-	}
+	// Input assembly (IA): Set the used vertex array
+	Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArray);
 
 	// Render the specified geometric primitive, based on an array of vertices
 	// -> Emit a single point in order to generate a draw call, the geometry shader does the rest

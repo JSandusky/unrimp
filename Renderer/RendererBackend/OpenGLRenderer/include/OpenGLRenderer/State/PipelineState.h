@@ -91,6 +91,24 @@ namespace OpenGLRenderer
 
 		/**
 		*  @brief
+		*    Return the OpenGL primitive topology describing the type of primitive to render
+		*
+		*  @return
+		*    OpenGL primitive topology describing the type of primitive to render (type "GLenum" not used in here in order to keep the header slim)
+		*/
+		inline uint32_t getOpenGLPrimitiveTopology() const;
+
+		/**
+		*  @brief
+		*    Return the number of vertices per patch
+		*
+		*  @return
+		*    Return the number of vertices per patch (type "GLint" not used in here in order to keep the header slim)
+		*/
+		inline int getNumberOfVerticesPerPatch() const;
+
+		/**
+		*  @brief
 		*    Bind the pipeline state
 		*/
 		void bindPipelineState() const;
@@ -115,7 +133,9 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Renderer::IProgram* mProgram;
+		uint32_t			mOpenGLPrimitiveTopology;	///< OpenGL primitive topology describing the type of primitive to render (type "GLenum" not used in here in order to keep the header slim)
+		int					mNumberOfVerticesPerPatch;	///< Number of vertices per patch (type "GLint" not used in here in order to keep the header slim)
+		Renderer::IProgram*	mProgram;
 		RasterizerState*	mRasterizerState;
 		DepthStencilState*	mDepthStencilState;
 		BlendState*			mBlendState;
@@ -128,3 +148,9 @@ namespace OpenGLRenderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // OpenGLRenderer
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "OpenGLRenderer/State/PipelineState.inl"

@@ -63,6 +63,28 @@ namespace VulkanRenderer
 		return MAPPING[indexBufferFormat];
 	}
 
+	VkPrimitiveTopology Mapping::getVulkanType(Renderer::PrimitiveTopology primitiveTopology)
+	{
+		// Tessellation support: Up to 32 vertices per patch are supported "Renderer::PrimitiveTopology::PATCH_LIST_1" ... "Renderer::PrimitiveTopology::PATCH_LIST_32"
+		if (primitiveTopology >= Renderer::PrimitiveTopology::PATCH_LIST_1)
+		{
+			// Use tessellation
+			return VK_PRIMITIVE_TOPOLOGY_PATCH_LIST;
+		}
+		else
+		{
+			static const VkPrimitiveTopology MAPPING[] =
+			{
+				VK_PRIMITIVE_TOPOLOGY_POINT_LIST,		// Renderer::PrimitiveTopology::POINT_LIST
+				VK_PRIMITIVE_TOPOLOGY_LINE_LIST,		// Renderer::PrimitiveTopology::LINE_LIST
+				VK_PRIMITIVE_TOPOLOGY_LINE_STRIP,		// Renderer::PrimitiveTopology::LINE_STRIP
+				VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,	// Renderer::PrimitiveTopology::TRIANGLE_LIST
+				VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP	// Renderer::PrimitiveTopology::TRIANGLE_STRIP
+			};
+			return MAPPING[static_cast<int>(primitiveTopology) - 1];	// Lookout! The "Renderer::PrimitiveTopology"-values start with 1, not 0
+		}
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

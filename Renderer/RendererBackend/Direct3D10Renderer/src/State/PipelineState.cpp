@@ -48,6 +48,7 @@ namespace Direct3D10Renderer
 	PipelineState::PipelineState(Direct3D10Renderer& direct3D10Renderer, const Renderer::PipelineState& pipelineState) :
 		IPipelineState(direct3D10Renderer),
 		mD3D10Device(direct3D10Renderer.getD3D10Device()),
+		mD3D10PrimitiveTopology(static_cast<D3D10_PRIMITIVE_TOPOLOGY>(pipelineState.primitiveTopology)),
 		mProgram(pipelineState.program),
 		mD3D10InputLayout(nullptr),
 		mRasterizerState(new RasterizerState(direct3D10Renderer, pipelineState.rasterizerState)),

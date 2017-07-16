@@ -165,13 +165,8 @@
 					// Set the used pipeline state object (PSO)
 					Renderer::Command::SetPipelineState::create(commandBuffer, mPipelineState);
 
-					{ // Setup input assembly (IA)
-						// Set the used vertex array
-						Renderer::Command::SetVertexArray::create(commandBuffer, mVertexArrayPtr[static_cast<int>(vrEye)]);
-
-						// Set the primitive topology used for draw calls
-						Renderer::Command::SetPrimitiveTopology::create(commandBuffer, Renderer::PrimitiveTopology::TRIANGLE_LIST);
-					}
+					// Setup input assembly (IA): // Set the used vertex array
+					Renderer::Command::SetVertexArray::create(commandBuffer, mVertexArrayPtr[static_cast<int>(vrEye)]);
 
 					// Render the specified geometric primitive, based on an array of vertices
 					Renderer::Command::Draw::create(commandBuffer, mNumberOfTriangles[static_cast<int>(vrEye)] * 3);

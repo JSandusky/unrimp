@@ -241,12 +241,6 @@ namespace
 				static_cast<OpenGLRenderer::OpenGLRenderer&>(renderer).iaSetVertexArray(realData->vertexArray);
 			}
 
-			void SetPrimitiveTopology(const void* data, Renderer::IRenderer& renderer)
-			{
-				const Renderer::Command::SetPrimitiveTopology* realData = static_cast<const Renderer::Command::SetPrimitiveTopology*>(data);
-				static_cast<OpenGLRenderer::OpenGLRenderer&>(renderer).iaSetPrimitiveTopology(realData->primitiveTopology);
-			}
-
 			//[-------------------------------------------------------]
 			//[ Rasterizer (RS) stage                                 ]
 			//[-------------------------------------------------------]
@@ -360,7 +354,6 @@ namespace
 			&BackendDispatch::SetPipelineState,
 			// Input-assembler (IA) stage
 			&BackendDispatch::SetVertexArray,
-			&BackendDispatch::SetPrimitiveTopology,
 			// Rasterizer (RS) stage
 			&BackendDispatch::SetViewports,
 			&BackendDispatch::SetScissorRectangles,
@@ -411,6 +404,7 @@ namespace OpenGLRenderer
 		// Input-assembler (IA) stage
 		mVertexArray(nullptr),
 		mOpenGLPrimitiveTopology(0xFFFF),	// Unknown default setting
+		mNumberOfVerticesPerPatch(0),
 		// Output-merger (OM) stage
 		mMainSwapChain(nullptr),
 		mRenderTarget(nullptr),
@@ -982,6 +976,14 @@ namespace OpenGLRenderer
 				mPipelineState = static_cast<PipelineState*>(pipelineState);
 				mPipelineState->addReference();
 
+				// Set OpenGL primitive topology
+				mOpenGLPrimitiveTopology = mPipelineState->getOpenGLPrimitiveTopology();
+				if (mNumberOfVerticesPerPatch != mPipelineState->getNumberOfVerticesPerPatch())
+				{
+					mNumberOfVerticesPerPatch = mPipelineState->getNumberOfVerticesPerPatch();
+					glPatchParameteri(GL_PATCH_VERTICES, mNumberOfVerticesPerPatch);
+				}
+
 				// Set pipeline state
 				mPipelineState->bindPipelineState();
 			}
@@ -1035,38 +1037,6 @@ namespace OpenGLRenderer
 				// Unset the currently used vertex array
 				iaUnsetVertexArray();
 			}
-		}
-	}
-
-	void OpenGLRenderer::iaSetPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology)
-	{
-		// Tessellation support: Up to 32 vertices per patch are supported "Renderer::PrimitiveTopology::PATCH_LIST_1" ... "Renderer::PrimitiveTopology::PATCH_LIST_32"
-		if (primitiveTopology >= Renderer::PrimitiveTopology::PATCH_LIST_1)
-		{
-			// Use tessellation
-
-			// Get number of vertices that will be used to make up a single patch primitive
-			// -> There's no need to check for the "GL_ARB_tessellation_shader" extension, it's there if "Renderer::Capabilities::maximumNumberOfPatchVertices" is not 0
-			const GLint numberOfVerticesPerPatch = static_cast<int>(primitiveTopology) - static_cast<int>(Renderer::PrimitiveTopology::PATCH_LIST_1) + 1;
-			if (numberOfVerticesPerPatch <= static_cast<GLint>(mCapabilities.maximumNumberOfPatchVertices))
-			{
-				// Set number of vertices that will be used to make up a single patch primitive
-				glPatchParameteri(GL_PATCH_VERTICES, numberOfVerticesPerPatch);
-
-				// Set OpenGL primitive topology
-				mOpenGLPrimitiveTopology = GL_PATCHES;
-			}
-			else
-			{
-				// Error!
-			}
-		}
-		else
-		{
-			// Do not use tessellation
-
-			// Map and backup the set OpenGL primitive topology
-			mOpenGLPrimitiveTopology = Mapping::getOpenGLType(primitiveTopology);
 		}
 	}
 

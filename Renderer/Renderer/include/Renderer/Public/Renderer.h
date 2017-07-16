@@ -282,47 +282,6 @@ namespace Renderer
 				COLOR_DEPTH = COLOR | DEPTH
 			};
 		};
-		enum class PrimitiveTopology
-		{
-			UNKNOWN        = 0,
-			POINT_LIST     = 1,
-			LINE_LIST      = 2,
-			LINE_STRIP     = 3,
-			TRIANGLE_LIST  = 4,
-			TRIANGLE_STRIP = 5,
-			PATCH_LIST_1   = 33,
-			PATCH_LIST_2   = 34,
-			PATCH_LIST_3   = 35,
-			PATCH_LIST_4   = 36,
-			PATCH_LIST_5   = 37,
-			PATCH_LIST_6   = 38,
-			PATCH_LIST_7   = 39,
-			PATCH_LIST_8   = 40,
-			PATCH_LIST_9   = 41,
-			PATCH_LIST_10  = 42,
-			PATCH_LIST_11  = 43,
-			PATCH_LIST_12  = 44,
-			PATCH_LIST_13  = 45,
-			PATCH_LIST_14  = 46,
-			PATCH_LIST_15  = 47,
-			PATCH_LIST_16  = 48,
-			PATCH_LIST_17  = 49,
-			PATCH_LIST_18  = 50,
-			PATCH_LIST_19  = 51,
-			PATCH_LIST_20  = 52,
-			PATCH_LIST_21  = 53,
-			PATCH_LIST_22  = 54,
-			PATCH_LIST_23  = 55,
-			PATCH_LIST_24  = 56,
-			PATCH_LIST_25  = 57,
-			PATCH_LIST_26  = 58,
-			PATCH_LIST_27  = 59,
-			PATCH_LIST_28  = 60,
-			PATCH_LIST_29  = 61,
-			PATCH_LIST_30  = 62,
-			PATCH_LIST_31  = 63,
-			PATCH_LIST_32  = 64
-		};
 		enum class ComparisonFunc
 		{
 			NEVER		  = 1,
@@ -1479,6 +1438,47 @@ namespace Renderer
 	// Renderer/State/PipelineStateTypes.h
 	#ifndef __RENDERER_PIPELINESTATE_TYPES_H__
 	#define __RENDERER_PIPELINESTATE_TYPES_H__
+		enum class PrimitiveTopology
+		{
+			UNKNOWN        = 0,
+			POINT_LIST     = 1,
+			LINE_LIST      = 2,
+			LINE_STRIP     = 3,
+			TRIANGLE_LIST  = 4,
+			TRIANGLE_STRIP = 5,
+			PATCH_LIST_1   = 33,
+			PATCH_LIST_2   = 34,
+			PATCH_LIST_3   = 35,
+			PATCH_LIST_4   = 36,
+			PATCH_LIST_5   = 37,
+			PATCH_LIST_6   = 38,
+			PATCH_LIST_7   = 39,
+			PATCH_LIST_8   = 40,
+			PATCH_LIST_9   = 41,
+			PATCH_LIST_10  = 42,
+			PATCH_LIST_11  = 43,
+			PATCH_LIST_12  = 44,
+			PATCH_LIST_13  = 45,
+			PATCH_LIST_14  = 46,
+			PATCH_LIST_15  = 47,
+			PATCH_LIST_16  = 48,
+			PATCH_LIST_17  = 49,
+			PATCH_LIST_18  = 50,
+			PATCH_LIST_19  = 51,
+			PATCH_LIST_20  = 52,
+			PATCH_LIST_21  = 53,
+			PATCH_LIST_22  = 54,
+			PATCH_LIST_23  = 55,
+			PATCH_LIST_24  = 56,
+			PATCH_LIST_25  = 57,
+			PATCH_LIST_26  = 58,
+			PATCH_LIST_27  = 59,
+			PATCH_LIST_28  = 60,
+			PATCH_LIST_29  = 61,
+			PATCH_LIST_30  = 62,
+			PATCH_LIST_31  = 63,
+			PATCH_LIST_32  = 64
+		};
 		enum class PrimitiveTopologyType
 		{
 			UNDEFINED	= 0,
@@ -1489,6 +1489,7 @@ namespace Renderer
 		};
 		struct SerializedPipelineState
 		{
+			PrimitiveTopology	  primitiveTopology;
 			PrimitiveTopologyType primitiveTopologyType;
 			RasterizerState		  rasterizerState;
 			DepthStencilState	  depthStencilState;
@@ -1511,6 +1512,7 @@ namespace Renderer
 				program								= nullptr;
 				vertexAttributes.numberOfAttributes	= 0;
 				vertexAttributes.attributes			= nullptr;
+				primitiveTopology					= PrimitiveTopology::TRIANGLE_LIST;
 				primitiveTopologyType				= PrimitiveTopologyType::TRIANGLE;
 				rasterizerState						= RasterizerStateBuilder::getDefaultRasterizerState();
 				depthStencilState					= DepthStencilStateBuilder::getDefaultDepthStencilState();
@@ -1531,6 +1533,7 @@ namespace Renderer
 				rootSignature				= _rootSignature;
 				program						= _program;
 				vertexAttributes			= _vertexAttributes;
+				primitiveTopology			= PrimitiveTopology::TRIANGLE_LIST;
 				primitiveTopologyType		= PrimitiveTopologyType::TRIANGLE;
 				rasterizerState				= RasterizerStateBuilder::getDefaultRasterizerState();
 				depthStencilState			= DepthStencilStateBuilder::getDefaultDepthStencilState();
@@ -2711,7 +2714,6 @@ namespace Renderer
 			SetGraphicsRootDescriptorTable,
 			SetPipelineState,
 			SetVertexArray,
-			SetPrimitiveTopology,
 			SetViewports,
 			SetScissorRectangles,
 			SetRenderTarget,
@@ -2955,18 +2957,6 @@ namespace Renderer
 				{}
 				IVertexArray* vertexArray;
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetVertexArray;
-			};
-			struct SetPrimitiveTopology
-			{
-				inline static void create(CommandBuffer& commandBuffer, PrimitiveTopology primitiveTopology)
-				{
-					*commandBuffer.addCommand<SetPrimitiveTopology>() = SetPrimitiveTopology(primitiveTopology);
-				}
-				inline SetPrimitiveTopology(PrimitiveTopology _primitiveTopology) :
-					primitiveTopology(_primitiveTopology)
-				{}
-				PrimitiveTopology primitiveTopology;
-				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetPrimitiveTopology;
 			};
 			struct SetViewports
 			{

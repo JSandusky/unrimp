@@ -426,6 +426,9 @@
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_DrawInstanced_GLSL_450.h">
       <Filter>Basics\FirstInstancing</Filter>
     </ClInclude>
+    <ClInclude Include="src\Basics\FirstGeometryShader\FirstGeometryShader_GLSL_450.h">
+      <Filter>Basics\FirstGeometryShader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Framework\IApplication.cpp">

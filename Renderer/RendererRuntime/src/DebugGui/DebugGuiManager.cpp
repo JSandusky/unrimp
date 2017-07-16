@@ -286,13 +286,8 @@ namespace RendererRuntime
 				Renderer::Command::SetPipelineState::create(commandBuffer, mPipelineState);
 			}
 
-			{ // Setup input assembly (IA)
-				// Set the used vertex array
-				Renderer::Command::SetVertexArray::create(commandBuffer, getFillVertexArrayPtr());
-
-				// Set the primitive topology used for draw calls
-				Renderer::Command::SetPrimitiveTopology::create(commandBuffer, Renderer::PrimitiveTopology::TRIANGLE_LIST);
-			}
+			// Setup input assembly (IA): Set the used vertex array
+			Renderer::Command::SetVertexArray::create(commandBuffer, getFillVertexArrayPtr());
 
 			// Render command lists
 			fillCommandBuffer(commandBuffer);

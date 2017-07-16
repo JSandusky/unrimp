@@ -335,13 +335,8 @@ void FirstMesh::onDraw()
 			const RendererRuntime::MeshResource* meshResource = rendererRuntime->getMeshResourceManager().tryGetById(mMeshResourceId);
 			if (nullptr != meshResource)
 			{
-				{ // Setup input assembly (IA)
-					// Set the used vertex array
-					Renderer::Command::SetVertexArray::create(mCommandBuffer, meshResource->getVertexArrayPtr());
-
-					// Set the primitive topology used for draw calls
-					Renderer::Command::SetPrimitiveTopology::create(mCommandBuffer, Renderer::PrimitiveTopology::TRIANGLE_LIST);
-				}
+				// Input assembly (IA): Set the used vertex array
+				Renderer::Command::SetVertexArray::create(mCommandBuffer, meshResource->getVertexArrayPtr());
 
 				// Render the specified geometric primitive, based on indexing into an array of vertices
 				Renderer::Command::DrawIndexed::create(mCommandBuffer, meshResource->getNumberOfIndices());

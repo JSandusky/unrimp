@@ -29,16 +29,12 @@
 //[-------------------------------------------------------]
 #include <Renderer/IRenderer.h>
 
+#include "Direct3D12Renderer/D3D12.h"
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-struct ID3D12Query;
-struct ID3D12Device;
-struct IDXGIFactory4;
-struct ID3D12CommandQueue;
-struct ID3D12CommandAllocator;
-struct ID3D12GraphicsCommandList;
 namespace Renderer
 {
 	class IRenderTarget;
@@ -154,7 +150,6 @@ namespace Direct3D12Renderer
 		//[ Input-assembler (IA) stage                            ]
 		//[-------------------------------------------------------]
 		void iaSetVertexArray(Renderer::IVertexArray* vertexArray);
-		void iaSetPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology);
 		//[-------------------------------------------------------]
 		//[ Rasterizer (RS) stage                                 ]
 		//[-------------------------------------------------------]
@@ -258,12 +253,14 @@ namespace Direct3D12Renderer
 		ID3D12CommandAllocator*	   mD3D12CommandAllocator;
 		ID3D12GraphicsCommandList* mD3D12GraphicsCommandList;
 		Renderer::IShaderLanguage* mShaderLanguageHlsl;			///< HLSL shader language instance (we keep a reference to it), can be a null pointer
-		ID3D12Query*			   mD3D12QueryFlush;			///< Direct3D 12 query used for flush, can be a null pointer
+		// ID3D12Query*			   mD3D12QueryFlush;			///< Direct3D 12 query used for flush, can be a null pointer	// TODO(co) Direct3D 12 update
 		//[-------------------------------------------------------]
 		//[ Output-merger (OM) stage                              ]
 		//[-------------------------------------------------------]
 		SwapChain*				 mMainSwapChain;	///< In case the optional native main window handle within the "Direct3D12Renderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
 		Renderer::IRenderTarget* mRenderTarget;		///< Currently set render target (we keep a reference to it), can be a null pointer
+		// State cache to avoid making redundant Direct3D 11 calls
+		D3D12_PRIMITIVE_TOPOLOGY mD3D12PrimitiveTopology;
 
 
 	};

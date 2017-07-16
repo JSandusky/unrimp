@@ -127,12 +127,6 @@ namespace
 				static_cast<NullRenderer::NullRenderer&>(renderer).iaSetVertexArray(realData->vertexArray);
 			}
 
-			void SetPrimitiveTopology(const void* data, Renderer::IRenderer& renderer)
-			{
-				const Renderer::Command::SetPrimitiveTopology* realData = static_cast<const Renderer::Command::SetPrimitiveTopology*>(data);
-				static_cast<NullRenderer::NullRenderer&>(renderer).iaSetPrimitiveTopology(realData->primitiveTopology);
-			}
-
 			//[-------------------------------------------------------]
 			//[ Rasterizer (RS) stage                                 ]
 			//[-------------------------------------------------------]
@@ -248,7 +242,6 @@ namespace
 			&BackendDispatch::SetPipelineState,
 			// Input-assembler (IA) stage
 			&BackendDispatch::SetVertexArray,
-			&BackendDispatch::SetPrimitiveTopology,
 			// Rasterizer (RS) stage
 			&BackendDispatch::SetViewports,
 			&BackendDispatch::SetScissorRectangles,
@@ -449,11 +442,6 @@ namespace NullRenderer
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *vertexArray)
 		}
-	}
-
-	void NullRenderer::iaSetPrimitiveTopology(Renderer::PrimitiveTopology)
-	{
-		// Nothing here
 	}
 
 

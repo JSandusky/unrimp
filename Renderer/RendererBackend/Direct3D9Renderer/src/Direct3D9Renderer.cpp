@@ -132,12 +132,6 @@ namespace
 				static_cast<Direct3D9Renderer::Direct3D9Renderer&>(renderer).iaSetVertexArray(realData->vertexArray);
 			}
 
-			void SetPrimitiveTopology(const void* data, Renderer::IRenderer& renderer)
-			{
-				const Renderer::Command::SetPrimitiveTopology* realData = static_cast<const Renderer::Command::SetPrimitiveTopology*>(data);
-				static_cast<Direct3D9Renderer::Direct3D9Renderer&>(renderer).iaSetPrimitiveTopology(realData->primitiveTopology);
-			}
-
 			//[-------------------------------------------------------]
 			//[ Rasterizer (RS) stage                                 ]
 			//[-------------------------------------------------------]
@@ -253,7 +247,6 @@ namespace
 			&BackendDispatch::SetPipelineState,
 			// Input-assembler (IA) stage
 			&BackendDispatch::SetVertexArray,
-			&BackendDispatch::SetPrimitiveTopology,
 			// Rasterizer (RS) stage
 			&BackendDispatch::SetViewports,
 			&BackendDispatch::SetScissorRectangles,
@@ -727,7 +720,9 @@ namespace Direct3D9Renderer
 			DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, *pipelineState)
 
 			// Set pipeline state
-			static_cast<PipelineState*>(pipelineState)->bindPipelineState();
+			const PipelineState* direct3D9PipelineState = static_cast<const PipelineState*>(pipelineState);
+			mPrimitiveTopology = direct3D9PipelineState->getPrimitiveTopology();
+			direct3D9PipelineState->bindPipelineState();
 		}
 		else
 		{
@@ -759,12 +754,6 @@ namespace Direct3D9Renderer
 		{
 			mDirect3DDevice9->SetVertexDeclaration(nullptr);
 		}
-	}
-
-	void Direct3D9Renderer::iaSetPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology)
-	{
-		// Backup the set primitive topology
-		mPrimitiveTopology = primitiveTopology;
 	}
 
 

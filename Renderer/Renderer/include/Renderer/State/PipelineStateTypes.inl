@@ -34,6 +34,7 @@ namespace Renderer
 		program								= nullptr;
 		vertexAttributes.numberOfAttributes	= 0;
 		vertexAttributes.attributes			= nullptr;
+		primitiveTopology					= PrimitiveTopology::TRIANGLE_LIST;
 		primitiveTopologyType				= PrimitiveTopologyType::TRIANGLE;
 		rasterizerState						= RasterizerStateBuilder::getDefaultRasterizerState();
 		depthStencilState					= DepthStencilStateBuilder::getDefaultDepthStencilState();
@@ -55,6 +56,7 @@ namespace Renderer
 		rootSignature				= _rootSignature;
 		program						= _program;
 		vertexAttributes			= _vertexAttributes;
+		primitiveTopology			= PrimitiveTopology::TRIANGLE_LIST;
 		primitiveTopologyType		= PrimitiveTopologyType::TRIANGLE;
 		rasterizerState				= RasterizerStateBuilder::getDefaultRasterizerState();
 		depthStencilState			= DepthStencilStateBuilder::getDefaultDepthStencilState();

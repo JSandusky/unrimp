@@ -185,12 +185,6 @@ namespace
 				static_cast<OpenGLES3Renderer::OpenGLES3Renderer&>(renderer).iaSetVertexArray(realData->vertexArray);
 			}
 
-			void SetPrimitiveTopology(const void* data, Renderer::IRenderer& renderer)
-			{
-				const Renderer::Command::SetPrimitiveTopology* realData = static_cast<const Renderer::Command::SetPrimitiveTopology*>(data);
-				static_cast<OpenGLES3Renderer::OpenGLES3Renderer&>(renderer).iaSetPrimitiveTopology(realData->primitiveTopology);
-			}
-
 			//[-------------------------------------------------------]
 			//[ Rasterizer (RS) stage                                 ]
 			//[-------------------------------------------------------]
@@ -306,7 +300,6 @@ namespace
 			&BackendDispatch::SetPipelineState,
 			// Input-assembler (IA) stage
 			&BackendDispatch::SetVertexArray,
-			&BackendDispatch::SetPrimitiveTopology,
 			// Rasterizer (RS) stage
 			&BackendDispatch::SetViewports,
 			&BackendDispatch::SetScissorRectangles,
@@ -730,6 +723,7 @@ namespace OpenGLES3Renderer
 				mPipelineState->addReference();
 
 				// Set pipeline state
+				mOpenGLES3PrimitiveTopology = mPipelineState->getOpenGLES3PrimitiveTopology();
 				mPipelineState->bindPipelineState();
 			}
 			else if (nullptr != mPipelineState)
@@ -784,12 +778,6 @@ namespace OpenGLES3Renderer
 				}
 			}
 		}
-	}
-
-	void OpenGLES3Renderer::iaSetPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology)
-	{
-		// Map and backup the set OpenGL ES 3 primitive topology
-		mOpenGLES3PrimitiveTopology = Mapping::getOpenGLES3Type(primitiveTopology);
 	}
 
 

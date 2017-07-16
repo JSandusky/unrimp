@@ -401,7 +401,7 @@ namespace OpenGLES3Renderer
 		return MAPPING[textureFormat];
 	}
 
-	uint32_t Mapping::getOpenGLES3Type(Renderer::PrimitiveTopology prmitive)
+	uint32_t Mapping::getOpenGLES3Type(Renderer::PrimitiveTopology primitiveTopology)
 	{
 		static const GLenum MAPPING[] =
 		{
@@ -411,7 +411,7 @@ namespace OpenGLES3Renderer
 			GL_TRIANGLES,		// Renderer::PrimitiveTopology::TRIANGLE_LIST
 			GL_TRIANGLE_STRIP	// Renderer::PrimitiveTopology::TRIANGLE_STRIP
 		};
-		return MAPPING[static_cast<int>(prmitive) - 1];	// Lookout! The "Renderer::PrimitiveTopology"-values start with 1, not 0
+		return MAPPING[static_cast<int>(primitiveTopology) - 1];	// Lookout! The "Renderer::PrimitiveTopology"-values start with 1, not 0
 	}
 
 	uint32_t Mapping::getOpenGLES3MapRangeType(Renderer::MapType mapType)

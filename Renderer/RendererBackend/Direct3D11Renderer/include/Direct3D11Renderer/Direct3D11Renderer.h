@@ -29,19 +29,12 @@
 //[-------------------------------------------------------]
 #include <Renderer/IRenderer.h>
 
+#include "Direct3D11Renderer/D3D11.h"
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-struct ID3D11Query;
-struct ID3D11Device;
-struct ID3D11HullShader;
-struct ID3D11PixelShader;
-struct ID3D11DomainShader;
-struct ID3D11VertexShader;
-struct ID3D11DeviceContext;
-struct ID3D11GeometryShader;
-struct ID3DUserDefinedAnnotation;
 namespace Renderer
 {
 	class IRenderTarget;
@@ -137,7 +130,6 @@ namespace Direct3D11Renderer
 		//[ Input-assembler (IA) stage                            ]
 		//[-------------------------------------------------------]
 		void iaSetVertexArray(Renderer::IVertexArray* vertexArray);
-		void iaSetPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology);
 		//[-------------------------------------------------------]
 		//[ Rasterizer (RS) stage                                 ]
 		//[-------------------------------------------------------]
@@ -245,11 +237,12 @@ namespace Direct3D11Renderer
 		Renderer::IRenderTarget*   mRenderTarget;				///< Currently set render target (we keep a reference to it), can be a null pointer
 		RootSignature*			   mGraphicsRootSignature;		///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
 		// State cache to avoid making redundant Direct3D 11 calls
-		ID3D11VertexShader*   mD3d11VertexShader;
-		ID3D11HullShader*     mD3d11HullShader;
-		ID3D11DomainShader*   mD3d11DomainShader;
-		ID3D11GeometryShader* mD3d11GeometryShader;
-		ID3D11PixelShader*	  mD3d11PixelShader;
+		D3D11_PRIMITIVE_TOPOLOGY mD3D11PrimitiveTopology;
+		ID3D11VertexShader*		 mD3d11VertexShader;
+		ID3D11HullShader*		 mD3d11HullShader;
+		ID3D11DomainShader*		 mD3d11DomainShader;
+		ID3D11GeometryShader*	 mD3d11GeometryShader;
+		ID3D11PixelShader*		 mD3d11PixelShader;
 
 
 	};

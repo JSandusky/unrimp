@@ -28,7 +28,10 @@
 #include "VulkanRenderer/RenderTarget/SwapChain.h"
 #include "VulkanRenderer/Shader/ProgramGlsl.h"
 #include "VulkanRenderer/Shader/VertexShaderGlsl.h"
+#include "VulkanRenderer/Shader/GeometryShaderGlsl.h"
 #include "VulkanRenderer/Shader/FragmentShaderGlsl.h"
+#include "VulkanRenderer/Shader/TessellationControlShaderGlsl.h"
+#include "VulkanRenderer/Shader/TessellationEvaluationShaderGlsl.h"
 #include "VulkanRenderer/RootSignature.h"
 #include "VulkanRenderer/VulkanRenderer.h"
 #include "VulkanRenderer/VulkanContext.h"
@@ -37,6 +40,44 @@
 #include <Renderer/ILog.h>
 
 #include <array>
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global definitions                                    ]
+		//[-------------------------------------------------------]
+		typedef std::array<VkPipelineShaderStageCreateInfo, 5> VkPipelineShaderStageCreateInfos;
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		void addVkPipelineShaderStageCreateInfo(VkShaderStageFlagBits vkShaderStageFlagBits, VkShaderModule vkShaderModule, VkPipelineShaderStageCreateInfos& vkPipelineShaderStageCreateInfos, uint32_t stageCount)
+		{
+			VkPipelineShaderStageCreateInfo& vkPipelineShaderStageCreateInfo = vkPipelineShaderStageCreateInfos[stageCount];
+			vkPipelineShaderStageCreateInfo.sType				= VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;	// sType (VkStructureType)
+			vkPipelineShaderStageCreateInfo.pNext				= nullptr;												// pNext (const void*)
+			vkPipelineShaderStageCreateInfo.flags				= 0;													// flags (VkPipelineShaderStageCreateFlags)
+			vkPipelineShaderStageCreateInfo.stage				= vkShaderStageFlagBits;								// stage (VkShaderStageFlagBits)
+			vkPipelineShaderStageCreateInfo.module				= vkShaderModule;										// module (VkShaderModule)
+			vkPipelineShaderStageCreateInfo.pName				= "main";												// pName (const char*)
+			vkPipelineShaderStageCreateInfo.pSpecializationInfo	= nullptr;												// pSpecializationInfo (const VkSpecializationInfo*)
+		}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
 
 
 //[-------------------------------------------------------]
@@ -71,29 +112,28 @@ namespace VulkanRenderer
 		swapChain->getWidthAndHeight(width, height);
 
 		// Shaders
-		// TODO(co) Handle all shaders correctly (all stages, null pointer checks etc.)
 		ProgramGlsl* programGlsl = static_cast<ProgramGlsl*>(mProgram);
-		std::vector<VkPipelineShaderStageCreateInfo> vkPipelineShaderStageCreateInfos =
+		uint32_t stageCount = 0;
+		::detail::VkPipelineShaderStageCreateInfos vkPipelineShaderStageCreateInfos;
 		{
-			{ // Vertex shader
-				VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,		// sType (VkStructureType)
-				nullptr,													// pNext (const void*)
-				0,															// flags (VkPipelineShaderStageCreateFlags)
-				VK_SHADER_STAGE_VERTEX_BIT,									// stage (VkShaderStageFlagBits)
-				programGlsl->getVertexShaderGlsl()->getVkShaderModule(),	// module (VkShaderModule)
-				"main",														// pName (const char*)
-				nullptr														// pSpecializationInfo (const VkSpecializationInfo*)
-			},
-			{ // Fragment shader
-				VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,		// sType (VkStructureType)
-				nullptr,													// pNext (const void*)
-				0,															// flags (VkPipelineShaderStageCreateFlags)
-				VK_SHADER_STAGE_FRAGMENT_BIT,								// stage (VkShaderStageFlagBits)
-				programGlsl->getFragmentShaderGlsl()->getVkShaderModule(),	// module (VkShaderModule)
-				"main",														// pName (const char*)
-				nullptr														// pSpecializationInfo (const VkSpecializationInfo*)
-			}
-		};
+			// Define helper macro
+			#define SHADER_STAGE(vkShaderStageFlagBits, shaderGlsl) \
+				if (nullptr != shaderGlsl) \
+				{ \
+					::detail::addVkPipelineShaderStageCreateInfo(vkShaderStageFlagBits, shaderGlsl->getVkShaderModule(), vkPipelineShaderStageCreateInfos, stageCount); \
+					++stageCount; \
+				}
+
+			// Shader stages
+			SHADER_STAGE(VK_SHADER_STAGE_VERTEX_BIT,				  programGlsl->getVertexShaderGlsl())
+			SHADER_STAGE(VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT,	  programGlsl->getTessellationControlShaderGlsl())
+			SHADER_STAGE(VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT, programGlsl->getTessellationEvaluationShaderGlsl())
+			SHADER_STAGE(VK_SHADER_STAGE_GEOMETRY_BIT,				  programGlsl->getGeometryShaderGlsl())
+			SHADER_STAGE(VK_SHADER_STAGE_FRAGMENT_BIT,				  programGlsl->getFragmentShaderGlsl())
+
+			// Undefine helper macro
+			#undef SHADER_STAGE
+		}
 
 		// Vertex attributes
 		const uint32_t numberOfAttributes = pipelineState.vertexAttributes.numberOfAttributes;
@@ -141,7 +181,7 @@ namespace VulkanRenderer
 			VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO,	// sType (VkStructureType)
 			nullptr,														// pNext (const void*)
 			0,																// flags (VkPipelineInputAssemblyStateCreateFlags)
-			VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,							// topology (VkPrimitiveTopology)
+			Mapping::getVulkanType(pipelineState.primitiveTopology),		// topology (VkPrimitiveTopology)
 			VK_FALSE														// primitiveRestartEnable (VkBool32)
 		};
 		const VkViewport vkViewport =
@@ -273,7 +313,7 @@ namespace VulkanRenderer
 			VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,										// sType (VkStructureType)
 			nullptr,																				// pNext (const void*)
 			0,																						// flags (VkPipelineCreateFlags)
-			static_cast<uint32_t>(vkPipelineShaderStageCreateInfos.size()),							// stageCount (uint32_t)
+			stageCount,																				// stageCount (uint32_t)
 			vkPipelineShaderStageCreateInfos.data(),												// pStages (const VkPipelineShaderStageCreateInfo*)
 			&vkPipelineVertexInputStateCreateInfo,													// pVertexInputState (const VkPipelineVertexInputStateCreateInfo*)
 			&vkPipelineInputAssemblyStateCreateInfo,												// pInputAssemblyState (const VkPipelineInputAssemblyStateCreateInfo*)

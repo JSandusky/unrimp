@@ -162,12 +162,6 @@ namespace
 				static_cast<Direct3D10Renderer::Direct3D10Renderer&>(renderer).iaSetVertexArray(realData->vertexArray);
 			}
 
-			void SetPrimitiveTopology(const void* data, Renderer::IRenderer& renderer)
-			{
-				const Renderer::Command::SetPrimitiveTopology* realData = static_cast<const Renderer::Command::SetPrimitiveTopology*>(data);
-				static_cast<Direct3D10Renderer::Direct3D10Renderer&>(renderer).iaSetPrimitiveTopology(realData->primitiveTopology);
-			}
-
 			//[-------------------------------------------------------]
 			//[ Rasterizer (RS) stage                                 ]
 			//[-------------------------------------------------------]
@@ -283,7 +277,6 @@ namespace
 			&BackendDispatch::SetPipelineState,
 			// Input-assembler (IA) stage
 			&BackendDispatch::SetVertexArray,
-			&BackendDispatch::SetPrimitiveTopology,
 			// Rasterizer (RS) stage
 			&BackendDispatch::SetViewports,
 			&BackendDispatch::SetScissorRectangles,
@@ -330,6 +323,7 @@ namespace Direct3D10Renderer
 		mMainSwapChain(nullptr),
 		mRenderTarget(nullptr),
 		mGraphicsRootSignature(nullptr),
+		mD3D10PrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_UNDEFINED),
 		mD3d10VertexShader(nullptr),
 		mD3d10GeometryShader(nullptr),
 		mD3d10PixelShader(nullptr)
@@ -773,8 +767,17 @@ namespace Direct3D10Renderer
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *pipelineState)
 
+			// Set primitive topology
+			// -> The "Renderer::PrimitiveTopology" values directly map to Direct3D 9 & 10 & 11 constants, do not change them
+			const PipelineState* direct3D10PipelineState = static_cast<const PipelineState*>(pipelineState);
+			if (mD3D10PrimitiveTopology != direct3D10PipelineState->getD3D10PrimitiveTopology())
+			{
+				mD3D10PrimitiveTopology = direct3D10PipelineState->getD3D10PrimitiveTopology();
+				mD3D10Device->IASetPrimitiveTopology(mD3D10PrimitiveTopology);
+			}
+
 			// Set pipeline state
-			static_cast<PipelineState*>(pipelineState)->bindPipelineState();
+			direct3D10PipelineState->bindPipelineState();
 		}
 		else
 		{
@@ -805,13 +808,6 @@ namespace Direct3D10Renderer
 		{
 			mD3D10Device->IASetInputLayout(nullptr);
 		}
-	}
-
-	void Direct3D10Renderer::iaSetPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology)
-	{
-		// Set primitive topology
-		// -> The "Renderer::PrimitiveTopology" values directly map to Direct3D 9 & 10 & 11 constants, do not change them
-		mD3D10Device->IASetPrimitiveTopology(static_cast<D3D10_PRIMITIVE_TOPOLOGY>(primitiveTopology));
 	}
 
 

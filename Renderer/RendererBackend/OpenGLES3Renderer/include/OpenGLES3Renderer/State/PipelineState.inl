@@ -21,25 +21,20 @@
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace Direct3D11Renderer
+namespace OpenGLES3Renderer
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline D3D11_PRIMITIVE_TOPOLOGY PipelineState::getD3D11PrimitiveTopology() const
+	inline uint32_t PipelineState::getOpenGLES3PrimitiveTopology() const
 	{
-		return mD3D11PrimitiveTopology;
-	}
-
-	inline ID3D11InputLayout* PipelineState::getD3D11InputLayout() const
-	{
-		return mD3D11InputLayout;
+		return mOpenGLES3PrimitiveTopology;
 	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // Direct3D11Renderer
+} // OpenGLES3Renderer

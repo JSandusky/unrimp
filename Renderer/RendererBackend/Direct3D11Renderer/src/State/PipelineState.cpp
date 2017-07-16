@@ -49,6 +49,7 @@ namespace Direct3D11Renderer
 		IPipelineState(direct3D11Renderer),
 		mProgram(pipelineState.program),
 		mD3D11DeviceContext(direct3D11Renderer.getD3D11DeviceContext()),
+		mD3D11PrimitiveTopology(static_cast<D3D11_PRIMITIVE_TOPOLOGY>(pipelineState.primitiveTopology)),
 		mD3D11InputLayout(nullptr),
 		mRasterizerState(new RasterizerState(direct3D11Renderer, pipelineState.rasterizerState)),
 		mDepthStencilState(new DepthStencilState(direct3D11Renderer, pipelineState.depthStencilState)),

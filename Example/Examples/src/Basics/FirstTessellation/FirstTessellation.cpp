@@ -138,6 +138,7 @@ void FirstTessellation::onInitialization()
 			if (nullptr != program)
 			{
 				Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes);
+				pipelineState.primitiveTopology = Renderer::PrimitiveTopology::PATCH_LIST_3;	// Patch list with 3 vertices per patch (tessellation relevant topology type) - "Renderer::PrimitiveTopology::TriangleList" used for tessellation
 				pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::PATCH;
 				pipelineState.rasterizerState.fillMode = Renderer::FillMode::WIREFRAME;
 				mPipelineState = renderer->createPipelineState(pipelineState);
@@ -197,14 +198,8 @@ void FirstTessellation::fillCommandBuffer()
 	// Set the used pipeline state object (PSO)
 	Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineState);
 
-	{ // Setup input assembly (IA)
-		// Set the used vertex array
-		Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArray);
-
-		// Set the primitive topology used for draw calls
-		// -> Patch list with 3 vertices per patch (tessellation relevant topology type) - "Renderer::PrimitiveTopology::TriangleList" used for tessellation
-		Renderer::Command::SetPrimitiveTopology::create(mCommandBuffer, Renderer::PrimitiveTopology::PATCH_LIST_3);
-	}
+	// Input assembly (IA): Set the used vertex array
+	Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArray);
 
 	// Render the specified geometric primitive, based on an array of vertices
 	Renderer::Command::Draw::create(mCommandBuffer, 3);

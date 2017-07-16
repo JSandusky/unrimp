@@ -130,7 +130,7 @@ void FirstInstancing::onInitialization()
 					// -> Simple instance ID in order to keep it similar to the "draw instanced" version on the right side (blue)
 					static const float INSTANCE_ID[] =
 					{
-							0.0f, 1.0f
+						0.0f, 1.0f
 					};
 					Renderer::IVertexBufferPtr vertexBufferInstanceId(mBufferManager->createVertexBuffer(sizeof(INSTANCE_ID), INSTANCE_ID, Renderer::BufferUsage::STATIC_DRAW));
 
@@ -315,13 +315,8 @@ void FirstInstancing::fillCommandBuffer()
 		// Set the used pipeline state object (PSO)
 		Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineStateInstancedArrays);
 
-		{ // Setup input assembly (IA)
-			// Set the used vertex array
-			Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArrayInstancedArrays);
-
-			// Set the primitive topology used for draw calls
-			Renderer::Command::SetPrimitiveTopology::create(mCommandBuffer, Renderer::PrimitiveTopology::TRIANGLE_LIST);
-		}
+		// Input assembly (IA): Set the used vertex array
+		Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArrayInstancedArrays);
 
 		// Render the specified geometric primitive, based on an array of vertices
 		// -> In this example, we only draw a simple triangle and therefore usually do not need an index buffer
@@ -342,13 +337,8 @@ void FirstInstancing::fillCommandBuffer()
 		// Set the used pipeline state object (PSO)
 		Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineStateDrawInstanced);
 
-		{ // Setup input assembly (IA)
-			// Set the used vertex array
-			Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArrayDrawInstanced);
-
-			// Set the primitive topology used for draw calls
-			Renderer::Command::SetPrimitiveTopology::create(mCommandBuffer, Renderer::PrimitiveTopology::TRIANGLE_LIST);
-		}
+		// Input assembly (IA): Set the used vertex array
+		Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArrayDrawInstanced);
 
 		// Render the specified geometric primitive, based on an array of vertices
 		Renderer::Command::Draw::create(mCommandBuffer, 3, 2);

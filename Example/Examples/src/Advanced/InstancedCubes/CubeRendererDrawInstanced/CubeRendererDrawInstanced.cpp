@@ -459,13 +459,8 @@ void CubeRendererDrawInstanced::fillCommandBuffer()
 	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 4, mTexture2DArray);
 	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 5, mUniformBufferDynamicFs);
 
-	{ // Setup input assembly (IA)
-		// Set the used vertex array
-		Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArray);
-
-		// Set the primitive topology used for draw calls
-		Renderer::Command::SetPrimitiveTopology::create(mCommandBuffer, Renderer::PrimitiveTopology::TRIANGLE_LIST);
-	}
+	// Input assembly (IA): Set the used vertex array
+	Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArray);
 
 	// Draw the batches
 	if (nullptr != mBatches)

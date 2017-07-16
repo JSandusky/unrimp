@@ -886,5 +886,8 @@
     <None Include="include\OpenGLRenderer\Linux\OpenGLContextLinux.inl">
       <Filter>Source Files\Linux</Filter>
     </None>
+    <None Include="include\OpenGLRenderer\State\PipelineState.inl">
+      <Filter>Source Files\State</Filter>
+    </None>
   </ItemGroup>
 </Project>

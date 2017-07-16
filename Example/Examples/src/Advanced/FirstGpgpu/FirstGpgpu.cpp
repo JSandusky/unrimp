@@ -245,6 +245,7 @@ void FirstGpgpu::onInitialization()
 			}
 			{ // Content processing
 				Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, programContentProcessing, vertexAttributes);
+				pipelineState.primitiveTopology = Renderer::PrimitiveTopology::TRIANGLE_STRIP;
 				pipelineState.depthStencilState.depthEnable = false;
 				mPipelineStateContentProcessing = mRenderer->createPipelineState(pipelineState);
 			}
@@ -314,13 +315,8 @@ void FirstGpgpu::fillCommandBufferContentGeneration()
 	// Set the used pipeline state object (PSO)
 	Renderer::Command::SetPipelineState::create(mCommandBufferContentGeneration, mPipelineStateContentGeneration);
 
-	{ // Setup input assembly (IA)
-		// Set the used vertex array
-		Renderer::Command::SetVertexArray::create(mCommandBufferContentGeneration, mVertexArrayContentGeneration);
-
-		// Set the primitive topology used for draw calls
-		Renderer::Command::SetPrimitiveTopology::create(mCommandBufferContentGeneration, Renderer::PrimitiveTopology::TRIANGLE_LIST);
-	}
+	// Input assembly (IA): Set the used vertex array
+	Renderer::Command::SetVertexArray::create(mCommandBufferContentGeneration, mVertexArrayContentGeneration);
 
 	// Render the specified geometric primitive, based on indexing into an array of vertices
 	Renderer::Command::Draw::create(mCommandBufferContentGeneration, 3);
@@ -357,13 +353,8 @@ void FirstGpgpu::fillCommandBufferContentProcessing()
 	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBufferContentProcessing, 0, mSamplerState);
 	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBufferContentProcessing, 1, mTexture2D[0]);
 
-	{ // Setup input assembly (IA)
-		// Set the used vertex array
-		Renderer::Command::SetVertexArray::create(mCommandBufferContentProcessing, mVertexArrayContentProcessing);
-
-		// Set the primitive topology used for draw calls
-		Renderer::Command::SetPrimitiveTopology::create(mCommandBufferContentProcessing, Renderer::PrimitiveTopology::TRIANGLE_STRIP);
-	}
+	// Input assembly (IA): Set the used vertex array
+	Renderer::Command::SetVertexArray::create(mCommandBufferContentProcessing, mVertexArrayContentProcessing);
 
 	// Render the specified geometric primitive, based on indexing into an array of vertices
 	Renderer::Command::Draw::create(mCommandBufferContentProcessing, 4);

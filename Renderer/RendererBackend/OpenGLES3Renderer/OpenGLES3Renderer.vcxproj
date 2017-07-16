@@ -55,6 +55,7 @@
     <None Include="include\OpenGLES3Renderer\State\BlendState.inl" />
     <None Include="include\OpenGLES3Renderer\State\DepthStencilState.inl" />
     <None Include="include\OpenGLES3Renderer\State\IState.inl" />
+    <None Include="include\OpenGLES3Renderer\State\PipelineState.inl" />
     <None Include="include\OpenGLES3Renderer\State\RasterizerState.inl" />
     <None Include="include\OpenGLES3Renderer\Texture\Texture1D.inl" />
     <None Include="include\OpenGLES3Renderer\Texture\Texture2D.inl" />

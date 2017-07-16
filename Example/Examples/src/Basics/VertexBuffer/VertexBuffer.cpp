@@ -284,13 +284,8 @@ void VertexBuffer::fillCommandBuffer()
 		// Set the used pipeline state object (PSO)
 		Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineStateVBO);
 
-		{ // Setup input assembly (IA)
-			// Set the used vertex array
-			Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArrayVBO);
-
-			// Set the primitive topology used for draw calls
-			Renderer::Command::SetPrimitiveTopology::create(mCommandBuffer, Renderer::PrimitiveTopology::TRIANGLE_LIST);
-		}
+		// Input assembly (IA): Set the used vertex array
+		Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArrayVBO);
 
 		// Render the specified geometric primitive, based on an array of vertices
 		Renderer::Command::Draw::create(mCommandBuffer, 3);
@@ -308,13 +303,8 @@ void VertexBuffer::fillCommandBuffer()
 		// Set the used pipeline state object (PSO)
 		Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineStateVBOs);
 
-		{ // Setup input assembly (IA)
-			// Set the used vertex array
-			Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArrayVBOs);
-
-			// Set the primitive topology used for draw calls
-			Renderer::Command::SetPrimitiveTopology::create(mCommandBuffer, Renderer::PrimitiveTopology::TRIANGLE_LIST);
-		}
+		// Input assembly (IA): Set the used vertex array
+		Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArrayVBOs);
 
 		// Render the specified geometric primitive, based on an array of vertices
 		Renderer::Command::Draw::create(mCommandBuffer, 3);

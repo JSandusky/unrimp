@@ -81,6 +81,9 @@
     <None Include="include\OpenGLES3Renderer\IOpenGLES3Context.inl">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="include\OpenGLES3Renderer\State\PipelineState.inl">
+      <Filter>Source Files\State</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">

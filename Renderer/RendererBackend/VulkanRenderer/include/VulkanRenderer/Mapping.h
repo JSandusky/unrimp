@@ -29,6 +29,7 @@
 //[-------------------------------------------------------]
 #include <Renderer/Buffer/VertexArrayTypes.h>
 #include <Renderer/Buffer/IndexBufferTypes.h>
+#include <Renderer/State/PipelineStateTypes.h>
 
 #include "VulkanRenderer/Vulkan.h"
 
@@ -84,6 +85,21 @@ namespace VulkanRenderer
 		*    Vulkan index type
 		*/
 		static VkIndexType getVulkanType(Renderer::IndexBufferFormat::Enum indexBufferFormat);
+
+		//[-------------------------------------------------------]
+		//[ Renderer::PrimitiveTopology                           ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    "Renderer::PrimitiveTopology" to Vulkan type
+		*
+		*  @param[in] primitiveTopology
+		*    "Renderer::PrimitiveTopology" to map
+		*
+		*  @return
+		*    Vulkan type
+		*/
+		static VkPrimitiveTopology getVulkanType(Renderer::PrimitiveTopology primitiveTopology);
 
 
 	};

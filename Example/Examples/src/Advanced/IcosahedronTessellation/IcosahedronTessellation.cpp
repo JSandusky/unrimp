@@ -223,6 +223,7 @@ void IcosahedronTessellation::onInitialization()
 			if (nullptr != program)
 			{
 				Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes);
+				pipelineState.primitiveTopology = Renderer::PrimitiveTopology::PATCH_LIST_3;	// Patch list with 3 vertices per patch (tessellation relevant topology type) - "Renderer::PrimitiveTopology::TriangleList" used for tessellation
 				pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::PATCH;
 				mPipelineState = renderer->createPipelineState(pipelineState);
 			}
@@ -307,14 +308,8 @@ void IcosahedronTessellation::fillCommandBuffer()
 	// Set the used pipeline state object (PSO)
 	Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineState);
 
-	{ // Setup input assembly (IA)
-		// Set the used vertex array
-		Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArray);
-
-		// Set the primitive topology used for draw calls
-		// -> Patch list with 3 vertices per patch (tessellation relevant topology type) - "Renderer::PrimitiveTopology::TriangleList" used for tessellation
-		Renderer::Command::SetPrimitiveTopology::create(mCommandBuffer, Renderer::PrimitiveTopology::PATCH_LIST_3);
-	}
+	// Input assembly (IA): Set the used vertex array
+	Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArray);
 
 	// Render the specified geometric primitive, based on indexing into an array of vertices
 	Renderer::Command::DrawIndexed::create(mCommandBuffer, 60);

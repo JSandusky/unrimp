@@ -137,12 +137,6 @@ namespace
 				static_cast<Direct3D12Renderer::Direct3D12Renderer&>(renderer).iaSetVertexArray(realData->vertexArray);
 			}
 
-			void SetPrimitiveTopology(const void* data, Renderer::IRenderer& renderer)
-			{
-				const Renderer::Command::SetPrimitiveTopology* realData = static_cast<const Renderer::Command::SetPrimitiveTopology*>(data);
-				static_cast<Direct3D12Renderer::Direct3D12Renderer&>(renderer).iaSetPrimitiveTopology(realData->primitiveTopology);
-			}
-
 			//[-------------------------------------------------------]
 			//[ Rasterizer (RS) stage                                 ]
 			//[-------------------------------------------------------]
@@ -260,7 +254,6 @@ namespace
 			&BackendDispatch::SetPipelineState,
 			// Input-assembler (IA) stage
 			&BackendDispatch::SetVertexArray,
-			&BackendDispatch::SetPrimitiveTopology,
 			// Rasterizer (RS) stage
 			&BackendDispatch::SetViewports,
 			&BackendDispatch::SetScissorRectangles,
@@ -306,9 +299,10 @@ namespace Direct3D12Renderer
 		mD3D12CommandAllocator(nullptr),
 		mD3D12GraphicsCommandList(nullptr),
 		mShaderLanguageHlsl(nullptr),
-		mD3D12QueryFlush(nullptr),
+		// mD3D12QueryFlush(nullptr),	// TODO(co) Direct3D 12 update
 		mMainSwapChain(nullptr),
-		mRenderTarget(nullptr)
+		mRenderTarget(nullptr),
+		mD3D12PrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_UNDEFINED)
 	{
 		mDirect3D12RuntimeLinking = new Direct3D12RuntimeLinking(*this);
 
@@ -676,6 +670,15 @@ namespace Direct3D12Renderer
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *pipelineState)
 
+			// Set primitive topology
+			// -> The "Renderer::PrimitiveTopology" values directly map to Direct3D 9 & 10 & 11 && 12 constants, do not change them
+			const PipelineState* direct3D12PipelineState = static_cast<const PipelineState*>(pipelineState);
+			if (mD3D12PrimitiveTopology != direct3D12PipelineState->getD3D12PrimitiveTopology())
+			{
+				mD3D12PrimitiveTopology = direct3D12PipelineState->getD3D12PrimitiveTopology();
+				mD3D12GraphicsCommandList->IASetPrimitiveTopology(mD3D12PrimitiveTopology);
+			}
+
 			// Set graphics pipeline state
 			mD3D12GraphicsCommandList->SetPipelineState(static_cast<PipelineState*>(pipelineState)->getD3D12PipelineState());
 		}
@@ -709,13 +712,6 @@ namespace Direct3D12Renderer
 			// Set no Direct3D 12 input layout
 			mD3D12GraphicsCommandList->IASetVertexBuffers(0, 0, nullptr);
 		}
-	}
-
-	void Direct3D12Renderer::iaSetPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology)
-	{
-		// Set primitive topology
-		// -> The "Renderer::PrimitiveTopology" values directly map to Direct3D 9 & 10 & 11 && 12 constants, do not change them
-		mD3D12GraphicsCommandList->IASetPrimitiveTopology(static_cast<D3D12_PRIMITIVE_TOPOLOGY>(primitiveTopology));
 	}
 
 

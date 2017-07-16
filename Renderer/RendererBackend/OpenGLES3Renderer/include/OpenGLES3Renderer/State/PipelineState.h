@@ -88,6 +88,15 @@ namespace OpenGLES3Renderer
 
 		/**
 		*  @brief
+		*    Return the OpenGL ES 3 primitive topology describing the type of primitive to render
+		*
+		*  @return
+		*    OpenGL ES 3 primitive topology describing the type of primitive to render (type "GLenum" not used in here in order to keep the header slim)
+		*/
+		inline uint32_t getOpenGLES3PrimitiveTopology() const;
+
+		/**
+		*  @brief
 		*    Bind the pipeline state
 		*/
 		void bindPipelineState() const;
@@ -112,6 +121,7 @@ namespace OpenGLES3Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		uint32_t			mOpenGLES3PrimitiveTopology;	///< OpenGL ES 3 primitive topology describing the type of primitive to render (type "GLenum" not used in here in order to keep the header slim)
 		Renderer::IProgram* mProgram;
 		RasterizerState*	mRasterizerState;
 		DepthStencilState*	mDepthStencilState;
@@ -125,3 +135,9 @@ namespace OpenGLES3Renderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // OpenGLES3Renderer
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "OpenGLES3Renderer/State/PipelineState.inl"

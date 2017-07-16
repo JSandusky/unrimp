@@ -475,13 +475,8 @@ void FirstMultipleSwapChains::fillCommandBuffer(const float color[4], Renderer::
 	// Set the used pipeline state object (PSO)
 	Renderer::Command::SetPipelineState::create(commandBuffer, mPipelineState);
 
-	{ // Setup input assembly (IA)
-		// Set the used vertex array
-		Renderer::Command::SetVertexArray::create(commandBuffer, mVertexArray);
-
-		// Set the primitive topology used for draw calls
-		Renderer::Command::SetPrimitiveTopology::create(commandBuffer, Renderer::PrimitiveTopology::TRIANGLE_LIST);
-	}
+	// Input assembly (IA): Set the used vertex array
+	Renderer::Command::SetVertexArray::create(commandBuffer, mVertexArray);
 
 	// Render the specified geometric primitive, based on an array of vertices
 	Renderer::Command::Draw::create(commandBuffer, 3);

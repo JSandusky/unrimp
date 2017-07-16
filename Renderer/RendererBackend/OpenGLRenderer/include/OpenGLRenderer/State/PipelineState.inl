@@ -21,25 +21,25 @@
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace Direct3D11Renderer
+namespace OpenGLRenderer
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline D3D11_PRIMITIVE_TOPOLOGY PipelineState::getD3D11PrimitiveTopology() const
+	inline uint32_t PipelineState::getOpenGLPrimitiveTopology() const
 	{
-		return mD3D11PrimitiveTopology;
+		return mOpenGLPrimitiveTopology;
 	}
 
-	inline ID3D11InputLayout* PipelineState::getD3D11InputLayout() const
+	inline int PipelineState::getNumberOfVerticesPerPatch() const
 	{
-		return mD3D11InputLayout;
+		return mNumberOfVerticesPerPatch;
 	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // Direct3D11Renderer
+} // OpenGLRenderer
