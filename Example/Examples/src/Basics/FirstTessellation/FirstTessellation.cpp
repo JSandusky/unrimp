@@ -72,8 +72,8 @@ void FirstTessellation::onInitialization()
 		// Vertex input layout
 		const Renderer::VertexAttribute vertexAttributesLayout[] =
 		{
-			// Data destination
 			{ // Attribute 0
+				// Data destination
 				Renderer::VertexAttributeFormat::FLOAT_2,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
 				"Position",									// name[32] (char)
 				"POSITION",									// semanticName[32] (char)

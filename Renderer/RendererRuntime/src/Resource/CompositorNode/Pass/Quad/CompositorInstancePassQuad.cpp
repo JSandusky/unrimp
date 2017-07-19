@@ -62,7 +62,7 @@ namespace
 					"POSITION",									// semanticName[32] (char)
 					0,											// semanticIndex (uint32_t)
 					// Data source
-					0,											// inputSlot (size_t)
+					0,											// inputSlot (uint32_t)
 					0,											// alignedByteOffset (uint32_t)
 					sizeof(float) * 4,							// strideInBytes (uint32_t)
 					0											// instancesPerElement (uint32_t)
