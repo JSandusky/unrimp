@@ -204,6 +204,13 @@ namespace VulkanRenderer
 				height	// height (uint32_t)
 			}
 		};
+		const VkPipelineTessellationStateCreateInfo vkPipelineTessellationStateCreateInfo =
+		{
+			VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO,																																							// sType (VkStructureType)
+			nullptr,																																																			// pNext (const void*)
+			0,																																																					// flags (VkPipelineTessellationStateCreateFlags)
+			(pipelineState.primitiveTopology >= Renderer::PrimitiveTopology::PATCH_LIST_1) ? static_cast<uint32_t>(pipelineState.primitiveTopology) - static_cast<uint32_t>(Renderer::PrimitiveTopology::PATCH_LIST_1) + 1 : 1	// patchControlPoints (uint32_t)
+		};
 		const VkPipelineViewportStateCreateInfo vkPipelineViewportStateCreateInfo =
 		{
 			VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO,	// sType (VkStructureType)
@@ -216,19 +223,19 @@ namespace VulkanRenderer
 		};
 		const VkPipelineRasterizationStateCreateInfo vkPipelineRasterizationStateCreateInfo =
 		{
-			VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO,	// sType (VkStructureType)
-			nullptr,													// pNext (const void*)
-			0,															// flags (VkPipelineRasterizationStateCreateFlags)
-			VK_FALSE,													// depthClampEnable (VkBool32)
-			VK_FALSE,													// rasterizerDiscardEnable (VkBool32)
-			VK_POLYGON_MODE_FILL,										// polygonMode (VkPolygonMode)
-			VK_CULL_MODE_BACK_BIT,										// cullMode (VkCullModeFlags)
-			VK_FRONT_FACE_CLOCKWISE,									// frontFace (VkFrontFace)
-			VK_FALSE,													// depthBiasEnable (VkBool32)
-			0.0f,														// depthBiasConstantFactor (float)
-			0.0f,														// depthBiasClamp (float)
-			0.0f,														// depthBiasSlopeFactor (float)
-			1.0f														// lineWidth (float)
+			VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO,																	// sType (VkStructureType)
+			nullptr,																													// pNext (const void*)
+			0,																															// flags (VkPipelineRasterizationStateCreateFlags)
+			VK_FALSE,																													// depthClampEnable (VkBool32)
+			VK_FALSE,																													// rasterizerDiscardEnable (VkBool32)
+			(Renderer::FillMode::WIREFRAME == pipelineState.rasterizerState.fillMode) ? VK_POLYGON_MODE_LINE : VK_POLYGON_MODE_FILL,	// polygonMode (VkPolygonMode)
+			VK_CULL_MODE_BACK_BIT,																										// cullMode (VkCullModeFlags)
+			VK_FRONT_FACE_CLOCKWISE,																									// frontFace (VkFrontFace)
+			VK_FALSE,																													// depthBiasEnable (VkBool32)
+			0.0f,																														// depthBiasConstantFactor (float)
+			0.0f,																														// depthBiasClamp (float)
+			0.0f,																														// depthBiasSlopeFactor (float)
+			1.0f																														// lineWidth (float)
 		};
 		const VkPipelineMultisampleStateCreateInfo vkPipelineMultisampleStateCreateInfo =
 		{
@@ -317,7 +324,7 @@ namespace VulkanRenderer
 			vkPipelineShaderStageCreateInfos.data(),												// pStages (const VkPipelineShaderStageCreateInfo*)
 			&vkPipelineVertexInputStateCreateInfo,													// pVertexInputState (const VkPipelineVertexInputStateCreateInfo*)
 			&vkPipelineInputAssemblyStateCreateInfo,												// pInputAssemblyState (const VkPipelineInputAssemblyStateCreateInfo*)
-			nullptr,																				// pTessellationState (const VkPipelineTessellationStateCreateInfo*)
+			&vkPipelineTessellationStateCreateInfo,													// pTessellationState (const VkPipelineTessellationStateCreateInfo*)
 			&vkPipelineViewportStateCreateInfo,														// pViewportState (const VkPipelineViewportStateCreateInfo*)
 			&vkPipelineRasterizationStateCreateInfo,												// pRasterizationState (const VkPipelineRasterizationStateCreateInfo*)
 			&vkPipelineMultisampleStateCreateInfo,													// pMultisampleState (const VkPipelineMultisampleStateCreateInfo*)

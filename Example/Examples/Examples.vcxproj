@@ -504,6 +504,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
     <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_Null.h" />
     <ClInclude Include="src\Basics\FirstTessellation\FirstTessellation.h" />
     <ClInclude Include="src\Basics\FirstTessellation\FirstTessellation_GLSL_410.h" />
+    <ClInclude Include="src\Basics\FirstTessellation\FirstTessellation_GLSL_450.h" />
     <ClInclude Include="src\Basics\FirstTessellation\FirstTessellation_HLSL_D3D11_D3D12.h" />
     <ClInclude Include="src\Basics\FirstTessellation\FirstTessellation_Null.h" />
     <ClInclude Include="src\Basics\FirstTexture\FirstTexture.h" />

@@ -120,7 +120,8 @@ void FirstTessellation::onInitialization()
 				const char* tessellationControlShaderSourceCode = nullptr;
 				const char* tessellationEvaluationShaderSourceCode = nullptr;
 				const char* fragmentShaderSourceCode = nullptr;
-				#include "FirstTessellation_GLSL_410.h"
+				#include "FirstTessellation_GLSL_450.h"	// For Vulkan
+				#include "FirstTessellation_GLSL_410.h"	// macOS 10.11 only supports OpenGL 4.1 hence it's our OpenGL minimum
 				#include "FirstTessellation_HLSL_D3D11_D3D12.h"
 				#include "FirstTessellation_Null.h"
 
