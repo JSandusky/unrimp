@@ -25,6 +25,7 @@
 #include "VulkanRenderer/VulkanRuntimeLinking.h"
 #include "VulkanRenderer/VulkanRenderer.h"
 #include "VulkanRenderer/VulkanContext.h"
+#include "VulkanRenderer/Mapping.h"
 
 #include <Renderer/ILog.h>
 
@@ -50,24 +51,24 @@ namespace VulkanRenderer
 		// TODO(co) Map "Renderer::SamplerState" to VkSamplerCreateInfo
 		const VkSamplerCreateInfo vkSamplerCreateInfo =
 		{
-			VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,		// sType (VkStructureType)
-			nullptr,									// pNext (const void*)
-			0,											// flags (VkSamplerCreateFlags)
-			VK_FILTER_LINEAR,							// magFilter (VkFilter)
-			VK_FILTER_LINEAR,							// minFilter (VkFilter)
-			VK_SAMPLER_MIPMAP_MODE_NEAREST,				// mipmapMode (VkSamplerMipmapMode)
-			VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,		// addressModeU (VkSamplerAddressMode)
-			VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,		// addressModeV (VkSamplerAddressMode)
-			VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,		// addressModeW (VkSamplerAddressMode)
-			samplerState.mipLODBias,					// mipLodBias (float)
-			VK_FALSE,									// anisotropyEnable (VkBool32)
-			1.0f,										// maxAnisotropy (float)
-			VK_FALSE,									// compareEnable (VkBool32)
-			VK_COMPARE_OP_ALWAYS,						// compareOp (VkCompareOp)
-			0.0f,										// minLod (float)
-			0.0f,										// maxLod (float)
-			VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK,	// borderColor (VkBorderColor)
-			VK_FALSE									// unnormalizedCoordinates (VkBool32)
+			VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,							// sType (VkStructureType)
+			nullptr,														// pNext (const void*)
+			0,																// flags (VkSamplerCreateFlags)
+			VK_FILTER_LINEAR,												// magFilter (VkFilter)
+			VK_FILTER_LINEAR,												// minFilter (VkFilter)
+			VK_SAMPLER_MIPMAP_MODE_NEAREST,									// mipmapMode (VkSamplerMipmapMode)
+			Mapping::getVulkanTextureAddressMode(samplerState.addressU),	// addressModeU (VkSamplerAddressMode)
+			Mapping::getVulkanTextureAddressMode(samplerState.addressV),	// addressModeV (VkSamplerAddressMode)
+			Mapping::getVulkanTextureAddressMode(samplerState.addressW),	// addressModeW (VkSamplerAddressMode)
+			samplerState.mipLODBias,										// mipLodBias (float)
+			VK_FALSE,														// anisotropyEnable (VkBool32)
+			1.0f,															// maxAnisotropy (float)
+			VK_FALSE,														// compareEnable (VkBool32)
+			VK_COMPARE_OP_ALWAYS,											// compareOp (VkCompareOp)
+			0.0f,															// minLod (float)
+			0.0f,															// maxLod (float)
+			VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK,						// borderColor (VkBorderColor)
+			VK_FALSE														// unnormalizedCoordinates (VkBool32)
 		};
 		if (vkCreateSampler(vulkanRenderer.getVulkanContext().getVkDevice(), &vkSamplerCreateInfo, nullptr, &mVkSampler) != VK_SUCCESS)
 		{

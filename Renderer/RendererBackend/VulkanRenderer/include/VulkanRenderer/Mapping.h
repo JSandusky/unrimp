@@ -30,6 +30,7 @@
 #include <Renderer/Buffer/VertexArrayTypes.h>
 #include <Renderer/Buffer/IndexBufferTypes.h>
 #include <Renderer/State/PipelineStateTypes.h>
+#include <Renderer/State/SamplerStateTypes.h>
 
 #include "VulkanRenderer/Vulkan.h"
 
@@ -56,6 +57,21 @@ namespace VulkanRenderer
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
 	public:
+		//[-------------------------------------------------------]
+		//[ Renderer::TextureAddressMode                          ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    "Renderer::TextureAddressMode" to Vulkan texture address mode
+		*
+		*  @param[in] textureAddressMode
+		*    "Renderer::TextureAddressMode" to map
+		*
+		*  @return
+		*    Vulkan texture address mode
+		*/
+		static VkSamplerAddressMode getVulkanTextureAddressMode(Renderer::TextureAddressMode textureAddressMode);
+
 		//[-------------------------------------------------------]
 		//[ Renderer::VertexAttributeFormat and semantic          ]
 		//[-------------------------------------------------------]
@@ -100,6 +116,21 @@ namespace VulkanRenderer
 		*    Vulkan type
 		*/
 		static VkPrimitiveTopology getVulkanType(Renderer::PrimitiveTopology primitiveTopology);
+
+		//[-------------------------------------------------------]
+		//[ Renderer::TextureFormat                               ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    "Renderer::TextureFormat" to Vulkan format
+		*
+		*  @param[in] textureFormat
+		*    "Renderer::TextureFormat" to map
+		*
+		*  @return
+		*    Vulkan format
+		*/
+		static VkFormat getVulkanFormat(Renderer::TextureFormat::Enum textureFormat);
 
 
 	};

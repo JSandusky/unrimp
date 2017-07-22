@@ -38,7 +38,9 @@
 #include "VulkanRenderer/Buffer/TextureBuffer.h"
 #include "VulkanRenderer/Buffer/IndirectBuffer.h"
 #include "VulkanRenderer/Texture/TextureManager.h"
+#include "VulkanRenderer/Texture/Texture1D.h"
 #include "VulkanRenderer/Texture/Texture2D.h"
+#include "VulkanRenderer/Texture/Texture3D.h"
 #include "VulkanRenderer/Texture/Texture2DArray.h"
 #include "VulkanRenderer/State/SamplerState.h"
 #include "VulkanRenderer/State/PipelineState.h"
@@ -479,11 +481,6 @@ namespace VulkanRenderer
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			VULKANRENDERER_RENDERERMATCHCHECK_RETURN(*this, *resource)
 
-			// Get the root signature parameter instance
-			// TODO(co) Implement me
-			// const Renderer::RootParameter& rootParameter = mGraphicsRootSignature->getRootSignature().parameters[rootParameterIndex];
-			// const Renderer::DescriptorRange* descriptorRange = rootParameter.descriptorTable.descriptorRanges;
-
 			// Check the type of resource to set
 			// TODO(co) Some additional resource type root signature security checks in debug build?
 			// TODO(co) There's room for binding API call related optimization in here (will certainly be no huge overall efficiency gain)
@@ -516,11 +513,84 @@ namespace VulkanRenderer
 					break;
 				}
 
-				case Renderer::ResourceType::TEXTURE_BUFFER:
 				case Renderer::ResourceType::TEXTURE_1D:
 				case Renderer::ResourceType::TEXTURE_2D:
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 				case Renderer::ResourceType::TEXTURE_3D:
+				{
+					// Evaluate the texture type and get the Vulkan image view
+					VkImageView vkImageView = VK_NULL_HANDLE;
+					switch (resourceType)
+					{
+						case Renderer::ResourceType::TEXTURE_1D:
+							vkImageView = static_cast<Texture1D*>(resource)->getVkImageView();
+							break;
+
+						case Renderer::ResourceType::TEXTURE_2D:
+							vkImageView = static_cast<Texture2D*>(resource)->getVkImageView();
+							break;
+
+						case Renderer::ResourceType::TEXTURE_3D:
+							vkImageView = static_cast<Texture3D*>(resource)->getVkImageView();
+							break;
+
+						case Renderer::ResourceType::ROOT_SIGNATURE:
+						case Renderer::ResourceType::PROGRAM:
+						case Renderer::ResourceType::VERTEX_ARRAY:
+						case Renderer::ResourceType::SWAP_CHAIN:
+						case Renderer::ResourceType::FRAMEBUFFER:
+						case Renderer::ResourceType::INDEX_BUFFER:
+						case Renderer::ResourceType::VERTEX_BUFFER:
+						case Renderer::ResourceType::UNIFORM_BUFFER:
+						case Renderer::ResourceType::INDIRECT_BUFFER:
+						case Renderer::ResourceType::TEXTURE_BUFFER:
+						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+						case Renderer::ResourceType::TEXTURE_CUBE:
+						case Renderer::ResourceType::PIPELINE_STATE:
+						case Renderer::ResourceType::SAMPLER_STATE:
+						case Renderer::ResourceType::VERTEX_SHADER:
+						case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+						case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+						case Renderer::ResourceType::GEOMETRY_SHADER:
+						case Renderer::ResourceType::FRAGMENT_SHADER:
+							RENDERER_LOG(mContext, CRITICAL, "Invalid Vulkan renderer backend resource type")
+							break;
+					}
+
+					// Get the root signature parameter instance
+					const Renderer::RootParameter& rootParameter = mGraphicsRootSignature->getRootSignature().parameters[rootParameterIndex];
+					const Renderer::DescriptorRange* descriptorRange = reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges);
+					assert(nullptr != descriptorRange);
+
+					// Get the sampler state
+					const SamplerState* samplerState = mGraphicsRootSignature->getSamplerState(descriptorRange->samplerRootParameterIndex);
+					assert(nullptr != samplerState);
+
+					// Update Vulkan descriptor sets
+					const VkDescriptorImageInfo vkDescriptorImageInfo =
+					{
+						samplerState->getVkSampler(),	// sampler (VkSampler)
+						vkImageView,					// imageView (VkImageView)
+						VK_IMAGE_LAYOUT_PREINITIALIZED	// imageLayout (VkImageLayout)
+					};
+					const VkWriteDescriptorSet vkWriteDescriptorSet =
+					{
+						VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,			// sType (VkStructureType)
+						nullptr,										// pNext (const void*)
+						mGraphicsRootSignature->getVkDescriptorSet(),	// dstSet (VkDescriptorSet)
+						rootParameterIndex,								// dstBinding (uint32_t)
+						0,												// dstArrayElement (uint32_t)
+						1,												// descriptorCount (uint32_t)
+						VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,		// descriptorType (VkDescriptorType)
+						&vkDescriptorImageInfo,							// pImageInfo (const VkDescriptorImageInfo*)
+						nullptr,										// pBufferInfo (const VkDescriptorBufferInfo*)
+						nullptr											// pTexelBufferView (const VkBufferView*)
+					};
+					vkUpdateDescriptorSets(getVulkanContext().getVkDevice(), 1, &vkWriteDescriptorSet, 0, nullptr);
+					break;
+				}
+
+				case Renderer::ResourceType::TEXTURE_BUFFER:
+				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 				case Renderer::ResourceType::TEXTURE_CUBE:
 				{
 					// TODO(co) Implement me
@@ -529,7 +599,8 @@ namespace VulkanRenderer
 
 				case Renderer::ResourceType::SAMPLER_STATE:
 				{
-					// TODO(co) Implement me
+					// Unlike Direct3D >=10, Vulkan directly attaches the sampler settings to the texture
+					mGraphicsRootSignature->setSamplerState(rootParameterIndex, static_cast<SamplerState*>(resource));
 					break;
 				}
 

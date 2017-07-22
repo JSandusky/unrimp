@@ -521,6 +521,7 @@ namespace VulkanRenderer
 		IMPORT_FUNC(vkGetImageSubresourceLayout);
 		IMPORT_FUNC(vkCmdCopyImage);
 		IMPORT_FUNC(vkCmdBlitImage);
+		IMPORT_FUNC(vkCmdCopyBufferToImage);
 		IMPORT_FUNC(vkDestroyImage);
 		IMPORT_FUNC(vkCmdClearAttachments);
 		IMPORT_FUNC(vkCmdCopyBuffer);

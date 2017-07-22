@@ -622,5 +622,8 @@
     <None Include="..\..\..\External\glslang\src\glslang\MachineIndependent\glslang.y">
       <Filter>External\glslang\MachineIndependent</Filter>
     </None>
+    <None Include="include\VulkanRenderer\State\SamplerState.inl">
+      <Filter>Source Files\State</Filter>
+    </None>
   </ItemGroup>
 </Project>

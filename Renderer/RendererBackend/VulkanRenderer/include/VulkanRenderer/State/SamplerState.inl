@@ -28,9 +28,9 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline VkImageView Texture2D::getVkImageView() const
+	inline VkSampler SamplerState::getVkSampler() const
 	{
-		return mVkImageView;
+		return mVkSampler;
 	}
 
 

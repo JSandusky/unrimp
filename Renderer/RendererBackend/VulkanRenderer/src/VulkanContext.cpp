@@ -448,7 +448,7 @@ namespace VulkanRenderer
 		}
 	}
 
-	uint32_t VulkanContext::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags vkMemoryPropertyFlags) const
+	uint32_t VulkanContext::findMemoryTypeIndex(uint32_t typeFilter, VkMemoryPropertyFlags vkMemoryPropertyFlags) const
 	{
 		VkPhysicalDeviceMemoryProperties vkPhysicalDeviceMemoryProperties;
 		vkGetPhysicalDeviceMemoryProperties(mVkPhysicalDevice, &vkPhysicalDeviceMemoryProperties);
@@ -463,6 +463,19 @@ namespace VulkanRenderer
 		// Error!
 		RENDERER_LOG(mVulkanRenderer.getContext(), CRITICAL, "Failed to find suitable Vulkan memory type")
 		return ~0u;
+	}
+
+	VkCommandBuffer VulkanContext::createVkCommandBuffer() const
+	{
+		return ::detail::createVkCommandBuffer(mVulkanRenderer, mVkDevice, mVkCommandPool);
+	}
+
+	void VulkanContext::destroyVkCommandBuffer(VkCommandBuffer vkCommandBuffer) const
+	{
+		if (VK_NULL_HANDLE != mVkCommandBuffer)
+		{
+			vkFreeCommandBuffers(mVkDevice, mVkCommandPool, 1, &vkCommandBuffer);
+		}
 	}
 
 

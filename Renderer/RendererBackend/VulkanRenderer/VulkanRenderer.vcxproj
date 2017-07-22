@@ -540,6 +540,7 @@
     <None Include="include\VulkanRenderer\State\IState.inl" />
     <None Include="include\VulkanRenderer\State\PipelineState.inl" />
     <None Include="include\VulkanRenderer\State\RasterizerState.inl" />
+    <None Include="include\VulkanRenderer\State\SamplerState.inl" />
     <None Include="include\VulkanRenderer\Texture\Texture1D.inl" />
     <None Include="include\VulkanRenderer\Texture\Texture2D.inl" />
     <None Include="include\VulkanRenderer\Texture\Texture2DArray.inl" />

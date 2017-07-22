@@ -22,7 +22,9 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "VulkanRenderer/Texture/Texture2D.h"
-#include "VulkanRenderer/VulkanRuntimeLinking.h"
+#include "VulkanRenderer/VulkanRenderer.h"
+#include "VulkanRenderer/VulkanContext.h"
+#include "VulkanRenderer/Helper.h"
 
 
 //[-------------------------------------------------------]
@@ -35,15 +37,19 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2D::Texture2D(VulkanRenderer& vulkanRenderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum, const void*, uint32_t, uint8_t) :
-		ITexture2D(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer), width, height)
+	Texture2D::Texture2D(VulkanRenderer& vulkanRenderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t, uint8_t) :
+		ITexture2D(vulkanRenderer, width, height),
+		mVkImage(VK_NULL_HANDLE),
+		mVkDeviceMemory(VK_NULL_HANDLE),
+		mVkImageView(VK_NULL_HANDLE)
 	{
-		// TODO(co) Implement me
+		// TODO(co) Add support for "flags" and multisamples
+		Helper::createAndFillVkImage(vulkanRenderer, VK_IMAGE_TYPE_2D, VK_IMAGE_VIEW_TYPE_2D, { width, height, 1 }, textureFormat, data, mVkImage, mVkDeviceMemory, mVkImageView);
 	}
 
 	Texture2D::~Texture2D()
 	{
-		// TODO(co) Implement me
+		Helper::destroyAndFreeVkImage(static_cast<VulkanRenderer&>(getRenderer()), mVkImage, mVkDeviceMemory, mVkImageView);
 	}
 
 

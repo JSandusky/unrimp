@@ -24,6 +24,7 @@
 #include "VulkanRenderer/Helper.h"
 #include "VulkanRenderer/VulkanRenderer.h"
 #include "VulkanRenderer/VulkanContext.h"
+#include "VulkanRenderer/Mapping.h"
 
 #include <Renderer/ILog.h>
 
@@ -38,118 +39,114 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	void Helper::setImageLayout(VkCommandBuffer vkCommandBuffer, VkImage vkImage, VkImageLayout oldVkImageLayout, VkImageLayout newVkImageLayout, VkImageAspectFlags vkImageAspectFlags)
+	VkCommandBuffer Helper::beginSingleTimeCommands(const VulkanRenderer& vulkanRenderer)
 	{
-		const VkImageSubresourceRange vkImageSubresourceRange =
+		// Create and begin Vulkan command buffer
+		VkCommandBuffer vkCommandBuffer = vulkanRenderer.getVulkanContext().createVkCommandBuffer();
+		const VkCommandBufferBeginInfo vkCommandBufferBeginInfo =
 		{
-			vkImageAspectFlags,	// aspectMask (VkImageAspectFlags)
-			0,					// baseMipLevel (uint32_t)
-			1,					// levelCount (uint32_t)
-			0,					// baseArrayLayer (uint32_t)
-			1					// layerCount (uint32_t)
+			VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,	// sType (VkStructureType)
+			nullptr,										// pNext (const void*)
+			0,												// flags (VkCommandBufferUsageFlags)
+			nullptr											// pInheritanceInfo (const VkCommandBufferInheritanceInfo*)
 		};
-		setImageLayout(vkCommandBuffer, vkImage, oldVkImageLayout, newVkImageLayout, vkImageSubresourceRange);
+		if (vkBeginCommandBuffer(vkCommandBuffer, &vkCommandBufferBeginInfo) == VK_SUCCESS)
+		{
+			// Done
+			return vkCommandBuffer;
+		}
+		else
+		{
+			// Error!
+			RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to begin Vulkan command buffer instance")
+			return VK_NULL_HANDLE;
+		}
 	}
 
-	void Helper::setImageLayout(VkCommandBuffer vkCommandBuffer, VkImage vkImage, VkImageLayout oldVkImageLayout, VkImageLayout newVkImageLayout, VkImageSubresourceRange vkImageSubresourceRange)
+	void Helper::endSingleTimeCommands(const VulkanRenderer& vulkanRenderer, VkCommandBuffer vkCommandBuffer)
 	{
-		// Create an image memory barrier for changing the layout of an image and put it into an active command buffer
-		// -> See chapter 11.4 "Image Layout" for details
-		// -> Basing on https://github.com/SaschaWillems/Vulkan - "Examples and demos for the new Vulkan API" - "vkTools::setImageLayout()" from Sascha Willems
+		const VulkanContext& vulkanContext = vulkanRenderer.getVulkanContext();
+		const VkQueue vkQueue = vulkanContext.getGraphicsVkQueue();
 
-		// Create an image barrier object
-		VkImageMemoryBarrier vkImageMemoryBarrier = {};
-		vkImageMemoryBarrier.sType				 = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-		vkImageMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-		vkImageMemoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-		vkImageMemoryBarrier.oldLayout			 = oldVkImageLayout;
-		vkImageMemoryBarrier.newLayout			 = newVkImageLayout;
-		vkImageMemoryBarrier.image				 = vkImage;
-		vkImageMemoryBarrier.subresourceRange	 = vkImageSubresourceRange;
+		// End Vulkan command buffer
+		vkEndCommandBuffer(vkCommandBuffer);
 
-		{ // Source layouts (old)
-			// Undefined layout
-			// Only allowed as initial layout!
-			// Make sure any writes to the image have been finished
-			if (VK_IMAGE_LAYOUT_PREINITIALIZED == oldVkImageLayout)
-			{
-				vkImageMemoryBarrier.srcAccessMask = VK_ACCESS_HOST_WRITE_BIT | VK_ACCESS_TRANSFER_WRITE_BIT;
-			}
-
-			// Old layout is color attachment
-			// Make sure any writes to the color buffer have been finished
-			if (VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL == oldVkImageLayout)
-			{
-				vkImageMemoryBarrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-			}
-
-			// Old layout is depth/stencil attachment
-			// Make sure any writes to the depth/stencil buffer have been finished
-			if (VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL == oldVkImageLayout)
-			{
-				vkImageMemoryBarrier.srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-			}
-
-			// Old layout is transfer source
-			// Make sure any reads from the image have been finished
-			if (VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL == oldVkImageLayout)
-			{
-				vkImageMemoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
-			}
-
-			// Old layout is shader read (sampler, input attachment)
-			// Make sure any shader reads from the image have been finished
-			if (VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL == oldVkImageLayout)
-			{
-				vkImageMemoryBarrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
-			}
+		// Submit Vulkan command buffer
+		const VkSubmitInfo vkSubmitInfo =
+		{
+			VK_STRUCTURE_TYPE_SUBMIT_INFO,	// sType (VkStructureType)
+			nullptr,						// pNext (const void*)
+			0,								// waitSemaphoreCount (uint32_t)
+			nullptr,						// pWaitSemaphores (const VkSemaphore*)
+			nullptr,						// pWaitDstStageMask (const VkPipelineStageFlags*)
+			1,								// commandBufferCount (uint32_t)
+			&vkCommandBuffer,				// pCommandBuffers (const VkCommandBuffer*)
+			0,								// signalSemaphoreCount (uint32_t)
+			nullptr							// pSignalSemaphores (const VkSemaphore*)
+		};
+		if (vkQueueSubmit(vkQueue, 1, &vkSubmitInfo, VK_NULL_HANDLE) != VK_SUCCESS)
+		{
+			// Error!
+			RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Vulkan queue submit failed")
+			return;
+		}
+		if (vkQueueWaitIdle(vkQueue) != VK_SUCCESS)
+		{
+			// Error!
+			RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Vulkan Queue wait idle failed")
+			return;
 		}
 
-		{ // Target layouts (new)
-			// New layout is transfer destination (copy, blit)
-			// Make sure any copies to the image have been finished
-			if (VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL == newVkImageLayout)
-			{
-				vkImageMemoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-			}
-
-			// New layout is transfer source (copy, blit)
-			// Make sure any reads from and writes to the image have been finished
-			if (VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL == newVkImageLayout)
-			{
-				vkImageMemoryBarrier.srcAccessMask = vkImageMemoryBarrier.srcAccessMask | VK_ACCESS_TRANSFER_READ_BIT;
-				vkImageMemoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
-			}
-
-			// New layout is color attachment
-			// Make sure any writes to the color buffer have been finished
-			if (VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL == newVkImageLayout)
-			{
-				vkImageMemoryBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-				vkImageMemoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
-			}
-
-			// New layout is depth attachment
-			// Make sure any writes to depth/stencil buffer have been finished
-			if (VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL == newVkImageLayout)
-			{
-				vkImageMemoryBarrier.dstAccessMask = vkImageMemoryBarrier.dstAccessMask | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
-			}
-
-			// New layout is shader read (sampler, input attachment)
-			// Make sure any writes to the image have been finished
-			if (VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL == newVkImageLayout)
-			{
-				vkImageMemoryBarrier.srcAccessMask = VK_ACCESS_HOST_WRITE_BIT | VK_ACCESS_TRANSFER_WRITE_BIT;
-				vkImageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
-			}
-		}
-
-		// Put barrier inside command buffer
-		vkCmdPipelineBarrier(vkCommandBuffer, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 1, &vkImageMemoryBarrier);
+		// Destroy Vulkan command buffer
+		vulkanContext.destroyVkCommandBuffer(vkCommandBuffer);
 	}
 
-	void Helper::createAndAllocateVkBuffer(const VulkanRenderer& vulkanRenderer, VkBufferUsageFlagBits vkBufferUsageFlagBits, uint32_t numberOfBytes, const void* data, VkBuffer& vkBuffer, VkDeviceMemory& vkDeviceMemory)
+	void Helper::transitionVkImageLayout(const VulkanRenderer& vulkanRenderer, VkImage vkImage, VkImageLayout oldVkImageLayout, VkImageLayout newVkImageLayout)
+	{
+		// Create and begin Vulkan command buffer
+		VkCommandBuffer vkCommandBuffer = beginSingleTimeCommands(vulkanRenderer);
+
+		// Vulkan image memory barrier
+		VkImageMemoryBarrier vkImageMemoryBarrier =
+		{
+			VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,	// sType (VkStructureType)
+			nullptr,								// pNext (const void*)
+			0,										// srcAccessMask (VkAccessFlags)
+			0,										// dstAccessMask (VkAccessFlags)
+			oldVkImageLayout,						// oldLayout (VkImageLayout)
+			newVkImageLayout,						// newLayout (VkImageLayout)
+			VK_QUEUE_FAMILY_IGNORED,				// srcQueueFamilyIndex (uint32_t)
+			VK_QUEUE_FAMILY_IGNORED,				// dstQueueFamilyIndex (uint32_t)
+			vkImage,								// image (VkImage)
+			{ // subresourceRange (VkImageSubresourceRange)
+				VK_IMAGE_ASPECT_COLOR_BIT,	// aspectMask (VkImageAspectFlags)
+				0,							// baseMipLevel (uint32_t)
+				1,							// levelCount (uint32_t)
+				0,							// baseArrayLayer (uint32_t)
+				1							// layerCount (uint32_t)
+			}
+		};
+		if (VK_IMAGE_LAYOUT_PREINITIALIZED == oldVkImageLayout && VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL == newVkImageLayout)
+		{
+			vkImageMemoryBarrier.srcAccessMask = VK_ACCESS_HOST_WRITE_BIT;
+			vkImageMemoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+		}
+		else if (VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL == oldVkImageLayout && VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL == newVkImageLayout)
+		{
+			vkImageMemoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+			vkImageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+		}
+		else
+		{
+			RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Unsupported Vulkan image layout transition")
+		}
+		vkCmdPipelineBarrier(vkCommandBuffer, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 1, &vkImageMemoryBarrier);
+
+		// End and destroy Vulkan command buffer
+		endSingleTimeCommands(vulkanRenderer, vkCommandBuffer);
+	}
+
+	void Helper::createAndAllocateVkBuffer(const VulkanRenderer& vulkanRenderer, VkBufferUsageFlagBits vkBufferUsageFlagBits, VkMemoryPropertyFlags vkMemoryPropertyFlags, VkDeviceSize numberOfBytes, const void* data, VkBuffer& vkBuffer, VkDeviceMemory& vkDeviceMemory)
 	{
 		const VulkanContext& vulkanContext = vulkanRenderer.getVulkanContext();
 		const VkDevice vkDevice = vulkanContext.getVkDevice();
@@ -176,10 +173,10 @@ namespace VulkanRenderer
 		vkGetBufferMemoryRequirements(vkDevice, vkBuffer, &vkMemoryRequirements);
 		const VkMemoryAllocateInfo vkMemoryAllocateInfo =
 		{
-			VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,																											// sType (VkStructureType)
-			nullptr,																																		// pNext (const void*)
-			vkMemoryRequirements.size,																														// allocationSize (VkDeviceSize)
-			vulkanContext.findMemoryType(vkMemoryRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT)	// memoryTypeIndex (uint32_t)
+			VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,															// sType (VkStructureType)
+			nullptr,																						// pNext (const void*)
+			vkMemoryRequirements.size,																		// allocationSize (VkDeviceSize)
+			vulkanContext.findMemoryTypeIndex(vkMemoryRequirements.memoryTypeBits, vkMemoryPropertyFlags)	// memoryTypeIndex (uint32_t)
 		};
 		if (vkAllocateMemory(vkDevice, &vkMemoryAllocateInfo, nullptr, &vkDeviceMemory) != VK_SUCCESS)
 		{
@@ -207,6 +204,159 @@ namespace VulkanRenderer
 			{
 				vkFreeMemory(vkDevice, vkDeviceMemory, nullptr);
 			}
+		}
+	}
+
+	void Helper::createAndFillVkImage(const VulkanRenderer& vulkanRenderer, VkImageType vkImageType, VkImageViewType vkImageViewType, const VkExtent3D& vkExtent3D, Renderer::TextureFormat::Enum textureFormat, const void* data, VkImage& vkImage, VkDeviceMemory& vkDeviceMemory, VkImageView& vkImageView)
+	{
+		// Get Vulkan format
+		const VkFormat vkFormat = Mapping::getVulkanFormat(textureFormat);
+
+		// Create Vulkan staging buffer
+		VkBuffer stagingVkBuffer;
+		VkDeviceMemory stagingVkDeviceMemory;
+		const uint32_t numberOfBytes = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, vkExtent3D.width, vkExtent3D.height) * vkExtent3D.depth;
+		createAndAllocateVkBuffer(vulkanRenderer, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, numberOfBytes, data, stagingVkBuffer, stagingVkDeviceMemory);
+
+		// Create and fill Vulkan image
+		createAndAllocateVkImage(vulkanRenderer, vkImageType, vkExtent3D, vkFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vkImage, vkDeviceMemory);
+		transitionVkImageLayout(vulkanRenderer, vkImage, VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+			copyVkBufferToVkImage(vulkanRenderer, stagingVkBuffer, vkImage, vkExtent3D);
+		transitionVkImageLayout(vulkanRenderer, vkImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+
+		// Destroy Vulkan staging buffer
+		destroyAndFreeVkBuffer(vulkanRenderer, stagingVkBuffer, stagingVkDeviceMemory);
+
+		// Create the Vulkan image view
+		createVkImageView(vulkanRenderer, vkImage, vkImageViewType, vkFormat, vkImageView);
+	}
+
+	void Helper::createAndAllocateVkImage(const VulkanRenderer& vulkanRenderer, VkImageType vkImageType, const VkExtent3D& vkExtent3D, VkFormat vkFormat, VkImageTiling vkImageTiling, VkImageUsageFlags vkImageUsageFlags, VkMemoryPropertyFlags vkMemoryPropertyFlags, VkImage& vkImage, VkDeviceMemory& vkDeviceMemory)
+	{
+		const VulkanContext& vulkanContext = vulkanRenderer.getVulkanContext();
+		const VkDevice vkDevice = vulkanContext.getVkDevice();
+
+		{ // Create Vulkan image
+			const VkImageCreateInfo vkImageCreateInfo =
+			{
+				VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,	// sType (VkStructureType)
+				nullptr,								// pNext (const void*)
+				0,										// flags (VkImageCreateFlags)
+				vkImageType,							// imageType (VkImageType)
+				vkFormat,								// format (VkFormat)
+				vkExtent3D,								// extent (VkExtent3D)
+				1,										// mipLevels (uint32_t)
+				1,										// arrayLayers (uint32_t)
+				VK_SAMPLE_COUNT_1_BIT,					// samples (VkSampleCountFlagBits)
+				vkImageTiling,							// tiling (VkImageTiling)
+				vkImageUsageFlags,						// usage (VkImageUsageFlags)
+				VK_SHARING_MODE_EXCLUSIVE,				// sharingMode (VkSharingMode)
+				0,										// queueFamilyIndexCount (uint32_t)
+				nullptr,								// pQueueFamilyIndices (const uint32_t*)
+				VK_IMAGE_LAYOUT_PREINITIALIZED			// initialLayout (VkImageLayout)
+			};
+			if (vkCreateImage(vkDevice, &vkImageCreateInfo, nullptr, &vkImage) != VK_SUCCESS)
+			{
+				RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create the Vulkan image")
+			}
+		}
+
+		{ // Allocate Vulkan memory
+			VkMemoryRequirements vkMemoryRequirements = {};
+			vkGetImageMemoryRequirements(vkDevice, vkImage, &vkMemoryRequirements);
+			const VkMemoryAllocateInfo vkMemoryAllocateInfo =
+			{
+				VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,															// sType (VkStructureType)
+				nullptr,																						// pNext (const void*)
+				vkMemoryRequirements.size,																		// allocationSize (VkDeviceSize)
+				vulkanContext.findMemoryTypeIndex(vkMemoryRequirements.memoryTypeBits, vkMemoryPropertyFlags)	// memoryTypeIndex (uint32_t)
+			};
+			if (vkAllocateMemory(vkDevice, &vkMemoryAllocateInfo, nullptr, &vkDeviceMemory) != VK_SUCCESS)
+			{
+				RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to allocate the Vulkan memory")
+			}
+			if (vkBindImageMemory(vkDevice, vkImage, vkDeviceMemory, 0) != VK_SUCCESS)
+			{
+				RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to bind the Vulkan image memory")
+			}
+		}
+	}
+
+	void Helper::copyVkBufferToVkImage(const VulkanRenderer& vulkanRenderer, VkBuffer vkBuffer, VkImage vkImage, const VkExtent3D& vkExtent3D)
+	{
+		// Create and begin Vulkan command buffer
+		VkCommandBuffer vkCommandBuffer = beginSingleTimeCommands(vulkanRenderer);
+
+		// Copy Vulkan buffer to Vulkan image
+		const VkBufferImageCopy vkBufferImageCopy =
+		{
+			0,	// bufferOffset (VkDeviceSize)
+			0,	// bufferRowLength (uint32_t)
+			0,	// bufferImageHeight (uint32_t)
+			{ // imageSubresource (VkImageSubresourceLayers)
+				VK_IMAGE_ASPECT_COLOR_BIT,	// aspectMask (VkImageAspectFlags)
+				0,							// mipLevel (uint32_t)
+				0,							// baseArrayLayer (uint32_t)
+				1							// layerCount (uint32_t)
+			},
+			{ 0, 0, 0 },					// imageOffset (VkOffset3D)
+			vkExtent3D						// imageExtent (VkExtent3D)
+		};
+		vkCmdCopyBufferToImage(vkCommandBuffer, vkBuffer, vkImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &vkBufferImageCopy);
+
+		// End and destroy Vulkan command buffer
+		endSingleTimeCommands(vulkanRenderer, vkCommandBuffer);
+	}
+
+	void Helper::destroyAndFreeVkImage(const VulkanRenderer& vulkanRenderer, VkImage vkImage, VkDeviceMemory vkDeviceMemory)
+	{
+		if (VK_NULL_HANDLE != vkImage)
+		{
+			const VkDevice vkDevice = vulkanRenderer.getVulkanContext().getVkDevice();
+			vkDestroyImage(vkDevice, vkImage, nullptr);
+			if (VK_NULL_HANDLE != vkDeviceMemory)
+			{
+				vkFreeMemory(vkDevice, vkDeviceMemory, nullptr);
+			}
+		}
+	}
+
+	void Helper::destroyAndFreeVkImage(const VulkanRenderer& vulkanRenderer, VkImage vkImage, VkDeviceMemory vkDeviceMemory, VkImageView vkImageView)
+	{
+		if (VK_NULL_HANDLE != vkImageView)
+		{
+			vkDestroyImageView(vulkanRenderer.getVulkanContext().getVkDevice(), vkImageView, nullptr);
+		}
+		destroyAndFreeVkImage(vulkanRenderer, vkImage, vkDeviceMemory);
+	}
+
+	void Helper::createVkImageView(const VulkanRenderer& vulkanRenderer, VkImage vkImage, VkImageViewType vkImageViewType, VkFormat vkFormat, VkImageView& vkImageView)
+	{
+		const VkImageViewCreateInfo vkImageViewCreateInfo =
+		{
+			VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,	// sType (VkStructureType)
+			nullptr,									// pNext (const void*)
+			0,											// flags (VkImageViewCreateFlags)
+			vkImage,									// image (VkImage)
+			vkImageViewType,							// viewType (VkImageViewType)
+			vkFormat,									// format (VkFormat)
+			{ // components (VkComponentMapping)
+				VK_COMPONENT_SWIZZLE_IDENTITY,			// r (VkComponentSwizzle)
+				VK_COMPONENT_SWIZZLE_IDENTITY,			// g (VkComponentSwizzle)
+				VK_COMPONENT_SWIZZLE_IDENTITY,			// b (VkComponentSwizzle)
+				VK_COMPONENT_SWIZZLE_IDENTITY			// a (VkComponentSwizzle)
+			},
+			{ // subresourceRange (VkImageSubresourceRange)
+				VK_IMAGE_ASPECT_COLOR_BIT,				// aspectMask (VkImageAspectFlags)
+				0,										// baseMipLevel (uint32_t)
+				1,										// levelCount (uint32_t)
+				0,										// baseArrayLayer (uint32_t)
+				1										// layerCount (uint32_t)
+			}
+		};
+		if (vkCreateImageView(vulkanRenderer.getVulkanContext().getVkDevice(), &vkImageViewCreateInfo, nullptr, &vkImageView) != VK_SUCCESS)
+		{
+			RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create Vulkan image view")
 		}
 	}
 

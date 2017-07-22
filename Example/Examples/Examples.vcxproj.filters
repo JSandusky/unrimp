@@ -435,6 +435,9 @@
     <ClInclude Include="src\Advanced\IcosahedronTessellation\IcosahedronTessellation_GLSL_450.h">
       <Filter>Advanced\IcosahedronTessellation</Filter>
     </ClInclude>
+    <ClInclude Include="src\Basics\FirstTexture\FirstTexture_GLSL_450.h">
+      <Filter>Basics\FirstTexture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Framework\IApplication.cpp">

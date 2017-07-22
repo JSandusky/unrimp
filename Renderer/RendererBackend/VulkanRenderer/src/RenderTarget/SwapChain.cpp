@@ -24,6 +24,7 @@
 #include "VulkanRenderer/RenderTarget/SwapChain.h"
 #include "VulkanRenderer/VulkanRenderer.h"
 #include "VulkanRenderer/VulkanContext.h"
+#include "VulkanRenderer/Helper.h"
 
 #include <Renderer/ILog.h>
 
@@ -590,7 +591,8 @@ namespace VulkanRenderer
 		const Renderer::Context& context = getRenderer().getContext();
 
 		// Get the Vulkan physical device
-		const VulkanContext&   vulkanContext	= static_cast<const VulkanRenderer&>(getRenderer()).getVulkanContext();
+		const VulkanRenderer&  vulkanRenderer	= static_cast<const VulkanRenderer&>(getRenderer());
+		const VulkanContext&   vulkanContext	= vulkanRenderer.getVulkanContext();
 		const VkPhysicalDevice vkPhysicalDevice	= vulkanContext.getVkPhysicalDevice();
 		const VkDevice		   vkDevice			= vulkanContext.getVkDevice();
 
@@ -695,34 +697,8 @@ namespace VulkanRenderer
 				SwapChainBuffer& swapChainBuffer = mSwapChainBuffer[i];
 				swapChainBuffer.vkImage = vkImages[i];
 
-				{ // Create the Vulkan image view
-					const VkImageViewCreateInfo vkImageViewCreateInfo =
-					{
-						VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,	// sType (VkStructureType)
-						nullptr,									// pNext (const void*)
-						0,											// flags (VkImageViewCreateFlags)
-						swapChainBuffer.vkImage,						// image (VkImage)
-						VK_IMAGE_VIEW_TYPE_2D,						// viewType (VkImageViewType)
-						desiredVkSurfaceFormatKHR.format,			// format (VkFormat)
-						{ // components (VkComponentMapping)
-							VK_COMPONENT_SWIZZLE_IDENTITY,			// r (VkComponentSwizzle)
-							VK_COMPONENT_SWIZZLE_IDENTITY,			// g (VkComponentSwizzle)
-							VK_COMPONENT_SWIZZLE_IDENTITY,			// b (VkComponentSwizzle)
-							VK_COMPONENT_SWIZZLE_IDENTITY			// a (VkComponentSwizzle)
-						},
-						{ // subresourceRange (VkImageSubresourceRange)
-							VK_IMAGE_ASPECT_COLOR_BIT,				// aspectMask (VkImageAspectFlags)
-							0,										// baseMipLevel (uint32_t)
-							1,										// levelCount (uint32_t)
-							0,										// baseArrayLayer (uint32_t)
-							1										// layerCount (uint32_t)
-						}
-					};
-					if (vkCreateImageView(vkDevice, &vkImageViewCreateInfo, nullptr, &swapChainBuffer.vkImageView) != VK_SUCCESS)
-					{
-						RENDERER_LOG(context, CRITICAL, "Failed to create Vulkan image view")
-					}
-				}
+				// Create the Vulkan image view
+				Helper::createVkImageView(vulkanRenderer, swapChainBuffer.vkImage, VK_IMAGE_VIEW_TYPE_2D, desiredVkSurfaceFormatKHR.format, swapChainBuffer.vkImageView);
 
 				{ // Create the Vulkan framebuffer
 					const VkFramebufferCreateInfo vkFramebufferCreateInfo =

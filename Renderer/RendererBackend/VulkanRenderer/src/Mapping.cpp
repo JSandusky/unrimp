@@ -34,6 +34,19 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
+	VkSamplerAddressMode Mapping::getVulkanTextureAddressMode(Renderer::TextureAddressMode textureAddressMode)
+	{
+		static const VkSamplerAddressMode MAPPING[] =
+		{
+			VK_SAMPLER_ADDRESS_MODE_REPEAT,					// Renderer::TextureAddressMode::WRAP
+			VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT,		// Renderer::TextureAddressMode::MIRROR
+			VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,			// Renderer::TextureAddressMode::CLAMP
+			VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER,		// Renderer::TextureAddressMode::BORDER
+			VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE	// Renderer::TextureAddressMode::MIRROR_ONCE
+		};
+		return MAPPING[static_cast<int>(textureAddressMode) - 1];	// Lookout! The "Renderer::TextureAddressMode"-values start with 1, not 0
+	}
+
 	VkFormat Mapping::getVulkanFormat(Renderer::VertexAttributeFormat vertexAttributeFormat)
 	{
 		static const VkFormat MAPPING[] =
@@ -83,6 +96,36 @@ namespace VulkanRenderer
 			};
 			return MAPPING[static_cast<int>(primitiveTopology) - 1];	// Lookout! The "Renderer::PrimitiveTopology"-values start with 1, not 0
 		}
+	}
+
+	VkFormat Mapping::getVulkanFormat(Renderer::TextureFormat::Enum textureFormat)
+	{
+		static const VkFormat MAPPING[] =
+		{
+			VK_FORMAT_R8_UNORM,					// Renderer::TextureFormat::R8            - 8-bit pixel format, all bits red
+			VK_FORMAT_R8G8B8_UNORM,				// Renderer::TextureFormat::R8G8B8        - 24-bit pixel format, 8 bits for red, green and blue
+			VK_FORMAT_R8G8B8A8_UNORM,			// Renderer::TextureFormat::R8G8B8A8      - 32-bit pixel format, 8 bits for red, green, blue and alpha
+			VK_FORMAT_R8G8B8A8_SRGB,			// Renderer::TextureFormat::R8G8B8A8_SRGB - 32-bit pixel format, 8 bits for red, green, blue and alpha; sRGB = RGB hardware gamma correction, the alpha channel always remains linear
+			VK_FORMAT_B10G11R11_UFLOAT_PACK32,	// Renderer::TextureFormat::R11G11B10F    - 32-bit float format using 11 bits the red and green channel, 10 bits the blue channel; red and green channels have a 6 bits mantissa and a 5 bits exponent and blue has a 5 bits mantissa and 5 bits exponent
+			VK_FORMAT_R16G16B16A16_SFLOAT,		// Renderer::TextureFormat::R16G16B16A16F - 64-bit float format using 16 bits for the each channel (red, green, blue, alpha)
+			VK_FORMAT_R32G32B32A32_SFLOAT,		// Renderer::TextureFormat::R32G32B32A32F - 128-bit float format using 32 bits for the each channel (red, green, blue, alpha)
+			VK_FORMAT_BC1_RGB_UNORM_BLOCK,		// Renderer::TextureFormat::BC1           - DXT1 compression (known as BC1 in DirectX 10, RGB compression: 8:1, 8 bytes per block)
+			VK_FORMAT_BC1_RGB_SRGB_BLOCK,		// Renderer::TextureFormat::BC1_SRGB      - DXT1 compression (known as BC1 in DirectX 10, RGB compression: 8:1, 8 bytes per block); sRGB = RGB hardware gamma correction, the alpha channel always remains linear
+			VK_FORMAT_BC2_UNORM_BLOCK,			// Renderer::TextureFormat::BC2           - DXT3 compression (known as BC2 in DirectX 10, RGBA compression: 4:1, 16 bytes per block)
+			VK_FORMAT_BC2_SRGB_BLOCK,			// Renderer::TextureFormat::BC2_SRGB      - DXT3 compression (known as BC2 in DirectX 10, RGBA compression: 4:1, 16 bytes per block); sRGB = RGB hardware gamma correction, the alpha channel always remains linear
+			VK_FORMAT_BC3_UNORM_BLOCK,			// Renderer::TextureFormat::BC3           - DXT5 compression (known as BC3 in DirectX 10, RGBA compression: 4:1, 16 bytes per block)
+			VK_FORMAT_BC3_SRGB_BLOCK,			// Renderer::TextureFormat::BC3_SRGB      - DXT5 compression (known as BC3 in DirectX 10, RGBA compression: 4:1, 16 bytes per block); sRGB = RGB hardware gamma correction, the alpha channel always remains linear
+			VK_FORMAT_BC4_UNORM_BLOCK,			// Renderer::TextureFormat::BC4           - 1 component texture compression (also known as 3DC+/ATI1N, known as BC4 in DirectX 10, 8 bytes per block)
+			VK_FORMAT_BC5_UNORM_BLOCK,			// Renderer::TextureFormat::BC5           - 2 component texture compression (luminance & alpha compression 4:1 -> normal map compression, also known as 3DC/ATI2N, known as BC5 in DirectX 10, 16 bytes per block)
+			VK_FORMAT_UNDEFINED,				// Renderer::TextureFormat::ETC1          - 3 component texture compression meant for mobile devices - not supported in Direct3D 11 - TODO(co) Check for Vulkan format
+			VK_FORMAT_R32_UINT,					// Renderer::TextureFormat::R32_UINT      - 32-bit unsigned integer format
+			VK_FORMAT_R32_SFLOAT,				// Renderer::TextureFormat::R32_FLOAT     - 32-bit float format
+			VK_FORMAT_D32_SFLOAT,				// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format
+			VK_FORMAT_R16G16_UNORM,				// Renderer::TextureFormat::R16G16_SNORM  - A two-component, 32-bit signed-normalized-integer format that supports 16 bits for the red channel and 16 bits for the green channel
+			VK_FORMAT_R16G16_SFLOAT,			// Renderer::TextureFormat::R16G16_FLOAT  - A two-component, 32-bit floating-point format that supports 16 bits for the red channel and 16 bits for the green channel
+			VK_FORMAT_R8_UNORM					// Renderer::TextureFormat::UNKNOWN       - Unknown
+		};
+		return MAPPING[textureFormat];
 	}
 
 

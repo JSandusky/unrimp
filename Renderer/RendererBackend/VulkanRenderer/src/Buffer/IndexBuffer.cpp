@@ -43,7 +43,7 @@ namespace VulkanRenderer
 		mVkBuffer(VK_NULL_HANDLE),
 		mVkDeviceMemory(VK_NULL_HANDLE)
 	{
-		Helper::createAndAllocateVkBuffer(vulkanRenderer, VK_BUFFER_USAGE_INDEX_BUFFER_BIT, numberOfBytes, data, mVkBuffer, mVkDeviceMemory);
+		Helper::createAndAllocateVkBuffer(vulkanRenderer, VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, numberOfBytes, data, mVkBuffer, mVkDeviceMemory);
 	}
 
 	IndexBuffer::~IndexBuffer()

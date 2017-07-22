@@ -143,8 +143,8 @@ namespace VulkanRenderer
 		const VkDevice vkDevice = vulkanRenderer.getVulkanContext().getVkDevice();
 		typedef std::vector<VkDescriptorSetLayoutBinding> VkDescriptorSetLayoutBindings;
 		VkDescriptorSetLayoutBindings vkDescriptorSetLayoutBindings;
-		uint32_t numberOfSampledImages = 0;		// "VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE"
-		uint32_t numberOfUniformBuffers = 0;	// "VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER"
+		uint32_t numberOfCombinedImageSamplers = 0;	// "VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER"
+		uint32_t numberOfUniformBuffers = 0;		// "VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER"
 		if (numberOfParameters > 0)
 		{
 			// Fill the Vulkan descriptor set layout bindings
@@ -168,8 +168,8 @@ namespace VulkanRenderer
 						switch (descriptorRange->rangeType)
 						{
 							case Renderer::DescriptorRangeType::SRV:
-								vkDescriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
-								++numberOfSampledImages;
+								vkDescriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+								++numberOfCombinedImageSamplers;
 								break;
 
 							case Renderer::DescriptorRangeType::UAV:
@@ -182,53 +182,55 @@ namespace VulkanRenderer
 								break;
 
 							case Renderer::DescriptorRangeType::SAMPLER:
-								RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Vulkan renderer backend: \"Renderer::DescriptorRangeType::SAMPLER\" is currently no supported descriptor range type")
+								// Nothing here due to usage of "VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER"
 								break;
 
 							case Renderer::DescriptorRangeType::NUMBER_OF_RANGE_TYPES:
 								RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Vulkan renderer backend: \"Renderer::DescriptorRangeType::NUMBER_OF_RANGE_TYPES\" is no valid descriptor range type")
 								break;
 						}
-
-						// Evaluate shader visibility
-						VkShaderStageFlags vkShaderStageFlags = VK_SHADER_STAGE_FLAG_BITS_MAX_ENUM;
-						switch (rootParameter.shaderVisibility)
+						if (VK_DESCRIPTOR_TYPE_MAX_ENUM != vkDescriptorType)
 						{
-							case Renderer::ShaderVisibility::ALL:
-								vkShaderStageFlags = VK_SHADER_STAGE_ALL_GRAPHICS;
-								break;
+							// Evaluate shader visibility
+							VkShaderStageFlags vkShaderStageFlags = VK_SHADER_STAGE_FLAG_BITS_MAX_ENUM;
+							switch (rootParameter.shaderVisibility)
+							{
+								case Renderer::ShaderVisibility::ALL:
+									vkShaderStageFlags = VK_SHADER_STAGE_ALL_GRAPHICS;
+									break;
 
-							case Renderer::ShaderVisibility::VERTEX:
-								vkShaderStageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-								break;
+								case Renderer::ShaderVisibility::VERTEX:
+									vkShaderStageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+									break;
 
-							case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
-								vkShaderStageFlags = VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
-								break;
+								case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
+									vkShaderStageFlags = VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
+									break;
 
-							case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
-								vkShaderStageFlags = VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
-								break;
+								case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
+									vkShaderStageFlags = VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
+									break;
 
-							case Renderer::ShaderVisibility::GEOMETRY:
-								vkShaderStageFlags = VK_SHADER_STAGE_GEOMETRY_BIT;
-								break;
+								case Renderer::ShaderVisibility::GEOMETRY:
+									vkShaderStageFlags = VK_SHADER_STAGE_GEOMETRY_BIT;
+									break;
 
-							case Renderer::ShaderVisibility::FRAGMENT:
-								vkShaderStageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
-								break;
+								case Renderer::ShaderVisibility::FRAGMENT:
+									vkShaderStageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+									break;
+							}
+
+							// Add the Vulkan descriptor set layout binding
+							const VkDescriptorSetLayoutBinding vkDescriptorSetLayoutBinding =
+							{
+								i,					// binding (uint32_t)
+								vkDescriptorType,	// descriptorType (VkDescriptorType)
+								1,					// descriptorCount (uint32_t)
+								vkShaderStageFlags,	// stageFlags (VkShaderStageFlags)
+								nullptr				// pImmutableSamplers (const VkSampler*)
+							};
+							vkDescriptorSetLayoutBindings.push_back(vkDescriptorSetLayoutBinding);
 						}
-
-						// Add the Vulkan descriptor set layout binding
-						const VkDescriptorSetLayoutBinding vkDescriptorSetLayoutBinding =
-						{
-							i,					// binding (uint32_t)
-							vkDescriptorType,	// descriptorType (VkDescriptorType)
-							1,					// descriptorCount (uint32_t)
-							vkShaderStageFlags,	// stageFlags (VkShaderStageFlags)
-							nullptr				// pImmutableSamplers (const VkSampler*)
-						};
-						vkDescriptorSetLayoutBindings.push_back(vkDescriptorSetLayoutBinding);
 					}
 				}
 			}
@@ -270,12 +272,12 @@ namespace VulkanRenderer
 			VkDescriptorPoolSizes vkDescriptorPoolSizes;
 			uint32_t numberOfVkDescriptorPoolSizes = 0;
 
-			// "VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE"
-			if (numberOfSampledImages > 0)
+			// "VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER"
+			if (numberOfCombinedImageSamplers > 0)
 			{
 				VkDescriptorPoolSize& vkDescriptorPoolSize = vkDescriptorPoolSizes[numberOfVkDescriptorPoolSizes];
-				vkDescriptorPoolSize.type			 = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;	// type (VkDescriptorType)
-				vkDescriptorPoolSize.descriptorCount = numberOfSampledImages;				// descriptorCount (uint32_t)
+				vkDescriptorPoolSize.type			 = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;	// type (VkDescriptorType)
+				vkDescriptorPoolSize.descriptorCount = numberOfCombinedImageSamplers;				// descriptorCount (uint32_t)
 				++numberOfVkDescriptorPoolSizes;
 			}
 
