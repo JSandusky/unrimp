@@ -24,8 +24,8 @@
 //[-------------------------------------------------------]
 //[ Shader start                                          ]
 //[-------------------------------------------------------]
-#ifndef RENDERER_NO_OPENGL
-if (0 == strcmp(renderer->getName(), "OpenGL"))
+#ifndef RENDERER_NO_VULKAN
+if (0 == strcmp(renderer->getName(), "Vulkan"))
 {
 
 
@@ -33,11 +33,12 @@ if (0 == strcmp(renderer->getName(), "OpenGL"))
 //[ Vertex shader source code                             ]
 //[-------------------------------------------------------]
 // One vertex shader invocation per control point of the patch
-vertexShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
+vertexShaderSourceCode = R"(#version 450 core	// OpenGL 4.5
+#extension GL_ARB_separate_shader_objects : enable	// The "GL_ARB_separate_shader_objects"-extension is required for Vulkan shaders to work
 
 // Attribute input/output
-in  vec3 Position;	// Object space control point position of the patch we received from the input assembly (IA) as input
-out vec3 vPosition;	// Object space control point position of the patch as output
+layout(location = 0) in  vec3 Position;		// Object space control point position of the patch we received from the input assembly (IA) as input
+layout(location = 0) out vec3 vPosition;	// Object space control point position of the patch as output
 
 // Programs
 void main()
@@ -52,15 +53,16 @@ void main()
 //[ Tessellation control shader source code               ]
 //[-------------------------------------------------------]
 // One tessellation control shader invocation per patch control point (with super-vision)
-tessellationControlShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
+tessellationControlShaderSourceCode = R"(#version 450 core	// OpenGL 4.5
+#extension GL_ARB_separate_shader_objects : enable	// The "GL_ARB_separate_shader_objects"-extension is required for Vulkan shaders to work
 
 // Attribute input/output
 layout(vertices = 3) out;
-in  vec3 vPosition[];	// Object space control point position of the patch we received from the vertex shader (VS) as input
-out vec3 tcPosition[];	// Object space control point position of the patch as output
+layout(location = 0) in  vec3 vPosition[];	// Object space control point position of the patch we received from the vertex shader (VS) as input
+layout(location = 0) out vec3 tcPosition[];	// Object space control point position of the patch as output
 
 // Uniforms
-layout(std140) uniform UniformBlockDynamicTcs
+layout(std140, binding = 0) uniform UniformBlockDynamicTcs
 {
 	float TessellationLevelOuter;	// Outer tessellation level
 	float TessellationLevelInner;	// Inner tessellation level
@@ -88,20 +90,21 @@ void main()
 //[ Tessellation evaluation shader source code            ]
 //[-------------------------------------------------------]
 // One tessellation evaluation shader invocation per point from tessellator
-tessellationEvaluationShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
+tessellationEvaluationShaderSourceCode = R"(#version 450 core	// OpenGL 4.5
+#extension GL_ARB_separate_shader_objects : enable	// The "GL_ARB_separate_shader_objects"-extension is required for Vulkan shaders to work
 
 // Attribute input/output
 layout(triangles, equal_spacing, cw) in;
-in  vec3 tcPosition[];		// Object space control point position of the patch we received from the tessellation control shader (TCS) as input
-out gl_PerVertex
+layout(location = 0) in vec3 tcPosition[];	// Object space control point position of the patch we received from the tessellation control shader (TCS) as input
+layout(location = 0) out gl_PerVertex
 {
 	vec4 gl_Position;
 };
-out vec3 tePosition;		// Interpolated object space vertex position inside the patch as output
-out vec3 tePatchDistance;	// The barycentric coordinate inside the patch we received from the tessellator as output
+layout(location = 1) out vec3 tePosition;		// Interpolated object space vertex position inside the patch as output
+layout(location = 2) out vec3 tePatchDistance;	// The barycentric coordinate inside the patch we received from the tessellator as output
 
 // Uniforms
-layout(std140) uniform UniformBlockStaticTes
+layout(std140, binding = 1) uniform UniformBlockStaticTes
 {
 	mat4 ObjectSpaceToClipSpaceMatrix;	// Object space to clip space matrix
 };
@@ -132,56 +135,61 @@ void main()
 //[ Geometry shader source code                           ]
 //[-------------------------------------------------------]
 // One geometry shader invocation per primitive
-geometryShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
+geometryShaderSourceCode = R"(#version 450 core	// OpenGL 4.5
+#extension GL_ARB_separate_shader_objects : enable	// The "GL_ARB_separate_shader_objects"-extension is required for Vulkan shaders to work
 
 // Attribute input/output
 layout(triangles) in;
 layout(triangle_strip, max_vertices = 3) out;
-in gl_PerVertex
+layout(location = 0) in gl_PerVertex
 {
 	vec4 gl_Position;
 } gl_in[3];
-in  vec3 tePosition[3];			// Interpolated object space vertex position inside the patch we received from the tessellation evaluation shader (TES) as input
-in  vec3 tePatchDistance[3];	// The barycentric coordinate inside the patch from the tessellator we received from the tessellation evaluation shader (TES) as input
-out gl_PerVertex
+layout(location = 1) in vec3 tePosition[3];			// Interpolated object space vertex position inside the patch we received from the tessellation evaluation shader (TES) as input
+layout(location = 2) in vec3 tePatchDistance[3];	// The barycentric coordinate inside the patch from the tessellator we received from the tessellation evaluation shader (TES) as input
+layout(location = 0) out gl_PerVertex
 {
 	vec4 gl_Position;
 };
-out vec3 gFacetNormal;			// Normalized normal of the primitive as output
-out vec3 gPatchDistance;		// The barycentric coordinate inside the patch from the tessellator as output
-out vec3 gTriDistance;			// Local triangle vertex position as output
+layout(location = 1) out vec3 gFacetNormal;			// Normalized normal of the primitive as output
+layout(location = 2) out vec3 gPatchDistance;		// The barycentric coordinate inside the patch from the tessellator as output
+layout(location = 3) out vec3 gTriDistance;			// Local triangle vertex position as output
 
 // Uniforms
-layout(std140) uniform UniformBlockStaticGs
+layout(std140, binding = 2) uniform UniformBlockStaticGs
 {
 	// TODO(co) mat3
 	mat4 NormalMatrix;	// Object space to clip space rotation matrix
 };
 
 // Programs
+// -> Compensate for different Vulkan coordinate system
 void main()
 {
 	vec3 A = tePosition[2] - tePosition[0];
 	vec3 B = tePosition[1] - tePosition[0];
 	// TODO(co) mat3
-	gFacetNormal = (NormalMatrix * vec4(normalize(cross(A, B)), 1.0)).xyz;
+	gFacetNormal = -(NormalMatrix * vec4(normalize(cross(A, B)), 1.0)).xyz;
 
 	// Emit vertex 0
 	gPatchDistance = tePatchDistance[0];
 	gTriDistance = vec3(1.0, 0.0, 0.0);
 	gl_Position = gl_in[0].gl_Position;
+	gl_Position.y = -gl_Position.y;
 	EmitVertex();
 
 	// Emit vertex 1
 	gPatchDistance = tePatchDistance[1];
 	gTriDistance = vec3(0.0, 1.0, 0.0);
 	gl_Position = gl_in[1].gl_Position;
+	gl_Position.y = -gl_Position.y;
 	EmitVertex();
 
 	// Emit vertex 2
 	gPatchDistance = tePatchDistance[2];
 	gTriDistance = vec3(0.0, 0.0, 1.0);
 	gl_Position = gl_in[2].gl_Position;
+	gl_Position.y = -gl_Position.y;
 	EmitVertex();
 
 	EndPrimitive();
@@ -193,16 +201,17 @@ void main()
 //[ Fragment shader source code                           ]
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
-fragmentShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
+fragmentShaderSourceCode = R"(#version 450 core	// OpenGL 4.5
+#extension GL_ARB_separate_shader_objects : enable	// The "GL_ARB_separate_shader_objects"-extension is required for Vulkan shaders to work
 
 // Attributes
-in vec3 gFacetNormal;	// Normalized normal of the primitive we received from the geometry shader (GS) as input
-in vec3 gPatchDistance;	// The barycentric coordinate inside the patch from the tessellator we received from the geometry shader (GS) as input
-in vec3 gTriDistance;	// Local triangle vertex position we received from the geometry shader (GS) as input
+layout(location = 1) in vec3 gFacetNormal;		// Normalized normal of the primitive we received from the geometry shader (GS) as input
+layout(location = 2) in vec3 gPatchDistance;	// The barycentric coordinate inside the patch from the tessellator we received from the geometry shader (GS) as input
+layout(location = 3) in vec3 gTriDistance;		// Local triangle vertex position we received from the geometry shader (GS) as input
 layout(location = 0) out vec4 OutFragmentColor;
 
 // Uniforms
-layout(std140) uniform UniformBlockStaticFs
+layout(std140, binding = 3) uniform UniformBlockStaticFs
 {
 	// TODO(co) vec3
 	vec4 LightPosition;

@@ -28,6 +28,8 @@
 
 #include <Renderer/ILog.h>
 
+#include <array>
+#include <vector>
 #include <memory.h>
 
 
@@ -94,27 +96,29 @@ namespace VulkanRenderer
 		IRootSignature(vulkanRenderer),
 		mRootSignature(rootSignature),
 		mSamplerStates(nullptr),
-		mVkPipelineLayout(VK_NULL_HANDLE)
+		mVkDescriptorSetLayout(VK_NULL_HANDLE),
+		mVkPipelineLayout(VK_NULL_HANDLE),
+		mVkDescriptorPool(VK_NULL_HANDLE),
+		mVkDescriptorSet(VK_NULL_HANDLE)
 	{
-		{ // Copy the parameter data
-			const uint32_t numberOfParameters = mRootSignature.numberOfParameters;
-			if (numberOfParameters > 0)
-			{
-				mRootSignature.parameters = new Renderer::RootParameter[numberOfParameters];
-				Renderer::RootParameter* destinationRootParameters = const_cast<Renderer::RootParameter*>(mRootSignature.parameters);
-				memcpy(destinationRootParameters, rootSignature.parameters, sizeof(Renderer::RootParameter) * numberOfParameters);
+		// Copy the parameter data
+		const uint32_t numberOfParameters = mRootSignature.numberOfParameters;
+		if (numberOfParameters > 0)
+		{
+			mRootSignature.parameters = new Renderer::RootParameter[numberOfParameters];
+			Renderer::RootParameter* destinationRootParameters = const_cast<Renderer::RootParameter*>(mRootSignature.parameters);
+			memcpy(destinationRootParameters, rootSignature.parameters, sizeof(Renderer::RootParameter) * numberOfParameters);
 
-				// Copy the descriptor table data
-				for (uint32_t i = 0; i < numberOfParameters; ++i)
+			// Copy the descriptor table data
+			for (uint32_t i = 0; i < numberOfParameters; ++i)
+			{
+				Renderer::RootParameter& destinationRootParameter = destinationRootParameters[i];
+				const Renderer::RootParameter& sourceRootParameter = rootSignature.parameters[i];
+				if (Renderer::RootParameterType::DESCRIPTOR_TABLE == destinationRootParameter.parameterType)
 				{
-					Renderer::RootParameter& destinationRootParameter = destinationRootParameters[i];
-					const Renderer::RootParameter& sourceRootParameter = rootSignature.parameters[i];
-					if (Renderer::RootParameterType::DESCRIPTOR_TABLE == destinationRootParameter.parameterType)
-					{
-						const uint32_t numberOfDescriptorRanges = destinationRootParameter.descriptorTable.numberOfDescriptorRanges;
-						destinationRootParameter.descriptorTable.descriptorRanges = reinterpret_cast<uintptr_t>(new Renderer::DescriptorRange[numberOfDescriptorRanges]);
-						memcpy(reinterpret_cast<Renderer::DescriptorRange*>(destinationRootParameter.descriptorTable.descriptorRanges), reinterpret_cast<const Renderer::DescriptorRange*>(sourceRootParameter.descriptorTable.descriptorRanges), sizeof(Renderer::DescriptorRange) * numberOfDescriptorRanges);
-					}
+					const uint32_t numberOfDescriptorRanges = destinationRootParameter.descriptorTable.numberOfDescriptorRanges;
+					destinationRootParameter.descriptorTable.descriptorRanges = reinterpret_cast<uintptr_t>(new Renderer::DescriptorRange[numberOfDescriptorRanges]);
+					memcpy(reinterpret_cast<Renderer::DescriptorRange*>(destinationRootParameter.descriptorTable.descriptorRanges), reinterpret_cast<const Renderer::DescriptorRange*>(sourceRootParameter.descriptorTable.descriptorRanges), sizeof(Renderer::DescriptorRange) * numberOfDescriptorRanges);
 				}
 			}
 		}
@@ -135,30 +139,208 @@ namespace VulkanRenderer
 			memset(mSamplerStates, 0, sizeof(SamplerState*) * mRootSignature.numberOfParameters);
 		}
 
-		// Create the Vulkan pipeline layout
-		// TODO(co) Implement "VkPipelineLayout" creation, this here is just a dummy for the first triangle on screen
-		const VkPipelineLayoutCreateInfo vkPipelineLayoutCreateInfo =
+		// Create the Vulkan descriptor set layout
+		const VkDevice vkDevice = vulkanRenderer.getVulkanContext().getVkDevice();
+		typedef std::vector<VkDescriptorSetLayoutBinding> VkDescriptorSetLayoutBindings;
+		VkDescriptorSetLayoutBindings vkDescriptorSetLayoutBindings;
+		uint32_t numberOfSampledImages = 0;		// "VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE"
+		uint32_t numberOfUniformBuffers = 0;	// "VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER"
+		if (numberOfParameters > 0)
 		{
-			VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,	// sType (VkStructureType)
-			nullptr,										// pNext (const void*)
-			0,												// flags (VkPipelineLayoutCreateFlags)
-			0,												// setLayoutCount (uint32_t)
-			nullptr,										// pSetLayouts (const VkDescriptorSetLayout*)
-			0,												// pushConstantRangeCount (uint32_t)
-			nullptr											// pPushConstantRanges (const VkPushConstantRange*)
-		};
-		if (vkCreatePipelineLayout(vulkanRenderer.getVulkanContext().getVkDevice(), &vkPipelineLayoutCreateInfo, nullptr, &mVkPipelineLayout) != VK_SUCCESS)
-		{
-			RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create the Vulkan pipeline layout")
+			// Fill the Vulkan descriptor set layout bindings
+			vkDescriptorSetLayoutBindings.reserve(numberOfParameters);
+			for (uint32_t i = 0; i < numberOfParameters; ++i)
+			{
+				const Renderer::RootParameter& rootParameter = rootSignature.parameters[i];
+				if (Renderer::RootParameterType::DESCRIPTOR_TABLE == rootParameter.parameterType)
+				{
+					// TODO(co) For now, we only support a single descriptor range
+					if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
+					{
+						RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Only a single descriptor range is supported by the Vulkan renderer backend")
+					}
+					else
+					{
+						const Renderer::DescriptorRange* descriptorRange = reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges);
+
+						// Evaluate parameter type
+						VkDescriptorType vkDescriptorType = VK_DESCRIPTOR_TYPE_MAX_ENUM;
+						switch (descriptorRange->rangeType)
+						{
+							case Renderer::DescriptorRangeType::SRV:
+								vkDescriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
+								++numberOfSampledImages;
+								break;
+
+							case Renderer::DescriptorRangeType::UAV:
+								RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Vulkan renderer backend: \"Renderer::DescriptorRangeType::UAV\" is currently no supported descriptor range type")
+								break;
+
+							case Renderer::DescriptorRangeType::UBV:
+								vkDescriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+								++numberOfUniformBuffers;
+								break;
+
+							case Renderer::DescriptorRangeType::SAMPLER:
+								RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Vulkan renderer backend: \"Renderer::DescriptorRangeType::SAMPLER\" is currently no supported descriptor range type")
+								break;
+
+							case Renderer::DescriptorRangeType::NUMBER_OF_RANGE_TYPES:
+								RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Vulkan renderer backend: \"Renderer::DescriptorRangeType::NUMBER_OF_RANGE_TYPES\" is no valid descriptor range type")
+								break;
+						}
+
+						// Evaluate shader visibility
+						VkShaderStageFlags vkShaderStageFlags = VK_SHADER_STAGE_FLAG_BITS_MAX_ENUM;
+						switch (rootParameter.shaderVisibility)
+						{
+							case Renderer::ShaderVisibility::ALL:
+								vkShaderStageFlags = VK_SHADER_STAGE_ALL_GRAPHICS;
+								break;
+
+							case Renderer::ShaderVisibility::VERTEX:
+								vkShaderStageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+								break;
+
+							case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
+								vkShaderStageFlags = VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
+								break;
+
+							case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
+								vkShaderStageFlags = VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
+								break;
+
+							case Renderer::ShaderVisibility::GEOMETRY:
+								vkShaderStageFlags = VK_SHADER_STAGE_GEOMETRY_BIT;
+								break;
+
+							case Renderer::ShaderVisibility::FRAGMENT:
+								vkShaderStageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+								break;
+						}
+
+						// Add the Vulkan descriptor set layout binding
+						const VkDescriptorSetLayoutBinding vkDescriptorSetLayoutBinding =
+						{
+							i,					// binding (uint32_t)
+							vkDescriptorType,	// descriptorType (VkDescriptorType)
+							1,					// descriptorCount (uint32_t)
+							vkShaderStageFlags,	// stageFlags (VkShaderStageFlags)
+							nullptr				// pImmutableSamplers (const VkSampler*)
+						};
+						vkDescriptorSetLayoutBindings.push_back(vkDescriptorSetLayoutBinding);
+					}
+				}
+			}
+
+			// Create the Vulkan descriptor set layout
+			const VkDescriptorSetLayoutCreateInfo vkDescriptorSetLayoutCreateInfo =
+			{
+				VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,			// sType (VkStructureType)
+				nullptr,														// pNext (const void*)
+				0,																// flags (VkDescriptorSetLayoutCreateFlags)
+				static_cast<uint32_t>(vkDescriptorSetLayoutBindings.size()),	// bindingCount (uint32_t)
+				vkDescriptorSetLayoutBindings.data()							// pBindings (const VkDescriptorSetLayoutBinding*)
+			};
+			if (vkCreateDescriptorSetLayout(vkDevice, &vkDescriptorSetLayoutCreateInfo, nullptr, &mVkDescriptorSetLayout) != VK_SUCCESS)
+			{
+				RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create the Vulkan descriptor set layout")
+			}
+		}
+
+		{ // Create the Vulkan pipeline layout
+			const VkPipelineLayoutCreateInfo vkPipelineLayoutCreateInfo =
+			{
+				VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,					// sType (VkStructureType)
+				nullptr,														// pNext (const void*)
+				0,																// flags (VkPipelineLayoutCreateFlags)
+				(numberOfParameters > 0) ? 1u : 0u,								// setLayoutCount (uint32_t)
+				(numberOfParameters > 0) ? &mVkDescriptorSetLayout : nullptr,	// pSetLayouts (const VkDescriptorSetLayout*)
+				0,																// pushConstantRangeCount (uint32_t)
+				nullptr															// pPushConstantRanges (const VkPushConstantRange*)
+			};
+			if (vkCreatePipelineLayout(vkDevice, &vkPipelineLayoutCreateInfo, nullptr, &mVkPipelineLayout) != VK_SUCCESS)
+			{
+				RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create the Vulkan pipeline layout")
+			}
+		}
+
+		{ // Create the Vulkan descriptor pool
+			typedef std::array<VkDescriptorPoolSize, 2> VkDescriptorPoolSizes;
+			VkDescriptorPoolSizes vkDescriptorPoolSizes;
+			uint32_t numberOfVkDescriptorPoolSizes = 0;
+
+			// "VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE"
+			if (numberOfSampledImages > 0)
+			{
+				VkDescriptorPoolSize& vkDescriptorPoolSize = vkDescriptorPoolSizes[numberOfVkDescriptorPoolSizes];
+				vkDescriptorPoolSize.type			 = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;	// type (VkDescriptorType)
+				vkDescriptorPoolSize.descriptorCount = numberOfSampledImages;				// descriptorCount (uint32_t)
+				++numberOfVkDescriptorPoolSizes;
+			}
+
+			// "VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER"
+			if (numberOfUniformBuffers > 0)
+			{
+				VkDescriptorPoolSize& vkDescriptorPoolSize = vkDescriptorPoolSizes[numberOfVkDescriptorPoolSizes];
+				vkDescriptorPoolSize.type			 = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;	// type (VkDescriptorType)
+				vkDescriptorPoolSize.descriptorCount = numberOfUniformBuffers;				// descriptorCount (uint32_t)
+				++numberOfVkDescriptorPoolSizes;
+			}
+
+			// Create the Vulkan descriptor pool
+			const VkDescriptorPoolCreateInfo VkDescriptorPoolCreateInfo =
+			{
+				VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,	// sType (VkStructureType)
+				nullptr,										// pNext (const void*)
+				0,												// flags (VkDescriptorPoolCreateFlags)
+				1,												// maxSets (uint32_t)
+				numberOfVkDescriptorPoolSizes,					// poolSizeCount (uint32_t)
+				vkDescriptorPoolSizes.data()					// pPoolSizes (const VkDescriptorPoolSize*)
+			};
+			if (vkCreateDescriptorPool(vkDevice, &VkDescriptorPoolCreateInfo, nullptr, &mVkDescriptorPool) != VK_SUCCESS)
+			{
+				RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create the Vulkan descriptor pool")
+			}
+		}
+
+		{ // Allocate Vulkan descriptor set
+			const VkDescriptorSetLayout vkDescriptorSetLayout[] = { mVkDescriptorSetLayout };
+			const VkDescriptorSetAllocateInfo vkDescriptorSetAllocateInfo =
+			{
+				VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO,	// sType (VkStructureType)
+				nullptr,										// pNext (const void*)
+				mVkDescriptorPool,								// descriptorPool (VkDescriptorPool)
+				1,												// descriptorSetCount (uint32_t)
+				vkDescriptorSetLayout							// pSetLayouts (const VkDescriptorSetLayout*)
+			};
+			if (vkAllocateDescriptorSets(vkDevice, &vkDescriptorSetAllocateInfo, &mVkDescriptorSet) != VK_SUCCESS)
+			{
+				RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to allocate the Vulkan descriptor set")
+			}
 		}
 	}
 
 	RootSignature::~RootSignature()
 	{
+		const VkDevice vkDevice = static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice();
+
+		// Destroy the Vulkan descriptor pool
+		if (VK_NULL_HANDLE != mVkDescriptorPool)
+		{
+			vkDestroyDescriptorPool(vkDevice, mVkDescriptorPool, nullptr);
+		}
+
 		// Destroy the Vulkan pipeline layout
 		if (VK_NULL_HANDLE != mVkPipelineLayout)
 		{
-			vkDestroyPipelineLayout(static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), mVkPipelineLayout, nullptr);
+			vkDestroyPipelineLayout(vkDevice, mVkPipelineLayout, nullptr);
+		}
+
+		// Destroy the Vulkan descriptor set layout
+		if (VK_NULL_HANDLE != mVkDescriptorSetLayout)
+		{
+			vkDestroyDescriptorSetLayout(vkDevice, mVkDescriptorSetLayout, nullptr);
 		}
 
 		// Release all sampler state references

@@ -430,6 +430,10 @@ namespace VulkanRenderer
 
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			VULKANRENDERER_RENDERERMATCHCHECK_RETURN(*this, *rootSignature)
+
+			// Bind Vulkan descriptor sets
+			const VkDescriptorSet vkDescriptorSet = mGraphicsRootSignature->getVkDescriptorSet();
+			vkCmdBindDescriptorSets(getVulkanContext().getVkCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, mGraphicsRootSignature->getVkPipelineLayout(), 0, 1, &vkDescriptorSet, 0, nullptr);
 		}
 	}
 
@@ -487,8 +491,30 @@ namespace VulkanRenderer
 			switch (resourceType)
 			{
 				case Renderer::ResourceType::UNIFORM_BUFFER:
-					// TODO(co) Implement me
+				{
+					const UniformBuffer* uniformBuffer = static_cast<UniformBuffer*>(resource);
+					const VkDescriptorBufferInfo vkDescriptorBufferInfo =
+					{
+						uniformBuffer->getVkBuffer(),	// buffer (VkBuffer)
+						0,								// offset (VkDeviceSize)
+						VK_WHOLE_SIZE					// range (VkDeviceSize)
+					};
+					const VkWriteDescriptorSet vkWriteDescriptorSet =
+					{
+						VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,			// sType (VkStructureType)
+						nullptr,										// pNext (const void*)
+						mGraphicsRootSignature->getVkDescriptorSet(),	// dstSet (VkDescriptorSet)
+						rootParameterIndex,								// dstBinding (uint32_t)
+						0,												// dstArrayElement (uint32_t)
+						1,												// descriptorCount (uint32_t)
+						VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,				// descriptorType (VkDescriptorType)
+						nullptr,										// pImageInfo (const VkDescriptorImageInfo*)
+						&vkDescriptorBufferInfo,						// pBufferInfo (const VkDescriptorBufferInfo*)
+						nullptr											// pTexelBufferView (const VkBufferView*)
+					};
+					vkUpdateDescriptorSets(getVulkanContext().getVkDevice(), 1, &vkWriteDescriptorSet, 0, nullptr);
 					break;
+				}
 
 				case Renderer::ResourceType::TEXTURE_BUFFER:
 				case Renderer::ResourceType::TEXTURE_1D:

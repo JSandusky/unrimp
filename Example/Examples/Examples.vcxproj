@@ -450,6 +450,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
     <ClInclude Include="src\Advanced\FirstGpgpu\FirstGpgpu_Null.h" />
     <ClInclude Include="src\Advanced\IcosahedronTessellation\IcosahedronTessellation.h" />
     <ClInclude Include="src\Advanced\IcosahedronTessellation\IcosahedronTessellation_GLSL_410.h" />
+    <ClInclude Include="src\Advanced\IcosahedronTessellation\IcosahedronTessellation_GLSL_450.h" />
     <ClInclude Include="src\Advanced\IcosahedronTessellation\IcosahedronTessellation_HLSL_D3D11_D3D12.h" />
     <ClInclude Include="src\Advanced\IcosahedronTessellation\IcosahedronTessellation_Null.h" />
     <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererDrawInstanced\BatchDrawInstanced.h" />
