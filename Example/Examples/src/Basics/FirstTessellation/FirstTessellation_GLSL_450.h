@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Shader start                                          ]
 //[-------------------------------------------------------]
-#ifndef RENDERER_NO_OPENGL
+#ifndef RENDERER_NO_VULKAN
 if (0 == strcmp(renderer->getName(), "Vulkan"))
 {
 
