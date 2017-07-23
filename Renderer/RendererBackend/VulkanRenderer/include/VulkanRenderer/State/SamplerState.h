@@ -80,6 +80,15 @@ namespace VulkanRenderer
 		*/
 		virtual ~SamplerState();
 
+		/**
+		*  @brief
+		*    Return the Vulkan sampler
+		*
+		*  @return
+		*    The Vulkan sampler
+		*/
+		inline VkSampler getVkSampler() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
@@ -103,3 +112,9 @@ namespace VulkanRenderer
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // VulkanRenderer
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "VulkanRenderer/State/SamplerState.inl"

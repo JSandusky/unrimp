@@ -521,6 +521,7 @@ namespace VulkanRenderer
 		IMPORT_FUNC(vkGetImageSubresourceLayout);
 		IMPORT_FUNC(vkCmdCopyImage);
 		IMPORT_FUNC(vkCmdBlitImage);
+		IMPORT_FUNC(vkCmdCopyBufferToImage);
 		IMPORT_FUNC(vkDestroyImage);
 		IMPORT_FUNC(vkCmdClearAttachments);
 		IMPORT_FUNC(vkCmdCopyBuffer);
@@ -551,16 +552,20 @@ namespace VulkanRenderer
 		IMPORT_FUNC(vkUpdateDescriptorSets);
 		IMPORT_FUNC(vkCmdBindDescriptorSets);
 		IMPORT_FUNC(vkCmdBindPipeline);
-		IMPORT_FUNC(vkCmdBindVertexBuffers);
-		IMPORT_FUNC(vkCmdBindIndexBuffer);
 		IMPORT_FUNC(vkCmdSetViewport);
 		IMPORT_FUNC(vkCmdSetScissor);
 		IMPORT_FUNC(vkCmdSetLineWidth);
 		IMPORT_FUNC(vkCmdSetDepthBias);
 		IMPORT_FUNC(vkCmdPushConstants);
-		IMPORT_FUNC(vkCmdDrawIndexed);
+		IMPORT_FUNC(vkCmdBindIndexBuffer);
+		IMPORT_FUNC(vkCmdBindVertexBuffers);
 		IMPORT_FUNC(vkCmdDraw);
+		IMPORT_FUNC(vkCmdDrawIndexed);
+		IMPORT_FUNC(vkCmdDrawIndirect);
+		IMPORT_FUNC(vkCmdDrawIndexedIndirect);
 		IMPORT_FUNC(vkCmdDispatch);
+		IMPORT_FUNC(vkCmdClearColorImage);
+		IMPORT_FUNC(vkCmdClearDepthStencilImage);
 		IMPORT_FUNC(vkDestroyPipeline);
 		IMPORT_FUNC(vkDestroyPipelineLayout);
 		IMPORT_FUNC(vkDestroyDescriptorSetLayout);
@@ -580,8 +585,11 @@ namespace VulkanRenderer
 		IMPORT_FUNC(vkCmdCopyQueryPoolResults);
 
 		// "VK_EXT_debug_report"-extension
-		IMPORT_FUNC(vkCreateDebugReportCallbackEXT);
-		IMPORT_FUNC(vkDestroyDebugReportCallbackEXT);
+		if (mValidationEnabled)
+		{
+			IMPORT_FUNC(vkCreateDebugReportCallbackEXT);
+			IMPORT_FUNC(vkDestroyDebugReportCallbackEXT);
+		}
 
 		// "VK_KHR_surface"-extension
 		IMPORT_FUNC(vkDestroySurfaceKHR);

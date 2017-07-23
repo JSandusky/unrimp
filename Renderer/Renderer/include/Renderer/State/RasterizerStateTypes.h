@@ -114,7 +114,7 @@ namespace Renderer
 		int								antialiasedLineEnable;			///< Boolean value. Default: "false"
 		unsigned int					forcedSampleCount;				///< Default: "0"
 		ConservativeRasterizationMode	conservativeRasterizationMode;	///< Boolean value. >= Direct3D 12 only. Default: "false"
-		int								scissorEnable;					///< Boolean value. Not available in Direct3D 12 (scissor testing is always enabled). Default: "false"
+		int								scissorEnable;					///< Boolean value. Not available in Vulkan or Direct3D 12 (scissor testing is always enabled). Default: "false"
 	};
 	struct RasterizerStateBuilder
 	{

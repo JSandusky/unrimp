@@ -28,7 +28,12 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline ID3D12PipelineState *PipelineState::getD3D12PipelineState() const
+	inline D3D12_PRIMITIVE_TOPOLOGY PipelineState::getD3D12PrimitiveTopology() const
+	{
+		return mD3D12PrimitiveTopology;
+	}
+
+	inline ID3D12PipelineState* PipelineState::getD3D12PipelineState() const
 	{
 		return mD3D12PipelineState;
 	}

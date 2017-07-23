@@ -106,7 +106,7 @@ namespace OpenGLRenderer
 	OpenGLRuntimeLinking::OpenGLRuntimeLinking(OpenGLRenderer& openGLRenderer) :
 		mOpenGLRenderer(openGLRenderer),
 		mOpenGLSharedLibrary(mOpenGLRenderer.getContext().getRendererApiSharedLibrary()),
-		mOwnsOpenGLSharedLibrary(nullptr == mOpenGLSharedLibrary), // We can do this here because mOpenGLSharedLibrary lays before this variable
+		mOwnsOpenGLSharedLibrary(nullptr == mOpenGLSharedLibrary),	// We can do this here because "mOpenGLSharedLibrary" lays before this variable
 		mEntryPointsRegistered(false),
 		mInitialized(false)
 	{

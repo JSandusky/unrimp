@@ -156,7 +156,6 @@ namespace VulkanRenderer
 		//[ Input-assembler (IA) stage                            ]
 		//[-------------------------------------------------------]
 		void iaSetVertexArray(Renderer::IVertexArray* vertexArray);
-		void iaSetPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology);
 		//[-------------------------------------------------------]
 		//[ Rasterizer (RS) stage                                 ]
 		//[-------------------------------------------------------]
@@ -175,7 +174,9 @@ namespace VulkanRenderer
 		//[-------------------------------------------------------]
 		//[ Draw call                                             ]
 		//[-------------------------------------------------------]
+		void draw(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1);
 		void drawEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1);
+		void drawIndexed(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1);
 		void drawIndexedEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1);
 		//[-------------------------------------------------------]
 		//[ Debug                                                 ]
@@ -248,12 +249,9 @@ namespace VulkanRenderer
 
 		/**
 		*  @brief
-		*    Set program
-		*
-		*  @param[in] program
-		*    Program to set
+		*    Begin Vulkan render pass
 		*/
-		void setProgram(Renderer::IProgram* program);
+		void beginVulkanRenderPass();
 
 
 	//[-------------------------------------------------------]
@@ -266,7 +264,7 @@ namespace VulkanRenderer
 		Renderer::IShaderLanguage* mShaderLanguageGlsl;		///< GLSL shader language instance (we keep a reference to it), can be a null pointer
 		RootSignature*			   mGraphicsRootSignature;	///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
 		Renderer::ISamplerState*   mDefaultSamplerState;	///< Default rasterizer state (we keep a reference to it), can be a null pointer
-		VkCommandBuffer			   mVkCommandBuffer;		///< Vulkan command buffer instance
+		bool					   mInsideVulkanRenderPass;	///< Some Vulkan commands like "vkCmdClearColorImage()" can only be executed outside a Vulkan render pass, so need to delay starting a Vulkan render pass
 		//[-------------------------------------------------------]
 		//[ Input-assembler (IA) stage                            ]
 		//[-------------------------------------------------------]

@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
 #include "Direct3D12Renderer/D3D12X.h"
-#include "Direct3D12Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
+#include "Direct3D12Renderer/Guid.h"			// For "WKPDID_D3DDebugObjectName"
 #include "Direct3D12Renderer/Direct3D12Debug.h"	// For "DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN()"
 #include "Direct3D12Renderer/Direct3D12RuntimeLinking.h"
 #include "Direct3D12Renderer/RootSignature.h"
@@ -135,12 +135,6 @@ namespace
 			{
 				const Renderer::Command::SetVertexArray* realData = static_cast<const Renderer::Command::SetVertexArray*>(data);
 				static_cast<Direct3D12Renderer::Direct3D12Renderer&>(renderer).iaSetVertexArray(realData->vertexArray);
-			}
-
-			void SetPrimitiveTopology(const void* data, Renderer::IRenderer& renderer)
-			{
-				const Renderer::Command::SetPrimitiveTopology* realData = static_cast<const Renderer::Command::SetPrimitiveTopology*>(data);
-				static_cast<Direct3D12Renderer::Direct3D12Renderer&>(renderer).iaSetPrimitiveTopology(realData->primitiveTopology);
 			}
 
 			//[-------------------------------------------------------]
@@ -260,7 +254,6 @@ namespace
 			&BackendDispatch::SetPipelineState,
 			// Input-assembler (IA) stage
 			&BackendDispatch::SetVertexArray,
-			&BackendDispatch::SetPrimitiveTopology,
 			// Rasterizer (RS) stage
 			&BackendDispatch::SetViewports,
 			&BackendDispatch::SetScissorRectangles,
@@ -306,9 +299,10 @@ namespace Direct3D12Renderer
 		mD3D12CommandAllocator(nullptr),
 		mD3D12GraphicsCommandList(nullptr),
 		mShaderLanguageHlsl(nullptr),
-		mD3D12QueryFlush(nullptr),
+		// mD3D12QueryFlush(nullptr),	// TODO(co) Direct3D 12 update
 		mMainSwapChain(nullptr),
-		mRenderTarget(nullptr)
+		mRenderTarget(nullptr),
+		mD3D12PrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_UNDEFINED)
 	{
 		mDirect3D12RuntimeLinking = new Direct3D12RuntimeLinking(*this);
 
@@ -676,6 +670,15 @@ namespace Direct3D12Renderer
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			DIRECT3D12RENDERER_RENDERERMATCHCHECK_RETURN(*this, *pipelineState)
 
+			// Set primitive topology
+			// -> The "Renderer::PrimitiveTopology" values directly map to Direct3D 9 & 10 & 11 && 12 constants, do not change them
+			const PipelineState* direct3D12PipelineState = static_cast<const PipelineState*>(pipelineState);
+			if (mD3D12PrimitiveTopology != direct3D12PipelineState->getD3D12PrimitiveTopology())
+			{
+				mD3D12PrimitiveTopology = direct3D12PipelineState->getD3D12PrimitiveTopology();
+				mD3D12GraphicsCommandList->IASetPrimitiveTopology(mD3D12PrimitiveTopology);
+			}
+
 			// Set graphics pipeline state
 			mD3D12GraphicsCommandList->SetPipelineState(static_cast<PipelineState*>(pipelineState)->getD3D12PipelineState());
 		}
@@ -711,49 +714,30 @@ namespace Direct3D12Renderer
 		}
 	}
 
-	void Direct3D12Renderer::iaSetPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology)
-	{
-		// Set primitive topology
-		// -> The "Renderer::PrimitiveTopology" values directly map to Direct3D 9 & 10 & 11 && 12 constants, do not change them
-		mD3D12GraphicsCommandList->IASetPrimitiveTopology(static_cast<D3D12_PRIMITIVE_TOPOLOGY>(primitiveTopology));
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Rasterizer (RS) stage                                 ]
 	//[-------------------------------------------------------]
 	void Direct3D12Renderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport* viewports)
 	{
-		// Are the given viewports valid?
-		if (numberOfViewports > 0 && nullptr != viewports)
-		{
-			// Set the Direct3D 12 viewports
-			// -> "Renderer::Viewport" directly maps to Direct3D 12, do not change it
-			// -> Let Direct3D 12 perform the index validation for us (the Direct3D 12 debug features are pretty good)
-			mD3D12GraphicsCommandList->RSSetViewports(numberOfViewports, reinterpret_cast<const D3D12_VIEWPORT*>(viewports));
-		}
-		else
-		{
-			// Error!
-			assert(false);
-		}
+		// Sanity check
+		assert((numberOfViewports > 0 && nullptr != viewports) && "Invalid rasterizer state viewports");
+
+		// Set the Direct3D 12 viewports
+		// -> "Renderer::Viewport" directly maps to Direct3D 12, do not change it
+		// -> Let Direct3D 12 perform the index validation for us (the Direct3D 12 debug features are pretty good)
+		mD3D12GraphicsCommandList->RSSetViewports(numberOfViewports, reinterpret_cast<const D3D12_VIEWPORT*>(viewports));
 	}
 
 	void Direct3D12Renderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles)
 	{
-		// Are the given scissor rectangles valid?
-		if (numberOfScissorRectangles > 0 && nullptr != scissorRectangles)
-		{
-			// Set the Direct3D 12 scissor rectangles
-			// -> "Renderer::ScissorRectangle" directly maps to Direct3D 9 & 10 & 11 & 12, do not change it
-			// -> Let Direct3D 12 perform the index validation for us (the Direct3D 12 debug features are pretty good)
-			mD3D12GraphicsCommandList->RSSetScissorRects(numberOfScissorRectangles, reinterpret_cast<const D3D12_RECT*>(scissorRectangles));
-		}
-		else
-		{
-			// Error!
-			assert(false);
-		}
+		// Sanity check
+		assert((numberOfScissorRectangles > 0 && nullptr != scissorRectangles) && "Invalid rasterizer state scissor rectangles");
+
+		// Set the Direct3D 12 scissor rectangles
+		// -> "Renderer::ScissorRectangle" directly maps to Direct3D 9 & 10 & 11 & 12, do not change it
+		// -> Let Direct3D 12 perform the index validation for us (the Direct3D 12 debug features are pretty good)
+		mD3D12GraphicsCommandList->RSSetScissorRects(numberOfScissorRectangles, reinterpret_cast<const D3D12_RECT*>(scissorRectangles));
 	}
 
 
@@ -1081,8 +1065,9 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	void Direct3D12Renderer::drawEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		// Get indirect buffer data and perform security checks
+		// Sanity checks
 		assert(nullptr != emulationData);
+		assert(numberOfDraws > 0 && "Number of draws must not be zero");
 
 		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
 		emulationData += indirectBufferOffset;
@@ -1107,8 +1092,9 @@ namespace Direct3D12Renderer
 
 	void Direct3D12Renderer::drawIndexedEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		// Get indirect buffer data and perform security checks
+		// Sanity checks
 		assert(nullptr != emulationData);
+		assert(numberOfDraws > 0 && "Number of draws must not be zero");
 
 		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
 		emulationData += indirectBufferOffset;

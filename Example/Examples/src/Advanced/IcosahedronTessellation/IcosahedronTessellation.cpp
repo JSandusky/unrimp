@@ -102,7 +102,7 @@ void IcosahedronTessellation::onInitialization()
 				// Data source
 				0,											// inputSlot (uint32_t)
 				0,											// alignedByteOffset (uint32_t)
-				// Data source, instancing part
+				sizeof(float) * 3,							// strideInBytes (uint32_t)
 				0											// instancesPerElement (uint32_t)
 			}
 		};
@@ -161,13 +161,7 @@ void IcosahedronTessellation::onInitialization()
 			// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
 			//    reference of the used vertex buffer objects (VBO). If the reference counter of a
 			//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
-			const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
-			{
-				{ // Vertex buffer 0
-					vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer*)
-					sizeof(float) * 3	// strideInBytes (uint32_t)
-				}
-			};
+			const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] = { vertexBuffer };
 			mVertexArray = mBufferManager->createVertexArray(vertexAttributes, static_cast<uint32_t>(glm::countof(vertexArrayVertexBuffers)), vertexArrayVertexBuffers, indexBuffer);
 		}
 
@@ -210,7 +204,8 @@ void IcosahedronTessellation::onInitialization()
 				const char* tessellationEvaluationShaderSourceCode = nullptr;
 				const char* geometryShaderSourceCode = nullptr;
 				const char* fragmentShaderSourceCode = nullptr;
-				#include "IcosahedronTessellation_GLSL_410.h"
+				#include "IcosahedronTessellation_GLSL_450.h"	// For Vulkan
+				#include "IcosahedronTessellation_GLSL_410.h"	// macOS 10.11 only supports OpenGL 4.1 hence it's our OpenGL minimum
 				#include "IcosahedronTessellation_HLSL_D3D11_D3D12.h"
 				#include "IcosahedronTessellation_Null.h"
 
@@ -229,6 +224,7 @@ void IcosahedronTessellation::onInitialization()
 			if (nullptr != program)
 			{
 				Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes);
+				pipelineState.primitiveTopology = Renderer::PrimitiveTopology::PATCH_LIST_3;	// Patch list with 3 vertices per patch (tessellation relevant topology type) - "Renderer::PrimitiveTopology::TriangleList" used for tessellation
 				pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::PATCH;
 				mPipelineState = renderer->createPipelineState(pipelineState);
 			}
@@ -313,14 +309,8 @@ void IcosahedronTessellation::fillCommandBuffer()
 	// Set the used pipeline state object (PSO)
 	Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineState);
 
-	{ // Setup input assembly (IA)
-		// Set the used vertex array
-		Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArray);
-
-		// Set the primitive topology used for draw calls
-		// -> Patch list with 3 vertices per patch (tessellation relevant topology type) - "Renderer::PrimitiveTopology::TriangleList" used for tessellation
-		Renderer::Command::SetPrimitiveTopology::create(mCommandBuffer, Renderer::PrimitiveTopology::PATCH_LIST_3);
-	}
+	// Input assembly (IA): Set the used vertex array
+	Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArray);
 
 	// Render the specified geometric primitive, based on indexing into an array of vertices
 	Renderer::Command::DrawIndexed::create(mCommandBuffer, 60);

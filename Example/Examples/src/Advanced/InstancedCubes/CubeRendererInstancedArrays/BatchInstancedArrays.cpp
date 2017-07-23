@@ -111,17 +111,7 @@ void BatchInstancedArrays::initialize(Renderer::IBufferManager& bufferManager, R
 			// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
 			//    reference of the used vertex buffer objects (VBO). If the reference counter of a
 			//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
-			const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
-			{
-				{ // Vertex buffer 0
-					&vertexBuffer,				// vertexBuffer (Renderer::IVertexBuffer*)
-					sizeof(float) * (3 + 2 + 3)	// strideInBytes (uint32_t)
-				},
-				{ // Vertex buffer 1
-					vertexBufferPerInstanceData,	// vertexBuffer (Renderer::IVertexBuffer*)
-					sizeof(float) * 4 * 2			// strideInBytes (uint32_t)
-				}
-			};
+			const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] = { &vertexBuffer, vertexBufferPerInstanceData };
 			mVertexArray = bufferManager.createVertexArray(vertexAttributes, static_cast<uint32_t>(glm::countof(vertexArrayVertexBuffers)), vertexArrayVertexBuffers, &indexBuffer);
 		}
 

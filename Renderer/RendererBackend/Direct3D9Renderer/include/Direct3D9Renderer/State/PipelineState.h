@@ -90,6 +90,15 @@ namespace Direct3D9Renderer
 
 		/**
 		*  @brief
+		*    Return the primitive topology
+		*
+		*  @return
+		*    The primitive topology
+		*/
+		inline Renderer::PrimitiveTopology getPrimitiveTopology() const;
+
+		/**
+		*  @brief
 		*    Return the Direct3D 9 vertex declaration instance
 		*
 		*  @return
@@ -124,6 +133,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	private:
 		IDirect3DDevice9*			 mDirect3DDevice9;				///< The Direct3D 9 device instance (we keep a reference to it), null pointer on horrible error (so we don't check)
+		Renderer::PrimitiveTopology  mPrimitiveTopology;
 		Renderer::IProgram*			 mProgram;
 		IDirect3DVertexDeclaration9* mDirect3DVertexDeclaration9;	///< Direct3D 9 vertex declaration instance, can be a null pointer
 		RasterizerState*			 mRasterizerState;

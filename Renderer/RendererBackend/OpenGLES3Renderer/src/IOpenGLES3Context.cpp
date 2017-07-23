@@ -24,13 +24,15 @@
 #include "OpenGLES3Renderer/IOpenGLES3Context.h"
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
-#include "Renderer/Context.h"
+#include <Renderer/Context.h>
 
 #include <EGL/eglext.h>
 
 #ifdef ANDROID
 	#include <android/native_window.h>	// For "ANativeWindow_setBuffersGeometry()"
 #endif
+
+#include <tuple>	// For "std::ignore"
 
 
 //[-------------------------------------------------------]
@@ -209,7 +211,7 @@ namespace OpenGLES3Renderer
 		#if (defined(LINUX) && !defined(ANDROID))
 			const Renderer::Context& context = openGLES3Renderer.getContext();
 
-			// If the given renderer context is an x11 context use the display connection object provided by the context
+			// If the given renderer context is an X11 context use the display connection object provided by the context
 			if (context.getType() == Renderer::Context::ContextType::X11)
 			{
 				mX11Display = static_cast<const Renderer::X11Context&>(context).getDisplay();
@@ -220,6 +222,8 @@ namespace OpenGLES3Renderer
 			{
 				mX11Display = XOpenDisplay(nullptr);
 			}
+		#else
+			std::ignore = openGLES3Renderer;
 		#endif
 	}
 

@@ -87,16 +87,16 @@ public:
 	*/
 	inline void redraw();
 
-#ifdef LINUX
-	/**
-	*  @brief
-	*    Return the X11 display connection object
-	*
-	*  @remarks
-	*    The X11 display connection object, can be a nullptr
-	*/
-	inline Display* getX11Display() const;
-#endif
+	#ifdef LINUX
+		/**
+		*  @brief
+		*    Return the X11 display connection object
+		*
+		*  @note
+		*    - The X11 display connection object, can be a null pointer
+		*/
+		inline Display* getX11Display() const;
+	#endif
 
 
 //[-------------------------------------------------------]

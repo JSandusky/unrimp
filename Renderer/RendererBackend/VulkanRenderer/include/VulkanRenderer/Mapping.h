@@ -25,6 +25,17 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include <Renderer/Buffer/VertexArrayTypes.h>
+#include <Renderer/Buffer/IndexBufferTypes.h>
+#include <Renderer/State/PipelineStateTypes.h>
+#include <Renderer/State/SamplerStateTypes.h>
+
+#include "VulkanRenderer/Vulkan.h"
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace VulkanRenderer
@@ -46,7 +57,134 @@ namespace VulkanRenderer
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
 	public:
-		// TODO(co) Implement me
+		//[-------------------------------------------------------]
+		//[ Renderer::FilterMode                                  ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    "Renderer::FilterMode" to Vulkan magnification filter mode
+		*
+		*  @param[in] filterMode
+		*    "Renderer::FilterMode" to map
+		*
+		*  @return
+		*    Vulkan magnification filter mode
+		*/
+		static VkFilter getVulkanMagFilterMode(Renderer::FilterMode filterMode);
+
+		/**
+		*  @brief
+		*    "Renderer::FilterMode" to Vulkan minification filter mode
+		*
+		*  @param[in] filterMode
+		*    "Renderer::FilterMode" to map
+		*
+		*  @return
+		*    Vulkan minification filter mode
+		*/
+		static VkFilter getVulkanMinFilterMode(Renderer::FilterMode filterMode);
+
+		/**
+		*  @brief
+		*    "Renderer::FilterMode" to Vulkan sampler mipmap mode
+		*
+		*  @param[in] filterMode
+		*    "Renderer::FilterMode" to map
+		*
+		*  @return
+		*    Vulkan sampler mipmap mode
+		*/
+		static VkSamplerMipmapMode getVulkanMipmapMode(Renderer::FilterMode filterMode);
+
+		//[-------------------------------------------------------]
+		//[ Renderer::TextureAddressMode                          ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    "Renderer::TextureAddressMode" to Vulkan texture address mode
+		*
+		*  @param[in] textureAddressMode
+		*    "Renderer::TextureAddressMode" to map
+		*
+		*  @return
+		*    Vulkan texture address mode
+		*/
+		static VkSamplerAddressMode getVulkanTextureAddressMode(Renderer::TextureAddressMode textureAddressMode);
+
+		//[-------------------------------------------------------]
+		//[ Renderer::ComparisonFunc                              ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    "Renderer::ComparisonFunc" to Vulkan comparison function
+		*
+		*  @param[in] comparisonFunc
+		*    "Renderer::ComparisonFunc" to map
+		*
+		*  @return
+		*    Vulkan comparison function
+		*/
+		static VkCompareOp getVulkanComparisonFunc(Renderer::ComparisonFunc comparisonFunc);
+
+		//[-------------------------------------------------------]
+		//[ Renderer::VertexAttributeFormat and semantic          ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    "Renderer::VertexAttributeFormat" to Vulkan format
+		*
+		*  @param[in] vertexAttributeFormat
+		*    "Renderer::VertexAttributeFormat" to map
+		*
+		*  @return
+		*    Vulkan format
+		*/
+		static VkFormat getVulkanFormat(Renderer::VertexAttributeFormat vertexAttributeFormat);
+
+		//[-------------------------------------------------------]
+		//[ Renderer::IndexBufferFormat                           ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    "Renderer::IndexBufferFormat" to Vulkan type
+		*
+		*  @param[in] indexBufferFormat
+		*    "Renderer::IndexBufferFormat" to map
+		*
+		*  @return
+		*    Vulkan index type
+		*/
+		static VkIndexType getVulkanType(Renderer::IndexBufferFormat::Enum indexBufferFormat);
+
+		//[-------------------------------------------------------]
+		//[ Renderer::PrimitiveTopology                           ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    "Renderer::PrimitiveTopology" to Vulkan type
+		*
+		*  @param[in] primitiveTopology
+		*    "Renderer::PrimitiveTopology" to map
+		*
+		*  @return
+		*    Vulkan type
+		*/
+		static VkPrimitiveTopology getVulkanType(Renderer::PrimitiveTopology primitiveTopology);
+
+		//[-------------------------------------------------------]
+		//[ Renderer::TextureFormat                               ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    "Renderer::TextureFormat" to Vulkan format
+		*
+		*  @param[in] textureFormat
+		*    "Renderer::TextureFormat" to map
+		*
+		*  @return
+		*    Vulkan format
+		*/
+		static VkFormat getVulkanFormat(Renderer::TextureFormat::Enum textureFormat);
 
 
 	};

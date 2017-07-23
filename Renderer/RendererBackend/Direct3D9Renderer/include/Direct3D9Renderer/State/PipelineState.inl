@@ -28,6 +28,11 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline Renderer::PrimitiveTopology PipelineState::getPrimitiveTopology() const
+	{
+		return mPrimitiveTopology;
+	}
+
 	inline IDirect3DVertexDeclaration9* PipelineState::getDirect3DVertexDeclaration9() const
 	{
 		return mDirect3DVertexDeclaration9;

@@ -24,6 +24,9 @@
 #include "VulkanRenderer/RenderTarget/SwapChain.h"
 #include "VulkanRenderer/VulkanRenderer.h"
 #include "VulkanRenderer/VulkanContext.h"
+#include "VulkanRenderer/Helper.h"
+
+#include <Renderer/ILog.h>
 
 #include <sstream>
 
@@ -195,7 +198,7 @@ namespace
 				return swapChainExtent;
 			}
 
-			// Most of the cases we define size of the swap_chain images equal to current window's size
+			// Most of the cases we define size of the swap chain images equal to current window's size
 			return vkSurfaceCapabilitiesKHR.currentExtent;
 		}
 
@@ -280,7 +283,7 @@ namespace
 				0,									// flags (VkAttachmentDescriptionFlags)
 				vkFormat,							// format (VkFormat)
 				VK_SAMPLE_COUNT_1_BIT,				// samples (VkSampleCountFlagBits)
-				VK_ATTACHMENT_LOAD_OP_CLEAR,		// loadOp (VkAttachmentLoadOp)
+				VK_ATTACHMENT_LOAD_OP_DONT_CARE,	// loadOp (VkAttachmentLoadOp)
 				VK_ATTACHMENT_STORE_OP_STORE,		// storeOp (VkAttachmentStoreOp)
 				VK_ATTACHMENT_LOAD_OP_DONT_CARE,	// stencilLoadOp (VkAttachmentLoadOp)
 				VK_ATTACHMENT_STORE_OP_DONT_CARE,	// stencilStoreOp (VkAttachmentStoreOp)
@@ -365,7 +368,8 @@ namespace VulkanRenderer
 		mVkSwapchainKHR(VK_NULL_HANDLE),
 		mVkRenderPass(VK_NULL_HANDLE),
 		mImageAvailableVkSemaphore(VK_NULL_HANDLE),
-		mRenderingFinishedVkSemaphore(VK_NULL_HANDLE)
+		mRenderingFinishedVkSemaphore(VK_NULL_HANDLE),
+		mCurrentImageIndex(~0u)
 	{
 		// Create the Vulkan presentation surface instance depending on the operation system
 		const VulkanContext&   vulkanContext	= vulkanRenderer.getVulkanContext();
@@ -376,21 +380,6 @@ namespace VulkanRenderer
 		{
 			// Create the Vulkan swap chain
 			createVulkanSwapChain();
-
-			{ // Create the Vulkan semaphores
-				const VkSemaphoreCreateInfo vkSemaphoreCreateInfo =
-				{
-					VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,	// sType (VkStructureType)
-					nullptr,									// pNext (const void*)
-					0											// flags (VkSemaphoreCreateFlags)
-				};
-				const VkDevice vkDevice = vulkanContext.getVkDevice();
-				if ((vkCreateSemaphore(vkDevice, &vkSemaphoreCreateInfo, nullptr, &mImageAvailableVkSemaphore) != VK_SUCCESS) ||
-					(vkCreateSemaphore(vkDevice, &vkSemaphoreCreateInfo, nullptr, &mRenderingFinishedVkSemaphore) != VK_SUCCESS))
-				{
-					RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create Vulkan semaphore")
-				}
-			}
 		}
 		else
 		{
@@ -403,14 +392,6 @@ namespace VulkanRenderer
 	{
 		if (VK_NULL_HANDLE != mVkSurfaceKHR)
 		{
-			if (VK_NULL_HANDLE != mImageAvailableVkSemaphore)
-			{
-				vkDestroySemaphore(static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), mImageAvailableVkSemaphore, nullptr);
-			}
-			if (VK_NULL_HANDLE != mRenderingFinishedVkSemaphore)
-			{
-				vkDestroySemaphore(static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), mRenderingFinishedVkSemaphore, nullptr);
-			}
 			destroyVulkanSwapChain();
 			vkDestroySurfaceKHR(static_cast<VulkanRenderer&>(getRenderer()).getVulkanRuntimeLinking().getVkInstance(), mVkSurfaceKHR, nullptr);
 		}
@@ -513,27 +494,75 @@ namespace VulkanRenderer
 
 	void SwapChain::present()
 	{
+		// TODO(co) "Renderer::IRenderWindow::present()" support
+		/*
 		if (nullptr != mRenderWindow)
 		{
 			mRenderWindow->present();
 			return;
 		}
-		#ifdef WIN32
-			// TODO(co) Implement me
-			/*
-			HDC hDC = ::GetDC(reinterpret_cast<HWND>(mNativeWindowHandle));
-			::SwapBuffers(hDC);
-			::ReleaseDC(reinterpret_cast<HWND>(mNativeWindowHandle), hDC);
-			*/
-		#elif defined LINUX
-			// TODO(co) Implement me
-			/*
-			VulkanRenderer& vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
-			glXSwapBuffers(static_cast<const VulkanContextLinux&>(vulkanRenderer.getVulkanContext()).getDisplay(), mNativeWindowHandle);
-			*/
-		#else
-			#error "Unsupported platform"
-		#endif
+		*/
+
+		// Get the Vulkan context
+		const VulkanRenderer& vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
+		const VulkanContext& vulkanContext = vulkanRenderer.getVulkanContext();
+
+		{ // Queue submit
+			const VkPipelineStageFlags waitDstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+			const VkCommandBuffer vkCommandBuffer = vulkanContext.getVkCommandBuffer();
+			const VkSubmitInfo vkSubmitInfo =
+			{
+				VK_STRUCTURE_TYPE_SUBMIT_INFO,	// sType (VkStructureType)
+				nullptr,						// pNext (const void*)
+				1,								// waitSemaphoreCount (uint32_t)
+				&mImageAvailableVkSemaphore,	// pWaitSemaphores (const VkSemaphore*)
+				&waitDstStageMask,				// pWaitDstStageMask (const VkPipelineStageFlags*)
+				1,								// commandBufferCount (uint32_t)
+				&vkCommandBuffer,				// pCommandBuffers (const VkCommandBuffer*)
+				1,								// signalSemaphoreCount (uint32_t)
+				&mRenderingFinishedVkSemaphore	// pSignalSemaphores (const VkSemaphore*)
+			};
+			if (vkQueueSubmit(vulkanContext.getGraphicsVkQueue(), 1, &vkSubmitInfo, VK_NULL_HANDLE) != VK_SUCCESS)
+			{
+				// Error!
+				RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Vulkan queue submit failed")
+				return;
+			}
+		}
+
+		{ // Queue present
+			const VkPresentInfoKHR vkPresentInfoKHR =
+			{
+				VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,	// sType (VkStructureType)
+				nullptr,							// pNext (const void*)
+				1,									// waitSemaphoreCount (uint32_t)
+				&mRenderingFinishedVkSemaphore,		// pWaitSemaphores (const VkSemaphore*)
+				1,									// swapchainCount (uint32_t)
+				&mVkSwapchainKHR,					// pSwapchains (const VkSwapchainKHR*)
+				&mCurrentImageIndex,				// pImageIndices (const uint32_t*)
+				nullptr								// pResults (VkResult*)
+			};
+			const VkResult vkResult = vkQueuePresentKHR(vulkanContext.getPresentVkQueue(), &vkPresentInfoKHR);
+			if (VK_SUCCESS != vkResult)
+			{
+				if (VK_ERROR_OUT_OF_DATE_KHR == vkResult || VK_SUBOPTIMAL_KHR == vkResult)
+				{
+					// Recreate the Vulkan swap chain
+					createVulkanSwapChain();
+					return;
+				}
+				else
+				{
+					// Error!
+					RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to present Vulkan queue")
+					return;
+				}
+			}
+			vkQueueWaitIdle(vulkanContext.getPresentVkQueue());
+		}
+
+		// Acquire next image
+		acquireNextImage(true);
 	}
 
 	void SwapChain::resizeBuffers()
@@ -562,7 +591,8 @@ namespace VulkanRenderer
 		const Renderer::Context& context = getRenderer().getContext();
 
 		// Get the Vulkan physical device
-		const VulkanContext&   vulkanContext	= static_cast<const VulkanRenderer&>(getRenderer()).getVulkanContext();
+		const VulkanRenderer&  vulkanRenderer	= static_cast<const VulkanRenderer&>(getRenderer());
+		const VulkanContext&   vulkanContext	= vulkanRenderer.getVulkanContext();
 		const VkPhysicalDevice vkPhysicalDevice	= vulkanContext.getVkPhysicalDevice();
 		const VkDevice		   vkDevice			= vulkanContext.getVkDevice();
 
@@ -667,34 +697,8 @@ namespace VulkanRenderer
 				SwapChainBuffer& swapChainBuffer = mSwapChainBuffer[i];
 				swapChainBuffer.vkImage = vkImages[i];
 
-				{ // Create the Vulkan image view
-					const VkImageViewCreateInfo vkImageViewCreateInfo =
-					{
-						VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,	// sType (VkStructureType)
-						nullptr,									// pNext (const void*)
-						0,											// flags (VkImageViewCreateFlags)
-						swapChainBuffer.vkImage,						// image (VkImage)
-						VK_IMAGE_VIEW_TYPE_2D,						// viewType (VkImageViewType)
-						desiredVkSurfaceFormatKHR.format,			// format (VkFormat)
-						{ // components (VkComponentMapping)
-							VK_COMPONENT_SWIZZLE_IDENTITY,			// r (VkComponentSwizzle)
-							VK_COMPONENT_SWIZZLE_IDENTITY,			// g (VkComponentSwizzle)
-							VK_COMPONENT_SWIZZLE_IDENTITY,			// b (VkComponentSwizzle)
-							VK_COMPONENT_SWIZZLE_IDENTITY			// a (VkComponentSwizzle)
-						},
-						{ // subresourceRange (VkImageSubresourceRange)
-							VK_IMAGE_ASPECT_COLOR_BIT,				// aspectMask (VkImageAspectFlags)
-							0,										// baseMipLevel (uint32_t)
-							1,										// levelCount (uint32_t)
-							0,										// baseArrayLayer (uint32_t)
-							1										// layerCount (uint32_t)
-						}
-					};
-					if (vkCreateImageView(vkDevice, &vkImageViewCreateInfo, nullptr, &swapChainBuffer.vkImageView) != VK_SUCCESS)
-					{
-						RENDERER_LOG(context, CRITICAL, "Failed to create Vulkan image view")
-					}
-				}
+				// Create the Vulkan image view
+				Helper::createVkImageView(vulkanRenderer, swapChainBuffer.vkImage, VK_IMAGE_VIEW_TYPE_2D, 1, desiredVkSurfaceFormatKHR.format, swapChainBuffer.vkImageView);
 
 				{ // Create the Vulkan framebuffer
 					const VkFramebufferCreateInfo vkFramebufferCreateInfo =
@@ -716,6 +720,23 @@ namespace VulkanRenderer
 				}
 			}
 		}
+
+		{ // Create the Vulkan semaphores
+			const VkSemaphoreCreateInfo vkSemaphoreCreateInfo =
+			{
+				VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,	// sType (VkStructureType)
+				nullptr,									// pNext (const void*)
+				0											// flags (VkSemaphoreCreateFlags)
+			};
+			if ((vkCreateSemaphore(vkDevice, &vkSemaphoreCreateInfo, nullptr, &mImageAvailableVkSemaphore) != VK_SUCCESS) ||
+				(vkCreateSemaphore(vkDevice, &vkSemaphoreCreateInfo, nullptr, &mRenderingFinishedVkSemaphore) != VK_SUCCESS))
+			{
+				RENDERER_LOG(context, CRITICAL, "Failed to create Vulkan semaphore")
+			}
+		}
+
+		// Acquire next image
+		acquireNextImage(false);
 	}
 
 	void SwapChain::destroyVulkanSwapChain()
@@ -742,6 +763,40 @@ namespace VulkanRenderer
 			{
 				vkDestroySwapchainKHR(vkDevice, mVkSwapchainKHR, nullptr);
 				mVkSwapchainKHR = VK_NULL_HANDLE;
+			}
+			if (VK_NULL_HANDLE != mImageAvailableVkSemaphore)
+			{
+				vkDestroySemaphore(static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), mImageAvailableVkSemaphore, nullptr);
+				mImageAvailableVkSemaphore = VK_NULL_HANDLE;
+			}
+			if (VK_NULL_HANDLE != mRenderingFinishedVkSemaphore)
+			{
+				vkDestroySemaphore(static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), mRenderingFinishedVkSemaphore, nullptr);
+				mRenderingFinishedVkSemaphore = VK_NULL_HANDLE;
+			}
+		}
+	}
+
+	void SwapChain::acquireNextImage(bool recreateSwapChainIfNeeded)
+	{
+		const VulkanRenderer& vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
+		const VkResult vkResult = vkAcquireNextImageKHR(vulkanRenderer.getVulkanContext().getVkDevice(), mVkSwapchainKHR, UINT64_MAX, mImageAvailableVkSemaphore, VK_NULL_HANDLE, &mCurrentImageIndex);
+		if (VK_SUCCESS != vkResult && VK_SUBOPTIMAL_KHR != vkResult)
+		{
+			if (VK_ERROR_OUT_OF_DATE_KHR == vkResult)
+			{
+				// Recreate the Vulkan swap chain
+				if (recreateSwapChainIfNeeded)
+				{
+					createVulkanSwapChain();
+				}
+				return;
+			}
+			else
+			{
+				// Error!
+				RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to acquire next Vulkan image from swap chain")
+				return;
 			}
 		}
 	}

@@ -30,6 +30,8 @@
 #include <Renderer/Buffer/IIndirectBuffer.h>
 #include <Renderer/Buffer/BufferTypes.h>
 
+#include "VulkanRenderer/Vulkan.h"
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -83,6 +85,33 @@ namespace VulkanRenderer
 		*/
 		virtual ~IndirectBuffer();
 
+		/**
+		*  @brief
+		*    Return the Vulkan indirect buffer
+		*
+		*  @return
+		*    The Vulkan indirect buffer
+		*/
+		inline VkBuffer getVkBuffer() const;
+
+		/**
+		*  @brief
+		*    Return the Vulkan device memory
+		*
+		*  @return
+		*    The Vulkan device memory
+		*/
+		inline VkDeviceMemory getVkDeviceMemory() const;
+
+		/**
+		*  @brief
+		*    Return writable indirect buffer emulation data pointer
+		*
+		*  @return
+		*    Writable indirect buffer emulation data pointer, can be a null pointer, don't destroy the returned instance
+		*/
+		inline uint8_t* getWritableEmulationData() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IIndirectBuffer methods      ]
@@ -104,7 +133,8 @@ namespace VulkanRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		// TODO(co) Implement me
+		VkBuffer	   mVkBuffer;		///< Vulkan indirect buffer
+		VkDeviceMemory mVkDeviceMemory;	///< Vulkan indirect memory
 
 
 	};

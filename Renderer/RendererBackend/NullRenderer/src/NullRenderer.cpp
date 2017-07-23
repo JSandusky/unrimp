@@ -127,12 +127,6 @@ namespace
 				static_cast<NullRenderer::NullRenderer&>(renderer).iaSetVertexArray(realData->vertexArray);
 			}
 
-			void SetPrimitiveTopology(const void* data, Renderer::IRenderer& renderer)
-			{
-				const Renderer::Command::SetPrimitiveTopology* realData = static_cast<const Renderer::Command::SetPrimitiveTopology*>(data);
-				static_cast<NullRenderer::NullRenderer&>(renderer).iaSetPrimitiveTopology(realData->primitiveTopology);
-			}
-
 			//[-------------------------------------------------------]
 			//[ Rasterizer (RS) stage                                 ]
 			//[-------------------------------------------------------]
@@ -248,7 +242,6 @@ namespace
 			&BackendDispatch::SetPipelineState,
 			// Input-assembler (IA) stage
 			&BackendDispatch::SetVertexArray,
-			&BackendDispatch::SetPrimitiveTopology,
 			// Rasterizer (RS) stage
 			&BackendDispatch::SetViewports,
 			&BackendDispatch::SetScissorRectangles,
@@ -451,27 +444,24 @@ namespace NullRenderer
 		}
 	}
 
-	void NullRenderer::iaSetPrimitiveTopology(Renderer::PrimitiveTopology)
-	{
-		// Nothing here
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Rasterizer (RS) stage                                 ]
 	//[-------------------------------------------------------]
 	void NullRenderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport* viewports)
 	{
+		// Sanity check
+		assert((numberOfViewports > 0 && nullptr != viewports) && "Invalid rasterizer state viewports");
 		std::ignore = numberOfViewports;
 		std::ignore = viewports;
-		assert(numberOfViewports > 0 && nullptr != viewports);
 	}
 
 	void NullRenderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles)
 	{
+		// Sanity check
+		assert((numberOfScissorRectangles > 0 && nullptr != scissorRectangles) && "Invalid rasterizer state scissor rectangles");
 		std::ignore = numberOfScissorRectangles;
 		std::ignore = scissorRectangles;
-		assert(numberOfScissorRectangles > 0 && nullptr != scissorRectangles);
 	}
 
 
@@ -538,14 +528,22 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Draw call                                             ]
 	//[-------------------------------------------------------]
-	void NullRenderer::drawEmulated(const uint8_t*, uint32_t, uint32_t)
+	void NullRenderer::drawEmulated(const uint8_t* emulationData, uint32_t, uint32_t numberOfDraws)
 	{
-		// Nothing here
+		// Sanity checks
+		assert(nullptr != emulationData);
+		assert(numberOfDraws > 0 && "Number of draws must not be zero");
+		std::ignore = emulationData;
+		std::ignore = numberOfDraws;
 	}
 
-	void NullRenderer::drawIndexedEmulated(const uint8_t*, uint32_t, uint32_t)
+	void NullRenderer::drawIndexedEmulated(const uint8_t* emulationData, uint32_t, uint32_t numberOfDraws)
 	{
-		// Nothing here
+		// Sanity checks
+		assert(nullptr != emulationData);
+		assert(numberOfDraws > 0 && "Number of draws must not be zero");
+		std::ignore = emulationData;
+		std::ignore = numberOfDraws;
 	}
 
 

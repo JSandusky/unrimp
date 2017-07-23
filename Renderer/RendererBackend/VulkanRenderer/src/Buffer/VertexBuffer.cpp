@@ -22,7 +22,8 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "VulkanRenderer/Buffer/VertexBuffer.h"
-#include "VulkanRenderer/Extensions.h"
+#include "VulkanRenderer/VulkanRenderer.h"
+#include "VulkanRenderer/Helper.h"
 
 
 //[-------------------------------------------------------]
@@ -35,15 +36,17 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexBuffer::VertexBuffer(VulkanRenderer& vulkanRenderer, uint32_t, const void*, Renderer::BufferUsage) :
-		IVertexBuffer(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer))
+	VertexBuffer::VertexBuffer(VulkanRenderer& vulkanRenderer, uint32_t numberOfBytes, const void* data, Renderer::BufferUsage) :
+		IVertexBuffer(vulkanRenderer),
+		mVkBuffer(VK_NULL_HANDLE),
+		mVkDeviceMemory(VK_NULL_HANDLE)
 	{
-		// TODO(co) Implement me
+		Helper::createAndAllocateVkBuffer(vulkanRenderer, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, numberOfBytes, data, mVkBuffer, mVkDeviceMemory);
 	}
 
 	VertexBuffer::~VertexBuffer()
 	{
-		// TODO(co) Implement me
+		Helper::destroyAndFreeVkBuffer(static_cast<const VulkanRenderer&>(getRenderer()), mVkBuffer, mVkDeviceMemory);
 	}
 
 

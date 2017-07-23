@@ -30,6 +30,8 @@
 #include <Renderer/Buffer/IVertexBuffer.h>
 #include <Renderer/Buffer/BufferTypes.h>
 
+#include "VulkanRenderer/Vulkan.h"
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -83,6 +85,24 @@ namespace VulkanRenderer
 		*/
 		virtual ~VertexBuffer();
 
+		/**
+		*  @brief
+		*    Return the Vulkan vertex buffer
+		*
+		*  @return
+		*    The Vulkan vertex buffer
+		*/
+		inline VkBuffer getVkBuffer() const;
+
+		/**
+		*  @brief
+		*    Return the Vulkan device memory
+		*
+		*  @return
+		*    The Vulkan device memory
+		*/
+		inline VkDeviceMemory getVkDeviceMemory() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
@@ -96,7 +116,8 @@ namespace VulkanRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		// TODO(co) Implement me
+		VkBuffer	   mVkBuffer;		///< Vulkan vertex buffer
+		VkDeviceMemory mVkDeviceMemory;	///< Vulkan vertex memory
 
 
 	};

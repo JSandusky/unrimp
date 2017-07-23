@@ -19,56 +19,62 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
+//[ Shader start                                          ]
 //[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
-//[ Namespace                                             ]
-//[-------------------------------------------------------]
-namespace VulkanRenderer
+#ifndef RENDERER_NO_VULKAN
+if (0 == strcmp(renderer->getName(), "Vulkan"))
 {
 
 
-	//[-------------------------------------------------------]
-	//[ Classes                                               ]
-	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Abstract state base class
-	*/
-	class IState
-	{
+//[-------------------------------------------------------]
+//[ Vertex shader source code                             ]
+//[-------------------------------------------------------]
+// One vertex shader invocation per vertex
+vertexShaderSourceCode = R"(#version 450 core	// OpenGL 4.5
+#extension GL_ARB_separate_shader_objects : enable	// The "GL_ARB_separate_shader_objects"-extension is required for Vulkan shaders to work
 
+// Attribute input - Mesh data
+layout(location = 0) in vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
+layout(location = 0) out gl_PerVertex
+{
+	vec4 gl_Position;
+};
 
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	protected:
-		/**
-		*  @brief
-		*    Default constructor
-		*/
-		inline IState();
+// Attribute input - Per-instance data
+layout(location = 1) in float InstanceID;	// Simple instance ID in order to keep it similar to the "draw instanced" version on the right side (blue)
 
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		inline virtual ~IState();
-
-
-	};
+// Programs
+void main()
+{
+	// Pass through the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
+	// -> Compensate for different Vulkan coordinate system
+	gl_Position = vec4(Position.x, -(Position.y - InstanceID), 0.0, 1.0);
+}
+)";
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Fragment shader source code                           ]
 //[-------------------------------------------------------]
-} // VulkanRenderer
+// One fragment shader invocation per fragment
+fragmentShaderSourceCode = R"(#version 450 core	// OpenGL 4.5
+#extension GL_ARB_separate_shader_objects : enable	// The "GL_ARB_separate_shader_objects"-extension is required for Vulkan shaders to work
+
+// Attribute input/output
+layout(location = 0) out vec4 OutputColor;
+
+// Programs
+void main()
+{
+	// Return green
+	OutputColor = vec4(0.0, 1.0, 0.0, 1.0);
+}
+)";
 
 
 //[-------------------------------------------------------]
-//[ Implementation                                        ]
+//[ Shader end                                            ]
 //[-------------------------------------------------------]
-#include "VulkanRenderer/State/IState.inl"
+}
+else
+#endif

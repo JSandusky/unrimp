@@ -56,7 +56,7 @@ namespace
 				// Data source
 				0,											// inputSlot (uint32_t)
 				0,											// alignedByteOffset (uint32_t)
-				// Data source, instancing part
+				sizeof(float) * 8,							// strideInBytes (uint32_t)
 				0											// instancesPerElement (uint32_t)
 			},
 			{ // Attribute 1
@@ -68,7 +68,7 @@ namespace
 				// Data source
 				0,											// inputSlot (uint32_t)
 				sizeof(float) * 3,							// alignedByteOffset (uint32_t)
-				// Data source, instancing part
+				sizeof(float) * 8,							// strideInBytes (uint32_t)
 				0											// instancesPerElement (uint32_t)
 			},
 			{ // Attribute 2
@@ -79,8 +79,8 @@ namespace
 				0,											// semanticIndex (uint32_t)
 				// Data source
 				0,											// inputSlot (uint32_t)
-				sizeof(float) * (3 + 2),					// alignedByteOffset (uint32_t)
-				// Data source, instancing part
+				sizeof(float) * 5,							// alignedByteOffset (uint32_t)
+				sizeof(float) * 8,							// strideInBytes (uint32_t)
 				0											// instancesPerElement (uint32_t)
 			},
 
@@ -94,7 +94,7 @@ namespace
 				// Data source
 				1,											// inputSlot (uint32_t)
 				0,											// alignedByteOffset (uint32_t)
-				// Data source, instancing part
+				sizeof(float) * 8,							// strideInBytes (uint32_t)
 				1											// instancesPerElement (uint32_t)
 			},
 			{ // Attribute 4
@@ -106,7 +106,7 @@ namespace
 				// Data source
 				1,											// inputSlot (uint32_t)
 				sizeof(float) * 4,							// alignedByteOffset (uint32_t)
-				// Data source, instancing part
+				sizeof(float) * 8,							// strideInBytes (uint32_t)
 				1											// instancesPerElement (uint32_t)
 			}
 		};
@@ -249,8 +249,9 @@ CubeRendererInstancedArrays::CubeRendererInstancedArrays(Renderer::IRenderer& re
 		// Get the shader source code (outsourced to keep an overview)
 		const char* vertexShaderSourceCode = nullptr;
 		const char* fragmentShaderSourceCode = nullptr;
+		#include "CubeRendererInstancedArrays_GLSL_450.h"	// For Vulkan
+		#include "CubeRendererInstancedArrays_GLSL_140.h"	// macOS 10.11 only supports OpenGL 4.1 hence it's our OpenGL minimum
 		#include "CubeRendererInstancedArrays_GLSL_130.h"
-		#include "CubeRendererInstancedArrays_GLSL_140.h"
 		#include "CubeRendererInstancedArrays_GLSL_ES3.h"
 		#include "CubeRendererInstancedArrays_HLSL_D3D10_D3D11_D3D12.h"
 		#include "CubeRendererInstancedArrays_HLSL_D3D9.h"
@@ -469,11 +470,6 @@ void CubeRendererInstancedArrays::fillCommandBuffer()
 	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 2, mSamplerState);
 	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 3, mTexture2D);
 	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 4, mUniformBufferDynamicFs);
-
-	{ // Setup input assembly (IA)
-		// Set the primitive topology used for draw calls
-		Renderer::Command::SetPrimitiveTopology::create(mCommandBuffer, Renderer::PrimitiveTopology::TRIANGLE_LIST);
-	}
 
 	// Draw the batches
 	if (nullptr != mBatches)

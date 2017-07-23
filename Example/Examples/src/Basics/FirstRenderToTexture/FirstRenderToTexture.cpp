@@ -106,7 +106,7 @@ void FirstRenderToTexture::onInitialization()
 				// Data source
 				0,											// inputSlot (uint32_t)
 				0,											// alignedByteOffset (uint32_t)
-				// Data source, instancing part
+				sizeof(float) * 2,							// strideInBytes (uint32_t)
 				0											// instancesPerElement (uint32_t)
 			}
 		};
@@ -129,13 +129,7 @@ void FirstRenderToTexture::onInitialization()
 			// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
 			//    reference of the used vertex buffer objects (VBO). If the reference counter of a
 			//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
-			const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
-			{
-				{ // Vertex buffer 0
-					vertexBuffer,		// vertexBuffer (Renderer::IVertexBuffer*)
-					sizeof(float) * 2	// strideInBytes (uint32_t)
-				}
-			};
+			const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] = { vertexBuffer };
 			mVertexArray = mBufferManager->createVertexArray(vertexAttributes, static_cast<uint32_t>(glm::countof(vertexArrayVertexBuffers)), vertexArrayVertexBuffers);
 		}
 
@@ -261,13 +255,8 @@ void FirstRenderToTexture::fillCommandBuffer()
 		// Set the used pipeline state object (PSO)
 		Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineState);
 
-		{ // Setup input assembly (IA)
-			// Set the used vertex array
-			Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArray);
-
-			// Set the primitive topology used for draw calls
-			Renderer::Command::SetPrimitiveTopology::create(mCommandBuffer, Renderer::PrimitiveTopology::TRIANGLE_LIST);
-		}
+		// Input assembly (IA): Set the used vertex array
+		Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArray);
 
 		// Render the specified geometric primitive, based on an array of vertices
 		Renderer::Command::Draw::create(mCommandBuffer, 3);

@@ -30,6 +30,8 @@
 #include <Renderer/Buffer/IUniformBuffer.h>
 #include <Renderer/Buffer/BufferTypes.h>
 
+#include "VulkanRenderer/Vulkan.h"
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -83,6 +85,24 @@ namespace VulkanRenderer
 		*/
 		virtual ~UniformBuffer();
 
+		/**
+		*  @brief
+		*    Return the Vulkan uniform buffer
+		*
+		*  @return
+		*    The Vulkan uniform buffer
+		*/
+		inline VkBuffer getVkBuffer() const;
+
+		/**
+		*  @brief
+		*    Return the Vulkan device memory
+		*
+		*  @return
+		*    The Vulkan device memory
+		*/
+		inline VkDeviceMemory getVkDeviceMemory() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IUniformBuffer methods       ]
@@ -103,7 +123,8 @@ namespace VulkanRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		// TODO(co) Implement me
+		VkBuffer	   mVkBuffer;		///< Vulkan uniform buffer
+		VkDeviceMemory mVkDeviceMemory;	///< Vulkan uniform memory
 
 
 	};

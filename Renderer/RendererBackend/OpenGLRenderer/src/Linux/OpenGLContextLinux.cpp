@@ -123,7 +123,7 @@ namespace OpenGLRenderer
 			const Renderer::Context& context = openGLRenderer.getContext();
 			assert(context.getType() == Renderer::Context::ContextType::X11);
 
-			// If the given renderer context is an x11 context use the display connection object provided by the context
+			// If the given renderer context is an X11 context use the display connection object provided by the context
 			if (context.getType() == Renderer::Context::ContextType::X11)
 			{
 				mDisplay = static_cast<const Renderer::X11Context&>(context).getDisplay();

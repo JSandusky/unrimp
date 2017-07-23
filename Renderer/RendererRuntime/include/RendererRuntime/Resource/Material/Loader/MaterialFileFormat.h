@@ -57,7 +57,7 @@ namespace RendererRuntime
 		//[ Definitions                                           ]
 		//[-------------------------------------------------------]
 		static const uint32_t FORMAT_TYPE	 = StringId("Material");
-		static const uint32_t FORMAT_VERSION = 2;
+		static const uint32_t FORMAT_VERSION = 3;
 
 		#pragma pack(push)
 		#pragma pack(1)

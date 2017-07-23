@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Shader start                                          ]
 //[-------------------------------------------------------]
-#ifndef RENDERER_NO_OPENGL
+#ifndef RENDERER_NO_VULKAN
 if (0 == strcmp(renderer->getName(), "Vulkan"))
 {
 
@@ -34,8 +34,8 @@ vertexShaderSourceCode = R"(#version 450 core	// OpenGL 4.5
 #extension GL_ARB_separate_shader_objects : enable	// The "GL_ARB_separate_shader_objects"-extension is required for Vulkan shaders to work
 
 // Attribute input/output
-in  vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
-out gl_PerVertex
+layout(location = 0) in vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
+layout(location = 0) out gl_PerVertex
 {
 	vec4 gl_Position;
 };
@@ -44,7 +44,8 @@ out gl_PerVertex
 void main()
 {
 	// Pass through the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
-	gl_Position = vec4(Position, 0.0, 1.0);
+	// -> Compensate for different Vulkan coordinate system
+	gl_Position = vec4(Position.x, -Position.y, 0.0, 1.0);
 }
 )";
 

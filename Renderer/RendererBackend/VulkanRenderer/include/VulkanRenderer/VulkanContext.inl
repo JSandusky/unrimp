@@ -30,7 +30,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	bool VulkanContext::isInitialized() const
 	{
-		return (VK_NULL_HANDLE != mSetupVkCommandBuffer);
+		return (VK_NULL_HANDLE != mVkCommandBuffer);
 	}
 
 	inline VulkanRenderer& VulkanContext::getVulkanRenderer() const
@@ -53,9 +53,19 @@ namespace VulkanRenderer
 		return mGraphicsQueueFamilyIndex;
 	}
 
+	inline uint32_t VulkanContext::getPresentQueueFamilyIndex() const
+	{
+		return mPresentQueueFamilyIndex;
+	}
+
 	inline VkQueue VulkanContext::getGraphicsVkQueue() const
 	{
 		return mGraphicsVkQueue;
+	}
+
+	inline VkQueue VulkanContext::getPresentVkQueue() const
+	{
+		return mPresentVkQueue;
 	}
 
 	inline VkCommandPool VulkanContext::getVkCommandPool() const
@@ -63,9 +73,9 @@ namespace VulkanRenderer
 		return mVkCommandPool;
 	}
 
-	inline VkCommandBuffer VulkanContext::getSetupVkCommandBuffer() const
+	inline VkCommandBuffer VulkanContext::getVkCommandBuffer() const
 	{
-		return mSetupVkCommandBuffer;
+		return mVkCommandBuffer;
 	}
 
 

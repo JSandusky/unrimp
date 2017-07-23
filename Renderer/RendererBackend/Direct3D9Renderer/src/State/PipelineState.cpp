@@ -44,6 +44,7 @@ namespace Direct3D9Renderer
 	PipelineState::PipelineState(Direct3D9Renderer& direct3D9Renderer, const Renderer::PipelineState& pipelineState) :
 		IPipelineState(direct3D9Renderer),
 		mDirect3DDevice9(direct3D9Renderer.getDirect3DDevice9()),
+		mPrimitiveTopology(pipelineState.primitiveTopology),
 		mProgram(pipelineState.program),
 		mDirect3DVertexDeclaration9(nullptr),
 		mRasterizerState(new RasterizerState(pipelineState.rasterizerState)),

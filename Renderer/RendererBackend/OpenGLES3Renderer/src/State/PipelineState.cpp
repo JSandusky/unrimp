@@ -25,8 +25,9 @@
 #include "OpenGLES3Renderer/State/BlendState.h"
 #include "OpenGLES3Renderer/State/RasterizerState.h"
 #include "OpenGLES3Renderer/State/DepthStencilState.h"
-#include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 #include "OpenGLES3Renderer/Shader/ProgramGlsl.h"
+#include "OpenGLES3Renderer/OpenGLES3Renderer.h"
+#include "OpenGLES3Renderer/Mapping.h"
 
 
 //[-------------------------------------------------------]
@@ -41,6 +42,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	PipelineState::PipelineState(OpenGLES3Renderer& openGLES3Renderer, const Renderer::PipelineState& pipelineState) :
 		IPipelineState(openGLES3Renderer),
+		mOpenGLES3PrimitiveTopology(Mapping::getOpenGLES3Type(pipelineState.primitiveTopology)),
 		mProgram(pipelineState.program),
 		mRasterizerState(new RasterizerState(pipelineState.rasterizerState)),
 		mDepthStencilState(new DepthStencilState(pipelineState.depthStencilState)),

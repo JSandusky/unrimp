@@ -87,7 +87,7 @@ namespace OpenGLRenderer
 										  attributeLocation,
 										  static_cast<VertexBuffer*>(vertexArrayVertexBuffer.vertexBuffer)->getOpenGLArrayBuffer(),
 										  0,	// No offset to the first element of the buffer
-										  static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes));
+										  static_cast<GLsizei>(attribute->strideInBytes));
 
 				// Per-instance instead of per-vertex requires "GL_ARB_instanced_arrays"
 				if (attribute->instancesPerElement > 0 && openGLRenderer.getExtensions().isGL_ARB_instanced_arrays())
@@ -102,7 +102,7 @@ namespace OpenGLRenderer
 												  attributeLocation, Mapping::getOpenGLSize(attribute->vertexAttributeFormat),
 												  Mapping::getOpenGLType(attribute->vertexAttributeFormat),
 												  static_cast<GLboolean>(Mapping::isOpenGLVertexAttributeFormatNormalized(attribute->vertexAttributeFormat)),
-												  static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes),
+												  static_cast<GLsizei>(attribute->strideInBytes),
 												  static_cast<GLintptr>(attribute->alignedByteOffset));
 
 				// Per-instance instead of per-vertex requires "GL_ARB_instanced_arrays"

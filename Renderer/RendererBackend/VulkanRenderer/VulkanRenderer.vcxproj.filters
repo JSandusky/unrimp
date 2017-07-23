@@ -133,19 +133,7 @@
     <ClInclude Include="include\VulkanRenderer\RenderTarget\Framebuffer.h">
       <Filter>Source Files\RenderTarget</Filter>
     </ClInclude>
-    <ClInclude Include="include\VulkanRenderer\State\DepthStencilState.h">
-      <Filter>Source Files\State</Filter>
-    </ClInclude>
-    <ClInclude Include="include\VulkanRenderer\State\IState.h">
-      <Filter>Source Files\State</Filter>
-    </ClInclude>
     <ClInclude Include="include\VulkanRenderer\State\PipelineState.h">
-      <Filter>Source Files\State</Filter>
-    </ClInclude>
-    <ClInclude Include="include\VulkanRenderer\State\RasterizerState.h">
-      <Filter>Source Files\State</Filter>
-    </ClInclude>
-    <ClInclude Include="include\VulkanRenderer\State\BlendState.h">
       <Filter>Source Files\State</Filter>
     </ClInclude>
     <ClInclude Include="include\VulkanRenderer\State\SamplerState.h">
@@ -381,16 +369,7 @@
     <ClCompile Include="src\RenderTarget\SwapChain.cpp">
       <Filter>Source Files\RenderTarget</Filter>
     </ClCompile>
-    <ClCompile Include="src\State\DepthStencilState.cpp">
-      <Filter>Source Files\State</Filter>
-    </ClCompile>
     <ClCompile Include="src\State\PipelineState.cpp">
-      <Filter>Source Files\State</Filter>
-    </ClCompile>
-    <ClCompile Include="src\State\RasterizerState.cpp">
-      <Filter>Source Files\State</Filter>
-    </ClCompile>
-    <ClCompile Include="src\State\BlendState.cpp">
       <Filter>Source Files\State</Filter>
     </ClCompile>
     <ClCompile Include="src\State\SamplerState.cpp">
@@ -498,13 +477,7 @@
     <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\preprocessor\PpContext.cpp">
       <Filter>External\glslang\MachineIndependent\preprocessor</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\preprocessor\PpMemory.cpp">
-      <Filter>External\glslang\MachineIndependent\preprocessor</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\preprocessor\PpScanner.cpp">
-      <Filter>External\glslang\MachineIndependent\preprocessor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\preprocessor\PpSymbols.cpp">
       <Filter>External\glslang\MachineIndependent\preprocessor</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\External\glslang\src\glslang\MachineIndependent\preprocessor\PpTokens.cpp">
@@ -589,13 +562,7 @@
     <None Include="include\VulkanRenderer\RenderTarget\SwapChain.inl">
       <Filter>Source Files\RenderTarget</Filter>
     </None>
-    <None Include="include\VulkanRenderer\State\IState.inl">
-      <Filter>Source Files\State</Filter>
-    </None>
     <None Include="include\VulkanRenderer\State\PipelineState.inl">
-      <Filter>Source Files\State</Filter>
-    </None>
-    <None Include="include\VulkanRenderer\State\RasterizerState.inl">
       <Filter>Source Files\State</Filter>
     </None>
     <None Include="include\VulkanRenderer\Buffer\BufferManager.inl">
@@ -627,6 +594,9 @@
     </None>
     <None Include="..\..\..\External\glslang\src\glslang\MachineIndependent\glslang.y">
       <Filter>External\glslang\MachineIndependent</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\State\SamplerState.inl">
+      <Filter>Source Files\State</Filter>
     </None>
   </ItemGroup>
 </Project>

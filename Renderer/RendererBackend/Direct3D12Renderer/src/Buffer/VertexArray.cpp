@@ -39,7 +39,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArray::VertexArray(Direct3D12Renderer& direct3D12Renderer, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer* vertexBuffers, IndexBuffer* indexBuffer) :
+	VertexArray::VertexArray(Direct3D12Renderer& direct3D12Renderer, const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer* vertexBuffers, IndexBuffer* indexBuffer) :
 		IVertexArray(direct3D12Renderer),
 		mIndexBuffer(indexBuffer),
 		mNumberOfSlots(numberOfVertexBuffers),
@@ -58,18 +58,27 @@ namespace Direct3D12Renderer
 			mD3D12VertexBufferViews = new D3D12_VERTEX_BUFFER_VIEW[mNumberOfSlots];
 			mVertexBuffers = new VertexBuffer*[mNumberOfSlots];
 
-			// Loop through all vertex buffers
-			D3D12_VERTEX_BUFFER_VIEW* currentD3D12VertexBufferView = mD3D12VertexBufferViews;
-			VertexBuffer** currentVertexBuffer = mVertexBuffers;
-			const Renderer::VertexArrayVertexBuffer* vertexBufferEnd = vertexBuffers + mNumberOfSlots;
-			for (const Renderer::VertexArrayVertexBuffer* vertexBuffer = vertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer, ++currentD3D12VertexBufferView, ++currentVertexBuffer)
-			{
-				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-				*currentVertexBuffer = static_cast<VertexBuffer*>(vertexBuffer->vertexBuffer);
-				(*currentVertexBuffer)->addReference();
-				currentD3D12VertexBufferView->BufferLocation = (*currentVertexBuffer)->getID3D12Resource()->GetGPUVirtualAddress();
-				currentD3D12VertexBufferView->SizeInBytes = (*currentVertexBuffer)->getNumberOfBytes();
-				currentD3D12VertexBufferView->StrideInBytes = vertexBuffer->strideInBytes;
+			{ // Loop through all vertex buffers
+				D3D12_VERTEX_BUFFER_VIEW* currentD3D12VertexBufferView = mD3D12VertexBufferViews;
+				VertexBuffer** currentVertexBuffer = mVertexBuffers;
+				const Renderer::VertexArrayVertexBuffer* vertexBufferEnd = vertexBuffers + mNumberOfSlots;
+				for (const Renderer::VertexArrayVertexBuffer* vertexBuffer = vertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer, ++currentD3D12VertexBufferView, ++currentVertexBuffer)
+				{
+					// TODO(co) Add security check: Is the given resource one of the currently used renderer?
+					*currentVertexBuffer = static_cast<VertexBuffer*>(vertexBuffer->vertexBuffer);
+					(*currentVertexBuffer)->addReference();
+					currentD3D12VertexBufferView->BufferLocation = (*currentVertexBuffer)->getID3D12Resource()->GetGPUVirtualAddress();
+					currentD3D12VertexBufferView->SizeInBytes = (*currentVertexBuffer)->getNumberOfBytes();
+				}
+			}
+
+			{ // Gather slot related data
+				const Renderer::VertexAttribute* attribute = vertexAttributes.attributes;
+				const Renderer::VertexAttribute* attributesEnd = attribute + vertexAttributes.numberOfAttributes;
+				for (; attribute < attributesEnd;  ++attribute)
+				{
+					mD3D12VertexBufferViews[attribute->inputSlot].StrideInBytes = attribute->strideInBytes;
+				}
 			}
 		}
 
@@ -109,7 +118,7 @@ namespace Direct3D12Renderer
 	{
 		d3d12GraphicsCommandList.IASetVertexBuffers(0, mNumberOfSlots, mD3D12VertexBufferViews);
 
-		// Get the used index buffer
+		// Set the used index buffer
 		// -> In case of no index buffer we don't set null indices, there's not really a point in it
 		if (nullptr != mIndexBuffer)
 		{

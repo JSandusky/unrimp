@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include <Renderer/Buffer/IVertexArray.h>
 
+#include "VulkanRenderer/Vulkan.h"
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -41,6 +43,7 @@ namespace Renderer
 namespace VulkanRenderer
 {
 	class IndexBuffer;
+	class VertexBuffer;
 	class VulkanRenderer;
 }
 
@@ -99,6 +102,15 @@ namespace VulkanRenderer
 		*/
 		inline IndexBuffer* getIndexBuffer() const;
 
+		/**
+		*  @brief
+		*    Bind Vulkan buffers
+		*
+		*  @param[in] vkCommandBuffer
+		*    Vulkan command buffer to write into
+		*/
+		void bindVulkanBuffers(VkCommandBuffer vkCommandBuffer) const;
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
@@ -112,7 +124,14 @@ namespace VulkanRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IndexBuffer* mIndexBuffer;	///< Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
+		IndexBuffer*   mIndexBuffer;		///< Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
+		// Vulkan input slots
+		uint32_t	   mNumberOfSlots;		///< Number of used Vulkan input slots
+		VkBuffer*	   mVertexVkBuffers;	///< Vulkan vertex buffers
+		uint32_t*	   mStrides;			///< Strides in bytes, if "mVertexVkBuffers" is no null pointer this is no null pointer as well
+		VkDeviceSize*  mOffsets;			///< Offsets in bytes, if "mVertexVkBuffers" is no null pointer this is no null pointer as well
+		// For proper vertex buffer reference counter behaviour
+		VertexBuffer** mVertexBuffers;		///< Vertex buffers (we keep a reference to it) used by this vertex array, can be a null pointer
 
 
 	};

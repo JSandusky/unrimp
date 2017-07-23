@@ -94,7 +94,7 @@ void FirstMesh::onInitialization()
 					// Data source
 					0,											// inputSlot (uint32_t)
 					0,											// alignedByteOffset (uint32_t)
-					// Data source, instancing part
+					sizeof(float) * 5 + sizeof(short) * 4,		// strideInBytes (uint32_t)
 					0											// instancesPerElement (uint32_t)
 				},
 				{ // Attribute 1
@@ -106,7 +106,7 @@ void FirstMesh::onInitialization()
 					// Data source
 					0,											// inputSlot (uint32_t)
 					sizeof(float) * 3,							// alignedByteOffset (uint32_t)
-					// Data source, instancing part
+					sizeof(float) * 5 + sizeof(short) * 4,		// strideInBytes (uint32_t)
 					0											// instancesPerElement (uint32_t)
 				},
 				{ // Attribute 2
@@ -117,8 +117,8 @@ void FirstMesh::onInitialization()
 					1,											// semanticIndex (uint32_t)
 					// Data source
 					0,											// inputSlot (uint32_t)
-					sizeof(float) * 3 + sizeof(float) * 2,		// alignedByteOffset (uint32_t)
-					// Data source, instancing part
+					sizeof(float) * 5,							// alignedByteOffset (uint32_t)
+					sizeof(float) * 5 + sizeof(short) * 4,		// strideInBytes (uint32_t)
 					0											// instancesPerElement (uint32_t)
 				}
 			};
@@ -153,7 +153,8 @@ void FirstMesh::onInitialization()
 				// Get the shader source code (outsourced to keep an overview)
 				const char* vertexShaderSourceCode = nullptr;
 				const char* fragmentShaderSourceCode = nullptr;
-				#include "FirstMesh_GLSL_410.h"
+				#include "FirstMesh_GLSL_450.h"	// For Vulkan
+				#include "FirstMesh_GLSL_410.h"	// macOS 10.11 only supports OpenGL 4.1 hence it's our OpenGL minimum
 				#include "FirstMesh_GLSL_ES3.h"
 				#include "FirstMesh_HLSL_D3D9.h"
 				#include "FirstMesh_HLSL_D3D10_D3D11_D3D12.h"
@@ -335,13 +336,8 @@ void FirstMesh::onDraw()
 			const RendererRuntime::MeshResource* meshResource = rendererRuntime->getMeshResourceManager().tryGetById(mMeshResourceId);
 			if (nullptr != meshResource)
 			{
-				{ // Setup input assembly (IA)
-					// Set the used vertex array
-					Renderer::Command::SetVertexArray::create(mCommandBuffer, meshResource->getVertexArrayPtr());
-
-					// Set the primitive topology used for draw calls
-					Renderer::Command::SetPrimitiveTopology::create(mCommandBuffer, Renderer::PrimitiveTopology::TRIANGLE_LIST);
-				}
+				// Input assembly (IA): Set the used vertex array
+				Renderer::Command::SetVertexArray::create(mCommandBuffer, meshResource->getVertexArrayPtr());
 
 				// Render the specified geometric primitive, based on indexing into an array of vertices
 				Renderer::Command::DrawIndexed::create(mCommandBuffer, meshResource->getNumberOfIndices());

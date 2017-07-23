@@ -22,9 +22,9 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Direct3D10Renderer/Direct3D10Renderer.h"
-#include "Direct3D10Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
-#include "Direct3D10Renderer/Direct3D10Debug.h"	// For "DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN()"
-#include "Direct3D10Renderer/Direct3D9RuntimeLinking.h"	//  For the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box) used for debugging, also works directly within VisualStudio 2012 out-of-the-box
+#include "Direct3D10Renderer/Guid.h"					// For "WKPDID_D3DDebugObjectName"
+#include "Direct3D10Renderer/Direct3D10Debug.h"			// For "DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN()"
+#include "Direct3D10Renderer/Direct3D9RuntimeLinking.h"	// For the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box) used for debugging, also works directly within VisualStudio 2012 out-of-the-box
 #include "Direct3D10Renderer/Direct3D10RuntimeLinking.h"
 #include "Direct3D10Renderer/RootSignature.h"
 #include "Direct3D10Renderer/Mapping.h"
@@ -162,12 +162,6 @@ namespace
 				static_cast<Direct3D10Renderer::Direct3D10Renderer&>(renderer).iaSetVertexArray(realData->vertexArray);
 			}
 
-			void SetPrimitiveTopology(const void* data, Renderer::IRenderer& renderer)
-			{
-				const Renderer::Command::SetPrimitiveTopology* realData = static_cast<const Renderer::Command::SetPrimitiveTopology*>(data);
-				static_cast<Direct3D10Renderer::Direct3D10Renderer&>(renderer).iaSetPrimitiveTopology(realData->primitiveTopology);
-			}
-
 			//[-------------------------------------------------------]
 			//[ Rasterizer (RS) stage                                 ]
 			//[-------------------------------------------------------]
@@ -283,7 +277,6 @@ namespace
 			&BackendDispatch::SetPipelineState,
 			// Input-assembler (IA) stage
 			&BackendDispatch::SetVertexArray,
-			&BackendDispatch::SetPrimitiveTopology,
 			// Rasterizer (RS) stage
 			&BackendDispatch::SetViewports,
 			&BackendDispatch::SetScissorRectangles,
@@ -330,6 +323,7 @@ namespace Direct3D10Renderer
 		mMainSwapChain(nullptr),
 		mRenderTarget(nullptr),
 		mGraphicsRootSignature(nullptr),
+		mD3D10PrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_UNDEFINED),
 		mD3d10VertexShader(nullptr),
 		mD3d10GeometryShader(nullptr),
 		mD3d10PixelShader(nullptr)
@@ -773,8 +767,17 @@ namespace Direct3D10Renderer
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *pipelineState)
 
+			// Set primitive topology
+			// -> The "Renderer::PrimitiveTopology" values directly map to Direct3D 9 & 10 & 11 constants, do not change them
+			const PipelineState* direct3D10PipelineState = static_cast<const PipelineState*>(pipelineState);
+			if (mD3D10PrimitiveTopology != direct3D10PipelineState->getD3D10PrimitiveTopology())
+			{
+				mD3D10PrimitiveTopology = direct3D10PipelineState->getD3D10PrimitiveTopology();
+				mD3D10Device->IASetPrimitiveTopology(mD3D10PrimitiveTopology);
+			}
+
 			// Set pipeline state
-			static_cast<PipelineState*>(pipelineState)->bindPipelineState();
+			direct3D10PipelineState->bindPipelineState();
 		}
 		else
 		{
@@ -807,67 +810,48 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::iaSetPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology)
-	{
-		// Set primitive topology
-		// -> The "Renderer::PrimitiveTopology" values directly map to Direct3D 9 & 10 & 11 constants, do not change them
-		mD3D10Device->IASetPrimitiveTopology(static_cast<D3D10_PRIMITIVE_TOPOLOGY>(primitiveTopology));
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Rasterizer (RS) stage                                 ]
 	//[-------------------------------------------------------]
 	void Direct3D10Renderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport* viewports)
 	{
-		// Are the given viewports valid?
-		if (numberOfViewports > 0 && nullptr != viewports)
-		{
-			#ifndef RENDERER_NO_DEBUG
-				// Is the given number of viewports valid?
-				if (numberOfViewports > (D3D10_VIEWPORT_AND_SCISSORRECT_MAX_INDEX + 1))
-				{
-					RENDERER_LOG(mContext, CRITICAL, "Direct3D 10 supports only %d viewports", D3D10_VIEWPORT_AND_SCISSORRECT_MAX_INDEX)
-					numberOfViewports = D3D10_VIEWPORT_AND_SCISSORRECT_MAX_INDEX + 1;
-				}
-			#endif
+		// Sanity check
+		assert((numberOfViewports > 0 && nullptr != viewports) && "Invalid rasterizer state viewports");
 
-			// Set the Direct3D 10 viewports
-			D3D10_VIEWPORT d3dViewports[D3D10_VIEWPORT_AND_SCISSORRECT_MAX_INDEX];
-			D3D10_VIEWPORT* d3dViewport = d3dViewports;
-			for (uint32_t i = 0; i < numberOfViewports; ++i, ++d3dViewport, ++viewports)
+		#ifndef RENDERER_NO_DEBUG
+			// Is the given number of viewports valid?
+			if (numberOfViewports > (D3D10_VIEWPORT_AND_SCISSORRECT_MAX_INDEX + 1))
 			{
-				d3dViewport->TopLeftX = static_cast<INT> (viewports->topLeftX);
-				d3dViewport->TopLeftY = static_cast<INT> (viewports->topLeftY);
-				d3dViewport->Width    = static_cast<UINT>(viewports->width);
-				d3dViewport->Height   = static_cast<UINT>(viewports->height);
-				d3dViewport->MinDepth = viewports->minDepth;
-				d3dViewport->MaxDepth = viewports->maxDepth;
+				RENDERER_LOG(mContext, CRITICAL, "Direct3D 10 supports only %d viewports", D3D10_VIEWPORT_AND_SCISSORRECT_MAX_INDEX)
+				numberOfViewports = D3D10_VIEWPORT_AND_SCISSORRECT_MAX_INDEX + 1;
 			}
-			mD3D10Device->RSSetViewports(numberOfViewports, d3dViewports);
-		}
-		else
+		#endif
+
+		// Set the Direct3D 10 viewports
+		D3D10_VIEWPORT d3dViewports[D3D10_VIEWPORT_AND_SCISSORRECT_MAX_INDEX];
+		D3D10_VIEWPORT* d3dViewport = d3dViewports;
+		for (uint32_t i = 0; i < numberOfViewports; ++i, ++d3dViewport, ++viewports)
 		{
-			// Error!
-			assert(false);
+			d3dViewport->TopLeftX = static_cast<INT> (viewports->topLeftX);
+			d3dViewport->TopLeftY = static_cast<INT> (viewports->topLeftY);
+			d3dViewport->Width    = static_cast<UINT>(viewports->width);
+			d3dViewport->Height   = static_cast<UINT>(viewports->height);
+			d3dViewport->MinDepth = viewports->minDepth;
+			d3dViewport->MaxDepth = viewports->maxDepth;
 		}
+		mD3D10Device->RSSetViewports(numberOfViewports, d3dViewports);
 	}
 
 	void Direct3D10Renderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles)
 	{
-		// Are the given scissor rectangles valid?
-		if (numberOfScissorRectangles > 0 && nullptr != scissorRectangles)
-		{
-			// Set the Direct3D 10 scissor rectangles
-			// -> "Renderer::ScissorRectangle" directly maps to Direct3D 9 & 10 & 11, do not change it
-			// -> Let Direct3D 10 perform the index validation for us (the Direct3D 10 debug features are pretty good)
-			mD3D10Device->RSSetScissorRects(numberOfScissorRectangles, reinterpret_cast<const D3D10_RECT*>(scissorRectangles));
-		}
-		else
-		{
-			// Error!
-			assert(false);
-		}
+		// Sanity check
+		assert((numberOfScissorRectangles > 0 && nullptr != scissorRectangles) && "Invalid rasterizer state scissor rectangles");
+
+		// Set the Direct3D 10 scissor rectangles
+		// -> "Renderer::ScissorRectangle" directly maps to Direct3D 9 & 10 & 11, do not change it
+		// -> Let Direct3D 10 perform the index validation for us (the Direct3D 10 debug features are pretty good)
+		mD3D10Device->RSSetScissorRects(numberOfScissorRectangles, reinterpret_cast<const D3D10_RECT*>(scissorRectangles));
 	}
 
 
@@ -1231,8 +1215,9 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	void Direct3D10Renderer::drawEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		// Get indirect buffer data and perform security checks
+		// Sanity checks
 		assert(nullptr != emulationData);
+		assert(numberOfDraws > 0 && "Number of draws must not be zero");
 
 		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
 		emulationData += indirectBufferOffset;
@@ -1269,8 +1254,9 @@ namespace Direct3D10Renderer
 
 	void Direct3D10Renderer::drawIndexedEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		// Get indirect buffer data and perform security checks
+		// Sanity checks
 		assert(nullptr != emulationData);
+		assert(numberOfDraws > 0 && "Number of draws must not be zero");
 
 		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
 		emulationData += indirectBufferOffset;

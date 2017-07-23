@@ -36,7 +36,9 @@ inline void IApplication::redraw()
 	mApplicationImpl->redraw();
 }
 
-inline Display* IApplication::getX11Display() const
-{
-	return mApplicationImpl->getX11Display();
-}
+#ifdef LINUX
+	inline Display* IApplication::getX11Display() const
+	{
+		return mApplicationImpl->getX11Display();
+	}
+#endif

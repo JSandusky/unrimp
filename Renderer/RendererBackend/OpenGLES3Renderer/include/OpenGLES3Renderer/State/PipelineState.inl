@@ -21,26 +21,20 @@
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace VulkanRenderer
+namespace OpenGLES3Renderer
 {
 
 
-
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline IState::IState()
+	inline uint32_t PipelineState::getOpenGLES3PrimitiveTopology() const
 	{
-		// Nothing here
-	}
-
-	inline IState::~IState()
-	{
-		// Nothing here
+		return mOpenGLES3PrimitiveTopology;
 	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // VulkanRenderer
+} // OpenGLES3Renderer

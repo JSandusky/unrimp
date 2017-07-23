@@ -196,10 +196,10 @@ void main()
 fragmentShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
 
 // Attributes
-layout(location = 0) out vec4 OutFragmentColor;
 in vec3 gFacetNormal;	// Normalized normal of the primitive we received from the geometry shader (GS) as input
 in vec3 gPatchDistance;	// The barycentric coordinate inside the patch from the tessellator we received from the geometry shader (GS) as input
 in vec3 gTriDistance;	// Local triangle vertex position we received from the geometry shader (GS) as input
+layout(location = 0) out vec4 OutFragmentColor;
 
 // Uniforms
 layout(std140) uniform UniformBlockStaticFs

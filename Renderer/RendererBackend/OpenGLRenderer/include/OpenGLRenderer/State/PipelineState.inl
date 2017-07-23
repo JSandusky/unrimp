@@ -19,40 +19,27 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "VulkanRenderer/State/DepthStencilState.h"
-#include "VulkanRenderer/VulkanRuntimeLinking.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace VulkanRenderer
+namespace OpenGLRenderer
 {
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	DepthStencilState::DepthStencilState(const Renderer::DepthStencilState& depthStencilState) :
-		mDepthStencilState(depthStencilState)
+	inline uint32_t PipelineState::getOpenGLPrimitiveTopology() const
 	{
-		// Nothing here
+		return mOpenGLPrimitiveTopology;
 	}
 
-	DepthStencilState::~DepthStencilState()
+	inline int PipelineState::getNumberOfVerticesPerPatch() const
 	{
-		// Nothing here
-	}
-
-	void DepthStencilState::setVulkanDepthStencilStates() const
-	{
-		// TODO(co) Implement me
+		return mNumberOfVerticesPerPatch;
 	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // VulkanRenderer
+} // OpenGLRenderer

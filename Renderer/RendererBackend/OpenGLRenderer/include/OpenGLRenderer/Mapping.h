@@ -31,8 +31,9 @@
 #include <Renderer/Buffer/VertexArrayTypes.h>
 #include <Renderer/Buffer/IndexBufferTypes.h>
 #include <Renderer/Texture/TextureTypes.h>
-#include <Renderer/State/SamplerStateTypes.h>
 #include <Renderer/State/BlendStateTypes.h>
+#include <Renderer/State/SamplerStateTypes.h>
+#include <Renderer/State/PipelineStateTypes.h>
 
 
 //[-------------------------------------------------------]
@@ -240,13 +241,13 @@ namespace OpenGLRenderer
 		*  @brief
 		*    "Renderer::PrimitiveTopology" to OpenGL type
 		*
-		*  @param[in] primitive
+		*  @param[in] primitiveTopology
 		*    "Renderer::PrimitiveTopology" to map
 		*
 		*  @return
 		*    OpenGL type (type "GLenum" not used in here in order to keep the header slim)
 		*/
-		static uint32_t getOpenGLType(Renderer::PrimitiveTopology prmitive);
+		static uint32_t getOpenGLType(Renderer::PrimitiveTopology primitiveTopology);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::MapType                                     ]

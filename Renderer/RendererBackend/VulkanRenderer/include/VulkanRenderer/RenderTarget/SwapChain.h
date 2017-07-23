@@ -91,6 +91,24 @@ namespace VulkanRenderer
 		*/
 		inline VkRenderPass getVkRenderPass() const;
 
+		/**
+		*  @brief
+		*    Return the current Vulkan image to render into
+		*
+		*  @return
+		*    The current Vulkan image to render into
+		*/
+		inline VkImage getCurrentVkImage() const;
+
+		/**
+		*  @brief
+		*    Return the current Vulkan framebuffer to render into
+		*
+		*  @return
+		*    The current Vulkan framebuffer to render into
+		*/
+		inline VkFramebuffer getCurrentVkFramebuffer() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
@@ -119,6 +137,7 @@ namespace VulkanRenderer
 		SwapChain& operator =(const SwapChain& source) = delete;
 		void createVulkanSwapChain();
 		void destroyVulkanSwapChain();
+		void acquireNextImage(bool recreateSwapChainIfNeeded);
 
 
 	//[-------------------------------------------------------]
@@ -149,6 +168,7 @@ namespace VulkanRenderer
 		SwapChainBuffers		 mSwapChainBuffer;
 		VkSemaphore				 mImageAvailableVkSemaphore;	///< Vulkan semaphore, destroy if no longer needed
 		VkSemaphore				 mRenderingFinishedVkSemaphore;	///< Vulkan semaphore, destroy if no longer needed
+		uint32_t				 mCurrentImageIndex;			///< The index of the current Vulkan swap chain image to render into, ~0 if uninitialized
 
 
 	};

@@ -78,6 +78,7 @@ namespace Renderer
 		Context(Context::ContextType::X11, log, nativeWindowHandle, useExternalContext),
 		mDisplay(display)
 	{
+		// Nothing here
 	}
 
 	inline _XDisplay* X11Context::getDisplay() const

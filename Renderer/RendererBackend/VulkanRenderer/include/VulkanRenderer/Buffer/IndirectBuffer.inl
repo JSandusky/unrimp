@@ -28,7 +28,21 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	// TODO(co) Implement me
+	inline VkBuffer IndirectBuffer::getVkBuffer() const
+	{
+		return mVkBuffer;
+	}
+
+	inline VkDeviceMemory IndirectBuffer::getVkDeviceMemory() const
+	{
+		return mVkDeviceMemory;
+	}
+
+	inline uint8_t* IndirectBuffer::getWritableEmulationData() const
+	{
+		// Currently there's no need to emulate the indirect buffer inside the Vulkan renderer backend
+		return nullptr;
+	}
 
 
 	//[-------------------------------------------------------]

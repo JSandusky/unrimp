@@ -55,7 +55,7 @@ namespace
 				// Data source
 				0,											// inputSlot (uint32_t)
 				0,											// alignedByteOffset (uint32_t)
-				// Data source, instancing part
+				sizeof(float) * 8,							// strideInBytes (uint32_t)
 				0											// instancesPerElement (uint32_t)
 			},
 			{ // Attribute 1
@@ -67,7 +67,7 @@ namespace
 				// Data source
 				0,											// inputSlot (uint32_t)
 				sizeof(float) * 3,							// alignedByteOffset (uint32_t)
-				// Data source, instancing part
+				sizeof(float) * 8,							// strideInBytes (uint32_t)
 				0											// instancesPerElement (uint32_t)
 			},
 			{ // Attribute 2
@@ -78,8 +78,8 @@ namespace
 				0,											// semanticIndex (uint32_t)
 				// Data source
 				0,											// inputSlot (uint32_t)
-				sizeof(float) * (3 + 2),					// alignedByteOffset (uint32_t)
-				// Data source, instancing part
+				sizeof(float) * 5,							// alignedByteOffset (uint32_t)
+				sizeof(float) * 8,							// strideInBytes (uint32_t)
 				0											// instancesPerElement (uint32_t)
 			}
 		};
@@ -177,7 +177,7 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer& render
 
 	{ // Create the root signature
 		Renderer::DescriptorRangeBuilder ranges[6];
-		ranges[0].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "TextureBufferStaticVS", 0);
+		ranges[0].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "PerInstanceDataMapVs", 0);
 		ranges[1].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockStaticVs", 0);
 		ranges[2].initialize(Renderer::DescriptorRangeType::UBV, 1, 1, "UniformBlockDynamicVs", 0);
 		ranges[3].initializeSampler(1, 0);
@@ -268,13 +268,7 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer& render
 		// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
 		//    reference of the used vertex buffer objects (VBO). If the reference counter of a
 		//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
-		const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
-		{
-			{ // Vertex buffer 0
-				vertexBuffer,				// vertexBuffer (Renderer::IVertexBuffer*)
-				sizeof(float) * (3 + 2 + 3)	// strideInBytes (uint32_t)
-			}
-		};
+		const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] = { vertexBuffer };
 		mVertexArray = mBufferManager->createVertexArray(detail::VertexAttributes, static_cast<uint32_t>(glm::countof(vertexArrayVertexBuffers)), vertexArrayVertexBuffers, indexBuffer);
 	}
 
@@ -307,7 +301,8 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer& render
 		// Get the shader source code (outsourced to keep an overview)
 		const char* vertexShaderSourceCode = nullptr;
 		const char* fragmentShaderSourceCode = nullptr;
-		#include "CubeRendererDrawInstanced_GLSL_410.h"
+		#include "CubeRendererDrawInstanced_GLSL_450.h"	// For Vulkan
+		#include "CubeRendererDrawInstanced_GLSL_410.h"	// macOS 10.11 only supports OpenGL 4.1 hence it's our OpenGL minimum
 		#include "CubeRendererDrawInstanced_HLSL_D3D10_D3D11_D3D12.h"
 		#include "CubeRendererDrawInstanced_GLSL_ES3.h"
 		#include "CubeRendererDrawInstanced_Null.h"
@@ -465,13 +460,8 @@ void CubeRendererDrawInstanced::fillCommandBuffer()
 	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 4, mTexture2DArray);
 	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 5, mUniformBufferDynamicFs);
 
-	{ // Setup input assembly (IA)
-		// Set the used vertex array
-		Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArray);
-
-		// Set the primitive topology used for draw calls
-		Renderer::Command::SetPrimitiveTopology::create(mCommandBuffer, Renderer::PrimitiveTopology::TRIANGLE_LIST);
-	}
+	// Input assembly (IA): Set the used vertex array
+	Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArray);
 
 	// Draw the batches
 	if (nullptr != mBatches)

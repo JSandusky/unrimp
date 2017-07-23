@@ -125,12 +125,30 @@ namespace VulkanRenderer
 
 		/**
 		*  @brief
+		*    Return the used present queue family index
+		*
+		*  @return
+		*    Present queue family index, ~0u if invalid
+		*/
+		inline uint32_t getPresentQueueFamilyIndex() const;
+
+		/**
+		*  @brief
 		*    Return the handle to the Vulkan device graphics queue that command buffers are submitted to
 		*
 		*  @return
 		*    Handle to the Vulkan device graphics queue that command buffers are submitted to
 		*/
 		inline VkQueue getGraphicsVkQueue() const;
+
+		/**
+		*  @brief
+		*    Return the handle to the Vulkan device present queue
+		*
+		*  @return
+		*    Handle to the Vulkan device present queue
+		*/
+		inline VkQueue getPresentVkQueue() const;
 
 		/**
 		*  @brief
@@ -143,18 +161,17 @@ namespace VulkanRenderer
 
 		/**
 		*  @brief
-		*    Return the Vulkan command buffer instance used for setup
+		*    Return the Vulkan command buffer instance
 		*
 		*  @return
-		*    The Vulkan command buffer instance used for setup
+		*    The Vulkan command buffer instance
 		*/
-		inline VkCommandBuffer getSetupVkCommandBuffer() const;
+		inline VkCommandBuffer getVkCommandBuffer() const;
 
-		/**
-		*  @brief
-		*    Flush the used Vulkan command buffer instance
-		*/
-		void flushSetupVkCommandBuffer() const;
+		// TODO(co) Trivial implementation to have something to start with. Need to use more clever memory management and stating buffers later on.
+		uint32_t findMemoryTypeIndex(uint32_t typeFilter, VkMemoryPropertyFlags vkMemoryPropertyFlags) const;
+		VkCommandBuffer createVkCommandBuffer() const;
+		void destroyVkCommandBuffer(VkCommandBuffer vkCommandBuffer) const;
 
 
 	//[-------------------------------------------------------]
@@ -173,9 +190,11 @@ namespace VulkanRenderer
 		VkPhysicalDevice mVkPhysicalDevice;			///< Vulkan physical device this context is using
 		VkDevice		 mVkDevice;					///< Vulkan device instance this context is using (equivalent of a OpenGL context or Direct3D 11 device)
 		uint32_t		 mGraphicsQueueFamilyIndex;	///< Graphics queue family index, ~0u if invalid
+		uint32_t		 mPresentQueueFamilyIndex;	///< Present queue family index, ~0u if invalid
 		VkQueue			 mGraphicsVkQueue;			///< Handle to the Vulkan device graphics queue that command buffers are submitted to
+		VkQueue			 mPresentVkQueue;			///< Handle to the Vulkan device present queue
 		VkCommandPool	 mVkCommandPool;			///< Vulkan command buffer pool instance
-		VkCommandBuffer  mSetupVkCommandBuffer;		///< Vulkan command buffer instance used for setup
+		VkCommandBuffer  mVkCommandBuffer;			///< Vulkan command buffer instance
 
 
 	};

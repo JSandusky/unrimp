@@ -113,12 +113,30 @@ namespace VulkanRenderer
 
 		/**
 		*  @brief
+		*    Return the Vulkan descriptor set layout
+		*
+		*  @return
+		*    The Vulkan descriptor set layout
+		*/
+		inline VkDescriptorSetLayout getVkDescriptorSetLayout() const;
+
+		/**
+		*  @brief
 		*    Return the Vulkan pipeline layout
 		*
 		*  @return
 		*    The Vulkan pipeline layout
 		*/
 		inline VkPipelineLayout getVkPipelineLayout() const;
+
+		/**
+		*  @brief
+		*    Return the Vulkan descriptor set
+		*
+		*  @return
+		*    The Vulkan descriptor set
+		*/
+		inline VkDescriptorSet getVkDescriptorSet() const;
 
 
 	//[-------------------------------------------------------]
@@ -135,7 +153,10 @@ namespace VulkanRenderer
 	private:
 		Renderer::RootSignature	mRootSignature;
 		SamplerState**			mSamplerStates;
+		VkDescriptorSetLayout	mVkDescriptorSetLayout;
 		VkPipelineLayout		mVkPipelineLayout;
+		VkDescriptorPool		mVkDescriptorPool;
+		VkDescriptorSet			mVkDescriptorSet;	///< "mVkDescriptorPool" is the owner which manages the memory
 
 
 	};

@@ -297,7 +297,12 @@ namespace RendererRuntime
 		std_filesystem::create_directories(directoryName);
 	}
 
-	inline IFile* StdFileManager::openFile(FileMode fileMode, const char* filename)
+	inline bool StdFileManager::doesFileExist(const char* filename) const
+	{
+		return std_filesystem::exists(filename);
+	}
+
+	inline IFile* StdFileManager::openFile(FileMode fileMode, const char* filename) const
 	{
 		assert(nullptr != filename);
 		::detail::StdFile* file = nullptr;
@@ -318,7 +323,7 @@ namespace RendererRuntime
 		return file;
 	}
 
-	inline void StdFileManager::closeFile(IFile& file)
+	inline void StdFileManager::closeFile(IFile& file) const
 	{
 		delete static_cast< ::detail::StdFile*>(&file);
 	}

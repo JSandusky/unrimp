@@ -22,18 +22,59 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "VulkanRenderer/State/PipelineState.h"
-#include "VulkanRenderer/State/BlendState.h"
-#include "VulkanRenderer/State/RasterizerState.h"
-#include "VulkanRenderer/State/DepthStencilState.h"
 #include "VulkanRenderer/RenderTarget/SwapChain.h"
 #include "VulkanRenderer/Shader/ProgramGlsl.h"
 #include "VulkanRenderer/Shader/VertexShaderGlsl.h"
+#include "VulkanRenderer/Shader/GeometryShaderGlsl.h"
 #include "VulkanRenderer/Shader/FragmentShaderGlsl.h"
+#include "VulkanRenderer/Shader/TessellationControlShaderGlsl.h"
+#include "VulkanRenderer/Shader/TessellationEvaluationShaderGlsl.h"
 #include "VulkanRenderer/RootSignature.h"
 #include "VulkanRenderer/VulkanRenderer.h"
 #include "VulkanRenderer/VulkanContext.h"
+#include "VulkanRenderer/Mapping.h"
+
+#include <Renderer/ILog.h>
 
 #include <array>
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global definitions                                    ]
+		//[-------------------------------------------------------]
+		typedef std::array<VkPipelineShaderStageCreateInfo, 5> VkPipelineShaderStageCreateInfos;
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		void addVkPipelineShaderStageCreateInfo(VkShaderStageFlagBits vkShaderStageFlagBits, VkShaderModule vkShaderModule, VkPipelineShaderStageCreateInfos& vkPipelineShaderStageCreateInfos, uint32_t stageCount)
+		{
+			VkPipelineShaderStageCreateInfo& vkPipelineShaderStageCreateInfo = vkPipelineShaderStageCreateInfos[stageCount];
+			vkPipelineShaderStageCreateInfo.sType				= VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;	// sType (VkStructureType)
+			vkPipelineShaderStageCreateInfo.pNext				= nullptr;												// pNext (const void*)
+			vkPipelineShaderStageCreateInfo.flags				= 0;													// flags (VkPipelineShaderStageCreateFlags)
+			vkPipelineShaderStageCreateInfo.stage				= vkShaderStageFlagBits;								// stage (VkShaderStageFlagBits)
+			vkPipelineShaderStageCreateInfo.module				= vkShaderModule;										// module (VkShaderModule)
+			vkPipelineShaderStageCreateInfo.pName				= "main";												// pName (const char*)
+			vkPipelineShaderStageCreateInfo.pSpecializationInfo	= nullptr;												// pSpecializationInfo (const VkSpecializationInfo*)
+		}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
 
 
 //[-------------------------------------------------------]
@@ -49,9 +90,6 @@ namespace VulkanRenderer
 	PipelineState::PipelineState(VulkanRenderer& vulkanRenderer, const Renderer::PipelineState& pipelineState) :
 		IPipelineState(vulkanRenderer),
 		mProgram(pipelineState.program),
-		mRasterizerState(new RasterizerState(pipelineState.rasterizerState)),
-		mDepthStencilState(new DepthStencilState(pipelineState.depthStencilState)),
-		mBlendState(new BlendState(pipelineState.blendState)),
 		mVkPipeline(VK_NULL_HANDLE)
 	{
 		// Add a reference to the given program
@@ -68,48 +106,76 @@ namespace VulkanRenderer
 		swapChain->getWidthAndHeight(width, height);
 
 		// Shaders
-		// TODO(co) Handle all shaders correctly (all stages, null pointer checks etc.)
 		ProgramGlsl* programGlsl = static_cast<ProgramGlsl*>(mProgram);
-		std::vector<VkPipelineShaderStageCreateInfo> vkPipelineShaderStageCreateInfos =
+		uint32_t stageCount = 0;
+		::detail::VkPipelineShaderStageCreateInfos vkPipelineShaderStageCreateInfos;
 		{
-			{ // Vertex shader
-				VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,		// sType (VkStructureType)
-				nullptr,													// pNext (const void*)
-				0,															// flags (VkPipelineShaderStageCreateFlags)
-				VK_SHADER_STAGE_VERTEX_BIT,									// stage (VkShaderStageFlagBits)
-				programGlsl->getVertexShaderGlsl()->getVkShaderModule(),	// module (VkShaderModule)
-				"main",														// pName (const char*)
-				nullptr														// pSpecializationInfo (const VkSpecializationInfo*)
-			},
-			{ // Fragment shader
-				VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,		// sType (VkStructureType)
-				nullptr,													// pNext (const void*)
-				0,															// flags (VkPipelineShaderStageCreateFlags)
-				VK_SHADER_STAGE_FRAGMENT_BIT,								// stage (VkShaderStageFlagBits)
-				programGlsl->getFragmentShaderGlsl()->getVkShaderModule(),	// module (VkShaderModule)
-				"main",														// pName (const char*)
-				nullptr														// pSpecializationInfo (const VkSpecializationInfo*)
+			// Define helper macro
+			#define SHADER_STAGE(vkShaderStageFlagBits, shaderGlsl) \
+				if (nullptr != shaderGlsl) \
+				{ \
+					::detail::addVkPipelineShaderStageCreateInfo(vkShaderStageFlagBits, shaderGlsl->getVkShaderModule(), vkPipelineShaderStageCreateInfos, stageCount); \
+					++stageCount; \
+				}
+
+			// Shader stages
+			SHADER_STAGE(VK_SHADER_STAGE_VERTEX_BIT,				  programGlsl->getVertexShaderGlsl())
+			SHADER_STAGE(VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT,	  programGlsl->getTessellationControlShaderGlsl())
+			SHADER_STAGE(VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT, programGlsl->getTessellationEvaluationShaderGlsl())
+			SHADER_STAGE(VK_SHADER_STAGE_GEOMETRY_BIT,				  programGlsl->getGeometryShaderGlsl())
+			SHADER_STAGE(VK_SHADER_STAGE_FRAGMENT_BIT,				  programGlsl->getFragmentShaderGlsl())
+
+			// Undefine helper macro
+			#undef SHADER_STAGE
+		}
+
+		// Vertex attributes
+		const uint32_t numberOfAttributes = pipelineState.vertexAttributes.numberOfAttributes;
+		std::vector<VkVertexInputBindingDescription> vkVertexInputBindingDescriptions;
+		std::vector<VkVertexInputAttributeDescription> vkVertexInputAttributeDescriptions(numberOfAttributes);
+		for (uint32_t attribute = 0; attribute < numberOfAttributes; ++attribute)
+		{
+			const Renderer::VertexAttribute* attributes = &pipelineState.vertexAttributes.attributes[attribute];
+			const uint32_t inputSlot = attributes->inputSlot;
+
+			{ // Map to Vulkan vertex input binding description
+				if (vkVertexInputBindingDescriptions.size() <= inputSlot)
+				{
+					vkVertexInputBindingDescriptions.resize(inputSlot + 1);
+				}
+				VkVertexInputBindingDescription& vkVertexInputBindingDescription = vkVertexInputBindingDescriptions[inputSlot];
+				vkVertexInputBindingDescription.binding   = inputSlot;
+				vkVertexInputBindingDescription.stride    = attributes->strideInBytes;
+				vkVertexInputBindingDescription.inputRate = (attributes->instancesPerElement > 0) ? VK_VERTEX_INPUT_RATE_INSTANCE : VK_VERTEX_INPUT_RATE_VERTEX;
 			}
-		};
+
+			{ // Map to Vulkan vertex input attribute description
+				VkVertexInputAttributeDescription& vkVertexInputAttributeDescription = vkVertexInputAttributeDescriptions[attribute];
+				vkVertexInputAttributeDescription.location = attribute;
+				vkVertexInputAttributeDescription.binding  = inputSlot;
+				vkVertexInputAttributeDescription.format   = Mapping::getVulkanFormat(attributes->vertexAttributeFormat);
+				vkVertexInputAttributeDescription.offset   = attributes->alignedByteOffset;
+			}
+		}
 
 		// Create the Vulkan graphics pipeline
 		// TODO(co) Implement "VkPipeline" creation, this here is just a dummy for the first triangle on screen
 		const VkPipelineVertexInputStateCreateInfo vkPipelineVertexInputStateCreateInfo =
 		{
-			VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,	// sType (VkStructureType)
-			nullptr,													// pNext (const void*)
-			0,															// flags (VkPipelineVertexInputStateCreateFlags)
-			0,															// vertexBindingDescriptionCount (uint32_t)
-			nullptr,													// pVertexBindingDescriptions (const VkVertexInputBindingDescription*)
-			0,															// vertexAttributeDescriptionCount (uint32_t)
-			nullptr														// pVertexAttributeDescriptions (const VkVertexInputAttributeDescription*)
+			VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,			// sType (VkStructureType)
+			nullptr,															// pNext (const void*)
+			0,																	// flags (VkPipelineVertexInputStateCreateFlags)
+			static_cast<uint32_t>(vkVertexInputBindingDescriptions.size()),		// vertexBindingDescriptionCount (uint32_t)
+			vkVertexInputBindingDescriptions.data(),							// pVertexBindingDescriptions (const VkVertexInputBindingDescription*)
+			static_cast<uint32_t>(vkVertexInputAttributeDescriptions.size()),	// vertexAttributeDescriptionCount (uint32_t)
+			vkVertexInputAttributeDescriptions.data()							// pVertexAttributeDescriptions (const VkVertexInputAttributeDescription*)
 		};
 		const VkPipelineInputAssemblyStateCreateInfo vkPipelineInputAssemblyStateCreateInfo =
 		{
 			VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO,	// sType (VkStructureType)
 			nullptr,														// pNext (const void*)
 			0,																// flags (VkPipelineInputAssemblyStateCreateFlags)
-			VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,							// topology (VkPrimitiveTopology)
+			Mapping::getVulkanType(pipelineState.primitiveTopology),		// topology (VkPrimitiveTopology)
 			VK_FALSE														// primitiveRestartEnable (VkBool32)
 		};
 		const VkViewport vkViewport =
@@ -132,6 +198,13 @@ namespace VulkanRenderer
 				height	// height (uint32_t)
 			}
 		};
+		const VkPipelineTessellationStateCreateInfo vkPipelineTessellationStateCreateInfo =
+		{
+			VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO,																																							// sType (VkStructureType)
+			nullptr,																																																			// pNext (const void*)
+			0,																																																					// flags (VkPipelineTessellationStateCreateFlags)
+			(pipelineState.primitiveTopology >= Renderer::PrimitiveTopology::PATCH_LIST_1) ? static_cast<uint32_t>(pipelineState.primitiveTopology) - static_cast<uint32_t>(Renderer::PrimitiveTopology::PATCH_LIST_1) + 1 : 1	// patchControlPoints (uint32_t)
+		};
 		const VkPipelineViewportStateCreateInfo vkPipelineViewportStateCreateInfo =
 		{
 			VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO,	// sType (VkStructureType)
@@ -142,21 +215,24 @@ namespace VulkanRenderer
 			1,														// scissorCount (uint32_t)
 			&scissorVkRect2D										// pScissors (const VkRect2D*)
 		};
+		const float depthBias = static_cast<float>(pipelineState.rasterizerState.depthBias);
+		const float depthBiasClamp = pipelineState.rasterizerState.depthBiasClamp;
+		const float slopeScaledDepthBias = pipelineState.rasterizerState.slopeScaledDepthBias;
 		const VkPipelineRasterizationStateCreateInfo vkPipelineRasterizationStateCreateInfo =
 		{
-			VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO,	// sType (VkStructureType)
-			nullptr,													// pNext (const void*)
-			0,															// flags (VkPipelineRasterizationStateCreateFlags)
-			VK_FALSE,													// depthClampEnable (VkBool32)
-			VK_FALSE,													// rasterizerDiscardEnable (VkBool32)
-			VK_POLYGON_MODE_FILL,										// polygonMode (VkPolygonMode)
-			VK_CULL_MODE_BACK_BIT,										// cullMode (VkCullModeFlags)
-			VK_FRONT_FACE_CLOCKWISE,									// frontFace (VkFrontFace)
-			VK_FALSE,													// depthBiasEnable (VkBool32)
-			0.0f,														// depthBiasConstantFactor (float)
-			0.0f,														// depthBiasClamp (float)
-			0.0f,														// depthBiasSlopeFactor (float)
-			1.0f														// lineWidth (float)
+			VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO,																	// sType (VkStructureType)
+			nullptr,																													// pNext (const void*)
+			0,																															// flags (VkPipelineRasterizationStateCreateFlags)
+			static_cast<VkBool32>(pipelineState.rasterizerState.depthClipEnable),														// depthClampEnable (VkBool32)
+			VK_FALSE,																													// rasterizerDiscardEnable (VkBool32)
+			(Renderer::FillMode::WIREFRAME == pipelineState.rasterizerState.fillMode) ? VK_POLYGON_MODE_LINE : VK_POLYGON_MODE_FILL,	// polygonMode (VkPolygonMode)
+			static_cast<VkCullModeFlags>(static_cast<int>(pipelineState.rasterizerState.cullMode) - 1),									// cullMode (VkCullModeFlags)
+			(1 == pipelineState.rasterizerState.frontCounterClockwise) ? VK_FRONT_FACE_COUNTER_CLOCKWISE : VK_FRONT_FACE_CLOCKWISE,		// frontFace (VkFrontFace)
+			static_cast<VkBool32>(0.0f != depthBias || 0.0f != depthBiasClamp || 0.0f != slopeScaledDepthBias),							// depthBiasEnable (VkBool32)
+			depthBias,																													// depthBiasConstantFactor (float)
+			depthBiasClamp,																												// depthBiasClamp (float)
+			slopeScaledDepthBias,																										// depthBiasSlopeFactor (float)
+			1.0f																														// lineWidth (float)
 		};
 		const VkPipelineMultisampleStateCreateInfo vkPipelineMultisampleStateCreateInfo =
 		{
@@ -172,34 +248,34 @@ namespace VulkanRenderer
 		};
 		const VkPipelineDepthStencilStateCreateInfo vkPipelineDepthStencilStateCreateInfo =
 		{
-			VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO,	// sType (VkStructureType)
-			nullptr,													// pNext (const void*)
-			0,															// flags (VkPipelineDepthStencilStateCreateFlags)
-			VK_FALSE,													// depthTestEnable (VkBool32)
-			VK_FALSE,													// depthWriteEnable (VkBool32)
-			VK_COMPARE_OP_LESS,											// depthCompareOp (VkCompareOp)
-			VK_FALSE,													// depthBoundsTestEnable (VkBool32)
-			VK_FALSE,													// stencilTestEnable (VkBool32)
+			VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO,												// sType (VkStructureType)
+			nullptr,																								// pNext (const void*)
+			0,																										// flags (VkPipelineDepthStencilStateCreateFlags)
+			static_cast<VkBool32>(0 != pipelineState.depthStencilState.depthEnable),								// depthTestEnable (VkBool32)
+			static_cast<VkBool32>(Renderer::DepthWriteMask::ALL == pipelineState.depthStencilState.depthWriteMask),	// depthWriteEnable (VkBool32)
+			Mapping::getVulkanComparisonFunc(pipelineState.depthStencilState.depthFunc),							// depthCompareOp (VkCompareOp)
+			VK_FALSE,																								// depthBoundsTestEnable (VkBool32)
+			static_cast<VkBool32>(0 != pipelineState.depthStencilState.stencilEnable),								// stencilTestEnable (VkBool32)
 			{ // front (VkStencilOpState)
-				VK_STENCIL_OP_KEEP,										// failOp (VkStencilOp)
-				VK_STENCIL_OP_KEEP,										// passOp (VkStencilOp)
-				VK_STENCIL_OP_KEEP,										// depthFailOp (VkStencilOp)
-				VK_COMPARE_OP_NEVER,									// compareOp (VkCompareOp)
-				0,														// compareMask (uint32_t)
-				0,														// writeMask (uint32_t)
-				0														// reference (uint32_t)
+				VK_STENCIL_OP_KEEP,																					// failOp (VkStencilOp)
+				VK_STENCIL_OP_KEEP,																					// passOp (VkStencilOp)
+				VK_STENCIL_OP_KEEP,																					// depthFailOp (VkStencilOp)
+				VK_COMPARE_OP_NEVER,																				// compareOp (VkCompareOp)
+				0,																									// compareMask (uint32_t)
+				0,																									// writeMask (uint32_t)
+				0																									// reference (uint32_t)
 			},
 			{ // back (VkStencilOpState)
-				VK_STENCIL_OP_KEEP,										// failOp (VkStencilOp)
-				VK_STENCIL_OP_KEEP,										// passOp (VkStencilOp)
-				VK_STENCIL_OP_KEEP,										// depthFailOp (VkStencilOp)
-				VK_COMPARE_OP_NEVER,									// compareOp (VkCompareOp)
-				0,														// compareMask (uint32_t)
-				0,														// writeMask (uint32_t)
-				0														// reference (uint32_t)
+				VK_STENCIL_OP_KEEP,																					// failOp (VkStencilOp)
+				VK_STENCIL_OP_KEEP,																					// passOp (VkStencilOp)
+				VK_STENCIL_OP_KEEP,																					// depthFailOp (VkStencilOp)
+				VK_COMPARE_OP_NEVER,																				// compareOp (VkCompareOp)
+				0,																									// compareMask (uint32_t)
+				0,																									// writeMask (uint32_t)
+				0																									// reference (uint32_t)
 			},
-			0.0f,														// minDepthBounds (float)
-			1.0f														// maxDepthBounds (float)
+			0.0f,																									// minDepthBounds (float)
+			1.0f																									// maxDepthBounds (float)
 		};
 		const VkPipelineColorBlendAttachmentState vkPipelineColorBlendAttachmentState =
 		{
@@ -241,11 +317,11 @@ namespace VulkanRenderer
 			VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,										// sType (VkStructureType)
 			nullptr,																				// pNext (const void*)
 			0,																						// flags (VkPipelineCreateFlags)
-			static_cast<uint32_t>(vkPipelineShaderStageCreateInfos.size()),							// stageCount (uint32_t)
+			stageCount,																				// stageCount (uint32_t)
 			vkPipelineShaderStageCreateInfos.data(),												// pStages (const VkPipelineShaderStageCreateInfo*)
 			&vkPipelineVertexInputStateCreateInfo,													// pVertexInputState (const VkPipelineVertexInputStateCreateInfo*)
 			&vkPipelineInputAssemblyStateCreateInfo,												// pInputAssemblyState (const VkPipelineInputAssemblyStateCreateInfo*)
-			nullptr,																				// pTessellationState (const VkPipelineTessellationStateCreateInfo*)
+			&vkPipelineTessellationStateCreateInfo,													// pTessellationState (const VkPipelineTessellationStateCreateInfo*)
 			&vkPipelineViewportStateCreateInfo,														// pViewportState (const VkPipelineViewportStateCreateInfo*)
 			&vkPipelineRasterizationStateCreateInfo,												// pRasterizationState (const VkPipelineRasterizationStateCreateInfo*)
 			&vkPipelineMultisampleStateCreateInfo,													// pMultisampleState (const VkPipelineMultisampleStateCreateInfo*)
@@ -272,21 +348,11 @@ namespace VulkanRenderer
 			vkDestroyPipeline(static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), mVkPipeline, nullptr);
 		}
 
-		// Destroy states
-		delete mRasterizerState;
-		delete mDepthStencilState;
-		delete mBlendState;
-
 		// Release the program reference
 		if (nullptr != mProgram)
 		{
 			mProgram->releaseReference();
 		}
-	}
-
-	void PipelineState::bindPipelineState() const
-	{
-		// TODO(co) Implement me
 	}
 
 

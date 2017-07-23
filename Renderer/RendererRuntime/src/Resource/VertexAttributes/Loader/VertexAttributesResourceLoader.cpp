@@ -78,9 +78,9 @@ namespace RendererRuntime
 					"POSITION",									// semanticName[32] (char)
 					0,											// semanticIndex (uint32_t)
 					// Data source
-					0,											// inputSlot (size_t)
+					0,											// inputSlot (uint32_t)
 					0,											// alignedByteOffset (uint32_t)
-					// Data source, instancing part
+					sizeof(float) * 4,							// strideInBytes (uint32_t)
 					0											// instancesPerElement (uint32_t)
 				}
 			};
@@ -101,7 +101,7 @@ namespace RendererRuntime
 					// Data source
 					0,											// inputSlot (uint32_t)
 					0,											// alignedByteOffset (uint32_t)
-					// Data source, instancing part
+					sizeof(float) * 4 + sizeof(uint8_t) * 4,	// strideInBytes (uint32_t)
 					0											// instancesPerElement (uint32_t)
 				},
 				{ // Attribute 1
@@ -113,7 +113,7 @@ namespace RendererRuntime
 					// Data source
 					0,											// inputSlot (uint32_t)
 					sizeof(float) * 2,							// alignedByteOffset (uint32_t)
-					// Data source, instancing part
+					sizeof(float) * 4 + sizeof(uint8_t) * 4,	// strideInBytes (uint32_t)
 					0											// instancesPerElement (uint32_t)
 				},
 				{ // Attribute 2
@@ -124,8 +124,8 @@ namespace RendererRuntime
 					0,													// semanticIndex (uint32_t)
 					// Data source
 					0,													// inputSlot (uint32_t)
-					sizeof(float) * 2 * 2,								// alignedByteOffset (uint32_t)
-					// Data source, instancing part
+					sizeof(float) * 4,									// alignedByteOffset (uint32_t)
+					sizeof(float) * 4 + sizeof(uint8_t) * 4,			// strideInBytes (uint32_t)
 					0													// instancesPerElement (uint32_t)
 				}
 			};

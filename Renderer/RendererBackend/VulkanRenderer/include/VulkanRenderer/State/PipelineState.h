@@ -42,10 +42,7 @@ namespace Renderer
 }
 namespace VulkanRenderer
 {
-	class BlendState;
 	class VulkanRenderer;
-	class RasterizerState;
-	class DepthStencilState;
 }
 
 
@@ -97,12 +94,6 @@ namespace VulkanRenderer
 		*/
 		inline VkPipeline getVkPipeline() const;
 
-		/**
-		*  @brief
-		*    Bind the pipeline state
-		*/
-		void bindPipelineState() const;
-
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
@@ -117,9 +108,6 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	private:
 		Renderer::IProgram* mProgram;
-		RasterizerState*	mRasterizerState;
-		DepthStencilState*	mDepthStencilState;
-		BlendState*			mBlendState;
 		VkPipeline			mVkPipeline;	///< The Vulkan graphics pipeline
 
 

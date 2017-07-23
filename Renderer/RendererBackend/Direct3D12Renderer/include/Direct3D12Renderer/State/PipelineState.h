@@ -29,11 +29,12 @@
 //[-------------------------------------------------------]
 #include <Renderer/State/IPipelineState.h>
 
+#include "Direct3D12Renderer/D3D12.h"
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-struct ID3D12PipelineState;
 namespace Renderer
 {
 	class IProgram;
@@ -87,6 +88,15 @@ namespace Direct3D12Renderer
 
 		/**
 		*  @brief
+		*    Return the Direct3D 12 primitive topology
+		*
+		*  @return
+		*    The Direct3D 12 primitive topology
+		*/
+		inline D3D12_PRIMITIVE_TOPOLOGY getD3D12PrimitiveTopology() const;
+
+		/**
+		*  @brief
 		*    Return the Direct3D 12 pipeline state
 		*
 		*  @return
@@ -114,6 +124,7 @@ namespace Direct3D12Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		D3D12_PRIMITIVE_TOPOLOGY  mD3D12PrimitiveTopology;
 		ID3D12PipelineState*	  mD3D12PipelineState;	///< Direct3D 12 pipeline state, can be a null pointer
 		Renderer::IRootSignature* mRootSignature;
 		Renderer::IProgram*		  mProgram;

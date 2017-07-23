@@ -27,6 +27,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include <Renderer/Texture/TextureTypes.h>
+
 #include "VulkanRenderer/VulkanRuntimeLinking.h"
 
 
@@ -52,17 +54,34 @@ namespace VulkanRenderer
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
 	public:
-		/**
-		*  @brief
-		*    Uses a fixed sub resource layout with first mip level and layer
-		*/
-		static void setImageLayout(VkCommandBuffer vkCommandBuffer, VkImage vkImage, VkImageLayout oldVkImageLayout, VkImageLayout newVkImageLayout, VkImageAspectFlags vkImageAspectFlags);
+		//[-------------------------------------------------------]
+		//[ Command                                               ]
+		//[-------------------------------------------------------]
+		static VkCommandBuffer beginSingleTimeCommands(const VulkanRenderer& vulkanRenderer);
+		static void endSingleTimeCommands(const VulkanRenderer& vulkanRenderer, VkCommandBuffer vkCommandBuffer);
 
-		/**
-		*  @brief
-		*    Put an image memory barrier for setting an image layout on the sub resource into the given command buffer
-		*/
-		static void setImageLayout(VkCommandBuffer vkCommandBuffer, VkImage vkImage, VkImageLayout oldVkImageLayout, VkImageLayout newVkImageLayout, VkImageSubresourceRange vkImageSubresourceRange);
+		//[-------------------------------------------------------]
+		//[ Transition                                            ]
+		//[-------------------------------------------------------]
+		static void transitionVkImageLayout(const VulkanRenderer& vulkanRenderer, VkImage vkImage, VkImageLayout oldVkImageLayout, VkImageLayout newVkImageLayout);
+		static void transitionVkImageLayout(const VulkanRenderer& vulkanRenderer, VkCommandBuffer vkCommandBuffer, VkImage vkImage, uint32_t levelCount, VkImageLayout oldVkImageLayout, VkImageLayout newVkImageLayout);
+
+		//[-------------------------------------------------------]
+		//[ Buffer                                                ]
+		//[-------------------------------------------------------]
+		// TODO(co) Trivial implementation to have something to start with. Need to use more clever memory management and stating buffers later on.
+		static void createAndAllocateVkBuffer(const VulkanRenderer& vulkanRenderer, VkBufferUsageFlagBits vkBufferUsageFlagBits, VkMemoryPropertyFlags vkMemoryPropertyFlags, VkDeviceSize numberOfBytes, const void* data, VkBuffer& vkBuffer, VkDeviceMemory& vkDeviceMemory);
+		static void destroyAndFreeVkBuffer(const VulkanRenderer& vulkanRenderer, VkBuffer& vkBuffer, VkDeviceMemory& vkDeviceMemory);
+
+		//[-------------------------------------------------------]
+		//[ Image                                                 ]
+		//[-------------------------------------------------------]
+		// TODO(co) Trivial implementation to have something to start with. Need to use more clever memory management and stating buffers later on.
+		static void createAndFillVkImage(const VulkanRenderer& vulkanRenderer, VkImageType vkImageType, VkImageViewType vkImageViewType, const VkExtent3D& vkExtent3D, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, VkImage& vkImage, VkDeviceMemory& vkDeviceMemory, VkImageView& vkImageView);
+		static void createAndAllocateVkImage(const VulkanRenderer& vulkanRenderer, VkImageType vkImageType, const VkExtent3D& vkExtent3D, uint32_t mipLevels, VkFormat vkFormat, VkImageTiling vkImageTiling, VkImageUsageFlags vkImageUsageFlags, VkMemoryPropertyFlags vkMemoryPropertyFlags, VkImage& vkImage, VkDeviceMemory& vkDeviceMemory);
+		static void destroyAndFreeVkImage(const VulkanRenderer& vulkanRenderer, VkImage vkImage, VkDeviceMemory vkDeviceMemory);
+		static void destroyAndFreeVkImage(const VulkanRenderer& vulkanRenderer, VkImage vkImage, VkDeviceMemory vkDeviceMemory, VkImageView vkImageView);
+		static void createVkImageView(const VulkanRenderer& vulkanRenderer, VkImage vkImage, VkImageViewType vkImageViewType, uint32_t mipLevels, VkFormat vkFormat, VkImageView& vkImageView);
 
 
 	};

@@ -96,7 +96,6 @@ namespace NullRenderer
 		//[ Input-assembler (IA) stage                            ]
 		//[-------------------------------------------------------]
 		void iaSetVertexArray(Renderer::IVertexArray* vertexArray);
-		void iaSetPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology);
 		//[-------------------------------------------------------]
 		//[ Rasterizer (RS) stage                                 ]
 		//[-------------------------------------------------------]

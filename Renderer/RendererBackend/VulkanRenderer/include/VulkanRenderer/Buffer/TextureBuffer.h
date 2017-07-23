@@ -31,6 +31,8 @@
 #include <Renderer/Buffer/BufferTypes.h>
 #include <Renderer/Texture/TextureTypes.h>
 
+#include "VulkanRenderer/Vulkan.h"
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -86,6 +88,15 @@ namespace VulkanRenderer
 		*/
 		virtual ~TextureBuffer();
 
+		/**
+		*  @brief
+		*    Return the Vulkan texture buffer
+		*
+		*  @return
+		*    The Vulkan texture buffer
+		*/
+		inline VkBuffer getVkBuffer() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ITextureBuffer methods       ]
@@ -106,7 +117,7 @@ namespace VulkanRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		// TODO(co) Implement me
+		VkBuffer mVkBuffer;	///< The Vulkan texture buffer
 
 
 	};

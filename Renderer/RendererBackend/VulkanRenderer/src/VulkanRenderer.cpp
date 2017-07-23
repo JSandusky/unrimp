@@ -38,7 +38,9 @@
 #include "VulkanRenderer/Buffer/TextureBuffer.h"
 #include "VulkanRenderer/Buffer/IndirectBuffer.h"
 #include "VulkanRenderer/Texture/TextureManager.h"
+#include "VulkanRenderer/Texture/Texture1D.h"
 #include "VulkanRenderer/Texture/Texture2D.h"
+#include "VulkanRenderer/Texture/Texture3D.h"
 #include "VulkanRenderer/Texture/Texture2DArray.h"
 #include "VulkanRenderer/State/SamplerState.h"
 #include "VulkanRenderer/State/PipelineState.h"
@@ -47,6 +49,8 @@
 
 #include <Renderer/ILog.h>
 #include <Renderer/Buffer/CommandBuffer.h>
+
+#include <tuple>	// For "std::ignore"
 
 
 //[-------------------------------------------------------]
@@ -129,12 +133,6 @@ namespace
 				static_cast<VulkanRenderer::VulkanRenderer&>(renderer).iaSetVertexArray(realData->vertexArray);
 			}
 
-			void SetPrimitiveTopology(const void* data, Renderer::IRenderer& renderer)
-			{
-				const Renderer::Command::SetPrimitiveTopology* realData = static_cast<const Renderer::Command::SetPrimitiveTopology*>(data);
-				static_cast<VulkanRenderer::VulkanRenderer&>(renderer).iaSetPrimitiveTopology(realData->primitiveTopology);
-			}
-
 			//[-------------------------------------------------------]
 			//[ Rasterizer (RS) stage                                 ]
 			//[-------------------------------------------------------]
@@ -188,8 +186,7 @@ namespace
 				const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
 				if (nullptr != realData->indirectBuffer)
 				{
-					// No resource owner security check in here, we only support emulated indirect buffer
-					static_cast<VulkanRenderer::VulkanRenderer&>(renderer).drawEmulated(realData->indirectBuffer->getEmulationData(), realData->indirectBufferOffset, realData->numberOfDraws);
+					static_cast<VulkanRenderer::VulkanRenderer&>(renderer).draw(*realData->indirectBuffer, realData->indirectBufferOffset, realData->numberOfDraws);
 				}
 				else
 				{
@@ -202,8 +199,7 @@ namespace
 				const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
 				if (nullptr != realData->indirectBuffer)
 				{
-					// No resource owner security check in here, we only support emulated indirect buffer
-					static_cast<VulkanRenderer::VulkanRenderer&>(renderer).drawIndexedEmulated(realData->indirectBuffer->getEmulationData(), realData->indirectBufferOffset, realData->numberOfDraws);
+					static_cast<VulkanRenderer::VulkanRenderer&>(renderer).drawIndexed(*realData->indirectBuffer, realData->indirectBufferOffset, realData->numberOfDraws);
 				}
 				else
 				{
@@ -250,7 +246,6 @@ namespace
 			&BackendDispatch::SetPipelineState,
 			// Input-assembler (IA) stage
 			&BackendDispatch::SetVertexArray,
-			&BackendDispatch::SetPrimitiveTopology,
 			// Rasterizer (RS) stage
 			&BackendDispatch::SetViewports,
 			&BackendDispatch::SetScissorRectangles,
@@ -295,7 +290,7 @@ namespace VulkanRenderer
 		mShaderLanguageGlsl(nullptr),
 		mGraphicsRootSignature(nullptr),
 		mDefaultSamplerState(nullptr),
-		mVkCommandBuffer(VK_NULL_HANDLE),
+		mInsideVulkanRenderPass(false),
 		mVertexArray(nullptr),
 		mMainSwapChain(nullptr),
 		mRenderTarget(nullptr)
@@ -328,39 +323,6 @@ namespace VulkanRenderer
 				// Initialize the capabilities
 				initializeCapabilities();
 
-				{ // Create Vulkan command buffer instance
-					const VkCommandBufferAllocateInfo vkCommandBufferAllocateInfo =
-					{
-						VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,	// sType (VkStructureType)
-						nullptr,										// pNext (const void*)
-						mVulkanContext->getVkCommandPool(),				// commandPool (VkCommandPool)
-						VK_COMMAND_BUFFER_LEVEL_PRIMARY,				// level (VkCommandBufferLevel)
-						1												// commandBufferCount (uint32_t)
-					};
-					VkResult vkResult = vkAllocateCommandBuffers(mVulkanContext->getVkDevice(), &vkCommandBufferAllocateInfo, &mVkCommandBuffer);
-					if (VK_SUCCESS == vkResult)
-					{
-						const VkCommandBufferBeginInfo vkCommandBufferBeginInfo =
-						{
-							VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,	// sType (VkStructureType)
-							nullptr,										// pNext (const void*)
-							0,												// flags (VkCommandBufferUsageFlags)
-							nullptr,										// pInheritanceInfo (const VkCommandBufferInheritanceInfo*)
-						};
-						vkResult = vkBeginCommandBuffer(mVkCommandBuffer, &vkCommandBufferBeginInfo);
-						if (VK_SUCCESS != vkResult)
-						{
-							// Error!
-							RENDERER_LOG(mContext, CRITICAL, "Failed to begin Vulkan command buffer instance")
-						}
-					}
-					else
-					{
-						// Error!
-						RENDERER_LOG(mContext, CRITICAL, "Failed to create Vulkan command buffer instance")
-					}
-				}
-
 				// Create the default sampler state
 				mDefaultSamplerState = createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
 
@@ -379,9 +341,6 @@ namespace VulkanRenderer
 					mMainSwapChain = new SwapChain(*this, nativeWindowHandle);
 					RENDERER_SET_RESOURCE_DEBUG_NAME(mMainSwapChain, "Main swap chain")
 					mMainSwapChain->addReference();	// Internal renderer reference
-
-					// Done
-					mVulkanContext->flushSetupVkCommandBuffer();
 				}
 			}
 		}
@@ -389,44 +348,6 @@ namespace VulkanRenderer
 
 	VulkanRenderer::~VulkanRenderer()
 	{
-		// Destroy Vulkan command buffer instance
-		VkResult vkResult = vkEndCommandBuffer(mVkCommandBuffer);
-		if (VK_SUCCESS == vkResult)
-		{
-			const VkSubmitInfo vkSubmitInfo =
-			{
-				VK_STRUCTURE_TYPE_SUBMIT_INFO,	// sType (VkStructureType)
-				nullptr,						// pNext (const void*)
-				0,								// waitSemaphoreCount (uint32_t)
-				nullptr,						// pWaitSemaphores (const VkSemaphore*)
-				nullptr,						// pWaitDstStageMask (const VkPipelineStageFlags*)
-				1,								// commandBufferCount (uint32_t)
-				&mVkCommandBuffer,				// pCommandBuffers (const VkCommandBuffer*)
-				0,								// signalSemaphoreCount (uint32_t)
-				nullptr							// pSignalSemaphores (const VkSemaphore*)
-			};
-			vkResult = vkQueueSubmit(mVulkanContext->getGraphicsVkQueue(), 1, &vkSubmitInfo, VK_NULL_HANDLE);
-			if (VK_SUCCESS == vkResult)
-			{
-				vkResult = vkQueueWaitIdle(mVulkanContext->getGraphicsVkQueue());
-				if (VK_SUCCESS != vkResult)
-				{
-					// Error!
-					RENDERER_LOG(mContext, CRITICAL, "Failed to wait for Vulkan command buffer instance flush")
-				}
-			}
-			else
-			{
-				// Error!
-				RENDERER_LOG(mContext, CRITICAL, "Failed to submit the Vulkan command buffer instance")
-			}
-		}
-		else
-		{
-			// Error!
-			RENDERER_LOG(mContext, CRITICAL, "Failed to end the Vulkan command buffer instance")
-		}
-
 		// Set no vertex array reference, in case we have one
 		if (nullptr != mVertexArray)
 		{
@@ -511,6 +432,10 @@ namespace VulkanRenderer
 
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			VULKANRENDERER_RENDERERMATCHCHECK_RETURN(*this, *rootSignature)
+
+			// Bind Vulkan descriptor sets
+			const VkDescriptorSet vkDescriptorSet = mGraphicsRootSignature->getVkDescriptorSet();
+			vkCmdBindDescriptorSets(getVulkanContext().getVkCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, mGraphicsRootSignature->getVkPipelineLayout(), 0, 1, &vkDescriptorSet, 0, nullptr);
 		}
 	}
 
@@ -556,11 +481,6 @@ namespace VulkanRenderer
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			VULKANRENDERER_RENDERERMATCHCHECK_RETURN(*this, *resource)
 
-			// Get the root signature parameter instance
-			// TODO(co) Implement me
-			// const Renderer::RootParameter& rootParameter = mGraphicsRootSignature->getRootSignature().parameters[rootParameterIndex];
-			// const Renderer::DescriptorRange* descriptorRange = rootParameter.descriptorTable.descriptorRanges;
-
 			// Check the type of resource to set
 			// TODO(co) Some additional resource type root signature security checks in debug build?
 			// TODO(co) There's room for binding API call related optimization in here (will certainly be no huge overall efficiency gain)
@@ -568,14 +488,109 @@ namespace VulkanRenderer
 			switch (resourceType)
 			{
 				case Renderer::ResourceType::UNIFORM_BUFFER:
-					// TODO(co) Implement me
+				{
+					const UniformBuffer* uniformBuffer = static_cast<UniformBuffer*>(resource);
+					const VkDescriptorBufferInfo vkDescriptorBufferInfo =
+					{
+						uniformBuffer->getVkBuffer(),	// buffer (VkBuffer)
+						0,								// offset (VkDeviceSize)
+						VK_WHOLE_SIZE					// range (VkDeviceSize)
+					};
+					const VkWriteDescriptorSet vkWriteDescriptorSet =
+					{
+						VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,			// sType (VkStructureType)
+						nullptr,										// pNext (const void*)
+						mGraphicsRootSignature->getVkDescriptorSet(),	// dstSet (VkDescriptorSet)
+						rootParameterIndex,								// dstBinding (uint32_t)
+						0,												// dstArrayElement (uint32_t)
+						1,												// descriptorCount (uint32_t)
+						VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,				// descriptorType (VkDescriptorType)
+						nullptr,										// pImageInfo (const VkDescriptorImageInfo*)
+						&vkDescriptorBufferInfo,						// pBufferInfo (const VkDescriptorBufferInfo*)
+						nullptr											// pTexelBufferView (const VkBufferView*)
+					};
+					vkUpdateDescriptorSets(getVulkanContext().getVkDevice(), 1, &vkWriteDescriptorSet, 0, nullptr);
 					break;
+				}
 
-				case Renderer::ResourceType::TEXTURE_BUFFER:
 				case Renderer::ResourceType::TEXTURE_1D:
 				case Renderer::ResourceType::TEXTURE_2D:
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 				case Renderer::ResourceType::TEXTURE_3D:
+				{
+					// Evaluate the texture type and get the Vulkan image view
+					VkImageView vkImageView = VK_NULL_HANDLE;
+					switch (resourceType)
+					{
+						case Renderer::ResourceType::TEXTURE_1D:
+							vkImageView = static_cast<Texture1D*>(resource)->getVkImageView();
+							break;
+
+						case Renderer::ResourceType::TEXTURE_2D:
+							vkImageView = static_cast<Texture2D*>(resource)->getVkImageView();
+							break;
+
+						case Renderer::ResourceType::TEXTURE_3D:
+							vkImageView = static_cast<Texture3D*>(resource)->getVkImageView();
+							break;
+
+						case Renderer::ResourceType::ROOT_SIGNATURE:
+						case Renderer::ResourceType::PROGRAM:
+						case Renderer::ResourceType::VERTEX_ARRAY:
+						case Renderer::ResourceType::SWAP_CHAIN:
+						case Renderer::ResourceType::FRAMEBUFFER:
+						case Renderer::ResourceType::INDEX_BUFFER:
+						case Renderer::ResourceType::VERTEX_BUFFER:
+						case Renderer::ResourceType::UNIFORM_BUFFER:
+						case Renderer::ResourceType::INDIRECT_BUFFER:
+						case Renderer::ResourceType::TEXTURE_BUFFER:
+						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+						case Renderer::ResourceType::TEXTURE_CUBE:
+						case Renderer::ResourceType::PIPELINE_STATE:
+						case Renderer::ResourceType::SAMPLER_STATE:
+						case Renderer::ResourceType::VERTEX_SHADER:
+						case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+						case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+						case Renderer::ResourceType::GEOMETRY_SHADER:
+						case Renderer::ResourceType::FRAGMENT_SHADER:
+							RENDERER_LOG(mContext, CRITICAL, "Invalid Vulkan renderer backend resource type")
+							break;
+					}
+
+					// Get the root signature parameter instance
+					const Renderer::RootParameter& rootParameter = mGraphicsRootSignature->getRootSignature().parameters[rootParameterIndex];
+					const Renderer::DescriptorRange* descriptorRange = reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges);
+					assert(nullptr != descriptorRange);
+
+					// Get the sampler state
+					const SamplerState* samplerState = mGraphicsRootSignature->getSamplerState(descriptorRange->samplerRootParameterIndex);
+					assert(nullptr != samplerState);
+
+					// Update Vulkan descriptor sets
+					const VkDescriptorImageInfo vkDescriptorImageInfo =
+					{
+						samplerState->getVkSampler(),	// sampler (VkSampler)
+						vkImageView,					// imageView (VkImageView)
+						VK_IMAGE_LAYOUT_PREINITIALIZED	// imageLayout (VkImageLayout)
+					};
+					const VkWriteDescriptorSet vkWriteDescriptorSet =
+					{
+						VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,			// sType (VkStructureType)
+						nullptr,										// pNext (const void*)
+						mGraphicsRootSignature->getVkDescriptorSet(),	// dstSet (VkDescriptorSet)
+						rootParameterIndex,								// dstBinding (uint32_t)
+						0,												// dstArrayElement (uint32_t)
+						1,												// descriptorCount (uint32_t)
+						VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,		// descriptorType (VkDescriptorType)
+						&vkDescriptorImageInfo,							// pImageInfo (const VkDescriptorImageInfo*)
+						nullptr,										// pBufferInfo (const VkDescriptorBufferInfo*)
+						nullptr											// pTexelBufferView (const VkBufferView*)
+					};
+					vkUpdateDescriptorSets(getVulkanContext().getVkDevice(), 1, &vkWriteDescriptorSet, 0, nullptr);
+					break;
+				}
+
+				case Renderer::ResourceType::TEXTURE_BUFFER:
+				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 				case Renderer::ResourceType::TEXTURE_CUBE:
 				{
 					// TODO(co) Implement me
@@ -584,7 +599,8 @@ namespace VulkanRenderer
 
 				case Renderer::ResourceType::SAMPLER_STATE:
 				{
-					// TODO(co) Implement me
+					// Unlike Direct3D >=10, Vulkan directly attaches the sampler settings to the texture
+					mGraphicsRootSignature->setSamplerState(rootParameterIndex, static_cast<SamplerState*>(resource));
 					break;
 				}
 
@@ -619,8 +635,8 @@ namespace VulkanRenderer
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			VULKANRENDERER_RENDERERMATCHCHECK_RETURN(*this, *pipelineState)
 
-			// Set pipeline state
-			static_cast<PipelineState*>(pipelineState)->bindPipelineState();
+			// Bind Vulkan pipeline
+			vkCmdBindPipeline(getVulkanContext().getVkCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, static_cast<PipelineState*>(pipelineState)->getVkPipeline());
 		}
 		else
 		{
@@ -650,7 +666,8 @@ namespace VulkanRenderer
 				mVertexArray = static_cast<VertexArray*>(vertexArray);
 				mVertexArray->addReference();
 
-				// TODO(co) Implement me
+				// Bind Vulkan buffers
+				static_cast<VertexArray*>(vertexArray)->bindVulkanBuffers(getVulkanContext().getVkCommandBuffer());
 			}
 			else
 			{
@@ -660,59 +677,33 @@ namespace VulkanRenderer
 		}
 	}
 
-	void VulkanRenderer::iaSetPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology)
-	{
-		// Tessellation support: Up to 32 vertices per patch are supported "Renderer::PrimitiveTopology::PATCH_LIST_1" ... "Renderer::PrimitiveTopology::PATCH_LIST_32"
-		if (primitiveTopology >= Renderer::PrimitiveTopology::PATCH_LIST_1)
-		{
-			// Use tessellation
-
-			// TODO(co) Implement me
-		}
-		else
-		{
-			// Do not use tessellation
-
-			// TODO(co) Implement me
-		}
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Rasterizer (RS) stage                                 ]
 	//[-------------------------------------------------------]
 	void VulkanRenderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport* viewports)
 	{
-		// Are the given viewports valid?
-		if (numberOfViewports > 0 && nullptr != viewports)
-		{
-			vkCmdSetViewport(mVkCommandBuffer, 0, numberOfViewports, reinterpret_cast<const VkViewport*>(viewports));
-		}
-		else
-		{
-			// Error!
-			assert(false);
-		}
+		// Sanity check
+		assert((numberOfViewports > 0 && nullptr != viewports) && "Invalid rasterizer state viewports");
+
+		// Set Vulkan viewport
+		vkCmdSetViewport(getVulkanContext().getVkCommandBuffer(), 0, numberOfViewports, reinterpret_cast<const VkViewport*>(viewports));
 	}
 
 	void VulkanRenderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles)
 	{
-		// Are the given scissor rectangles valid?
-		if (numberOfScissorRectangles > 0 && nullptr != scissorRectangles)
+		// Sanity check
+		assert((numberOfScissorRectangles > 0 && nullptr != scissorRectangles) && "Invalid rasterizer state scissor rectangles");
+		std::ignore = numberOfScissorRectangles;
+
+		// Set Vulkan scissor
+		// TODO(co) Add support for multiple scissor rectangles. Change "Renderer::ScissorRectangle" to Vulkan style to make it the primary API on the long run?
+		const VkRect2D vkRect2D =
 		{
-			// TODO(co) Add support for multiple scissor rectangles. Change "Renderer::ScissorRectangle" to Vulkan style to make it the primary API on the long run?
-			const VkRect2D vkRect2D =
-			{
-				{ static_cast<int32_t>(scissorRectangles[0].topLeftX), static_cast<int32_t>(scissorRectangles[0].topLeftY) },
-				{ static_cast<uint32_t>(scissorRectangles[0].bottomRightX - scissorRectangles[0].topLeftX), static_cast<uint32_t>(scissorRectangles[0].bottomRightY - scissorRectangles[0].topLeftY) }
-			};
-			vkCmdSetScissor(mVkCommandBuffer, 0, 1, &vkRect2D);
-		}
-		else
-		{
-			// Error!
-			assert(false);
-		}
+			{ static_cast<int32_t>(scissorRectangles[0].topLeftX), static_cast<int32_t>(scissorRectangles[0].topLeftY) },
+			{ static_cast<uint32_t>(scissorRectangles[0].bottomRightX - scissorRectangles[0].topLeftX), static_cast<uint32_t>(scissorRectangles[0].bottomRightY - scissorRectangles[0].topLeftY) }
+		};
+		vkCmdSetScissor(getVulkanContext().getVkCommandBuffer(), 0, 1, &vkRect2D);
 	}
 
 
@@ -724,32 +715,127 @@ namespace VulkanRenderer
 		// New render target?
 		if (mRenderTarget != renderTarget)
 		{
+			// Release the render target reference, in case we have one
+			if (nullptr != mRenderTarget)
+			{
+				// End Vulkan render pass if necessary
+				if (mInsideVulkanRenderPass)
+				{
+					// Implicit image layout change transition
+					vkCmdEndRenderPass(getVulkanContext().getVkCommandBuffer());
+					mInsideVulkanRenderPass = false;
+				}
+				else
+				{
+					// Explicit image layout change transition: Handle Vulkan image memory barrier
+					// -> Only needed when there's no Vulkan render pass which performs this implicit
+					switch (mRenderTarget->getResourceType())
+					{
+						case Renderer::ResourceType::SWAP_CHAIN:
+						{
+							// Vulkan image memory barrier: Writing to present transition
+							const SwapChain* swapChain = static_cast<SwapChain*>(mRenderTarget);
+							const VkImageSubresourceRange vkImageSubresourceRange =
+							{
+								VK_IMAGE_ASPECT_COLOR_BIT,	// aspectMask (VkImageAspectFlags)
+								0,							// baseMipLevel (uint32_t)
+								1,							// levelCount (uint32_t)
+								0,							// baseArrayLayer (uint32_t)
+								1							// layerCount (uint32_t)
+							};
+							const VkImageMemoryBarrier vkImageMemoryBarrier =
+							{
+								VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,	// sType (VkStructureType)
+								nullptr,								// pNext (const void*)
+								VK_ACCESS_TRANSFER_WRITE_BIT,			// srcAccessMask (VkAccessFlags)
+								VK_ACCESS_MEMORY_READ_BIT,				// dstAccessMask (VkAccessFlags)
+								VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,	// oldLayout (VkImageLayout)
+								VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,		// newLayout (VkImageLayout)
+								VK_QUEUE_FAMILY_IGNORED,				// srcQueueFamilyIndex (uint32_t)
+								VK_QUEUE_FAMILY_IGNORED,				// dstQueueFamilyIndex (uint32_t)
+								swapChain->getCurrentVkImage(),			// image (VkImage)
+								vkImageSubresourceRange					// subresourceRange (VkImageSubresourceRange)
+							};
+							vkCmdPipelineBarrier(getVulkanContext().getVkCommandBuffer(), VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 1, &vkImageMemoryBarrier);
+							break;
+						}
+
+						case Renderer::ResourceType::FRAMEBUFFER:
+						{
+							// TODO(co) Implement me
+							break;
+						}
+
+						case Renderer::ResourceType::ROOT_SIGNATURE:
+						case Renderer::ResourceType::PROGRAM:
+						case Renderer::ResourceType::VERTEX_ARRAY:
+						case Renderer::ResourceType::INDEX_BUFFER:
+						case Renderer::ResourceType::VERTEX_BUFFER:
+						case Renderer::ResourceType::UNIFORM_BUFFER:
+						case Renderer::ResourceType::TEXTURE_BUFFER:
+						case Renderer::ResourceType::INDIRECT_BUFFER:
+						case Renderer::ResourceType::TEXTURE_1D:
+						case Renderer::ResourceType::TEXTURE_2D:
+						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+						case Renderer::ResourceType::TEXTURE_3D:
+						case Renderer::ResourceType::TEXTURE_CUBE:
+						case Renderer::ResourceType::PIPELINE_STATE:
+						case Renderer::ResourceType::SAMPLER_STATE:
+						case Renderer::ResourceType::VERTEX_SHADER:
+						case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+						case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+						case Renderer::ResourceType::GEOMETRY_SHADER:
+						case Renderer::ResourceType::FRAGMENT_SHADER:
+						default:
+							// Not handled in here
+							break;
+					}
+				}
+
+				// Release
+				mRenderTarget->releaseReference();
+				mRenderTarget = nullptr;
+			}
+
 			// Set a render target?
 			if (nullptr != renderTarget)
 			{
 				// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 				VULKANRENDERER_RENDERERMATCHCHECK_RETURN(*this, *renderTarget)
 
-				// Release the render target reference, in case we have one
-				if (nullptr != mRenderTarget)
-				{
-					// TODO(co) Implement me
-
-					// Release
-					mRenderTarget->releaseReference();
-				}
-
 				// Set new render target and add a reference to it
 				mRenderTarget = renderTarget;
 				mRenderTarget->addReference();
 
-				// Evaluate the render target type
+				// Handle Vulkan image memory barrier
 				switch (mRenderTarget->getResourceType())
 				{
 					case Renderer::ResourceType::SWAP_CHAIN:
 					{
-						// TODO(co) Implement me
-						// static_cast<SwapChain*>(mRenderTarget)->getVulkanContext().makeCurrent();
+						// Vulkan image memory barrier: Present to writing transition
+						const SwapChain* swapChain = static_cast<SwapChain*>(mRenderTarget);
+						const VkImageSubresourceRange vkImageSubresourceRange =
+						{
+							VK_IMAGE_ASPECT_COLOR_BIT,	// aspectMask (VkImageAspectFlags)
+							0,							// baseMipLevel (uint32_t)
+							1,							// levelCount (uint32_t)
+							0,							// baseArrayLayer (uint32_t)
+							1							// layerCount (uint32_t)
+						};
+						const VkImageMemoryBarrier vkImageMemoryBarrier =
+						{
+							VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,	// sType (VkStructureType)
+							nullptr,								// pNext (const void*)
+							0,										// srcAccessMask (VkAccessFlags)
+							VK_ACCESS_TRANSFER_WRITE_BIT,			// dstAccessMask (VkAccessFlags)
+							VK_IMAGE_LAYOUT_UNDEFINED,				// oldLayout (VkImageLayout)
+							VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,	// newLayout (VkImageLayout)
+							VK_QUEUE_FAMILY_IGNORED,				// srcQueueFamilyIndex (uint32_t)
+							VK_QUEUE_FAMILY_IGNORED,				// dstQueueFamilyIndex (uint32_t)
+							swapChain->getCurrentVkImage(),			// image (VkImage)
+							vkImageSubresourceRange					// subresourceRange (VkImageSubresourceRange)
+						};
+						vkCmdPipelineBarrier(getVulkanContext().getVkCommandBuffer(), VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, nullptr, 0, nullptr, 1, &vkImageMemoryBarrier);
 						break;
 					}
 
@@ -784,17 +870,6 @@ namespace VulkanRenderer
 						break;
 				}
 			}
-			else
-			{
-				// TODO(co) Set no active render target
-
-				// Release the render target reference, in case we have one
-				if (nullptr != mRenderTarget)
-				{
-					mRenderTarget->releaseReference();
-					mRenderTarget = nullptr;
-				}
-			}
 		}
 	}
 
@@ -802,9 +877,84 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Operations                                            ]
 	//[-------------------------------------------------------]
-	void VulkanRenderer::clear(uint32_t, const float[4], float, uint32_t)
+	void VulkanRenderer::clear(uint32_t flags, const float color[4], float, uint32_t)
 	{
-		// TODO(co) Implement me
+		// Sanity check
+		assert(nullptr != mRenderTarget && "Can't execute clear command without a render target set");
+		assert(!mInsideVulkanRenderPass && "Can't execute clear command inside a Vulkan render pass");
+
+		// Clear color
+		if (flags & Renderer::ClearFlag::COLOR)
+		{
+			// Get the Vulkan image to clear
+			VkImage vkImage = VK_NULL_HANDLE;
+			switch (mRenderTarget->getResourceType())
+			{
+				case Renderer::ResourceType::SWAP_CHAIN:
+					vkImage = static_cast<SwapChain*>(mRenderTarget)->getCurrentVkImage();
+					break;
+
+				case Renderer::ResourceType::FRAMEBUFFER:
+					// TODO(co) Implement me
+					break;
+
+				case Renderer::ResourceType::ROOT_SIGNATURE:
+				case Renderer::ResourceType::PROGRAM:
+				case Renderer::ResourceType::VERTEX_ARRAY:
+				case Renderer::ResourceType::INDEX_BUFFER:
+				case Renderer::ResourceType::VERTEX_BUFFER:
+				case Renderer::ResourceType::UNIFORM_BUFFER:
+				case Renderer::ResourceType::TEXTURE_BUFFER:
+				case Renderer::ResourceType::INDIRECT_BUFFER:
+				case Renderer::ResourceType::TEXTURE_1D:
+				case Renderer::ResourceType::TEXTURE_2D:
+				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+				case Renderer::ResourceType::TEXTURE_3D:
+				case Renderer::ResourceType::TEXTURE_CUBE:
+				case Renderer::ResourceType::PIPELINE_STATE:
+				case Renderer::ResourceType::SAMPLER_STATE:
+				case Renderer::ResourceType::VERTEX_SHADER:
+				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+				case Renderer::ResourceType::GEOMETRY_SHADER:
+				case Renderer::ResourceType::FRAGMENT_SHADER:
+				default:
+					// Not handled in here
+					break;
+			}
+			assert(VK_NULL_HANDLE != vkImage && "Failed to get a Vulkan image");
+
+			// Clear the Vulkan color image
+			const VkClearColorValue vkClearColorValue =
+			{
+				color[0], color[1], color[2], color[3]
+			};
+			const VkImageSubresourceRange vkImageSubresourceRange =
+			{
+				VK_IMAGE_ASPECT_COLOR_BIT,	// aspectMask (VkImageAspectFlags)
+				0,							// baseMipLevel (uint32_t)
+				1,							// levelCount (uint32_t)
+				0,							// baseArrayLayer (uint32_t)
+				1							// layerCount (uint32_t)
+			};
+			vkCmdClearColorImage(getVulkanContext().getVkCommandBuffer(), vkImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, &vkClearColorValue, 1, &vkImageSubresourceRange);
+		}
+
+		// Clear depth stencil
+		if ((flags & Renderer::ClearFlag::DEPTH) || (flags & Renderer::ClearFlag::STENCIL))
+		{
+			// TODO(co) Implement me
+			NOP;
+			/*
+			VKAPI_ATTR void VKAPI_CALL vkCmdClearDepthStencilImage(
+				VkCommandBuffer                             commandBuffer,
+				VkImage                                     image,
+				VkImageLayout                               imageLayout,
+				const VkClearDepthStencilValue*             pDepthStencil,
+				uint32_t                                    rangeCount,
+				const VkImageSubresourceRange*              pRanges);
+			*/
+		}
 	}
 
 	void VulkanRenderer::resolveMultisampleFramebuffer(Renderer::IRenderTarget&, Renderer::IFramebuffer&)
@@ -821,31 +971,115 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Draw call                                             ]
 	//[-------------------------------------------------------]
-	void VulkanRenderer::drawEmulated(const uint8_t*, uint32_t, uint32_t)
+	void VulkanRenderer::draw(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		// Is currently an vertex array set?
-		if (nullptr != mVertexArray)
+		// Sanity check
+		assert(numberOfDraws > 0 && "Number of draws must not be zero");
+		// It's possible to draw without "mVertexArray"
+
+		// Before doing anything else: If there's emulation data, use it (for example "Renderer::IndirectBuffer" might have been used to generate the data)
+		const uint8_t* emulationData = indirectBuffer.getEmulationData();
+		if (nullptr != emulationData)
 		{
-			// Get the used index buffer
-			IndexBuffer* indexBuffer = mVertexArray->getIndexBuffer();
-			if (nullptr != indexBuffer)
+			drawEmulated(emulationData, indirectBufferOffset, numberOfDraws);
+		}
+		else
+		{
+			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+			VULKANRENDERER_RENDERERMATCHCHECK_RETURN(*this, indirectBuffer)
+
+			// Start Vulkan render pass, if necessary
+			if (!mInsideVulkanRenderPass)
 			{
-				// TODO(co) Implement me
+				beginVulkanRenderPass();
 			}
+
+			// Vulkan draw indirect command
+			vkCmdDrawIndirect(getVulkanContext().getVkCommandBuffer(), static_cast<const IndirectBuffer&>(indirectBuffer).getVkBuffer(), indirectBufferOffset, numberOfDraws, sizeof(VkDrawIndirectCommand));
 		}
 	}
 
-	void VulkanRenderer::drawIndexedEmulated(const uint8_t*, uint32_t, uint32_t)
+	void VulkanRenderer::drawEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		// Is currently an vertex array set?
-		if (nullptr != mVertexArray)
+		// Sanity checks
+		assert(nullptr != emulationData);
+		assert(numberOfDraws > 0 && "Number of draws must not be zero");
+		// It's possible to draw without "mVertexArray"
+
+		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
+		emulationData += indirectBufferOffset;
+
+		// Start Vulkan render pass, if necessary
+		if (!mInsideVulkanRenderPass)
 		{
-			// Get the used index buffer
-			IndexBuffer* indexBuffer = mVertexArray->getIndexBuffer();
-			if (nullptr != indexBuffer)
+			beginVulkanRenderPass();
+		}
+
+		// Emit the draw calls
+		const VkCommandBuffer vkCommandBuffer = getVulkanContext().getVkCommandBuffer();
+		for (uint32_t i = 0; i < numberOfDraws; ++i)
+		{
+			// Draw and advance
+			const Renderer::DrawInstancedArguments& drawInstancedArguments = *reinterpret_cast<const Renderer::DrawInstancedArguments*>(emulationData);
+			vkCmdDraw(vkCommandBuffer, drawInstancedArguments.vertexCountPerInstance, drawInstancedArguments.instanceCount, drawInstancedArguments.startVertexLocation, drawInstancedArguments.startInstanceLocation);
+			emulationData += sizeof(Renderer::DrawInstancedArguments);
+		}
+	}
+
+	void VulkanRenderer::drawIndexed(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
+	{
+		// Sanity checks
+		assert(numberOfDraws > 0 && "Number of draws must not be zero");
+		assert(nullptr != mVertexArray && "Draw indexed needs a set vertex array");
+		assert(nullptr != mVertexArray->getIndexBuffer() && "Draw indexed needs a set vertex array which contains an index buffer");
+
+		// Before doing anything else: If there's emulation data, use it (for example "Renderer::IndirectBuffer" might have been used to generate the data)
+		const uint8_t* emulationData = indirectBuffer.getEmulationData();
+		if (nullptr != emulationData)
+		{
+			drawIndexedEmulated(emulationData, indirectBufferOffset, numberOfDraws);
+		}
+		else
+		{
+			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+			VULKANRENDERER_RENDERERMATCHCHECK_RETURN(*this, indirectBuffer)
+
+			// Start Vulkan render pass, if necessary
+			if (!mInsideVulkanRenderPass)
 			{
-				// TODO(co) Implement me
+				beginVulkanRenderPass();
 			}
+
+			// Vulkan draw indexed indirect command
+			vkCmdDrawIndexedIndirect(getVulkanContext().getVkCommandBuffer(), static_cast<const IndirectBuffer&>(indirectBuffer).getVkBuffer(), indirectBufferOffset, numberOfDraws, sizeof(VkDrawIndexedIndirectCommand));
+		}
+	}
+
+	void VulkanRenderer::drawIndexedEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
+	{
+		// Sanity checks
+		assert(nullptr != emulationData);
+		assert(numberOfDraws > 0 && "Number of draws must not be zero");
+		assert(nullptr != mVertexArray && "Draw indexed needs a set vertex array");
+		assert(nullptr != mVertexArray->getIndexBuffer() && "Draw indexed needs a set vertex array which contains an index buffer");
+
+		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
+		emulationData += indirectBufferOffset;
+
+		// Start Vulkan render pass, if necessary
+		if (!mInsideVulkanRenderPass)
+		{
+			beginVulkanRenderPass();
+		}
+
+		// Emit the draw calls
+		const VkCommandBuffer vkCommandBuffer = getVulkanContext().getVkCommandBuffer();
+		for (uint32_t i = 0; i < numberOfDraws; ++i)
+		{
+			// Draw and advance
+			const Renderer::DrawIndexedInstancedArguments& drawIndexedInstancedArguments = *reinterpret_cast<const Renderer::DrawIndexedInstancedArguments*>(emulationData);
+			vkCmdDrawIndexed(vkCommandBuffer, drawIndexedInstancedArguments.indexCountPerInstance, drawIndexedInstancedArguments.instanceCount, drawIndexedInstancedArguments.startIndexLocation, drawIndexedInstancedArguments.baseVertexLocation, drawIndexedInstancedArguments.startInstanceLocation);
+			emulationData += sizeof(Renderer::DrawIndexedInstancedArguments);
 		}
 	}
 
@@ -983,15 +1217,224 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Resource handling                                     ]
 	//[-------------------------------------------------------]
-	bool VulkanRenderer::map(Renderer::IResource&, uint32_t, Renderer::MapType, uint32_t, Renderer::MappedSubresource&)
+	bool VulkanRenderer::map(Renderer::IResource& resource, uint32_t, Renderer::MapType, uint32_t, Renderer::MappedSubresource& mappedSubresource)
 	{
-		// TODO(co) Implement me
-		return false;
+		// Evaluate the resource type
+		switch (resource.getResourceType())
+		{
+			case Renderer::ResourceType::INDEX_BUFFER:
+			{
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+				return (vkMapMemory(getVulkanContext().getVkDevice(), static_cast<IndexBuffer&>(resource).getVkDeviceMemory(), 0, VK_WHOLE_SIZE, 0, &mappedSubresource.data) == VK_SUCCESS);
+			}
+
+			case Renderer::ResourceType::VERTEX_BUFFER:
+			{
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+				return (vkMapMemory(getVulkanContext().getVkDevice(), static_cast<VertexBuffer&>(resource).getVkDeviceMemory(), 0, VK_WHOLE_SIZE, 0, &mappedSubresource.data) == VK_SUCCESS);
+			}
+
+			case Renderer::ResourceType::UNIFORM_BUFFER:
+			{
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+				return (vkMapMemory(getVulkanContext().getVkDevice(), static_cast<UniformBuffer&>(resource).getVkDeviceMemory(), 0, VK_WHOLE_SIZE, 0, &mappedSubresource.data) == VK_SUCCESS);
+			}
+
+			case Renderer::ResourceType::TEXTURE_BUFFER:
+			{
+				// TODO(co) Implement me
+				return false;
+			}
+
+			case Renderer::ResourceType::INDIRECT_BUFFER:
+			{
+				const IndirectBuffer& indirectBuffer = static_cast<IndirectBuffer&>(resource);
+				uint8_t* emulationData = indirectBuffer.getWritableEmulationData();
+				if (nullptr != emulationData)
+				{
+					mappedSubresource.data		 = emulationData;
+					mappedSubresource.rowPitch   = 0;
+					mappedSubresource.depthPitch = 0;
+
+					// Done
+					return true;
+				}
+				else
+				{
+					mappedSubresource.rowPitch   = 0;
+					mappedSubresource.depthPitch = 0;
+					return (vkMapMemory(getVulkanContext().getVkDevice(), static_cast<IndirectBuffer&>(resource).getVkDeviceMemory(), 0, VK_WHOLE_SIZE, 0, &mappedSubresource.data) == VK_SUCCESS);
+				}
+				break;	// Impossible to reach, but still add it
+			}
+
+			case Renderer::ResourceType::TEXTURE_1D:
+			{
+				// TODO(co) Implement me
+				return false;
+			}
+
+			case Renderer::ResourceType::TEXTURE_2D:
+			{
+				// TODO(co) Implement me
+				return false;
+			}
+
+			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+			{
+				// TODO(co) Implement me
+				return false;
+			}
+
+			case Renderer::ResourceType::TEXTURE_3D:
+			{
+				// TODO(co) Implement me
+				return false;
+			}
+
+			case Renderer::ResourceType::TEXTURE_CUBE:
+			{
+				// TODO(co) Implement me
+				return false;
+			}
+
+			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::PROGRAM:
+			case Renderer::ResourceType::VERTEX_ARRAY:
+			case Renderer::ResourceType::SWAP_CHAIN:
+			case Renderer::ResourceType::FRAMEBUFFER:
+			case Renderer::ResourceType::PIPELINE_STATE:
+			case Renderer::ResourceType::SAMPLER_STATE:
+			case Renderer::ResourceType::VERTEX_SHADER:
+			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+			case Renderer::ResourceType::GEOMETRY_SHADER:
+			case Renderer::ResourceType::FRAGMENT_SHADER:
+			default:
+				// Nothing we can map, set known return values
+				mappedSubresource.data		 = nullptr;
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+
+				// Error!
+				return false;
+		}
 	}
 
-	void VulkanRenderer::unmap(Renderer::IResource&, uint32_t)
+	void VulkanRenderer::unmap(Renderer::IResource& resource, uint32_t)
 	{
-		// TODO(co) Implement me
+		// Evaluate the resource type
+		switch (resource.getResourceType())
+		{
+			case Renderer::ResourceType::INDEX_BUFFER:
+			{
+				vkUnmapMemory(getVulkanContext().getVkDevice(), static_cast<IndexBuffer&>(resource).getVkDeviceMemory());
+				break;
+			}
+
+			case Renderer::ResourceType::VERTEX_BUFFER:
+			{
+				vkUnmapMemory(getVulkanContext().getVkDevice(), static_cast<VertexBuffer&>(resource).getVkDeviceMemory());
+				break;
+			}
+
+			case Renderer::ResourceType::UNIFORM_BUFFER:
+			{
+				vkUnmapMemory(getVulkanContext().getVkDevice(), static_cast<UniformBuffer&>(resource).getVkDeviceMemory());
+				break;
+			}
+
+			case Renderer::ResourceType::TEXTURE_BUFFER:
+			{
+				// TODO(co) Implement me
+				break;
+			}
+
+			case Renderer::ResourceType::INDIRECT_BUFFER:
+			{
+				const IndirectBuffer& indirectBuffer = static_cast<IndirectBuffer&>(resource);
+				if (nullptr == indirectBuffer.getEmulationData())
+				{
+					vkUnmapMemory(getVulkanContext().getVkDevice(), indirectBuffer.getVkDeviceMemory());
+				}
+				break;
+			}
+
+			case Renderer::ResourceType::TEXTURE_1D:
+			{
+				// TODO(co) Implement me
+				break;
+			}
+
+			case Renderer::ResourceType::TEXTURE_2D:
+			{
+				// TODO(co) Implement me
+				/*
+				// Get the Direct3D 11 resource instance
+				ID3D11Resource* d3d11Resource = nullptr;
+				static_cast<Texture2D&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
+				if (nullptr != d3d11Resource)
+				{
+					// Unmap the Direct3D 11 resource
+					mD3D11DeviceContext->Unmap(d3d11Resource, subresource);
+
+					// Release the Direct3D 11 resource instance
+					d3d11Resource->Release();
+				}
+				*/
+				break;
+			}
+
+			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+			{
+				// TODO(co) Implement me
+				/*
+				// Get the Direct3D 11 resource instance
+				ID3D11Resource* d3d11Resource = nullptr;
+				static_cast<Texture2DArray&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
+				if (nullptr != d3d11Resource)
+				{
+					// Unmap the Direct3D 11 resource
+					mD3D11DeviceContext->Unmap(d3d11Resource, subresource);
+
+					// Release the Direct3D 11 resource instance
+					d3d11Resource->Release();
+				}
+				*/
+				break;
+			}
+
+			case Renderer::ResourceType::TEXTURE_3D:
+			{
+				// TODO(co) Implement me
+				break;
+			}
+
+			case Renderer::ResourceType::TEXTURE_CUBE:
+			{
+				// TODO(co) Implement me
+				break;
+			}
+
+			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::PROGRAM:
+			case Renderer::ResourceType::VERTEX_ARRAY:
+			case Renderer::ResourceType::SWAP_CHAIN:
+			case Renderer::ResourceType::FRAMEBUFFER:
+			case Renderer::ResourceType::PIPELINE_STATE:
+			case Renderer::ResourceType::SAMPLER_STATE:
+			case Renderer::ResourceType::VERTEX_SHADER:
+			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+			case Renderer::ResourceType::GEOMETRY_SHADER:
+			case Renderer::ResourceType::FRAGMENT_SHADER:
+			default:
+				// Nothing we can unmap
+				break;
+		}
 	}
 
 
@@ -1000,10 +1443,26 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	bool VulkanRenderer::beginScene()
 	{
-		// Not required when using Vulkan
-
-		// Done
-		return true;
+		// Begin Vulkan command buffer
+		// -> This automatically resets the Vulkan command buffer in case it was previously already recorded
+		const VkCommandBufferBeginInfo vkCommandBufferBeginInfo =
+		{
+			VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,	// sType (VkStructureType)
+			nullptr,										// pNext (const void*)
+			0,												// flags (VkCommandBufferUsageFlags)
+			nullptr											// pInheritanceInfo (const VkCommandBufferInheritanceInfo*)
+		};
+		if (vkBeginCommandBuffer(getVulkanContext().getVkCommandBuffer(), &vkCommandBufferBeginInfo) == VK_SUCCESS)
+		{
+			// Done
+			return true;
+		}
+		else
+		{
+			// Error!
+			RENDERER_LOG(getContext(), CRITICAL, "Failed to begin Vulkan command buffer instance")
+			return false;
+		}
 	}
 
 	void VulkanRenderer::submitCommandBuffer(const Renderer::CommandBuffer& commandBuffer)
@@ -1033,6 +1492,13 @@ namespace VulkanRenderer
 
 		// We need to forget about the currently set vertex array
 		iaUnsetVertexArray();
+
+		// End Vulkan command buffer
+		if (vkEndCommandBuffer(getVulkanContext().getVkCommandBuffer()) != VK_SUCCESS)
+		{
+			// Error!
+			RENDERER_LOG(getContext(), CRITICAL, "Failed to end Vulkan command buffer instance")
+		}
 	}
 
 
@@ -1127,7 +1593,8 @@ namespace VulkanRenderer
 		// Release the currently used vertex array reference, in case we have one
 		if (nullptr != mVertexArray)
 		{
-			// TODO(co) Implement me
+			// Do nothing since the Vulkan specification says "bindingCount must be greater than 0"
+			// vkCmdBindVertexBuffers(getVulkanContext().getVkCommandBuffer(), 0, 0, nullptr, nullptr);
 
 			// Release reference
 			mVertexArray->releaseReference();
@@ -1135,23 +1602,73 @@ namespace VulkanRenderer
 		}
 	}
 
-	void VulkanRenderer::setProgram(Renderer::IProgram* program)
+	void VulkanRenderer::beginVulkanRenderPass()
 	{
-		// TODO(co) Avoid changing already set program
+		// Sanity checks
+		assert(!mInsideVulkanRenderPass && "We're already inside a Vulkan render pass");
+		assert(nullptr != mRenderTarget && "Can't begin a Vulkan render pass without a render target set");
 
-		if (nullptr != program)
+		// Start Vulkan render pass
+		switch (mRenderTarget->getResourceType())
 		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			VULKANRENDERER_RENDERERMATCHCHECK_RETURN(*this, *program)
+			case Renderer::ResourceType::SWAP_CHAIN:
+			{
+				const SwapChain* swapChain = static_cast<SwapChain*>(mRenderTarget);
 
-			// TODO(co) GLSL buffer settings, unset previous program
-			// TODO(co) Implement me
+				// Get render target dimension
+				uint32_t width = 1;
+				uint32_t height = 1;
+				mRenderTarget->getWidthAndHeight(width, height);
+
+				// Begin Vulkan render pass
+				const VkRenderPassBeginInfo vkRenderPassBeginInfo =
+				{
+					VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,	// sType (VkStructureType)
+					nullptr,									// pNext (const void*)
+					swapChain->getVkRenderPass(),				// renderPass (VkRenderPass)
+					swapChain->getCurrentVkFramebuffer(),		// framebuffer (VkFramebuffer)
+					{ // renderArea (VkRect2D)
+						{ 0, 0 },								// offset (VkOffset2D)
+						{ width, height }						// extent (VkExtent2D)
+					},
+					0,											// clearValueCount (uint32_t)
+					nullptr										// pClearValues (const VkClearValue*)
+				};
+				vkCmdBeginRenderPass(getVulkanContext().getVkCommandBuffer(), &vkRenderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+				break;
+			}
+
+			case Renderer::ResourceType::FRAMEBUFFER:
+			{
+				// TODO(co) Implement me
+				break;
+			}
+
+			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::PROGRAM:
+			case Renderer::ResourceType::VERTEX_ARRAY:
+			case Renderer::ResourceType::INDEX_BUFFER:
+			case Renderer::ResourceType::VERTEX_BUFFER:
+			case Renderer::ResourceType::UNIFORM_BUFFER:
+			case Renderer::ResourceType::TEXTURE_BUFFER:
+			case Renderer::ResourceType::INDIRECT_BUFFER:
+			case Renderer::ResourceType::TEXTURE_1D:
+			case Renderer::ResourceType::TEXTURE_2D:
+			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+			case Renderer::ResourceType::TEXTURE_3D:
+			case Renderer::ResourceType::TEXTURE_CUBE:
+			case Renderer::ResourceType::PIPELINE_STATE:
+			case Renderer::ResourceType::SAMPLER_STATE:
+			case Renderer::ResourceType::VERTEX_SHADER:
+			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+			case Renderer::ResourceType::GEOMETRY_SHADER:
+			case Renderer::ResourceType::FRAGMENT_SHADER:
+			default:
+				// Not handled in here
+				break;
 		}
-		else
-		{
-			// TODO(co) GLSL buffer settings
-			// TODO(co) Implement me
-		}
+		mInsideVulkanRenderPass = true;
 	}
 
 

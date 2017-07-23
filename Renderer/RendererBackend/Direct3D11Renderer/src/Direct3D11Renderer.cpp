@@ -22,7 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Direct3D11Renderer/Direct3D11Renderer.h"
-#include "Direct3D11Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
+#include "Direct3D11Renderer/Guid.h"			// For "WKPDID_D3DDebugObjectName"
 #include "Direct3D11Renderer/Direct3D11Debug.h"	// For "DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN()"
 #include "Direct3D11Renderer/Direct3D11RuntimeLinking.h"
 #include "Direct3D11Renderer/RootSignature.h"
@@ -173,12 +173,6 @@ namespace
 				static_cast<Direct3D11Renderer::Direct3D11Renderer&>(renderer).iaSetVertexArray(realData->vertexArray);
 			}
 
-			void SetPrimitiveTopology(const void* data, Renderer::IRenderer& renderer)
-			{
-				const Renderer::Command::SetPrimitiveTopology* realData = static_cast<const Renderer::Command::SetPrimitiveTopology*>(data);
-				static_cast<Direct3D11Renderer::Direct3D11Renderer&>(renderer).iaSetPrimitiveTopology(realData->primitiveTopology);
-			}
-
 			//[-------------------------------------------------------]
 			//[ Rasterizer (RS) stage                                 ]
 			//[-------------------------------------------------------]
@@ -296,7 +290,6 @@ namespace
 			&BackendDispatch::SetPipelineState,
 			// Input-assembler (IA) stage
 			&BackendDispatch::SetVertexArray,
-			&BackendDispatch::SetPrimitiveTopology,
 			// Rasterizer (RS) stage
 			&BackendDispatch::SetViewports,
 			&BackendDispatch::SetScissorRectangles,
@@ -344,6 +337,7 @@ namespace Direct3D11Renderer
 		mMainSwapChain(nullptr),
 		mRenderTarget(nullptr),
 		mGraphicsRootSignature(nullptr),
+		mD3D11PrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_UNDEFINED),
 		mD3d11VertexShader(nullptr),
 		mD3d11HullShader(nullptr),
 		mD3d11DomainShader(nullptr),
@@ -804,8 +798,17 @@ namespace Direct3D11Renderer
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *pipelineState)
 
+			// Set primitive topology
+			// -> The "Renderer::PrimitiveTopology" values directly map to Direct3D 9 & 10 & 11 constants, do not change them
+			const PipelineState* direct3D11PipelineState = static_cast<const PipelineState*>(pipelineState);
+			if (mD3D11PrimitiveTopology != direct3D11PipelineState->getD3D11PrimitiveTopology())
+			{
+				mD3D11PrimitiveTopology = direct3D11PipelineState->getD3D11PrimitiveTopology();
+				mD3D11DeviceContext->IASetPrimitiveTopology(mD3D11PrimitiveTopology);
+			}
+
 			// Set pipeline state
-			static_cast<PipelineState*>(pipelineState)->bindPipelineState();
+			direct3D11PipelineState->bindPipelineState();
 		}
 		else
 		{
@@ -839,49 +842,30 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	void Direct3D11Renderer::iaSetPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology)
-	{
-		// Set primitive topology
-		// -> The "Renderer::PrimitiveTopology" values directly map to Direct3D 9 & 10 & 11 constants, do not change them
-		mD3D11DeviceContext->IASetPrimitiveTopology(static_cast<D3D11_PRIMITIVE_TOPOLOGY>(primitiveTopology));
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Rasterizer (RS) stage                                 ]
 	//[-------------------------------------------------------]
 	void Direct3D11Renderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport* viewports)
 	{
-		// Are the given viewports valid?
-		if (numberOfViewports > 0 && nullptr != viewports)
-		{
-			// Set the Direct3D 11 viewports
-			// -> "Renderer::Viewport" directly maps to Direct3D 11, do not change it
-			// -> Let Direct3D 11 perform the index validation for us (the Direct3D 11 debug features are pretty good)
-			mD3D11DeviceContext->RSSetViewports(numberOfViewports, reinterpret_cast<const D3D11_VIEWPORT*>(viewports));
-		}
-		else
-		{
-			// Error!
-			assert(false);
-		}
+		// Sanity check
+		assert((numberOfViewports > 0 && nullptr != viewports) && "Invalid rasterizer state viewports");
+
+		// Set the Direct3D 11 viewports
+		// -> "Renderer::Viewport" directly maps to Direct3D 11, do not change it
+		// -> Let Direct3D 11 perform the index validation for us (the Direct3D 11 debug features are pretty good)
+		mD3D11DeviceContext->RSSetViewports(numberOfViewports, reinterpret_cast<const D3D11_VIEWPORT*>(viewports));
 	}
 
 	void Direct3D11Renderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles)
 	{
-		// Are the given scissor rectangles valid?
-		if (numberOfScissorRectangles > 0 && nullptr != scissorRectangles)
-		{
-			// Set the Direct3D 11 scissor rectangles
-			// -> "Renderer::ScissorRectangle" directly maps to Direct3D 9 & 10 & 11, do not change it
-			// -> Let Direct3D 11 perform the index validation for us (the Direct3D 11 debug features are pretty good)
-			mD3D11DeviceContext->RSSetScissorRects(numberOfScissorRectangles, reinterpret_cast<const D3D11_RECT*>(scissorRectangles));
-		}
-		else
-		{
-			// Error!
-			assert(false);
-		}
+		// Sanity check
+		assert((numberOfScissorRectangles > 0 && nullptr != scissorRectangles) && "Invalid rasterizer state scissor rectangles");
+
+		// Set the Direct3D 11 scissor rectangles
+		// -> "Renderer::ScissorRectangle" directly maps to Direct3D 9 & 10 & 11, do not change it
+		// -> Let Direct3D 11 perform the index validation for us (the Direct3D 11 debug features are pretty good)
+		mD3D11DeviceContext->RSSetScissorRects(numberOfScissorRectangles, reinterpret_cast<const D3D11_RECT*>(scissorRectangles));
 	}
 
 
@@ -1245,8 +1229,9 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	void Direct3D11Renderer::drawEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		// Get indirect buffer data and perform security checks
+		// Sanity checks
 		assert(nullptr != emulationData);
+		assert(numberOfDraws > 0 && "Number of draws must not be zero");
 
 		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
 		emulationData += indirectBufferOffset;
@@ -1283,8 +1268,9 @@ namespace Direct3D11Renderer
 
 	void Direct3D11Renderer::drawIndexedEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		// Get indirect buffer data and perform security checks
+		// Sanity checks
 		assert(nullptr != emulationData);
+		assert(numberOfDraws > 0 && "Number of draws must not be zero");
 
 		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
 		emulationData += indirectBufferOffset;

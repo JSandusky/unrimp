@@ -28,12 +28,13 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include <Renderer/RendererTypes.h>
-#include <Renderer/Buffer/VertexArrayTypes.h>
 #include <Renderer/Buffer/BufferTypes.h>
+#include <Renderer/Buffer/VertexArrayTypes.h>
 #include <Renderer/Buffer/IndexBufferTypes.h>
 #include <Renderer/Texture/TextureTypes.h>
-#include <Renderer/State/SamplerStateTypes.h>
 #include <Renderer/State/BlendStateTypes.h>
+#include <Renderer/State/SamplerStateTypes.h>
+#include <Renderer/State/PipelineStateTypes.h>
 
 
 //[-------------------------------------------------------]

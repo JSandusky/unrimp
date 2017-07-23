@@ -230,7 +230,6 @@ namespace RendererRuntime
 
 		// Track currently bound renderer resources and states to void generating redundant commands
 		Renderer::IVertexArray* currentVertexArray = nullptr;
-		Renderer::PrimitiveTopology currentPrimitiveTopology = Renderer::PrimitiveTopology::UNKNOWN;
 		Renderer::IPipelineState* currentPipelineState = nullptr;
 
 		// We try to minimize state changes across multiple render queue fill command buffer calls, but while doing so we still need to take into account
@@ -434,13 +433,6 @@ namespace RendererRuntime
 										{
 											currentVertexArray = vertexArrayPtr;
 											Renderer::Command::SetVertexArray::create(commandBuffer, currentVertexArray);
-										}
-
-										// Setup input assembly (IA): Set the primitive topology used for draw calls
-										if (currentPrimitiveTopology != renderable.getPrimitiveTopology())
-										{
-											currentPrimitiveTopology = renderable.getPrimitiveTopology();
-											Renderer::Command::SetPrimitiveTopology::create(commandBuffer, currentPrimitiveTopology);
 										}
 
 										// Set the used pipeline state object (PSO)

@@ -28,7 +28,20 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	// TODO(co) Implement me
+	inline VkIndexType IndexBuffer::getVkIndexType() const
+	{
+		return mVkIndexType;
+	}
+
+	inline VkBuffer IndexBuffer::getVkBuffer() const
+	{
+		return mVkBuffer;
+	}
+
+	inline VkDeviceMemory IndexBuffer::getVkDeviceMemory() const
+	{
+		return mVkDeviceMemory;
+	}
 
 
 //[-------------------------------------------------------]

@@ -19,83 +19,59 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
+//[ Shader start                                          ]
 //[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "VulkanRenderer/State/IState.h"
-
-#include <Renderer/State/BlendStateTypes.h>
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace VulkanRenderer
+#ifndef RENDERER_NO_VULKAN
+if (0 == strcmp(renderer->getName(), "Vulkan"))
 {
-	class VulkanRenderer;
+
+
+//[-------------------------------------------------------]
+//[ Vertex shader source code                             ]
+//[-------------------------------------------------------]
+// One vertex shader invocation per vertex
+vertexShaderSourceCode = R"(#version 450 core	// OpenGL 4.5
+#extension GL_ARB_separate_shader_objects : enable	// The "GL_ARB_separate_shader_objects"-extension is required for Vulkan shaders to work
+
+// Attribute input/output
+layout(location = 0) in vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
+layout(location = 0) out gl_PerVertex
+{
+	vec4 gl_Position;
+};
+
+// Programs
+void main()
+{
+	// Pass through the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
+	// -> Compensate for different Vulkan coordinate system
+	gl_Position = vec4(Position.x, -(Position.y - float(gl_InstanceID)), 0.0, 1.0);
 }
+)";
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Fragment shader source code                           ]
 //[-------------------------------------------------------]
-namespace VulkanRenderer
+// One fragment shader invocation per fragment
+fragmentShaderSourceCode = R"(#version 450 core	// OpenGL 4.5
+#extension GL_ARB_separate_shader_objects : enable	// The "GL_ARB_separate_shader_objects"-extension is required for Vulkan shaders to work
+
+// Attribute input/output
+layout(location = 0) out vec4 OutputColor;
+
+// Programs
+void main()
 {
-
-
-	//[-------------------------------------------------------]
-	//[ Classes                                               ]
-	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Vulkan blend state class
-	*/
-	class BlendState : public IState
-	{
-
-
-	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	public:
-		/**
-		*  @brief
-		*    Constructor
-		*
-		*  @param[in] blendState
-		*    Blend state to use
-		*/
-		BlendState(const Renderer::BlendState& blendState);
-
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		virtual ~BlendState();
-
-		/**
-		*  @brief
-		*    Set the Vulkan blend states
-		*/
-		void setVulkanBlendStates() const;
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-		Renderer::BlendState mBlendState;	///< Blend state
-
-
-	};
+	// Return blue
+	OutputColor = vec4(0.0, 0.0, 1.0, 1.0);
+}
+)";
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Shader end                                            ]
 //[-------------------------------------------------------]
-} // VulkanRenderer
+}
+else
+#endif

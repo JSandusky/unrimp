@@ -24,7 +24,6 @@
 #include "VulkanRenderer/RenderTarget/Framebuffer.h"
 #include "VulkanRenderer/Texture/Texture2DArray.h"
 #include "VulkanRenderer/Texture/Texture2D.h"
-#include "VulkanRenderer/Extensions.h"
 
 #include <limits.h>	// For "INT_MAX"
 

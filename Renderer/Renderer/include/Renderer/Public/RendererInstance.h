@@ -32,7 +32,10 @@
 #ifdef SHARED_LIBRARIES
 	#ifdef WIN32
 		#include "Renderer/WindowsHeader.h"
+
+		#include <tuple>	// For "std::ignore"
 	#elif defined LINUX
+		// Nothing here
 	#else
 		#error "Unsupported platform"
 	#endif
@@ -41,7 +44,7 @@
 #endif
 
 #ifdef LINUX
-	#include <dlfcn.h> // We need it also for the non shared libraries case
+	#include <dlfcn.h>	// We need it also for the non shared libraries case
 #endif
 
 #include <string.h>
@@ -131,7 +134,7 @@ namespace Renderer
 		*  @param[in] context
 		*    Renderer context, the renderer context instance must stay valid as long as the renderer instance exists
 		*  @param[in] loadRendererApiSharedLibrary
-		*    Indicates if the renderer instance should should load the renderer api shared library (true) or not (false, default)
+		*    Indicates if the renderer instance should load the renderer API shared library (true) or not (false, default)
 		*/
 		RendererInstance(const char* rendererName, Renderer::Context& context, bool loadRendererApiSharedLibrary = false) :
 			mRendererSharedLibrary(nullptr),
@@ -141,8 +144,8 @@ namespace Renderer
 			// fixed typed in. For a real system a dynamic plugin system would be a good idea.
 			if (loadRendererApiSharedLibrary)
 			{
-				// User wants us to load the renderer api shared library
-				this->loadRendererApiSharedLibrary(rendererName);
+				// User wants us to load the renderer API shared library
+				loadRendererApiSharedLibraryInternal(rendererName);
 				context.setRendererApiSharedLibrary(mRendererApiSharedLibrary);
 			}
 			#ifdef SHARED_LIBRARIES
@@ -327,7 +330,7 @@ namespace Renderer
 				#endif
 			#endif
 
-			// Unload the renderer api shared library instance
+			// Unload the renderer API shared library instance
 			#ifdef WIN32
 				if (nullptr != mRendererApiSharedLibrary)
 				{
@@ -369,19 +372,21 @@ namespace Renderer
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		void loadRendererApiSharedLibrary(const char* rendererName)
+		void loadRendererApiSharedLibraryInternal(const char* rendererName)
 		{
-			// TODO(sw) Currently this is only needed for OpenGL (libGL.so) under linux. This interacts with the library libX11
-#ifdef LINUX
-			// Under linux the OpenGL library (libGL.so) registers callbacks in libX11 when loaded, which gets called on XCloseDisplay
-			// When the OpenGL library gets unloaded before the XCloseDisplay call then the X11 library wants to call the callbacks registered by the OpenGL library -> crash
-			// So we load it here. The user must make sure that an instance of this class gets destroyed after XCloseDisplay was called
-			// See http://dri.sourceforge.net/doc/DRIuserguide.html "11.5 libGL.so and dlopen()"
-			if (0 == strcmp(rendererName, "OpenGL"))
-			{
-				mRendererApiSharedLibrary = ::dlopen("libGL.so", RTLD_NOW | RTLD_GLOBAL);
-			}
-#endif
+			// TODO(sw) Currently this is only needed for OpenGL (libGL.so) under Linux. This interacts with the library libX11.
+			#ifdef LINUX
+				// Under Linux the OpenGL library (libGL.so) registers callbacks in libX11 when loaded, which gets called on XCloseDisplay
+				// When the OpenGL library gets unloaded before the XCloseDisplay call then the X11 library wants to call the callbacks registered by the OpenGL library -> crash
+				// So we load it here. The user must make sure that an instance of this class gets destroyed after XCloseDisplay was called
+				// See http://dri.sourceforge.net/doc/DRIuserguide.html "11.5 libGL.so and dlopen()"
+				if (0 == strcmp(rendererName, "OpenGL"))
+				{
+					mRendererApiSharedLibrary = ::dlopen("libGL.so", RTLD_NOW | RTLD_GLOBAL);
+				}
+			#else
+				std::ignore = rendererName;
+			#endif
 		}
 
 
@@ -391,7 +396,7 @@ namespace Renderer
 	private:
 		void*				   mRendererSharedLibrary;		///< Shared renderer library, can be a null pointer
 		Renderer::IRendererPtr mRenderer;					///< Renderer instance, can be a null pointer
-		void*				   mRendererApiSharedLibrary;	///< Shared renderer api library, can be a null pointer
+		void*				   mRendererApiSharedLibrary;	///< Shared renderer API library, can be a null pointer
 
 
 	};

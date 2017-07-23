@@ -28,7 +28,10 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	// TODO(co) Implement me
+	inline VkImageView Texture2D::getVkImageView() const
+	{
+		return mVkImageView;
+	}
 
 
 //[-------------------------------------------------------]

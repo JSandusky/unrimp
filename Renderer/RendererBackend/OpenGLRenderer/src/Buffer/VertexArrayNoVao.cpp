@@ -112,7 +112,7 @@ namespace OpenGLRenderer
 				glVertexAttribIPointer(attributeLocation,
 									   Mapping::getOpenGLSize(attribute->vertexAttributeFormat),
 									   Mapping::getOpenGLType(attribute->vertexAttributeFormat),
-									   static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes),
+									   static_cast<GLsizei>(attribute->strideInBytes),
 									   reinterpret_cast<void*>(static_cast<uintptr_t>(attribute->alignedByteOffset)));
 			}
 			else
@@ -121,7 +121,7 @@ namespace OpenGLRenderer
 										 Mapping::getOpenGLSize(attribute->vertexAttributeFormat),
 										 Mapping::getOpenGLType(attribute->vertexAttributeFormat),
 										 static_cast<GLboolean>(Mapping::isOpenGLVertexAttributeFormatNormalized(attribute->vertexAttributeFormat)),
-										 static_cast<GLsizei>(vertexArrayVertexBuffer.strideInBytes),
+										 static_cast<GLsizei>(attribute->strideInBytes),
 										 reinterpret_cast<void*>(static_cast<uintptr_t>(attribute->alignedByteOffset)));
 			}
 
@@ -140,7 +140,7 @@ namespace OpenGLRenderer
 			glBindBufferARB(GL_ARRAY_BUFFER_ARB, static_cast<GLuint>(openGLArrayBufferBackup));
 		#endif
 
-		// Get the used index buffer
+		// Set the used index buffer
 		// -> In case of no index buffer we don't bind buffer 0, there's not really a point in it
 		const IndexBuffer* indexBuffer = getIndexBuffer();
 		if (nullptr != indexBuffer)

@@ -28,7 +28,15 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	// TODO(co) Implement me
+	inline VkBuffer VertexBuffer::getVkBuffer() const
+	{
+		return mVkBuffer;
+	}
+
+	inline VkDeviceMemory VertexBuffer::getVkDeviceMemory() const
+	{
+		return mVkDeviceMemory;
+	}
 
 
 //[-------------------------------------------------------]

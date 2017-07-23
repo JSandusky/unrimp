@@ -73,7 +73,6 @@ namespace Renderer
 		SetPipelineState,
 		// Input-assembler (IA) stage
 		SetVertexArray,
-		SetPrimitiveTopology,
 		// Rasterizer (RS) stage
 		SetViewports,
 		SetScissorRectangles,
@@ -563,30 +562,6 @@ namespace Renderer
 			IVertexArray* vertexArray;
 			// Static data
 			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetVertexArray;
-		};
-
-		/**
-		*  @brief
-		*    Set the primitive topology used for draw calls
-		*
-		*  @param[in] primitiveTopology
-		*    Member of the primitive topology enumerated type, describing the type of primitive to render (default: "Renderer::PrimitiveTopology::UNKNOWN")
-		*/
-		struct SetPrimitiveTopology
-		{
-			// Static methods
-			inline static void create(CommandBuffer& commandBuffer, PrimitiveTopology primitiveTopology)
-			{
-				*commandBuffer.addCommand<SetPrimitiveTopology>() = SetPrimitiveTopology(primitiveTopology);
-			}
-			// Constructor
-			inline SetPrimitiveTopology(PrimitiveTopology _primitiveTopology) :
-				primitiveTopology(_primitiveTopology)
-			{}
-			// Data
-			PrimitiveTopology primitiveTopology;
-			// Static data
-			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetPrimitiveTopology;
 		};
 
 		//[-------------------------------------------------------]

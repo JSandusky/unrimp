@@ -26,7 +26,10 @@
 #include "OpenGLRenderer/State/RasterizerState.h"
 #include "OpenGLRenderer/State/DepthStencilState.h"
 #include "OpenGLRenderer/Shader/Monolithic/ProgramMonolithic.h"
+#include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
+#include "OpenGLRenderer/Extensions.h"
+#include "OpenGLRenderer/Mapping.h"
 
 
 //[-------------------------------------------------------]
@@ -41,11 +44,43 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	PipelineState::PipelineState(OpenGLRenderer& openGLRenderer, const Renderer::PipelineState& pipelineState) :
 		IPipelineState(openGLRenderer),
+		mOpenGLPrimitiveTopology(0xFFFF),	// Unknown default setting
+		mNumberOfVerticesPerPatch(0),
 		mProgram(pipelineState.program),
 		mRasterizerState(new RasterizerState(pipelineState.rasterizerState)),
 		mDepthStencilState(new DepthStencilState(pipelineState.depthStencilState)),
 		mBlendState(new BlendState(pipelineState.blendState))
 	{
+		// Tessellation support: Up to 32 vertices per patch are supported "Renderer::PrimitiveTopology::PATCH_LIST_1" ... "Renderer::PrimitiveTopology::PATCH_LIST_32"
+		if (pipelineState.primitiveTopology >= Renderer::PrimitiveTopology::PATCH_LIST_1)
+		{
+			// Use tessellation
+
+			// Get number of vertices that will be used to make up a single patch primitive
+			// -> There's no need to check for the "GL_ARB_tessellation_shader" extension, it's there if "Renderer::Capabilities::maximumNumberOfPatchVertices" is not 0
+			const int numberOfVerticesPerPatch = static_cast<int>(pipelineState.primitiveTopology) - static_cast<int>(Renderer::PrimitiveTopology::PATCH_LIST_1) + 1;
+			if (numberOfVerticesPerPatch <= static_cast<int>(openGLRenderer.getCapabilities().maximumNumberOfPatchVertices))
+			{
+				// Set number of vertices that will be used to make up a single patch primitive
+				mNumberOfVerticesPerPatch = numberOfVerticesPerPatch;
+
+				// Set OpenGL primitive topology
+				mOpenGLPrimitiveTopology = GL_PATCHES;
+			}
+			else
+			{
+				// Error!
+				assert(false);
+			}
+		}
+		else
+		{
+			// Do not use tessellation
+
+			// Map and backup the set OpenGL primitive topology
+			mOpenGLPrimitiveTopology = Mapping::getOpenGLType(pipelineState.primitiveTopology);
+		}
+
 		// Add a reference to the given program
 		mProgram->addReference();
 	}

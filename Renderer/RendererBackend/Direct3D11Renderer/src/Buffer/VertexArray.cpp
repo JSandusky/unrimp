@@ -40,7 +40,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	VertexArray::VertexArray(Direct3D11Renderer& direct3D11Renderer, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer* vertexBuffers, IndexBuffer* indexBuffer) :
+	VertexArray::VertexArray(Direct3D11Renderer& direct3D11Renderer, const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer* vertexBuffers, IndexBuffer* indexBuffer) :
 		IVertexArray(direct3D11Renderer),
 		mD3D11DeviceContext(direct3D11Renderer.getD3D11DeviceContext()),
 		mIndexBuffer(indexBuffer),
@@ -70,18 +70,26 @@ namespace Direct3D11Renderer
 			// Vertex buffer offset is not supported by OpenGL, so our renderer API doesn't support it either
 			memset(mOffsets, 0, sizeof(uint32_t) * mNumberOfSlots);
 
-			// Loop through all vertex buffers
-			ID3D11Buffer** currentD3D11Buffer = mD3D11Buffers;
-			UINT* currentStride = mStrides;
-			VertexBuffer** currentVertexBuffer = mVertexBuffers;
-			const Renderer::VertexArrayVertexBuffer* vertexBufferEnd = vertexBuffers + mNumberOfSlots;
-			for (const Renderer::VertexArrayVertexBuffer* vertexBuffer = vertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer, ++currentD3D11Buffer, ++currentStride, ++currentVertexBuffer)
-			{
-				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-				*currentStride = vertexBuffer->strideInBytes;
-				*currentVertexBuffer = static_cast<VertexBuffer*>(vertexBuffer->vertexBuffer);
-				*currentD3D11Buffer = (*currentVertexBuffer)->getD3D11Buffer();
-				(*currentVertexBuffer)->addReference();
+			{ // Loop through all vertex buffers
+				ID3D11Buffer** currentD3D11Buffer = mD3D11Buffers;
+				VertexBuffer** currentVertexBuffer = mVertexBuffers;
+				const Renderer::VertexArrayVertexBuffer* vertexBufferEnd = vertexBuffers + mNumberOfSlots;
+				for (const Renderer::VertexArrayVertexBuffer* vertexBuffer = vertexBuffers; vertexBuffer < vertexBufferEnd; ++vertexBuffer, ++currentD3D11Buffer, ++currentVertexBuffer)
+				{
+					// TODO(co) Add security check: Is the given resource one of the currently used renderer?
+					*currentVertexBuffer = static_cast<VertexBuffer*>(vertexBuffer->vertexBuffer);
+					*currentD3D11Buffer = (*currentVertexBuffer)->getD3D11Buffer();
+					(*currentVertexBuffer)->addReference();
+				}
+			}
+
+			{ // Gather slot related data
+				const Renderer::VertexAttribute* attribute = vertexAttributes.attributes;
+				const Renderer::VertexAttribute* attributesEnd = attribute + vertexAttributes.numberOfAttributes;
+				for (; attribute < attributesEnd;  ++attribute)
+				{
+					mStrides[attribute->inputSlot] = attribute->strideInBytes;
+				}
 			}
 		}
 	}
@@ -134,7 +142,7 @@ namespace Direct3D11Renderer
 			// -> Direct3D 11 does not give us this message, but it's probably still no good thing to do
 		}
 
-		// Get the used index buffer
+		// Set the used index buffer
 		// -> In case of no index buffer we don't set null indices, there's not really a point in it
 		if (nullptr != mIndexBuffer)
 		{

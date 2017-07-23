@@ -61,7 +61,7 @@ namespace
 				// Data source
 				0,											// inputSlot (uint32_t)
 				0,											// alignedByteOffset (uint32_t)
-				// Data source, instancing part
+				sizeof(float) * 4 + sizeof(uint8_t) * 4,	// strideInBytes (uint32_t)
 				0											// instancesPerElement (uint32_t)
 			},
 			{ // Attribute 1
@@ -73,7 +73,7 @@ namespace
 				// Data source
 				0,											// inputSlot (uint32_t)
 				sizeof(float) * 2,							// alignedByteOffset (uint32_t)
-				// Data source, instancing part
+				sizeof(float) * 4 + sizeof(uint8_t) * 4,	// strideInBytes (uint32_t)
 				0											// instancesPerElement (uint32_t)
 			},
 			{ // Attribute 2
@@ -84,8 +84,8 @@ namespace
 				0,													// semanticIndex (uint32_t)
 				// Data source
 				0,													// inputSlot (uint32_t)
-				sizeof(float) * 2 * 2,								// alignedByteOffset (uint32_t)
-				// Data source, instancing part
+				sizeof(float) * 4,									// alignedByteOffset (uint32_t)
+				sizeof(float) * 4 + sizeof(uint8_t) * 4,			// strideInBytes (uint32_t)
 				0													// instancesPerElement (uint32_t)
 			}
 		};
@@ -159,19 +159,12 @@ namespace RendererRuntime
 					assert(nullptr != mIndexBufferPtr);
 
 					// Create vertex array object (VAO)
-					const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] =
-					{
-						{ // Vertex buffer 0
-							mVertexBufferPtr,	// vertexBuffer (Renderer::IVertexBuffer*)
-							sizeof(ImDrawVert)	// strideInBytes (uint32_t)
-						}
-					};
+					const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] = { mVertexBufferPtr };
 					mVertexArrayPtr = bufferManager.createVertexArray(::detail::VertexAttributes, static_cast<uint32_t>(glm::countof(vertexArrayVertexBuffers)), vertexArrayVertexBuffers, mIndexBufferPtr);
 					RENDERER_SET_RESOURCE_DEBUG_NAME(mVertexArrayPtr, "Debug GUI")
 				}
 
 				{ // Copy and convert all vertices and indices into a single contiguous buffer
-					// TODO(co) Not compatible with command buffer: This certainly is going to be changed
 					Renderer::MappedSubresource vertexBufferMappedSubresource;
 					if (renderer.map(*mVertexBufferPtr, 0, Renderer::MapType::WRITE_DISCARD, 0, vertexBufferMappedSubresource))
 					{
@@ -292,13 +285,8 @@ namespace RendererRuntime
 				Renderer::Command::SetPipelineState::create(commandBuffer, mPipelineState);
 			}
 
-			{ // Setup input assembly (IA)
-				// Set the used vertex array
-				Renderer::Command::SetVertexArray::create(commandBuffer, getFillVertexArrayPtr());
-
-				// Set the primitive topology used for draw calls
-				Renderer::Command::SetPrimitiveTopology::create(commandBuffer, Renderer::PrimitiveTopology::TRIANGLE_LIST);
-			}
+			// Setup input assembly (IA): Set the used vertex array
+			Renderer::Command::SetVertexArray::create(commandBuffer, getFillVertexArrayPtr());
 
 			// Render command lists
 			fillCommandBuffer(commandBuffer);
@@ -413,7 +401,8 @@ namespace RendererRuntime
 					// Get the shader source code (outsourced to keep an overview)
 					const char* vertexShaderSourceCode = nullptr;
 					const char* fragmentShaderSourceCode = nullptr;
-					#include "Detail/Shader/DebugGui_GLSL_410.h"
+					#include "Detail/Shader/DebugGui_GLSL_450.h"	// For Vulkan
+					#include "Detail/Shader/DebugGui_GLSL_410.h"	// macOS 10.11 only supports OpenGL 4.1 hence it's our OpenGL minimum
 					#include "Detail/Shader/DebugGui_GLSL_ES3.h"
 					#include "Detail/Shader/DebugGui_HLSL_D3D9.h"
 					#include "Detail/Shader/DebugGui_HLSL_D3D10_D3D11_D3D12.h"

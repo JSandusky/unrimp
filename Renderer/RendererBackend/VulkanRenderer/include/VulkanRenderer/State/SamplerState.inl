@@ -28,9 +28,9 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline const Renderer::RasterizerState& RasterizerState::getRasterizerState() const
+	inline VkSampler SamplerState::getVkSampler() const
 	{
-		return mRasterizerState;
+		return mVkSampler;
 	}
 
 

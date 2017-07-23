@@ -54,6 +54,8 @@
 
 #include <GLES3/gl2ext.h>
 
+#include <tuple>	// For "std::ignore"
+
 
 //[-------------------------------------------------------]
 //[ Global functions                                      ]
@@ -183,12 +185,6 @@ namespace
 				static_cast<OpenGLES3Renderer::OpenGLES3Renderer&>(renderer).iaSetVertexArray(realData->vertexArray);
 			}
 
-			void SetPrimitiveTopology(const void* data, Renderer::IRenderer& renderer)
-			{
-				const Renderer::Command::SetPrimitiveTopology* realData = static_cast<const Renderer::Command::SetPrimitiveTopology*>(data);
-				static_cast<OpenGLES3Renderer::OpenGLES3Renderer&>(renderer).iaSetPrimitiveTopology(realData->primitiveTopology);
-			}
-
 			//[-------------------------------------------------------]
 			//[ Rasterizer (RS) stage                                 ]
 			//[-------------------------------------------------------]
@@ -304,7 +300,6 @@ namespace
 			&BackendDispatch::SetPipelineState,
 			// Input-assembler (IA) stage
 			&BackendDispatch::SetVertexArray,
-			&BackendDispatch::SetPrimitiveTopology,
 			// Rasterizer (RS) stage
 			&BackendDispatch::SetViewports,
 			&BackendDispatch::SetScissorRectangles,
@@ -728,6 +723,7 @@ namespace OpenGLES3Renderer
 				mPipelineState->addReference();
 
 				// Set pipeline state
+				mOpenGLES3PrimitiveTopology = mPipelineState->getOpenGLES3PrimitiveTopology();
 				mPipelineState->bindPipelineState();
 			}
 			else if (nullptr != mPipelineState)
@@ -784,82 +780,66 @@ namespace OpenGLES3Renderer
 		}
 	}
 
-	void OpenGLES3Renderer::iaSetPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology)
-	{
-		// Map and backup the set OpenGL ES 3 primitive topology
-		mOpenGLES3PrimitiveTopology = Mapping::getOpenGLES3Type(primitiveTopology);
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Rasterizer (RS) stage                                 ]
 	//[-------------------------------------------------------]
 	void OpenGLES3Renderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport* viewports)
 	{
-		// Are the given viewports valid?
-		if (numberOfViewports > 0 && nullptr != viewports)
-		{
-			// In OpenGL ES 3, the origin of the viewport is left bottom while Direct3D is using a left top origin. To make the
-			// Direct3D 11 implementation as efficient as possible the Direct3D convention is used and we have to convert in here.
+		// Sanity check
+		assert((numberOfViewports > 0 && nullptr != viewports) && "Invalid rasterizer state viewports");
+		std::ignore = numberOfViewports;
 
-			// Get the width and height of the current render target
-			uint32_t renderTargetHeight = 1;
-			if (nullptr != mRenderTarget)
-			{
-				uint32_t renderTargetWidth = 1;
-				mRenderTarget->getWidthAndHeight(renderTargetWidth, renderTargetHeight);
-			}
+		// In OpenGL ES 3, the origin of the viewport is left bottom while Direct3D is using a left top origin. To make the
+		// Direct3D 11 implementation as efficient as possible the Direct3D convention is used and we have to convert in here.
 
-			// Set the OpenGL ES 3 viewport
-			// -> OpenGL ES 3 supports only one viewport
-		#ifndef RENDERER_NO_DEBUG
-			if (numberOfViewports > 1)
-			{
-				RENDERER_LOG(mContext, CRITICAL, "OpenGL ES 3 supports only one viewport")
-			}
-		#endif
-			glViewport(static_cast<GLint>(viewports->topLeftX), static_cast<GLint>(renderTargetHeight - viewports->topLeftY - viewports->height), static_cast<GLsizei>(viewports->width), static_cast<GLsizei>(viewports->height));
-			glDepthRangef(static_cast<GLclampf>(viewports->minDepth), static_cast<GLclampf>(viewports->maxDepth));
-		}
-		else
+		// Get the width and height of the current render target
+		uint32_t renderTargetHeight = 1;
+		if (nullptr != mRenderTarget)
 		{
-			// Error!
-			assert(false);
+			uint32_t renderTargetWidth = 1;
+			mRenderTarget->getWidthAndHeight(renderTargetWidth, renderTargetHeight);
 		}
+
+		// Set the OpenGL ES 3 viewport
+		// -> OpenGL ES 3 supports only one viewport
+	#ifndef RENDERER_NO_DEBUG
+		if (numberOfViewports > 1)
+		{
+			RENDERER_LOG(mContext, CRITICAL, "OpenGL ES 3 supports only one viewport")
+		}
+	#endif
+		glViewport(static_cast<GLint>(viewports->topLeftX), static_cast<GLint>(renderTargetHeight - viewports->topLeftY - viewports->height), static_cast<GLsizei>(viewports->width), static_cast<GLsizei>(viewports->height));
+		glDepthRangef(static_cast<GLclampf>(viewports->minDepth), static_cast<GLclampf>(viewports->maxDepth));
 	}
 
 	void OpenGLES3Renderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles)
 	{
-		// Are the given scissor rectangles valid?
-		if (numberOfScissorRectangles > 0 && nullptr != scissorRectangles)
-		{
-			// In OpenGL ES 3, the origin of the scissor rectangle is left bottom while Direct3D is using a left top origin. To make the
-			// Direct3D 9 & 10 & 11 implementation as efficient as possible the Direct3D convention is used and we have to convert in here.
+		// Sanity check
+		assert((numberOfScissorRectangles > 0 && nullptr != scissorRectangles) && "Invalid rasterizer state scissor rectangles");
+		std::ignore = numberOfScissorRectangles;
 
-			// Get the width and height of the current render target
-			uint32_t renderTargetHeight = 1;
-			if (nullptr != mRenderTarget)
-			{
-				uint32_t renderTargetWidth = 1;
-				mRenderTarget->getWidthAndHeight(renderTargetWidth, renderTargetHeight);
-			}
+		// In OpenGL ES 3, the origin of the scissor rectangle is left bottom while Direct3D is using a left top origin. To make the
+		// Direct3D 9 & 10 & 11 implementation as efficient as possible the Direct3D convention is used and we have to convert in here.
 
-			// Set the OpenGL ES 3 scissor rectangle
-		#ifndef RENDERER_NO_DEBUG
-			if (numberOfScissorRectangles > 1)
-			{
-				RENDERER_LOG(mContext, CRITICAL, "OpenGL ES 3 supports only one scissor rectangle")
-			}
-		#endif
-			const GLsizei width  = scissorRectangles->bottomRightX - scissorRectangles->topLeftX;
-			const GLsizei height = scissorRectangles->bottomRightY - scissorRectangles->topLeftY;
-			glScissor(static_cast<GLint>(scissorRectangles->topLeftX), static_cast<GLint>(renderTargetHeight - scissorRectangles->topLeftY - height), width, height);
-		}
-		else
+		// Get the width and height of the current render target
+		uint32_t renderTargetHeight = 1;
+		if (nullptr != mRenderTarget)
 		{
-			// Error!
-			assert(false);
+			uint32_t renderTargetWidth = 1;
+			mRenderTarget->getWidthAndHeight(renderTargetWidth, renderTargetHeight);
 		}
+
+		// Set the OpenGL ES 3 scissor rectangle
+	#ifndef RENDERER_NO_DEBUG
+		if (numberOfScissorRectangles > 1)
+		{
+			RENDERER_LOG(mContext, CRITICAL, "OpenGL ES 3 supports only one scissor rectangle")
+		}
+	#endif
+		const GLsizei width  = scissorRectangles->bottomRightX - scissorRectangles->topLeftX;
+		const GLsizei height = scissorRectangles->bottomRightY - scissorRectangles->topLeftY;
+		glScissor(static_cast<GLint>(scissorRectangles->topLeftX), static_cast<GLint>(renderTargetHeight - scissorRectangles->topLeftY - height), width, height);
 	}
 
 
@@ -1146,125 +1126,121 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	void OpenGLES3Renderer::drawEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		if (nullptr != mVertexArray && numberOfDraws > 0)
+		// Sanity checks
+		assert(nullptr != emulationData);
+		assert(numberOfDraws > 0 && "Number of draws must not be zero");
+		// It's possible to draw without "mVertexArray"
+
+		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
+		emulationData += indirectBufferOffset;
+
+		// Emit the draw calls
+		for (uint32_t i = 0; i < numberOfDraws; ++i)
 		{
-			assert(nullptr != emulationData);
+			const Renderer::DrawInstancedArguments& drawInstancedArguments = *reinterpret_cast<const Renderer::DrawInstancedArguments*>(emulationData);
+			updateGL_EXT_base_instanceEmulation(drawInstancedArguments.startInstanceLocation);
 
-			// TODO(co) Currently no buffer overflow check due to lack of interface provided data
-			emulationData += indirectBufferOffset;
-
-			// Emit the draw calls
-			for (uint32_t i = 0; i < numberOfDraws; ++i)
+			// Draw and advance
+			if (drawInstancedArguments.instanceCount > 1 || (drawInstancedArguments.startInstanceLocation > 0 && mOpenGLES3Context->getExtensions().isGL_EXT_base_instance()))
 			{
-				const Renderer::DrawInstancedArguments& drawInstancedArguments = *reinterpret_cast<const Renderer::DrawInstancedArguments*>(emulationData);
-				updateGL_EXT_base_instanceEmulation(drawInstancedArguments.startInstanceLocation);
-
-				// Draw and advance
-				if (drawInstancedArguments.instanceCount > 1 || (drawInstancedArguments.startInstanceLocation > 0 && mOpenGLES3Context->getExtensions().isGL_EXT_base_instance()))
+				// With instancing
+				if (drawInstancedArguments.startInstanceLocation > 0 && mOpenGLES3Context->getExtensions().isGL_EXT_base_instance())
 				{
-					// With instancing
-					if (drawInstancedArguments.startInstanceLocation > 0 && mOpenGLES3Context->getExtensions().isGL_EXT_base_instance())
-					{
-						glDrawArraysInstancedBaseInstanceEXT(mOpenGLES3PrimitiveTopology, static_cast<GLint>(drawInstancedArguments.startVertexLocation), static_cast<GLsizei>(drawInstancedArguments.vertexCountPerInstance), static_cast<GLsizei>(drawInstancedArguments.instanceCount), drawInstancedArguments.startInstanceLocation);
-					}
-					else
-					{
-						glDrawArraysInstanced(mOpenGLES3PrimitiveTopology, static_cast<GLint>(drawInstancedArguments.startVertexLocation), static_cast<GLsizei>(drawInstancedArguments.vertexCountPerInstance), static_cast<GLsizei>(drawInstancedArguments.instanceCount));
-					}
+					glDrawArraysInstancedBaseInstanceEXT(mOpenGLES3PrimitiveTopology, static_cast<GLint>(drawInstancedArguments.startVertexLocation), static_cast<GLsizei>(drawInstancedArguments.vertexCountPerInstance), static_cast<GLsizei>(drawInstancedArguments.instanceCount), drawInstancedArguments.startInstanceLocation);
 				}
 				else
 				{
-					// Without instancing
-					assert(drawInstancedArguments.instanceCount <= 1);
-					glDrawArrays(mOpenGLES3PrimitiveTopology, static_cast<GLint>(drawInstancedArguments.startVertexLocation), static_cast<GLsizei>(drawInstancedArguments.vertexCountPerInstance));
+					glDrawArraysInstanced(mOpenGLES3PrimitiveTopology, static_cast<GLint>(drawInstancedArguments.startVertexLocation), static_cast<GLsizei>(drawInstancedArguments.vertexCountPerInstance), static_cast<GLsizei>(drawInstancedArguments.instanceCount));
 				}
-				emulationData += sizeof(Renderer::DrawInstancedArguments);
 			}
+			else
+			{
+				// Without instancing
+				assert(drawInstancedArguments.instanceCount <= 1);
+				glDrawArrays(mOpenGLES3PrimitiveTopology, static_cast<GLint>(drawInstancedArguments.startVertexLocation), static_cast<GLsizei>(drawInstancedArguments.vertexCountPerInstance));
+			}
+			emulationData += sizeof(Renderer::DrawInstancedArguments);
 		}
 	}
 
 	void OpenGLES3Renderer::drawIndexedEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
-		// Is currently an vertex array?
-		if (nullptr != mVertexArray && numberOfDraws > 0)
+		// Sanity checks
+		assert(nullptr != emulationData);
+		assert(numberOfDraws > 0 && "Number of draws must not be zero");
+		assert(nullptr != mVertexArray && "Draw indexed needs a set vertex array");
+		assert(nullptr != mVertexArray->getIndexBuffer() && "Draw indexed needs a set vertex array which contains an index buffer");
+
+		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
+		emulationData += indirectBufferOffset;
+
+		// Emit the draw calls
+		IndexBuffer* indexBuffer = mVertexArray->getIndexBuffer();
+		for (uint32_t i = 0; i < numberOfDraws; ++i)
 		{
-			// Get the used index buffer
-			IndexBuffer* indexBuffer = mVertexArray->getIndexBuffer();
-			if (nullptr != indexBuffer)
+			const Renderer::DrawIndexedInstancedArguments& drawIndexedInstancedArguments = *reinterpret_cast<const Renderer::DrawIndexedInstancedArguments*>(emulationData);
+			updateGL_EXT_base_instanceEmulation(drawIndexedInstancedArguments.startInstanceLocation);
+
+			// Draw and advance
+			if (drawIndexedInstancedArguments.instanceCount > 1 || (drawIndexedInstancedArguments.startInstanceLocation > 0 && mOpenGLES3Context->getExtensions().isGL_EXT_base_instance()))
 			{
-				assert(nullptr != emulationData);
-
-				// TODO(co) Currently no buffer overflow check due to lack of interface provided data
-				emulationData += indirectBufferOffset;
-
-				// Emit the draw calls
-				for (uint32_t i = 0; i < numberOfDraws; ++i)
+				// With instancing
+				if (drawIndexedInstancedArguments.baseVertexLocation > 0)
 				{
-					const Renderer::DrawIndexedInstancedArguments& drawIndexedInstancedArguments = *reinterpret_cast<const Renderer::DrawIndexedInstancedArguments*>(emulationData);
-					updateGL_EXT_base_instanceEmulation(drawIndexedInstancedArguments.startInstanceLocation);
-
-					// Draw and advance
-					if (drawIndexedInstancedArguments.instanceCount > 1 || (drawIndexedInstancedArguments.startInstanceLocation > 0 && mOpenGLES3Context->getExtensions().isGL_EXT_base_instance()))
+					// Use start instance location?
+					if (drawIndexedInstancedArguments.startInstanceLocation > 0 && mOpenGLES3Context->getExtensions().isGL_EXT_base_instance())
 					{
-						// With instancing
-						if (drawIndexedInstancedArguments.baseVertexLocation > 0)
-						{
-							// Use start instance location?
-							if (drawIndexedInstancedArguments.startInstanceLocation > 0 && mOpenGLES3Context->getExtensions().isGL_EXT_base_instance())
-							{
-								// Draw with base vertex location and start instance location
-								glDrawElementsInstancedBaseVertexBaseInstanceEXT(mOpenGLES3PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES3Type(), reinterpret_cast<void*>(static_cast<uintptr_t>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes())), static_cast<GLsizei>(drawIndexedInstancedArguments.instanceCount), static_cast<GLint>(drawIndexedInstancedArguments.baseVertexLocation), drawIndexedInstancedArguments.startInstanceLocation);
-							}
+						// Draw with base vertex location and start instance location
+						glDrawElementsInstancedBaseVertexBaseInstanceEXT(mOpenGLES3PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES3Type(), reinterpret_cast<void*>(static_cast<uintptr_t>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes())), static_cast<GLsizei>(drawIndexedInstancedArguments.instanceCount), static_cast<GLint>(drawIndexedInstancedArguments.baseVertexLocation), drawIndexedInstancedArguments.startInstanceLocation);
+					}
 
-							// Is the "GL_EXT_draw_elements_base_vertex" extension there?
-							else if (mOpenGLES3Context->getExtensions().isGL_EXT_draw_elements_base_vertex())
-							{
-								// Draw with base vertex location
-								glDrawElementsInstancedBaseVertexEXT(mOpenGLES3PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES3Type(), reinterpret_cast<void*>(static_cast<uintptr_t>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes())), static_cast<GLsizei>(drawIndexedInstancedArguments.instanceCount), static_cast<GLint>(drawIndexedInstancedArguments.baseVertexLocation));
-							}
-							else
-							{
-								// Error!
-								assert(false);
-							}
-						}
-						else if (drawIndexedInstancedArguments.startInstanceLocation > 0 && mOpenGLES3Context->getExtensions().isGL_EXT_base_instance())
-						{
-							// Draw without base vertex location and with start instance location
-							glDrawElementsInstancedBaseInstanceEXT(mOpenGLES3PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES3Type(), reinterpret_cast<void*>(static_cast<uintptr_t>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes())), static_cast<GLsizei>(drawIndexedInstancedArguments.instanceCount), drawIndexedInstancedArguments.startInstanceLocation);
-						}
-						else
-						{
-							// Draw without base vertex location
-							glDrawElementsInstanced(mOpenGLES3PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES3Type(), reinterpret_cast<void*>(static_cast<uintptr_t>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes())), static_cast<GLsizei>(drawIndexedInstancedArguments.instanceCount));
-						}
+					// Is the "GL_EXT_draw_elements_base_vertex" extension there?
+					else if (mOpenGLES3Context->getExtensions().isGL_EXT_draw_elements_base_vertex())
+					{
+						// Draw with base vertex location
+						glDrawElementsInstancedBaseVertexEXT(mOpenGLES3PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES3Type(), reinterpret_cast<void*>(static_cast<uintptr_t>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes())), static_cast<GLsizei>(drawIndexedInstancedArguments.instanceCount), static_cast<GLint>(drawIndexedInstancedArguments.baseVertexLocation));
 					}
 					else
 					{
-						// Without instancing
-
-						// Use base vertex location?
-						if (drawIndexedInstancedArguments.baseVertexLocation > 0)
-						{
-							// Is the "GL_EXT_draw_elements_base_vertex" extension there?
-							if (mOpenGLES3Context->getExtensions().isGL_EXT_draw_elements_base_vertex())
-							{
-								// Draw with base vertex location
-								glDrawElementsBaseVertexEXT(mOpenGLES3PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES3Type(), reinterpret_cast<void*>(static_cast<uintptr_t>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes())), static_cast<GLint>(drawIndexedInstancedArguments.baseVertexLocation));
-							}
-							else
-							{
-								// Error!
-								assert(false);
-							}
-						}
-						else
-						{
-							// Draw and advance
-							glDrawElements(mOpenGLES3PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES3Type(), reinterpret_cast<void*>(static_cast<uintptr_t>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes())));
-							emulationData += sizeof(Renderer::DrawIndexedInstancedArguments);
-						}
+						// Error!
+						assert(false);
 					}
+				}
+				else if (drawIndexedInstancedArguments.startInstanceLocation > 0 && mOpenGLES3Context->getExtensions().isGL_EXT_base_instance())
+				{
+					// Draw without base vertex location and with start instance location
+					glDrawElementsInstancedBaseInstanceEXT(mOpenGLES3PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES3Type(), reinterpret_cast<void*>(static_cast<uintptr_t>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes())), static_cast<GLsizei>(drawIndexedInstancedArguments.instanceCount), drawIndexedInstancedArguments.startInstanceLocation);
+				}
+				else
+				{
+					// Draw without base vertex location
+					glDrawElementsInstanced(mOpenGLES3PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES3Type(), reinterpret_cast<void*>(static_cast<uintptr_t>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes())), static_cast<GLsizei>(drawIndexedInstancedArguments.instanceCount));
+				}
+			}
+			else
+			{
+				// Without instancing
+
+				// Use base vertex location?
+				if (drawIndexedInstancedArguments.baseVertexLocation > 0)
+				{
+					// Is the "GL_EXT_draw_elements_base_vertex" extension there?
+					if (mOpenGLES3Context->getExtensions().isGL_EXT_draw_elements_base_vertex())
+					{
+						// Draw with base vertex location
+						glDrawElementsBaseVertexEXT(mOpenGLES3PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES3Type(), reinterpret_cast<void*>(static_cast<uintptr_t>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes())), static_cast<GLint>(drawIndexedInstancedArguments.baseVertexLocation));
+					}
+					else
+					{
+						// Error!
+						assert(false);
+					}
+				}
+				else
+				{
+					// Draw and advance
+					glDrawElements(mOpenGLES3PrimitiveTopology, static_cast<GLsizei>(drawIndexedInstancedArguments.indexCountPerInstance), indexBuffer->getOpenGLES3Type(), reinterpret_cast<void*>(static_cast<uintptr_t>(drawIndexedInstancedArguments.startIndexLocation * indexBuffer->getIndexSizeInBytes())));
+					emulationData += sizeof(Renderer::DrawIndexedInstancedArguments);
 				}
 			}
 		}
