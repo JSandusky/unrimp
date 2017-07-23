@@ -399,7 +399,7 @@ namespace VulkanRenderer
 			#warning "TODO(co) Not tested"
 			enabledExtensions.push_back(VK_KHR_ANDROID_SURFACE_EXTENSION_NAME);
 		#elif defined VK_USE_PLATFORM_XLIB_KHR
-			#warning "TODO(co) Not tested"
+			//#warning "TODO(co) Not tested"
 			enabledExtensions.push_back(VK_KHR_XLIB_SURFACE_EXTENSION_NAME);
 		#elif defined VK_USE_PLATFORM_XCB_KHR
 			#warning "TODO(co) Not tested"
@@ -481,8 +481,8 @@ namespace VulkanRenderer
 		#define IMPORT_FUNC(funcName)																												\
 			if (result)																																\
 			{																																		\
-				##funcName = reinterpret_cast<PFN_##funcName>(vkGetInstanceProcAddr(mVkInstance, #funcName));										\
-				if (nullptr == ##funcName)																											\
+				funcName = reinterpret_cast<PFN_##funcName>(vkGetInstanceProcAddr(mVkInstance, #funcName));										\
+				if (nullptr == funcName)																											\
 				{																																	\
 					RENDERER_LOG(mVulkanRenderer.getContext(), CRITICAL, "Failed to load instance based Vulkan function pointer \"%s\"", #funcName)	\
 					result = false;																													\

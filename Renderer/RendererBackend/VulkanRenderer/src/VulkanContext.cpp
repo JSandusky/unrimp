@@ -28,6 +28,7 @@
 
 #include <array>
 #include <vector>
+#include <cstring> // For strcmp
 
 
 //[-------------------------------------------------------]

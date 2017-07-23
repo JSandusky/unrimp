@@ -26,6 +26,8 @@
 #include "VulkanRenderer/VulkanContext.h"
 #include "VulkanRenderer/Helper.h"
 
+#include <cstring> // for memset and memcpy
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

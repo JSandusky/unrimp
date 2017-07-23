@@ -324,7 +324,7 @@ FNPTR(vkGetPhysicalDeviceSurfacePresentModesKHR)
 	FNPTR(vkCreateAndroidSurfaceKHR)
 #elif defined VK_USE_PLATFORM_XLIB_KHR
 	// "VK_KHR_xlib_surface"-extension
-	#warning "TODO(co) Not tested"
+	//#warning "TODO(co) Not tested"
 	FNPTR(vkCreateXlibSurfaceKHR)
 #elif defined VK_USE_PLATFORM_XCB_KHR
 	// "VK_KHR_xcb_surface"-extension
