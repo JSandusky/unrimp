@@ -314,7 +314,7 @@ namespace VulkanRenderer
 				RENDERER_LOG(mVulkanRenderer.getContext(), CRITICAL, "Failed to load in the shared Vulkan library \"vulkan-1.dll\"")
 			}
 		#elif defined LINUX
-			mVulkanSharedLibrary = ::dlopen("libvulkan-1.so", RTLD_NOW);
+			mVulkanSharedLibrary = ::dlopen("libvulkan.so", RTLD_NOW);
 			if (nullptr == mVulkanSharedLibrary)
 			{
 				RENDERER_LOG(mVulkanRenderer.getContext(), CRITICAL, "Failed to load in the shared Vulkan library \"libvulkan-1.so\"")
@@ -606,7 +606,7 @@ namespace VulkanRenderer
 			IMPORT_FUNC(vkCreateAndroidSurfaceKHR);
 		#elif defined VK_USE_PLATFORM_XLIB_KHR
 			// "VK_KHR_xlib_surface"-extension
-			#warning "TODO(co) Not tested"
+			//#warning "TODO(co) Not tested"
 			IMPORT_FUNC(vkCreateXlibSurfaceKHR);
 		#elif defined VK_USE_PLATFORM_XCB_KHR
 			// "VK_KHR_xcb_surface"-extension
