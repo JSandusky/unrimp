@@ -34,7 +34,6 @@
 #elif defined(__ANDROID__)
 	#define VK_USE_PLATFORM_ANDROID_KHR
 #elif defined(LINUX)
-	//#warning "TODO(co) Not tested. Use XLIB or XCB?"
 	#define VK_USE_PLATFORM_XLIB_KHR
 #endif
 #define VK_NO_PROTOTYPES

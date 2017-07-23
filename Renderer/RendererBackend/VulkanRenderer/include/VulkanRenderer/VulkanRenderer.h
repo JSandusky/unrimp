@@ -37,7 +37,6 @@
 //[-------------------------------------------------------]
 namespace Renderer
 {
-	//class IProgram;
 	class IVertexArray;
 	class IRenderTarget;
 	class IIndirectBuffer;

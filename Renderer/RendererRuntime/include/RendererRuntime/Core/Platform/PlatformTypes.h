@@ -89,7 +89,7 @@
 	*  @brief
 	*    No operation macro ("_asm nop"/__nop())
 	*/
-	#define NOP
+	#define NOP asm ("nop");
 
 	#ifdef __clang__
 		/**

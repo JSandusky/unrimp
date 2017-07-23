@@ -170,11 +170,10 @@ namespace
 			}
 
 			// Check if list contains most widely used R8 G8 B8 A8 format with nonlinear color space
-			// Not all implementation supports RGBA8. Some only support BGRA8 formats (e.g. xlib surface ander linux with RADV)
+			// -> Not all implementations support RGBA8, some only support BGRA8 formats (e.g. xlib surface under Linux with RADV), so check for both
 			for (const VkSurfaceFormatKHR& surfaceFormat : surfaceFormats)
 			{
-				if (VK_FORMAT_R8G8B8A8_UNORM == surfaceFormat.format
-					|| VK_FORMAT_B8G8R8A8_UNORM == surfaceFormat.format)
+				if (VK_FORMAT_R8G8B8A8_UNORM == surfaceFormat.format || VK_FORMAT_B8G8R8A8_UNORM == surfaceFormat.format)
 				{
 					return surfaceFormat;
 				}

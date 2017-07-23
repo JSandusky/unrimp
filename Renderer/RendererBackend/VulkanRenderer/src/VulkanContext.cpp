@@ -28,7 +28,7 @@
 
 #include <array>
 #include <vector>
-#include <cstring> // For strcmp
+#include <cstring>	// For "strcmp()"
 
 
 //[-------------------------------------------------------]

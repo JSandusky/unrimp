@@ -124,7 +124,7 @@ namespace Renderer
 				#define NULL_HANDLE 0
 			#endif
 			#define FORCEINLINE __attribute__((always_inline))
-			#define NOP
+			#define NOP asm ("nop");
 			#ifdef __clang__
 				#define PRAGMA_WARNING_PUSH _Pragma("clang diagnostic push")
 				#define PRAGMA_WARNING_POP _Pragma("clang diagnostic pop")

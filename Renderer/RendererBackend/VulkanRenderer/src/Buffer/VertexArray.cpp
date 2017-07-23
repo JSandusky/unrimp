@@ -28,7 +28,7 @@
 
 #include <Renderer/Buffer/VertexArrayTypes.h>
 
-#include <cstring> // for memset and memcpy
+#include <cstring>	// For "memset()" and "memcpy()"
 
 
 //[-------------------------------------------------------]

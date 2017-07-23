@@ -29,7 +29,7 @@
 #include <Renderer/ILog.h>
 #include <Renderer/Texture/ITexture.h>
 
-#include <cstring> // For memcpy
+#include <cstring>	// For "memcpy()"
 
 
 //[-------------------------------------------------------]
