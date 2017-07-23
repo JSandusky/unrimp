@@ -26,6 +26,8 @@
 #include "VulkanRenderer/VulkanContext.h"
 #include "VulkanRenderer/Helper.h"
 
+#include <Renderer/ILog.h>
+
 #include <cstring>	// For "memset()" and "memcpy()"
 
 

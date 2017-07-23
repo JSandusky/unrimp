@@ -316,10 +316,6 @@ namespace VulkanRenderer
 				mExtensions = new Extensions(*mVulkanContext);
 				mExtensions->initialize();
 
-				#ifdef RENDERER_OUTPUT_DEBUG
-					// TODO(co) Implement me
-				#endif
-
 				// Initialize the capabilities
 				initializeCapabilities();
 
