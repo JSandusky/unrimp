@@ -49,24 +49,25 @@ namespace VulkanRenderer
 		assert(samplerState.maxAnisotropy <= vulkanRenderer.getCapabilities().maximumAnisotropy && "Maximum anisotropy value violated");
 
 		// TODO(co) Map "Renderer::SamplerState" to VkSamplerCreateInfo
+		const bool anisotropyEnable = (Renderer::FilterMode::ANISOTROPIC == samplerState.filter || Renderer::FilterMode::COMPARISON_ANISOTROPIC == samplerState.filter);
 		const VkSamplerCreateInfo vkSamplerCreateInfo =
 		{
 			VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,							// sType (VkStructureType)
 			nullptr,														// pNext (const void*)
 			0,																// flags (VkSamplerCreateFlags)
-			VK_FILTER_LINEAR,												// magFilter (VkFilter)
-			VK_FILTER_LINEAR,												// minFilter (VkFilter)
-			VK_SAMPLER_MIPMAP_MODE_NEAREST,									// mipmapMode (VkSamplerMipmapMode)
+			Mapping::getVulkanMagFilterMode(samplerState.filter),			// magFilter (VkFilter)
+			Mapping::getVulkanMinFilterMode(samplerState.filter),			// minFilter (VkFilter)
+			Mapping::getVulkanMipmapMode(samplerState.filter),				// mipmapMode (VkSamplerMipmapMode)
 			Mapping::getVulkanTextureAddressMode(samplerState.addressU),	// addressModeU (VkSamplerAddressMode)
 			Mapping::getVulkanTextureAddressMode(samplerState.addressV),	// addressModeV (VkSamplerAddressMode)
 			Mapping::getVulkanTextureAddressMode(samplerState.addressW),	// addressModeW (VkSamplerAddressMode)
 			samplerState.mipLODBias,										// mipLodBias (float)
-			VK_FALSE,														// anisotropyEnable (VkBool32)
-			1.0f,															// maxAnisotropy (float)
+			static_cast<VkBool32>(anisotropyEnable),						// anisotropyEnable (VkBool32)
+			static_cast<float>(samplerState.maxAnisotropy),					// maxAnisotropy (float)
 			VK_FALSE,														// compareEnable (VkBool32)
 			VK_COMPARE_OP_ALWAYS,											// compareOp (VkCompareOp)
-			0.0f,															// minLod (float)
-			0.0f,															// maxLod (float)
+			samplerState.minLOD,											// minLod (float)
+			samplerState.maxLOD,											// maxLod (float)
 			VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK,						// borderColor (VkBorderColor)
 			VK_FALSE														// unnormalizedCoordinates (VkBool32)
 		};

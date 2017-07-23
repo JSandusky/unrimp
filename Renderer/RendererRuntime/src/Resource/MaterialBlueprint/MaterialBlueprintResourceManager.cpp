@@ -127,7 +127,12 @@ namespace RendererRuntime
 			// -> Runtime hiccups would also be there without fallback pipeline state caches, so there's no real way around
 			// -> We must enforce fully loaded material blueprint resource state for this
 			materialBlueprintResource->enforceFullyLoaded();
-			materialBlueprintResource->createPipelineStateCaches(true);
+
+			// TODO(co) The Vulkan renderer backend is under construction
+			if (0 != strcmp(mRendererRuntime.getRenderer().getName(), "Vulkan"))
+			{
+				materialBlueprintResource->createPipelineStateCaches(true);
+			}
 		}
 	}
 

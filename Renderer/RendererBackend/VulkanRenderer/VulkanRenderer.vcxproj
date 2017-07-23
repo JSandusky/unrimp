@@ -91,11 +91,7 @@
     <ClInclude Include="include\VulkanRenderer\Mapping.h" />
     <ClInclude Include="include\VulkanRenderer\RenderTarget\Framebuffer.h" />
     <ClInclude Include="include\VulkanRenderer\RenderTarget\SwapChain.h" />
-    <ClInclude Include="include\VulkanRenderer\State\BlendState.h" />
-    <ClInclude Include="include\VulkanRenderer\State\DepthStencilState.h" />
-    <ClInclude Include="include\VulkanRenderer\State\IState.h" />
     <ClInclude Include="include\VulkanRenderer\State\PipelineState.h" />
-    <ClInclude Include="include\VulkanRenderer\State\RasterizerState.h" />
     <ClInclude Include="include\VulkanRenderer\State\SamplerState.h" />
     <ClInclude Include="include\VulkanRenderer\Texture\Texture1D.h" />
     <ClInclude Include="include\VulkanRenderer\Texture\Texture2D.h" />
@@ -500,10 +496,7 @@
     <ClCompile Include="src\Mapping.cpp" />
     <ClCompile Include="src\RenderTarget\Framebuffer.cpp" />
     <ClCompile Include="src\RenderTarget\SwapChain.cpp" />
-    <ClCompile Include="src\State\BlendState.cpp" />
-    <ClCompile Include="src\State\DepthStencilState.cpp" />
     <ClCompile Include="src\State\PipelineState.cpp" />
-    <ClCompile Include="src\State\RasterizerState.cpp" />
     <ClCompile Include="src\State\SamplerState.cpp" />
     <ClCompile Include="src\Texture\Texture1D.cpp" />
     <ClCompile Include="src\Texture\Texture2D.cpp" />
@@ -537,9 +530,7 @@
     <None Include="include\VulkanRenderer\Buffer\VertexBuffer.inl" />
     <None Include="include\VulkanRenderer\RenderTarget\Framebuffer.inl" />
     <None Include="include\VulkanRenderer\RenderTarget\SwapChain.inl" />
-    <None Include="include\VulkanRenderer\State\IState.inl" />
     <None Include="include\VulkanRenderer\State\PipelineState.inl" />
-    <None Include="include\VulkanRenderer\State\RasterizerState.inl" />
     <None Include="include\VulkanRenderer\State\SamplerState.inl" />
     <None Include="include\VulkanRenderer\Texture\Texture1D.inl" />
     <None Include="include\VulkanRenderer\Texture\Texture2D.inl" />

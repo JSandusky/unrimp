@@ -438,6 +438,15 @@
     <ClInclude Include="src\Basics\FirstTexture\FirstTexture_GLSL_450.h">
       <Filter>Basics\FirstTexture</Filter>
     </ClInclude>
+    <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererDrawInstanced\CubeRendererDrawInstanced_GLSL_450.h">
+      <Filter>Advanced\InstancedCubes\CubeRendereDrawInstanced</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Advanced\InstancedCubes\CubeRendererInstancedArrays\CubeRendererInstancedArrays_GLSL_450.h">
+      <Filter>Advanced\InstancedCubes\CubeRendererInstancedArrays</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_GLSL_450.h">
+      <Filter>Runtime\FirstMesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Framework\IApplication.cpp">

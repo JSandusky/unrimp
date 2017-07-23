@@ -21,8 +21,8 @@
 //[-------------------------------------------------------]
 //[ Shader start                                          ]
 //[-------------------------------------------------------]
-#if !defined(RENDERER_NO_DIRECT3D10) || !defined(RENDERER_NO_DIRECT3D11) || !defined(RENDERER_NO_DIRECT3D12)
-if (0 == strcmp(mRenderer->getName(), "Direct3D10") || 0 == strcmp(mRenderer->getName(), "Direct3D11") || 0 == strcmp(mRenderer->getName(), "Direct3D12"))
+#ifndef RENDERER_NO_VULKAN
+if (0 == strcmp(mRenderer->getName(), "Vulkan"))
 {
 
 
@@ -30,66 +30,61 @@ if (0 == strcmp(mRenderer->getName(), "Direct3D10") || 0 == strcmp(mRenderer->ge
 //[ Vertex shader source code                             ]
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
-vertexShaderSourceCode = R"(
+vertexShaderSourceCode = R"(#version 450 core	// OpenGL 4.5
+#extension GL_ARB_separate_shader_objects : enable	// The "GL_ARB_separate_shader_objects"-extension is required for Vulkan shaders to work
+
 // Attribute input/output
-struct VS_INPUT
+layout(location = 0) in vec3 Position;		// Object space vertex position input
+layout(location = 1) in vec2 TexCoord;
+layout(location = 2) in vec3 Normal;
+layout(location = 0) out gl_PerVertex
 {
-	float3 Position   : POSITION;	// Object space vertex position
-	float2 TexCoord   : TEXCOORD0;
-	float3 Normal     : NORMAL;
-	uint   InstanceID : SV_INSTANCEID;
+	vec4 gl_Position;
 };
-struct VS_OUTPUT
-{
-	float4 Position      : SV_POSITION;
-	float3 TexCoord      : TEXCOORD0;	// z component = texture ID
-	float3 Normal        : NORMAL;
-	float3 WorldPosition : TEXCOORD1;
-};
+layout(location = 1) out vec3 WorldPositionVs;
+layout(location = 2) out vec3 TexCoordVs;	// z component = texture ID
+layout(location = 3) out vec3 NormalVs;
 
 // Uniforms
-tbuffer PerInstanceDataMapVs : register(t0)	// Texture buffer with per instance data
-											// -> Layout: [Position][Rotation][Position][Rotation]...
-											//    - Position: xyz=Position, w=Slice of the 2D texture array to use
-											//    - Rotation: Rotation quaternion (xyz) and scale (w)
-											//      -> We don't need to store the w component of the quaternion. It's normalized and storing
-											//         three components while recomputing the fourths component is be sufficient.
+layout(binding = 0) uniform samplerBuffer PerInstanceDataMapVs;	// Texture buffer with per instance data (used via vertex texture fetch)
+																// -> Layout: [Position][Rotation][Position][Rotation]...
+																//    - Position: xyz=Position, w=Slice of the 2D texture array to use
+																//    - Rotation: Rotation quaternion (xyz) and scale (w)
+																//      -> We don't need to store the w component of the quaternion. It's normalized and storing
+																//         three components while recomputing the fourths component is be sufficient.
+layout(std140, binding = 1) uniform UniformBlockStaticVs
 {
-	float4 PerInstanceDataMap[2000];	// TODO(co) Real number... hm, I like the OpenGL way more because it's more flexible and I can draw a LOT more instances with a single draw call...
-										// (Direct3D error message: "array dimension must be between 1 and 65536")
+	mat4 MVP;
 };
-cbuffer UniformBlockStaticVs : register(b0)
+layout(std140, binding = 2) uniform UniformBlockDynamicVs
 {
-	float4x4 MVP;
-};
-cbuffer UniformBlockDynamicVs : register(b1)
-{
-	float2 TimerAndGlobalScale;	// x=Timer, y=Global scale
+	vec2 TimerAndGlobalScale;	// x=Timer, y=Global scale
 };
 
 // Programs
-VS_OUTPUT main(VS_INPUT Input)
+void main()
 {
-	VS_OUTPUT output;
-
 	// Get the per instance position (xyz=Position, w=Slice of the 2D texture array to use)
-	float4 perInstancePositionTexture = PerInstanceDataMap[Input.InstanceID * 2];
+	vec4 perInstancePositionTexture = texelFetch(PerInstanceDataMapVs, gl_InstanceID * 2);
 
 	// Get the per instance rotation quaternion (xyz) and scale (w)
-	float4 perInstanceRotationScale = PerInstanceDataMap[Input.InstanceID * 2 + 1];
+	vec4 perInstanceRotationScale = texelFetch(PerInstanceDataMapVs, gl_InstanceID * 2 + 1);
 
 	// Compute last component (w) of the quaternion (rotation quaternions are always normalized)
-	float sqw = 1.0f - perInstanceRotationScale.x * perInstanceRotationScale.x
-					 - perInstanceRotationScale.y * perInstanceRotationScale.y
-					 - perInstanceRotationScale.z * perInstanceRotationScale.z;
-	float4 r = float4(perInstanceRotationScale.xyz, (sqw > 0.0f) ? -sqrt(sqw) : 0.0f);
+	float sqw = 1.0 - perInstanceRotationScale.x * perInstanceRotationScale.x
+					- perInstanceRotationScale.y * perInstanceRotationScale.y
+					- perInstanceRotationScale.z * perInstanceRotationScale.z;
+	vec4 r = vec4(perInstanceRotationScale.xyz, (sqw > 0.0) ? -sqrt(sqw) : 0.0);
+
+	// Start with the local space vertex position
+	vec4 position = vec4(Position, 1.0);
 
 	{ // Cube rotation: SLERP from identity quaternion to rotation quaternion of the current instance
 		// From
-		float4 from = float4(0.0, 0.0, 0.0, 1.0);	// Identity
+		vec4 from = vec4(0.0, 0.0, 0.0, 1.0);	// Identity
 
 		// To
-		float4 to = r;
+		vec4 to = r;
 
 		// Time
 		float time = TimerAndGlobalScale.x * 0.001f;
@@ -98,7 +93,7 @@ VS_OUTPUT main(VS_INPUT Input)
 		float cosom = dot(from, to);
 
 		// Adjust signs (if necessary)
-		float4 to1;
+		vec4 to1;
 		if (cosom < 0.0f)
 		{
 			cosom  = -cosom;
@@ -132,9 +127,6 @@ VS_OUTPUT main(VS_INPUT Input)
 		r = scale0 * from + scale1 * to1;
 	}
 
-	// Start with the local space vertex position
-	float4 position = float4(Input.Position, 1.0f);
-
 	{ // Apply rotation by using the rotation quaternion
 		float x2 = r.x * r.x;
 		float y2 = r.y * r.y;
@@ -143,36 +135,33 @@ VS_OUTPUT main(VS_INPUT Input)
 		float xa = r.x * position.x;
 		float yb = r.y * position.y;
 		float zc = r.z * position.z;
-		position.xyz = float3(position.x * ( x2 - y2 - z2 + w2) + 2.0 * (r.w * (r.y * position.z - r.z * position.y) + r.x * (yb + zc)),
-							  position.y * (-x2 + y2 - z2 + w2) + 2.0 * (r.w * (r.z * position.x - r.x * position.z) + r.y * (xa + zc)),
-							  position.z * (-x2 - y2 + z2 + w2) + 2.0 * (r.w * (r.x * position.y - r.y * position.x) + r.z * (xa + yb)));
+		position.xyz = vec3(position.x * ( x2 - y2 - z2 + w2) + 2.0 * (r.w * (r.y * position.z - r.z * position.y) + r.x * (yb + zc)),
+							position.y * (-x2 + y2 - z2 + w2) + 2.0 * (r.w * (r.z * position.x - r.x * position.z) + r.y * (xa + zc)),
+							position.z * (-x2 - y2 + z2 + w2) + 2.0 * (r.w * (r.x * position.y - r.y * position.x) + r.z * (xa + yb)));
 	}
 
 	// Apply global scale and per instance scale
 	position.xyz = position.xyz * TimerAndGlobalScale.y * perInstanceRotationScale.w;
 
 	// Some movement in general
-	position.x += sin(TimerAndGlobalScale.x * 0.0001f);
-	position.y += sin(TimerAndGlobalScale.x * 0.0001f) * 2.0f;
-	position.z += cos(TimerAndGlobalScale.x * 0.0001f) * 0.5f;
+	position.x += sin(TimerAndGlobalScale.x * 0.0001);
+	position.y += sin(TimerAndGlobalScale.x * 0.0001) * 2.0;
+	position.z += cos(TimerAndGlobalScale.x * 0.0001) * 0.5;
 
 	// Apply per instance position
 	position.xyz += perInstancePositionTexture.xyz;
 
 	// Calculate the world position of the vertex
-	output.WorldPosition = position.xyz;
+	WorldPositionVs = position.xyz;
 
 	// Calculate the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
-	position = mul(MVP, position);
+	position = MVP * position;
 
 	// Write out the final vertex data
-	output.Position = position;
-	output.TexCoord.xy = Input.TexCoord;
-	output.TexCoord.z = perInstancePositionTexture.w;
-	output.Normal = Input.Normal;
-
-	// Done
-	return output;
+	gl_Position = position;
+	TexCoordVs.xy = TexCoord;
+	TexCoordVs.z = perInstancePositionTexture.w;
+	NormalVs = Normal;
 }
 )";
 
@@ -181,37 +170,31 @@ VS_OUTPUT main(VS_INPUT Input)
 //[ Fragment shader source code                           ]
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
-// "pixel shader" in Direct3D terminology
-fragmentShaderSourceCode = R"(
-// Attribute input
-struct VS_OUTPUT
-{
-	float4 Position      : SV_POSITION;
-	float3 TexCoord      : TEXCOORD0;	// z component = texture ID
-	float3 Normal        : NORMAL;
-	float3 WorldPosition : TEXCOORD1;
-};
+fragmentShaderSourceCode = R"(#version 450 core	// OpenGL 4.5
+#extension GL_ARB_separate_shader_objects : enable	// The "GL_ARB_separate_shader_objects"-extension is required for Vulkan shaders to work
+
+// Attribute input/output
+layout(location = 1) in vec3 WorldPositionVs;
+layout(location = 2) in vec3 TexCoordVs;	// z component = texture ID
+layout(location = 3) in vec3 NormalVs;
+layout(location = 0, index = 0) out vec4 Color0;
 
 // Uniforms
-SamplerState SamplerLinear : register(s0);
-Texture2DArray DiffuseMap : register(t0);
-cbuffer UniformBlockDynamicFs : register(b0)
+layout(binding = 4) uniform sampler2DArray DiffuseMap;
+layout(std140, binding = 5) uniform UniformBlockDynamicFs
 {
-	float3 LightPosition;	// World space light position
+	vec3 LightPosition;	// World space light position
 };
 
 // Programs
-float4 main(VS_OUTPUT Input) : SV_TARGET
+void main()
 {
 	// Simple point light by using Lambert's cosine law
-	float lighting = clamp(dot(Input.Normal, normalize(LightPosition - Input.WorldPosition)), 0.0f, 0.8f);
+	float lighting = clamp(dot(NormalVs, normalize(LightPosition - WorldPositionVs)), 0.0, 0.8);
 
 	// Calculate the final fragment color
-	float4 color = (float4(0.2f, 0.2f, 0.2f, 1.0f) + lighting) * DiffuseMap.Sample(SamplerLinear, Input.TexCoord);
-	color.a = 0.8f;
-
-	// Done
-	return color;
+	Color0 = (vec4(0.2, 0.2, 0.2, 1.0) + lighting) * texture(DiffuseMap, TexCoordVs);
+	Color0.a = 0.8;
 }
 )";
 

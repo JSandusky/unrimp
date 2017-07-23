@@ -1217,15 +1217,224 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Resource handling                                     ]
 	//[-------------------------------------------------------]
-	bool VulkanRenderer::map(Renderer::IResource&, uint32_t, Renderer::MapType, uint32_t, Renderer::MappedSubresource&)
+	bool VulkanRenderer::map(Renderer::IResource& resource, uint32_t, Renderer::MapType, uint32_t, Renderer::MappedSubresource& mappedSubresource)
 	{
-		// TODO(co) Implement me
-		return false;
+		// Evaluate the resource type
+		switch (resource.getResourceType())
+		{
+			case Renderer::ResourceType::INDEX_BUFFER:
+			{
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+				return (vkMapMemory(getVulkanContext().getVkDevice(), static_cast<IndexBuffer&>(resource).getVkDeviceMemory(), 0, VK_WHOLE_SIZE, 0, &mappedSubresource.data) == VK_SUCCESS);
+			}
+
+			case Renderer::ResourceType::VERTEX_BUFFER:
+			{
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+				return (vkMapMemory(getVulkanContext().getVkDevice(), static_cast<VertexBuffer&>(resource).getVkDeviceMemory(), 0, VK_WHOLE_SIZE, 0, &mappedSubresource.data) == VK_SUCCESS);
+			}
+
+			case Renderer::ResourceType::UNIFORM_BUFFER:
+			{
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+				return (vkMapMemory(getVulkanContext().getVkDevice(), static_cast<UniformBuffer&>(resource).getVkDeviceMemory(), 0, VK_WHOLE_SIZE, 0, &mappedSubresource.data) == VK_SUCCESS);
+			}
+
+			case Renderer::ResourceType::TEXTURE_BUFFER:
+			{
+				// TODO(co) Implement me
+				return false;
+			}
+
+			case Renderer::ResourceType::INDIRECT_BUFFER:
+			{
+				const IndirectBuffer& indirectBuffer = static_cast<IndirectBuffer&>(resource);
+				uint8_t* emulationData = indirectBuffer.getWritableEmulationData();
+				if (nullptr != emulationData)
+				{
+					mappedSubresource.data		 = emulationData;
+					mappedSubresource.rowPitch   = 0;
+					mappedSubresource.depthPitch = 0;
+
+					// Done
+					return true;
+				}
+				else
+				{
+					mappedSubresource.rowPitch   = 0;
+					mappedSubresource.depthPitch = 0;
+					return (vkMapMemory(getVulkanContext().getVkDevice(), static_cast<IndirectBuffer&>(resource).getVkDeviceMemory(), 0, VK_WHOLE_SIZE, 0, &mappedSubresource.data) == VK_SUCCESS);
+				}
+				break;	// Impossible to reach, but still add it
+			}
+
+			case Renderer::ResourceType::TEXTURE_1D:
+			{
+				// TODO(co) Implement me
+				return false;
+			}
+
+			case Renderer::ResourceType::TEXTURE_2D:
+			{
+				// TODO(co) Implement me
+				return false;
+			}
+
+			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+			{
+				// TODO(co) Implement me
+				return false;
+			}
+
+			case Renderer::ResourceType::TEXTURE_3D:
+			{
+				// TODO(co) Implement me
+				return false;
+			}
+
+			case Renderer::ResourceType::TEXTURE_CUBE:
+			{
+				// TODO(co) Implement me
+				return false;
+			}
+
+			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::PROGRAM:
+			case Renderer::ResourceType::VERTEX_ARRAY:
+			case Renderer::ResourceType::SWAP_CHAIN:
+			case Renderer::ResourceType::FRAMEBUFFER:
+			case Renderer::ResourceType::PIPELINE_STATE:
+			case Renderer::ResourceType::SAMPLER_STATE:
+			case Renderer::ResourceType::VERTEX_SHADER:
+			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+			case Renderer::ResourceType::GEOMETRY_SHADER:
+			case Renderer::ResourceType::FRAGMENT_SHADER:
+			default:
+				// Nothing we can map, set known return values
+				mappedSubresource.data		 = nullptr;
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+
+				// Error!
+				return false;
+		}
 	}
 
-	void VulkanRenderer::unmap(Renderer::IResource&, uint32_t)
+	void VulkanRenderer::unmap(Renderer::IResource& resource, uint32_t)
 	{
-		// TODO(co) Implement me
+		// Evaluate the resource type
+		switch (resource.getResourceType())
+		{
+			case Renderer::ResourceType::INDEX_BUFFER:
+			{
+				vkUnmapMemory(getVulkanContext().getVkDevice(), static_cast<IndexBuffer&>(resource).getVkDeviceMemory());
+				break;
+			}
+
+			case Renderer::ResourceType::VERTEX_BUFFER:
+			{
+				vkUnmapMemory(getVulkanContext().getVkDevice(), static_cast<VertexBuffer&>(resource).getVkDeviceMemory());
+				break;
+			}
+
+			case Renderer::ResourceType::UNIFORM_BUFFER:
+			{
+				vkUnmapMemory(getVulkanContext().getVkDevice(), static_cast<UniformBuffer&>(resource).getVkDeviceMemory());
+				break;
+			}
+
+			case Renderer::ResourceType::TEXTURE_BUFFER:
+			{
+				// TODO(co) Implement me
+				break;
+			}
+
+			case Renderer::ResourceType::INDIRECT_BUFFER:
+			{
+				const IndirectBuffer& indirectBuffer = static_cast<IndirectBuffer&>(resource);
+				if (nullptr == indirectBuffer.getEmulationData())
+				{
+					vkUnmapMemory(getVulkanContext().getVkDevice(), indirectBuffer.getVkDeviceMemory());
+				}
+				break;
+			}
+
+			case Renderer::ResourceType::TEXTURE_1D:
+			{
+				// TODO(co) Implement me
+				break;
+			}
+
+			case Renderer::ResourceType::TEXTURE_2D:
+			{
+				// TODO(co) Implement me
+				/*
+				// Get the Direct3D 11 resource instance
+				ID3D11Resource* d3d11Resource = nullptr;
+				static_cast<Texture2D&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
+				if (nullptr != d3d11Resource)
+				{
+					// Unmap the Direct3D 11 resource
+					mD3D11DeviceContext->Unmap(d3d11Resource, subresource);
+
+					// Release the Direct3D 11 resource instance
+					d3d11Resource->Release();
+				}
+				*/
+				break;
+			}
+
+			case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+			{
+				// TODO(co) Implement me
+				/*
+				// Get the Direct3D 11 resource instance
+				ID3D11Resource* d3d11Resource = nullptr;
+				static_cast<Texture2DArray&>(resource).getD3D11ShaderResourceView()->GetResource(&d3d11Resource);
+				if (nullptr != d3d11Resource)
+				{
+					// Unmap the Direct3D 11 resource
+					mD3D11DeviceContext->Unmap(d3d11Resource, subresource);
+
+					// Release the Direct3D 11 resource instance
+					d3d11Resource->Release();
+				}
+				*/
+				break;
+			}
+
+			case Renderer::ResourceType::TEXTURE_3D:
+			{
+				// TODO(co) Implement me
+				break;
+			}
+
+			case Renderer::ResourceType::TEXTURE_CUBE:
+			{
+				// TODO(co) Implement me
+				break;
+			}
+
+			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::PROGRAM:
+			case Renderer::ResourceType::VERTEX_ARRAY:
+			case Renderer::ResourceType::SWAP_CHAIN:
+			case Renderer::ResourceType::FRAMEBUFFER:
+			case Renderer::ResourceType::PIPELINE_STATE:
+			case Renderer::ResourceType::SAMPLER_STATE:
+			case Renderer::ResourceType::VERTEX_SHADER:
+			case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+			case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+			case Renderer::ResourceType::GEOMETRY_SHADER:
+			case Renderer::ResourceType::FRAGMENT_SHADER:
+			default:
+				// Nothing we can unmap
+				break;
+		}
 	}
 
 

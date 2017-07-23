@@ -64,6 +64,7 @@ namespace VulkanRenderer
 		//[ Transition                                            ]
 		//[-------------------------------------------------------]
 		static void transitionVkImageLayout(const VulkanRenderer& vulkanRenderer, VkImage vkImage, VkImageLayout oldVkImageLayout, VkImageLayout newVkImageLayout);
+		static void transitionVkImageLayout(const VulkanRenderer& vulkanRenderer, VkCommandBuffer vkCommandBuffer, VkImage vkImage, uint32_t levelCount, VkImageLayout oldVkImageLayout, VkImageLayout newVkImageLayout);
 
 		//[-------------------------------------------------------]
 		//[ Buffer                                                ]
@@ -76,12 +77,11 @@ namespace VulkanRenderer
 		//[ Image                                                 ]
 		//[-------------------------------------------------------]
 		// TODO(co) Trivial implementation to have something to start with. Need to use more clever memory management and stating buffers later on.
-		static void createAndFillVkImage(const VulkanRenderer& vulkanRenderer, VkImageType vkImageType, VkImageViewType vkImageViewType, const VkExtent3D& vkExtent3D, Renderer::TextureFormat::Enum textureFormat, const void* data, VkImage& vkImage, VkDeviceMemory& vkDeviceMemory, VkImageView& vkImageView);
-		static void createAndAllocateVkImage(const VulkanRenderer& vulkanRenderer, VkImageType vkImageType, const VkExtent3D& vkExtent3D, VkFormat vkFormat, VkImageTiling vkImageTiling, VkImageUsageFlags vkImageUsageFlags, VkMemoryPropertyFlags vkMemoryPropertyFlags, VkImage& vkImage, VkDeviceMemory& vkDeviceMemory);
-		static void copyVkBufferToVkImage(const VulkanRenderer& vulkanRenderer, VkBuffer vkBuffer, VkImage vkImage, const VkExtent3D& vkExtent3D);
+		static void createAndFillVkImage(const VulkanRenderer& vulkanRenderer, VkImageType vkImageType, VkImageViewType vkImageViewType, const VkExtent3D& vkExtent3D, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, VkImage& vkImage, VkDeviceMemory& vkDeviceMemory, VkImageView& vkImageView);
+		static void createAndAllocateVkImage(const VulkanRenderer& vulkanRenderer, VkImageType vkImageType, const VkExtent3D& vkExtent3D, uint32_t mipLevels, VkFormat vkFormat, VkImageTiling vkImageTiling, VkImageUsageFlags vkImageUsageFlags, VkMemoryPropertyFlags vkMemoryPropertyFlags, VkImage& vkImage, VkDeviceMemory& vkDeviceMemory);
 		static void destroyAndFreeVkImage(const VulkanRenderer& vulkanRenderer, VkImage vkImage, VkDeviceMemory vkDeviceMemory);
 		static void destroyAndFreeVkImage(const VulkanRenderer& vulkanRenderer, VkImage vkImage, VkDeviceMemory vkDeviceMemory, VkImageView vkImageView);
-		static void createVkImageView(const VulkanRenderer& vulkanRenderer, VkImage vkImage, VkImageViewType vkImageViewType, VkFormat vkFormat, VkImageView& vkImageView);
+		static void createVkImageView(const VulkanRenderer& vulkanRenderer, VkImage vkImage, VkImageViewType vkImageViewType, uint32_t mipLevels, VkFormat vkFormat, VkImageView& vkImageView);
 
 
 	};

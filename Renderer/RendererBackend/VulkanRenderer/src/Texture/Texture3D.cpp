@@ -37,14 +37,13 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture3D::Texture3D(VulkanRenderer& vulkanRenderer, uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t) :
+	Texture3D::Texture3D(VulkanRenderer& vulkanRenderer, uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags) :
 		ITexture3D(vulkanRenderer, width, height, depth),
 		mVkImage(VK_NULL_HANDLE),
 		mVkDeviceMemory(VK_NULL_HANDLE),
 		mVkImageView(VK_NULL_HANDLE)
 	{
-		// TODO(co) Add support for "flags"
-		Helper::createAndFillVkImage(vulkanRenderer, VK_IMAGE_TYPE_3D, VK_IMAGE_VIEW_TYPE_3D, { width, height, depth }, textureFormat, data, mVkImage, mVkDeviceMemory, mVkImageView);
+		Helper::createAndFillVkImage(vulkanRenderer, VK_IMAGE_TYPE_3D, VK_IMAGE_VIEW_TYPE_3D, { width, height, depth }, textureFormat, data, flags, mVkImage, mVkDeviceMemory, mVkImageView);
 	}
 
 	Texture3D::~Texture3D()

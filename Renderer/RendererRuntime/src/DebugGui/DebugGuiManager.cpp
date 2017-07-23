@@ -165,7 +165,6 @@ namespace RendererRuntime
 				}
 
 				{ // Copy and convert all vertices and indices into a single contiguous buffer
-					// TODO(co) Not compatible with command buffer: This certainly is going to be changed
 					Renderer::MappedSubresource vertexBufferMappedSubresource;
 					if (renderer.map(*mVertexBufferPtr, 0, Renderer::MapType::WRITE_DISCARD, 0, vertexBufferMappedSubresource))
 					{
@@ -402,7 +401,8 @@ namespace RendererRuntime
 					// Get the shader source code (outsourced to keep an overview)
 					const char* vertexShaderSourceCode = nullptr;
 					const char* fragmentShaderSourceCode = nullptr;
-					#include "Detail/Shader/DebugGui_GLSL_410.h"
+					#include "Detail/Shader/DebugGui_GLSL_450.h"	// For Vulkan
+					#include "Detail/Shader/DebugGui_GLSL_410.h"	// macOS 10.11 only supports OpenGL 4.1 hence it's our OpenGL minimum
 					#include "Detail/Shader/DebugGui_GLSL_ES3.h"
 					#include "Detail/Shader/DebugGui_HLSL_D3D9.h"
 					#include "Detail/Shader/DebugGui_HLSL_D3D10_D3D11_D3D12.h"

@@ -365,6 +365,7 @@
     <ClInclude Include="include\RendererRuntime\Vr\OpenVR\VrManagerOpenVR.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="src\DebugGui\Detail\Shader\DebugGui_GLSL_410.h" />
+    <ClInclude Include="src\DebugGui\Detail\Shader\DebugGui_GLSL_450.h" />
     <ClInclude Include="src\DebugGui\Detail\Shader\DebugGui_GLSL_ES3.h" />
     <ClInclude Include="src\DebugGui\Detail\Shader\DebugGui_HLSL_D3D10_D3D11_D3D12.h" />
     <ClInclude Include="src\DebugGui\Detail\Shader\DebugGui_HLSL_D3D9.h" />

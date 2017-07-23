@@ -249,8 +249,9 @@ CubeRendererInstancedArrays::CubeRendererInstancedArrays(Renderer::IRenderer& re
 		// Get the shader source code (outsourced to keep an overview)
 		const char* vertexShaderSourceCode = nullptr;
 		const char* fragmentShaderSourceCode = nullptr;
+		#include "CubeRendererInstancedArrays_GLSL_450.h"	// For Vulkan
+		#include "CubeRendererInstancedArrays_GLSL_140.h"	// macOS 10.11 only supports OpenGL 4.1 hence it's our OpenGL minimum
 		#include "CubeRendererInstancedArrays_GLSL_130.h"
-		#include "CubeRendererInstancedArrays_GLSL_140.h"
 		#include "CubeRendererInstancedArrays_GLSL_ES3.h"
 		#include "CubeRendererInstancedArrays_HLSL_D3D10_D3D11_D3D12.h"
 		#include "CubeRendererInstancedArrays_HLSL_D3D9.h"

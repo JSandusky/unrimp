@@ -72,7 +72,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	bool MemoryFile::loadLz4CompressedDataFromFile(uint32_t formatType, uint32_t formatVersion, const std::string& filename, IFileManager& fileManager)
+	bool MemoryFile::loadLz4CompressedDataFromFile(uint32_t formatType, uint32_t formatVersion, const std::string& filename, const IFileManager& fileManager)
 	{
 		IFile* file = fileManager.openFile(IFileManager::FileMode::READ, filename.c_str());
 		if (nullptr != file)
@@ -123,7 +123,7 @@ namespace RendererRuntime
 		mCurrentDataPointer = mDecompressedData.data();
 	}
 
-	bool MemoryFile::writeLz4CompressedDataToFile(uint32_t formatType, uint32_t formatVersion, const std::string& filename, IFileManager& fileManager) const
+	bool MemoryFile::writeLz4CompressedDataToFile(uint32_t formatType, uint32_t formatVersion, const std::string& filename, const IFileManager& fileManager) const
 	{
 		// Open file
 		IFile* file = fileManager.openFile(IFileManager::FileMode::WRITE, filename.c_str());

@@ -204,8 +204,8 @@ void IcosahedronTessellation::onInitialization()
 				const char* tessellationEvaluationShaderSourceCode = nullptr;
 				const char* geometryShaderSourceCode = nullptr;
 				const char* fragmentShaderSourceCode = nullptr;
-				#include "IcosahedronTessellation_GLSL_410.h"	// For Vulkan
-				#include "IcosahedronTessellation_GLSL_450.h"	// macOS 10.11 only supports OpenGL 4.1 hence it's our OpenGL minimum
+				#include "IcosahedronTessellation_GLSL_450.h"	// For Vulkan
+				#include "IcosahedronTessellation_GLSL_410.h"	// macOS 10.11 only supports OpenGL 4.1 hence it's our OpenGL minimum
 				#include "IcosahedronTessellation_HLSL_D3D11_D3D12.h"
 				#include "IcosahedronTessellation_Null.h"
 

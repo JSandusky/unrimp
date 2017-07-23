@@ -698,7 +698,7 @@ namespace VulkanRenderer
 				swapChainBuffer.vkImage = vkImages[i];
 
 				// Create the Vulkan image view
-				Helper::createVkImageView(vulkanRenderer, swapChainBuffer.vkImage, VK_IMAGE_VIEW_TYPE_2D, desiredVkSurfaceFormatKHR.format, swapChainBuffer.vkImageView);
+				Helper::createVkImageView(vulkanRenderer, swapChainBuffer.vkImage, VK_IMAGE_VIEW_TYPE_2D, 1, desiredVkSurfaceFormatKHR.format, swapChainBuffer.vkImageView);
 
 				{ // Create the Vulkan framebuffer
 					const VkFramebufferCreateInfo vkFramebufferCreateInfo =

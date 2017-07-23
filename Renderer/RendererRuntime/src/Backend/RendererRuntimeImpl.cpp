@@ -97,7 +97,8 @@ namespace
 			std::string directoryName;
 			std::string filename;
 			getPipelineStateObjectCacheFilename(rendererRuntime, directoryName, filename);
-			if (memoryFile.loadLz4CompressedDataFromFile(PipelineStateCache::FORMAT_TYPE, PipelineStateCache::FORMAT_VERSION, filename, rendererRuntime.getFileManager()))
+			const RendererRuntime::IFileManager& fileManager = rendererRuntime.getFileManager();
+			if (fileManager.doesFileExist(filename.c_str()) && memoryFile.loadLz4CompressedDataFromFile(PipelineStateCache::FORMAT_TYPE, PipelineStateCache::FORMAT_VERSION, filename, fileManager))
 			{
 				memoryFile.decompress();
 
@@ -105,7 +106,8 @@ namespace
 				return true;
 			}
 			
-			// Error!
+			// Failed to load the cache
+			// -> No error since the cache might just not exist which is a valid situation
 			return false;
 		}
 

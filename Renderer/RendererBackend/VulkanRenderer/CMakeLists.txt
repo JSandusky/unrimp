@@ -70,10 +70,7 @@ set(SOURCE_CODES
 	src/Shader/TessellationControlShaderHlsl.cpp
 	src/Shader/TessellationEvaluationShaderHlsl.cpp
 	src/Shader/VertexShaderHlsl.cpp
-	src/State/BlendState.cpp
-	src/State/DepthStencilState.cpp
 	src/State/PipelineState.cpp
-	src/State/RasterizerState.cpp
 	src/State/SamplerState.cpp
 	src/Texture/Texture1D.cpp
 	src/Texture/Texture2D.cpp

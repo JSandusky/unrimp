@@ -22,9 +22,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "VulkanRenderer/State/PipelineState.h"
-#include "VulkanRenderer/State/BlendState.h"
-#include "VulkanRenderer/State/RasterizerState.h"
-#include "VulkanRenderer/State/DepthStencilState.h"
 #include "VulkanRenderer/RenderTarget/SwapChain.h"
 #include "VulkanRenderer/Shader/ProgramGlsl.h"
 #include "VulkanRenderer/Shader/VertexShaderGlsl.h"
@@ -93,9 +90,6 @@ namespace VulkanRenderer
 	PipelineState::PipelineState(VulkanRenderer& vulkanRenderer, const Renderer::PipelineState& pipelineState) :
 		IPipelineState(vulkanRenderer),
 		mProgram(pipelineState.program),
-		mRasterizerState(new RasterizerState(pipelineState.rasterizerState)),
-		mDepthStencilState(new DepthStencilState(pipelineState.depthStencilState)),
-		mBlendState(new BlendState(pipelineState.blendState)),
 		mVkPipeline(VK_NULL_HANDLE)
 	{
 		// Add a reference to the given program
@@ -221,20 +215,23 @@ namespace VulkanRenderer
 			1,														// scissorCount (uint32_t)
 			&scissorVkRect2D										// pScissors (const VkRect2D*)
 		};
+		const float depthBias = static_cast<float>(pipelineState.rasterizerState.depthBias);
+		const float depthBiasClamp = pipelineState.rasterizerState.depthBiasClamp;
+		const float slopeScaledDepthBias = pipelineState.rasterizerState.slopeScaledDepthBias;
 		const VkPipelineRasterizationStateCreateInfo vkPipelineRasterizationStateCreateInfo =
 		{
 			VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO,																	// sType (VkStructureType)
 			nullptr,																													// pNext (const void*)
 			0,																															// flags (VkPipelineRasterizationStateCreateFlags)
-			VK_FALSE,																													// depthClampEnable (VkBool32)
+			static_cast<VkBool32>(pipelineState.rasterizerState.depthClipEnable),														// depthClampEnable (VkBool32)
 			VK_FALSE,																													// rasterizerDiscardEnable (VkBool32)
 			(Renderer::FillMode::WIREFRAME == pipelineState.rasterizerState.fillMode) ? VK_POLYGON_MODE_LINE : VK_POLYGON_MODE_FILL,	// polygonMode (VkPolygonMode)
-			VK_CULL_MODE_BACK_BIT,																										// cullMode (VkCullModeFlags)
-			VK_FRONT_FACE_CLOCKWISE,																									// frontFace (VkFrontFace)
-			VK_FALSE,																													// depthBiasEnable (VkBool32)
-			0.0f,																														// depthBiasConstantFactor (float)
-			0.0f,																														// depthBiasClamp (float)
-			0.0f,																														// depthBiasSlopeFactor (float)
+			static_cast<VkCullModeFlags>(static_cast<int>(pipelineState.rasterizerState.cullMode) - 1),									// cullMode (VkCullModeFlags)
+			(1 == pipelineState.rasterizerState.frontCounterClockwise) ? VK_FRONT_FACE_COUNTER_CLOCKWISE : VK_FRONT_FACE_CLOCKWISE,		// frontFace (VkFrontFace)
+			static_cast<VkBool32>(0.0f != depthBias || 0.0f != depthBiasClamp || 0.0f != slopeScaledDepthBias),							// depthBiasEnable (VkBool32)
+			depthBias,																													// depthBiasConstantFactor (float)
+			depthBiasClamp,																												// depthBiasClamp (float)
+			slopeScaledDepthBias,																										// depthBiasSlopeFactor (float)
 			1.0f																														// lineWidth (float)
 		};
 		const VkPipelineMultisampleStateCreateInfo vkPipelineMultisampleStateCreateInfo =
@@ -251,34 +248,34 @@ namespace VulkanRenderer
 		};
 		const VkPipelineDepthStencilStateCreateInfo vkPipelineDepthStencilStateCreateInfo =
 		{
-			VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO,	// sType (VkStructureType)
-			nullptr,													// pNext (const void*)
-			0,															// flags (VkPipelineDepthStencilStateCreateFlags)
-			VK_FALSE,													// depthTestEnable (VkBool32)
-			VK_FALSE,													// depthWriteEnable (VkBool32)
-			VK_COMPARE_OP_LESS,											// depthCompareOp (VkCompareOp)
-			VK_FALSE,													// depthBoundsTestEnable (VkBool32)
-			VK_FALSE,													// stencilTestEnable (VkBool32)
+			VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO,												// sType (VkStructureType)
+			nullptr,																								// pNext (const void*)
+			0,																										// flags (VkPipelineDepthStencilStateCreateFlags)
+			static_cast<VkBool32>(0 != pipelineState.depthStencilState.depthEnable),								// depthTestEnable (VkBool32)
+			static_cast<VkBool32>(Renderer::DepthWriteMask::ALL == pipelineState.depthStencilState.depthWriteMask),	// depthWriteEnable (VkBool32)
+			Mapping::getVulkanComparisonFunc(pipelineState.depthStencilState.depthFunc),							// depthCompareOp (VkCompareOp)
+			VK_FALSE,																								// depthBoundsTestEnable (VkBool32)
+			static_cast<VkBool32>(0 != pipelineState.depthStencilState.stencilEnable),								// stencilTestEnable (VkBool32)
 			{ // front (VkStencilOpState)
-				VK_STENCIL_OP_KEEP,										// failOp (VkStencilOp)
-				VK_STENCIL_OP_KEEP,										// passOp (VkStencilOp)
-				VK_STENCIL_OP_KEEP,										// depthFailOp (VkStencilOp)
-				VK_COMPARE_OP_NEVER,									// compareOp (VkCompareOp)
-				0,														// compareMask (uint32_t)
-				0,														// writeMask (uint32_t)
-				0														// reference (uint32_t)
+				VK_STENCIL_OP_KEEP,																					// failOp (VkStencilOp)
+				VK_STENCIL_OP_KEEP,																					// passOp (VkStencilOp)
+				VK_STENCIL_OP_KEEP,																					// depthFailOp (VkStencilOp)
+				VK_COMPARE_OP_NEVER,																				// compareOp (VkCompareOp)
+				0,																									// compareMask (uint32_t)
+				0,																									// writeMask (uint32_t)
+				0																									// reference (uint32_t)
 			},
 			{ // back (VkStencilOpState)
-				VK_STENCIL_OP_KEEP,										// failOp (VkStencilOp)
-				VK_STENCIL_OP_KEEP,										// passOp (VkStencilOp)
-				VK_STENCIL_OP_KEEP,										// depthFailOp (VkStencilOp)
-				VK_COMPARE_OP_NEVER,									// compareOp (VkCompareOp)
-				0,														// compareMask (uint32_t)
-				0,														// writeMask (uint32_t)
-				0														// reference (uint32_t)
+				VK_STENCIL_OP_KEEP,																					// failOp (VkStencilOp)
+				VK_STENCIL_OP_KEEP,																					// passOp (VkStencilOp)
+				VK_STENCIL_OP_KEEP,																					// depthFailOp (VkStencilOp)
+				VK_COMPARE_OP_NEVER,																				// compareOp (VkCompareOp)
+				0,																									// compareMask (uint32_t)
+				0,																									// writeMask (uint32_t)
+				0																									// reference (uint32_t)
 			},
-			0.0f,														// minDepthBounds (float)
-			1.0f														// maxDepthBounds (float)
+			0.0f,																									// minDepthBounds (float)
+			1.0f																									// maxDepthBounds (float)
 		};
 		const VkPipelineColorBlendAttachmentState vkPipelineColorBlendAttachmentState =
 		{
@@ -350,11 +347,6 @@ namespace VulkanRenderer
 		{
 			vkDestroyPipeline(static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), mVkPipeline, nullptr);
 		}
-
-		// Destroy states
-		delete mRasterizerState;
-		delete mDepthStencilState;
-		delete mBlendState;
 
 		// Release the program reference
 		if (nullptr != mProgram)

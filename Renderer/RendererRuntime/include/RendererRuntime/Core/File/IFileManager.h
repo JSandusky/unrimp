@@ -99,6 +99,18 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
+		*    Check whether or not a file exists
+		*
+		*  @param[in] filename
+		*    ASCII name of the file to check for existence, never ever a null pointer and always finished by a terminating zero
+		*
+		*  @return
+		*    "true" if the file does exist, else "false"
+		*/
+		virtual bool doesFileExist(const char* filename) const = 0;
+
+		/**
+		*  @brief
 		*    Open a file
 		*
 		*  @param[in] fileMode
@@ -109,7 +121,7 @@ namespace RendererRuntime
 		*  @return
 		*    The file interface, can be a null pointer if horrible things are happening (total failure)
 		*/
-		virtual IFile* openFile(FileMode fileMode, const char* filename) = 0;
+		virtual IFile* openFile(FileMode fileMode, const char* filename) const = 0;
 
 		/**
 		*  @brief
@@ -118,7 +130,7 @@ namespace RendererRuntime
 		*  @param[in] file
 		*    File to close
 		*/
-		virtual void closeFile(IFile& file) = 0;
+		virtual void closeFile(IFile& file) const = 0;
 
 
 	//[-------------------------------------------------------]

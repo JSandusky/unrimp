@@ -106,6 +106,15 @@ namespace VulkanRenderer
 		*/
 		inline VkBuffer getVkBuffer() const;
 
+		/**
+		*  @brief
+		*    Return the Vulkan device memory
+		*
+		*  @return
+		*    The Vulkan device memory
+		*/
+		inline VkDeviceMemory getVkDeviceMemory() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]

@@ -62,11 +62,18 @@ namespace VulkanRenderer
 		assert(VK_NULL_HANDLE != mVkDeviceMemory);
 
 		// Upload data
-		const VkDevice vkDevice = static_cast<const VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice();
+		const VulkanRenderer& vulkanRenderer = static_cast<const VulkanRenderer&>(getRenderer());
+		const VkDevice vkDevice = vulkanRenderer.getVulkanContext().getVkDevice();
 		void* mappedData = nullptr;
-		vkMapMemory(vkDevice, mVkDeviceMemory, 0, numberOfBytes, 0, &mappedData);
+		if (vkMapMemory(vkDevice, mVkDeviceMemory, 0, numberOfBytes, 0, &mappedData) == VK_SUCCESS)
+		{
 			memcpy(mappedData, data, numberOfBytes);
-		vkUnmapMemory(vkDevice, mVkDeviceMemory);
+			vkUnmapMemory(vkDevice, mVkDeviceMemory);
+		}
+		else
+		{
+			RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to map the Vulkan memory")
+		}
 	}
 
 

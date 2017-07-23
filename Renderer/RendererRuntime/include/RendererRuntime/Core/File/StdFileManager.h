@@ -84,8 +84,9 @@ namespace RendererRuntime
 	public:
 		inline virtual const char* getAbsoluteLocalDataDirectoryName() const override;
 		inline virtual void createDirectories(const char* directoryName) const override;
-		inline virtual IFile* openFile(FileMode fileMode, const char* filename) override;
-		inline virtual void closeFile(IFile& file) override;
+		inline virtual bool doesFileExist(const char* filename) const override;
+		inline virtual IFile* openFile(FileMode fileMode, const char* filename) const override;
+		inline virtual void closeFile(IFile& file) const override;
 
 
 	//[-------------------------------------------------------]

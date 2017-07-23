@@ -34,6 +34,207 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
+	VkFilter Mapping::getVulkanMagFilterMode(Renderer::FilterMode filterMode)
+	{
+		switch (filterMode)
+		{
+			case Renderer::FilterMode::MIN_MAG_MIP_POINT:
+				return VK_FILTER_NEAREST;
+
+			case Renderer::FilterMode::MIN_MAG_POINT_MIP_LINEAR:
+				return VK_FILTER_NEAREST;
+
+			case Renderer::FilterMode::MIN_POINT_MAG_LINEAR_MIP_POINT:
+				return VK_FILTER_LINEAR;
+
+			case Renderer::FilterMode::MIN_POINT_MAG_MIP_LINEAR:
+				return VK_FILTER_LINEAR;
+
+			case Renderer::FilterMode::MIN_LINEAR_MAG_MIP_POINT:
+				return VK_FILTER_NEAREST;
+
+			case Renderer::FilterMode::MIN_LINEAR_MAG_POINT_MIP_LINEAR:
+				return VK_FILTER_NEAREST;
+
+			case Renderer::FilterMode::MIN_MAG_LINEAR_MIP_POINT:
+				return VK_FILTER_LINEAR;
+
+			case Renderer::FilterMode::MIN_MAG_MIP_LINEAR:
+				return VK_FILTER_LINEAR;
+
+			case Renderer::FilterMode::ANISOTROPIC:
+				return VK_FILTER_LINEAR;	// There's no special setting in Vulkan
+
+			case Renderer::FilterMode::COMPARISON_MIN_MAG_MIP_POINT:
+				return VK_FILTER_NEAREST;
+
+			case Renderer::FilterMode::COMPARISON_MIN_MAG_POINT_MIP_LINEAR:
+				return VK_FILTER_NEAREST;
+
+			case Renderer::FilterMode::COMPARISON_MIN_POINT_MAG_LINEAR_MIP_POINT:
+				return VK_FILTER_LINEAR;
+
+			case Renderer::FilterMode::COMPARISON_MIN_POINT_MAG_MIP_LINEAR:
+				return VK_FILTER_LINEAR;
+
+			case Renderer::FilterMode::COMPARISON_MIN_LINEAR_MAG_MIP_POINT:
+				return VK_FILTER_NEAREST;
+
+			case Renderer::FilterMode::COMPARISON_MIN_LINEAR_MAG_POINT_MIP_LINEAR:
+				return VK_FILTER_NEAREST;
+
+			case Renderer::FilterMode::COMPARISON_MIN_MAG_LINEAR_MIP_POINT:
+				return VK_FILTER_LINEAR;
+
+			case Renderer::FilterMode::COMPARISON_MIN_MAG_MIP_LINEAR:
+				return VK_FILTER_LINEAR;
+
+			case Renderer::FilterMode::COMPARISON_ANISOTROPIC:
+				return VK_FILTER_LINEAR;	// There's no special setting in Vulkan
+
+			case Renderer::FilterMode::UNKNOWN:
+				assert(false && "Filter mode must not be unknown");
+				return VK_FILTER_NEAREST;
+
+			default:
+				return VK_FILTER_NEAREST;	// We should never be in here
+		}
+	}
+
+	VkFilter Mapping::getVulkanMinFilterMode(Renderer::FilterMode filterMode)
+	{
+		switch (filterMode)
+		{
+			case Renderer::FilterMode::MIN_MAG_MIP_POINT:
+				return VK_FILTER_NEAREST;
+
+			case Renderer::FilterMode::MIN_MAG_POINT_MIP_LINEAR:
+				return VK_FILTER_NEAREST;
+
+			case Renderer::FilterMode::MIN_POINT_MAG_LINEAR_MIP_POINT:
+				return VK_FILTER_NEAREST;
+
+			case Renderer::FilterMode::MIN_POINT_MAG_MIP_LINEAR:
+				return VK_FILTER_NEAREST;
+
+			case Renderer::FilterMode::MIN_LINEAR_MAG_MIP_POINT:
+				return VK_FILTER_LINEAR;
+
+			case Renderer::FilterMode::MIN_LINEAR_MAG_POINT_MIP_LINEAR:
+				return VK_FILTER_LINEAR;
+
+			case Renderer::FilterMode::MIN_MAG_LINEAR_MIP_POINT:
+				return VK_FILTER_LINEAR;
+
+			case Renderer::FilterMode::MIN_MAG_MIP_LINEAR:
+				return VK_FILTER_LINEAR;
+
+			case Renderer::FilterMode::ANISOTROPIC:
+				return VK_FILTER_LINEAR;	// There's no special setting in Vulkan
+
+			case Renderer::FilterMode::COMPARISON_MIN_MAG_MIP_POINT:
+				return VK_FILTER_NEAREST;
+
+			case Renderer::FilterMode::COMPARISON_MIN_MAG_POINT_MIP_LINEAR:
+				return VK_FILTER_NEAREST;
+
+			case Renderer::FilterMode::COMPARISON_MIN_POINT_MAG_LINEAR_MIP_POINT:
+				return VK_FILTER_NEAREST;
+
+			case Renderer::FilterMode::COMPARISON_MIN_POINT_MAG_MIP_LINEAR:
+				return VK_FILTER_NEAREST;
+
+			case Renderer::FilterMode::COMPARISON_MIN_LINEAR_MAG_MIP_POINT:
+				return VK_FILTER_LINEAR;
+
+			case Renderer::FilterMode::COMPARISON_MIN_LINEAR_MAG_POINT_MIP_LINEAR:
+				return VK_FILTER_LINEAR;
+
+			case Renderer::FilterMode::COMPARISON_MIN_MAG_LINEAR_MIP_POINT:
+				return VK_FILTER_LINEAR;
+
+			case Renderer::FilterMode::COMPARISON_MIN_MAG_MIP_LINEAR:
+				return VK_FILTER_LINEAR;
+
+			case Renderer::FilterMode::COMPARISON_ANISOTROPIC:
+				return VK_FILTER_LINEAR;	// There's no special setting in Vulkan
+
+			case Renderer::FilterMode::UNKNOWN:
+				assert(false && "Filter mode must not be unknown");
+				return VK_FILTER_NEAREST;
+
+			default:
+				return VK_FILTER_NEAREST;	// We should never be in here
+		}
+	}
+
+	VkSamplerMipmapMode Mapping::getVulkanMipmapMode(Renderer::FilterMode filterMode)
+	{
+		switch (filterMode)
+		{
+			case Renderer::FilterMode::MIN_MAG_MIP_POINT:
+				return VK_SAMPLER_MIPMAP_MODE_NEAREST;
+
+			case Renderer::FilterMode::MIN_MAG_POINT_MIP_LINEAR:
+				return VK_SAMPLER_MIPMAP_MODE_LINEAR;
+
+			case Renderer::FilterMode::MIN_POINT_MAG_LINEAR_MIP_POINT:
+				return VK_SAMPLER_MIPMAP_MODE_NEAREST;
+
+			case Renderer::FilterMode::MIN_POINT_MAG_MIP_LINEAR:
+				return VK_SAMPLER_MIPMAP_MODE_LINEAR;
+
+			case Renderer::FilterMode::MIN_LINEAR_MAG_MIP_POINT:
+				return VK_SAMPLER_MIPMAP_MODE_NEAREST;
+
+			case Renderer::FilterMode::MIN_LINEAR_MAG_POINT_MIP_LINEAR:
+				return VK_SAMPLER_MIPMAP_MODE_LINEAR;
+
+			case Renderer::FilterMode::MIN_MAG_LINEAR_MIP_POINT:
+				return VK_SAMPLER_MIPMAP_MODE_NEAREST;
+
+			case Renderer::FilterMode::MIN_MAG_MIP_LINEAR:
+				return VK_SAMPLER_MIPMAP_MODE_LINEAR;
+
+			case Renderer::FilterMode::ANISOTROPIC:
+				return VK_SAMPLER_MIPMAP_MODE_LINEAR;	// There's no special setting in Vulkan
+
+			case Renderer::FilterMode::COMPARISON_MIN_MAG_MIP_POINT:
+				return VK_SAMPLER_MIPMAP_MODE_NEAREST;
+
+			case Renderer::FilterMode::COMPARISON_MIN_MAG_POINT_MIP_LINEAR:
+				return VK_SAMPLER_MIPMAP_MODE_LINEAR;
+
+			case Renderer::FilterMode::COMPARISON_MIN_POINT_MAG_LINEAR_MIP_POINT:
+				return VK_SAMPLER_MIPMAP_MODE_NEAREST;
+
+			case Renderer::FilterMode::COMPARISON_MIN_POINT_MAG_MIP_LINEAR:
+				return VK_SAMPLER_MIPMAP_MODE_LINEAR;
+
+			case Renderer::FilterMode::COMPARISON_MIN_LINEAR_MAG_MIP_POINT:
+				return VK_SAMPLER_MIPMAP_MODE_NEAREST;
+
+			case Renderer::FilterMode::COMPARISON_MIN_LINEAR_MAG_POINT_MIP_LINEAR:
+				return VK_SAMPLER_MIPMAP_MODE_LINEAR;
+
+			case Renderer::FilterMode::COMPARISON_MIN_MAG_LINEAR_MIP_POINT:
+				return VK_SAMPLER_MIPMAP_MODE_NEAREST;
+
+			case Renderer::FilterMode::COMPARISON_MIN_MAG_MIP_LINEAR:
+				return VK_SAMPLER_MIPMAP_MODE_LINEAR;
+
+			case Renderer::FilterMode::COMPARISON_ANISOTROPIC:
+				return VK_SAMPLER_MIPMAP_MODE_LINEAR;	// There's no special setting in Vulkan
+
+			case Renderer::FilterMode::UNKNOWN:
+				assert(false && "Filter mode must not be unknown");
+				return VK_SAMPLER_MIPMAP_MODE_NEAREST;
+
+			default:
+				return VK_SAMPLER_MIPMAP_MODE_NEAREST;	// We should never be in here
+		}
+	}
+
 	VkSamplerAddressMode Mapping::getVulkanTextureAddressMode(Renderer::TextureAddressMode textureAddressMode)
 	{
 		static const VkSamplerAddressMode MAPPING[] =
@@ -45,6 +246,22 @@ namespace VulkanRenderer
 			VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE	// Renderer::TextureAddressMode::MIRROR_ONCE
 		};
 		return MAPPING[static_cast<int>(textureAddressMode) - 1];	// Lookout! The "Renderer::TextureAddressMode"-values start with 1, not 0
+	}
+
+	VkCompareOp Mapping::getVulkanComparisonFunc(Renderer::ComparisonFunc comparisonFunc)
+	{
+		static const VkCompareOp MAPPING[] =
+		{
+			VK_COMPARE_OP_NEVER,			// Renderer::ComparisonFunc::NEVER
+			VK_COMPARE_OP_LESS,				// Renderer::ComparisonFunc::LESS
+			VK_COMPARE_OP_EQUAL,			// Renderer::ComparisonFunc::EQUAL
+			VK_COMPARE_OP_LESS_OR_EQUAL,	// Renderer::ComparisonFunc::LESS_EQUAL
+			VK_COMPARE_OP_GREATER,			// Renderer::ComparisonFunc::GREATER
+			VK_COMPARE_OP_NOT_EQUAL,		// Renderer::ComparisonFunc::NOT_EQUAL
+			VK_COMPARE_OP_GREATER_OR_EQUAL,	// Renderer::ComparisonFunc::GREATER_EQUAL
+			VK_COMPARE_OP_ALWAYS			// Renderer::ComparisonFunc::ALWAYS
+		};
+		return MAPPING[static_cast<int>(comparisonFunc) - 1];	// Lookout! The "Renderer::ComparisonFunc"-values start with 1, not 0
 	}
 
 	VkFormat Mapping::getVulkanFormat(Renderer::VertexAttributeFormat vertexAttributeFormat)

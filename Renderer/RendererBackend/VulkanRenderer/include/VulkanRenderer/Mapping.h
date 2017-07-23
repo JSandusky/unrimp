@@ -58,6 +58,45 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	public:
 		//[-------------------------------------------------------]
+		//[ Renderer::FilterMode                                  ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    "Renderer::FilterMode" to Vulkan magnification filter mode
+		*
+		*  @param[in] filterMode
+		*    "Renderer::FilterMode" to map
+		*
+		*  @return
+		*    Vulkan magnification filter mode
+		*/
+		static VkFilter getVulkanMagFilterMode(Renderer::FilterMode filterMode);
+
+		/**
+		*  @brief
+		*    "Renderer::FilterMode" to Vulkan minification filter mode
+		*
+		*  @param[in] filterMode
+		*    "Renderer::FilterMode" to map
+		*
+		*  @return
+		*    Vulkan minification filter mode
+		*/
+		static VkFilter getVulkanMinFilterMode(Renderer::FilterMode filterMode);
+
+		/**
+		*  @brief
+		*    "Renderer::FilterMode" to Vulkan sampler mipmap mode
+		*
+		*  @param[in] filterMode
+		*    "Renderer::FilterMode" to map
+		*
+		*  @return
+		*    Vulkan sampler mipmap mode
+		*/
+		static VkSamplerMipmapMode getVulkanMipmapMode(Renderer::FilterMode filterMode);
+
+		//[-------------------------------------------------------]
 		//[ Renderer::TextureAddressMode                          ]
 		//[-------------------------------------------------------]
 		/**
@@ -71,6 +110,21 @@ namespace VulkanRenderer
 		*    Vulkan texture address mode
 		*/
 		static VkSamplerAddressMode getVulkanTextureAddressMode(Renderer::TextureAddressMode textureAddressMode);
+
+		//[-------------------------------------------------------]
+		//[ Renderer::ComparisonFunc                              ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    "Renderer::ComparisonFunc" to Vulkan comparison function
+		*
+		*  @param[in] comparisonFunc
+		*    "Renderer::ComparisonFunc" to map
+		*
+		*  @return
+		*    Vulkan comparison function
+		*/
+		static VkCompareOp getVulkanComparisonFunc(Renderer::ComparisonFunc comparisonFunc);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::VertexAttributeFormat and semantic          ]

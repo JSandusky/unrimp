@@ -1230,6 +1230,9 @@
     <ClInclude Include="include\RendererRuntime\Context.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\DebugGui\Detail\Shader\DebugGui_GLSL_450.h">
+      <Filter>Source Files\DebugGui\Detail\Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">

@@ -38,6 +38,11 @@ namespace VulkanRenderer
 		return mVkBuffer;
 	}
 
+	inline VkDeviceMemory IndexBuffer::getVkDeviceMemory() const
+	{
+		return mVkDeviceMemory;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

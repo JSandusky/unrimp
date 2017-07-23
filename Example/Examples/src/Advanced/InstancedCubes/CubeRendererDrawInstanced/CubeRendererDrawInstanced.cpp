@@ -177,7 +177,7 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer& render
 
 	{ // Create the root signature
 		Renderer::DescriptorRangeBuilder ranges[6];
-		ranges[0].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "TextureBufferStaticVS", 0);
+		ranges[0].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "PerInstanceDataMapVs", 0);
 		ranges[1].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockStaticVs", 0);
 		ranges[2].initialize(Renderer::DescriptorRangeType::UBV, 1, 1, "UniformBlockDynamicVs", 0);
 		ranges[3].initializeSampler(1, 0);
@@ -301,7 +301,8 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer& render
 		// Get the shader source code (outsourced to keep an overview)
 		const char* vertexShaderSourceCode = nullptr;
 		const char* fragmentShaderSourceCode = nullptr;
-		#include "CubeRendererDrawInstanced_GLSL_410.h"
+		#include "CubeRendererDrawInstanced_GLSL_450.h"	// For Vulkan
+		#include "CubeRendererDrawInstanced_GLSL_410.h"	// macOS 10.11 only supports OpenGL 4.1 hence it's our OpenGL minimum
 		#include "CubeRendererDrawInstanced_HLSL_D3D10_D3D11_D3D12.h"
 		#include "CubeRendererDrawInstanced_GLSL_ES3.h"
 		#include "CubeRendererDrawInstanced_Null.h"
