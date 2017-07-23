@@ -93,12 +93,21 @@ namespace VulkanRenderer
 
 		/**
 		*  @brief
-		*    Return the current Vulkan image to render into
+		*    Return the current Vulkan image to render color into
 		*
 		*  @return
-		*    The current Vulkan image to render into
+		*    The current Vulkan image to render color into
 		*/
-		inline VkImage getCurrentVkImage() const;
+		inline VkImage getColorCurrentVkImage() const;
+
+		/**
+		*  @brief
+		*    Return the Vulkan image to render depth into
+		*
+		*  @return
+		*    The Vulkan image to render depth into
+		*/
+		inline VkImage getDepthVkImage() const;
 
 		/**
 		*  @brief
@@ -138,6 +147,8 @@ namespace VulkanRenderer
 		void createVulkanSwapChain();
 		void destroyVulkanSwapChain();
 		void acquireNextImage(bool recreateSwapChainIfNeeded);
+		void createDepthRenderTarget(const VkExtent2D& vkExtent2D);
+		void destroyDepthRenderTarget();
 
 
 	//[-------------------------------------------------------]
@@ -158,17 +169,22 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	private:
 		// Operation system window
-		handle					 mNativeWindowHandle;			///< Native window handle window, can be a null handle
-		Renderer::IRenderWindow* mRenderWindow;					///< Render window instance, can be a null pointer, don't destroy the instance since we don't own it
+		handle					 mNativeWindowHandle;	///< Native window handle window, can be a null handle
+		Renderer::IRenderWindow* mRenderWindow;			///< Render window instance, can be a null pointer, don't destroy the instance since we don't own it
 		// Vulkan presentation surface
-		VkSurfaceKHR			 mVkSurfaceKHR;					///< Vulkan presentation surface, destroy if no longer needed
-		// Vulkan swap chain and render target related
-		VkSwapchainKHR			 mVkSwapchainKHR;				///< Vulkan swap chain, destroy if no longer needed
-		VkRenderPass			 mVkRenderPass;					///< Vulkan render pass, destroy if no longer needed
-		SwapChainBuffers		 mSwapChainBuffer;
-		VkSemaphore				 mImageAvailableVkSemaphore;	///< Vulkan semaphore, destroy if no longer needed
-		VkSemaphore				 mRenderingFinishedVkSemaphore;	///< Vulkan semaphore, destroy if no longer needed
-		uint32_t				 mCurrentImageIndex;			///< The index of the current Vulkan swap chain image to render into, ~0 if uninitialized
+		VkSurfaceKHR mVkSurfaceKHR;	///< Vulkan presentation surface, destroy if no longer needed
+		// Vulkan swap chain and color render target related
+		VkSwapchainKHR	 mVkSwapchainKHR;				///< Vulkan swap chain, destroy if no longer needed
+		VkRenderPass	 mVkRenderPass;					///< Vulkan render pass, destroy if no longer needed
+		SwapChainBuffers mSwapChainBuffer;				///< Swap chain buffer for managing the color render targets
+		VkSemaphore		 mImageAvailableVkSemaphore;	///< Vulkan semaphore, destroy if no longer needed
+		VkSemaphore		 mRenderingFinishedVkSemaphore;	///< Vulkan semaphore, destroy if no longer needed
+		uint32_t		 mCurrentImageIndex;			///< The index of the current Vulkan swap chain image to render into, ~0 if uninitialized
+		// Depth render target related
+		VkFormat		mDepthVkFormat;
+		VkImage			mDepthVkImage;
+		VkDeviceMemory  mDepthVkDeviceMemory;
+		VkImageView		mDepthVkImageView;
 
 
 	};

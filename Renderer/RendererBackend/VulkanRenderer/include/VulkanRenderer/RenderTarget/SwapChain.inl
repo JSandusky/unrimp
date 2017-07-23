@@ -33,11 +33,16 @@ namespace VulkanRenderer
 		return mVkRenderPass;
 	}
 
-	inline VkImage SwapChain::getCurrentVkImage() const
+	inline VkImage SwapChain::getColorCurrentVkImage() const
 	{
 		assert(~0u != mCurrentImageIndex && "Invalid index of the current Vulkan swap chain image to render into (Vulkan swap chain creation failed?)");
 		assert(mCurrentImageIndex < mSwapChainBuffer.size() && "Out-of-bounds index of the current Vulkan swap chain image to render into");
 		return mSwapChainBuffer[mCurrentImageIndex].vkImage;
+	}
+
+	inline VkImage SwapChain::getDepthVkImage() const
+	{
+		return mDepthVkImage;
 	}
 
 	inline VkFramebuffer SwapChain::getCurrentVkFramebuffer() const

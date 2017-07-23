@@ -63,8 +63,8 @@ namespace VulkanRenderer
 		//[-------------------------------------------------------]
 		//[ Transition                                            ]
 		//[-------------------------------------------------------]
-		static void transitionVkImageLayout(const VulkanRenderer& vulkanRenderer, VkImage vkImage, VkImageLayout oldVkImageLayout, VkImageLayout newVkImageLayout);
-		static void transitionVkImageLayout(const VulkanRenderer& vulkanRenderer, VkCommandBuffer vkCommandBuffer, VkImage vkImage, uint32_t levelCount, VkImageLayout oldVkImageLayout, VkImageLayout newVkImageLayout);
+		static void transitionVkImageLayout(const VulkanRenderer& vulkanRenderer, VkImage vkImage, VkFormat vkFormat, VkImageLayout oldVkImageLayout, VkImageLayout newVkImageLayout);
+		static void transitionVkImageLayout(const VulkanRenderer& vulkanRenderer, VkCommandBuffer vkCommandBuffer, VkImage vkImage, VkFormat vkFormat, uint32_t levelCount, VkImageLayout oldVkImageLayout, VkImageLayout newVkImageLayout);
 
 		//[-------------------------------------------------------]
 		//[ Buffer                                                ]
@@ -81,7 +81,7 @@ namespace VulkanRenderer
 		static void createAndAllocateVkImage(const VulkanRenderer& vulkanRenderer, VkImageType vkImageType, const VkExtent3D& vkExtent3D, uint32_t mipLevels, VkFormat vkFormat, VkImageTiling vkImageTiling, VkImageUsageFlags vkImageUsageFlags, VkMemoryPropertyFlags vkMemoryPropertyFlags, VkImage& vkImage, VkDeviceMemory& vkDeviceMemory);
 		static void destroyAndFreeVkImage(const VulkanRenderer& vulkanRenderer, VkImage vkImage, VkDeviceMemory vkDeviceMemory);
 		static void destroyAndFreeVkImage(const VulkanRenderer& vulkanRenderer, VkImage vkImage, VkDeviceMemory vkDeviceMemory, VkImageView vkImageView);
-		static void createVkImageView(const VulkanRenderer& vulkanRenderer, VkImage vkImage, VkImageViewType vkImageViewType, uint32_t mipLevels, VkFormat vkFormat, VkImageView& vkImageView);
+		static void createVkImageView(const VulkanRenderer& vulkanRenderer, VkImage vkImage, VkImageViewType vkImageViewType, uint32_t mipLevels, VkFormat vkFormat, VkImageAspectFlags vkImageAspectFlags, VkImageView& vkImageView);
 
 
 	};

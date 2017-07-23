@@ -28,6 +28,7 @@
 
 #include <Renderer/ILog.h>
 
+#include <array>
 #include <sstream>
 
 
@@ -275,13 +276,13 @@ namespace
 			return VK_PRESENT_MODE_MAX_ENUM_KHR;
 		}
 		
-		VkRenderPass createRenderPass(const Renderer::Context& context, VkDevice vkDevice, VkFormat vkFormat)
+		VkRenderPass createRenderPass(const Renderer::Context& context, VkDevice vkDevice, VkFormat colorVkFormat, VkFormat depthVkFormat)
 		{
 			// Render pass configuration
 			const VkAttachmentDescription colorVkAttachmentDescription =
 			{
 				0,									// flags (VkAttachmentDescriptionFlags)
-				vkFormat,							// format (VkFormat)
+				colorVkFormat,						// format (VkFormat)
 				VK_SAMPLE_COUNT_1_BIT,				// samples (VkSampleCountFlagBits)
 				VK_ATTACHMENT_LOAD_OP_DONT_CARE,	// loadOp (VkAttachmentLoadOp)
 				VK_ATTACHMENT_STORE_OP_STORE,		// storeOp (VkAttachmentStoreOp)
@@ -290,10 +291,28 @@ namespace
 				VK_IMAGE_LAYOUT_UNDEFINED,			// initialLayout (VkImageLayout)
 				VK_IMAGE_LAYOUT_PRESENT_SRC_KHR		// finalLayout (VkImageLayout)
 			};
+			const VkAttachmentDescription depthVkAttachmentDescription =
+			{
+				0,													// flags (VkAttachmentDescriptionFlags)
+				depthVkFormat,										// format (VkFormat)
+				VK_SAMPLE_COUNT_1_BIT,								// samples (VkSampleCountFlagBits)
+				VK_ATTACHMENT_LOAD_OP_DONT_CARE,					// loadOp (VkAttachmentLoadOp)
+				VK_ATTACHMENT_STORE_OP_STORE,						// storeOp (VkAttachmentStoreOp)
+				VK_ATTACHMENT_LOAD_OP_DONT_CARE,					// stencilLoadOp (VkAttachmentLoadOp)
+				VK_ATTACHMENT_STORE_OP_DONT_CARE,					// stencilStoreOp (VkAttachmentStoreOp)
+				VK_IMAGE_LAYOUT_UNDEFINED,							// initialLayout (VkImageLayout)
+				VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL	// finalLayout (VkImageLayout)
+			};
+			const std::array<VkAttachmentDescription, 2> vkAttachmentDescriptions = { colorVkAttachmentDescription, depthVkAttachmentDescription };
 			const VkAttachmentReference colorVkAttachmentReference =
 			{
 				0,											// attachment (uint32_t)
 				VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL	// layout (VkImageLayout)
+			};
+			const VkAttachmentReference depthVkAttachmentReference =
+			{
+				1,													// attachment (uint32_t)
+				VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL	// layout (VkImageLayout)
 			};
 			const VkSubpassDescription vkSubpassDescription =
 			{
@@ -304,7 +323,7 @@ namespace
 				1,									// colorAttachmentCount (uint32_t)
 				&colorVkAttachmentReference,		// pColorAttachments (const VkAttachmentReference*)
 				nullptr,							// pResolveAttachments (const VkAttachmentReference*)
-				nullptr,							// pDepthStencilAttachment (const VkAttachmentReference*)
+				&depthVkAttachmentReference,		// pDepthStencilAttachment (const VkAttachmentReference*)
 				0,									// preserveAttachmentCount (uint32_t)
 				nullptr								// pPreserveAttachments (const uint32_t*)
 			};
@@ -320,15 +339,15 @@ namespace
 			};
 			const VkRenderPassCreateInfo vkRenderPassCreateInfo =
 			{
-				VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO,	// sType (VkStructureType)
-				nullptr,									// pNext (const void*)
-				0,											// flags (VkRenderPassCreateFlags)
-				1,											// attachmentCount (uint32_t)
-				&colorVkAttachmentDescription,				// pAttachments (const VkAttachmentDescription*)
-				1,											// subpassCount (uint32_t)
-				&vkSubpassDescription,						// pSubpasses (const VkSubpassDescription*)
-				1,											// dependencyCount (uint32_t)
-				&vkSubpassDependency						// pDependencies (const VkSubpassDependency*)
+				VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO,				// sType (VkStructureType)
+				nullptr,												// pNext (const void*)
+				0,														// flags (VkRenderPassCreateFlags)
+				static_cast<uint32_t>(vkAttachmentDescriptions.size()),	// attachmentCount (uint32_t)
+				vkAttachmentDescriptions.data(),						// pAttachments (const VkAttachmentDescription*)
+				1,														// subpassCount (uint32_t)
+				&vkSubpassDescription,									// pSubpasses (const VkSubpassDescription*)
+				1,														// dependencyCount (uint32_t)
+				&vkSubpassDependency									// pDependencies (const VkSubpassDependency*)
 			};
 
 			// Create render pass
@@ -340,6 +359,31 @@ namespace
 
 			// Done
 			return vkRenderPass;
+		}
+
+		VkFormat findSupportedVkFormat(VkPhysicalDevice vkPhysicalDevice, const std::vector<VkFormat>& vkFormatCandidates, VkImageTiling vkImageTiling, VkFormatFeatureFlags vkFormatFeatureFlags)
+		{
+			for (VkFormat vkFormat : vkFormatCandidates)
+			{
+				VkFormatProperties vkFormatProperties;
+				vkGetPhysicalDeviceFormatProperties(vkPhysicalDevice, vkFormat, &vkFormatProperties);
+				if (VK_IMAGE_TILING_LINEAR == vkImageTiling && (vkFormatProperties.linearTilingFeatures & vkFormatFeatureFlags) == vkFormatFeatureFlags)
+				{
+					return vkFormat;
+				}
+				else if (VK_IMAGE_TILING_OPTIMAL == vkImageTiling && (vkFormatProperties.optimalTilingFeatures & vkFormatFeatureFlags) == vkFormatFeatureFlags)
+				{
+					return vkFormat;
+				}
+			}
+
+			// Failed to find supported Vulkan depth format
+			return VK_FORMAT_UNDEFINED;
+		}
+
+		VkFormat findDepthVkFormat(VkPhysicalDevice vkPhysicalDevice)
+		{
+			return findSupportedVkFormat(vkPhysicalDevice, { VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT }, VK_IMAGE_TILING_OPTIMAL, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
 		}
 
 
@@ -362,14 +406,22 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	SwapChain::SwapChain(VulkanRenderer& vulkanRenderer, handle nativeWindowHandle) :
 		ISwapChain(vulkanRenderer),
+		// Operation system window
 		mNativeWindowHandle(nativeWindowHandle),
 		mRenderWindow(nullptr),
+		// Vulkan presentation surface
 		mVkSurfaceKHR(VK_NULL_HANDLE),
+		// Vulkan swap chain and color render target related
 		mVkSwapchainKHR(VK_NULL_HANDLE),
 		mVkRenderPass(VK_NULL_HANDLE),
 		mImageAvailableVkSemaphore(VK_NULL_HANDLE),
 		mRenderingFinishedVkSemaphore(VK_NULL_HANDLE),
-		mCurrentImageIndex(~0u)
+		mCurrentImageIndex(~0u),
+		// Depth render target related
+		mDepthVkFormat(::detail::findDepthVkFormat(vulkanRenderer.getVulkanContext().getVkPhysicalDevice())),
+		mDepthVkImage(VK_NULL_HANDLE),
+		mDepthVkDeviceMemory(VK_NULL_HANDLE),
+		mDepthVkImageView(VK_NULL_HANDLE)
 	{
 		// Create the Vulkan presentation surface instance depending on the operation system
 		const VulkanContext&   vulkanContext	= vulkanRenderer.getVulkanContext();
@@ -670,8 +722,11 @@ namespace VulkanRenderer
 			mVkSwapchainKHR = newVkSwapchainKHR;
 		}
 
+		// Create depth render target
+		createDepthRenderTarget(desiredVkExtent2D);
+
 		// Create render pass
-		mVkRenderPass = ::detail::createRenderPass(context, vkDevice, desiredVkSurfaceFormatKHR.format);
+		mVkRenderPass = ::detail::createRenderPass(context, vkDevice, desiredVkSurfaceFormatKHR.format, mDepthVkFormat);
 
 		// Vulkan swap chain image handling
 		if (VK_NULL_HANDLE != mVkRenderPass)
@@ -698,17 +753,22 @@ namespace VulkanRenderer
 				swapChainBuffer.vkImage = vkImages[i];
 
 				// Create the Vulkan image view
-				Helper::createVkImageView(vulkanRenderer, swapChainBuffer.vkImage, VK_IMAGE_VIEW_TYPE_2D, 1, desiredVkSurfaceFormatKHR.format, swapChainBuffer.vkImageView);
+				Helper::createVkImageView(vulkanRenderer, swapChainBuffer.vkImage, VK_IMAGE_VIEW_TYPE_2D, 1, desiredVkSurfaceFormatKHR.format, VK_IMAGE_ASPECT_COLOR_BIT, swapChainBuffer.vkImageView);
 
 				{ // Create the Vulkan framebuffer
+					const std::array<VkImageView, 2> vkImageViews =
+					{
+						swapChainBuffer.vkImageView,
+						mDepthVkImageView
+					};
 					const VkFramebufferCreateInfo vkFramebufferCreateInfo =
 					{
 						VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,	// sType (VkStructureType)
 						nullptr,									// pNext (const void*)
 						0,											// flags (VkFramebufferCreateFlags)
 						mVkRenderPass,								// renderPass (VkRenderPass)
-						1,											// attachmentCount (uint32_t)
-						&swapChainBuffer.vkImageView,				// pAttachments (const VkImageView*)
+						static_cast<uint32_t>(vkImageViews.size()),	// attachmentCount (uint32_t)
+						vkImageViews.data(),						// pAttachments (const VkImageView*)
 						desiredVkExtent2D.width,					// width (uint32_t)
 						desiredVkExtent2D.height,					// height (uint32_t)
 						1											// layers (uint32_t)
@@ -741,6 +801,7 @@ namespace VulkanRenderer
 
 	void SwapChain::destroyVulkanSwapChain()
 	{
+		// Destroy Vulkan swap chain
 		if (VK_NULL_HANDLE != mVkRenderPass || !mSwapChainBuffer.empty() || VK_NULL_HANDLE != mVkSwapchainKHR)
 		{
 			const VkDevice vkDevice = static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice();
@@ -775,6 +836,9 @@ namespace VulkanRenderer
 				mRenderingFinishedVkSemaphore = VK_NULL_HANDLE;
 			}
 		}
+
+		// Destroy depth render target
+		destroyDepthRenderTarget();
 	}
 
 	void SwapChain::acquireNextImage(bool recreateSwapChainIfNeeded)
@@ -790,15 +854,34 @@ namespace VulkanRenderer
 				{
 					createVulkanSwapChain();
 				}
-				return;
 			}
 			else
 			{
 				// Error!
 				RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to acquire next Vulkan image from swap chain")
-				return;
 			}
 		}
+	}
+
+	void SwapChain::createDepthRenderTarget(const VkExtent2D& vkExtent2D)
+	{
+		const VulkanRenderer& vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
+		if (VK_FORMAT_UNDEFINED != mDepthVkFormat)
+		{
+			Helper::createAndAllocateVkImage(vulkanRenderer, VK_IMAGE_TYPE_2D, { vkExtent2D.width, vkExtent2D.height, 1 }, 1, mDepthVkFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, mDepthVkImage, mDepthVkDeviceMemory);
+			Helper::createVkImageView(vulkanRenderer, mDepthVkImage, VK_IMAGE_VIEW_TYPE_2D, 1, mDepthVkFormat, VK_IMAGE_ASPECT_DEPTH_BIT, mDepthVkImageView);
+			Helper::transitionVkImageLayout(vulkanRenderer, mDepthVkImage, mDepthVkFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+		}
+		else
+		{
+			// Error!
+			RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to find supported Vulkan depth format")
+		}
+	}
+
+	void SwapChain::destroyDepthRenderTarget()
+	{
+		Helper::destroyAndFreeVkImage(static_cast<VulkanRenderer&>(getRenderer()), mDepthVkImage, mDepthVkDeviceMemory, mDepthVkImageView);
 	}
 
 

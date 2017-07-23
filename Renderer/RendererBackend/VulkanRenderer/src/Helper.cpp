@@ -31,6 +31,31 @@
 
 
 //[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		bool hasVkFormatStencilComponent(VkFormat vkFormat)
+		{
+			return (VK_FORMAT_D32_SFLOAT_S8_UINT == vkFormat || VK_FORMAT_D24_UNORM_S8_UINT == vkFormat);
+		}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	}
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace VulkanRenderer
@@ -102,19 +127,19 @@ namespace VulkanRenderer
 		vulkanContext.destroyVkCommandBuffer(vkCommandBuffer);
 	}
 
-	void Helper::transitionVkImageLayout(const VulkanRenderer& vulkanRenderer, VkImage vkImage, VkImageLayout oldVkImageLayout, VkImageLayout newVkImageLayout)
+	void Helper::transitionVkImageLayout(const VulkanRenderer& vulkanRenderer, VkImage vkImage, VkFormat vkFormat, VkImageLayout oldVkImageLayout, VkImageLayout newVkImageLayout)
 	{
 		// Create and begin Vulkan command buffer
 		VkCommandBuffer vkCommandBuffer = beginSingleTimeCommands(vulkanRenderer);
 
 		// Vulkan image memory barrier
-		transitionVkImageLayout(vulkanRenderer, vkCommandBuffer, vkImage, 1, oldVkImageLayout, newVkImageLayout);
+		transitionVkImageLayout(vulkanRenderer, vkCommandBuffer, vkImage, vkFormat, 1, oldVkImageLayout, newVkImageLayout);
 
 		// End and destroy Vulkan command buffer
 		endSingleTimeCommands(vulkanRenderer, vkCommandBuffer);
 	}
 
-	void Helper::transitionVkImageLayout(const VulkanRenderer& vulkanRenderer, VkCommandBuffer vkCommandBuffer, VkImage vkImage, uint32_t levelCount, VkImageLayout oldVkImageLayout, VkImageLayout newVkImageLayout)
+	void Helper::transitionVkImageLayout(const VulkanRenderer& vulkanRenderer, VkCommandBuffer vkCommandBuffer, VkImage vkImage, VkFormat vkFormat, uint32_t levelCount, VkImageLayout oldVkImageLayout, VkImageLayout newVkImageLayout)
 	{
 		VkImageMemoryBarrier vkImageMemoryBarrier =
 		{
@@ -135,6 +160,18 @@ namespace VulkanRenderer
 				1							// layerCount (uint32_t)
 			}
 		};
+
+		// "aspectMask" configuration
+		if (VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL == newVkImageLayout)
+		{
+			vkImageMemoryBarrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+			if (::detail::hasVkFormatStencilComponent(vkFormat))
+			{
+				vkImageMemoryBarrier.subresourceRange.aspectMask |= VK_IMAGE_ASPECT_STENCIL_BIT;
+			}
+		}
+
+		// "srcAccessMask" and "dstAccessMask" configuration
 		if (VK_IMAGE_LAYOUT_PREINITIALIZED == oldVkImageLayout && VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL == newVkImageLayout)
 		{
 			vkImageMemoryBarrier.srcAccessMask = VK_ACCESS_HOST_WRITE_BIT;
@@ -145,10 +182,17 @@ namespace VulkanRenderer
 			vkImageMemoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
 			vkImageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
 		}
+		else if (VK_IMAGE_LAYOUT_UNDEFINED == oldVkImageLayout && VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL == newVkImageLayout)
+		{
+			vkImageMemoryBarrier.srcAccessMask = 0;
+			vkImageMemoryBarrier.dstAccessMask = (VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT);
+		}
 		else
 		{
 			RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Unsupported Vulkan image layout transition")
 		}
+
+		// Create Vulkan pipeline barrier command
 		vkCmdPipelineBarrier(vkCommandBuffer, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 1, &vkImageMemoryBarrier);
 	}
 
@@ -263,7 +307,7 @@ namespace VulkanRenderer
 		{ // Upload all mipmaps
 			// Create and begin Vulkan command buffer
 			VkCommandBuffer vkCommandBuffer = beginSingleTimeCommands(vulkanRenderer);
-			transitionVkImageLayout(vulkanRenderer, vkCommandBuffer, vkImage, numberOfMipmaps, VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+			transitionVkImageLayout(vulkanRenderer, vkCommandBuffer, vkImage, vkFormat, numberOfMipmaps, VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
 			// TODO(co) Check whether or not there's a way to upload everything with a single command call
 			// Upload all mipmaps
@@ -298,7 +342,7 @@ namespace VulkanRenderer
 			}
 
 			// End and destroy Vulkan command buffer
-			transitionVkImageLayout(vulkanRenderer, vkCommandBuffer, vkImage, numberOfMipmaps, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+			transitionVkImageLayout(vulkanRenderer, vkCommandBuffer, vkImage, vkFormat, numberOfMipmaps, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 			endSingleTimeCommands(vulkanRenderer, vkCommandBuffer);
 		}
 
@@ -306,7 +350,7 @@ namespace VulkanRenderer
 		destroyAndFreeVkBuffer(vulkanRenderer, stagingVkBuffer, stagingVkDeviceMemory);
 
 		// Create the Vulkan image view
-		createVkImageView(vulkanRenderer, vkImage, vkImageViewType, numberOfMipmaps, vkFormat, vkImageView);
+		createVkImageView(vulkanRenderer, vkImage, vkImageViewType, numberOfMipmaps, vkFormat, VK_IMAGE_ASPECT_COLOR_BIT, vkImageView);
 	}
 
 	void Helper::createAndAllocateVkImage(const VulkanRenderer& vulkanRenderer, VkImageType vkImageType, const VkExtent3D& vkExtent3D, uint32_t mipLevels, VkFormat vkFormat, VkImageTiling vkImageTiling, VkImageUsageFlags vkImageUsageFlags, VkMemoryPropertyFlags vkMemoryPropertyFlags, VkImage& vkImage, VkDeviceMemory& vkDeviceMemory)
@@ -382,7 +426,7 @@ namespace VulkanRenderer
 		destroyAndFreeVkImage(vulkanRenderer, vkImage, vkDeviceMemory);
 	}
 
-	void Helper::createVkImageView(const VulkanRenderer& vulkanRenderer, VkImage vkImage, VkImageViewType vkImageViewType, uint32_t mipLevels, VkFormat vkFormat, VkImageView& vkImageView)
+	void Helper::createVkImageView(const VulkanRenderer& vulkanRenderer, VkImage vkImage, VkImageViewType vkImageViewType, uint32_t mipLevels, VkFormat vkFormat, VkImageAspectFlags vkImageAspectFlags, VkImageView& vkImageView)
 	{
 		const VkImageViewCreateInfo vkImageViewCreateInfo =
 		{
@@ -399,7 +443,7 @@ namespace VulkanRenderer
 				VK_COMPONENT_SWIZZLE_IDENTITY			// a (VkComponentSwizzle)
 			},
 			{ // subresourceRange (VkImageSubresourceRange)
-				VK_IMAGE_ASPECT_COLOR_BIT,				// aspectMask (VkImageAspectFlags)
+				vkImageAspectFlags,						// aspectMask (VkImageAspectFlags)
 				0,										// baseMipLevel (uint32_t)
 				mipLevels,								// levelCount (uint32_t)
 				0,										// baseArrayLayer (uint32_t)
