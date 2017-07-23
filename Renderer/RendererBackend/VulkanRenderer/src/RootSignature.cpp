@@ -234,20 +234,20 @@ namespace VulkanRenderer
 					}
 				}
 			}
-		}
 
-		// Create the Vulkan descriptor set layout
-		const VkDescriptorSetLayoutCreateInfo vkDescriptorSetLayoutCreateInfo =
-		{
-			VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,									// sType (VkStructureType)
-			nullptr,																				// pNext (const void*)
-			0,																						// flags (VkDescriptorSetLayoutCreateFlags)
-			static_cast<uint32_t>(vkDescriptorSetLayoutBindings.size()),							// bindingCount (uint32_t)
-			vkDescriptorSetLayoutBindings.empty() ? nullptr : vkDescriptorSetLayoutBindings.data()	// pBindings (const VkDescriptorSetLayoutBinding*)
-		};
-		if (vkCreateDescriptorSetLayout(vkDevice, &vkDescriptorSetLayoutCreateInfo, nullptr, &mVkDescriptorSetLayout) != VK_SUCCESS)
-		{
-			RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create the Vulkan descriptor set layout")
+			// Create the Vulkan descriptor set layout
+			const VkDescriptorSetLayoutCreateInfo vkDescriptorSetLayoutCreateInfo =
+			{
+				VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,			// sType (VkStructureType)
+				nullptr,														// pNext (const void*)
+				0,																// flags (VkDescriptorSetLayoutCreateFlags)
+				static_cast<uint32_t>(vkDescriptorSetLayoutBindings.size()),	// bindingCount (uint32_t)
+				vkDescriptorSetLayoutBindings.data()							// pBindings (const VkDescriptorSetLayoutBinding*)
+			};
+			if (vkCreateDescriptorSetLayout(vkDevice, &vkDescriptorSetLayoutCreateInfo, nullptr, &mVkDescriptorSetLayout) != VK_SUCCESS)
+			{
+				RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create the Vulkan descriptor set layout")
+			}
 		}
 
 		{ // Create the Vulkan pipeline layout
@@ -291,22 +291,27 @@ namespace VulkanRenderer
 			}
 
 			// Create the Vulkan descriptor pool
-			const VkDescriptorPoolCreateInfo VkDescriptorPoolCreateInfo =
+			if (numberOfVkDescriptorPoolSizes > 0)
 			{
-				VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,	// sType (VkStructureType)
-				nullptr,										// pNext (const void*)
-				0,												// flags (VkDescriptorPoolCreateFlags)
-				1,												// maxSets (uint32_t)
-				numberOfVkDescriptorPoolSizes,					// poolSizeCount (uint32_t)
-				vkDescriptorPoolSizes.data()					// pPoolSizes (const VkDescriptorPoolSize*)
-			};
-			if (vkCreateDescriptorPool(vkDevice, &VkDescriptorPoolCreateInfo, nullptr, &mVkDescriptorPool) != VK_SUCCESS)
-			{
-				RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create the Vulkan descriptor pool")
+				const VkDescriptorPoolCreateInfo VkDescriptorPoolCreateInfo =
+				{
+					VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,	// sType (VkStructureType)
+					nullptr,										// pNext (const void*)
+					0,												// flags (VkDescriptorPoolCreateFlags)
+					1,												// maxSets (uint32_t)
+					numberOfVkDescriptorPoolSizes,					// poolSizeCount (uint32_t)
+					vkDescriptorPoolSizes.data()					// pPoolSizes (const VkDescriptorPoolSize*)
+				};
+				if (vkCreateDescriptorPool(vkDevice, &VkDescriptorPoolCreateInfo, nullptr, &mVkDescriptorPool) != VK_SUCCESS)
+				{
+					RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create the Vulkan descriptor pool")
+				}
 			}
 		}
 
-		{ // Allocate Vulkan descriptor set
+		// Allocate Vulkan descriptor set
+		if (VK_NULL_HANDLE != mVkDescriptorPool)
+		{
 			const VkDescriptorSetLayout vkDescriptorSetLayout[] = { mVkDescriptorSetLayout };
 			const VkDescriptorSetAllocateInfo vkDescriptorSetAllocateInfo =
 			{

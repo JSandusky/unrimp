@@ -431,7 +431,10 @@ namespace VulkanRenderer
 
 			// Bind Vulkan descriptor sets
 			const VkDescriptorSet vkDescriptorSet = mGraphicsRootSignature->getVkDescriptorSet();
-			vkCmdBindDescriptorSets(getVulkanContext().getVkCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, mGraphicsRootSignature->getVkPipelineLayout(), 0, 1, &vkDescriptorSet, 0, nullptr);
+			if (VK_NULL_HANDLE != vkDescriptorSet)
+			{
+				vkCmdBindDescriptorSets(getVulkanContext().getVkCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, mGraphicsRootSignature->getVkPipelineLayout(), 0, 1, &vkDescriptorSet, 0, nullptr);
+			}
 		}
 	}
 

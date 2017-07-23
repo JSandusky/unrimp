@@ -134,7 +134,7 @@ namespace VulkanRenderer
 		*    Return the Vulkan descriptor set
 		*
 		*  @return
-		*    The Vulkan descriptor set
+		*    The Vulkan descriptor set, can be a null handle
 		*/
 		inline VkDescriptorSet getVkDescriptorSet() const;
 
@@ -156,7 +156,7 @@ namespace VulkanRenderer
 		VkDescriptorSetLayout	mVkDescriptorSetLayout;
 		VkPipelineLayout		mVkPipelineLayout;
 		VkDescriptorPool		mVkDescriptorPool;
-		VkDescriptorSet			mVkDescriptorSet;	///< "mVkDescriptorPool" is the owner which manages the memory
+		VkDescriptorSet			mVkDescriptorSet;	///< "mVkDescriptorPool" is the owner which manages the memory, can be a null handle
 
 
 	};
