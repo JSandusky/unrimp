@@ -334,7 +334,7 @@ void FirstMesh::onDraw()
 
 		{ // Draw mesh instance
 			const RendererRuntime::MeshResource* meshResource = rendererRuntime->getMeshResourceManager().tryGetById(mMeshResourceId);
-			if (nullptr != meshResource)
+			if (nullptr != meshResource && nullptr != meshResource->getVertexArrayPtr())
 			{
 				// Input assembly (IA): Set the used vertex array
 				Renderer::Command::SetVertexArray::create(mCommandBuffer, meshResource->getVertexArrayPtr());
