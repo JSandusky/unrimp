@@ -406,24 +406,27 @@ namespace VulkanRenderer
 		}
 	}
 
-	void Helper::destroyAndFreeVkImage(const VulkanRenderer& vulkanRenderer, VkImage vkImage, VkDeviceMemory vkDeviceMemory)
+	void Helper::destroyAndFreeVkImage(const VulkanRenderer& vulkanRenderer, VkImage& vkImage, VkDeviceMemory& vkDeviceMemory)
 	{
 		if (VK_NULL_HANDLE != vkImage)
 		{
 			const VkDevice vkDevice = vulkanRenderer.getVulkanContext().getVkDevice();
 			vkDestroyImage(vkDevice, vkImage, nullptr);
+			vkImage = VK_NULL_HANDLE;
 			if (VK_NULL_HANDLE != vkDeviceMemory)
 			{
 				vkFreeMemory(vkDevice, vkDeviceMemory, nullptr);
+				vkDeviceMemory = VK_NULL_HANDLE;
 			}
 		}
 	}
 
-	void Helper::destroyAndFreeVkImage(const VulkanRenderer& vulkanRenderer, VkImage vkImage, VkDeviceMemory vkDeviceMemory, VkImageView vkImageView)
+	void Helper::destroyAndFreeVkImage(const VulkanRenderer& vulkanRenderer, VkImage& vkImage, VkDeviceMemory& vkDeviceMemory, VkImageView& vkImageView)
 	{
 		if (VK_NULL_HANDLE != vkImageView)
 		{
 			vkDestroyImageView(vulkanRenderer.getVulkanContext().getVkDevice(), vkImageView, nullptr);
+			vkImageView = VK_NULL_HANDLE;
 		}
 		destroyAndFreeVkImage(vulkanRenderer, vkImage, vkDeviceMemory);
 	}
