@@ -18,7 +18,7 @@
 #\*********************************************************/
 
 
-cmake_minimum_required(VERSION 3.2.2)
+cmake_minimum_required(VERSION 3.3.0)
 
 
 ##################################################
@@ -63,18 +63,18 @@ set(SOURCE_CODES
 	src/Buffer/VertexBuffer.cpp
 	src/RenderTarget/Framebuffer.cpp
 	src/RenderTarget/SwapChain.cpp
-	src/Shader/FragmentShaderHlsl.cpp
-	src/Shader/GeometryShaderHlsl.cpp
-	src/Shader/ProgramHlsl.cpp
-	src/Shader/ShaderLanguageHlsl.cpp
-	src/Shader/TessellationControlShaderHlsl.cpp
-	src/Shader/TessellationEvaluationShaderHlsl.cpp
-	src/Shader/VertexShaderHlsl.cpp
+	src/Shader/FragmentShaderGlsl.cpp
+	src/Shader/GeometryShaderGlsl.cpp
+	src/Shader/ProgramGlsl.cpp
+	src/Shader/ShaderLanguageGlsl.cpp
+	src/Shader/TessellationControlShaderGlsl.cpp
+	src/Shader/TessellationEvaluationShaderGlsl.cpp
+	src/Shader/VertexShaderGlsl.cpp
 	src/State/PipelineState.cpp
 	src/State/SamplerState.cpp
 	src/Texture/Texture1D.cpp
-	src/Texture/Texture2D.cpp
 	src/Texture/Texture2DArray.cpp
+	src/Texture/Texture2D.cpp
 	src/Texture/Texture3D.cpp
 	src/Texture/TextureCube.cpp
 	src/Texture/TextureManager.cpp
@@ -82,8 +82,8 @@ set(SOURCE_CODES
 	src/Helper.cpp
 	src/Mapping.cpp
 	src/RootSignature.cpp
-	src/VulkanRenderer.cpp
 	src/VulkanContext.cpp
+	src/VulkanRenderer.cpp
 	src/VulkanRuntimeLinking.cpp
 )
 if(WIN32)
@@ -107,9 +107,7 @@ if(RENDERER_VULKAN_GLSLTOSPIRV)
 		${GLSLANG_DIR}/glslang/MachineIndependent/preprocessor/Pp.cpp
 		${GLSLANG_DIR}/glslang/MachineIndependent/preprocessor/PpAtom.cpp
 		${GLSLANG_DIR}/glslang/MachineIndependent/preprocessor/PpContext.cpp
-		${GLSLANG_DIR}/glslang/MachineIndependent/preprocessor/PpMemory.cpp
 		${GLSLANG_DIR}/glslang/MachineIndependent/preprocessor/PpScanner.cpp
-		${GLSLANG_DIR}/glslang/MachineIndependent/preprocessor/PpSymbols.cpp
 		${GLSLANG_DIR}/glslang/MachineIndependent/preprocessor/PpTokens.cpp
 		${GLSLANG_DIR}/glslang/MachineIndependent/Constant.cpp
 		${GLSLANG_DIR}/glslang/MachineIndependent/glslang_tab.cpp

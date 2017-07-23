@@ -26,11 +26,6 @@
 #include "VulkanRenderer/Extensions.h"
 #include "VulkanRenderer/VulkanRuntimeLinking.h"
 
-#ifdef LINUX
-	#include <Renderer/LinuxHeader.h>
-	#include "VulkanRenderer/Linux/VulkanContextLinux.h"
-#endif
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

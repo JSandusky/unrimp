@@ -4,7 +4,7 @@
 #
 # Distributed under the MIT License (MIT) (See accompanying file LICENSE.txt
 # or copy at http://opensource.org/licenses/MIT) 
-cmake_minimum_required(VERSION 2.8.12) # first version with add_compile_options()
+cmake_minimum_required(VERSION 3.3.0) # first version with add_compile_options()
 project(SQLiteCpp)
 
 # Define useful variables to handle OS differences:

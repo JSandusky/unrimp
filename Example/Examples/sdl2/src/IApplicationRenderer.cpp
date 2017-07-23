@@ -662,14 +662,14 @@ Renderer::Context* IApplicationRenderer::createRendererContext() const
 			switch(info.subsystem) {
 		#ifdef WIN32
 				case SDL_SYSWM_WINDOWS:
-					return new Renderer::Context(Renderer::Context::ContextType::WIN32, ::detail::g_RendererLog, info.info.win.window, true);
+					return new Renderer::Context(Renderer::Context::ContextType::WINDOWS, ::detail::g_RendererLog, info.info.win.window, true);
 		#endif
 #ifdef LINUX
 				case SDL_SYSWM_X11:
 					return new Renderer::X11Context(::detail::g_RendererLog, info.info.x11.display, info.info.x11.window, true);
 				case SDL_SYSWM_WAYLAND:
 					// TODO(sw) For now we misuse the win32 context, the nativ window handle is only used by the renderer instance to determine if a main swapchain should be created or not, because we tell the renderer instance that an external context is used
-					return new Renderer::Context(Renderer::Context::ContextType::WIN32, ::detail::g_RendererLog, reinterpret_cast<uintptr_t>(info.info.wl.surface));
+					return new Renderer::Context(Renderer::Context::ContextType::WINDOWS, ::detail::g_RendererLog, reinterpret_cast<uintptr_t>(info.info.wl.surface));
 #endif
 			}
 		}

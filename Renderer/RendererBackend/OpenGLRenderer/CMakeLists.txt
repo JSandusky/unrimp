@@ -18,7 +18,7 @@
 #\*********************************************************/
 
 
-cmake_minimum_required(VERSION 3.2.2)
+cmake_minimum_required(VERSION 3.3.0)
 
 
 ##################################################
@@ -154,9 +154,7 @@ if(RENDERER_OPENGL_GLSLTOSPIRV)
 		${GLSLANG_DIR}/glslang/MachineIndependent/preprocessor/Pp.cpp
 		${GLSLANG_DIR}/glslang/MachineIndependent/preprocessor/PpAtom.cpp
 		${GLSLANG_DIR}/glslang/MachineIndependent/preprocessor/PpContext.cpp
-		${GLSLANG_DIR}/glslang/MachineIndependent/preprocessor/PpMemory.cpp
 		${GLSLANG_DIR}/glslang/MachineIndependent/preprocessor/PpScanner.cpp
-		${GLSLANG_DIR}/glslang/MachineIndependent/preprocessor/PpSymbols.cpp
 		${GLSLANG_DIR}/glslang/MachineIndependent/preprocessor/PpTokens.cpp
 		${GLSLANG_DIR}/glslang/MachineIndependent/Constant.cpp
 		${GLSLANG_DIR}/glslang/MachineIndependent/glslang_tab.cpp

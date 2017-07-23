@@ -93,7 +93,7 @@
 	*  @brief
 	*    No operation macro ("_asm nop"/__nop())
 	*/
-	#define NOP __nop()	// TODO(co) This will probably not work, when it's time for Unix ports, review this
+	#define NOP asm ("nop");
 
 	#ifdef __clang__
 		/**

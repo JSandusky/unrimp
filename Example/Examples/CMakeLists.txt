@@ -18,7 +18,7 @@
 #\*********************************************************/
 
 
-cmake_minimum_required(VERSION 3.2.2)
+cmake_minimum_required(VERSION 3.3.0)
 
 
 find_package(Qt4 COMPONENTS QtCore QtGui)
@@ -237,9 +237,9 @@ if(SHARED_LIBRARY)
 		target_link_libraries(Examples X11 dl)
 
 		if (HAVE_CXX_FILESYSTEM_TS_SUPPORT)
-			TARGET_LINK_LIBRARIES(ExamplesStatic stdc++fs)
+			TARGET_LINK_LIBRARIES(Examples stdc++fs)
 		elseif(Boost_FILESYSTEM_FOUND)
-			TARGET_LINK_LIBRARIES(ExamplesStatic Boost::filesystem)
+			TARGET_LINK_LIBRARIES(Examples Boost::filesystem)
 		endif()
 	endif()
 	if(RENDERER_RUNTIME)

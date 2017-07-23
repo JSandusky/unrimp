@@ -34,7 +34,7 @@
 #elif defined(__ANDROID__)
 	#define VK_USE_PLATFORM_ANDROID_KHR
 #elif defined(LINUX)
-	#warning "TODO(co) Not tested. Use XLIB or XCB?"
+	//#warning "TODO(co) Not tested. Use XLIB or XCB?"
 	#define VK_USE_PLATFORM_XLIB_KHR
 #endif
 #define VK_NO_PROTOTYPES
@@ -44,4 +44,5 @@ PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4668)	// Warning	C4668	'<x>' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
 	#include <vulkan/vulkan.h>
 	#undef max	// Get rid of nasty OS macro
+	#undef None // Get rid of nasty OS macro
 PRAGMA_WARNING_POP

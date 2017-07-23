@@ -27,6 +27,7 @@
 #include "VulkanRenderer/Helper.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/Context.h>
 
 #include <array>
 #include <sstream>
@@ -77,19 +78,27 @@ namespace
 					vkSurfaceKHR = VK_NULL_HANDLE;
 				}
 			#elif defined VK_USE_PLATFORM_XLIB_KHR
-				#error "TODO(co) Complete implementation"
-				const VkXlibSurfaceCreateInfoKHR vkXlibSurfaceCreateInfoKHR =
+				VulkanRenderer::VulkanRenderer& vulkanRenderer = vulkanContext.getVulkanRenderer();
+				const Renderer::Context& context = vulkanRenderer.getContext();
+				assert(context.getType() == Renderer::Context::ContextType::X11);
+
+				// If the given renderer context is an X11 context use the display connection object provided by the context
+				if (context.getType() == Renderer::Context::ContextType::X11)
 				{
-					VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR,	// sType (VkStructureType)
-					nullptr,										// pNext (const void*)
-					0,												// flags (VkXlibSurfaceCreateFlagsKHR)
-					TODO(co)										// dpy (Display*)
-					TODO(co)										// window (Window)
-				};
-				if (vkCreateXlibSurfaceKHR(vkInstance, &vkXlibSurfaceCreateInfoKHR, nullptr, &vkSurfaceKHR) != VK_SUCCESS)
-				{
-					// TODO(co) Can we ensure "vkSurfaceKHR" doesn't get touched by "vkCreateXlibSurfaceKHR()" in case of failure?
-					vkSurfaceKHR = VK_NULL_HANDLE;
+					const Renderer::X11Context& x11Context = static_cast<const Renderer::X11Context&>(context);
+					const VkXlibSurfaceCreateInfoKHR vkXlibSurfaceCreateInfoKHR =
+					{
+						VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR,	// sType (VkStructureType)
+						nullptr,										// pNext (const void*)
+						0,												// flags (VkXlibSurfaceCreateFlagsKHR)
+						x11Context.getDisplay(),						// dpy (Display*)
+						nativeWindowHandle								// window (Window)
+					};
+					if (vkCreateXlibSurfaceKHR(vkInstance, &vkXlibSurfaceCreateInfoKHR, nullptr, &vkSurfaceKHR) != VK_SUCCESS)
+					{
+						// TODO(co) Can we ensure "vkSurfaceKHR" doesn't get touched by "vkCreateXlibSurfaceKHR()" in case of failure?
+						vkSurfaceKHR = VK_NULL_HANDLE;
+					}
 				}
 			#elif defined VK_USE_PLATFORM_XCB_KHR
 				#error "TODO(co) Complete implementation"
@@ -161,9 +170,11 @@ namespace
 			}
 
 			// Check if list contains most widely used R8 G8 B8 A8 format with nonlinear color space
+			// Not all implementation supports RGBA8. Some only support BGRA8 formats (e.g. xlib surface ander linux with RADV)
 			for (const VkSurfaceFormatKHR& surfaceFormat : surfaceFormats)
 			{
-				if (VK_FORMAT_R8G8B8A8_UNORM == surfaceFormat.format)
+				if (VK_FORMAT_R8G8B8A8_UNORM == surfaceFormat.format
+					|| VK_FORMAT_B8G8R8A8_UNORM == surfaceFormat.format)
 				{
 					return surfaceFormat;
 				}
@@ -499,30 +510,38 @@ namespace VulkanRenderer
 			if (NULL_HANDLE != mNativeWindowHandle)
 			{
 				VulkanRenderer& vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
-				Display* display = static_cast<const VulkanContextLinux&>(vulkanRenderer.getVulkanContext()).getDisplay();
+				const Renderer::Context& context = vulkanRenderer.getContext();
+				assert(context.getType() == Renderer::Context::ContextType::X11);
 
-				// Get the width and height...
-				::Window rootWindow = 0;
-				int positionX = 0, positionY = 0;
-				unsigned int unsignedWidth = 0, unsignedHeight = 0, border = 0, depth = 0;
-				if (nullptr != display)
+				// If the given renderer context is an X11 context use the display connection object provided by the context
+				if (context.getType() == Renderer::Context::ContextType::X11)
 				{
-					XGetGeometry(display, mNativeWindowHandle, &rootWindow, &positionX, &positionY, &unsignedWidth, &unsignedHeight, &border, &depth);
-				}
+					const Renderer::X11Context& x11Context = static_cast<const Renderer::X11Context&>(context);
+					Display* display = x11Context.getDisplay();
 
-				// ... and ensure that none of them is ever zero
-				if (unsignedWidth < 1)
-				{
-					unsignedWidth = 1;
-				}
-				if (unsignedHeight < 1)
-				{
-					unsignedHeight = 1;
-				}
+					// Get the width and height...
+					::Window rootWindow = 0;
+					int positionX = 0, positionY = 0;
+					unsigned int unsignedWidth = 0, unsignedHeight = 0, border = 0, depth = 0;
+					if (nullptr != display)
+					{
+						XGetGeometry(display, mNativeWindowHandle, &rootWindow, &positionX, &positionY, &unsignedWidth, &unsignedHeight, &border, &depth);
+					}
 
-				// Done
-				width = unsignedWidth;
-				height = unsignedHeight;
+					// ... and ensure that none of them is ever zero
+					if (unsignedWidth < 1)
+					{
+						unsignedWidth = 1;
+					}
+					if (unsignedHeight < 1)
+					{
+						unsignedHeight = 1;
+					}
+
+					// Done
+					width = unsignedWidth;
+					height = unsignedHeight;
+				}
 			}
 			else
 		#else

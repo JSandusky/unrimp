@@ -18,7 +18,7 @@
 #\*********************************************************/
 
 
-cmake_minimum_required(VERSION 3.2.2)
+cmake_minimum_required(VERSION 3.3.0)
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 find_package(SDL2 REQUIRED)
