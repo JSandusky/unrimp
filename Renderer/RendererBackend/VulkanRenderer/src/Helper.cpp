@@ -299,60 +299,65 @@ namespace VulkanRenderer
 			numberOfMipmaps = 1;
 		}
 
-		// Create Vulkan staging buffer
-		VkBuffer stagingVkBuffer;
-		VkDeviceMemory stagingVkDeviceMemory;
-		createAndAllocateVkBuffer(vulkanRenderer, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, numberOfBytes, data, stagingVkBuffer, stagingVkDeviceMemory);
-
 		// Create and fill Vulkan image
 		createAndAllocateVkImage(vulkanRenderer, vkImageType, vkExtent3D, numberOfMipmaps, vkFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vkImage, vkDeviceMemory);
-		{ // Upload all mipmaps
-			// Create and begin Vulkan command buffer
-			VkCommandBuffer vkCommandBuffer = beginSingleTimeCommands(vulkanRenderer);
-			transitionVkImageLayout(vulkanRenderer, vkCommandBuffer, vkImage, vkFormat, numberOfMipmaps, VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-
-			// TODO(co) Check whether or not there's a way to upload everything with a single command call
-			// Upload all mipmaps
-			uint32_t bufferOffset = 0;
-			uint32_t width = vkExtent3D.width;
-			uint32_t height = vkExtent3D.height;
-			uint32_t depth = vkExtent3D.depth;
-			for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
-			{
-				// Copy Vulkan buffer to Vulkan image
-				const VkBufferImageCopy vkBufferImageCopy =
-				{
-					bufferOffset,					// bufferOffset (VkDeviceSize)
-					0,								// bufferRowLength (uint32_t)
-					0,								// bufferImageHeight (uint32_t)
-					{ // imageSubresource (VkImageSubresourceLayers)
-						VK_IMAGE_ASPECT_COLOR_BIT,	// aspectMask (VkImageAspectFlags)
-						mipmap,						// mipLevel (uint32_t)
-						0,							// baseArrayLayer (uint32_t)
-						1							// layerCount (uint32_t)
-					},
-					{ 0, 0, 0 },					// imageOffset (VkOffset3D)
-					{ width, height, depth }		// imageExtent (VkExtent3D)
-				};
-				vkCmdCopyBufferToImage(vkCommandBuffer, stagingVkBuffer, vkImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &vkBufferImageCopy);
-
-				// Move on to the next mipmap
-				bufferOffset += Renderer::TextureFormat::getNumberOfBytesPerSlice(static_cast<Renderer::TextureFormat::Enum>(textureFormat), width, height) * depth;
-				width = std::max(width >> 1, 1u);	// /= 2
-				height = std::max(height >> 1, 1u);	// /= 2
-				depth = std::max(depth >> 1, 1u);	// /= 2
-			}
-
-			// End and destroy Vulkan command buffer
-			transitionVkImageLayout(vulkanRenderer, vkCommandBuffer, vkImage, vkFormat, numberOfMipmaps, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-			endSingleTimeCommands(vulkanRenderer, vkCommandBuffer);
-		}
-
-		// Destroy Vulkan staging buffer
-		destroyAndFreeVkBuffer(vulkanRenderer, stagingVkBuffer, stagingVkDeviceMemory);
 
 		// Create the Vulkan image view
 		createVkImageView(vulkanRenderer, vkImage, vkImageViewType, numberOfMipmaps, vkFormat, VK_IMAGE_ASPECT_COLOR_BIT, vkImageView);
+
+		// Upload all mipmaps
+		if (nullptr != data)
+		{
+			// Create Vulkan staging buffer
+			VkBuffer stagingVkBuffer = VK_NULL_HANDLE;
+			VkDeviceMemory stagingVkDeviceMemory = VK_NULL_HANDLE;
+			createAndAllocateVkBuffer(vulkanRenderer, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, numberOfBytes, data, stagingVkBuffer, stagingVkDeviceMemory);
+
+			{ // Upload all mipmaps
+				// Create and begin Vulkan command buffer
+				VkCommandBuffer vkCommandBuffer = beginSingleTimeCommands(vulkanRenderer);
+				transitionVkImageLayout(vulkanRenderer, vkCommandBuffer, vkImage, vkFormat, numberOfMipmaps, VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+
+				// TODO(co) Check whether or not there's a way to upload everything with a single command call
+				// Upload all mipmaps
+				uint32_t bufferOffset = 0;
+				uint32_t width = vkExtent3D.width;
+				uint32_t height = vkExtent3D.height;
+				uint32_t depth = vkExtent3D.depth;
+				for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
+				{
+					// Copy Vulkan buffer to Vulkan image
+					const VkBufferImageCopy vkBufferImageCopy =
+					{
+						bufferOffset,					// bufferOffset (VkDeviceSize)
+						0,								// bufferRowLength (uint32_t)
+						0,								// bufferImageHeight (uint32_t)
+						{ // imageSubresource (VkImageSubresourceLayers)
+							VK_IMAGE_ASPECT_COLOR_BIT,	// aspectMask (VkImageAspectFlags)
+							mipmap,						// mipLevel (uint32_t)
+							0,							// baseArrayLayer (uint32_t)
+							1							// layerCount (uint32_t)
+						},
+						{ 0, 0, 0 },					// imageOffset (VkOffset3D)
+						{ width, height, depth }		// imageExtent (VkExtent3D)
+					};
+					vkCmdCopyBufferToImage(vkCommandBuffer, stagingVkBuffer, vkImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &vkBufferImageCopy);
+
+					// Move on to the next mipmap
+					bufferOffset += Renderer::TextureFormat::getNumberOfBytesPerSlice(static_cast<Renderer::TextureFormat::Enum>(textureFormat), width, height) * depth;
+					width = std::max(width >> 1, 1u);	// /= 2
+					height = std::max(height >> 1, 1u);	// /= 2
+					depth = std::max(depth >> 1, 1u);	// /= 2
+				}
+
+				// End and destroy Vulkan command buffer
+				transitionVkImageLayout(vulkanRenderer, vkCommandBuffer, vkImage, vkFormat, numberOfMipmaps, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+				endSingleTimeCommands(vulkanRenderer, vkCommandBuffer);
+			}
+
+			// Destroy Vulkan staging buffer
+			destroyAndFreeVkBuffer(vulkanRenderer, stagingVkBuffer, stagingVkDeviceMemory);
+		}
 	}
 
 	void Helper::createAndAllocateVkImage(const VulkanRenderer& vulkanRenderer, VkImageType vkImageType, const VkExtent3D& vkExtent3D, uint32_t mipLevels, VkFormat vkFormat, VkImageTiling vkImageTiling, VkImageUsageFlags vkImageUsageFlags, VkMemoryPropertyFlags vkMemoryPropertyFlags, VkImage& vkImage, VkDeviceMemory& vkDeviceMemory)
