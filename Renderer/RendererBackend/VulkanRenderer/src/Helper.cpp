@@ -30,6 +30,7 @@
 #include <Renderer/Texture/ITexture.h>
 
 #include <cstring>	// For "memcpy()"
+#include <vector>
 
 
 //[-------------------------------------------------------]
@@ -318,12 +319,15 @@ namespace VulkanRenderer
 				VkCommandBuffer vkCommandBuffer = beginSingleTimeCommands(vulkanRenderer);
 				transitionVkImageLayout(vulkanRenderer, vkCommandBuffer, vkImage, vkFormat, numberOfMipmaps, VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
-				// TODO(co) Check whether or not there's a way to upload everything with a single command call
 				// Upload all mipmaps
 				uint32_t bufferOffset = 0;
 				uint32_t width = vkExtent3D.width;
 				uint32_t height = vkExtent3D.height;
 				uint32_t depth = vkExtent3D.depth;
+
+				// Allocate list of VkBufferImageCopy and setup VkBufferImageCopy data for each mipmap level
+				std::vector<VkBufferImageCopy> vkBufferImageCopyList;
+				vkBufferImageCopyList.reserve(numberOfMipmaps);
 				for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
 				{
 					// Copy Vulkan buffer to Vulkan image
@@ -341,7 +345,8 @@ namespace VulkanRenderer
 						{ 0, 0, 0 },					// imageOffset (VkOffset3D)
 						{ width, height, depth }		// imageExtent (VkExtent3D)
 					};
-					vkCmdCopyBufferToImage(vkCommandBuffer, stagingVkBuffer, vkImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &vkBufferImageCopy);
+
+					vkBufferImageCopyList.push_back(vkBufferImageCopy);
 
 					// Move on to the next mipmap
 					bufferOffset += Renderer::TextureFormat::getNumberOfBytesPerSlice(static_cast<Renderer::TextureFormat::Enum>(textureFormat), width, height) * depth;
@@ -349,6 +354,7 @@ namespace VulkanRenderer
 					height = std::max(height >> 1, 1u);	// /= 2
 					depth = std::max(depth >> 1, 1u);	// /= 2
 				}
+				vkCmdCopyBufferToImage(vkCommandBuffer, stagingVkBuffer, vkImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, vkBufferImageCopyList.size(), vkBufferImageCopyList.data());
 
 				// End and destroy Vulkan command buffer
 				transitionVkImageLayout(vulkanRenderer, vkCommandBuffer, vkImage, vkFormat, numberOfMipmaps, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
