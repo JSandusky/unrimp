@@ -330,9 +330,7 @@ namespace VulkanRenderer
 				vkBufferImageCopyList.reserve(numberOfMipmaps);
 				for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
 				{
-					// Copy Vulkan buffer to Vulkan image
-					const VkBufferImageCopy vkBufferImageCopy =
-					{
+					vkBufferImageCopyList.push_back({
 						bufferOffset,					// bufferOffset (VkDeviceSize)
 						0,								// bufferRowLength (uint32_t)
 						0,								// bufferImageHeight (uint32_t)
@@ -344,9 +342,7 @@ namespace VulkanRenderer
 						},
 						{ 0, 0, 0 },					// imageOffset (VkOffset3D)
 						{ width, height, depth }		// imageExtent (VkExtent3D)
-					};
-
-					vkBufferImageCopyList.push_back(vkBufferImageCopy);
+					});
 
 					// Move on to the next mipmap
 					bufferOffset += Renderer::TextureFormat::getNumberOfBytesPerSlice(static_cast<Renderer::TextureFormat::Enum>(textureFormat), width, height) * depth;
@@ -354,6 +350,8 @@ namespace VulkanRenderer
 					height = std::max(height >> 1, 1u);	// /= 2
 					depth = std::max(depth >> 1, 1u);	// /= 2
 				}
+
+				// Copy Vulkan buffer to Vulkan image
 				vkCmdCopyBufferToImage(vkCommandBuffer, stagingVkBuffer, vkImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, vkBufferImageCopyList.size(), vkBufferImageCopyList.data());
 
 				// End and destroy Vulkan command buffer
