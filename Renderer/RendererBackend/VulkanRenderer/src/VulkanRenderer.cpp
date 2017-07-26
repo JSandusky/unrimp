@@ -772,7 +772,7 @@ namespace VulkanRenderer
 									VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,				// sType (VkStructureType)
 									nullptr,											// pNext (const void*)
 									VK_ACCESS_TRANSFER_WRITE_BIT,						// srcAccessMask (VkAccessFlags)
-									VK_ACCESS_MEMORY_READ_BIT,							// dstAccessMask (VkAccessFlags)
+									VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,		// dstAccessMask (VkAccessFlags)
 									VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,				// oldLayout (VkImageLayout)
 									VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,	// newLayout (VkImageLayout)
 									VK_QUEUE_FAMILY_IGNORED,							// srcQueueFamilyIndex (uint32_t)
@@ -874,16 +874,16 @@ namespace VulkanRenderer
 							};
 							const VkImageMemoryBarrier vkImageMemoryBarrier =
 							{
-								VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,	// sType (VkStructureType)
-								nullptr,								// pNext (const void*)
-								0,										// srcAccessMask (VkAccessFlags)
-								VK_ACCESS_TRANSFER_WRITE_BIT,			// dstAccessMask (VkAccessFlags)
-								VK_IMAGE_LAYOUT_UNDEFINED,				// oldLayout (VkImageLayout)
-								VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,	// newLayout (VkImageLayout)
-								VK_QUEUE_FAMILY_IGNORED,				// srcQueueFamilyIndex (uint32_t)
-								VK_QUEUE_FAMILY_IGNORED,				// dstQueueFamilyIndex (uint32_t)
-								swapChain->getDepthVkImage(),			// image (VkImage)
-								vkImageSubresourceRange					// subresourceRange (VkImageSubresourceRange)
+								VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,				// sType (VkStructureType)
+								nullptr,											// pNext (const void*)
+								VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,		// srcAccessMask (VkAccessFlags)
+								VK_ACCESS_TRANSFER_WRITE_BIT,						// dstAccessMask (VkAccessFlags)
+								VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,	// oldLayout (VkImageLayout)
+								VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,				// newLayout (VkImageLayout)
+								VK_QUEUE_FAMILY_IGNORED,							// srcQueueFamilyIndex (uint32_t)
+								VK_QUEUE_FAMILY_IGNORED,							// dstQueueFamilyIndex (uint32_t)
+								swapChain->getDepthVkImage(),						// image (VkImage)
+								vkImageSubresourceRange								// subresourceRange (VkImageSubresourceRange)
 							};
 							vkCmdPipelineBarrier(getVulkanContext().getVkCommandBuffer(), VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, nullptr, 0, nullptr, 1, &vkImageMemoryBarrier);
 						}
