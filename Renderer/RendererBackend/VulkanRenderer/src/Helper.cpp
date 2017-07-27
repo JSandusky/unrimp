@@ -352,7 +352,7 @@ namespace VulkanRenderer
 				}
 
 				// Copy Vulkan buffer to Vulkan image
-				vkCmdCopyBufferToImage(vkCommandBuffer, stagingVkBuffer, vkImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, vkBufferImageCopyList.size(), vkBufferImageCopyList.data());
+				vkCmdCopyBufferToImage(vkCommandBuffer, stagingVkBuffer, vkImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, static_cast<uint32_t>(vkBufferImageCopyList.size()), vkBufferImageCopyList.data());
 
 				// End and destroy Vulkan command buffer
 				transitionVkImageLayout(vulkanRenderer, vkCommandBuffer, vkImage, vkFormat, numberOfMipmaps, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
