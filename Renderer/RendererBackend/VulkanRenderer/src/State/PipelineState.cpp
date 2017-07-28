@@ -277,16 +277,17 @@ namespace VulkanRenderer
 			0.0f,																									// minDepthBounds (float)
 			1.0f																									// maxDepthBounds (float)
 		};
+		const Renderer::RenderTargetBlendDesc& renderTargetBlendDesc = pipelineState.blendState.renderTarget[0];
 		const VkPipelineColorBlendAttachmentState vkPipelineColorBlendAttachmentState =
 		{
-			VK_FALSE,																									// blendEnable (VkBool32)
-			VK_BLEND_FACTOR_ZERO,																						// srcColorBlendFactor (VkBlendFactor)
-			VK_BLEND_FACTOR_ZERO,																						// dstColorBlendFactor (VkBlendFactor)
-			VK_BLEND_OP_ADD,																							// colorBlendOp (VkBlendOp)
-			VK_BLEND_FACTOR_ZERO,																						// srcAlphaBlendFactor (VkBlendFactor)
-			VK_BLEND_FACTOR_ZERO,																						// dstAlphaBlendFactor (VkBlendFactor)
-			VK_BLEND_OP_ADD,																							// alphaBlendOp (VkBlendOp)
-			VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT	// colorWriteMask (VkColorComponentFlags)
+			static_cast<VkBool32>(renderTargetBlendDesc.blendEnable),				// blendEnable (VkBool32)
+			Mapping::getVulkanBlendFactor(renderTargetBlendDesc.srcBlend),			// srcColorBlendFactor (VkBlendFactor)
+			Mapping::getVulkanBlendFactor(renderTargetBlendDesc.destBlend),			// dstColorBlendFactor (VkBlendFactor)
+			Mapping::getVulkanBlendOp(renderTargetBlendDesc.blendOp),				// colorBlendOp (VkBlendOp)
+			Mapping::getVulkanBlendFactor(renderTargetBlendDesc.srcBlendAlpha),		// srcAlphaBlendFactor (VkBlendFactor)
+			Mapping::getVulkanBlendFactor(renderTargetBlendDesc.destBlendAlpha),	// dstAlphaBlendFactor (VkBlendFactor)
+			Mapping::getVulkanBlendOp(renderTargetBlendDesc.blendOpAlpha),			// alphaBlendOp (VkBlendOp)
+			renderTargetBlendDesc.renderTargetWriteMask								// colorWriteMask (VkColorComponentFlags)
 		};
 		const VkPipelineColorBlendStateCreateInfo vkPipelineColorBlendStateCreateInfo =
 		{

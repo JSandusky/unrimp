@@ -248,6 +248,46 @@ namespace VulkanRenderer
 		return MAPPING[static_cast<int>(textureAddressMode) - 1];	// Lookout! The "Renderer::TextureAddressMode"-values start with 1, not 0
 	}
 
+	VkBlendFactor Mapping::getVulkanBlendFactor(Renderer::Blend blend)
+	{
+		static const VkBlendFactor MAPPING[] =
+		{
+			VK_BLEND_FACTOR_ZERO,						// Renderer::Blend::ZERO			 = 1
+			VK_BLEND_FACTOR_ONE,						// Renderer::Blend::ONE				 = 2
+			VK_BLEND_FACTOR_SRC_COLOR,					// Renderer::Blend::SRC_COLOR		 = 3
+			VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR,		// Renderer::Blend::INV_SRC_COLOR	 = 4
+			VK_BLEND_FACTOR_SRC_ALPHA,					// Renderer::Blend::SRC_ALPHA		 = 5
+			VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA,		// Renderer::Blend::INV_SRC_ALPHA	 = 6
+			VK_BLEND_FACTOR_DST_ALPHA,					// Renderer::Blend::DEST_ALPHA		 = 7
+			VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA,		// Renderer::Blend::INV_DEST_ALPHA	 = 8
+			VK_BLEND_FACTOR_DST_COLOR,					// Renderer::Blend::DEST_COLOR		 = 9
+			VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR,		// Renderer::Blend::INV_DEST_COLOR	 = 10
+			VK_BLEND_FACTOR_SRC_ALPHA_SATURATE,			// Renderer::Blend::SRC_ALPHA_SAT	 = 11
+			VK_BLEND_FACTOR_MAX_ENUM,					// <undefined>						 = 12 !
+			VK_BLEND_FACTOR_MAX_ENUM,					// <undefined>						 = 13 !
+			VK_BLEND_FACTOR_CONSTANT_COLOR,				// Renderer::Blend::BLEND_FACTOR	 = 14
+			VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR,	// Renderer::Blend::INV_BLEND_FACTOR = 15
+			VK_BLEND_FACTOR_SRC1_COLOR,					// Renderer::Blend::SRC_1_COLOR		 = 16
+			VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR,		// Renderer::Blend::INV_SRC_1_COLOR	 = 17
+			VK_BLEND_FACTOR_SRC1_ALPHA,					// Renderer::Blend::SRC_1_ALPHA		 = 18
+			VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA		// Renderer::Blend::INV_SRC_1_ALPHA	 = 19
+		};
+		return MAPPING[static_cast<int>(blend) - 1];	// Lookout! The "Renderer::Blend"-values start with 1, not 0, there are also holes
+	}
+
+	VkBlendOp Mapping::getVulkanBlendOp(Renderer::BlendOp blendOp)
+	{
+		static const VkBlendOp MAPPING[] =
+		{
+			VK_BLEND_OP_ADD,				// Renderer::BlendOp::ADD
+			VK_BLEND_OP_SUBTRACT,			// Renderer::BlendOp::SUBTRACT
+			VK_BLEND_OP_REVERSE_SUBTRACT,	// Renderer::BlendOp::REV_SUBTRACT
+			VK_BLEND_OP_MIN,				// Renderer::BlendOp::MIN
+			VK_BLEND_OP_MAX					// Renderer::BlendOp::MAX
+		};
+		return MAPPING[static_cast<int>(blendOp) - 1];	// Lookout! The "Renderer::Blend"-values start with 1, not 0
+	}
+
 	VkCompareOp Mapping::getVulkanComparisonFunc(Renderer::ComparisonFunc comparisonFunc)
 	{
 		static const VkCompareOp MAPPING[] =

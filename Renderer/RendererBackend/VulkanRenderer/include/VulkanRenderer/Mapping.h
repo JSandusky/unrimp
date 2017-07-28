@@ -112,6 +112,33 @@ namespace VulkanRenderer
 		static VkSamplerAddressMode getVulkanTextureAddressMode(Renderer::TextureAddressMode textureAddressMode);
 
 		//[-------------------------------------------------------]
+		//[ Renderer::Blend                                       ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    "Renderer::Blend" to Vulkan blend factor
+		*
+		*  @param[in] blend
+		*    "Renderer::Blend" to map
+		*
+		*  @return
+		*    Vulkan blend factor
+		*/
+		static VkBlendFactor getVulkanBlendFactor(Renderer::Blend blend);
+
+		/**
+		*  @brief
+		*    "Renderer::BlendOp" to Vulkan blend operation
+		*
+		*  @param[in] blendOp
+		*    "Renderer::BlendOp" to map
+		*
+		*  @return
+		*    Vulkan blend operation
+		*/
+		static VkBlendOp getVulkanBlendOp(Renderer::BlendOp blendOp);
+
+		//[-------------------------------------------------------]
 		//[ Renderer::ComparisonFunc                              ]
 		//[-------------------------------------------------------]
 		/**
