@@ -291,6 +291,7 @@ namespace VulkanRenderer
 		mGraphicsRootSignature(nullptr),
 		mDefaultSamplerState(nullptr),
 		mInsideVulkanRenderPass(false),
+		mVkClearValues{ VkClearValue{0.0f, 0.0f, 0.0f, 1.0f}, VkClearValue{ 1.0f, 0 } },
 		mVertexArray(nullptr),
 		mMainSwapChain(nullptr),
 		mRenderTarget(nullptr)
@@ -720,101 +721,8 @@ namespace VulkanRenderer
 				// End Vulkan render pass if necessary
 				if (mInsideVulkanRenderPass)
 				{
-					// Implicit image layout change transition
 					vkCmdEndRenderPass(getVulkanContext().getVkCommandBuffer());
 					mInsideVulkanRenderPass = false;
-				}
-				else
-				{
-					// Explicit image layout change transition: Handle Vulkan image memory barrier
-					// -> Only needed when there's no Vulkan render pass which performs this implicit
-					switch (mRenderTarget->getResourceType())
-					{
-						case Renderer::ResourceType::SWAP_CHAIN:
-						{
-							// Vulkan image memory barrier: Writing to present transition
-							const SwapChain* swapChain = static_cast<SwapChain*>(mRenderTarget);
-							{ // Color
-								const VkImageSubresourceRange vkImageSubresourceRange =
-								{
-									VK_IMAGE_ASPECT_COLOR_BIT,	// aspectMask (VkImageAspectFlags)
-									0,							// baseMipLevel (uint32_t)
-									1,							// levelCount (uint32_t)
-									0,							// baseArrayLayer (uint32_t)
-									1							// layerCount (uint32_t)
-								};
-								const VkImageMemoryBarrier vkImageMemoryBarrier =
-								{
-									VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,	// sType (VkStructureType)
-									nullptr,								// pNext (const void*)
-									VK_ACCESS_TRANSFER_WRITE_BIT,			// srcAccessMask (VkAccessFlags)
-									VK_ACCESS_MEMORY_READ_BIT,				// dstAccessMask (VkAccessFlags)
-									VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,	// oldLayout (VkImageLayout)
-									VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,		// newLayout (VkImageLayout)
-									VK_QUEUE_FAMILY_IGNORED,				// srcQueueFamilyIndex (uint32_t)
-									VK_QUEUE_FAMILY_IGNORED,				// dstQueueFamilyIndex (uint32_t)
-									swapChain->getColorCurrentVkImage(),	// image (VkImage)
-									vkImageSubresourceRange					// subresourceRange (VkImageSubresourceRange)
-								};
-								vkCmdPipelineBarrier(getVulkanContext().getVkCommandBuffer(), VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 1, &vkImageMemoryBarrier);
-							}
-							{ // Depth
-								const VkImageSubresourceRange vkImageSubresourceRange =
-								{
-									VK_IMAGE_ASPECT_DEPTH_BIT,	// aspectMask (VkImageAspectFlags)
-									0,							// baseMipLevel (uint32_t)
-									1,							// levelCount (uint32_t)
-									0,							// baseArrayLayer (uint32_t)
-									1							// layerCount (uint32_t)
-								};
-								const VkImageMemoryBarrier vkImageMemoryBarrier =
-								{
-									VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,				// sType (VkStructureType)
-									nullptr,											// pNext (const void*)
-									VK_ACCESS_TRANSFER_WRITE_BIT,						// srcAccessMask (VkAccessFlags)
-									VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,		// dstAccessMask (VkAccessFlags)
-									VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,				// oldLayout (VkImageLayout)
-									VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,	// newLayout (VkImageLayout)
-									VK_QUEUE_FAMILY_IGNORED,							// srcQueueFamilyIndex (uint32_t)
-									VK_QUEUE_FAMILY_IGNORED,							// dstQueueFamilyIndex (uint32_t)
-									swapChain->getDepthVkImage(),						// image (VkImage)
-									vkImageSubresourceRange								// subresourceRange (VkImageSubresourceRange)
-								};
-								vkCmdPipelineBarrier(getVulkanContext().getVkCommandBuffer(), VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 1, &vkImageMemoryBarrier);
-							}
-							break;
-						}
-
-						case Renderer::ResourceType::FRAMEBUFFER:
-						{
-							// TODO(co) Implement me
-							break;
-						}
-
-						case Renderer::ResourceType::ROOT_SIGNATURE:
-						case Renderer::ResourceType::PROGRAM:
-						case Renderer::ResourceType::VERTEX_ARRAY:
-						case Renderer::ResourceType::INDEX_BUFFER:
-						case Renderer::ResourceType::VERTEX_BUFFER:
-						case Renderer::ResourceType::UNIFORM_BUFFER:
-						case Renderer::ResourceType::TEXTURE_BUFFER:
-						case Renderer::ResourceType::INDIRECT_BUFFER:
-						case Renderer::ResourceType::TEXTURE_1D:
-						case Renderer::ResourceType::TEXTURE_2D:
-						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-						case Renderer::ResourceType::TEXTURE_3D:
-						case Renderer::ResourceType::TEXTURE_CUBE:
-						case Renderer::ResourceType::PIPELINE_STATE:
-						case Renderer::ResourceType::SAMPLER_STATE:
-						case Renderer::ResourceType::VERTEX_SHADER:
-						case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-						case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-						case Renderer::ResourceType::GEOMETRY_SHADER:
-						case Renderer::ResourceType::FRAGMENT_SHADER:
-						default:
-							// Not handled in here
-							break;
-					}
 				}
 
 				// Release
@@ -831,95 +739,6 @@ namespace VulkanRenderer
 				// Set new render target and add a reference to it
 				mRenderTarget = renderTarget;
 				mRenderTarget->addReference();
-
-				// Handle Vulkan image memory barrier
-				switch (mRenderTarget->getResourceType())
-				{
-					case Renderer::ResourceType::SWAP_CHAIN:
-					{
-						// Vulkan image memory barrier: Present to writing transition
-						const SwapChain* swapChain = static_cast<SwapChain*>(mRenderTarget);
-						{ // Color
-							const VkImageSubresourceRange vkImageSubresourceRange =
-							{
-								VK_IMAGE_ASPECT_COLOR_BIT,	// aspectMask (VkImageAspectFlags)
-								0,							// baseMipLevel (uint32_t)
-								1,							// levelCount (uint32_t)
-								0,							// baseArrayLayer (uint32_t)
-								1							// layerCount (uint32_t)
-							};
-							const VkImageMemoryBarrier vkImageMemoryBarrier =
-							{
-								VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,	// sType (VkStructureType)
-								nullptr,								// pNext (const void*)
-								0,										// srcAccessMask (VkAccessFlags)
-								VK_ACCESS_TRANSFER_WRITE_BIT,			// dstAccessMask (VkAccessFlags)
-								VK_IMAGE_LAYOUT_UNDEFINED,				// oldLayout (VkImageLayout)
-								VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,	// newLayout (VkImageLayout)
-								VK_QUEUE_FAMILY_IGNORED,				// srcQueueFamilyIndex (uint32_t)
-								VK_QUEUE_FAMILY_IGNORED,				// dstQueueFamilyIndex (uint32_t)
-								swapChain->getColorCurrentVkImage(),	// image (VkImage)
-								vkImageSubresourceRange					// subresourceRange (VkImageSubresourceRange)
-							};
-							vkCmdPipelineBarrier(getVulkanContext().getVkCommandBuffer(), VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, nullptr, 0, nullptr, 1, &vkImageMemoryBarrier);
-						}
-						{ // Depth
-							const VkImageSubresourceRange vkImageSubresourceRange =
-							{
-								VK_IMAGE_ASPECT_DEPTH_BIT,	// aspectMask (VkImageAspectFlags)
-								0,							// baseMipLevel (uint32_t)
-								1,							// levelCount (uint32_t)
-								0,							// baseArrayLayer (uint32_t)
-								1							// layerCount (uint32_t)
-							};
-							const VkImageMemoryBarrier vkImageMemoryBarrier =
-							{
-								VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,				// sType (VkStructureType)
-								nullptr,											// pNext (const void*)
-								VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,		// srcAccessMask (VkAccessFlags)
-								VK_ACCESS_TRANSFER_WRITE_BIT,						// dstAccessMask (VkAccessFlags)
-								VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,	// oldLayout (VkImageLayout)
-								VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,				// newLayout (VkImageLayout)
-								VK_QUEUE_FAMILY_IGNORED,							// srcQueueFamilyIndex (uint32_t)
-								VK_QUEUE_FAMILY_IGNORED,							// dstQueueFamilyIndex (uint32_t)
-								swapChain->getDepthVkImage(),						// image (VkImage)
-								vkImageSubresourceRange								// subresourceRange (VkImageSubresourceRange)
-							};
-							vkCmdPipelineBarrier(getVulkanContext().getVkCommandBuffer(), VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, nullptr, 0, nullptr, 1, &vkImageMemoryBarrier);
-						}
-						break;
-					}
-
-					case Renderer::ResourceType::FRAMEBUFFER:
-					{
-						// TODO(co) Implement me
-						break;
-					}
-
-					case Renderer::ResourceType::ROOT_SIGNATURE:
-					case Renderer::ResourceType::PROGRAM:
-					case Renderer::ResourceType::VERTEX_ARRAY:
-					case Renderer::ResourceType::INDEX_BUFFER:
-					case Renderer::ResourceType::VERTEX_BUFFER:
-					case Renderer::ResourceType::UNIFORM_BUFFER:
-					case Renderer::ResourceType::TEXTURE_BUFFER:
-					case Renderer::ResourceType::INDIRECT_BUFFER:
-					case Renderer::ResourceType::TEXTURE_1D:
-					case Renderer::ResourceType::TEXTURE_2D:
-					case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-					case Renderer::ResourceType::TEXTURE_3D:
-					case Renderer::ResourceType::TEXTURE_CUBE:
-					case Renderer::ResourceType::PIPELINE_STATE:
-					case Renderer::ResourceType::SAMPLER_STATE:
-					case Renderer::ResourceType::VERTEX_SHADER:
-					case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-					case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-					case Renderer::ResourceType::GEOMETRY_SHADER:
-					case Renderer::ResourceType::FRAGMENT_SHADER:
-					default:
-						// Not handled in here
-						break;
-				}
 			}
 		}
 	}
@@ -937,116 +756,14 @@ namespace VulkanRenderer
 		// Clear color
 		if (flags & Renderer::ClearFlag::COLOR)
 		{
-			// Get the Vulkan image to clear
-			VkImage vkImage = VK_NULL_HANDLE;
-			switch (mRenderTarget->getResourceType())
-			{
-				case Renderer::ResourceType::SWAP_CHAIN:
-					vkImage = static_cast<SwapChain*>(mRenderTarget)->getColorCurrentVkImage();
-					break;
-
-				case Renderer::ResourceType::FRAMEBUFFER:
-					// TODO(co) Implement me
-					break;
-
-				case Renderer::ResourceType::ROOT_SIGNATURE:
-				case Renderer::ResourceType::PROGRAM:
-				case Renderer::ResourceType::VERTEX_ARRAY:
-				case Renderer::ResourceType::INDEX_BUFFER:
-				case Renderer::ResourceType::VERTEX_BUFFER:
-				case Renderer::ResourceType::UNIFORM_BUFFER:
-				case Renderer::ResourceType::TEXTURE_BUFFER:
-				case Renderer::ResourceType::INDIRECT_BUFFER:
-				case Renderer::ResourceType::TEXTURE_1D:
-				case Renderer::ResourceType::TEXTURE_2D:
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-				case Renderer::ResourceType::TEXTURE_3D:
-				case Renderer::ResourceType::TEXTURE_CUBE:
-				case Renderer::ResourceType::PIPELINE_STATE:
-				case Renderer::ResourceType::SAMPLER_STATE:
-				case Renderer::ResourceType::VERTEX_SHADER:
-				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-				case Renderer::ResourceType::GEOMETRY_SHADER:
-				case Renderer::ResourceType::FRAGMENT_SHADER:
-				default:
-					// Not handled in here
-					break;
-			}
-			assert(VK_NULL_HANDLE != vkImage && "Failed to get a Vulkan color image");
-
-			// Clear the Vulkan color image
-			const VkClearColorValue vkClearColorValue =
-			{
-				color[0], color[1], color[2], color[3]
-			};
-			const VkImageSubresourceRange vkImageSubresourceRange =
-			{
-				VK_IMAGE_ASPECT_COLOR_BIT,	// aspectMask (VkImageAspectFlags)
-				0,							// baseMipLevel (uint32_t)
-				1,							// levelCount (uint32_t)
-				0,							// baseArrayLayer (uint32_t)
-				1							// layerCount (uint32_t)
-			};
-			vkCmdClearColorImage(getVulkanContext().getVkCommandBuffer(), vkImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, &vkClearColorValue, 1, &vkImageSubresourceRange);
+			memcpy(mVkClearValues[0].color.float32, &color[0], sizeof(float) * 4);
 		}
 
 		// Clear depth stencil
 		if ((flags & Renderer::ClearFlag::DEPTH) || (flags & Renderer::ClearFlag::STENCIL))
 		{
-			// Get the Vulkan image to clear
-			VkImage vkImage = VK_NULL_HANDLE;
-			switch (mRenderTarget->getResourceType())
-			{
-				case Renderer::ResourceType::SWAP_CHAIN:
-					vkImage = static_cast<SwapChain*>(mRenderTarget)->getDepthVkImage();
-					break;
-
-				case Renderer::ResourceType::FRAMEBUFFER:
-					// TODO(co) Implement me
-					break;
-
-				case Renderer::ResourceType::ROOT_SIGNATURE:
-				case Renderer::ResourceType::PROGRAM:
-				case Renderer::ResourceType::VERTEX_ARRAY:
-				case Renderer::ResourceType::INDEX_BUFFER:
-				case Renderer::ResourceType::VERTEX_BUFFER:
-				case Renderer::ResourceType::UNIFORM_BUFFER:
-				case Renderer::ResourceType::TEXTURE_BUFFER:
-				case Renderer::ResourceType::INDIRECT_BUFFER:
-				case Renderer::ResourceType::TEXTURE_1D:
-				case Renderer::ResourceType::TEXTURE_2D:
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-				case Renderer::ResourceType::TEXTURE_3D:
-				case Renderer::ResourceType::TEXTURE_CUBE:
-				case Renderer::ResourceType::PIPELINE_STATE:
-				case Renderer::ResourceType::SAMPLER_STATE:
-				case Renderer::ResourceType::VERTEX_SHADER:
-				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-				case Renderer::ResourceType::GEOMETRY_SHADER:
-				case Renderer::ResourceType::FRAGMENT_SHADER:
-				default:
-					// Not handled in here
-					break;
-			}
-			assert(VK_NULL_HANDLE != vkImage && "Failed to get a Vulkan depth image");
-
-			// Clear the Vulkan depth image
-			const VkClearDepthStencilValue vkClearDepthStencilValue =
-			{
-				z,		// depth (float)
-				stencil	// stencil (uint32_t)
-			};
-			const VkImageSubresourceRange vkImageSubresourceRange =
-			{
-				VK_IMAGE_ASPECT_DEPTH_BIT,	// aspectMask (VkImageAspectFlags)
-				0,							// baseMipLevel (uint32_t)
-				1,							// levelCount (uint32_t)
-				0,							// baseArrayLayer (uint32_t)
-				1							// layerCount (uint32_t)
-			};
-			vkCmdClearDepthStencilImage(getVulkanContext().getVkCommandBuffer(), vkImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, &vkClearDepthStencilValue, 1, &vkImageSubresourceRange);
+			mVkClearValues[1].depthStencil.depth = z;
+			mVkClearValues[1].depthStencil.stencil = stencil;
 		}
 	}
 
@@ -1716,16 +1433,16 @@ namespace VulkanRenderer
 				// Begin Vulkan render pass
 				const VkRenderPassBeginInfo vkRenderPassBeginInfo =
 				{
-					VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,	// sType (VkStructureType)
-					nullptr,									// pNext (const void*)
-					swapChain->getVkRenderPass(),				// renderPass (VkRenderPass)
-					swapChain->getCurrentVkFramebuffer(),		// framebuffer (VkFramebuffer)
+					VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,		// sType (VkStructureType)
+					nullptr,										// pNext (const void*)
+					swapChain->getVkRenderPass(),					// renderPass (VkRenderPass)
+					swapChain->getCurrentVkFramebuffer(),			// framebuffer (VkFramebuffer)
 					{ // renderArea (VkRect2D)
-						{ 0, 0 },								// offset (VkOffset2D)
-						{ width, height }						// extent (VkExtent2D)
+						{ 0, 0 },									// offset (VkOffset2D)
+						{ width, height }							// extent (VkExtent2D)
 					},
-					0,											// clearValueCount (uint32_t)
-					nullptr										// pClearValues (const VkClearValue*)
+					static_cast<uint32_t>(mVkClearValues.size()),	// clearValueCount (uint32_t)
+					mVkClearValues.data()							// pClearValues (const VkClearValue*)
 				};
 				vkCmdBeginRenderPass(getVulkanContext().getVkCommandBuffer(), &vkRenderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 				break;

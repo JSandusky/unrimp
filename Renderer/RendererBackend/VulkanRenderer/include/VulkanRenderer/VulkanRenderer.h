@@ -31,6 +31,8 @@
 
 #include "VulkanRenderer/Vulkan.h"
 
+#include <array>
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -260,13 +262,14 @@ namespace VulkanRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		VulkanRuntimeLinking*	   mVulkanRuntimeLinking;	///< Vulkan runtime linking instance, always valid
-		VulkanContext*			   mVulkanContext;			///< Vulkan context instance, always valid
-		Extensions*				   mExtensions;				///< Extensions instance, always valid
-		Renderer::IShaderLanguage* mShaderLanguageGlsl;		///< GLSL shader language instance (we keep a reference to it), can be a null pointer
-		RootSignature*			   mGraphicsRootSignature;	///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
-		Renderer::ISamplerState*   mDefaultSamplerState;	///< Default rasterizer state (we keep a reference to it), can be a null pointer
-		bool					   mInsideVulkanRenderPass;	///< Some Vulkan commands like "vkCmdClearColorImage()" can only be executed outside a Vulkan render pass, so need to delay starting a Vulkan render pass
+		VulkanRuntimeLinking*		mVulkanRuntimeLinking;		///< Vulkan runtime linking instance, always valid
+		VulkanContext*				mVulkanContext;				///< Vulkan context instance, always valid
+		Extensions*					mExtensions;				///< Extensions instance, always valid
+		Renderer::IShaderLanguage*	mShaderLanguageGlsl;		///< GLSL shader language instance (we keep a reference to it), can be a null pointer
+		RootSignature*				mGraphicsRootSignature;		///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
+		Renderer::ISamplerState*	mDefaultSamplerState;		///< Default rasterizer state (we keep a reference to it), can be a null pointer
+		bool						mInsideVulkanRenderPass;	///< Some Vulkan commands like "vkCmdClearColorImage()" can only be executed outside a Vulkan render pass, so need to delay starting a Vulkan render pass
+		std::array<VkClearValue, 2>	mVkClearValues;
 		//[-------------------------------------------------------]
 		//[ Input-assembler (IA) stage                            ]
 		//[-------------------------------------------------------]
