@@ -506,6 +506,8 @@ namespace VulkanRenderer
 		IMPORT_FUNC(vkUnmapMemory);
 		IMPORT_FUNC(vkBindBufferMemory);
 		IMPORT_FUNC(vkDestroyBuffer);
+		IMPORT_FUNC(vkCreateBufferView);
+		IMPORT_FUNC(vkDestroyBufferView);
 		IMPORT_FUNC(vkAllocateMemory);
 		IMPORT_FUNC(vkFreeMemory);
 		IMPORT_FUNC(vkCreateRenderPass);

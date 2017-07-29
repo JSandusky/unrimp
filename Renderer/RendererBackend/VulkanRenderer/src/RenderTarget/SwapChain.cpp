@@ -771,7 +771,7 @@ namespace VulkanRenderer
 				swapChainBuffer.vkImage = vkImages[i];
 
 				// Create the Vulkan image view
-				Helper::createVkImageView(vulkanRenderer, swapChainBuffer.vkImage, VK_IMAGE_VIEW_TYPE_2D, 1, desiredVkSurfaceFormatKHR.format, VK_IMAGE_ASPECT_COLOR_BIT, swapChainBuffer.vkImageView);
+				Helper::createVkImageView(vulkanRenderer, swapChainBuffer.vkImage, VK_IMAGE_VIEW_TYPE_2D, 1, 1, desiredVkSurfaceFormatKHR.format, VK_IMAGE_ASPECT_COLOR_BIT, swapChainBuffer.vkImageView);
 
 				{ // Create the Vulkan framebuffer
 					const std::array<VkImageView, 2> vkImageViews =
@@ -886,8 +886,8 @@ namespace VulkanRenderer
 		const VulkanRenderer& vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
 		if (VK_FORMAT_UNDEFINED != mDepthVkFormat)
 		{
-			Helper::createAndAllocateVkImage(vulkanRenderer, VK_IMAGE_TYPE_2D, { vkExtent2D.width, vkExtent2D.height, 1 }, 1, mDepthVkFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, mDepthVkImage, mDepthVkDeviceMemory);
-			Helper::createVkImageView(vulkanRenderer, mDepthVkImage, VK_IMAGE_VIEW_TYPE_2D, 1, mDepthVkFormat, VK_IMAGE_ASPECT_DEPTH_BIT, mDepthVkImageView);
+			Helper::createAndAllocateVkImage(vulkanRenderer, 0, VK_IMAGE_TYPE_2D, { vkExtent2D.width, vkExtent2D.height, 1 }, 1, 1, mDepthVkFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, mDepthVkImage, mDepthVkDeviceMemory);
+			Helper::createVkImageView(vulkanRenderer, mDepthVkImage, VK_IMAGE_VIEW_TYPE_2D, 1, 1, mDepthVkFormat, VK_IMAGE_ASPECT_DEPTH_BIT, mDepthVkImageView);
 			Helper::transitionVkImageLayout(vulkanRenderer, mDepthVkImage, mDepthVkFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 		}
 		else

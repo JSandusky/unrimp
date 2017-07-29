@@ -177,7 +177,7 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer& render
 
 	{ // Create the root signature
 		Renderer::DescriptorRangeBuilder ranges[6];
-		ranges[0].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "PerInstanceDataMapVs", 0);
+		ranges[0].initialize(Renderer::DescriptorRangeType::UAV, 1, 0, "PerInstanceDataMapVs", 0);	// TODO(co) Usage of "UAV" is just a temporary hack
 		ranges[1].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockStaticVs", 0);
 		ranges[2].initialize(Renderer::DescriptorRangeType::UBV, 1, 1, "UniformBlockDynamicVs", 0);
 		ranges[3].initializeSampler(1, 0);

@@ -24,6 +24,12 @@
 #include "VulkanRenderer/Buffer/TextureBuffer.h"
 #include "VulkanRenderer/VulkanRenderer.h"
 #include "VulkanRenderer/VulkanContext.h"
+#include "VulkanRenderer/Mapping.h"
+#include "VulkanRenderer/Helper.h"
+
+#include <Renderer/ILog.h>
+
+#include <cstring>	// For "memset()" and "memcpy()"
 
 
 //[-------------------------------------------------------]
@@ -36,28 +42,65 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureBuffer::TextureBuffer(VulkanRenderer& vulkanRenderer, uint32_t, Renderer::TextureFormat::Enum, const void*, Renderer::BufferUsage) :
+	TextureBuffer::TextureBuffer(VulkanRenderer& vulkanRenderer, uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void* data, Renderer::BufferUsage) :
 		ITextureBuffer(vulkanRenderer),
-		mVkBuffer(VK_NULL_HANDLE)
+		mVkBuffer(VK_NULL_HANDLE),
+		mVkDeviceMemory(VK_NULL_HANDLE),
+		mVkBufferView(VK_NULL_HANDLE)
 	{
-		// TODO(co) Implement me
+		Helper::createAndAllocateVkBuffer(vulkanRenderer, VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, numberOfBytes, data, mVkBuffer, mVkDeviceMemory);
+
+		// Create Vulkan buffer view
+		const VkBufferViewCreateInfo vkBufferViewCreateInfo =
+		{
+			VK_STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO,	// sType (VkStructureType)
+			nullptr,									// pNext (const void*)
+			0,											// flags (VkBufferViewCreateFlags)
+			mVkBuffer,									// buffer (VkBuffer)
+			Mapping::getVulkanFormat(textureFormat),	// format (VkFormat)
+			0,											// offset (VkDeviceSize)
+			VK_WHOLE_SIZE								// range (VkDeviceSize)
+		};
+		if (vkCreateBufferView(vulkanRenderer.getVulkanContext().getVkDevice(), &vkBufferViewCreateInfo, nullptr, &mVkBufferView) != VK_SUCCESS)
+		{
+			RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create the Vulkan buffer view")
+		}
 	}
 
 	TextureBuffer::~TextureBuffer()
 	{
-		if (VK_NULL_HANDLE != mVkBuffer)
+		const VulkanRenderer& vulkanRenderer = static_cast<const VulkanRenderer&>(getRenderer());
+		if (VK_NULL_HANDLE != mVkBufferView)
 		{
-			vkDestroyBuffer(static_cast<const VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), mVkBuffer, nullptr);
+			vkDestroyBufferView(vulkanRenderer.getVulkanContext().getVkDevice(), mVkBufferView, nullptr);
 		}
+		Helper::destroyAndFreeVkBuffer(vulkanRenderer, mVkBuffer, mVkDeviceMemory);
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ITextureBuffer methods       ]
 	//[-------------------------------------------------------]
-	void TextureBuffer::copyDataFrom(uint32_t, const void*)
+	void TextureBuffer::copyDataFrom(uint32_t numberOfBytes, const void* data)
 	{
-		// TODO(co) Implement me
+		// Sanity checks
+		assert(0 != numberOfBytes);
+		assert(nullptr != data);
+		assert(VK_NULL_HANDLE != mVkDeviceMemory);
+
+		// Upload data
+		const VulkanRenderer& vulkanRenderer = static_cast<const VulkanRenderer&>(getRenderer());
+		const VkDevice vkDevice = vulkanRenderer.getVulkanContext().getVkDevice();
+		void* mappedData = nullptr;
+		if (vkMapMemory(vkDevice, mVkDeviceMemory, 0, numberOfBytes, 0, &mappedData) == VK_SUCCESS)
+		{
+			memcpy(mappedData, data, numberOfBytes);
+			vkUnmapMemory(vkDevice, mVkDeviceMemory);
+		}
+		else
+		{
+			RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to map the Vulkan memory")
+		}
 	}
 
 

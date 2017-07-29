@@ -158,6 +158,8 @@ void main()
 	position = MVP * position;
 
 	// Write out the final vertex data
+	// -> Compensate for different Vulkan coordinate system
+	position.y = -position.y;
 	gl_Position = position;
 	TexCoordVs.xy = TexCoord;
 	TexCoordVs.z = perInstancePositionTexture.w;

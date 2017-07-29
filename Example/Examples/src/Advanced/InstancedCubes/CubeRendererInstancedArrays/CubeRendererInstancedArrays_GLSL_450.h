@@ -45,9 +45,13 @@ layout(location = 4) in vec4 PerInstanceRotationScale;		// Rotation: Rotation qu
 															//    three components while recomputing the fourths component is be sufficient.
 
 // Attribute output
-layout(location = 0) out vec3 WorldPositionVs;
-layout(location = 1) out vec2 TexCoordVs;
-layout(location = 2) out vec3 NormalVs;
+layout(location = 0) out gl_PerVertex
+{
+	vec4 gl_Position;
+};
+layout(location = 1) out vec3 WorldPositionVs;
+layout(location = 2) out vec2 TexCoordVs;
+layout(location = 3) out vec3 NormalVs;
 
 // Uniforms
 layout(std140, binding = 0) uniform UniformBlockStaticVs
@@ -150,6 +154,8 @@ void main()
 	position = MVP * position;
 
 	// Write out the final vertex data
+	// -> Compensate for different Vulkan coordinate system
+	position.y = -position.y;
 	gl_Position = position;
 	TexCoordVs = vec2(TexCoord.x, TexCoord.y / 8.0 + 1.0 / 8.0 * PerInstancePositionTexture.w);	// Fixed build in number of textures
 	NormalVs = Normal;
@@ -165,9 +171,9 @@ fragmentShaderSourceCode = R"(#version 450 core	// OpenGL 4.5
 #extension GL_ARB_separate_shader_objects : enable	// The "GL_ARB_separate_shader_objects"-extension is required for Vulkan shaders to work
 
 // Attribute input/output
-layout(location = 0) in vec3 WorldPositionVs;
-layout(location = 1) in vec2 TexCoordVs;
-layout(location = 2) in vec3 NormalVs;
+layout(location = 1) in vec3 WorldPositionVs;
+layout(location = 2) in vec2 TexCoordVs;
+layout(location = 3) in vec3 NormalVs;
 layout(location = 0, index = 0) out vec4 Color0;
 
 // Uniforms

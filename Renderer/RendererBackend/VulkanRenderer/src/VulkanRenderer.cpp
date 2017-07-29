@@ -41,6 +41,7 @@
 #include "VulkanRenderer/Texture/Texture1D.h"
 #include "VulkanRenderer/Texture/Texture2D.h"
 #include "VulkanRenderer/Texture/Texture3D.h"
+#include "VulkanRenderer/Texture/TextureCube.h"
 #include "VulkanRenderer/Texture/Texture2DArray.h"
 #include "VulkanRenderer/State/SamplerState.h"
 #include "VulkanRenderer/State/PipelineState.h"
@@ -526,9 +527,31 @@ namespace VulkanRenderer
 					break;
 				}
 
+				case Renderer::ResourceType::TEXTURE_BUFFER:
+				{
+					const VkBufferView vkBufferView = static_cast<TextureBuffer*>(resource)->getVkBufferView();
+					const VkWriteDescriptorSet vkWriteDescriptorSet =
+					{
+						VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,			// sType (VkStructureType)
+						nullptr,										// pNext (const void*)
+						mGraphicsRootSignature->getVkDescriptorSet(),	// dstSet (VkDescriptorSet)
+						rootParameterIndex,								// dstBinding (uint32_t)
+						0,												// dstArrayElement (uint32_t)
+						1,												// descriptorCount (uint32_t)
+						VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER,		// descriptorType (VkDescriptorType)
+						nullptr,										// pImageInfo (const VkDescriptorImageInfo*)
+						nullptr,										// pBufferInfo (const VkDescriptorBufferInfo*)
+						&vkBufferView									// pTexelBufferView (const VkBufferView*)
+					};
+					vkUpdateDescriptorSets(getVulkanContext().getVkDevice(), 1, &vkWriteDescriptorSet, 0, nullptr);
+					break;
+				}
+
 				case Renderer::ResourceType::TEXTURE_1D:
 				case Renderer::ResourceType::TEXTURE_2D:
+				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 				case Renderer::ResourceType::TEXTURE_3D:
+				case Renderer::ResourceType::TEXTURE_CUBE:
 				{
 					// Evaluate the texture type and get the Vulkan image view
 					VkImageView vkImageView = VK_NULL_HANDLE;
@@ -542,8 +565,16 @@ namespace VulkanRenderer
 							vkImageView = static_cast<Texture2D*>(resource)->getVkImageView();
 							break;
 
+						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+							vkImageView = static_cast<Texture2DArray*>(resource)->getVkImageView();
+							break;
+
 						case Renderer::ResourceType::TEXTURE_3D:
 							vkImageView = static_cast<Texture3D*>(resource)->getVkImageView();
+							break;
+
+						case Renderer::ResourceType::TEXTURE_CUBE:
+							vkImageView = static_cast<TextureCube*>(resource)->getVkImageView();
 							break;
 
 						case Renderer::ResourceType::ROOT_SIGNATURE:
@@ -556,8 +587,6 @@ namespace VulkanRenderer
 						case Renderer::ResourceType::UNIFORM_BUFFER:
 						case Renderer::ResourceType::INDIRECT_BUFFER:
 						case Renderer::ResourceType::TEXTURE_BUFFER:
-						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-						case Renderer::ResourceType::TEXTURE_CUBE:
 						case Renderer::ResourceType::PIPELINE_STATE:
 						case Renderer::ResourceType::SAMPLER_STATE:
 						case Renderer::ResourceType::VERTEX_SHADER:
@@ -599,14 +628,6 @@ namespace VulkanRenderer
 						nullptr											// pTexelBufferView (const VkBufferView*)
 					};
 					vkUpdateDescriptorSets(getVulkanContext().getVkDevice(), 1, &vkWriteDescriptorSet, 0, nullptr);
-					break;
-				}
-
-				case Renderer::ResourceType::TEXTURE_BUFFER:
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-				case Renderer::ResourceType::TEXTURE_CUBE:
-				{
-					// TODO(co) Implement me
 					break;
 				}
 
@@ -1068,8 +1089,9 @@ namespace VulkanRenderer
 
 			case Renderer::ResourceType::TEXTURE_BUFFER:
 			{
-				// TODO(co) Implement me
-				return false;
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+				return (vkMapMemory(getVulkanContext().getVkDevice(), static_cast<TextureBuffer&>(resource).getVkDeviceMemory(), 0, VK_WHOLE_SIZE, 0, &mappedSubresource.data) == VK_SUCCESS);
 			}
 
 			case Renderer::ResourceType::INDIRECT_BUFFER:
@@ -1172,7 +1194,7 @@ namespace VulkanRenderer
 
 			case Renderer::ResourceType::TEXTURE_BUFFER:
 			{
-				// TODO(co) Implement me
+				vkUnmapMemory(getVulkanContext().getVkDevice(), static_cast<TextureBuffer&>(resource).getVkDeviceMemory());
 				break;
 			}
 
@@ -1376,7 +1398,7 @@ namespace VulkanRenderer
 			mCapabilities.instancedArrays = true;
 
 			// Draw instanced supported? (shader model 4 feature, build in shader variable holding the current instance ID)
-			mCapabilities.drawInstanced = true;
+			mCapabilities.drawInstanced = false;	// TODO(co) Set this to "true" after the descriptor sets related renderer interface update
 
 			// Maximum number of vertices per patch (usually 0 for no tessellation support or 32 which is the maximum number of supported vertices per patch)
 			mCapabilities.maximumNumberOfPatchVertices = 32;

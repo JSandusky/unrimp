@@ -145,6 +145,7 @@ namespace VulkanRenderer
 		VkDescriptorSetLayoutBindings vkDescriptorSetLayoutBindings;
 		uint32_t numberOfCombinedImageSamplers = 0;	// "VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER"
 		uint32_t numberOfUniformBuffers = 0;		// "VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER"
+		uint32_t numberOfUniformTexelBuffers = 0;	// "VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER"
 		if (numberOfParameters > 0)
 		{
 			// Fill the Vulkan descriptor set layout bindings
@@ -173,7 +174,10 @@ namespace VulkanRenderer
 								break;
 
 							case Renderer::DescriptorRangeType::UAV:
-								RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Vulkan renderer backend: \"Renderer::DescriptorRangeType::UAV\" is currently no supported descriptor range type")
+								// TODO(co) Usage of "UAV" is just a temporary hack
+								// RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Vulkan renderer backend: \"Renderer::DescriptorRangeType::UAV\" is currently no supported descriptor range type")
+								vkDescriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER;
+								++numberOfUniformTexelBuffers;
 								break;
 
 							case Renderer::DescriptorRangeType::UBV:
@@ -268,7 +272,7 @@ namespace VulkanRenderer
 		}
 
 		{ // Create the Vulkan descriptor pool
-			typedef std::array<VkDescriptorPoolSize, 2> VkDescriptorPoolSizes;
+			typedef std::array<VkDescriptorPoolSize, 3> VkDescriptorPoolSizes;
 			VkDescriptorPoolSizes vkDescriptorPoolSizes;
 			uint32_t numberOfVkDescriptorPoolSizes = 0;
 
@@ -287,6 +291,15 @@ namespace VulkanRenderer
 				VkDescriptorPoolSize& vkDescriptorPoolSize = vkDescriptorPoolSizes[numberOfVkDescriptorPoolSizes];
 				vkDescriptorPoolSize.type			 = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;	// type (VkDescriptorType)
 				vkDescriptorPoolSize.descriptorCount = numberOfUniformBuffers;				// descriptorCount (uint32_t)
+				++numberOfVkDescriptorPoolSizes;
+			}
+
+			// "VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER"
+			if (numberOfUniformTexelBuffers > 0)
+			{
+				VkDescriptorPoolSize& vkDescriptorPoolSize = vkDescriptorPoolSizes[numberOfVkDescriptorPoolSizes];
+				vkDescriptorPoolSize.type			 = VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER;	// type (VkDescriptorType)
+				vkDescriptorPoolSize.descriptorCount = numberOfUniformTexelBuffers;				// descriptorCount (uint32_t)
 				++numberOfVkDescriptorPoolSizes;
 			}
 
