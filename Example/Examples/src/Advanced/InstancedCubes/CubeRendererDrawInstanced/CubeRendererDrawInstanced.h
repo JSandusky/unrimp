@@ -82,7 +82,7 @@ public:
 //[-------------------------------------------------------]
 public:
 	virtual void setNumberOfCubes(uint32_t numberOfCubes) override;
-	virtual void draw(float globalTimer, float globalScale, float lightPositionX, float lightPositionY, float lightPositionZ) override;
+	virtual void fillCommandBuffer(float globalTimer, float globalScale, float lightPositionX, float lightPositionY, float lightPositionZ, Renderer::CommandBuffer& commandBuffer) override;
 
 
 //[-------------------------------------------------------]
@@ -91,30 +91,30 @@ public:
 private:
 	explicit CubeRendererDrawInstanced(const CubeRendererDrawInstanced& source) = delete;
 	CubeRendererDrawInstanced& operator =(const CubeRendererDrawInstanced& source) = delete;
-	void fillCommandBuffer();
+	void fillReusableCommandBuffer();
 
 
 //[-------------------------------------------------------]
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	Renderer::IRendererPtr		  mRenderer;							///< Renderer instance to use, always valid
-	Renderer::IBufferManagerPtr	  mBufferManager;						///< Buffer manager, can be a null pointer
-	Renderer::ITextureManagerPtr  mTextureManager;						///< Texture manager, can be a null pointer
-	uint32_t					  mNumberOfTextures;					///< Number of textures
-	uint32_t					  mSceneRadius;							///< Scene radius
-	uint32_t					  mMaximumNumberOfInstancesPerBatch;	///< Maximum number of instances per batch
-	Renderer::ITexture2DArrayPtr  mTexture2DArray;						///< 2D texture array, can be a null pointer
-	Renderer::ISamplerStatePtr	  mSamplerState;						///< Sampler state, can be a null pointer
-	Renderer::IRootSignaturePtr	  mRootSignature;						///< Root signature, can be a null pointer
-	Renderer::IUniformBufferPtr	  mUniformBufferStaticVs;				///< Static vertex shader uniform buffer object (UBO), can be a null pointer
-	Renderer::IUniformBufferPtr	  mUniformBufferDynamicVs;				///< Dynamic vertex shader uniform buffer object (UBO), can be a null pointer
-	Renderer::IUniformBufferPtr	  mUniformBufferDynamicFs;				///< Dynamic fragment shader uniform buffer object (UBO), can be a null pointer
-	Renderer::IProgramPtr		  mProgram;								///< Program, can be a null pointer
-	Renderer::IVertexArrayPtr	  mVertexArray;							///< Vertex array object (VAO), can be a null pointer
-	uint32_t					  mNumberOfBatches;						///< Current number of batches
-	BatchDrawInstanced			 *mBatches;								///< Batches, can be a null pointer
-	Renderer::CommandBuffer		  mCommandBuffer;						///< Command buffer
+	Renderer::IRendererPtr		 mRenderer;							///< Renderer instance to use, always valid
+	Renderer::IBufferManagerPtr	 mBufferManager;					///< Buffer manager, can be a null pointer
+	Renderer::ITextureManagerPtr mTextureManager;					///< Texture manager, can be a null pointer
+	uint32_t					 mNumberOfTextures;					///< Number of textures
+	uint32_t					 mSceneRadius;						///< Scene radius
+	uint32_t					 mMaximumNumberOfInstancesPerBatch;	///< Maximum number of instances per batch
+	Renderer::ITexture2DArrayPtr mTexture2DArray;					///< 2D texture array, can be a null pointer
+	Renderer::ISamplerStatePtr	 mSamplerState;						///< Sampler state, can be a null pointer
+	Renderer::IRootSignaturePtr	 mRootSignature;					///< Root signature, can be a null pointer
+	Renderer::IUniformBufferPtr	 mUniformBufferStaticVs;			///< Static vertex shader uniform buffer object (UBO), can be a null pointer
+	Renderer::IUniformBufferPtr	 mUniformBufferDynamicVs;			///< Dynamic vertex shader uniform buffer object (UBO), can be a null pointer
+	Renderer::IUniformBufferPtr	 mUniformBufferDynamicFs;			///< Dynamic fragment shader uniform buffer object (UBO), can be a null pointer
+	Renderer::IProgramPtr		 mProgram;							///< Program, can be a null pointer
+	Renderer::IVertexArrayPtr	 mVertexArray;						///< Vertex array object (VAO), can be a null pointer
+	uint32_t					 mNumberOfBatches;					///< Current number of batches
+	BatchDrawInstanced*			 mBatches;							///< Batches, can be a null pointer
+	Renderer::CommandBuffer		 mCommandBuffer;					///< Command buffer which is recorded once and then used multiple times
 
 
 };

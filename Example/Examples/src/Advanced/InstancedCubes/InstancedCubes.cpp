@@ -204,13 +204,10 @@ void InstancedCubes::onDraw()
 		// Clear the color buffer of the current render target with gray, do also clear the depth buffer
 		Renderer::Command::Clear::create(mCommandBuffer, Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
 
-		// Submit command buffer to the renderer backend
-		mCommandBuffer.submitAndClear(*renderer);
-
 		// Draw the cubes
 		if (nullptr != mCubeRenderer)
 		{
-			mCubeRenderer->draw(mGlobalTimer, mGlobalScale, sin(mGlobalTimer * 0.001f) * SCENE_RADIUS, sin(mGlobalTimer * 0.0005f) * SCENE_RADIUS, cos(mGlobalTimer * 0.0008f) * SCENE_RADIUS);
+			mCubeRenderer->fillCommandBuffer(mGlobalTimer, mGlobalScale, sin(mGlobalTimer * 0.001f) * SCENE_RADIUS, sin(mGlobalTimer * 0.0005f) * SCENE_RADIUS, cos(mGlobalTimer * 0.0008f) * SCENE_RADIUS, mCommandBuffer);
 		}
 
 		// Display statistics
@@ -246,10 +243,10 @@ void InstancedCubes::onDraw()
 					RendererRuntime::DebugGuiHelper::drawText("No cube renderer instance", 10.0f, 10.0f);
 				}
 				debugGuiManager.fillCommandBufferUsingFixedBuildInRendererConfiguration(mCommandBuffer);
-
-				// Submit command buffer to the renderer backend
-				mCommandBuffer.submitAndClear(*renderer);
 			}
 		}
+
+		// Submit command buffer to the renderer backend
+		mCommandBuffer.submitAndClear(*renderer);
 	}
 }

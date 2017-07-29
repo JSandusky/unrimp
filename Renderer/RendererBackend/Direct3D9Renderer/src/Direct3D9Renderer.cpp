@@ -85,6 +85,17 @@ namespace
 
 
 			//[-------------------------------------------------------]
+			//[ Command buffer                                        ]
+			//[-------------------------------------------------------]
+			void ExecuteCommandBuffer(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::ExecuteCommandBuffer* realData = static_cast<const Renderer::Command::ExecuteCommandBuffer*>(data);
+				assert(nullptr != realData->commandBufferToExecute);
+				renderer.submitCommandBuffer(*realData->commandBufferToExecute);
+			}
+
+
+			//[-------------------------------------------------------]
 			//[ Resource handling                                     ]
 			//[-------------------------------------------------------]
 			void CopyUniformBufferData(const void*, Renderer::IRenderer&)
@@ -237,6 +248,8 @@ namespace
 		//[-------------------------------------------------------]
 		static const Renderer::BackendDispatchFunction DISPATCH_FUNCTIONS[Renderer::CommandDispatchFunctionIndex::NumberOfFunctions] =
 		{
+			// Command buffer
+			&BackendDispatch::ExecuteCommandBuffer,
 			// Resource handling
 			&BackendDispatch::CopyUniformBufferData,
 			&BackendDispatch::CopyTextureBufferData,

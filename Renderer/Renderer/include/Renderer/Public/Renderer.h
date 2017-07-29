@@ -2708,7 +2708,8 @@ namespace Renderer
 	#define __RENDERER_COMMANDBUFFER_H__
 		enum CommandDispatchFunctionIndex : uint8_t
 		{
-			CopyUniformBufferData = 0,
+			ExecuteCommandBuffer = 0,
+			CopyUniformBufferData,
 			CopyTextureBufferData,
 			SetGraphicsRootSignature,
 			SetGraphicsRootDescriptorTable,
@@ -2868,6 +2869,19 @@ namespace Renderer
 		};
 		namespace Command
 		{
+			struct ExecuteCommandBuffer
+			{
+				inline static void create(CommandBuffer& commandBuffer, CommandBuffer* commandBufferToExecute)
+				{
+					assert(nullptr != commandBufferToExecute);
+					*commandBuffer.addCommand<ExecuteCommandBuffer>() = ExecuteCommandBuffer(commandBufferToExecute);
+				}
+				inline ExecuteCommandBuffer(CommandBuffer* _commandBufferToExecute) :
+					commandBufferToExecute(_commandBufferToExecute)
+				{}
+				CommandBuffer* commandBufferToExecute;
+				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::ExecuteCommandBuffer;
+			};
 			struct CopyUniformBufferData
 			{
 				inline static void create(CommandBuffer& commandBuffer, IUniformBuffer* uniformBuffer, uint32_t numberOfBytes, void* data)

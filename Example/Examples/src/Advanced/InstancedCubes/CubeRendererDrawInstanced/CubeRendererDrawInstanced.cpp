@@ -371,10 +371,10 @@ void CubeRendererDrawInstanced::setNumberOfCubes(uint32_t numberOfCubes)
 
 	// Since we're always submitting the same commands to the renderer, we can fill the command buffer once during initialization and then reuse it multiple times during runtime
 	mCommandBuffer.clear();
-	fillCommandBuffer();
+	fillReusableCommandBuffer();
 }
 
-void CubeRendererDrawInstanced::draw(float globalTimer, float globalScale, float lightPositionX, float lightPositionY, float lightPositionZ)
+void CubeRendererDrawInstanced::fillCommandBuffer(float globalTimer, float globalScale, float lightPositionX, float lightPositionY, float lightPositionZ, Renderer::CommandBuffer& commandBuffer)
 {
 	// Sanity checks
 	assert(nullptr != mProgram);
@@ -426,15 +426,15 @@ void CubeRendererDrawInstanced::draw(float globalTimer, float globalScale, float
 		// mProgram->setUniform4fv(mProgram->getUniformHandle("MVP"), MVP);
 	}
 
-	// Submit command buffer to the renderer backend
-	mCommandBuffer.submit(*mRenderer);
+	// Execute pre-recorded command buffer
+	Renderer::Command::ExecuteCommandBuffer::create(commandBuffer, &mCommandBuffer);
 }
 
 
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-void CubeRendererDrawInstanced::fillCommandBuffer()
+void CubeRendererDrawInstanced::fillReusableCommandBuffer()
 {
 	// Sanity checks
 	assert(nullptr != mRootSignature);

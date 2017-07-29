@@ -63,8 +63,10 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	enum CommandDispatchFunctionIndex : uint8_t
 	{
+		// Command buffer
+		ExecuteCommandBuffer = 0,
 		// Resource handling
-		CopyUniformBufferData = 0,
+		CopyUniformBufferData,
 		CopyTextureBufferData,
 		// Graphics root
 		SetGraphicsRootSignature,
@@ -401,6 +403,27 @@ namespace Renderer
 	namespace Command
 	{
 
+
+		//[-------------------------------------------------------]
+		//[ Command buffer                                        ]
+		//[-------------------------------------------------------]
+		struct ExecuteCommandBuffer
+		{
+			// Static methods
+			inline static void create(CommandBuffer& commandBuffer, CommandBuffer* commandBufferToExecute)
+			{
+				assert(nullptr != commandBufferToExecute);
+				*commandBuffer.addCommand<ExecuteCommandBuffer>() = ExecuteCommandBuffer(commandBufferToExecute);
+			}
+			// Constructor
+			inline ExecuteCommandBuffer(CommandBuffer* _commandBufferToExecute) :
+				commandBufferToExecute(_commandBufferToExecute)
+			{}
+			// Data
+			CommandBuffer* commandBufferToExecute;
+			// Static data
+			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::ExecuteCommandBuffer;
+		};
 
 		//[-------------------------------------------------------]
 		//[ Resource handling                                     ]

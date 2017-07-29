@@ -27,8 +27,8 @@
 
 #include <math.h>
 #include <string.h>
-#include <float.h> // For FLT_MAX
-#include <stdlib.h> // For rand()
+#include <float.h>	// For "FLT_MAX"
+#include <stdlib.h>	// For "rand()"
 
 
 //[-------------------------------------------------------]
@@ -384,10 +384,10 @@ void CubeRendererInstancedArrays::setNumberOfCubes(uint32_t numberOfCubes)
 
 	// Since we're always submitting the same commands to the renderer, we can fill the command buffer once during initialization and then reuse it multiple times during runtime
 	mCommandBuffer.clear();
-	fillCommandBuffer();
+	fillReusableCommandBuffer();
 }
 
-void CubeRendererInstancedArrays::draw(float globalTimer, float globalScale, float lightPositionX, float lightPositionY, float lightPositionZ)
+void CubeRendererInstancedArrays::fillCommandBuffer(float globalTimer, float globalScale, float lightPositionX, float lightPositionY, float lightPositionZ, Renderer::CommandBuffer& commandBuffer)
 {
 	// Sanity checks
 	assert(nullptr != mProgram);
@@ -439,15 +439,15 @@ void CubeRendererInstancedArrays::draw(float globalTimer, float globalScale, flo
 		// mProgram->setUniformMatrix4fv(mProgram->getUniformHandle("MVP"), MVP);
 	}
 
-	// Submit command buffer to the renderer backend
-	mCommandBuffer.submit(*mRenderer);
+	// Execute pre-recorded command buffer
+	Renderer::Command::ExecuteCommandBuffer::create(commandBuffer, &mCommandBuffer);
 }
 
 
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-void CubeRendererInstancedArrays::fillCommandBuffer()
+void CubeRendererInstancedArrays::fillReusableCommandBuffer()
 {
 	// Sanity checks
 	assert(nullptr != mRootSignature);
