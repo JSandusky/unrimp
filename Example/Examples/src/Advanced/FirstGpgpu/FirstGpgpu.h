@@ -146,15 +146,16 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	char						 mRendererName[32];	///< Case sensitive ASCII name of the renderer to instance
-	Renderer::RendererInstance*	 mRendererInstance;	///< Renderer instance, can be a null pointer
-	Renderer::IRendererPtr		 mRenderer;			///< Renderer instance, can be a null pointer
-	Renderer::IBufferManagerPtr	 mBufferManager;	///< Buffer manager, can be a null pointer
-	Renderer::ITextureManagerPtr mTextureManager;	///< Buffer manager, can be a null pointer
-	Renderer::ITexture2DPtr		 mTexture2D[2];		///< 2D texture, can be a null pointer
-	Renderer::IFramebufferPtr	 mFramebuffer[2];	///< Framebuffer object (FBO), can be a null pointer
-	Renderer::ISamplerStatePtr	 mSamplerState;		///< Sampler state, can be a null pointer
-	Renderer::IRootSignaturePtr	 mRootSignature;	///< Root signature, can be a null pointer
+	char						 mRendererName[32];		///< Case sensitive ASCII name of the renderer to instance
+	Renderer::RendererInstance*	 mRendererInstance;		///< Renderer instance, can be a null pointer
+	Renderer::IRendererPtr		 mRenderer;				///< Renderer instance, can be a null pointer
+	Renderer::IBufferManagerPtr	 mBufferManager;		///< Buffer manager, can be a null pointer
+	Renderer::ITextureManagerPtr mTextureManager;		///< Buffer manager, can be a null pointer
+	Renderer::IRootSignaturePtr	 mRootSignature;		///< Root signature, can be a null pointer
+	Renderer::ITexture2DPtr		 mTexture2D[2];			///< 2D texture, can be a null pointer
+	Renderer::IFramebufferPtr	 mFramebuffer[2];		///< Framebuffer object (FBO), can be a null pointer
+	Renderer::IResourceGroupPtr	 mTextureGroup;			///< Texture group, can be a null pointer
+	Renderer::IResourceGroupPtr	 mSamplerStateGroup;	///< Sampler state resource group, can be a null pointer
 	// Content generation
 	Renderer::IPipelineStatePtr  mPipelineStateContentGeneration;	///< Pipeline state object (PSO) for content generation, can be a null pointer
 	Renderer::IVertexArrayPtr    mVertexArrayContentGeneration;		///< Vertex array object (VAO) for content generation, can be a null pointer

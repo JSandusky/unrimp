@@ -127,9 +127,7 @@ namespace RendererRuntime
 			// -> Runtime hiccups would also be there without fallback pipeline state caches, so there's no real way around
 			// -> We must enforce fully loaded material blueprint resource state for this
 			materialBlueprintResource->enforceFullyLoaded();
-
-			// TODO(co) The Vulkan renderer backend is under construction
-			if (0 != strcmp(mRendererRuntime.getRenderer().getName(), "Vulkan"))
+			if (mCreateInitialPipelineStateCaches)
 			{
 				materialBlueprintResource->createPipelineStateCaches(true);
 			}
@@ -146,6 +144,18 @@ namespace RendererRuntime
 			mMaterialBlueprintResourceListener->onShutdown(mRendererRuntime);
 			mMaterialBlueprintResourceListener = (nullptr != materialBlueprintResourceListener) ? materialBlueprintResourceListener : &::detail::defaultMaterialBlueprintResourceListener;
 			mMaterialBlueprintResourceListener->onStartup(mRendererRuntime);
+		}
+	}
+
+	void MaterialBlueprintResourceManager::onPreCommandBufferExecution()
+	{
+		if (nullptr != mInstanceBufferManager)
+		{
+			mInstanceBufferManager->onPreCommandBufferExecution();
+		}
+		if (nullptr != mIndirectBufferManager)
+		{
+			mIndirectBufferManager->onPreCommandBufferExecution();
 		}
 	}
 
@@ -243,6 +253,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	MaterialBlueprintResourceManager::MaterialBlueprintResourceManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime),
+		mCreateInitialPipelineStateCaches(true),
 		mMaterialBlueprintResourceListener(&::detail::defaultMaterialBlueprintResourceListener),
 		mDefaultTextureFilterMode(Renderer::FilterMode::MIN_MAG_MIP_LINEAR),
 		mDefaultMaximumTextureAnisotropy(1),

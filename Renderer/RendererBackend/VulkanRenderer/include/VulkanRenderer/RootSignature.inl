@@ -33,19 +33,14 @@ namespace VulkanRenderer
 		return mRootSignature;
 	}
 
-	inline VkDescriptorSetLayout RootSignature::getVkDescriptorSetLayout() const
-	{
-		return mVkDescriptorSetLayout;
-	}
-
 	inline VkPipelineLayout RootSignature::getVkPipelineLayout() const
 	{
 		return mVkPipelineLayout;
 	}
 
-	inline VkDescriptorSet RootSignature::getVkDescriptorSet() const
+	inline VkDescriptorPool RootSignature::getVkDescriptorPool() const
 	{
-		return mVkDescriptorSet;
+		return mVkDescriptorPool;
 	}
 
 

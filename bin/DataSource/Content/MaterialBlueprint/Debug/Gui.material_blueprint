@@ -36,10 +36,10 @@
 						{
 							"RangeType": "UBV",
 							"BaseShaderRegister": "0",
-							"BaseShaderRegisterName": "PassUniformBuffer"
+							"BaseShaderRegisterName": "PassUniformBuffer",
+							"ShaderVisibility": "VERTEX"
 						}
-					},
-					"ShaderVisibility": "VERTEX"
+					}
 				},
 				"1":
 				{
@@ -49,10 +49,10 @@
 						"0":
 						{
 							"RangeType": "SAMPLER",
-							"BaseShaderRegister": "0"
+							"BaseShaderRegister": "0",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"2":
 				{
@@ -62,10 +62,10 @@
 						"0":
 						{
 							"RangeType": "SAMPLER",
-							"BaseShaderRegister": "1"
+							"BaseShaderRegister": "1",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"3":
 				{
@@ -77,10 +77,10 @@
 							"RangeType": "SRV",
 							"BaseShaderRegister": "0",
 							"BaseShaderRegisterName": "GlyphMap",
-							"SamplerRootParameterIndex": "1"
+							"SamplerRootParameterIndex": "1",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"4":
 				{
@@ -92,10 +92,10 @@
 							"RangeType": "SRV",
 							"BaseShaderRegister": "1",
 							"BaseShaderRegisterName": "BackgroundMap",
-							"SamplerRootParameterIndex": "2"
+							"SamplerRootParameterIndex": "2",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				}
 			}
 		},

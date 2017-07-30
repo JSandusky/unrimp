@@ -229,12 +229,12 @@ void VertexBuffer::onInitialization()
 void VertexBuffer::onDeinitialization()
 {
 	// Release the used resources
-	mCommandBuffer.clear();
-	mVertexArrayVBOs = nullptr;
 	mPipelineStateVBOs = nullptr;
+	mVertexArrayVBOs = nullptr;
 	mVertexArrayVBO = nullptr;
 	mPipelineStateVBO = nullptr;
 	mRootSignature = nullptr;
+	mCommandBuffer.clear();
 	mBufferManager = nullptr;
 
 	// Call the base implementation
@@ -259,12 +259,12 @@ void VertexBuffer::onDraw()
 void VertexBuffer::fillCommandBuffer()
 {
 	// Sanity checks
+	assert(mCommandBuffer.isEmpty());
 	assert(nullptr != mRootSignature);
 	assert(nullptr != mPipelineStateVBO);
 	assert(nullptr != mVertexArrayVBO);
 	assert(nullptr != mPipelineStateVBOs);
 	assert(nullptr != mVertexArrayVBOs);
-	assert(mCommandBuffer.isEmpty());
 
 	// Begin debug event
 	COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(mCommandBuffer)

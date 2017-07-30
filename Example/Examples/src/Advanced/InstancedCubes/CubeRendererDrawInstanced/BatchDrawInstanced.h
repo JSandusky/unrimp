@@ -78,7 +78,7 @@ public:
 	*  @param[in] sceneRadius
 	*    Scene radius
 	*/
-	void initialize(Renderer::IBufferManager& bufferManager, Renderer::IRootSignature &rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IProgram &program, uint32_t numberOfCubeInstances, bool alphaBlending, uint32_t numberOfTextures, uint32_t sceneRadius);
+	void initialize(Renderer::IBufferManager& bufferManager, Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IProgram &program, uint32_t numberOfCubeInstances, bool alphaBlending, uint32_t numberOfTextures, uint32_t sceneRadius);
 
 	/**
 	*  @brief
@@ -102,10 +102,10 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	Renderer::IRendererPtr		mRenderer;						///< Owner renderer instance, can be a null pointer
-	uint32_t					mNumberOfCubeInstances;			///< Number of cube instances
-	Renderer::ITextureBufferPtr	mTextureBufferPerInstanceData;	///< Texture buffer with per instance data (used via vertex texture fetch), each entry can contain a null pointer
-	Renderer::IPipelineStatePtr	mPipelineState;					///< Pipeline state object (PSO), can be a null pointer
+	Renderer::IRendererPtr		mRenderer;				///< Owner renderer instance, can be a null pointer
+	uint32_t					mNumberOfCubeInstances;	///< Number of cube instances
+	Renderer::IResourceGroupPtr	mTextureBufferGroup;	///< Texture buffer group with per instance data (used via vertex texture fetch), each entry can contain a null pointer
+	Renderer::IPipelineStatePtr	mPipelineState;			///< Pipeline state object (PSO), can be a null pointer
 
 
 };

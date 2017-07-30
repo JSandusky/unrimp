@@ -202,6 +202,9 @@
     <ClInclude Include="include\Renderer\ILog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Renderer\IResourceGroup.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Renderer\IResource.inl">
@@ -339,6 +342,9 @@
       <Filter>Header Files\Public</Filter>
     </None>
     <None Include="include\Renderer\ILog.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\IResourceGroup.inl">
       <Filter>Header Files</Filter>
     </None>
   </ItemGroup>

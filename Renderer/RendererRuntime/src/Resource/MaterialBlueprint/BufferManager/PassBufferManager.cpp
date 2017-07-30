@@ -186,7 +186,9 @@ namespace RendererRuntime
 			const MaterialBlueprintResource::UniformBuffer* passUniformBuffer = mMaterialBlueprintResource.getPassUniformBuffer();
 			if (nullptr != passUniformBuffer)
 			{
-				Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, passUniformBuffer->rootParameterIndex, mUniformBuffers[mCurrentUniformBufferIndex - 1]);
+				// TODO(co) Port to resource group usage
+				std::ignore = commandBuffer;
+				// Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, passUniformBuffer->rootParameterIndex, mUniformBuffers[mCurrentUniformBufferIndex - 1]);
 			}
 		}
 	}

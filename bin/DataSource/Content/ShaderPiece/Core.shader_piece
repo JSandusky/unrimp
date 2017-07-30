@@ -183,8 +183,8 @@
 		#define MAIN_BEGIN void main() {
 		#define MAIN_BEGIN_NO_OUTPUT void main() {
 			#define MAIN_INPUT(name) name
-			#define MAIN_INPUT_VERTEX_ID gl_VertexID
-			#define MAIN_INPUT_DRAW_ID (drawId + uint(gl_InstanceID))
+			#define MAIN_INPUT_VERTEX_ID gl_VertexIndex						// "gl_VertexIndex" is equivalent to OpenGL's "gl_VertexID"
+			#define MAIN_INPUT_DRAW_ID (drawId + uint(gl_InstanceIndex))	// "gl_InstanceIndex" is not equivalent to OpenGL's "gl_InstanceID" because "gl_InstanceID" does not include the "baseInstance"-parameter
 			#define MAIN_OUTPUT(name) name
 			#define MAIN_OUTPUT_POSITION gl_Position
 			#define MAIN_OUTPUT_COLOR(semanticIndex) OutputColor##semanticIndex

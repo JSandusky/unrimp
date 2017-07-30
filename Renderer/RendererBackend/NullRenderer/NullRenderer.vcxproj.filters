@@ -39,6 +39,9 @@
     <None Include="include\NullRenderer\Texture\TextureManager.inl">
       <Filter>Source Files\Texture</Filter>
     </None>
+    <None Include="include\NullRenderer\ResourceGroup.inl">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\NullRenderer\Shader\GeometryShader.h">
@@ -122,6 +125,9 @@
     <ClInclude Include="include\NullRenderer\Texture\Texture1D.h">
       <Filter>Source Files\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="include\NullRenderer\ResourceGroup.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Shader\GeometryShader.cpp">
@@ -201,6 +207,9 @@
     </ClCompile>
     <ClCompile Include="src\Texture\Texture1D.cpp">
       <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ResourceGroup.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

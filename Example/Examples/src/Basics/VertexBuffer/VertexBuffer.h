@@ -88,15 +88,15 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	Renderer::IBufferManagerPtr mBufferManager;		///< Buffer manager, can be a null pointer
-	Renderer::IRootSignaturePtr mRootSignature;		///< Root signature, can be a null pointer
+	Renderer::IBufferManagerPtr	mBufferManager;		///< Buffer manager, can be a null pointer
 	Renderer::CommandBuffer		mCommandBuffer;		///< Command buffer
+	Renderer::IRootSignaturePtr	mRootSignature;		///< Root signature, can be a null pointer
 	// Using one vertex buffer object (VBO)
-	Renderer::IPipelineStatePtr mPipelineStateVBO;	///< Pipeline state object (PSO), can be a null pointer
-	Renderer::IVertexArrayPtr   mVertexArrayVBO;	///< Vertex array object (VAO), can be a null pointer
+	Renderer::IPipelineStatePtr	mPipelineStateVBO;	///< Pipeline state object (PSO), can be a null pointer
+	Renderer::IVertexArrayPtr	mVertexArrayVBO;	///< Vertex array object (VAO), can be a null pointer
 	// Using multiple vertex buffer objects (VBO)
-	Renderer::IVertexArrayPtr   mVertexArrayVBOs;	///< Vertex array object (VAO), can be a null pointer
-	Renderer::IPipelineStatePtr mPipelineStateVBOs;	///< Pipeline state object (PSO), can be a null pointer
+	Renderer::IVertexArrayPtr	mVertexArrayVBOs;	///< Vertex array object (VAO), can be a null pointer
+	Renderer::IPipelineStatePtr	mPipelineStateVBOs;	///< Pipeline state object (PSO), can be a null pointer
 
 
 };

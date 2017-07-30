@@ -91,6 +91,7 @@
     <ClInclude Include="include\VulkanRenderer\Mapping.h" />
     <ClInclude Include="include\VulkanRenderer\RenderTarget\Framebuffer.h" />
     <ClInclude Include="include\VulkanRenderer\RenderTarget\SwapChain.h" />
+    <ClInclude Include="include\VulkanRenderer\ResourceGroup.h" />
     <ClInclude Include="include\VulkanRenderer\State\PipelineState.h" />
     <ClInclude Include="include\VulkanRenderer\State\SamplerState.h" />
     <ClInclude Include="include\VulkanRenderer\Texture\Texture1D.h" />
@@ -496,6 +497,7 @@
     <ClCompile Include="src\Mapping.cpp" />
     <ClCompile Include="src\RenderTarget\Framebuffer.cpp" />
     <ClCompile Include="src\RenderTarget\SwapChain.cpp" />
+    <ClCompile Include="src\ResourceGroup.cpp" />
     <ClCompile Include="src\State\PipelineState.cpp" />
     <ClCompile Include="src\State\SamplerState.cpp" />
     <ClCompile Include="src\Texture\Texture1D.cpp" />
@@ -530,6 +532,7 @@
     <None Include="include\VulkanRenderer\Buffer\VertexBuffer.inl" />
     <None Include="include\VulkanRenderer\RenderTarget\Framebuffer.inl" />
     <None Include="include\VulkanRenderer\RenderTarget\SwapChain.inl" />
+    <None Include="include\VulkanRenderer\ResourceGroup.inl" />
     <None Include="include\VulkanRenderer\State\PipelineState.inl" />
     <None Include="include\VulkanRenderer\State\SamplerState.inl" />
     <None Include="include\VulkanRenderer\Texture\Texture1D.inl" />

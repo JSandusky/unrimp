@@ -88,11 +88,11 @@ void FirstIndirectBuffer::onDeinitialization()
 void FirstIndirectBuffer::fillCommandBuffer()
 {
 	// Sanity checks
+	assert(mCommandBuffer.isEmpty());
 	assert(nullptr != mRootSignature);
 	assert(nullptr != mPipelineState);
 	assert(nullptr != mVertexArray);
 	assert(nullptr != mIndirectBuffer);
-	assert(mCommandBuffer.isEmpty());
 
 	// Begin debug event
 	COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(mCommandBuffer)

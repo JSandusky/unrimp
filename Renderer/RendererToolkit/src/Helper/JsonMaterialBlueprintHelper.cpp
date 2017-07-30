@@ -554,8 +554,6 @@ namespace RendererToolkit
 						Renderer::RootParameterData rootParameter;
 						rootParameter.parameterType = Renderer::RootParameterType::DESCRIPTOR_TABLE;
 						rootParameter.numberOfDescriptorRanges = rapidJsonValueDescriptorRanges.MemberCount();
-						rootParameter.shaderVisibility = Renderer::ShaderVisibility::ALL;
-						optionalShaderVisibilityProperty(rapidJsonValueRootParameter, "ShaderVisibility", rootParameter.shaderVisibility);
 						rootParameters.push_back(rootParameter);
 					}
 
@@ -611,6 +609,10 @@ namespace RendererToolkit
 						// Optional sampler root parameter index
 						descriptorRange.samplerRootParameterIndex = 0;
 						JsonHelper::optionalIntegerProperty(rapidJsonValueDescriptorRange, "SamplerRootParameterIndex", descriptorRange.samplerRootParameterIndex);
+
+						// Optional shader visibility
+						descriptorRange.shaderVisibility = Renderer::ShaderVisibility::ALL;
+						optionalShaderVisibilityProperty(rapidJsonValueDescriptorRange, "ShaderVisibility", descriptorRange.shaderVisibility);
 
 						// Collect the descriptor range
 						descriptorRanges.push_back(descriptorRange);

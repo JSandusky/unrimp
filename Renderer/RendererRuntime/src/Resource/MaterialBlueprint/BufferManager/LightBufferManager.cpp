@@ -112,7 +112,10 @@ namespace RendererRuntime
 		const MaterialBlueprintResource::TextureBuffer* lightTextureBuffer = materialBlueprintResource.getLightTextureBuffer();
 		if (nullptr != lightTextureBuffer)
 		{
-			Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, lightTextureBuffer->rootParameterIndex, mTextureBuffer);
+			// TODO(co) Port to resource group usage
+			std::ignore = lightTextureBuffer;
+			std::ignore = commandBuffer;
+			// Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, lightTextureBuffer->rootParameterIndex, mTextureBuffer);
 		}
 	}
 

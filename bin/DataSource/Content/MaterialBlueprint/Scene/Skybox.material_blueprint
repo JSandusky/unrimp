@@ -58,10 +58,10 @@
 						"0":
 						{
 							"RangeType": "SAMPLER",
-							"BaseShaderRegister": "0"
+							"BaseShaderRegister": "0",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"2":
 				{
@@ -73,10 +73,10 @@
 							"RangeType": "SRV",
 							"BaseShaderRegister": "0",
 							"BaseShaderRegisterName": "EnvironmentCubeMap",
-							"SamplerRootParameterIndex": "1"
+							"SamplerRootParameterIndex": "1",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				}
 			}
 		},

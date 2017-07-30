@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Direct3D11Renderer/RootSignature.h"
+#include "Direct3D11Renderer/ResourceGroup.h"
 #include "Direct3D11Renderer/Direct3D11Renderer.h"
 
 #include <memory.h>
@@ -89,6 +90,21 @@ namespace Direct3D11Renderer
 			delete [] mRootSignature.parameters;
 		}
 		delete [] mRootSignature.staticSamplers;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IRootSignature methods       ]
+	//[-------------------------------------------------------]
+	Renderer::IResourceGroup* RootSignature::createResourceGroup(uint32_t rootParameterIndex, uint32_t numberOfResources, Renderer::IResource** resources)
+	{
+		// Sanity checks
+		assert(rootParameterIndex < mRootSignature.numberOfParameters && "The root parameter index is out-of-bounds");
+		assert(numberOfResources > 0 && "The number of resources must not be zero");
+		assert(nullptr != resources && "The resource pointers must be valid");
+
+		// Create resource group
+		return new ResourceGroup(getRenderer(), rootParameterIndex, numberOfResources, resources);
 	}
 
 

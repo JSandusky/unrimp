@@ -43,6 +43,7 @@
     <None Include="include\Direct3D9Renderer\Direct3D9Renderer.inl" />
     <None Include="include\Direct3D9Renderer\RenderTarget\Framebuffer.inl" />
     <None Include="include\Direct3D9Renderer\RenderTarget\SwapChain.inl" />
+    <None Include="include\Direct3D9Renderer\ResourceGroup.inl" />
     <None Include="include\Direct3D9Renderer\RootSignature.inl" />
     <None Include="include\Direct3D9Renderer\Shader\FragmentShaderHlsl.inl" />
     <None Include="include\Direct3D9Renderer\Shader\ProgramHlsl.inl" />
@@ -71,6 +72,7 @@
     <ClInclude Include="include\Direct3D9Renderer\Mapping.h" />
     <ClInclude Include="include\Direct3D9Renderer\RenderTarget\Framebuffer.h" />
     <ClInclude Include="include\Direct3D9Renderer\RenderTarget\SwapChain.h" />
+    <ClInclude Include="include\Direct3D9Renderer\ResourceGroup.h" />
     <ClInclude Include="include\Direct3D9Renderer\RootSignature.h" />
     <ClInclude Include="include\Direct3D9Renderer\Shader\FragmentShaderHlsl.h" />
     <ClInclude Include="include\Direct3D9Renderer\Shader\ProgramHlsl.h" />
@@ -100,6 +102,7 @@
     <ClCompile Include="src\Mapping.cpp" />
     <ClCompile Include="src\RenderTarget\Framebuffer.cpp" />
     <ClCompile Include="src\RenderTarget\SwapChain.cpp" />
+    <ClCompile Include="src\ResourceGroup.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\Shader\FragmentShaderHlsl.cpp" />
     <ClCompile Include="src\Shader\ProgramHlsl.cpp" />

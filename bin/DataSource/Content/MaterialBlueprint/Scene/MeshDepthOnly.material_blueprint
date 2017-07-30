@@ -71,10 +71,10 @@
 						{
 							"RangeType": "UBV",
 							"BaseShaderRegister": "0",
-							"BaseShaderRegisterName": "PassUniformBuffer"
+							"BaseShaderRegisterName": "PassUniformBuffer",
+							"ShaderVisibility": "VERTEX"
 						}
-					},
-					"ShaderVisibility": "VERTEX"
+					}
 				},
 				"1":
 				{
@@ -85,10 +85,10 @@
 						{
 							"RangeType": "UBV",
 							"BaseShaderRegister": "1",
-							"BaseShaderRegisterName": "MaterialUniformBuffer"
+							"BaseShaderRegisterName": "MaterialUniformBuffer",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"2":
 				{
@@ -99,10 +99,10 @@
 						{
 							"RangeType": "UBV",
 							"BaseShaderRegister": "2",
-							"BaseShaderRegisterName": "InstanceUniformBuffer"
+							"BaseShaderRegisterName": "InstanceUniformBuffer",
+							"ShaderVisibility": "VERTEX"
 						}
-					},
-					"ShaderVisibility": "VERTEX"
+					}
 				},
 				"3":
 				{
@@ -113,10 +113,10 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "0",
-							"BaseShaderRegisterName": "InstanceTextureBuffer"
+							"BaseShaderRegisterName": "InstanceTextureBuffer",
+							"ShaderVisibility": "VERTEX"
 						}
-					},
-					"ShaderVisibility": "VERTEX"
+					}
 				},
 				"4":
 				{
@@ -126,10 +126,10 @@
 						"0":
 						{
 							"RangeType": "SAMPLER",
-							"BaseShaderRegister": "0"
+							"BaseShaderRegister": "0",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"5":
 				{
@@ -141,10 +141,10 @@
 							"RangeType": "SRV",
 							"BaseShaderRegister": "1",
 							"BaseShaderRegisterName": "AlphaMap",
-							"SamplerRootParameterIndex": "4"
+							"SamplerRootParameterIndex": "4",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				}
 			}
 		},

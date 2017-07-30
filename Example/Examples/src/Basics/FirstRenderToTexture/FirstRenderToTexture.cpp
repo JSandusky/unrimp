@@ -59,32 +59,14 @@ void FirstRenderToTexture::onInitialization()
 		mBufferManager = renderer->createBufferManager();
 		mTextureManager = renderer->createTextureManager();
 
-		// Create the texture instance, but without providing texture data (we use the texture as render target)
-		// -> Use the "Renderer::TextureFlag::RENDER_TARGET"-flag to mark this texture as a render target
-		// -> Required for Direct3D 9, Direct3D 10, Direct3D 11 and Direct3D 12
-		// -> Not required for OpenGL and OpenGL ES 2
-		// -> The optimized texture clear value is a Direct3D 12 related option
-		Renderer::ITexture *texture2D = mTexture2D = mTextureManager->createTexture2D(16, 16, Renderer::TextureFormat::R8G8B8A8, nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT, 1, reinterpret_cast<const Renderer::OptimizedTextureClearValue*>(&Color4::GREEN));
-
-		{ // Create the framebuffer object (FBO) instance
-			Renderer::FramebufferAttachment colorFramebufferAttachment(texture2D);
-			mFramebuffer = renderer->createFramebuffer(1, &colorFramebufferAttachment);
-		}
-
-		{ // Create sampler state: We don't use mipmaps
-			Renderer::SamplerState samplerState = Renderer::ISamplerState::getDefaultSamplerState();
-			samplerState.maxLOD = 0.0f;
-			mSamplerState = renderer->createSamplerState(samplerState);
-		}
-
 		{ // Create the root signature
 			Renderer::DescriptorRangeBuilder ranges[2];
-			ranges[0].initializeSampler(1, 0);
-			ranges[1].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap", 0);
+			ranges[0].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap", 1, Renderer::ShaderVisibility::FRAGMENT);
+			ranges[1].initializeSampler(1, 0, Renderer::ShaderVisibility::FRAGMENT);
 
 			Renderer::RootParameterBuilder rootParameters[2];
-			rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::FRAGMENT);
-			rootParameters[1].initializeAsDescriptorTable(1, &ranges[1], Renderer::ShaderVisibility::FRAGMENT);
+			rootParameters[0].initializeAsDescriptorTable(1, &ranges[0]);
+			rootParameters[1].initializeAsDescriptorTable(1, &ranges[1]);
 
 			// Setup
 			Renderer::RootSignatureBuilder rootSignature;
@@ -92,6 +74,32 @@ void FirstRenderToTexture::onInitialization()
 
 			// Create the instance
 			mRootSignature = renderer->createRootSignature(rootSignature);
+		}
+
+		{ // Create sampler state and wrap it into a resource group instance
+			Renderer::SamplerState samplerState = Renderer::ISamplerState::getDefaultSamplerState();
+			samplerState.maxLOD = 0.0f;
+			Renderer::IResource* resource = renderer->createSamplerState(samplerState);
+			mSamplerStateGroup = mRootSignature->createResourceGroup(1, 1, &resource);
+		}
+
+		{ // Texture resource related
+			// Create the texture instance, but without providing texture data (we use the texture as render target)
+			// -> Use the "Renderer::TextureFlag::RENDER_TARGET"-flag to mark this texture as a render target
+			// -> Required for Direct3D 9, Direct3D 10, Direct3D 11 and Direct3D 12
+			// -> Not required for OpenGL and OpenGL ES 2
+			// -> The optimized texture clear value is a Direct3D 12 related option
+			Renderer::ITexture* texture2D = mTextureManager->createTexture2D(16, 16, Renderer::TextureFormat::R8G8B8A8, nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT, 1, reinterpret_cast<const Renderer::OptimizedTextureClearValue*>(&Color4::GREEN));
+
+			{ // Create texture group
+				Renderer::IResource* resource = texture2D;
+				mTextureGroup = mRootSignature->createResourceGroup(0, 1, &resource);
+			}
+
+			{ // Create the framebuffer object (FBO) instance
+				Renderer::FramebufferAttachment colorFramebufferAttachment(texture2D);
+				mFramebuffer = renderer->createFramebuffer(1, &colorFramebufferAttachment);
+			}
 		}
 
 		// Vertex input layout
@@ -172,15 +180,15 @@ void FirstRenderToTexture::onInitialization()
 void FirstRenderToTexture::onDeinitialization()
 {
 	// Release the used resources
-	mCommandBuffer.clear();
 	mVertexArray = nullptr;
 	mPipelineState = nullptr;
-	mSamplerState = nullptr;
-	mRootSignature = nullptr;
+	mSamplerStateGroup = nullptr;
+	mTextureGroup = nullptr;
 	mFramebuffer = nullptr;
-	mTexture2D = nullptr;
-	mBufferManager = nullptr;
+	mRootSignature = nullptr;
+	mCommandBuffer.clear();
 	mTextureManager = nullptr;
+	mBufferManager = nullptr;
 
 	// Call the base implementation
 	ExampleBase::onDeinitialization();
@@ -204,15 +212,15 @@ void FirstRenderToTexture::onDraw()
 void FirstRenderToTexture::fillCommandBuffer()
 {
 	// Sanity checks
-	assert(nullptr != mFramebuffer);
 	assert(nullptr != getRenderer());
 	assert(nullptr != getMainRenderTarget());
+	assert(mCommandBuffer.isEmpty());
 	assert(nullptr != mRootSignature);
-	assert(nullptr != mSamplerState);
-	assert(nullptr != mTexture2D);
+	assert(nullptr != mFramebuffer);
+	assert(nullptr != mTextureGroup);
+	assert(nullptr != mSamplerStateGroup);
 	assert(nullptr != mPipelineState);
 	assert(nullptr != mVertexArray);
-	assert(mCommandBuffer.isEmpty());
 
 	// Begin debug event
 	COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(mCommandBuffer)
@@ -248,12 +256,12 @@ void FirstRenderToTexture::fillCommandBuffer()
 		// Set the used graphics root signature
 		Renderer::Command::SetGraphicsRootSignature::create(mCommandBuffer, mRootSignature);
 
-		// Set diffuse map
-		Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 0, mSamplerState);
-		Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 1, mTexture2D);
-
 		// Set the used pipeline state object (PSO)
 		Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineState);
+
+		// Set resource groups
+		Renderer::Command::SetGraphicsResourceGroup::create(mCommandBuffer, 1, mSamplerStateGroup);
+		Renderer::Command::SetGraphicsResourceGroup::create(mCommandBuffer, 0, mTextureGroup);
 
 		// Input assembly (IA): Set the used vertex array
 		Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArray);

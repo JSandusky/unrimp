@@ -70,7 +70,7 @@ namespace Renderer
 		CopyTextureBufferData,
 		// Graphics root
 		SetGraphicsRootSignature,
-		SetGraphicsRootDescriptorTable,
+		SetGraphicsResourceGroup,
 		// States
 		SetPipelineState,
 		// Input-assembler (IA) stage
@@ -507,30 +507,30 @@ namespace Renderer
 
 		/**
 		*  @brief
-		*    Set the graphics descriptor table
+		*    Set a graphics resource group
 		*
 		*  @param[in] rootParameterIndex
-		*    The slot number for binding
-		*  @param[in] resource
-		*    Resource to bind
+		*    The root parameter index number for binding
+		*  @param[in] resourceGroup
+		*    Resource group to set
 		*/
-		struct SetGraphicsRootDescriptorTable
+		struct SetGraphicsResourceGroup
 		{
 			// Static methods
-			inline static void create(CommandBuffer& commandBuffer, uint32_t rootParameterIndex, IResource* resource)
+			inline static void create(CommandBuffer& commandBuffer, uint32_t rootParameterIndex, IResourceGroup* resourceGroup)
 			{
-				*commandBuffer.addCommand<SetGraphicsRootDescriptorTable>() = SetGraphicsRootDescriptorTable(rootParameterIndex, resource);
+				*commandBuffer.addCommand<SetGraphicsResourceGroup>() = SetGraphicsResourceGroup(rootParameterIndex, resourceGroup);
 			}
 			// Constructor
-			inline SetGraphicsRootDescriptorTable(uint32_t _rootParameterIndex, IResource* _resource) :
+			inline SetGraphicsResourceGroup(uint32_t _rootParameterIndex, IResourceGroup* _resourceGroup) :
 				rootParameterIndex(_rootParameterIndex),
-				resource(_resource)
+				resourceGroup(_resourceGroup)
 			{}
 			// Data
-			uint32_t   rootParameterIndex;
-			IResource* resource;
+			uint32_t		rootParameterIndex;
+			IResourceGroup*	resourceGroup;
 			// Static data
-			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetGraphicsRootDescriptorTable;
+			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetGraphicsResourceGroup;
 		};
 
 		//[-------------------------------------------------------]

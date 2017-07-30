@@ -88,15 +88,14 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	Renderer::IBufferManagerPtr  mBufferManager;	///< Buffer manager, can be a null pointer
-	Renderer::ITextureManagerPtr mTextureManager;	///< Texture manager, can be a null pointer
-	Renderer::ITexture1DPtr		 mTexture1D;		///< 1D texture, can be a null pointer
-	Renderer::ITexture2DPtr		 mTexture2D;		///< 2D texture, can be a null pointer
-	Renderer::ISamplerStatePtr	 mSamplerState;		///< Sampler state, can be a null pointer
-	Renderer::IRootSignaturePtr	 mRootSignature;	///< Root signature, can be a null pointer
-	Renderer::IPipelineStatePtr	 mPipelineState;	///< Pipeline state object (PSO), can be a null pointer
-	Renderer::IVertexArrayPtr	 mVertexArray;		///< Vertex array object (VAO), can be a null pointer
-	Renderer::CommandBuffer		 mCommandBuffer;	///< Command buffer
+	Renderer::IBufferManagerPtr  mBufferManager;		///< Buffer manager, can be a null pointer
+	Renderer::ITextureManagerPtr mTextureManager;		///< Texture manager, can be a null pointer
+	Renderer::CommandBuffer		 mCommandBuffer;		///< Command buffer
+	Renderer::IRootSignaturePtr	 mRootSignature;		///< Root signature, can be a null pointer
+	Renderer::IResourceGroupPtr	 mTextureGroup;			///< Texture group, can be a null pointer
+	Renderer::IResourceGroupPtr	 mSamplerStateGroup;	///< Sampler state resource group, can be a null pointer
+	Renderer::IPipelineStatePtr	 mPipelineState;		///< Pipeline state object (PSO), can be a null pointer
+	Renderer::IVertexArrayPtr	 mVertexArray;			///< Vertex array object (VAO), can be a null pointer
 
 
 };

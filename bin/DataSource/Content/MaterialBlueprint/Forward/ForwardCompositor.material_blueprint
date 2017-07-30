@@ -89,10 +89,10 @@
 						"0":
 						{
 							"RangeType": "SAMPLER",
-							"BaseShaderRegister": "0"
+							"BaseShaderRegister": "0",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"2":
 				{
@@ -104,10 +104,10 @@
 							"RangeType": "SRV",
 							"BaseShaderRegister": "0",
 							"BaseShaderRegisterName": "ColorMap",
-							"SamplerRootParameterIndex": "1"
+							"SamplerRootParameterIndex": "1",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"3":
 				{
@@ -119,10 +119,10 @@
 							"RangeType": "SRV",
 							"BaseShaderRegister": "1",
 							"BaseShaderRegisterName": "DepthMap",
-							"SamplerRootParameterIndex": "1"
+							"SamplerRootParameterIndex": "1",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"4":
 				{
@@ -134,10 +134,10 @@
 							"RangeType": "SRV",
 							"BaseShaderRegister": "2",
 							"BaseShaderRegisterName": "ScreenSpaceAmbientOcclusionMap",
-							"SamplerRootParameterIndex": "1"
+							"SamplerRootParameterIndex": "1",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				}
 			}
 		},

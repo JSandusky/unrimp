@@ -154,7 +154,8 @@ namespace RendererRuntime
 					Renderer::ITexturePtr texturePtr = textureResource->getTexture();
 					if (nullptr != texturePtr)
 					{
-						Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, texture.rootParameterIndex, texturePtr);
+						// TODO(co) Port to resource group usage
+						// Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, texture.rootParameterIndex, texturePtr);
 					}
 					else
 					{

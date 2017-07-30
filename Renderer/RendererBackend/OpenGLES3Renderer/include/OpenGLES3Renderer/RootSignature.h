@@ -111,6 +111,13 @@ namespace OpenGLES3Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IRootSignature methods       ]
+	//[-------------------------------------------------------]
+	public:
+		virtual Renderer::IResourceGroup* createResourceGroup(uint32_t rootParameterIndex, uint32_t numberOfResources, Renderer::IResource** resources) override;
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:

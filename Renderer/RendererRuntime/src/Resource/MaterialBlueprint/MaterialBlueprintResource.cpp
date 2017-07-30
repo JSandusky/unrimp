@@ -288,8 +288,9 @@ namespace RendererRuntime
 			const size_t numberOfSamplerStates = mSamplerStates.size();
 			for (size_t i = 0; i < numberOfSamplerStates; ++i)
 			{
-				const SamplerState& samplerState = mSamplerStates[i];
-				Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, samplerState.rootParameterIndex, samplerState.samplerStatePtr);
+				// TODO(co) Port to resource group usage
+				// const SamplerState& samplerState = mSamplerStates[i];
+				//Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, samplerState.rootParameterIndex, samplerState.samplerStatePtr);
 			}
 		}
 

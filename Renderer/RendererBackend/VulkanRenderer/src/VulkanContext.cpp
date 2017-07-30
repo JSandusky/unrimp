@@ -177,6 +177,7 @@ namespace
 
 		VkResult createVkDevice(VkPhysicalDevice vkPhysicalDevice, const VkDeviceQueueCreateInfo& vkDeviceQueueCreateInfo, bool enableValidation, VkDevice& vkDevice)
 		{
+			// See http://vulkan.gpuinfo.org/listfeatures.php to check out GPU hardware capabilities
 			const std::array<const char*, 1> enabledExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 			const VkPhysicalDeviceFeatures vkPhysicalDeviceFeatures =
 			{

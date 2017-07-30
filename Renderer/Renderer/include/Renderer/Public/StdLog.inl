@@ -115,6 +115,12 @@ namespace Renderer
 			case Type::WARNING:
 				return "Warning: ";
 
+			case Type::PERFORMANCE_WARNING:
+				return "Performance warning: ";
+
+			case Type::COMPATIBILITY_WARNING:
+				return "Compatibility warning: ";
+
 			case Type::CRITICAL:
 				return "Critical: ";
 

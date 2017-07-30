@@ -111,6 +111,7 @@
     <ClInclude Include="include\OpenGLRenderer\RenderTarget\FramebufferBind.h" />
     <ClInclude Include="include\OpenGLRenderer\RenderTarget\FramebufferDsa.h" />
     <ClInclude Include="include\OpenGLRenderer\RenderTarget\SwapChain.h" />
+    <ClInclude Include="include\OpenGLRenderer\ResourceGroup.h" />
     <ClInclude Include="include\OpenGLRenderer\RootSignature.h" />
     <ClInclude Include="include\OpenGLRenderer\Shader\Monolithic\FragmentShaderMonolithic.h" />
     <ClInclude Include="include\OpenGLRenderer\Shader\Monolithic\GeometryShaderMonolithic.h" />
@@ -566,6 +567,7 @@
     <ClCompile Include="src\RenderTarget\FramebufferBind.cpp" />
     <ClCompile Include="src\RenderTarget\FramebufferDsa.cpp" />
     <ClCompile Include="src\RenderTarget\SwapChain.cpp" />
+    <ClCompile Include="src\ResourceGroup.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\Shader\Monolithic\FragmentShaderMonolithic.cpp" />
     <ClCompile Include="src\Shader\Monolithic\GeometryShaderMonolithic.cpp" />
@@ -626,6 +628,7 @@
     <None Include="include\OpenGLRenderer\OpenGLRenderer.inl" />
     <None Include="include\OpenGLRenderer\RenderTarget\Framebuffer.inl" />
     <None Include="include\OpenGLRenderer\RenderTarget\SwapChain.inl" />
+    <None Include="include\OpenGLRenderer\ResourceGroup.inl" />
     <None Include="include\OpenGLRenderer\RootSignature.inl" />
     <None Include="include\OpenGLRenderer\Shader\Monolithic\FragmentShaderMonolithic.inl" />
     <None Include="include\OpenGLRenderer\Shader\Monolithic\GeometryShaderMonolithic.inl" />

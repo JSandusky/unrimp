@@ -26,6 +26,7 @@
 #include "Direct3D9Renderer/Direct3D9Debug.h"	// For "DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN()"
 #include "Direct3D9Renderer/Direct3D9RuntimeLinking.h"
 #include "Direct3D9Renderer/RootSignature.h"
+#include "Direct3D9Renderer/ResourceGroup.h"
 #include "Direct3D9Renderer/RenderTarget/SwapChain.h"
 #include "Direct3D9Renderer/RenderTarget/Framebuffer.h"
 #include "Direct3D9Renderer/Buffer/BufferManager.h"
@@ -119,10 +120,10 @@ namespace
 				static_cast<Direct3D9Renderer::Direct3D9Renderer&>(renderer).setGraphicsRootSignature(realData->rootSignature);
 			}
 
-			void SetGraphicsRootDescriptorTable(const void* data, Renderer::IRenderer& renderer)
+			void SetGraphicsResourceGroup(const void* data, Renderer::IRenderer& renderer)
 			{
-				const Renderer::Command::SetGraphicsRootDescriptorTable* realData = static_cast<const Renderer::Command::SetGraphicsRootDescriptorTable*>(data);
-				static_cast<Direct3D9Renderer::Direct3D9Renderer&>(renderer).setGraphicsRootDescriptorTable(realData->rootParameterIndex, realData->resource);
+				const Renderer::Command::SetGraphicsResourceGroup* realData = static_cast<const Renderer::Command::SetGraphicsResourceGroup*>(data);
+				static_cast<Direct3D9Renderer::Direct3D9Renderer&>(renderer).setGraphicsResourceGroup(realData->rootParameterIndex, realData->resourceGroup);
 			}
 
 			//[-------------------------------------------------------]
@@ -255,7 +256,7 @@ namespace
 			&BackendDispatch::CopyTextureBufferData,
 			// Graphics root
 			&BackendDispatch::SetGraphicsRootSignature,
-			&BackendDispatch::SetGraphicsRootDescriptorTable,
+			&BackendDispatch::SetGraphicsResourceGroup,
 			// States
 			&BackendDispatch::SetPipelineState,
 			// Input-assembler (IA) stage
@@ -490,7 +491,7 @@ namespace Direct3D9Renderer
 		}
 	}
 
-	void Direct3D9Renderer::setGraphicsRootDescriptorTable(uint32_t rootParameterIndex, Renderer::IResource* resource)
+	void Direct3D9Renderer::setGraphicsResourceGroup(uint32_t rootParameterIndex, Renderer::IResourceGroup* resourceGroup)
 	{
 		// Security checks
 		#ifndef DIRECT3D9RENDERER_NO_DEBUG
@@ -512,13 +513,6 @@ namespace Direct3D9Renderer
 				RENDERER_LOG(mContext, CRITICAL, "The Direct3D 9 renderer backend root parameter index doesn't reference a descriptor table")
 				return;
 			}
-
-			// TODO(co) For now, we only support a single descriptor range
-			if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
-			{
-				RENDERER_LOG(mContext, CRITICAL, "Only a single descriptor range is supported by the Direct3D 9 renderer backend")
-				return;
-			}
 			if (nullptr == reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges))
 			{
 				RENDERER_LOG(mContext, CRITICAL, "The Direct3D 9 renderer backend descriptor ranges is a null pointer")
@@ -527,201 +521,207 @@ namespace Direct3D9Renderer
 		}
 		#endif
 
-		if (nullptr != resource)
+		if (nullptr != resourceGroup)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, *resource)
+			DIRECT3D9RENDERER_RENDERERMATCHCHECK_RETURN(*this, *resourceGroup)
 
-			// Get the root signature parameter instance
+			// Set graphics resource group
+			const ResourceGroup* d3d9ResourceGroup = static_cast<ResourceGroup*>(resourceGroup);
+			const uint32_t numberOfResources = d3d9ResourceGroup->getNumberOfResources();
+			Renderer::IResource** resources = d3d9ResourceGroup->getResources();
 			const Renderer::RootParameter& rootParameter = mGraphicsRootSignature->getRootSignature().parameters[rootParameterIndex];
-			const Renderer::DescriptorRange* descriptorRange = reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges);
-
-			// Check the type of resource to set
-			// TODO(co) Some additional resource type root signature security checks in debug build?
-			switch (resource->getResourceType())
+			for (uint32_t resourceIndex = 0; resourceIndex < numberOfResources; ++resourceIndex, ++resources)
 			{
-				case Renderer::ResourceType::TEXTURE_BUFFER:
-					RENDERER_LOG(mContext, CRITICAL, "Direct3D 9 has no texture buffer support")
-					break;
-
-				case Renderer::ResourceType::TEXTURE_1D:
-				case Renderer::ResourceType::TEXTURE_2D:
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-				case Renderer::ResourceType::TEXTURE_3D:
-				case Renderer::ResourceType::TEXTURE_CUBE:
+				// Since Direct3D 9 doesn't support e.g. uniform buffer we need to check for null pointers here
+				Renderer::IResource* resource = *resources;
+				if (nullptr == resource)
 				{
-					const UINT startSlot = descriptorRange->baseShaderRegister;
+					continue;
+				}
+				assert(nullptr != reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges));
+				const Renderer::DescriptorRange& descriptorRange = reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges)[resourceIndex];
 
-					// Get Direct3D 9 texture
-					IDirect3DBaseTexture9* direct3DBaseTexture9 = nullptr;
-					switch (resource->getResourceType())
+				// Check the type of resource to set
+				// TODO(co) Some additional resource type root signature security checks in debug build?
+				const Renderer::ResourceType resourceType = resource->getResourceType();
+				switch (resourceType)
+				{
+					case Renderer::ResourceType::UNIFORM_BUFFER:
+						RENDERER_LOG(mContext, CRITICAL, "Direct3D 9 has no uniform buffer support")
+						break;
+
+					case Renderer::ResourceType::TEXTURE_BUFFER:
+						RENDERER_LOG(mContext, CRITICAL, "Direct3D 9 has no texture buffer support")
+						break;
+
+					case Renderer::ResourceType::TEXTURE_1D:
+					case Renderer::ResourceType::TEXTURE_2D:
+					case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+					case Renderer::ResourceType::TEXTURE_3D:
+					case Renderer::ResourceType::TEXTURE_CUBE:
 					{
-						case Renderer::ResourceType::TEXTURE_1D:
-							direct3DBaseTexture9 = static_cast<Texture1D*>(resource)->getDirect3DTexture9();
-							break;
+						const UINT startSlot = descriptorRange.baseShaderRegister;
 
-						case Renderer::ResourceType::TEXTURE_2D:
-							direct3DBaseTexture9 = static_cast<Texture2D*>(resource)->getDirect3DTexture9();
-							break;
-
-						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-							RENDERER_LOG(mContext, CRITICAL, "Direct3D 9 has no 2D array textures support")
-							break;
-
-						case Renderer::ResourceType::TEXTURE_3D:
-							direct3DBaseTexture9 = static_cast<Texture3D*>(resource)->getDirect3DTexture9();
-							break;
-
-						case Renderer::ResourceType::TEXTURE_CUBE:
-							direct3DBaseTexture9 = static_cast<TextureCube*>(resource)->getDirect3DTexture9();
-							break;
-
-						case Renderer::ResourceType::TEXTURE_BUFFER:
-						case Renderer::ResourceType::SAMPLER_STATE:
-						case Renderer::ResourceType::ROOT_SIGNATURE:
-						case Renderer::ResourceType::PROGRAM:
-						case Renderer::ResourceType::VERTEX_ARRAY:
-						case Renderer::ResourceType::SWAP_CHAIN:
-						case Renderer::ResourceType::FRAMEBUFFER:
-						case Renderer::ResourceType::INDEX_BUFFER:
-						case Renderer::ResourceType::VERTEX_BUFFER:
-						case Renderer::ResourceType::UNIFORM_BUFFER:
-						case Renderer::ResourceType::INDIRECT_BUFFER:
-						case Renderer::ResourceType::PIPELINE_STATE:
-						case Renderer::ResourceType::VERTEX_SHADER:
-						case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-						case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-						case Renderer::ResourceType::GEOMETRY_SHADER:
-						case Renderer::ResourceType::FRAGMENT_SHADER:
-							// Nothing here
-							break;
-					}
-
-					// Information about vertex texture fetch in Direct3D 9 can be found within:
-					// Whitepaper: ftp://download.nvidia.com/developer/Papers/2004/Vertex_Textures/Vertex_Textures.pdf
-					//    "Shader Model 3.0
-					//     Using Vertex Textures"
-					//    (DA-01373-001_v00 1 - 06/24/04)
-					// From
-					//    Philipp Gerasimov
-					//    Randima (Randy) Fernando
-					//    Simon Green
-					//    NVIDIA Corporation
-					// Four texture samplers are supported:
-					//     D3DVERTEXTEXTURESAMPLER1
-					//     D3DVERTEXTEXTURESAMPLER2
-					//     D3DVERTEXTEXTURESAMPLER3
-					//     D3DVERTEXTEXTURESAMPLER4
-					// -> Update the given zero based texture unit (the constants are linear, so the following is fine)
-					const UINT vertexFetchStartSlot = startSlot + D3DVERTEXTEXTURESAMPLER1;
-
-					switch (rootParameter.shaderVisibility)
-					{
-						case Renderer::ShaderVisibility::ALL:
+						// Get Direct3D 9 texture
+						IDirect3DBaseTexture9* direct3DBaseTexture9 = nullptr;
+						switch (resource->getResourceType())
 						{
-							// Begin debug event
-							RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
+							case Renderer::ResourceType::TEXTURE_1D:
+								direct3DBaseTexture9 = static_cast<Texture1D*>(resource)->getDirect3DTexture9();
+								break;
 
-							// Set texture
-							mDirect3DDevice9->SetTexture(vertexFetchStartSlot, direct3DBaseTexture9);
-							mDirect3DDevice9->SetTexture(startSlot, direct3DBaseTexture9);
+							case Renderer::ResourceType::TEXTURE_2D:
+								direct3DBaseTexture9 = static_cast<Texture2D*>(resource)->getDirect3DTexture9();
+								break;
 
-							{ // Set sampler
-								const SamplerState* samplerState = mGraphicsRootSignature->getSamplerState(descriptorRange->samplerRootParameterIndex);
-								samplerState->setDirect3D9SamplerStates(vertexFetchStartSlot, *mDirect3DDevice9);
-								samplerState->setDirect3D9SamplerStates(startSlot, *mDirect3DDevice9);
-							}
+							case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+								RENDERER_LOG(mContext, CRITICAL, "Direct3D 9 has no 2D array textures support")
+								break;
 
-							// End debug event
-							RENDERER_END_DEBUG_EVENT(this)
-							break;
+							case Renderer::ResourceType::TEXTURE_3D:
+								direct3DBaseTexture9 = static_cast<Texture3D*>(resource)->getDirect3DTexture9();
+								break;
+
+							case Renderer::ResourceType::TEXTURE_CUBE:
+								direct3DBaseTexture9 = static_cast<TextureCube*>(resource)->getDirect3DTexture9();
+								break;
+
+							case Renderer::ResourceType::TEXTURE_BUFFER:
+							case Renderer::ResourceType::SAMPLER_STATE:
+							case Renderer::ResourceType::ROOT_SIGNATURE:
+							case Renderer::ResourceType::RESOURCE_GROUP:
+							case Renderer::ResourceType::PROGRAM:
+							case Renderer::ResourceType::VERTEX_ARRAY:
+							case Renderer::ResourceType::SWAP_CHAIN:
+							case Renderer::ResourceType::FRAMEBUFFER:
+							case Renderer::ResourceType::INDEX_BUFFER:
+							case Renderer::ResourceType::VERTEX_BUFFER:
+							case Renderer::ResourceType::UNIFORM_BUFFER:
+							case Renderer::ResourceType::INDIRECT_BUFFER:
+							case Renderer::ResourceType::PIPELINE_STATE:
+							case Renderer::ResourceType::VERTEX_SHADER:
+							case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+							case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+							case Renderer::ResourceType::GEOMETRY_SHADER:
+							case Renderer::ResourceType::FRAGMENT_SHADER:
+								// Nothing here
+								break;
 						}
 
-						case Renderer::ShaderVisibility::VERTEX:
-							// Begin debug event
-							RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
+						// Information about vertex texture fetch in Direct3D 9 can be found within:
+						// Whitepaper: ftp://download.nvidia.com/developer/Papers/2004/Vertex_Textures/Vertex_Textures.pdf
+						//    "Shader Model 3.0
+						//     Using Vertex Textures"
+						//    (DA-01373-001_v00 1 - 06/24/04)
+						// From
+						//    Philipp Gerasimov
+						//    Randima (Randy) Fernando
+						//    Simon Green
+						//    NVIDIA Corporation
+						// Four texture samplers are supported:
+						//     D3DVERTEXTEXTURESAMPLER1
+						//     D3DVERTEXTEXTURESAMPLER2
+						//     D3DVERTEXTEXTURESAMPLER3
+						//     D3DVERTEXTEXTURESAMPLER4
+						// -> Update the given zero based texture unit (the constants are linear, so the following is fine)
+						const UINT vertexFetchStartSlot = startSlot + D3DVERTEXTEXTURESAMPLER1;
 
-							// Set texture
-							mDirect3DDevice9->SetTexture(vertexFetchStartSlot, direct3DBaseTexture9);
+						switch (descriptorRange.shaderVisibility)
+						{
+							case Renderer::ShaderVisibility::ALL:
+							{
+								// Begin debug event
+								RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
 
-							// Set sampler
-							mGraphicsRootSignature->getSamplerState(descriptorRange->samplerRootParameterIndex)->setDirect3D9SamplerStates(vertexFetchStartSlot, *mDirect3DDevice9);
+								// Set texture
+								mDirect3DDevice9->SetTexture(vertexFetchStartSlot, direct3DBaseTexture9);
+								mDirect3DDevice9->SetTexture(startSlot, direct3DBaseTexture9);
 
-							// End debug event
-							RENDERER_END_DEBUG_EVENT(this)
-							break;
+								{ // Set sampler
+									const SamplerState* samplerState = mGraphicsRootSignature->getSamplerState(descriptorRange.samplerRootParameterIndex);
+									samplerState->setDirect3D9SamplerStates(vertexFetchStartSlot, *mDirect3DDevice9);
+									samplerState->setDirect3D9SamplerStates(startSlot, *mDirect3DDevice9);
+								}
 
-						case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
-							RENDERER_LOG(mContext, CRITICAL, "Direct3D 9 has no tessellation control shader support (hull shader in Direct3D terminology)")
-							break;
+								// End debug event
+								RENDERER_END_DEBUG_EVENT(this)
+								break;
+							}
 
-						case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
-							RENDERER_LOG(mContext, CRITICAL, "Direct3D 9 has no tessellation evaluation shader support (domain shader in Direct3D terminology)")
-							break;
+							case Renderer::ShaderVisibility::VERTEX:
+								// Begin debug event
+								RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
 
-						case Renderer::ShaderVisibility::GEOMETRY:
-							RENDERER_LOG(mContext, CRITICAL, "Direct3D 9 has no geometry shader support")
-							break;
+								// Set texture
+								mDirect3DDevice9->SetTexture(vertexFetchStartSlot, direct3DBaseTexture9);
 
-						case Renderer::ShaderVisibility::FRAGMENT:
-							// "pixel shader" in Direct3D terminology
+								// Set sampler
+								mGraphicsRootSignature->getSamplerState(descriptorRange.samplerRootParameterIndex)->setDirect3D9SamplerStates(vertexFetchStartSlot, *mDirect3DDevice9);
 
-							// Begin debug event
-							RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
+								// End debug event
+								RENDERER_END_DEBUG_EVENT(this)
+								break;
 
-							// Set texture
-							mDirect3DDevice9->SetTexture(startSlot, direct3DBaseTexture9);
+							case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
+								RENDERER_LOG(mContext, CRITICAL, "Direct3D 9 has no tessellation control shader support (hull shader in Direct3D terminology)")
+								break;
 
-							// Set sampler
-							mGraphicsRootSignature->getSamplerState(descriptorRange->samplerRootParameterIndex)->setDirect3D9SamplerStates(startSlot, *mDirect3DDevice9);
+							case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
+								RENDERER_LOG(mContext, CRITICAL, "Direct3D 9 has no tessellation evaluation shader support (domain shader in Direct3D terminology)")
+								break;
 
-							// End debug event
-							RENDERER_END_DEBUG_EVENT(this)
-							break;
+							case Renderer::ShaderVisibility::GEOMETRY:
+								RENDERER_LOG(mContext, CRITICAL, "Direct3D 9 has no geometry shader support")
+								break;
+
+							case Renderer::ShaderVisibility::FRAGMENT:
+								// "pixel shader" in Direct3D terminology
+
+								// Begin debug event
+								RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
+
+								// Set texture
+								mDirect3DDevice9->SetTexture(startSlot, direct3DBaseTexture9);
+
+								// Set sampler
+								mGraphicsRootSignature->getSamplerState(descriptorRange.samplerRootParameterIndex)->setDirect3D9SamplerStates(startSlot, *mDirect3DDevice9);
+
+								// End debug event
+								RENDERER_END_DEBUG_EVENT(this)
+								break;
+						}
+						break;
 					}
-					break;
+
+					case Renderer::ResourceType::SAMPLER_STATE:
+						// Unlike Direct3D >=10, Direct3D 9 directly attaches the sampler settings to texture stages
+						mGraphicsRootSignature->setSamplerState(rootParameterIndex, static_cast<SamplerState*>(resource));
+						break;
+
+					case Renderer::ResourceType::ROOT_SIGNATURE:
+					case Renderer::ResourceType::RESOURCE_GROUP:
+					case Renderer::ResourceType::PROGRAM:
+					case Renderer::ResourceType::VERTEX_ARRAY:
+					case Renderer::ResourceType::SWAP_CHAIN:
+					case Renderer::ResourceType::FRAMEBUFFER:
+					case Renderer::ResourceType::INDEX_BUFFER:
+					case Renderer::ResourceType::VERTEX_BUFFER:
+					case Renderer::ResourceType::INDIRECT_BUFFER:
+					case Renderer::ResourceType::PIPELINE_STATE:
+					case Renderer::ResourceType::VERTEX_SHADER:
+					case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+					case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+					case Renderer::ResourceType::GEOMETRY_SHADER:
+					case Renderer::ResourceType::FRAGMENT_SHADER:
+						RENDERER_LOG(mContext, CRITICAL, "Invalid Direct3D 9 renderer backend resource type")
+						break;
 				}
-
-				case Renderer::ResourceType::SAMPLER_STATE:
-					// Unlike Direct3D >=10, Direct3D 9 directly attaches the sampler settings to texture stages
-					mGraphicsRootSignature->setSamplerState(rootParameterIndex, static_cast<SamplerState*>(resource));
-					break;
-
-				case Renderer::ResourceType::ROOT_SIGNATURE:
-				case Renderer::ResourceType::PROGRAM:
-				case Renderer::ResourceType::VERTEX_ARRAY:
-				case Renderer::ResourceType::SWAP_CHAIN:
-				case Renderer::ResourceType::FRAMEBUFFER:
-				case Renderer::ResourceType::INDEX_BUFFER:
-				case Renderer::ResourceType::VERTEX_BUFFER:
-				case Renderer::ResourceType::UNIFORM_BUFFER:
-				case Renderer::ResourceType::INDIRECT_BUFFER:
-				case Renderer::ResourceType::PIPELINE_STATE:
-				case Renderer::ResourceType::VERTEX_SHADER:
-				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-				case Renderer::ResourceType::GEOMETRY_SHADER:
-				case Renderer::ResourceType::FRAGMENT_SHADER:
-					RENDERER_LOG(mContext, CRITICAL, "Invalid Direct3D 9 renderer backend resource type")
-					break;
 			}
 		}
 		else
 		{
 			// TODO(co) Handle this situation?
-			/*
-			// Set the default sampler state
-			if (nullptr != mDefaultSamplerState)
-			{
-				fsSetSamplerState(unit, mDefaultSamplerState);
-			}
-			else
-			{
-				// Fallback in case everything goes wrong
-
-				// TODO(co) Set default settings
-			}
-			*/
 		}
 	}
 
@@ -896,6 +896,7 @@ namespace Direct3D9Renderer
 					}
 
 					case Renderer::ResourceType::ROOT_SIGNATURE:
+					case Renderer::ResourceType::RESOURCE_GROUP:
 					case Renderer::ResourceType::PROGRAM:
 					case Renderer::ResourceType::VERTEX_ARRAY:
 					case Renderer::ResourceType::INDEX_BUFFER:
@@ -1548,6 +1549,7 @@ namespace Direct3D9Renderer
 				return false;
 
 			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::RESOURCE_GROUP:
 			case Renderer::ResourceType::PROGRAM:
 			case Renderer::ResourceType::VERTEX_ARRAY:
 			case Renderer::ResourceType::SWAP_CHAIN:
@@ -1610,6 +1612,7 @@ namespace Direct3D9Renderer
 				break;
 
 			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::RESOURCE_GROUP:
 			case Renderer::ResourceType::PROGRAM:
 			case Renderer::ResourceType::VERTEX_ARRAY:
 			case Renderer::ResourceType::SWAP_CHAIN:

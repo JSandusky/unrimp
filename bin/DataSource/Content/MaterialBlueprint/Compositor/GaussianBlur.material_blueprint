@@ -36,10 +36,10 @@
 						"0":
 						{
 							"RangeType": "SAMPLER",
-							"BaseShaderRegister": "0"
+							"BaseShaderRegister": "0",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"1":
 				{

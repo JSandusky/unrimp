@@ -140,10 +140,10 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "0",
-							"BaseShaderRegisterName": "LightTextureBuffer"
+							"BaseShaderRegisterName": "LightTextureBuffer",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"2":
 				{
@@ -153,10 +153,10 @@
 						"0":
 						{
 							"RangeType": "SAMPLER",
-							"BaseShaderRegister": "0"
+							"BaseShaderRegister": "0",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"3":
 				{
@@ -166,10 +166,10 @@
 						"0":
 						{
 							"RangeType": "SAMPLER",
-							"BaseShaderRegister": "1"
+							"BaseShaderRegister": "1",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"4":
 				{
@@ -181,10 +181,10 @@
 							"RangeType": "SRV",
 							"BaseShaderRegister": "1",
 							"BaseShaderRegisterName": "GBufferMap0",
-							"SamplerRootParameterIndex": "2"
+							"SamplerRootParameterIndex": "2",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"5":
 				{
@@ -196,10 +196,10 @@
 							"RangeType": "SRV",
 							"BaseShaderRegister": "2",
 							"BaseShaderRegisterName": "GBufferMap1",
-							"SamplerRootParameterIndex": "2"
+							"SamplerRootParameterIndex": "2",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"6":
 				{
@@ -211,10 +211,10 @@
 							"RangeType": "SRV",
 							"BaseShaderRegister": "3",
 							"BaseShaderRegisterName": "GBufferMap2",
-							"SamplerRootParameterIndex": "2"
+							"SamplerRootParameterIndex": "2",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"7":
 				{
@@ -226,10 +226,10 @@
 							"RangeType": "SRV",
 							"BaseShaderRegister": "4",
 							"BaseShaderRegisterName": "DepthMap",
-							"SamplerRootParameterIndex": "2"
+							"SamplerRootParameterIndex": "2",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"8":
 				{
@@ -241,10 +241,10 @@
 							"RangeType": "SRV",
 							"BaseShaderRegister": "5",
 							"BaseShaderRegisterName": "ShadowMap",
-							"SamplerRootParameterIndex": "2"
+							"SamplerRootParameterIndex": "2",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"9":
 				{
@@ -256,10 +256,10 @@
 							"RangeType": "SRV",
 							"BaseShaderRegister": "6",
 							"BaseShaderRegisterName": "ScreenSpaceAmbientOcclusionMap",
-							"SamplerRootParameterIndex": "2"
+							"SamplerRootParameterIndex": "2",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"10":
 				{
@@ -271,10 +271,10 @@
 							"RangeType": "SRV",
 							"BaseShaderRegister": "7",
 							"BaseShaderRegisterName": "ReflectionCubeMap",
-							"SamplerRootParameterIndex": "3"
+							"SamplerRootParameterIndex": "3",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"11":
 				{
@@ -286,10 +286,10 @@
 							"RangeType": "SRV",
 							"BaseShaderRegister": "8",
 							"BaseShaderRegisterName": "LightClustersMap3D",
-							"SamplerRootParameterIndex": "3"
+							"SamplerRootParameterIndex": "3",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				}
 			}
 		},

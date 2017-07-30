@@ -32,6 +32,8 @@
 
 #include "VulkanRenderer/Vulkan.h"
 
+#include <vector>
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -113,15 +115,6 @@ namespace VulkanRenderer
 
 		/**
 		*  @brief
-		*    Return the Vulkan descriptor set layout
-		*
-		*  @return
-		*    The Vulkan descriptor set layout
-		*/
-		inline VkDescriptorSetLayout getVkDescriptorSetLayout() const;
-
-		/**
-		*  @brief
 		*    Return the Vulkan pipeline layout
 		*
 		*  @return
@@ -131,12 +124,19 @@ namespace VulkanRenderer
 
 		/**
 		*  @brief
-		*    Return the Vulkan descriptor set
+		*    Return the Vulkan descriptor pool
 		*
 		*  @return
-		*    The Vulkan descriptor set, can be a null handle
+		*    The Vulkan descriptor pool
 		*/
-		inline VkDescriptorSet getVkDescriptorSet() const;
+		inline VkDescriptorPool getVkDescriptorPool() const;
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IRootSignature methods       ]
+	//[-------------------------------------------------------]
+	public:
+		virtual Renderer::IResourceGroup* createResourceGroup(uint32_t rootParameterIndex, uint32_t numberOfResources, Renderer::IResource** resources) override;
 
 
 	//[-------------------------------------------------------]
@@ -148,15 +148,21 @@ namespace VulkanRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		typedef std::vector<VkDescriptorSetLayout> VkDescriptorSetLayouts;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
 		Renderer::RootSignature	mRootSignature;
 		SamplerState**			mSamplerStates;
-		VkDescriptorSetLayout	mVkDescriptorSetLayout;
+		VkDescriptorSetLayouts	mVkDescriptorSetLayouts;
 		VkPipelineLayout		mVkPipelineLayout;
 		VkDescriptorPool		mVkDescriptorPool;
-		VkDescriptorSet			mVkDescriptorSet;	///< "mVkDescriptorPool" is the owner which manages the memory, can be a null handle
 
 
 	};

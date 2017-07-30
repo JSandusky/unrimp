@@ -54,11 +54,11 @@ layout(location = 2) out vec2 TexCoordVs;
 layout(location = 3) out vec3 NormalVs;
 
 // Uniforms
-layout(std140, binding = 0) uniform UniformBlockStaticVs
+layout(std140, set = 0, binding = 0) uniform UniformBlockStaticVs
 {
 	mat4 MVP;
 };
-layout(std140, binding = 1) uniform UniformBlockDynamicVs
+layout(std140, set = 0, binding = 1) uniform UniformBlockDynamicVs
 {
 	vec2 TimerAndGlobalScale;	// x=Timer, y=Global scale
 };
@@ -177,8 +177,8 @@ layout(location = 3) in vec3 NormalVs;
 layout(location = 0, index = 0) out vec4 Color0;
 
 // Uniforms
-layout(binding = 3) uniform sampler2D DiffuseMap;
-layout(std140, binding = 4) uniform UniformBlockDynamicFs
+layout(set = 0, binding = 2) uniform sampler2D DiffuseMap;
+layout(std140, set = 0, binding = 3) uniform UniformBlockDynamicFs
 {
 	vec3 LightPosition;	// World space light position
 };

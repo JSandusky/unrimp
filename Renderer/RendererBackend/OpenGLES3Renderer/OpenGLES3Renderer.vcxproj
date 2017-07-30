@@ -48,6 +48,7 @@
     <None Include="include\OpenGLES3Renderer\OpenGLES3Renderer.inl" />
     <None Include="include\OpenGLES3Renderer\RenderTarget\Framebuffer.inl" />
     <None Include="include\OpenGLES3Renderer\RenderTarget\SwapChain.inl" />
+    <None Include="include\OpenGLES3Renderer\ResourceGroup.inl" />
     <None Include="include\OpenGLES3Renderer\RootSignature.inl" />
     <None Include="include\OpenGLES3Renderer\Shader\FragmentShaderGlsl.inl" />
     <None Include="include\OpenGLES3Renderer\Shader\ProgramGlsl.inl" />
@@ -84,6 +85,7 @@
     <ClInclude Include="include\OpenGLES3Renderer\OpenGLES3Renderer.h" />
     <ClInclude Include="include\OpenGLES3Renderer\RenderTarget\Framebuffer.h" />
     <ClInclude Include="include\OpenGLES3Renderer\RenderTarget\SwapChain.h" />
+    <ClInclude Include="include\OpenGLES3Renderer\ResourceGroup.h" />
     <ClInclude Include="include\OpenGLES3Renderer\RootSignature.h" />
     <ClInclude Include="include\OpenGLES3Renderer\Shader\FragmentShaderGlsl.h" />
     <ClInclude Include="include\OpenGLES3Renderer\Shader\ProgramGlsl.h" />
@@ -120,6 +122,7 @@
     <ClCompile Include="src\OpenGLES3Renderer.cpp" />
     <ClCompile Include="src\RenderTarget\Framebuffer.cpp" />
     <ClCompile Include="src\RenderTarget\SwapChain.cpp" />
+    <ClCompile Include="src\ResourceGroup.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\Shader\FragmentShaderGlsl.cpp" />
     <ClCompile Include="src\Shader\ProgramGlsl.cpp" />

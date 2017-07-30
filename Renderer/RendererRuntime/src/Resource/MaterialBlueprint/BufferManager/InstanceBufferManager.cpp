@@ -107,7 +107,9 @@ namespace RendererRuntime
 			const MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer = materialBlueprintResource.getInstanceUniformBuffer();
 			if (nullptr != instanceUniformBuffer)
 			{
-				Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, instanceUniformBuffer->rootParameterIndex, mCurrentInstanceBuffer->uniformBuffer);
+				// TODO(co) Port to resource group usage
+				std::ignore = commandBuffer;
+				// Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, instanceUniformBuffer->rootParameterIndex, mCurrentInstanceBuffer->uniformBuffer);
 			}
 		}
 
@@ -115,7 +117,8 @@ namespace RendererRuntime
 			const MaterialBlueprintResource::TextureBuffer* instanceTextureBuffer = materialBlueprintResource.getInstanceTextureBuffer();
 			if (nullptr != instanceTextureBuffer)
 			{
-				Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, instanceTextureBuffer->rootParameterIndex, mCurrentInstanceBuffer->textureBuffer);
+				// TODO(co) Port to resource group usage
+				// Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, instanceTextureBuffer->rootParameterIndex, mCurrentInstanceBuffer->textureBuffer);
 			}
 		}
 	}

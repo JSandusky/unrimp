@@ -109,6 +109,23 @@ void FirstGpgpu::onInitialization()
 	mBufferManager = mRenderer->createBufferManager();
 	mTextureManager = mRenderer->createTextureManager();
 
+	{ // Create the root signature
+		Renderer::DescriptorRangeBuilder ranges[2];
+		ranges[0].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap", 1, Renderer::ShaderVisibility::FRAGMENT);
+		ranges[1].initializeSampler(1, 0, Renderer::ShaderVisibility::FRAGMENT);
+
+		Renderer::RootParameterBuilder rootParameters[2];
+		rootParameters[0].initializeAsDescriptorTable(1, &ranges[0]);
+		rootParameters[1].initializeAsDescriptorTable(1, &ranges[1]);
+
+		// Setup
+		Renderer::RootSignatureBuilder rootSignature;
+		rootSignature.initialize(static_cast<uint32_t>(glm::countof(rootParameters)), rootParameters, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+		// Create the instance
+		mRootSignature = mRenderer->createRootSignature(rootSignature);
+	}
+
 	// Create the 2D texture and framebuffer object (FBO) instances
 	for (int i = 0; i < 2; ++i)
 	{
@@ -117,34 +134,23 @@ void FirstGpgpu::onInitialization()
 		// -> Required for Direct3D 9, Direct3D 10, Direct3D 11 and Direct3D 12
 		// -> Not required for OpenGL and OpenGL ES 2
 		// -> The optimized texture clear value is a Direct3D 12 related option
-		Renderer::ITexture *texture2D = mTexture2D[i] = mTextureManager->createTexture2D(64, 64, Renderer::TextureFormat::R8G8B8A8, nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT, 1, reinterpret_cast<const Renderer::OptimizedTextureClearValue*>(&Color4::BLUE));
+		Renderer::ITexture* texture2D = mTexture2D[i] = mTextureManager->createTexture2D(64, 64, Renderer::TextureFormat::R8G8B8A8, nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT, 1, reinterpret_cast<const Renderer::OptimizedTextureClearValue*>(&Color4::BLUE));
 
 		// Create the framebuffer object (FBO) instance
 		Renderer::FramebufferAttachment colorFramebufferAttachment(texture2D);
 		mFramebuffer[i] = mRenderer->createFramebuffer(1, &colorFramebufferAttachment);
 	}
 
-	{ // Create sampler state: We don't use mipmaps
-		Renderer::SamplerState samplerState = Renderer::ISamplerState::getDefaultSamplerState();
-		samplerState.maxLOD = 0.0f;
-		mSamplerState = mRenderer->createSamplerState(samplerState);
+	{ // Create texture group
+		Renderer::IResource* resource = mTexture2D[0];
+		mTextureGroup = mRootSignature->createResourceGroup(0, 1, &resource);
 	}
 
-	{ // Create the root signature
-		Renderer::DescriptorRangeBuilder ranges[2];
-		ranges[0].initializeSampler(1, 0);
-		ranges[1].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap", 0);
-
-		Renderer::RootParameterBuilder rootParameters[2];
-		rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::FRAGMENT);
-		rootParameters[1].initializeAsDescriptorTable(1, &ranges[1], Renderer::ShaderVisibility::FRAGMENT);
-
-		// Setup
-		Renderer::RootSignatureBuilder rootSignature;
-		rootSignature.initialize(static_cast<uint32_t>(glm::countof(rootParameters)), rootParameters, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
-
-		// Create the instance
-		mRootSignature = mRenderer->createRootSignature(rootSignature);
+	{ // Create sampler state and wrap it into a resource group instance: We don't use mipmaps
+		Renderer::SamplerState samplerState = Renderer::ISamplerState::getDefaultSamplerState();
+		samplerState.maxLOD = 0.0f;
+		Renderer::IResource* resource = mRenderer->createSamplerState(samplerState);
+		mSamplerStateGroup = mRootSignature->createResourceGroup(1, 1, &resource);
 	}
 
 	// Vertex input layout
@@ -266,7 +272,8 @@ void FirstGpgpu::onDeinitialization()
 	mPipelineStateContentProcessing = nullptr;
 	mVertexArrayContentGeneration = nullptr;
 	mPipelineStateContentGeneration = nullptr;
-	mSamplerState = nullptr;
+	mSamplerStateGroup = nullptr;
+	mTextureGroup = nullptr;
 	mRootSignature = nullptr;
 	for (int i = 0; i < 2; ++i)
 	{
@@ -331,7 +338,8 @@ void FirstGpgpu::fillCommandBufferContentProcessing()
 	assert(nullptr != mFramebuffer[1]);
 	assert(nullptr != mRootSignature);
 	assert(nullptr != mPipelineStateContentProcessing);
-	assert(nullptr != mSamplerState);
+	assert(nullptr != mTextureGroup);
+	assert(nullptr != mSamplerStateGroup);
 	assert(nullptr != mTexture2D[0]);
 	assert(mCommandBufferContentProcessing.isEmpty());
 
@@ -349,9 +357,9 @@ void FirstGpgpu::fillCommandBufferContentProcessing()
 	// Set the used pipeline state object (PSO)
 	Renderer::Command::SetPipelineState::create(mCommandBufferContentProcessing, mPipelineStateContentProcessing);
 
-	// Set content map
-	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBufferContentProcessing, 0, mSamplerState);
-	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBufferContentProcessing, 1, mTexture2D[0]);
+	// Set resource groups
+	Renderer::Command::SetGraphicsResourceGroup::create(mCommandBufferContentProcessing, 1, mSamplerStateGroup);
+	Renderer::Command::SetGraphicsResourceGroup::create(mCommandBufferContentProcessing, 0, mTextureGroup);
 
 	// Input assembly (IA): Set the used vertex array
 	Renderer::Command::SetVertexArray::create(mCommandBufferContentProcessing, mVertexArrayContentProcessing);

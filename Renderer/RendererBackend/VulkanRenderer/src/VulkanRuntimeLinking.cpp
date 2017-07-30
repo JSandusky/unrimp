@@ -142,9 +142,13 @@ namespace
 			{
 				type = Renderer::ILog::Type::CRITICAL;
 			}
-			else if ((flags & VK_DEBUG_REPORT_WARNING_BIT_EXT) != 0 || (flags & VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT) != 0)
+			else if ((flags & VK_DEBUG_REPORT_WARNING_BIT_EXT) != 0)
 			{
 				type = Renderer::ILog::Type::WARNING;
+			}
+			else if ((flags & VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT) != 0)
+			{
+				type = Renderer::ILog::Type::PERFORMANCE_WARNING;
 			}
 			else if ((flags & VK_DEBUG_REPORT_INFORMATION_BIT_EXT) != 0)
 			{
@@ -550,6 +554,7 @@ namespace VulkanRenderer
 		IMPORT_FUNC(vkCreateDescriptorPool);
 		IMPORT_FUNC(vkCreateDescriptorSetLayout);
 		IMPORT_FUNC(vkAllocateDescriptorSets);
+		IMPORT_FUNC(vkFreeDescriptorSets);
 		IMPORT_FUNC(vkUpdateDescriptorSets);
 		IMPORT_FUNC(vkCmdBindDescriptorSets);
 		IMPORT_FUNC(vkCmdBindPipeline);

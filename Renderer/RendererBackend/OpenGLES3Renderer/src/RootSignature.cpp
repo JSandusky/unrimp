@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLES3Renderer/RootSignature.h"
+#include "OpenGLES3Renderer/ResourceGroup.h"
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 #include "OpenGLES3Renderer/State/SamplerState.h"
 
@@ -204,6 +205,21 @@ namespace OpenGLES3Renderer
 
 		// Set sampler state
 		mSamplerStates[samplerRootParameterIndex]->setOpenGLES3SamplerStates();
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IRootSignature methods       ]
+	//[-------------------------------------------------------]
+	Renderer::IResourceGroup* RootSignature::createResourceGroup(uint32_t rootParameterIndex, uint32_t numberOfResources, Renderer::IResource** resources)
+	{
+		// Sanity checks
+		assert(rootParameterIndex < mRootSignature.numberOfParameters && "The root parameter index is out-of-bounds");
+		assert(numberOfResources > 0 && "The number of resources must not be zero");
+		assert(nullptr != resources && "The resource pointers must be valid");
+
+		// Create resource group
+		return new ResourceGroup(*this, rootParameterIndex, numberOfResources, resources);
 	}
 
 

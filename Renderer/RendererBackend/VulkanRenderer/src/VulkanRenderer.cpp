@@ -26,6 +26,7 @@
 #include "VulkanRenderer/Mapping.h"
 #include "VulkanRenderer/Extensions.h"
 #include "VulkanRenderer/RootSignature.h"
+#include "VulkanRenderer/ResourceGroup.h"
 #include "VulkanRenderer/VulkanContext.h"
 #include "VulkanRenderer/VulkanRuntimeLinking.h"
 #include "VulkanRenderer/RenderTarget/SwapChain.h"
@@ -121,10 +122,10 @@ namespace
 				static_cast<VulkanRenderer::VulkanRenderer&>(renderer).setGraphicsRootSignature(realData->rootSignature);
 			}
 
-			void SetGraphicsRootDescriptorTable(const void* data, Renderer::IRenderer& renderer)
+			void SetGraphicsResourceGroup(const void* data, Renderer::IRenderer& renderer)
 			{
-				const Renderer::Command::SetGraphicsRootDescriptorTable* realData = static_cast<const Renderer::Command::SetGraphicsRootDescriptorTable*>(data);
-				static_cast<VulkanRenderer::VulkanRenderer&>(renderer).setGraphicsRootDescriptorTable(realData->rootParameterIndex, realData->resource);
+				const Renderer::Command::SetGraphicsResourceGroup* realData = static_cast<const Renderer::Command::SetGraphicsResourceGroup*>(data);
+				static_cast<VulkanRenderer::VulkanRenderer&>(renderer).setGraphicsResourceGroup(realData->rootParameterIndex, realData->resourceGroup);
 			}
 
 			//[-------------------------------------------------------]
@@ -255,7 +256,7 @@ namespace
 			&BackendDispatch::CopyTextureBufferData,
 			// Graphics root
 			&BackendDispatch::SetGraphicsRootSignature,
-			&BackendDispatch::SetGraphicsRootDescriptorTable,
+			&BackendDispatch::SetGraphicsResourceGroup,
 			// States
 			&BackendDispatch::SetPipelineState,
 			// Input-assembler (IA) stage
@@ -443,17 +444,10 @@ namespace VulkanRenderer
 
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			VULKANRENDERER_RENDERERMATCHCHECK_RETURN(*this, *rootSignature)
-
-			// Bind Vulkan descriptor sets
-			const VkDescriptorSet vkDescriptorSet = mGraphicsRootSignature->getVkDescriptorSet();
-			if (VK_NULL_HANDLE != vkDescriptorSet)
-			{
-				vkCmdBindDescriptorSets(getVulkanContext().getVkCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, mGraphicsRootSignature->getVkPipelineLayout(), 0, 1, &vkDescriptorSet, 0, nullptr);
-			}
 		}
 	}
 
-	void VulkanRenderer::setGraphicsRootDescriptorTable(uint32_t rootParameterIndex, Renderer::IResource* resource)
+	void VulkanRenderer::setGraphicsResourceGroup(uint32_t rootParameterIndex, Renderer::IResourceGroup* resourceGroup)
 	{
 		// Security checks
 		#ifndef VULKANRENDERER_NO_DEBUG
@@ -475,13 +469,6 @@ namespace VulkanRenderer
 				RENDERER_LOG(mContext, CRITICAL, "The Vulkan renderer backend root parameter index doesn't reference a descriptor table")
 				return;
 			}
-
-			// TODO(co) For now, we only support a single descriptor range
-			if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
-			{
-				RENDERER_LOG(mContext, CRITICAL, "Only a single descriptor range is supported by the Vulkan renderer backend")
-				return;
-			}
 			if (nullptr == reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges))
 			{
 				RENDERER_LOG(mContext, CRITICAL, "The Vulkan renderer backend descriptor ranges is a null pointer")
@@ -490,170 +477,16 @@ namespace VulkanRenderer
 		}
 		#endif
 
-		if (nullptr != resource)
+		if (nullptr != resourceGroup)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			VULKANRENDERER_RENDERERMATCHCHECK_RETURN(*this, *resource)
+			VULKANRENDERER_RENDERERMATCHCHECK_RETURN(*this, *resourceGroup)
 
-			// Check the type of resource to set
-			// TODO(co) Some additional resource type root signature security checks in debug build?
-			// TODO(co) There's room for binding API call related optimization in here (will certainly be no huge overall efficiency gain)
-			const Renderer::ResourceType resourceType = resource->getResourceType();
-			switch (resourceType)
+			// Bind Vulkan descriptor set
+			const VkDescriptorSet vkDescriptorSet = static_cast<ResourceGroup*>(resourceGroup)->getVkDescriptorSet();
+			if (VK_NULL_HANDLE != vkDescriptorSet)
 			{
-				case Renderer::ResourceType::UNIFORM_BUFFER:
-				{
-					const UniformBuffer* uniformBuffer = static_cast<UniformBuffer*>(resource);
-					const VkDescriptorBufferInfo vkDescriptorBufferInfo =
-					{
-						uniformBuffer->getVkBuffer(),	// buffer (VkBuffer)
-						0,								// offset (VkDeviceSize)
-						VK_WHOLE_SIZE					// range (VkDeviceSize)
-					};
-					const VkWriteDescriptorSet vkWriteDescriptorSet =
-					{
-						VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,			// sType (VkStructureType)
-						nullptr,										// pNext (const void*)
-						mGraphicsRootSignature->getVkDescriptorSet(),	// dstSet (VkDescriptorSet)
-						rootParameterIndex,								// dstBinding (uint32_t)
-						0,												// dstArrayElement (uint32_t)
-						1,												// descriptorCount (uint32_t)
-						VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,				// descriptorType (VkDescriptorType)
-						nullptr,										// pImageInfo (const VkDescriptorImageInfo*)
-						&vkDescriptorBufferInfo,						// pBufferInfo (const VkDescriptorBufferInfo*)
-						nullptr											// pTexelBufferView (const VkBufferView*)
-					};
-					vkUpdateDescriptorSets(getVulkanContext().getVkDevice(), 1, &vkWriteDescriptorSet, 0, nullptr);
-					break;
-				}
-
-				case Renderer::ResourceType::TEXTURE_BUFFER:
-				{
-					const VkBufferView vkBufferView = static_cast<TextureBuffer*>(resource)->getVkBufferView();
-					const VkWriteDescriptorSet vkWriteDescriptorSet =
-					{
-						VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,			// sType (VkStructureType)
-						nullptr,										// pNext (const void*)
-						mGraphicsRootSignature->getVkDescriptorSet(),	// dstSet (VkDescriptorSet)
-						rootParameterIndex,								// dstBinding (uint32_t)
-						0,												// dstArrayElement (uint32_t)
-						1,												// descriptorCount (uint32_t)
-						VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER,		// descriptorType (VkDescriptorType)
-						nullptr,										// pImageInfo (const VkDescriptorImageInfo*)
-						nullptr,										// pBufferInfo (const VkDescriptorBufferInfo*)
-						&vkBufferView									// pTexelBufferView (const VkBufferView*)
-					};
-					vkUpdateDescriptorSets(getVulkanContext().getVkDevice(), 1, &vkWriteDescriptorSet, 0, nullptr);
-					break;
-				}
-
-				case Renderer::ResourceType::TEXTURE_1D:
-				case Renderer::ResourceType::TEXTURE_2D:
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-				case Renderer::ResourceType::TEXTURE_3D:
-				case Renderer::ResourceType::TEXTURE_CUBE:
-				{
-					// Evaluate the texture type and get the Vulkan image view
-					VkImageView vkImageView = VK_NULL_HANDLE;
-					switch (resourceType)
-					{
-						case Renderer::ResourceType::TEXTURE_1D:
-							vkImageView = static_cast<Texture1D*>(resource)->getVkImageView();
-							break;
-
-						case Renderer::ResourceType::TEXTURE_2D:
-							vkImageView = static_cast<Texture2D*>(resource)->getVkImageView();
-							break;
-
-						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-							vkImageView = static_cast<Texture2DArray*>(resource)->getVkImageView();
-							break;
-
-						case Renderer::ResourceType::TEXTURE_3D:
-							vkImageView = static_cast<Texture3D*>(resource)->getVkImageView();
-							break;
-
-						case Renderer::ResourceType::TEXTURE_CUBE:
-							vkImageView = static_cast<TextureCube*>(resource)->getVkImageView();
-							break;
-
-						case Renderer::ResourceType::ROOT_SIGNATURE:
-						case Renderer::ResourceType::PROGRAM:
-						case Renderer::ResourceType::VERTEX_ARRAY:
-						case Renderer::ResourceType::SWAP_CHAIN:
-						case Renderer::ResourceType::FRAMEBUFFER:
-						case Renderer::ResourceType::INDEX_BUFFER:
-						case Renderer::ResourceType::VERTEX_BUFFER:
-						case Renderer::ResourceType::UNIFORM_BUFFER:
-						case Renderer::ResourceType::INDIRECT_BUFFER:
-						case Renderer::ResourceType::TEXTURE_BUFFER:
-						case Renderer::ResourceType::PIPELINE_STATE:
-						case Renderer::ResourceType::SAMPLER_STATE:
-						case Renderer::ResourceType::VERTEX_SHADER:
-						case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-						case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-						case Renderer::ResourceType::GEOMETRY_SHADER:
-						case Renderer::ResourceType::FRAGMENT_SHADER:
-							RENDERER_LOG(mContext, CRITICAL, "Invalid Vulkan renderer backend resource type")
-							break;
-					}
-
-					// Get the root signature parameter instance
-					const Renderer::RootParameter& rootParameter = mGraphicsRootSignature->getRootSignature().parameters[rootParameterIndex];
-					const Renderer::DescriptorRange* descriptorRange = reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges);
-					assert(nullptr != descriptorRange);
-
-					// Get the sampler state
-					const SamplerState* samplerState = mGraphicsRootSignature->getSamplerState(descriptorRange->samplerRootParameterIndex);
-					assert(nullptr != samplerState);
-
-					// Update Vulkan descriptor sets
-					const VkDescriptorImageInfo vkDescriptorImageInfo =
-					{
-						samplerState->getVkSampler(),	// sampler (VkSampler)
-						vkImageView,					// imageView (VkImageView)
-						VK_IMAGE_LAYOUT_PREINITIALIZED	// imageLayout (VkImageLayout)
-					};
-					const VkWriteDescriptorSet vkWriteDescriptorSet =
-					{
-						VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,			// sType (VkStructureType)
-						nullptr,										// pNext (const void*)
-						mGraphicsRootSignature->getVkDescriptorSet(),	// dstSet (VkDescriptorSet)
-						rootParameterIndex,								// dstBinding (uint32_t)
-						0,												// dstArrayElement (uint32_t)
-						1,												// descriptorCount (uint32_t)
-						VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,		// descriptorType (VkDescriptorType)
-						&vkDescriptorImageInfo,							// pImageInfo (const VkDescriptorImageInfo*)
-						nullptr,										// pBufferInfo (const VkDescriptorBufferInfo*)
-						nullptr											// pTexelBufferView (const VkBufferView*)
-					};
-					vkUpdateDescriptorSets(getVulkanContext().getVkDevice(), 1, &vkWriteDescriptorSet, 0, nullptr);
-					break;
-				}
-
-				case Renderer::ResourceType::SAMPLER_STATE:
-				{
-					// Unlike Direct3D >=10, Vulkan directly attaches the sampler settings to the texture
-					mGraphicsRootSignature->setSamplerState(rootParameterIndex, static_cast<SamplerState*>(resource));
-					break;
-				}
-
-				case Renderer::ResourceType::ROOT_SIGNATURE:
-				case Renderer::ResourceType::PROGRAM:
-				case Renderer::ResourceType::VERTEX_ARRAY:
-				case Renderer::ResourceType::SWAP_CHAIN:
-				case Renderer::ResourceType::FRAMEBUFFER:
-				case Renderer::ResourceType::INDEX_BUFFER:
-				case Renderer::ResourceType::VERTEX_BUFFER:
-				case Renderer::ResourceType::INDIRECT_BUFFER:
-				case Renderer::ResourceType::PIPELINE_STATE:
-				case Renderer::ResourceType::VERTEX_SHADER:
-				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-				case Renderer::ResourceType::GEOMETRY_SHADER:
-				case Renderer::ResourceType::FRAGMENT_SHADER:
-					RENDERER_LOG(mContext, CRITICAL, "Invalid Vulkan renderer backend resource type")
-					break;
+				vkCmdBindDescriptorSets(getVulkanContext().getVkCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, mGraphicsRootSignature->getVkPipelineLayout(), rootParameterIndex, 1, &vkDescriptorSet, 0, nullptr);
 			}
 		}
 		else
@@ -1147,6 +980,7 @@ namespace VulkanRenderer
 			}
 
 			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::RESOURCE_GROUP:
 			case Renderer::ResourceType::PROGRAM:
 			case Renderer::ResourceType::VERTEX_ARRAY:
 			case Renderer::ResourceType::SWAP_CHAIN:
@@ -1265,6 +1099,7 @@ namespace VulkanRenderer
 			}
 
 			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::RESOURCE_GROUP:
 			case Renderer::ResourceType::PROGRAM:
 			case Renderer::ResourceType::VERTEX_ARRAY:
 			case Renderer::ResourceType::SWAP_CHAIN:
@@ -1398,7 +1233,7 @@ namespace VulkanRenderer
 			mCapabilities.instancedArrays = true;
 
 			// Draw instanced supported? (shader model 4 feature, build in shader variable holding the current instance ID)
-			mCapabilities.drawInstanced = false;	// TODO(co) Set this to "true" after the descriptor sets related renderer interface update
+			mCapabilities.drawInstanced = true;
 
 			// Maximum number of vertices per patch (usually 0 for no tessellation support or 32 which is the maximum number of supported vertices per patch)
 			mCapabilities.maximumNumberOfPatchVertices = 32;
@@ -1490,6 +1325,7 @@ namespace VulkanRenderer
 			}
 
 			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::RESOURCE_GROUP:
 			case Renderer::ResourceType::PROGRAM:
 			case Renderer::ResourceType::VERTEX_ARRAY:
 			case Renderer::ResourceType::INDEX_BUFFER:

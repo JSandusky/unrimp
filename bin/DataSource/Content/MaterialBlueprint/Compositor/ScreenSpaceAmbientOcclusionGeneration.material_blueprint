@@ -78,10 +78,10 @@
 						"0":
 						{
 							"RangeType": "SAMPLER",
-							"BaseShaderRegister": "0"
+							"BaseShaderRegister": "0",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"2":
 				{
@@ -91,10 +91,10 @@
 						"0":
 						{
 							"RangeType": "SAMPLER",
-							"BaseShaderRegister": "1"
+							"BaseShaderRegister": "1",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"3":
 				{
@@ -106,10 +106,10 @@
 							"RangeType": "SRV",
 							"BaseShaderRegister": "0",
 							"BaseShaderRegisterName": "NormalMap",
-							"SamplerRootParameterIndex": "1"
+							"SamplerRootParameterIndex": "1",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"4":
 				{
@@ -121,10 +121,10 @@
 							"RangeType": "SRV",
 							"BaseShaderRegister": "1",
 							"BaseShaderRegisterName": "DepthMap",
-							"SamplerRootParameterIndex": "1"
+							"SamplerRootParameterIndex": "1",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"5":
 				{
@@ -136,10 +136,10 @@
 							"RangeType": "SRV",
 							"BaseShaderRegister": "2",
 							"BaseShaderRegisterName": "SsaoSampleKernelMap",
-							"SamplerRootParameterIndex": "1"
+							"SamplerRootParameterIndex": "1",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"6":
 				{
@@ -151,10 +151,10 @@
 							"RangeType": "SRV",
 							"BaseShaderRegister": "3",
 							"BaseShaderRegisterName": "SsaoNoise4x4Map",
-							"SamplerRootParameterIndex": "2"
+							"SamplerRootParameterIndex": "2",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				}
 			}
 		},

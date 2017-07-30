@@ -47,6 +47,14 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../External/OpenGLES/inclu
 ##################################################
 # Cross-platform source codes
 set(SOURCE_CODES
+	src/OpenGLES3ContextRuntimeLinking.cpp
+	src/ExtensionsRuntimeLinking.cpp
+	src/IOpenGLES3Context.cpp
+	src/IExtensions.cpp
+	src/Mapping.cpp
+	src/OpenGLES3Renderer.cpp
+	src/RootSignature.cpp
+	src/ResourceGroup.cpp
 	src/Buffer/BufferManager.cpp
 	src/Buffer/IndexBuffer.cpp
 	src/Buffer/IndirectBuffer.cpp
@@ -56,15 +64,8 @@ set(SOURCE_CODES
 	src/Buffer/UniformBuffer.cpp
 	src/Buffer/VertexArray.cpp
 	src/Buffer/VertexBuffer.cpp
-	src/OpenGLES3ContextRuntimeLinking.cpp
-	src/ExtensionsRuntimeLinking.cpp
-	src/IOpenGLES3Context.cpp
-	src/IExtensions.cpp
-	src/Mapping.cpp
-	src/OpenGLES3Renderer.cpp
 	src/RenderTarget/Framebuffer.cpp
 	src/RenderTarget/SwapChain.cpp
-	src/RootSignature.cpp
 	src/Shader/FragmentShaderGlsl.cpp
 	src/Shader/ProgramGlsl.cpp
 	src/Shader/ShaderLanguageGlsl.cpp

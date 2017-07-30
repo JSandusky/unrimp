@@ -90,7 +90,7 @@ namespace NullRenderer
 		//[ States                                                ]
 		//[-------------------------------------------------------]
 		void setGraphicsRootSignature(Renderer::IRootSignature* rootSignature);
-		void setGraphicsRootDescriptorTable(uint32_t rootParameterIndex, Renderer::IResource* resource);
+		void setGraphicsResourceGroup(uint32_t rootParameterIndex, Renderer::IResourceGroup* resourceGroup);
 		void setPipelineState(Renderer::IPipelineState* pipelineState);
 		//[-------------------------------------------------------]
 		//[ Input-assembler (IA) stage                            ]

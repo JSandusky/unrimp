@@ -59,6 +59,13 @@ endif()
 # Cross-platform source codes
 set(SOURCE_CODES
 	${CMAKE_CURRENT_SOURCE_DIR}/../../../External/smol-v/src/smolv.cpp
+	src/Extensions.cpp
+	src/IOpenGLContext.cpp
+	src/Mapping.cpp
+	src/OpenGLRenderer.cpp
+	src/OpenGLRuntimeLinking.cpp
+	src/RootSignature.cpp
+	src/ResourceGroup.cpp
 	src/Buffer/BufferManager.cpp
 	src/Buffer/IndexBuffer.cpp
 	src/Buffer/IndexBufferBind.cpp
@@ -80,16 +87,10 @@ set(SOURCE_CODES
 	src/Buffer/VertexBuffer.cpp
 	src/Buffer/VertexBufferBind.cpp
 	src/Buffer/VertexBufferDsa.cpp
-	src/Extensions.cpp
-	src/IOpenGLContext.cpp
-	src/Mapping.cpp
-	src/OpenGLRenderer.cpp
-	src/OpenGLRuntimeLinking.cpp
 	src/RenderTarget/Framebuffer.cpp
 	src/RenderTarget/FramebufferBind.cpp
 	src/RenderTarget/FramebufferDsa.cpp
 	src/RenderTarget/SwapChain.cpp
-	src/RootSignature.cpp
 	src/Shader/Monolithic/FragmentShaderMonolithic.cpp
 	src/Shader/Monolithic/GeometryShaderMonolithic.cpp
 	src/Shader/Monolithic/ProgramMonolithic.cpp

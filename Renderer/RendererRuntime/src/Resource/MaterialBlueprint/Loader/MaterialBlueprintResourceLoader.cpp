@@ -118,7 +118,6 @@ namespace RendererRuntime
 			{
 				mRootParameters[index].parameterType = rootParameterData[index].parameterType;
 				mRootParameters[index].descriptorTable.numberOfDescriptorRanges = rootParameterData[index].numberOfDescriptorRanges;
-				mRootParameters[index].shaderVisibility = rootParameterData[index].shaderVisibility;
 			}
 
 			// Load in the descriptor ranges

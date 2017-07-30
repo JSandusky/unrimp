@@ -45,7 +45,7 @@ layout(location = 2) in  vec4 Color;		// Color as input
 layout(location = 2) out vec4 ColorVs;		// Color as output
 
 // Uniforms
-layout(std140, binding = 0) uniform UniformBlockDynamicVs
+layout(std140, set = 0, binding = 0) uniform UniformBlockDynamicVs
 {
 	mat4 ObjectSpaceToClipSpaceMatrix;
 };
@@ -80,7 +80,7 @@ layout(location = 2) in vec4 ColorVs;
 layout(location = 0) out vec4 OutFragmentColor;
 
 // Uniforms
-layout(binding = 2) uniform sampler2D GlyphMap;	// Glyph atlas texture map
+layout(set = 0, binding = 1) uniform sampler2D GlyphMap;	// Glyph atlas texture map
 
 // Programs
 void main()

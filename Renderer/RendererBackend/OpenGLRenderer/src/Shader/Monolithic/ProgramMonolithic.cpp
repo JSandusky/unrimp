@@ -136,36 +136,35 @@ namespace OpenGLRenderer
 			// The actual locations assigned to uniform variables are not known until the program object is linked successfully
 			// -> So we have to build a root signature parameter index -> uniform location mapping here
 			const Renderer::RootSignature& rootSignatureData = static_cast<const RootSignature&>(rootSignature).getRootSignature();
-			const uint32_t numberOfParameters = rootSignatureData.numberOfParameters;
-			for (uint32_t parameterIndex = 0; parameterIndex < numberOfParameters; ++parameterIndex)
+			const uint32_t numberOfRootParameters = rootSignatureData.numberOfParameters;
+			uint32_t uniformBlockBindingIndex = 0;
+			for (uint32_t rootParameterIndex = 0; rootParameterIndex < numberOfRootParameters; ++rootParameterIndex)
 			{
-				const Renderer::RootParameter& rootParameter = rootSignatureData.parameters[parameterIndex];
+				const Renderer::RootParameter& rootParameter = rootSignatureData.parameters[rootParameterIndex];
 				if (Renderer::RootParameterType::DESCRIPTOR_TABLE == rootParameter.parameterType)
 				{
-					// TODO(co) For now, we only support a single descriptor range
-					if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
+					assert(nullptr != reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges));
+					const uint32_t numberOfDescriptorRanges = rootParameter.descriptorTable.numberOfDescriptorRanges;
+					for (uint32_t descriptorRangeIndex = 0; descriptorRangeIndex < numberOfDescriptorRanges; ++descriptorRangeIndex)
 					{
-						RENDERER_LOG(openGLRenderer.getContext(), CRITICAL, "Only a single descriptor range is supported by the OpenGL renderer backend")
-					}
-					else
-					{
-						const Renderer::DescriptorRange* descriptorRange = reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges);
+						const Renderer::DescriptorRange& descriptorRange = reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges)[descriptorRangeIndex];
 
 						// Ignore sampler range types in here (OpenGL handles samplers in a different way then Direct3D 10>=)
-						if (Renderer::DescriptorRangeType::UBV == descriptorRange->rangeType)
+						if (Renderer::DescriptorRangeType::UBV == descriptorRange.rangeType)
 						{
 							// Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension,
 							// for backward compatibility, ask for the uniform block index
-							const GLuint uniformBlockIndex = glGetUniformBlockIndex(mOpenGLProgram, descriptorRange->baseShaderRegisterName);
+							const GLuint uniformBlockIndex = glGetUniformBlockIndex(mOpenGLProgram, descriptorRange.baseShaderRegisterName);
 							if (GL_INVALID_INDEX != uniformBlockIndex)
 							{
 								// Associate the uniform block with the given binding point
-								glUniformBlockBinding(mOpenGLProgram, uniformBlockIndex, parameterIndex);
+								glUniformBlockBinding(mOpenGLProgram, uniformBlockIndex, uniformBlockBindingIndex);
+								++uniformBlockBindingIndex;
 							}
 						}
-						else if (Renderer::DescriptorRangeType::SAMPLER != descriptorRange->rangeType)
+						else if (Renderer::DescriptorRangeType::SAMPLER != descriptorRange.rangeType)
 						{
-							const GLint uniformLocation = glGetUniformLocationARB(mOpenGLProgram, descriptorRange->baseShaderRegisterName);
+							const GLint uniformLocation = glGetUniformLocationARB(mOpenGLProgram, descriptorRange.baseShaderRegisterName);
 							if (uniformLocation >= 0)
 							{
 								// OpenGL/GLSL is not automatically assigning texture units to samplers, so, we have to take over this job
@@ -177,11 +176,11 @@ namespace OpenGLRenderer
 								// -> Use the "GL_ARB_direct_state_access" or "GL_EXT_direct_state_access" extension if possible to not change OpenGL states
 								if (nullptr != glProgramUniform1i)
 								{
-									glProgramUniform1i(mOpenGLProgram, uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
+									glProgramUniform1i(mOpenGLProgram, uniformLocation, static_cast<GLint>(descriptorRange.baseShaderRegister));
 								}
 								else if (nullptr != glProgramUniform1iEXT)
 								{
-									glProgramUniform1iEXT(mOpenGLProgram, uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
+									glProgramUniform1iEXT(mOpenGLProgram, uniformLocation, static_cast<GLint>(descriptorRange.baseShaderRegister));
 								}
 								else
 								{
@@ -193,20 +192,20 @@ namespace OpenGLRenderer
 										if (static_cast<GLuint>(openGLProgramBackup) == mOpenGLProgram)
 										{
 											// Set uniform, please note that for this our program must be the currently used one
-											glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
+											glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange.baseShaderRegister));
 										}
 										else
 										{
 											// Set uniform, please note that for this our program must be the currently used one
 											glUseProgramObjectARB(mOpenGLProgram);
-											glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
+											glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange.baseShaderRegister));
 
 											// Be polite and restore the previous used OpenGL program
 											glUseProgramObjectARB(static_cast<GLhandleARB>(openGLProgramBackup));
 										}
 									#else
 										glUseProgramObjectARB(mOpenGLProgram);
-										glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
+										glUniform1iARB(uniformLocation, static_cast<GLint>(descriptorRange.baseShaderRegister));
 									#endif
 								}
 							}

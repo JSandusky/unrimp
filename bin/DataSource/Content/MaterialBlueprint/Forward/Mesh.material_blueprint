@@ -184,10 +184,10 @@
 						{
 							"RangeType": "UBV",
 							"BaseShaderRegister": "1",
-							"BaseShaderRegisterName": "MaterialUniformBuffer"
+							"BaseShaderRegisterName": "MaterialUniformBuffer",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"2":
 				{
@@ -198,10 +198,10 @@
 						{
 							"RangeType": "UBV",
 							"BaseShaderRegister": "2",
-							"BaseShaderRegisterName": "InstanceUniformBuffer"
+							"BaseShaderRegisterName": "InstanceUniformBuffer",
+							"ShaderVisibility": "VERTEX"
 						}
-					},
-					"ShaderVisibility": "VERTEX"
+					}
 				},
 				"3":
 				{
@@ -212,10 +212,10 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "0",
-							"BaseShaderRegisterName": "InstanceTextureBuffer"
+							"BaseShaderRegisterName": "InstanceTextureBuffer",
+							"ShaderVisibility": "VERTEX"
 						}
-					},
-					"ShaderVisibility": "VERTEX"
+					}
 				},
 				"4":
 				{
@@ -226,10 +226,10 @@
 						{
 							"RangeType": "SRV",
 							"BaseShaderRegister": "1",
-							"BaseShaderRegisterName": "LightTextureBuffer"
+							"BaseShaderRegisterName": "LightTextureBuffer",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"5":
 				{
@@ -239,10 +239,10 @@
 						"0":
 						{
 							"RangeType": "SAMPLER",
-							"BaseShaderRegister": "0"
+							"BaseShaderRegister": "0",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"6":
 				{
@@ -252,10 +252,10 @@
 						"0":
 						{
 							"RangeType": "SAMPLER",
-							"BaseShaderRegister": "1"
+							"BaseShaderRegister": "1",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"7":
 				{
@@ -267,10 +267,10 @@
 							"RangeType": "SRV",
 							"BaseShaderRegister": "2",
 							"BaseShaderRegisterName": "_drgb_nxa",
-							"SamplerRootParameterIndex": "6"
+							"SamplerRootParameterIndex": "6",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"8":
 				{
@@ -282,10 +282,10 @@
 							"RangeType": "SRV",
 							"BaseShaderRegister": "3",
 							"BaseShaderRegisterName": "_hr_rg_mb_nya",
-							"SamplerRootParameterIndex": "6"
+							"SamplerRootParameterIndex": "6",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"9":
 				{
@@ -297,10 +297,10 @@
 							"RangeType": "SRV",
 							"BaseShaderRegister": "4",
 							"BaseShaderRegisterName": "AlphaMap",
-							"SamplerRootParameterIndex": "6"
+							"SamplerRootParameterIndex": "6",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"10":
 				{
@@ -312,10 +312,10 @@
 							"RangeType": "SRV",
 							"BaseShaderRegister": "5",
 							"BaseShaderRegisterName": "EmissiveMap",
-							"SamplerRootParameterIndex": "6"
+							"SamplerRootParameterIndex": "6",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"11":
 				{
@@ -327,10 +327,10 @@
 							"RangeType": "SRV",
 							"BaseShaderRegister": "6",
 							"BaseShaderRegisterName": "ShadowMap",
-							"SamplerRootParameterIndex": "5"
+							"SamplerRootParameterIndex": "5",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"12":
 				{
@@ -342,10 +342,10 @@
 							"RangeType": "SRV",
 							"BaseShaderRegister": "7",
 							"BaseShaderRegisterName": "ReflectionCubeMap",
-							"SamplerRootParameterIndex": "6"
+							"SamplerRootParameterIndex": "6",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				},
 				"13":
 				{
@@ -357,10 +357,10 @@
 							"RangeType": "SRV",
 							"BaseShaderRegister": "8",
 							"BaseShaderRegisterName": "LightClustersMap3D",
-							"SamplerRootParameterIndex": "5"
+							"SamplerRootParameterIndex": "5",
+							"ShaderVisibility": "FRAGMENT"
 						}
-					},
-					"ShaderVisibility": "FRAGMENT"
+					}
 				}
 			}
 		},

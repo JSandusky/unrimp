@@ -48,12 +48,12 @@ struct VS_OUTPUT
 };
 
 // Uniforms
-tbuffer PerInstanceDataMapVs : register(t0)	// Texture buffer with per instance data
-											// -> Layout: [Position][Rotation][Position][Rotation]...
-											//    - Position: xyz=Position, w=Slice of the 2D texture array to use
-											//    - Rotation: Rotation quaternion (xyz) and scale (w)
-											//      -> We don't need to store the w component of the quaternion. It's normalized and storing
-											//         three components while recomputing the fourths component is be sufficient.
+tbuffer PerInstanceTextureBufferVs : register(t0)	// Texture buffer with per instance data
+													// -> Layout: [Position][Rotation][Position][Rotation]...
+													//    - Position: xyz=Position, w=Slice of the 2D texture array to use
+													//    - Rotation: Rotation quaternion (xyz) and scale (w)
+													//      -> We don't need to store the w component of the quaternion. It's normalized and storing
+													//         three components while recomputing the fourths component is be sufficient.
 {
 	float4 PerInstanceDataMap[2000];	// TODO(co) Real number... hm, I like the OpenGL way more because it's more flexible and I can draw a LOT more instances with a single draw call...
 										// (Direct3D error message: "array dimension must be between 1 and 65536")

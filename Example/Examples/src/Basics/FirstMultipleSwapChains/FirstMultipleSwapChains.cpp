@@ -328,6 +328,7 @@ void FirstMultipleSwapChains::onDeinitialization()
 	mVertexArray = nullptr;
 	mPipelineState = nullptr;
 	mRootSignature = nullptr;
+	mCommandBuffer.clear();
 	mBufferManager = nullptr;
 
 	// Call the base implementation

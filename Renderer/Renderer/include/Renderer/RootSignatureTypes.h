@@ -64,6 +64,26 @@ namespace Renderer
 
 	/**
 	*  @brief
+	*    Shader visibility
+	*
+	*  @note
+	*    - These constants directly map to Direct3D 12 constants, do not change them
+	*
+	*  @see
+	*    - "D3D12_SHADER_VISIBILITY"-documentation for details
+	*/
+	enum class ShaderVisibility
+	{
+		ALL                     = 0,
+		VERTEX                  = 1,
+		TESSELLATION_CONTROL    = 2,
+		TESSELLATION_EVALUATION = 3,
+		GEOMETRY                = 4,
+		FRAGMENT                = 5
+	};
+
+	/**
+	*  @brief
 	*    Descriptor range
 	*
 	*  @note
@@ -84,6 +104,7 @@ namespace Renderer
 		static const uint32_t NAME_LENGTH = 32;
 		char				  baseShaderRegisterName[NAME_LENGTH];	///< When not using explicit binding locations (OpenGL ES 2, legacy GLSL profiles)
 		uint32_t			  samplerRootParameterIndex;			///< In case this is a texture, the sampler root parameter index is required for OpenGL, OpenGL ES 2 and DirectX 9
+		ShaderVisibility	  shaderVisibility;
 	};
 	struct DescriptorRangeBuilder : public DescriptorRange
 	{
@@ -102,18 +123,20 @@ namespace Renderer
 			uint32_t _baseShaderRegister,
 			const char _baseShaderRegisterName[NAME_LENGTH],
 			uint32_t _samplerRootParameterIndex,
+			ShaderVisibility _shaderVisibility,
 			uint32_t _registerSpace = 0,
 			uint32_t _offsetInDescriptorsFromTableStart = OFFSET_APPEND)
 		{
-			initialize(_rangeType, _numberOfDescriptors, _baseShaderRegister, _baseShaderRegisterName, _samplerRootParameterIndex, _registerSpace, _offsetInDescriptorsFromTableStart);
+			initialize(_rangeType, _numberOfDescriptors, _baseShaderRegister, _baseShaderRegisterName, _samplerRootParameterIndex, _shaderVisibility, _registerSpace, _offsetInDescriptorsFromTableStart);
 		}
 		inline void initializeSampler(
 			uint32_t _numberOfDescriptors,
 			uint32_t _baseShaderRegister,
+			ShaderVisibility _shaderVisibility,
 			uint32_t _registerSpace = 0,
 			uint32_t _offsetInDescriptorsFromTableStart = OFFSET_APPEND)
 		{
-			initialize(*this, DescriptorRangeType::SAMPLER, _numberOfDescriptors, _baseShaderRegister, "", 0, _registerSpace, _offsetInDescriptorsFromTableStart);
+			initialize(*this, DescriptorRangeType::SAMPLER, _numberOfDescriptors, _baseShaderRegister, "", 0, _shaderVisibility, _registerSpace, _offsetInDescriptorsFromTableStart);
 		}
 		inline void initialize(
 			DescriptorRangeType _rangeType,
@@ -121,10 +144,11 @@ namespace Renderer
 			uint32_t _baseShaderRegister,
 			const char _baseShaderRegisterName[NAME_LENGTH],
 			uint32_t _samplerRootParameterIndex,
+			ShaderVisibility _shaderVisibility,
 			uint32_t _registerSpace = 0,
 			uint32_t _offsetInDescriptorsFromTableStart = OFFSET_APPEND)
 		{
-			initialize(*this, _rangeType, _numberOfDescriptors, _baseShaderRegister, _baseShaderRegisterName, _samplerRootParameterIndex, _registerSpace, _offsetInDescriptorsFromTableStart);
+			initialize(*this, _rangeType, _numberOfDescriptors, _baseShaderRegister, _baseShaderRegisterName, _samplerRootParameterIndex, _shaderVisibility, _registerSpace, _offsetInDescriptorsFromTableStart);
 		}
 		static inline void initialize(
 			DescriptorRange& range,
@@ -133,6 +157,7 @@ namespace Renderer
 			uint32_t _baseShaderRegister,
 			const char _baseShaderRegisterName[NAME_LENGTH],
 			uint32_t _samplerRootParameterIndex,
+			ShaderVisibility _shaderVisibility,
 			uint32_t _registerSpace = 0,
 			uint32_t _offsetInDescriptorsFromTableStart = OFFSET_APPEND)
 		{
@@ -143,6 +168,7 @@ namespace Renderer
 			range.offsetInDescriptorsFromTableStart = _offsetInDescriptorsFromTableStart;
 			strcpy(range.baseShaderRegisterName, _baseShaderRegisterName);
 			range.samplerRootParameterIndex = _samplerRootParameterIndex;
+			range.shaderVisibility = _shaderVisibility;
 		}
 	};
 
@@ -152,6 +178,7 @@ namespace Renderer
 	*
 	*  @note
 	*    - This structure directly maps to Direct3D 12 structure, do not change it
+	*    - Samplers are not allowed in the same descriptor table as UBV/UAV/SRVs
 	*
 	*  @see
 	*    - "D3D12_ROOT_DESCRIPTOR_TABLE"-documentation for details
@@ -310,30 +337,10 @@ namespace Renderer
 
 	/**
 	*  @brief
-	*    Shader visibility
-	*
-	*  @note
-	*    - These constants directly map to Direct3D 12 constants, do not change them
-	*
-	*  @see
-	*    - "D3D12_SHADER_VISIBILITY"-documentation for details
-	*/
-	enum class ShaderVisibility
-	{
-		ALL                     = 0,
-		VERTEX                  = 1,
-		TESSELLATION_CONTROL    = 2,
-		TESSELLATION_EVALUATION = 3,
-		GEOMETRY                = 4,
-		FRAGMENT                = 5
-	};
-
-	/**
-	*  @brief
 	*    Root parameter
 	*
 	*  @note
-	*    - This structure directly maps to Direct3D 12 structure, do not change it
+	*    - "Renderer::RootParameter" is not identical to "D3D12_ROOT_PARAMETER", the shader visibility is defined per descriptor since Vulkan needs it this way
 	*
 	*  @see
 	*    - "D3D12_ROOT_PARAMETER"-documentation for details
@@ -347,12 +354,10 @@ namespace Renderer
 			RootConstants		constants;
 			RootDescriptor		descriptor;
 		};
-		ShaderVisibility		shaderVisibility;
 	};
 	struct RootParameterData
 	{
 		RootParameterType	parameterType;
-		ShaderVisibility	shaderVisibility;
 		uint32_t			numberOfDescriptorRanges;
 	};
 	struct RootParameterBuilder : public RootParameter
@@ -368,89 +373,74 @@ namespace Renderer
 		static inline void initializeAsDescriptorTable(
 			RootParameter& rootParam,
 			uint32_t numberOfDescriptorRanges,
-			const DescriptorRange* descriptorRanges,
-			ShaderVisibility visibility = ShaderVisibility::ALL)
+			const DescriptorRange* descriptorRanges)
 		{
 			rootParam.parameterType = RootParameterType::DESCRIPTOR_TABLE;
-			rootParam.shaderVisibility = visibility;
 			RootDescriptorTableBuilder::initialize(rootParam.descriptorTable, numberOfDescriptorRanges, descriptorRanges);
 		}
 		static inline void initializeAsConstants(
 			RootParameter& rootParam,
 			uint32_t numberOf32BitValues,
 			uint32_t shaderRegister,
-			uint32_t registerSpace = 0,
-			ShaderVisibility visibility = ShaderVisibility::ALL)
+			uint32_t registerSpace = 0)
 		{
 			rootParam.parameterType = RootParameterType::CONSTANTS_32BIT;
-			rootParam.shaderVisibility = visibility;
 			RootConstantsBuilder::initialize(rootParam.constants, numberOf32BitValues, shaderRegister, registerSpace);
 		}
 		static inline void initializeAsConstantBufferView(
 			RootParameter& rootParam,
 			uint32_t shaderRegister,
-			uint32_t registerSpace = 0,
-			ShaderVisibility visibility = ShaderVisibility::ALL)
+			uint32_t registerSpace = 0)
 		{
 			rootParam.parameterType = RootParameterType::UBV;
-			rootParam.shaderVisibility = visibility;
 			RootDescriptorBuilder::initialize(rootParam.descriptor, shaderRegister, registerSpace);
 		}
 		static inline void initializeAsShaderResourceView(
 			RootParameter& rootParam,
 			uint32_t shaderRegister,
-			uint32_t registerSpace = 0,
-			ShaderVisibility visibility = ShaderVisibility::ALL)
+			uint32_t registerSpace = 0)
 		{
 			rootParam.parameterType = RootParameterType::SRV;
-			rootParam.shaderVisibility = visibility;
 			RootDescriptorBuilder::initialize(rootParam.descriptor, shaderRegister, registerSpace);
 		}
 		static inline void initializeAsUnorderedAccessView(
 			RootParameter& rootParam,
 			uint32_t shaderRegister,
-			uint32_t registerSpace = 0,
-			ShaderVisibility visibility = ShaderVisibility::ALL)
+			uint32_t registerSpace = 0)
 		{
 			rootParam.parameterType = RootParameterType::UAV;
-			rootParam.shaderVisibility = visibility;
 			RootDescriptorBuilder::initialize(rootParam.descriptor, shaderRegister, registerSpace);
 		}
 		inline void initializeAsDescriptorTable(
 			uint32_t numberOfDescriptorRanges,
-			const DescriptorRange* descriptorRanges,
-			ShaderVisibility visibility = ShaderVisibility::ALL)
+			const DescriptorRange* descriptorRanges)
 		{
-			initializeAsDescriptorTable(*this, numberOfDescriptorRanges, descriptorRanges, visibility);
+			initializeAsDescriptorTable(*this, numberOfDescriptorRanges, descriptorRanges);
 		}
 		inline void initializeAsConstants(
 			uint32_t numberOf32BitValues,
 			uint32_t shaderRegister,
-			uint32_t registerSpace = 0,
-			ShaderVisibility visibility = ShaderVisibility::ALL)
+			uint32_t registerSpace = 0)
 		{
-			initializeAsConstants(*this, numberOf32BitValues, shaderRegister, registerSpace, visibility);
+			initializeAsConstants(*this, numberOf32BitValues, shaderRegister, registerSpace);
 		}
 		inline void initializeAsConstantBufferView(
 			uint32_t shaderRegister,
-			uint32_t registerSpace = 0,
-			ShaderVisibility visibility = ShaderVisibility::ALL)
+			uint32_t registerSpace = 0)
 		{
-			initializeAsConstantBufferView(*this, shaderRegister, registerSpace, visibility);
+			initializeAsConstantBufferView(*this, shaderRegister, registerSpace);
 		}
 		inline void initializeAsShaderResourceView(
 			uint32_t shaderRegister,
-			uint32_t registerSpace = 0,
-			ShaderVisibility visibility = ShaderVisibility::ALL)
+			uint32_t registerSpace = 0)
 		{
-			initializeAsShaderResourceView(*this, shaderRegister, registerSpace, visibility);
+			initializeAsShaderResourceView(*this, shaderRegister, registerSpace);
 		}
 		inline void initializeAsUnorderedAccessView(
 			uint32_t shaderRegister,
-			uint32_t registerSpace = 0,
-			ShaderVisibility visibility = ShaderVisibility::ALL)
+			uint32_t registerSpace = 0)
 		{
-			initializeAsUnorderedAccessView(*this, shaderRegister, registerSpace, visibility);
+			initializeAsUnorderedAccessView(*this, shaderRegister, registerSpace);
 		}
 	};
 

@@ -45,7 +45,6 @@ namespace OpenGLES3Renderer
 	ProgramGlsl::ProgramGlsl(OpenGLES3Renderer& openGLES3Renderer, const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, VertexShaderGlsl* vertexShaderGlsl, FragmentShaderGlsl* fragmentShaderGlsl) :
 		IProgram(openGLES3Renderer),
 		mNumberOfRootSignatureParameters(0),
-		mRootSignatureParameterIndexToUniformLocation(nullptr),
 		mOpenGLES3Program(0),
 		mDrawIdUniformLocation(-1)
 	{
@@ -92,62 +91,58 @@ namespace OpenGLES3Renderer
 			// The actual locations assigned to uniform variables are not known until the program object is linked successfully
 			// -> So we have to build a root signature parameter index -> uniform location mapping here
 			const Renderer::RootSignature& rootSignatureData = static_cast<const RootSignature&>(rootSignature).getRootSignature();
-			const uint32_t numberOfParameters = rootSignatureData.numberOfParameters;
-			if (numberOfParameters > 0)
+			const uint32_t numberOfRootParameters = rootSignatureData.numberOfParameters;
+			if (numberOfRootParameters > 0)
 			{
-				mRootSignatureParameterIndexToUniformLocation = new int32_t[numberOfParameters];
-				memset(mRootSignatureParameterIndexToUniformLocation, -1, sizeof(int32_t) * numberOfParameters);
+				uint32_t uniformBlockBindingIndex = 0;
 				const bool isGL_EXT_texture_buffer = openGLES3Renderer.getOpenGLES3Context().getExtensions().isGL_EXT_texture_buffer();
-				for (uint32_t parameterIndex = 0; parameterIndex < numberOfParameters; ++parameterIndex)
+				for (uint32_t rootParameterIndex = 0; rootParameterIndex < numberOfRootParameters; ++rootParameterIndex)
 				{
-					const Renderer::RootParameter& rootParameter = rootSignatureData.parameters[parameterIndex];
+					const Renderer::RootParameter& rootParameter = rootSignatureData.parameters[rootParameterIndex];
 					if (Renderer::RootParameterType::DESCRIPTOR_TABLE == rootParameter.parameterType)
 					{
-						// TODO(co) For now, we only support a single descriptor range
-						if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
+						assert(nullptr != reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges));
+						const uint32_t numberOfDescriptorRanges = rootParameter.descriptorTable.numberOfDescriptorRanges;
+						for (uint32_t descriptorRangeIndex = 0; descriptorRangeIndex < numberOfDescriptorRanges; ++descriptorRangeIndex)
 						{
-							RENDERER_LOG(openGLES3Renderer.getContext(), CRITICAL, "Only a single descriptor range is supported by the OpenGL ES 3 renderer backend")
-						}
-						else
-						{
-							const Renderer::DescriptorRange* descriptorRange = reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges);
+							const Renderer::DescriptorRange& descriptorRange = reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges)[descriptorRangeIndex];
 
 							// Ignore sampler range types in here (OpenGL ES 3 handles samplers in a different way then Direct3D 10>=)
-							if (Renderer::DescriptorRangeType::UBV == descriptorRange->rangeType)
+							if (Renderer::DescriptorRangeType::UBV == descriptorRange.rangeType)
 							{
 								// Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension,
 								// for backward compatibility, ask for the uniform block index
-								const GLuint uniformBlockIndex = glGetUniformBlockIndex(mOpenGLES3Program, descriptorRange->baseShaderRegisterName);
+								const GLuint uniformBlockIndex = glGetUniformBlockIndex(mOpenGLES3Program, descriptorRange.baseShaderRegisterName);
 								if (GL_INVALID_INDEX != uniformBlockIndex)
 								{
 									// Associate the uniform block with the given binding point
-									glUniformBlockBinding(mOpenGLES3Program, uniformBlockIndex, parameterIndex);
+									glUniformBlockBinding(mOpenGLES3Program, uniformBlockIndex, uniformBlockBindingIndex);
+									++uniformBlockBindingIndex;
 								}
 							}
-							else if (Renderer::DescriptorRangeType::SAMPLER != descriptorRange->rangeType)
+							else if (Renderer::DescriptorRangeType::SAMPLER != descriptorRange.rangeType)
 							{
 								// We can only emulate the "Renderer::TextureFormat::R32G32B32A32F" texture format using an uniform buffer
 								// -> Check for something like "InstanceTextureBuffer". Yes, this only works when one sticks to the naming convention.
-								if (!isGL_EXT_texture_buffer && nullptr != strstr(descriptorRange->baseShaderRegisterName, "TextureBuffer"))
+								if (!isGL_EXT_texture_buffer && nullptr != strstr(descriptorRange.baseShaderRegisterName, "TextureBuffer"))
 								{
 									// Texture buffer emulation using uniform buffer
 
 									// Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension,
 									// for backward compatibility, ask for the uniform block index
-									const GLuint uniformBlockIndex = glGetUniformBlockIndex(mOpenGLES3Program, descriptorRange->baseShaderRegisterName);
+									const GLuint uniformBlockIndex = glGetUniformBlockIndex(mOpenGLES3Program, descriptorRange.baseShaderRegisterName);
 									if (GL_INVALID_INDEX != uniformBlockIndex)
 									{
 										// Associate the uniform block with the given binding point
-										glUniformBlockBinding(mOpenGLES3Program, uniformBlockIndex, parameterIndex);
+										glUniformBlockBinding(mOpenGLES3Program, uniformBlockIndex, uniformBlockBindingIndex);
+										++uniformBlockBindingIndex;
 									}
 								}
 								else
 								{
-									const GLint uniformLocation = glGetUniformLocation(mOpenGLES3Program, descriptorRange->baseShaderRegisterName);
+									const GLint uniformLocation = glGetUniformLocation(mOpenGLES3Program, descriptorRange.baseShaderRegisterName);
 									if (uniformLocation >= 0)
 									{
-										mRootSignatureParameterIndexToUniformLocation[parameterIndex] = uniformLocation;
-
 										// OpenGL ES 3/GLSL is not automatically assigning texture units to samplers, so, we have to take over this job
 										// -> When using OpenGL or OpenGL ES 3 this is required
 										// -> OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension supports explicit binding points ("layout(binding = 0)"
@@ -162,13 +157,13 @@ namespace OpenGLES3Renderer
 											if (openGLES3ProgramBackup == static_cast<GLint>(mOpenGLES3Program))
 											{
 												// Set uniform, please note that for this our program must be the currently used one
-												glUniform1i(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
+												glUniform1i(uniformLocation, static_cast<GLint>(descriptorRange.baseShaderRegister));
 											}
 											else
 											{
 												// Set uniform, please note that for this our program must be the currently used one
 												glUseProgram(mOpenGLES3Program);
-												glUniform1i(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
+												glUniform1i(uniformLocation, static_cast<GLint>(descriptorRange.baseShaderRegister));
 
 												// Be polite and restore the previous used OpenGL ES 3 program
 												glUseProgram(static_cast<GLuint>(openGLES3ProgramBackup));
@@ -176,7 +171,7 @@ namespace OpenGLES3Renderer
 										#else
 											// Set uniform, please note that for this our program must be the currently used one
 											glUseProgram(mOpenGLES3Program);
-											glUniform1i(uniformLocation, static_cast<GLint>(descriptorRange->baseShaderRegister));
+											glUniform1i(uniformLocation, static_cast<GLint>(descriptorRange.baseShaderRegister));
 										#endif
 									}
 								}
@@ -213,9 +208,6 @@ namespace OpenGLES3Renderer
 		// Destroy the OpenGL ES 3 program
 		// -> A value of 0 for program will be silently ignored
 		glDeleteProgram(mOpenGLES3Program);
-
-		// Destroy root signature parameter index to OpenGL ES 3 uniform location mapping, if required
-		delete [] mRootSignatureParameterIndexToUniformLocation;
 	}
 
 

@@ -123,6 +123,28 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer& render
 	// -> /2 -> One instance requires two texels
 	mMaximumNumberOfInstancesPerBatch = mRenderer->getCapabilities().maximumTextureBufferSize / 2;
 
+	{ // Create the root signature
+		Renderer::DescriptorRangeBuilder ranges[6];
+		ranges[0].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockStaticVs", 0, Renderer::ShaderVisibility::VERTEX);
+		ranges[1].initialize(Renderer::DescriptorRangeType::UBV, 1, 1, "UniformBlockDynamicVs", 0, Renderer::ShaderVisibility::VERTEX);
+		ranges[2].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap", 2, Renderer::ShaderVisibility::FRAGMENT);
+		ranges[3].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockDynamicFs", 0, Renderer::ShaderVisibility::FRAGMENT);
+		ranges[4].initialize(Renderer::DescriptorRangeType::UAV, 1, 0, "PerInstanceTextureBufferVs", 0, Renderer::ShaderVisibility::VERTEX);	// TODO(co) Usage of "UAV" is just a temporary hack
+		ranges[5].initializeSampler(1, 0, Renderer::ShaderVisibility::FRAGMENT);
+
+		Renderer::RootParameterBuilder rootParameters[3];
+		rootParameters[0].initializeAsDescriptorTable(4, &ranges[0]);
+		rootParameters[1].initializeAsDescriptorTable(1, &ranges[4]);
+		rootParameters[2].initializeAsDescriptorTable(1, &ranges[5]);
+
+		// Setup
+		Renderer::RootSignatureBuilder rootSignature;
+		rootSignature.initialize(static_cast<uint32_t>(glm::countof(rootParameters)), rootParameters, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+		// Create the instance
+		mRootSignature = mRenderer->createRootSignature(rootSignature);
+	}
+
 	{ // Create the textures
 		static const uint32_t TEXTURE_WIDTH   = 128;
 		static const uint32_t TEXTURE_HEIGHT  = 128;
@@ -172,32 +194,9 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer& render
 		delete [] data;
 	}
 
-	// Create sampler state
-	mSamplerState = mRenderer->createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
-
-	{ // Create the root signature
-		Renderer::DescriptorRangeBuilder ranges[6];
-		ranges[0].initialize(Renderer::DescriptorRangeType::UAV, 1, 0, "PerInstanceDataMapVs", 0);	// TODO(co) Usage of "UAV" is just a temporary hack
-		ranges[1].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockStaticVs", 0);
-		ranges[2].initialize(Renderer::DescriptorRangeType::UBV, 1, 1, "UniformBlockDynamicVs", 0);
-		ranges[3].initializeSampler(1, 0);
-		ranges[4].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap", 3);
-		ranges[5].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockDynamicFs", 0);
-
-		Renderer::RootParameterBuilder rootParameters[6];
-		rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::VERTEX);
-		rootParameters[1].initializeAsDescriptorTable(1, &ranges[1], Renderer::ShaderVisibility::VERTEX);
-		rootParameters[2].initializeAsDescriptorTable(1, &ranges[2], Renderer::ShaderVisibility::VERTEX);
-		rootParameters[3].initializeAsDescriptorTable(1, &ranges[3], Renderer::ShaderVisibility::FRAGMENT);
-		rootParameters[4].initializeAsDescriptorTable(1, &ranges[4], Renderer::ShaderVisibility::FRAGMENT);
-		rootParameters[5].initializeAsDescriptorTable(1, &ranges[5], Renderer::ShaderVisibility::FRAGMENT);
-
-		// Setup
-		Renderer::RootSignatureBuilder rootSignature;
-		rootSignature.initialize(static_cast<uint32_t>(glm::countof(rootParameters)), rootParameters, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
-
-		// Create the instance
-		mRootSignature = mRenderer->createRootSignature(rootSignature);
+	{ // Create sampler state instance and wrap it into a resource group instance
+		Renderer::IResource* resource = mRenderer->createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
+		mSamplerStateGroup = mRootSignature->createResourceGroup(2, 1, &resource);
 	}
 
 	{ // Create vertex array object (VAO)
@@ -292,6 +291,11 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer& render
 		// Create dynamic uniform buffers
 		mUniformBufferDynamicVs = mBufferManager->createUniformBuffer(sizeof(float) * 2, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 		mUniformBufferDynamicFs = mBufferManager->createUniformBuffer(sizeof(float) * 3, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+	}
+
+	{ // Create resource group
+		Renderer::IResource* resources[4] = { mUniformBufferStaticVs, mUniformBufferDynamicVs, mTexture2DArray, mUniformBufferDynamicFs };
+		mResourceGroup = mRootSignature->createResourceGroup(0, static_cast<uint32_t>(glm::countof(resources)), resources);
 	}
 
 	// Create the program: Decide which shader language should be used (for example "GLSL" or "HLSL")
@@ -437,14 +441,15 @@ void CubeRendererDrawInstanced::fillCommandBuffer(float globalTimer, float globa
 void CubeRendererDrawInstanced::fillReusableCommandBuffer()
 {
 	// Sanity checks
-	assert(nullptr != mRootSignature);
-	assert(nullptr != mUniformBufferStaticVs);
-	assert(nullptr != mUniformBufferDynamicVs);
-	assert(nullptr != mSamplerState);
-	assert(nullptr != mTexture2DArray);
-	assert(nullptr != mUniformBufferDynamicFs);
-	assert(nullptr != mVertexArray);
 	assert(mCommandBuffer.isEmpty());
+	assert(nullptr != mRootSignature);
+	assert(nullptr != mTexture2DArray);
+	assert(0 == mRenderer->getCapabilities().maximumUniformBufferSize || nullptr != mUniformBufferStaticVs);
+	assert(0 == mRenderer->getCapabilities().maximumUniformBufferSize || nullptr != mUniformBufferDynamicVs);
+	assert(0 == mRenderer->getCapabilities().maximumUniformBufferSize || nullptr != mUniformBufferDynamicFs);
+	assert(nullptr != mResourceGroup);
+	assert(nullptr != mSamplerStateGroup);
+	assert(nullptr != mVertexArray);
 
 	// Begin debug event
 	COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(mCommandBuffer)
@@ -452,13 +457,10 @@ void CubeRendererDrawInstanced::fillReusableCommandBuffer()
 	// Set the used graphics root signature
 	Renderer::Command::SetGraphicsRootSignature::create(mCommandBuffer, mRootSignature);
 
-	// Set diffuse map
-	// -> Graphics root descriptor table 0 is set inside "BatchDrawInstanced::draw()"
-	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 1, mUniformBufferStaticVs);
-	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 2, mUniformBufferDynamicVs);
-	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 3, mSamplerState);
-	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 4, mTexture2DArray);
-	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 5, mUniformBufferDynamicFs);
+	// Set resource groups
+	Renderer::Command::SetGraphicsResourceGroup::create(mCommandBuffer, 2, mSamplerStateGroup);
+	// Graphics root descriptor table 1 is set inside "BatchDrawInstanced::draw()"
+	Renderer::Command::SetGraphicsResourceGroup::create(mCommandBuffer, 0, mResourceGroup);
 
 	// Input assembly (IA): Set the used vertex array
 	Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArray);

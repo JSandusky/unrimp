@@ -31,6 +31,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace Renderer
+{
+	class IResourceGroup;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace Renderer
@@ -60,6 +69,27 @@ namespace Renderer
 		*    Destructor
 		*/
 		inline virtual ~IRootSignature();
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IRootSignature methods       ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Create a resource group instance
+		*
+		*  @param[in] rootParameterIndex
+		*    The root parameter index number for binding
+		*  @param[in] numberOfResources
+		*    Number of resources, having no resources is invalid
+		*  @param[in] resources
+		*    At least "numberOfResources" resource pointers, must be valid, the resource group will keep a reference to the resources
+		*
+		*  @return
+		*    The created resource group instance, a null pointer on error. Release the returned instance if you no longer need it.
+		*/
+		virtual IResourceGroup* createResourceGroup(uint32_t rootParameterIndex, uint32_t numberOfResources, IResource** resources) = 0;
 
 
 	//[-------------------------------------------------------]

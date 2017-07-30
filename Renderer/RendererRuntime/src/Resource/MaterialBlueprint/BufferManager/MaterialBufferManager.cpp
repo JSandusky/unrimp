@@ -164,7 +164,10 @@ namespace RendererRuntime
 			assert(nullptr != mLastBoundPool);
 			const MaterialBlueprintResource::UniformBuffer* materialUniformBuffer = mMaterialBlueprintResource.getMaterialUniformBuffer();
 			assert(nullptr != materialUniformBuffer);
-			Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, materialUniformBuffer->rootParameterIndex, mLastBoundPool->uniformBuffer);
+			// TODO(co) Port to resource group usage
+			std::ignore = commandBuffer;
+			std::ignore = materialUniformBuffer;
+			//Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, materialUniformBuffer->rootParameterIndex, mLastBoundPool->uniformBuffer);
 
 			// Assigned material pool change
 			return true;
