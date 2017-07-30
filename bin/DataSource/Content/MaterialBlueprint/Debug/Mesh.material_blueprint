@@ -107,7 +107,7 @@
 					{
 						"0":
 						{
-							"RangeType": "SRV",
+							"RangeType": "UAV",
 							"BaseShaderRegister": "3",
 							"BaseShaderRegisterName": "InstanceTextureBuffer"
 						}

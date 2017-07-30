@@ -43,16 +43,16 @@ struct PassDataStruct
 	float ShadowFilterSize;
 	int   ShadowSampleRadius;
 };
-UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
+UNIFORM_BUFFER_BEGIN(0, PassUniformBuffer, 0)
 	PassDataStruct PassData;
 UNIFORM_BUFFER_END
 
 // Textures
 @property(VerticalBlur)
-	TEXTURE_2D(ColorMap, 0)
+	TEXTURE_2D(2, ColorMap, 0)
 @end
 @property(!VerticalBlur)
-	TEXTURE_ARRAY(ColorMap, 0)
+	TEXTURE_2D_ARRAY(2, ColorMap, 0)
 @end
 
 

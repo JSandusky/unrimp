@@ -38,13 +38,13 @@
 //[-------------------------------------------------------]
 // Attribute input / output
 INPUT_BEGIN
-	INPUT_TEXTURE_COORDINATE_NOINTERPOLATION(uint,   AssignedMaterialSlotVS,		0)	// The assigned material slot inside the material uniform buffer
-	INPUT_TEXTURE_COORDINATE				(float2, TexCoordVS,					1)	// Texture coordinate
-	INPUT_TEXTURE_COORDINATE				(float3, TangentFrame0VS,				2)	// Tangent frame
-	INPUT_TEXTURE_COORDINATE				(float3, TangentFrame1VS,				3)	// Tangent frame
-	INPUT_TEXTURE_COORDINATE				(float3, TangentFrame2VS,				4)	// Tangent frame
-	INPUT_TEXTURE_COORDINATE				(float3, WorldSpacePositionVS,			5)	// World space position
-	INPUT_TEXTURE_COORDINATE				(float3, PreviousClipSpacePositionVS,	6)	// Previous clip space position
+	INPUT_TEXTURE_COORDINATE_NOINTERPOLATION(1, uint,   AssignedMaterialSlotVS,			0)	// The assigned material slot inside the material uniform buffer
+	INPUT_TEXTURE_COORDINATE				(2, float2, TexCoordVS,						1)	// Texture coordinate
+	INPUT_TEXTURE_COORDINATE				(3, float3, TangentFrame0VS,				2)	// Tangent frame
+	INPUT_TEXTURE_COORDINATE				(4, float3, TangentFrame1VS,				3)	// Tangent frame
+	INPUT_TEXTURE_COORDINATE				(5, float3, TangentFrame2VS,				4)	// Tangent frame
+	INPUT_TEXTURE_COORDINATE				(6, float3, WorldSpacePositionVS,			5)	// World space position
+	INPUT_TEXTURE_COORDINATE				(7, float3, PreviousClipSpacePositionVS,	6)	// Previous clip space position
 	DECLARE_FRAGMENT_POSITION
 	DECLARE_COVERAGE_MASK
 	DECLARE_IS_FRONT_FACE
@@ -77,7 +77,7 @@ struct PassDataStruct
 	float2   ViewportSize;
 	float2   ProjectionParameters;
 };
-UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
+UNIFORM_BUFFER_BEGIN(0, PassUniformBuffer, 0)
 	PassDataStruct PassData;
 UNIFORM_BUFFER_END
 struct Material
@@ -88,29 +88,29 @@ struct Material
 	float  AlphaReference;
 	float  EmissiveIntensity;
 };
-UNIFORM_BUFFER_BEGIN(MaterialUniformBuffer, 1)
+UNIFORM_BUFFER_BEGIN(1, MaterialUniformBuffer, 1)
 	Material Materials[@insertpiece(MaximumNumberOfMaterials)];
 UNIFORM_BUFFER_END
 
 // Texture buffers: We need to start at texture unit 1 instead of texture unit 0 because the vertex shader has an instance texture buffer bound at texture unit 0 (OpenGL shares those bindings accros all shader stages while Direct3D doesn't)
-TEXTURE_BUFFER(float4, LightTextureBuffer, 1)	// "LIGHT"
+TEXTURE_BUFFER(4, float4, LightTextureBuffer, 1)	// "LIGHT"
 
 // Samplers
-SAMPLER_STATE(SamplerPoint, 0)
-SAMPLER_STATE(SamplerLinear, 1)
+SAMPLER_STATE(5, SamplerPoint, 0)
+SAMPLER_STATE(6, SamplerLinear, 1)
 
 // Textures
-TEXTURE_2D(_drgb_nxa, 2)		// RGB channel = Diffuse map ("_d"-postfix), A channel = x component of normal map ("_n"-postfix)
-TEXTURE_2D(_hr_rg_mb_nya, 3)	// R channel = Height map ("_h"-postfix), G channel = Roughness map ("_r"-postfix), B channel = Metallic map ("_m"-postfix), A channel = y component of normal map ("_n"-postfix)
+TEXTURE_2D(7, _drgb_nxa, 2)		// RGB channel = Diffuse map ("_d"-postfix), A channel = x component of normal map ("_n"-postfix)
+TEXTURE_2D(8, _hr_rg_mb_nya, 3)	// R channel = Height map ("_h"-postfix), G channel = Roughness map ("_r"-postfix), B channel = Metallic map ("_m"-postfix), A channel = y component of normal map ("_n"-postfix)
 @property(UseAlphaMap)
-	TEXTURE_2D(AlphaMap, 4)
+	TEXTURE_2D(9, AlphaMap, 4)
 @end
 @property(UseEmissiveMap)
-	TEXTURE_2D(EmissiveMap, 5)
+	TEXTURE_2D(10, EmissiveMap, 5)
 @end
-TEXTURE_ARRAY(ShadowMap, 6)
-TEXTURE_CUBE(ReflectionCubeMap, 7)
-TEXTURE_3D_UINT(LightClustersMap3D, 8)
+TEXTURE_2D_ARRAY(11, ShadowMap, 6)
+TEXTURE_CUBE(12, ReflectionCubeMap, 7)
+TEXTURE_3D_UINT(13, LightClustersMap3D, 8)
 
 
 //[-------------------------------------------------------]

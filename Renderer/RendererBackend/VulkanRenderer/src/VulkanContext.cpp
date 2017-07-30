@@ -186,7 +186,7 @@ namespace
 				VK_FALSE,	// independentBlend (VkBool32)
 				VK_TRUE,	// geometryShader (VkBool32)
 				VK_TRUE,	// tessellationShader (VkBool32)
-				VK_FALSE,	// sampleRateShading (VkBool32)
+				VK_TRUE,	// sampleRateShading (VkBool32)
 				VK_FALSE,	// dualSrcBlend (VkBool32)
 				VK_FALSE,	// logicOp (VkBool32)
 				VK_TRUE,	// multiDrawIndirect (VkBool32)

@@ -30,20 +30,20 @@
 //[-------------------------------------------------------]
 // Attribute input / output
 INPUT_BEGIN
-	INPUT_TEXTURE_COORDINATE(float4, TexCoordVS, 0)	// xy = glyph texture coordinate, zw = background texture coordinate
-	INPUT_TEXTURE_COORDINATE(float4, ColorVS, 1)	// Vertex color
+	INPUT_TEXTURE_COORDINATE(1, float4, TexCoordVS, 0)	// xy = glyph texture coordinate, zw = background texture coordinate
+	INPUT_TEXTURE_COORDINATE(2, float4, ColorVS, 1)		// Vertex color
 INPUT_END
 OUTPUT_BEGIN
 	OUTPUT_COLOR(0)
 OUTPUT_END
 
 // Samplers
-SAMPLER_STATE(GlyphSampler, 0)
-SAMPLER_STATE(BackgroundSampler, 1)
+SAMPLER_STATE(1, GlyphSampler, 0)
+SAMPLER_STATE(2, BackgroundSampler, 1)
 
 // Textures
-TEXTURE_2D(GlyphMap, 0)
-TEXTURE_2D(BackgroundMap, 1)
+TEXTURE_2D(3, GlyphMap, 0)
+TEXTURE_2D(4, BackgroundMap, 1)
 
 
 //[-------------------------------------------------------]

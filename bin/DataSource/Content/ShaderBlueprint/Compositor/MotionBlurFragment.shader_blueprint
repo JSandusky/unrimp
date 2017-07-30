@@ -30,7 +30,7 @@
 //[-------------------------------------------------------]
 // Attribute input / output
 INPUT_BEGIN
-	INPUT_TEXTURE_COORDINATE(float2, TexCoordVS, 0)	// Texture coordinate
+	INPUT_TEXTURE_COORDINATE(1, float2, TexCoordVS, 0)	// Texture coordinate
 INPUT_END
 OUTPUT_BEGIN
 	OUTPUT_COLOR(0)
@@ -44,20 +44,20 @@ struct PassDataStruct
 	float  Strength;
 	int    NumberOfSamples;
 };
-UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
+UNIFORM_BUFFER_BEGIN(0, PassUniformBuffer, 0)
 	PassDataStruct PassData;
 UNIFORM_BUFFER_END
 
 // Samplers
-SAMPLER_STATE(SamplerPoint, 0)
+SAMPLER_STATE(1, SamplerPoint, 0)
 
 // Textures
-TEXTURE_2D(ColorMap, 0)
+TEXTURE_2D(2, ColorMap, 0)
 @property(NumberOfMultisamples)
-	TEXTURE_2D_MS(VelocityMap, @value(NumberOfMultisamples), 1)
+	TEXTURE_2D_MS(3, VelocityMap, @value(NumberOfMultisamples), 1)
 @end
 @property(!NumberOfMultisamples)
-	TEXTURE_2D(VelocityMap, 1)
+	TEXTURE_2D(3, VelocityMap, 1)
 @end
 
 

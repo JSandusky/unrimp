@@ -31,18 +31,18 @@
 //[-------------------------------------------------------]
 // Attribute input / output
 INPUT_BEGIN
-	INPUT_VERTEX_POSITION(float3, Position)				// Object space vertex position
-	INPUT_TEXTURE_COORDINATE(float2, TexCoord, 0)		// 32 bit texture coordinate
+	INPUT_VERTEX_POSITION(0, float3, Position)				// Object space vertex position
+	INPUT_TEXTURE_COORDINATE(1, float2, TexCoord, 0)		// 32 bit texture coordinate
+	INPUT_VERTEX_DRAW_ID(3)									// Draw ID
 	@property(UseGpuSkinning)
-		INPUT_VERTEX_BLEND_INDICES(uint4, BlendIndices)	// 8 bit bone indices
-		INPUT_VERTEX_BLEND_WEIGHTS(uint4, BlendWeights)	// 8 bit bone weights
+		INPUT_VERTEX_BLEND_INDICES(4, uint4, BlendIndices)	// 8 bit bone indices
+		INPUT_VERTEX_BLEND_WEIGHTS(5, uint4, BlendWeights)	// 8 bit bone weights
 	@end
-	INPUT_VERTEX_DRAW_ID								// Draw ID
 INPUT_END
 OUTPUT_BEGIN
-	OUTPUT_TEXTURE_COORDINATE_NOINTERPOLATION(uint,   AssignedMaterialSlotVS, 0)	// The assigned material slot inside the material uniform buffer
-	OUTPUT_TEXTURE_COORDINATE				 (float2, TexCoordVS,			  1)	// Texture coordinate
-	OUTPUT_POSITION																	// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
+	OUTPUT_TEXTURE_COORDINATE_NOINTERPOLATION(1, uint,   AssignedMaterialSlotVS, 0)	// The assigned material slot inside the material uniform buffer
+	OUTPUT_TEXTURE_COORDINATE				 (2, float2, TexCoordVS,			 1)	// Texture coordinate
+	OUTPUT_POSITION							 (0)									// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
 OUTPUT_END
 
 // Uniform buffers
@@ -50,10 +50,10 @@ struct PassDataStruct
 {
 	float4x4 WorldSpaceToClipSpaceMatrix;
 };
-UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
+UNIFORM_BUFFER_BEGIN(0, PassUniformBuffer, 0)
 	PassDataStruct PassData;
 UNIFORM_BUFFER_END
-UNIFORM_BUFFER_BEGIN(InstanceUniformBuffer, 2)
+UNIFORM_BUFFER_BEGIN(2, InstanceUniformBuffer, 2)
 	// x = The instance texture buffer start index
 	// y = The assigned material slot inside the material uniform buffer
 	// z = The custom parameters start index inside the instance texture buffer
@@ -63,7 +63,7 @@ UNIFORM_BUFFER_END
 
 // Texture buffers
 // -> We're using base shader register 3 instead of 0 to be compatible to the OpenGL ES 3 renderer backend texture buffer emulation, which is using an uniform buffer for the emulation
-TEXTURE_BUFFER(float4, InstanceTextureBuffer, 3)	// "POSITION_ROTATION_SCALE"
+TEXTURE_BUFFER(3, float4, InstanceTextureBuffer, 3)	// "POSITION_ROTATION_SCALE"
 
 
 //[-------------------------------------------------------]

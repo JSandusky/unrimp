@@ -30,12 +30,12 @@
 //[-------------------------------------------------------]
 // Attribute input / output
 INPUT_BEGIN
-	INPUT_VERTEX_POSITION(float3, Position)	// Object space vertex position
+	INPUT_VERTEX_POSITION(0, float3, Position)	// Object space vertex position
 INPUT_END
 OUTPUT_BEGIN
-	OUTPUT_TEXTURE_COORDINATE(float3, TexCoordVS,				   0)	// Texture coordinate
-	OUTPUT_TEXTURE_COORDINATE(float3, PreviousClipSpacePositionVS, 1)	// Previous clip space position
-	OUTPUT_POSITION														// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
+	OUTPUT_TEXTURE_COORDINATE(1, float3, TexCoordVS,				  0)	// Texture coordinate
+	OUTPUT_TEXTURE_COORDINATE(2, float3, PreviousClipSpacePositionVS, 1)	// Previous clip space position
+	OUTPUT_POSITION			 (0)											// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
 OUTPUT_END
 
 // Uniform buffers
@@ -49,7 +49,7 @@ struct PassDataStruct
 	float3   WorldSpaceSunlightDirection;
 	float2   ViewportSize;
 };
-UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
+UNIFORM_BUFFER_BEGIN(0, PassUniformBuffer, 0)
 	PassDataStruct PassData;
 UNIFORM_BUFFER_END
 

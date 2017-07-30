@@ -136,7 +136,8 @@ void FirstScene::onInitialization()
 		rendererRuntime->getMaterialResourceManager().loadMaterialResourceByAssetId(::detail::IMROD_MATERIAL_ASSET_ID, mMaterialResourceId, this);
 
 		// When using OpenGL ES 3, switch to a compositor which is designed for mobile devices
-		if (strcmp(rendererRuntime->getRenderer().getName(), "OpenGLES3") == 0)
+		// TODO(co) The Vulkan renderer backend is under construction, so debug compositor for now
+		if (strcmp(rendererRuntime->getRenderer().getName(), "OpenGLES3") == 0 || strcmp(rendererRuntime->getRenderer().getName(), "Vulkan") == 0)
 		{
 			// TODO(co) Add compositor designed for mobile devices, for now we're using the most simple debug compositor to have something on the screen
 			mCurrentCompositor = mInstancedCompositor = Compositor::DEBUG;
