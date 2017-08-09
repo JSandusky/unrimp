@@ -35,6 +35,10 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace Renderer
+{
+	class ISamplerState;
+}
 namespace VulkanRenderer
 {
 	class RootSignature;
@@ -69,16 +73,16 @@ namespace VulkanRenderer
 		*
 		*  @param[in] rootSignature
 		*    Root signature
-		*  @param[in] rootParameterIndex
-		*    The root parameter index number for binding
 		*  @param[in] vkDescriptorSet
 		*    Wrapped Vulkan descriptor set
 		*  @param[in] numberOfResources
 		*    Number of resources, having no resources is invalid
 		*  @param[in] resources
 		*    At least "numberOfResources" resource pointers, must be valid, the resource group will keep a reference to the resources
+		*  @param[in] samplerStates
+		*    If not a null pointer at least "numberOfResources" sampler state pointers, must be valid if there's at least one texture resource, the resource group will keep a reference to the sampler states
 		*/
-		ResourceGroup(RootSignature& rootSignature, uint32_t rootParameterIndex, VkDescriptorSet vkDescriptorSet, uint32_t numberOfResources, Renderer::IResource** resources);
+		ResourceGroup(RootSignature& rootSignature, VkDescriptorSet vkDescriptorSet, uint32_t numberOfResources, Renderer::IResource** resources, Renderer::ISamplerState** samplerStates);
 
 		/**
 		*  @brief
@@ -108,10 +112,11 @@ namespace VulkanRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		RootSignature&		  mRootSignature;		///< Root signature
-		VkDescriptorSet		  mVkDescriptorSet;		///< "mVkDescriptorPool" of the root signature is the owner which manages the memory, can be a null handle (e.g. for a sampler resource group)
-		uint32_t			  mNumberOfResources;	///< Number of resources this resource group groups together
-		Renderer::IResource** mResources;			///< Renderer resource, we keep a reference to it
+		RootSignature&			  mRootSignature;		///< Root signature
+		VkDescriptorSet			  mVkDescriptorSet;		///< "mVkDescriptorPool" of the root signature is the owner which manages the memory, can be a null handle (e.g. for a sampler resource group)
+		uint32_t				  mNumberOfResources;	///< Number of resources this resource group groups together
+		Renderer::IResource**	  mResources;			///< Renderer resource, we keep a reference to it
+		Renderer::ISamplerState** mSamplerStates;		///< Sampler states, we keep a reference to it
 
 
 	};

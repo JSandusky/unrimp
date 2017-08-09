@@ -2093,7 +2093,7 @@ namespace Renderer
 		public:
 			virtual ~IRootSignature();
 		public:
-			virtual IResourceGroup* createResourceGroup(uint32_t rootParameterIndex, uint32_t numberOfResources, IResource** resources) = 0;
+			virtual IResourceGroup* createResourceGroup(uint32_t rootParameterIndex, uint32_t numberOfResources, IResource** resources, Renderer::ISamplerState** samplerStates = nullptr) = 0;
 		protected:
 			explicit IRootSignature(IRenderer& renderer);
 			explicit IRootSignature(const IRootSignature& source) = delete;

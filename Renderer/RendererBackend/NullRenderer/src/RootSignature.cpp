@@ -96,7 +96,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRootSignature methods       ]
 	//[-------------------------------------------------------]
-	Renderer::IResourceGroup* RootSignature::createResourceGroup(uint32_t rootParameterIndex, uint32_t numberOfResources, Renderer::IResource** resources)
+	Renderer::IResourceGroup* RootSignature::createResourceGroup(uint32_t rootParameterIndex, uint32_t numberOfResources, Renderer::IResource** resources, Renderer::ISamplerState** samplerStates)
 	{
 		// Sanity checks
 		assert(rootParameterIndex < mRootSignature.numberOfParameters && "The root parameter index is out-of-bounds");
@@ -104,7 +104,7 @@ namespace NullRenderer
 		assert(nullptr != resources && "The resource pointers must be valid");
 
 		// Create resource group
-		return new ResourceGroup(getRenderer(), rootParameterIndex, numberOfResources, resources);
+		return new ResourceGroup(getRenderer(), rootParameterIndex, numberOfResources, resources, samplerStates);
 	}
 
 

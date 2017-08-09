@@ -62,14 +62,15 @@ void FirstTexture::onInitialization()
 		mTextureManager = renderer->createTextureManager();
 
 		{ // Create the root signature
-			Renderer::DescriptorRangeBuilder ranges[3];
+			Renderer::DescriptorRangeBuilder ranges[4];
 			ranges[0].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "GradientMap", 1, Renderer::ShaderVisibility::FRAGMENT);
 			ranges[1].initialize(Renderer::DescriptorRangeType::SRV, 1, 1, "DiffuseMap", 1, Renderer::ShaderVisibility::FRAGMENT);
 			ranges[2].initializeSampler(1, 0, Renderer::ShaderVisibility::FRAGMENT);
+			ranges[3].initializeSampler(1, 1, Renderer::ShaderVisibility::FRAGMENT);
 
 			Renderer::RootParameterBuilder rootParameters[2];
 			rootParameters[0].initializeAsDescriptorTable(2, &ranges[0]);
-			rootParameters[1].initializeAsDescriptorTable(1, &ranges[2]);
+			rootParameters[1].initializeAsDescriptorTable(2, &ranges[2]);
 
 			// Setup
 			Renderer::RootSignatureBuilder rootSignature;
@@ -79,12 +80,21 @@ void FirstTexture::onInitialization()
 			mRootSignature = renderer->createRootSignature(rootSignature);
 		}
 
-		{ // Create sampler state and wrap it into a resource group instance
+		// Create sampler state and wrap it into a resource group instance
+		Renderer::ISamplerState* linearSamplerResource = nullptr;
+		Renderer::ISamplerState* pointSamplerResource = nullptr;
+		{
+			// Create the sampler resources
 			Renderer::SamplerState samplerState = Renderer::ISamplerState::getDefaultSamplerState();
 			samplerState.addressU = Renderer::TextureAddressMode::WRAP;
 			samplerState.addressV = Renderer::TextureAddressMode::WRAP;
-			Renderer::IResource* resource = renderer->createSamplerState(samplerState);
-			mSamplerStateGroup = mRootSignature->createResourceGroup(1, 1, &resource);
+			linearSamplerResource = renderer->createSamplerState(samplerState);
+			samplerState.filter = Renderer::FilterMode::MIN_MAG_MIP_POINT;
+			pointSamplerResource = renderer->createSamplerState(samplerState);
+
+			// Create the resource group
+			Renderer::IResource* resources[2] = { linearSamplerResource, pointSamplerResource };
+			mSamplerStateGroup = mRootSignature->createResourceGroup(1, static_cast<uint32_t>(glm::countof(resources)), resources);
 		}
 
 		{ // Create the texture group
@@ -148,7 +158,8 @@ void FirstTexture::onInitialization()
 			}
 
 			// Create the texture group
-			mTextureGroup = mRootSignature->createResourceGroup(0, static_cast<uint32_t>(glm::countof(resources)), resources);
+			Renderer::ISamplerState* samplerStates[2] = { linearSamplerResource, pointSamplerResource };
+			mTextureGroup = mRootSignature->createResourceGroup(0, static_cast<uint32_t>(glm::countof(resources)), resources, samplerStates);
 		}
 
 		// Vertex input layout
@@ -281,8 +292,8 @@ void FirstTexture::fillCommandBuffer()
 	Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineState);
 
 	// Set resource groups
-	Renderer::Command::SetGraphicsResourceGroup::create(mCommandBuffer, 1, mSamplerStateGroup);
 	Renderer::Command::SetGraphicsResourceGroup::create(mCommandBuffer, 0, mTextureGroup);
+	Renderer::Command::SetGraphicsResourceGroup::create(mCommandBuffer, 1, mSamplerStateGroup);
 
 	// Input assembly (IA): Set the used vertex array
 	Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArray);

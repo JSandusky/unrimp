@@ -36,7 +36,6 @@
 //[-------------------------------------------------------]
 namespace OpenGLES3Renderer
 {
-	class SamplerState;
 	class OpenGLES3Renderer;
 }
 
@@ -89,32 +88,12 @@ namespace OpenGLES3Renderer
 		*/
 		inline const Renderer::RootSignature& getRootSignature() const;
 
-		/**
-		*  @brief
-		*    Set the sampler state
-		*
-		*  @param[in] samplerRootParameterIndex
-		*    Sampler root parameter index
-		*  @param[in] samplerState
-		*    Sampler state
-		*/
-		void setSamplerState(uint32_t samplerRootParameterIndex, SamplerState* samplerState) const;
-
-		/**
-		*  @brief
-		*    Set the OpenGL ES 3 sampler states
-		*
-		*  @param[in] samplerRootParameterIndex
-		*    Sampler root parameter index
-		*/
-		void setOpenGLES3SamplerStates(uint32_t samplerRootParameterIndex) const;
-
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRootSignature methods       ]
 	//[-------------------------------------------------------]
 	public:
-		virtual Renderer::IResourceGroup* createResourceGroup(uint32_t rootParameterIndex, uint32_t numberOfResources, Renderer::IResource** resources) override;
+		virtual Renderer::IResourceGroup* createResourceGroup(uint32_t rootParameterIndex, uint32_t numberOfResources, Renderer::IResource** resources, Renderer::ISamplerState** samplerStates = nullptr) override;
 
 
 	//[-------------------------------------------------------]
@@ -129,8 +108,7 @@ namespace OpenGLES3Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Renderer::RootSignature	mRootSignature;
-		SamplerState**			mSamplerStates;
+		Renderer::RootSignature mRootSignature;
 
 
 	};

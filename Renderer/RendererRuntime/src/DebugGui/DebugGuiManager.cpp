@@ -280,8 +280,8 @@ namespace RendererRuntime
 				Renderer::Command::SetPipelineState::create(commandBuffer, mPipelineState);
 
 				// Set resource groups
-				Renderer::Command::SetGraphicsResourceGroup::create(commandBuffer, 1, mSamplerStateGroup);
 				Renderer::Command::SetGraphicsResourceGroup::create(commandBuffer, 0, mResourceGroup);
+				Renderer::Command::SetGraphicsResourceGroup::create(commandBuffer, 1, mSamplerStateGroup);
 			}
 
 			// Setup input assembly (IA): Set the used vertex array
@@ -450,18 +450,21 @@ namespace RendererRuntime
 			mObjectSpaceToClipSpaceMatrixUniformHandle = mProgram->getUniformHandle("ObjectSpaceToClipSpaceMatrix");
 		}
 
-		{ // Create sampler state instance and wrap it into a resource group instance
+		// Create sampler state instance and wrap it into a resource group instance
+		Renderer::IResource* samplerStateResource = nullptr;
+		{
 			Renderer::SamplerState samplerState = Renderer::ISamplerState::getDefaultSamplerState();
 			samplerState.addressU = Renderer::TextureAddressMode::WRAP;
 			samplerState.addressV = Renderer::TextureAddressMode::WRAP;
-			Renderer::IResource* resource = renderer.createSamplerState(samplerState);
-			RENDERER_SET_RESOURCE_DEBUG_NAME(resource, "Debug GUI")
-			mSamplerStateGroup = mRootSignature->createResourceGroup(1, 1, &resource);
+			samplerStateResource = renderer.createSamplerState(samplerState);
+			RENDERER_SET_RESOURCE_DEBUG_NAME(samplerStateResource, "Debug GUI")
+			mSamplerStateGroup = mRootSignature->createResourceGroup(1, 1, &samplerStateResource);
 		}
 
 		{ // Create resource group
 			Renderer::IResource* resources[2] = { mVertexShaderUniformBuffer, mTexture2D };
-			mResourceGroup = mRootSignature->createResourceGroup(0, static_cast<uint32_t>(glm::countof(resources)), resources);
+			Renderer::ISamplerState* samplerStates[2] = { nullptr, static_cast<Renderer::ISamplerState*>(samplerStateResource) };
+			mResourceGroup = mRootSignature->createResourceGroup(0, static_cast<uint32_t>(glm::countof(resources)), resources, samplerStates);
 		}
 	}
 

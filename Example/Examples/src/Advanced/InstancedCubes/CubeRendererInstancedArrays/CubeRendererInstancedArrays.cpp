@@ -214,10 +214,9 @@ CubeRendererInstancedArrays::CubeRendererInstancedArrays(Renderer::IRenderer& re
 		delete [] data;
 	}
 
-	{ // Create sampler state instance and wrap it into a resource group instance
-		Renderer::IResource* resource = mRenderer->createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
-		mSamplerStateGroup = mRootSignature->createResourceGroup(1, 1, &resource);
-	}
+	// Create sampler state instance and wrap it into a resource group instance
+	Renderer::IResource* samplerStateResource = mRenderer->createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
+	mSamplerStateGroup = mRootSignature->createResourceGroup(1, 1, &samplerStateResource);
 
 	// Uniform buffer object (UBO, "constant buffer" in Direct3D terminology) supported?
 	// -> If they are there, we really want to use them (performance and ease of use)
@@ -243,7 +242,8 @@ CubeRendererInstancedArrays::CubeRendererInstancedArrays(Renderer::IRenderer& re
 
 	{ // Create resource group
 		Renderer::IResource* resources[4] = { mUniformBufferStaticVs, mUniformBufferDynamicVs, mTexture2D, mUniformBufferDynamicFs };
-		mResourceGroup = mRootSignature->createResourceGroup(0, static_cast<uint32_t>(glm::countof(resources)), resources);
+		Renderer::ISamplerState* samplerStates[4] = { nullptr, nullptr, static_cast<Renderer::ISamplerState*>(samplerStateResource), nullptr };
+		mResourceGroup = mRootSignature->createResourceGroup(0, static_cast<uint32_t>(glm::countof(resources)), resources, samplerStates);
 	}
 
 	// Create the program: Decide which shader language should be used (for example "GLSL" or "HLSL")
@@ -470,8 +470,8 @@ void CubeRendererInstancedArrays::fillReusableCommandBuffer()
 	Renderer::Command::SetGraphicsRootSignature::create(mCommandBuffer, mRootSignature);
 
 	// Set resource groups
-	Renderer::Command::SetGraphicsResourceGroup::create(mCommandBuffer, 1, mSamplerStateGroup);
 	Renderer::Command::SetGraphicsResourceGroup::create(mCommandBuffer, 0, mResourceGroup);
+	Renderer::Command::SetGraphicsResourceGroup::create(mCommandBuffer, 1, mSamplerStateGroup);
 
 	// Draw the batches
 	if (nullptr != mBatches)

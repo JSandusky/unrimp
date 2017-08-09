@@ -47,20 +47,19 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ResourceGroup::ResourceGroup(RootSignature& rootSignature, uint32_t rootParameterIndex, VkDescriptorSet vkDescriptorSet, uint32_t numberOfResources, Renderer::IResource** resources) :
+	ResourceGroup::ResourceGroup(RootSignature& rootSignature, VkDescriptorSet vkDescriptorSet, uint32_t numberOfResources, Renderer::IResource** resources, Renderer::ISamplerState** samplerStates) :
 		IResourceGroup(static_cast<VulkanRenderer&>(rootSignature.getRenderer())),
 		mRootSignature(rootSignature),
 		mVkDescriptorSet(vkDescriptorSet),
 		mNumberOfResources(numberOfResources),
-		mResources(new Renderer::IResource*[mNumberOfResources])
+		mResources(new Renderer::IResource*[mNumberOfResources]),
+		mSamplerStates(nullptr)
 	{
-		// Process all resources
+		// Process all resources and add our reference to the renderer resource
 		const VulkanRenderer& vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
 		const VkDevice vkDevice = vulkanRenderer.getVulkanContext().getVkDevice();
-		const Renderer::RootParameter& rootParameter = mRootSignature.getRootSignature().parameters[rootParameterIndex];
 		for (uint32_t resourceIndex = 0; resourceIndex < mNumberOfResources; ++resourceIndex, ++resources)
 		{
-			// Add our reference to the renderer resource
 			Renderer::IResource* resource = *resources;
 			mResources[resourceIndex] = resource;
 			resource->addReference();
@@ -168,9 +167,8 @@ namespace VulkanRenderer
 					}
 
 					// Get the sampler state
-					const Renderer::DescriptorRange* descriptorRange = reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges);
-					assert(nullptr != descriptorRange);
-					const SamplerState* samplerState = mRootSignature.getSamplerState(descriptorRange[resourceIndex].samplerRootParameterIndex);
+					assert(nullptr != samplerStates);
+					const SamplerState* samplerState = static_cast<const SamplerState*>(samplerStates[resourceIndex]);
 					assert(nullptr != samplerState);
 
 					// Update Vulkan descriptor sets
@@ -198,12 +196,8 @@ namespace VulkanRenderer
 				}
 
 				case Renderer::ResourceType::SAMPLER_STATE:
-				{
-					// TODO(co) Remove this
-					// Unlike Direct3D >=10, Vulkan directly attaches the sampler settings to the texture
-					mRootSignature.setSamplerState(rootParameterIndex, static_cast<SamplerState*>(resource));
+					// Nothing to do in here, Vulkan is using combined image samplers
 					break;
-				}
 
 				case Renderer::ResourceType::ROOT_SIGNATURE:
 				case Renderer::ResourceType::RESOURCE_GROUP:
@@ -224,11 +218,35 @@ namespace VulkanRenderer
 					break;
 			}
 		}
+		if (nullptr != samplerStates)
+		{
+			mSamplerStates = new Renderer::ISamplerState*[mNumberOfResources];
+			for (uint32_t resourceIndex = 0; resourceIndex < mNumberOfResources; ++resourceIndex)
+			{
+				Renderer::ISamplerState* samplerState = mSamplerStates[resourceIndex] = samplerStates[resourceIndex];
+				if (nullptr != samplerState)
+				{
+					samplerState->addReference();
+				}
+			}
+		}
 	}
 
 	ResourceGroup::~ResourceGroup()
 	{
 		// Remove our reference from the renderer resources
+		if (nullptr != mSamplerStates)
+		{
+			for (uint32_t resourceIndex = 0; resourceIndex < mNumberOfResources; ++resourceIndex)
+			{
+				Renderer::ISamplerState* samplerState = mSamplerStates[resourceIndex];
+				if (nullptr != samplerState)
+				{
+					samplerState->releaseReference();
+				}
+			}
+			delete [] mSamplerStates;
+		}
 		for (uint32_t resourceIndex = 0; resourceIndex < mNumberOfResources; ++resourceIndex)
 		{
 			mResources[resourceIndex]->releaseReference();

@@ -126,6 +126,7 @@ private:
 	RendererRuntime::TextureResourceId	  m_hr_rg_mb_nyaTextureResourceId;
 	RendererRuntime::TextureResourceId	  mEmissiveTextureResourceId;
 	Renderer::IResourceGroupPtr			  mResourceGroup;			///< Resource group, can be a null pointer
+	Renderer::ISamplerStatePtr			  mSamplerStatePtr;			///< Sampler state, can be a null pointer
 	Renderer::IResourceGroupPtr			  mSamplerStateGroup;		///< Sampler state resource group, can be a null pointer
 	// Optimization: Cache data to not bother the renderer API to much
 	handle	 mObjectSpaceToClipSpaceMatrixUniformHandle;	///< Object space to clip space matrix uniform handle, can be NULL_HANDLE

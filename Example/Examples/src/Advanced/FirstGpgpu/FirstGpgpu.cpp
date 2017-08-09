@@ -141,16 +141,19 @@ void FirstGpgpu::onInitialization()
 		mFramebuffer[i] = mRenderer->createFramebuffer(1, &colorFramebufferAttachment);
 	}
 
-	{ // Create texture group
-		Renderer::IResource* resource = mTexture2D[0];
-		mTextureGroup = mRootSignature->createResourceGroup(0, 1, &resource);
-	}
-
-	{ // Create sampler state and wrap it into a resource group instance: We don't use mipmaps
+	// Create sampler state and wrap it into a resource group instance: We don't use mipmaps
+	Renderer::IResource* samplerStateResource = nullptr;
+	{
 		Renderer::SamplerState samplerState = Renderer::ISamplerState::getDefaultSamplerState();
 		samplerState.maxLOD = 0.0f;
-		Renderer::IResource* resource = mRenderer->createSamplerState(samplerState);
-		mSamplerStateGroup = mRootSignature->createResourceGroup(1, 1, &resource);
+		samplerStateResource = mRenderer->createSamplerState(samplerState);
+		mSamplerStateGroup = mRootSignature->createResourceGroup(1, 1, &samplerStateResource);
+	}
+
+	{ // Create texture group
+		Renderer::IResource* resource = mTexture2D[0];
+		Renderer::ISamplerState* samplerState = static_cast<Renderer::ISamplerState*>(samplerStateResource);
+		mTextureGroup = mRootSignature->createResourceGroup(0, 1, &resource, &samplerState);
 	}
 
 	// Vertex input layout
@@ -358,8 +361,8 @@ void FirstGpgpu::fillCommandBufferContentProcessing()
 	Renderer::Command::SetPipelineState::create(mCommandBufferContentProcessing, mPipelineStateContentProcessing);
 
 	// Set resource groups
-	Renderer::Command::SetGraphicsResourceGroup::create(mCommandBufferContentProcessing, 1, mSamplerStateGroup);
 	Renderer::Command::SetGraphicsResourceGroup::create(mCommandBufferContentProcessing, 0, mTextureGroup);
+	Renderer::Command::SetGraphicsResourceGroup::create(mCommandBufferContentProcessing, 1, mSamplerStateGroup);
 
 	// Input assembly (IA): Set the used vertex array
 	Renderer::Command::SetVertexArray::create(mCommandBufferContentProcessing, mVertexArrayContentProcessing);

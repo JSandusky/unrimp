@@ -24,6 +24,8 @@
 #include "OpenGLRenderer/ResourceGroup.h"
 #include "OpenGLRenderer/RootSignature.h"
 
+#include <Renderer/State/ISamplerState.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -35,11 +37,12 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ResourceGroup::ResourceGroup(RootSignature& rootSignature, uint32_t rootParameterIndex, uint32_t numberOfResources, Renderer::IResource** resources) :
+	ResourceGroup::ResourceGroup(RootSignature& rootSignature, uint32_t rootParameterIndex, uint32_t numberOfResources, Renderer::IResource** resources, Renderer::ISamplerState** samplerStates) :
 		IResourceGroup(rootSignature.getRenderer()),
 		mRootParameterIndex(rootParameterIndex),
 		mNumberOfResources(numberOfResources),
 		mResources(new Renderer::IResource*[mNumberOfResources]),
+		mSamplerStates(nullptr),
 		mResourceIndexToUniformBlockBindingIndex(nullptr)
 	{
 		// Get the uniform block binding start index
@@ -62,11 +65,10 @@ namespace OpenGLRenderer
 			}
 		}
 
-		// Process all resources
+		// Process all resources and add our reference to the renderer resource
 		const Renderer::RootParameter& rootParameter = rootSignatureData.parameters[rootParameterIndex];
 		for (uint32_t resourceIndex = 0; resourceIndex < mNumberOfResources; ++resourceIndex, ++resources)
 		{
-			// Add our reference to the renderer resource
 			Renderer::IResource* resource = *resources;
 			mResources[resourceIndex] = resource;
 			resource->addReference();
@@ -84,11 +86,35 @@ namespace OpenGLRenderer
 				++uniformBlockBindingIndex;
 			}
 		}
+		if (nullptr != samplerStates)
+		{
+			mSamplerStates = new Renderer::ISamplerState*[mNumberOfResources];
+			for (uint32_t resourceIndex = 0; resourceIndex < mNumberOfResources; ++resourceIndex)
+			{
+				Renderer::ISamplerState* samplerState = mSamplerStates[resourceIndex] = samplerStates[resourceIndex];
+				if (nullptr != samplerState)
+				{
+					samplerState->addReference();
+				}
+			}
+		}
 	}
 
 	ResourceGroup::~ResourceGroup()
 	{
 		// Remove our reference from the renderer resources
+		if (nullptr != mSamplerStates)
+		{
+			for (uint32_t resourceIndex = 0; resourceIndex < mNumberOfResources; ++resourceIndex)
+			{
+				Renderer::ISamplerState* samplerState = mSamplerStates[resourceIndex];
+				if (nullptr != samplerState)
+				{
+					samplerState->releaseReference();
+				}
+			}
+			delete [] mSamplerStates;
+		}
 		for (uint32_t resourceIndex = 0; resourceIndex < mNumberOfResources; ++resourceIndex)
 		{
 			mResources[resourceIndex]->releaseReference();

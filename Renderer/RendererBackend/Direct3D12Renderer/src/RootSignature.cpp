@@ -172,7 +172,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRootSignature methods       ]
 	//[-------------------------------------------------------]
-	Renderer::IResourceGroup* RootSignature::createResourceGroup(uint32_t, uint32_t, Renderer::IResource**)
+	Renderer::IResourceGroup* RootSignature::createResourceGroup(uint32_t, uint32_t, Renderer::IResource**, Renderer::ISamplerState**)
 	{
 		// TODO(co) Implement resource group
 		assert(false);

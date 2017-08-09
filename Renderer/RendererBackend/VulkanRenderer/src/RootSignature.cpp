@@ -25,55 +25,12 @@
 #include "VulkanRenderer/VulkanContext.h"
 #include "VulkanRenderer/VulkanRenderer.h"
 #include "VulkanRenderer/ResourceGroup.h"
-#include "VulkanRenderer/State/SamplerState.h"
 
 #include <Renderer/ILog.h>
 
 #include <array>
 #include <vector>
 #include <memory.h>
-
-
-#ifndef VULKANRENDERER_NO_DEBUG
-	//[-------------------------------------------------------]
-	//[ Anonymous detail namespace                            ]
-	//[-------------------------------------------------------]
-	namespace
-	{
-		namespace detail
-		{
-
-
-			//[-------------------------------------------------------]
-			//[ Global functions                                      ]
-			//[-------------------------------------------------------]
-			void checkSamplerState(VulkanRenderer::VulkanRenderer& vulkanRenderer, const Renderer::RootSignature& rootSignature, uint32_t samplerRootParameterIndex)
-			{
-				if (samplerRootParameterIndex >= rootSignature.numberOfParameters)
-				{
-					RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Vulkan renderer backend sampler root parameter index is out of bounds")
-					return;
-				}
-				const Renderer::RootParameter& samplerRootParameter = rootSignature.parameters[samplerRootParameterIndex];
-				if (Renderer::RootParameterType::DESCRIPTOR_TABLE != samplerRootParameter.parameterType)
-				{
-					RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Vulkan renderer backend sampler root parameter index doesn't point to a descriptor table")
-					return;
-				}
-				if (Renderer::DescriptorRangeType::SAMPLER != reinterpret_cast<const Renderer::DescriptorRange*>(samplerRootParameter.descriptorTable.descriptorRanges)[0].rangeType)
-				{
-					RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Vulkan renderer backend sampler root parameter index is out of bounds")
-					return;
-				}
-			}
-
-
-	//[-------------------------------------------------------]
-	//[ Anonymous detail namespace                            ]
-	//[-------------------------------------------------------]
-		} // detail
-	}
-#endif
 
 
 //[-------------------------------------------------------]
@@ -89,7 +46,6 @@ namespace VulkanRenderer
 	RootSignature::RootSignature(VulkanRenderer& vulkanRenderer, const Renderer::RootSignature& rootSignature) :
 		IRootSignature(vulkanRenderer),
 		mRootSignature(rootSignature),
-		mSamplerStates(nullptr),
 		mVkPipelineLayout(VK_NULL_HANDLE),
 		mVkDescriptorPool(VK_NULL_HANDLE)
 	{
@@ -124,13 +80,6 @@ namespace VulkanRenderer
 				mRootSignature.staticSamplers = new Renderer::StaticSampler[numberOfStaticSamplers];
 				memcpy(const_cast<Renderer::StaticSampler*>(mRootSignature.staticSamplers), rootSignature.staticSamplers, sizeof(Renderer::StaticSampler) * numberOfStaticSamplers);
 			}
-		}
-
-		// Initialize sampler state references
-		if (numberOfRootParameters > 0)
-		{
-			mSamplerStates = new SamplerState*[numberOfRootParameters];
-			memset(mSamplerStates, 0, sizeof(SamplerState*) * numberOfRootParameters);
 		}
 
 		// Create the Vulkan descriptor set layout
@@ -349,20 +298,6 @@ namespace VulkanRenderer
 			}
 		}
 
-		// Release all sampler state references
-		if (nullptr != mSamplerStates)
-		{
-			for (uint32_t rootParameterIndex = 0; rootParameterIndex < mRootSignature.numberOfParameters; ++rootParameterIndex)
-			{
-				SamplerState* samplerState = mSamplerStates[rootParameterIndex];
-				if (nullptr != samplerState)
-				{
-					samplerState->releaseReference();
-				}
-			}
-			delete [] mSamplerStates;
-		}
-
 		// Destroy the root signature data
 		if (nullptr != mRootSignature.parameters)
 		{
@@ -379,49 +314,11 @@ namespace VulkanRenderer
 		delete [] mRootSignature.staticSamplers;
 	}
 
-	const SamplerState* RootSignature::getSamplerState(uint32_t samplerRootParameterIndex) const
-	{
-		// Security checks
-		#ifndef VULKANRENDERER_NO_DEBUG
-			VulkanRenderer& vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
-			detail::checkSamplerState(vulkanRenderer, mRootSignature, samplerRootParameterIndex);
-			if (nullptr == mSamplerStates[samplerRootParameterIndex])
-			{
-				RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Vulkan renderer backend sampler root parameter index points to no sampler state instance")
-				return nullptr;
-			}
-		#endif
-		return mSamplerStates[samplerRootParameterIndex];
-	}
-
-	void RootSignature::setSamplerState(uint32_t samplerRootParameterIndex, SamplerState* samplerState) const
-	{
-		// Security checks
-		#ifndef VULKANRENDERER_NO_DEBUG
-			detail::checkSamplerState(static_cast<VulkanRenderer&>(getRenderer()), mRootSignature, samplerRootParameterIndex);
-		#endif
-
-		// Set sampler state
-		SamplerState** samplerStateSlot = &mSamplerStates[samplerRootParameterIndex];
-		if (samplerState != *samplerStateSlot)
-		{
-			if (nullptr != *samplerStateSlot)
-			{
-				(*samplerStateSlot)->releaseReference();
-			}
-			(*samplerStateSlot) = samplerState;
-			if (nullptr != *samplerStateSlot)
-			{
-				(*samplerStateSlot)->addReference();
-			}
-		}
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRootSignature methods       ]
 	//[-------------------------------------------------------]
-	Renderer::IResourceGroup* RootSignature::createResourceGroup(uint32_t rootParameterIndex, uint32_t numberOfResources, Renderer::IResource** resources)
+	Renderer::IResourceGroup* RootSignature::createResourceGroup(uint32_t rootParameterIndex, uint32_t numberOfResources, Renderer::IResource** resources, Renderer::ISamplerState** samplerStates)
 	{
 		// Sanity checks
 		assert(VK_NULL_HANDLE != mVkDescriptorPool && "The Vulkan descriptor pool instance must be valid");
@@ -449,7 +346,7 @@ namespace VulkanRenderer
 		}
 
 		// Create resource group
-		return new ResourceGroup(*this, rootParameterIndex, vkDescriptorSet, numberOfResources, resources);
+		return new ResourceGroup(*this, vkDescriptorSet, numberOfResources, resources, samplerStates);
 	}
 
 

@@ -643,8 +643,12 @@ namespace OpenGLES3Renderer
 
 								if (Renderer::ResourceType::TEXTURE_BUFFER != resourceType)
 								{
-									// Set the OpenGL ES 3 sampler states
-									mGraphicsRootSignature->setOpenGLES3SamplerStates(descriptorRange.samplerRootParameterIndex);
+									assert(nullptr != openGLES3ResourceGroup->getSamplerState());
+									const SamplerState* samplerState = static_cast<const SamplerState*>(openGLES3ResourceGroup->getSamplerState()[resourceIndex]);
+									assert(nullptr != samplerState);
+
+									// Traditional bind version to emulate a sampler object
+									samplerState->setOpenGLES3SamplerStates();
 								}
 
 								#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
@@ -671,7 +675,6 @@ namespace OpenGLES3Renderer
 
 					case Renderer::ResourceType::SAMPLER_STATE:
 						// Unlike Direct3D >=10, OpenGL ES 3 directly attaches the sampler settings to the texture
-						mGraphicsRootSignature->setSamplerState(rootParameterIndex, static_cast<SamplerState*>(resource));
 						break;
 
 					case Renderer::ResourceType::ROOT_SIGNATURE:

@@ -639,7 +639,9 @@ namespace Direct3D9Renderer
 								mDirect3DDevice9->SetTexture(startSlot, direct3DBaseTexture9);
 
 								{ // Set sampler
-									const SamplerState* samplerState = mGraphicsRootSignature->getSamplerState(descriptorRange.samplerRootParameterIndex);
+									assert(nullptr != d3d9ResourceGroup->getSamplerState());
+									const SamplerState* samplerState = static_cast<const SamplerState*>(d3d9ResourceGroup->getSamplerState()[resourceIndex]);
+									assert(nullptr != samplerState);
 									samplerState->setDirect3D9SamplerStates(vertexFetchStartSlot, *mDirect3DDevice9);
 									samplerState->setDirect3D9SamplerStates(startSlot, *mDirect3DDevice9);
 								}
@@ -656,8 +658,12 @@ namespace Direct3D9Renderer
 								// Set texture
 								mDirect3DDevice9->SetTexture(vertexFetchStartSlot, direct3DBaseTexture9);
 
-								// Set sampler
-								mGraphicsRootSignature->getSamplerState(descriptorRange.samplerRootParameterIndex)->setDirect3D9SamplerStates(vertexFetchStartSlot, *mDirect3DDevice9);
+								{ // Set sampler
+									assert(nullptr != d3d9ResourceGroup->getSamplerState());
+									const SamplerState* samplerState = static_cast<const SamplerState*>(d3d9ResourceGroup->getSamplerState()[resourceIndex]);
+									assert(nullptr != samplerState);
+									samplerState->setDirect3D9SamplerStates(vertexFetchStartSlot, *mDirect3DDevice9);
+								}
 
 								// End debug event
 								RENDERER_END_DEBUG_EVENT(this)
@@ -684,8 +690,12 @@ namespace Direct3D9Renderer
 								// Set texture
 								mDirect3DDevice9->SetTexture(startSlot, direct3DBaseTexture9);
 
-								// Set sampler
-								mGraphicsRootSignature->getSamplerState(descriptorRange.samplerRootParameterIndex)->setDirect3D9SamplerStates(startSlot, *mDirect3DDevice9);
+								{ // Set sampler
+									assert(nullptr != d3d9ResourceGroup->getSamplerState());
+									const SamplerState* samplerState = static_cast<const SamplerState*>(d3d9ResourceGroup->getSamplerState()[resourceIndex]);
+									assert(nullptr != samplerState);
+									samplerState->setDirect3D9SamplerStates(startSlot, *mDirect3DDevice9);
+								}
 
 								// End debug event
 								RENDERER_END_DEBUG_EVENT(this)
@@ -696,7 +706,6 @@ namespace Direct3D9Renderer
 
 					case Renderer::ResourceType::SAMPLER_STATE:
 						// Unlike Direct3D >=10, Direct3D 9 directly attaches the sampler settings to texture stages
-						mGraphicsRootSignature->setSamplerState(rootParameterIndex, static_cast<SamplerState*>(resource));
 						break;
 
 					case Renderer::ResourceType::ROOT_SIGNATURE:

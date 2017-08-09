@@ -38,6 +38,11 @@ namespace Direct3D9Renderer
 		return mResources;
 	}
 
+	inline Renderer::ISamplerState** ResourceGroup::getSamplerState() const
+	{
+		return mSamplerStates;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

@@ -783,7 +783,9 @@ namespace OpenGLRenderer
 							// Set the OpenGL sampler states, if required (texture buffer has no sampler state)
 							if (Renderer::ResourceType::TEXTURE_BUFFER != resourceType)
 							{
-								const SamplerState* samplerState = mGraphicsRootSignature->getSamplerState(descriptorRange.samplerRootParameterIndex);
+								assert(nullptr != openGLResourceGroup->getSamplerState());
+								const SamplerState* samplerState = static_cast<const SamplerState*>(openGLResourceGroup->getSamplerState()[resourceIndex]);
+								assert(nullptr != samplerState);
 
 								// Is "GL_ARB_sampler_objects" there?
 								if (mExtensions->isGL_ARB_sampler_objects())
@@ -896,7 +898,9 @@ namespace OpenGLRenderer
 								// Set the OpenGL sampler states, if required (texture buffer has no sampler state)
 								if (Renderer::ResourceType::TEXTURE_BUFFER != resourceType)
 								{
-									const SamplerState* samplerState = mGraphicsRootSignature->getSamplerState(descriptorRange.samplerRootParameterIndex);
+									assert(nullptr != openGLResourceGroup->getSamplerState());
+									const SamplerState* samplerState = static_cast<const SamplerState*>(openGLResourceGroup->getSamplerState()[resourceIndex]);
+									assert(nullptr != samplerState);
 
 									// Is "GL_ARB_sampler_objects" there?
 									if (mExtensions->isGL_ARB_sampler_objects())
@@ -928,7 +932,6 @@ namespace OpenGLRenderer
 
 					case Renderer::ResourceType::SAMPLER_STATE:
 						// Unlike Direct3D >=10, OpenGL directly attaches the sampler settings to the texture (unless the sampler object extension is used)
-						mGraphicsRootSignature->setSamplerState(rootParameterIndex, static_cast<SamplerState*>(resource));
 						break;
 
 					case Renderer::ResourceType::ROOT_SIGNATURE:

@@ -36,6 +36,7 @@
 namespace Renderer
 {
 	class IRenderer;
+	class ISamplerState;
 }
 namespace OpenGLRenderer
 {
@@ -77,8 +78,10 @@ namespace OpenGLRenderer
 		*    Number of resources, having no resources is invalid
 		*  @param[in] resources
 		*    At least "numberOfResources" resource pointers, must be valid, the resource group will keep a reference to the resources
+		*  @param[in] samplerStates
+		*    If not a null pointer at least "numberOfResources" sampler state pointers, must be valid if there's at least one texture resource, the resource group will keep a reference to the sampler states
 		*/
-		ResourceGroup(RootSignature& rootSignature, uint32_t rootParameterIndex, uint32_t numberOfResources, Renderer::IResource** resources);
+		ResourceGroup(RootSignature& rootSignature, uint32_t rootParameterIndex, uint32_t numberOfResources, Renderer::IResource** resources, Renderer::ISamplerState** samplerStates);
 
 		/**
 		*  @brief
@@ -106,6 +109,15 @@ namespace OpenGLRenderer
 
 		/**
 		*  @brief
+		*    Return the sampler states
+		*
+		*  @return
+		*    The sampler states, don't release or destroy the returned pointer
+		*/
+		inline Renderer::ISamplerState** getSamplerState() const;
+
+		/**
+		*  @brief
 		*    Return the resource index to uniform block binding index mapping
 		*
 		*  @return
@@ -126,10 +138,11 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		uint32_t			  mRootParameterIndex;						///< The root parameter index number for binding
-		uint32_t			  mNumberOfResources;						///< Number of resources this resource group groups together
-		Renderer::IResource** mResources;								///< Renderer resources, we keep a reference to it
-		uint32_t*			  mResourceIndexToUniformBlockBindingIndex;	///< Resource index to uniform block binding index mapping, only valid for uniform buffer resources
+		uint32_t				  mRootParameterIndex;						///< The root parameter index number for binding
+		uint32_t				  mNumberOfResources;						///< Number of resources this resource group groups together
+		Renderer::IResource**	  mResources;								///< Renderer resources, we keep a reference to it
+		Renderer::ISamplerState** mSamplerStates;							///< Sampler states, we keep a reference to it
+		uint32_t*				  mResourceIndexToUniformBlockBindingIndex;	///< Resource index to uniform block binding index mapping, only valid for uniform buffer resources
 
 
 	};

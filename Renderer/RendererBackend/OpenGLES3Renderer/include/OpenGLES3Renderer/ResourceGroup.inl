@@ -38,6 +38,11 @@ namespace OpenGLES3Renderer
 		return mResources;
 	}
 
+	inline Renderer::ISamplerState** ResourceGroup::getSamplerState() const
+	{
+		return mSamplerStates;
+	}
+
 	inline uint32_t* ResourceGroup::getResourceIndexToUniformBlockBindingIndex() const
 	{
 		return mResourceIndexToUniformBlockBindingIndex;

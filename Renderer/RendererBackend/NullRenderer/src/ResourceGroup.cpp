@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "NullRenderer/ResourceGroup.h"
 
+#include <Renderer/State/ISamplerState.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -34,25 +36,49 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ResourceGroup::ResourceGroup(Renderer::IRenderer& renderer, uint32_t rootParameterIndex, uint32_t numberOfResources, Renderer::IResource** resources) :
+	ResourceGroup::ResourceGroup(Renderer::IRenderer& renderer, uint32_t rootParameterIndex, uint32_t numberOfResources, Renderer::IResource** resources, Renderer::ISamplerState** samplerStates) :
 		IResourceGroup(renderer),
 		mRootParameterIndex(rootParameterIndex),
 		mNumberOfResources(numberOfResources),
-		mResources(new Renderer::IResource*[mNumberOfResources])
+		mResources(new Renderer::IResource*[mNumberOfResources]),
+		mSamplerStates(nullptr)
 	{
-		// Process all resources
+		// Process all resources and add our reference to the renderer resource
 		for (uint32_t resourceIndex = 0; resourceIndex < mNumberOfResources; ++resourceIndex, ++resources)
 		{
-			// Add our reference to the renderer resource
 			Renderer::IResource* resource = *resources;
 			mResources[resourceIndex] = resource;
 			resource->addReference();
+		}
+		if (nullptr != samplerStates)
+		{
+			mSamplerStates = new Renderer::ISamplerState*[mNumberOfResources];
+			for (uint32_t resourceIndex = 0; resourceIndex < mNumberOfResources; ++resourceIndex)
+			{
+				Renderer::ISamplerState* samplerState = mSamplerStates[resourceIndex] = samplerStates[resourceIndex];
+				if (nullptr != samplerState)
+				{
+					samplerState->addReference();
+				}
+			}
 		}
 	}
 
 	ResourceGroup::~ResourceGroup()
 	{
 		// Remove our reference from the renderer resources
+		if (nullptr != mSamplerStates)
+		{
+			for (uint32_t resourceIndex = 0; resourceIndex < mNumberOfResources; ++resourceIndex)
+			{
+				Renderer::ISamplerState* samplerState = mSamplerStates[resourceIndex];
+				if (nullptr != samplerState)
+				{
+					samplerState->releaseReference();
+				}
+			}
+			delete [] mSamplerStates;
+		}
 		for (uint32_t resourceIndex = 0; resourceIndex < mNumberOfResources; ++resourceIndex)
 		{
 			mResources[resourceIndex]->releaseReference();

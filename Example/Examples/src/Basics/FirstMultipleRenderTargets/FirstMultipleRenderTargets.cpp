@@ -80,12 +80,14 @@ void FirstMultipleRenderTargets::onInitialization()
 				mRootSignature = renderer->createRootSignature(rootSignature);
 			}
 
-			{ // Create sampler state and wrap it into a resource group instance: We don't use mipmaps
+			// Create sampler state and wrap it into a resource group instance: We don't use mipmaps
+			Renderer::IResource* samplerStateResource = nullptr;
+			{
 				Renderer::SamplerState samplerState = Renderer::ISamplerState::getDefaultSamplerState();
 				samplerState.filter = Renderer::FilterMode::MIN_MAG_MIP_POINT;
 				samplerState.maxLOD = 0.0f;
-				Renderer::IResource* resource = renderer->createSamplerState(samplerState);
-				mSamplerStateGroup = mRootSignature->createResourceGroup(1, 1, &resource);
+				samplerStateResource = renderer->createSamplerState(samplerState);
+				mSamplerStateGroup = mRootSignature->createResourceGroup(1, 1, &samplerStateResource);
 			}
 
 			{ // Texture resource related
@@ -95,14 +97,16 @@ void FirstMultipleRenderTargets::onInitialization()
 				// -> Not required for OpenGL and OpenGL ES 2
 				// -> The optimized texture clear value is a Direct3D 12 related option
 				Renderer::IResource* textureResource[NUMBER_OF_TEXTURES] = {};
+				Renderer::ISamplerState* samplerStates[NUMBER_OF_TEXTURES] = {};
 				Renderer::FramebufferAttachment colorFramebufferAttachments[NUMBER_OF_TEXTURES];
 				for (uint32_t i = 0; i < NUMBER_OF_TEXTURES; ++i)
 				{
 					textureResource[i] = colorFramebufferAttachments[i].texture = mTextureManager->createTexture2D(TEXTURE_SIZE, TEXTURE_SIZE, Renderer::TextureFormat::R8G8B8A8, nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT, 1, reinterpret_cast<const Renderer::OptimizedTextureClearValue*>(&Color4::BLACK));
+					samplerStates[i] = static_cast<Renderer::ISamplerState*>(samplerStateResource);
 				}
 
 				// Create texture group
-				mTextureGroup = mRootSignature->createResourceGroup(0, NUMBER_OF_TEXTURES, textureResource);
+				mTextureGroup = mRootSignature->createResourceGroup(0, NUMBER_OF_TEXTURES, textureResource, samplerStates);
 
 				// Create the framebuffer object (FBO) instance
 				mFramebuffer = renderer->createFramebuffer(NUMBER_OF_TEXTURES, colorFramebufferAttachments);
@@ -313,8 +317,8 @@ void FirstMultipleRenderTargets::fillCommandBuffer()
 		Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineState);
 
 		// Set resource groups
-		Renderer::Command::SetGraphicsResourceGroup::create(mCommandBuffer, 1, mSamplerStateGroup);
 		Renderer::Command::SetGraphicsResourceGroup::create(mCommandBuffer, 0, mTextureGroup);
+		Renderer::Command::SetGraphicsResourceGroup::create(mCommandBuffer, 1, mSamplerStateGroup);
 
 		// Input assembly (IA): Set the used vertex array
 		Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArray);

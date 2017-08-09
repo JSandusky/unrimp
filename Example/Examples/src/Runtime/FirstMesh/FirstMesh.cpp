@@ -152,8 +152,8 @@ void FirstMesh::onInitialization()
 				Renderer::SamplerState samplerStateSettings = Renderer::ISamplerState::getDefaultSamplerState();
 				samplerStateSettings.addressU = Renderer::TextureAddressMode::WRAP;
 				samplerStateSettings.addressV = Renderer::TextureAddressMode::WRAP;
-				Renderer::IResource* resource = renderer->createSamplerState(samplerStateSettings);
-				mSamplerStateGroup = mRootSignature->createResourceGroup(1, 1, &resource);
+				Renderer::IResource* samplerStateResource = mSamplerStatePtr = renderer->createSamplerState(samplerStateSettings);
+				mSamplerStateGroup = mRootSignature->createResourceGroup(1, 1, &samplerStateResource);
 			}
 
 			// Create the program
@@ -210,6 +210,7 @@ void FirstMesh::onDeinitialization()
 	mObjectSpaceToViewSpaceMatrixUniformHandle = NULL_HANDLE;
 	mObjectSpaceToClipSpaceMatrixUniformHandle = NULL_HANDLE;
 	mSamplerStateGroup = nullptr;
+	mSamplerStatePtr = nullptr;
 	mResourceGroup = nullptr;
 	RendererRuntime::setUninitialized(mEmissiveTextureResourceId);
 	RendererRuntime::setUninitialized(m_hr_rg_mb_nyaTextureResourceId);
@@ -263,7 +264,8 @@ void FirstMesh::onDraw()
 	{
 		// Create resource group
 		Renderer::IResource* resources[4] = { mUniformBuffer, _drgb_nxaTextureResource->getTexture(), _hr_rg_mb_nyaTextureResource->getTexture(), emissiveTextureResource->getTexture() };
-		mResourceGroup = mRootSignature->createResourceGroup(0, static_cast<uint32_t>(glm::countof(resources)), resources);
+		Renderer::ISamplerState* samplerStates[4] = { nullptr, mSamplerStatePtr, mSamplerStatePtr, mSamplerStatePtr };
+		mResourceGroup = mRootSignature->createResourceGroup(0, static_cast<uint32_t>(glm::countof(resources)), resources, samplerStates);
 	}
 
 	// Get and check the renderer instance
@@ -299,8 +301,8 @@ void FirstMesh::onDraw()
 		Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineState);
 
 		// Set resource groups
-		Renderer::Command::SetGraphicsResourceGroup::create(mCommandBuffer, 1, mSamplerStateGroup);
 		Renderer::Command::SetGraphicsResourceGroup::create(mCommandBuffer, 0, mResourceGroup);
+		Renderer::Command::SetGraphicsResourceGroup::create(mCommandBuffer, 1, mSamplerStateGroup);
 
 		{ // Set uniform
 			// Calculate the object space to clip space matrix

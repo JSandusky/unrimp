@@ -76,11 +76,13 @@ void FirstRenderToTexture::onInitialization()
 			mRootSignature = renderer->createRootSignature(rootSignature);
 		}
 
-		{ // Create sampler state and wrap it into a resource group instance
+		// Create sampler state and wrap it into a resource group instance
+		Renderer::IResource* samplerStateResource = nullptr;
+		{
 			Renderer::SamplerState samplerState = Renderer::ISamplerState::getDefaultSamplerState();
 			samplerState.maxLOD = 0.0f;
-			Renderer::IResource* resource = renderer->createSamplerState(samplerState);
-			mSamplerStateGroup = mRootSignature->createResourceGroup(1, 1, &resource);
+			samplerStateResource = renderer->createSamplerState(samplerState);
+			mSamplerStateGroup = mRootSignature->createResourceGroup(1, 1, &samplerStateResource);
 		}
 
 		{ // Texture resource related
@@ -93,7 +95,8 @@ void FirstRenderToTexture::onInitialization()
 
 			{ // Create texture group
 				Renderer::IResource* resource = texture2D;
-				mTextureGroup = mRootSignature->createResourceGroup(0, 1, &resource);
+				Renderer::ISamplerState* samplerState = static_cast<Renderer::ISamplerState*>(samplerStateResource);
+				mTextureGroup = mRootSignature->createResourceGroup(0, 1, &resource, &samplerState);
 			}
 
 			{ // Create the framebuffer object (FBO) instance
@@ -260,8 +263,8 @@ void FirstRenderToTexture::fillCommandBuffer()
 		Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineState);
 
 		// Set resource groups
-		Renderer::Command::SetGraphicsResourceGroup::create(mCommandBuffer, 1, mSamplerStateGroup);
 		Renderer::Command::SetGraphicsResourceGroup::create(mCommandBuffer, 0, mTextureGroup);
+		Renderer::Command::SetGraphicsResourceGroup::create(mCommandBuffer, 1, mSamplerStateGroup);
 
 		// Input assembly (IA): Set the used vertex array
 		Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArray);

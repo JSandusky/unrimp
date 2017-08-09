@@ -40,7 +40,6 @@
 //[-------------------------------------------------------]
 namespace VulkanRenderer
 {
-	class SamplerState;
 	class VulkanRenderer;
 }
 
@@ -95,26 +94,6 @@ namespace VulkanRenderer
 
 		/**
 		*  @brief
-		*    Return the sampler state at the given sampler root parameter index
-		*
-		*  @return
-		*    Sampler state, null pointer on error, don't destroy the returned instance
-		*/
-		const SamplerState* getSamplerState(uint32_t samplerRootParameterIndex) const;
-
-		/**
-		*  @brief
-		*    Set the sampler state
-		*
-		*  @param[in] samplerRootParameterIndex
-		*    Sampler root parameter index
-		*  @param[in] samplerState
-		*    Sampler state
-		*/
-		void setSamplerState(uint32_t samplerRootParameterIndex, SamplerState* samplerState) const;
-
-		/**
-		*  @brief
 		*    Return the Vulkan pipeline layout
 		*
 		*  @return
@@ -136,7 +115,7 @@ namespace VulkanRenderer
 	//[ Public virtual Renderer::IRootSignature methods       ]
 	//[-------------------------------------------------------]
 	public:
-		virtual Renderer::IResourceGroup* createResourceGroup(uint32_t rootParameterIndex, uint32_t numberOfResources, Renderer::IResource** resources) override;
+		virtual Renderer::IResourceGroup* createResourceGroup(uint32_t rootParameterIndex, uint32_t numberOfResources, Renderer::IResource** resources, Renderer::ISamplerState** samplerStates = nullptr) override;
 
 
 	//[-------------------------------------------------------]
@@ -159,7 +138,6 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	private:
 		Renderer::RootSignature	mRootSignature;
-		SamplerState**			mSamplerStates;
 		VkDescriptorSetLayouts	mVkDescriptorSetLayouts;
 		VkPipelineLayout		mVkPipelineLayout;
 		VkDescriptorPool		mVkDescriptorPool;

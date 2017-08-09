@@ -194,10 +194,9 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer& render
 		delete [] data;
 	}
 
-	{ // Create sampler state instance and wrap it into a resource group instance
-		Renderer::IResource* resource = mRenderer->createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
-		mSamplerStateGroup = mRootSignature->createResourceGroup(2, 1, &resource);
-	}
+	// Create sampler state instance and wrap it into a resource group instance
+	Renderer::IResource* samplerStateResource = mRenderer->createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
+	mSamplerStateGroup = mRootSignature->createResourceGroup(2, 1, &samplerStateResource);
 
 	{ // Create vertex array object (VAO)
 		// Create the vertex buffer object (VBO)
@@ -295,7 +294,8 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer& render
 
 	{ // Create resource group
 		Renderer::IResource* resources[4] = { mUniformBufferStaticVs, mUniformBufferDynamicVs, mTexture2DArray, mUniformBufferDynamicFs };
-		mResourceGroup = mRootSignature->createResourceGroup(0, static_cast<uint32_t>(glm::countof(resources)), resources);
+		Renderer::ISamplerState* samplerStates[4] = { nullptr, nullptr, static_cast<Renderer::ISamplerState*>(samplerStateResource), nullptr };
+		mResourceGroup = mRootSignature->createResourceGroup(0, static_cast<uint32_t>(glm::countof(resources)), resources, samplerStates);
 	}
 
 	// Create the program: Decide which shader language should be used (for example "GLSL" or "HLSL")
@@ -458,9 +458,9 @@ void CubeRendererDrawInstanced::fillReusableCommandBuffer()
 	Renderer::Command::SetGraphicsRootSignature::create(mCommandBuffer, mRootSignature);
 
 	// Set resource groups
-	Renderer::Command::SetGraphicsResourceGroup::create(mCommandBuffer, 2, mSamplerStateGroup);
-	// Graphics root descriptor table 1 is set inside "BatchDrawInstanced::draw()"
 	Renderer::Command::SetGraphicsResourceGroup::create(mCommandBuffer, 0, mResourceGroup);
+	// Graphics root descriptor table 1 is set inside "BatchDrawInstanced::draw()"
+	Renderer::Command::SetGraphicsResourceGroup::create(mCommandBuffer, 2, mSamplerStateGroup);
 
 	// Input assembly (IA): Set the used vertex array
 	Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArray);

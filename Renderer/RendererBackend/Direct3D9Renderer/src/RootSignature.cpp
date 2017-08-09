@@ -24,60 +24,8 @@
 #include "Direct3D9Renderer/RootSignature.h"
 #include "Direct3D9Renderer/ResourceGroup.h"
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
-#include "Direct3D9Renderer/State/SamplerState.h"
-
-#include <Renderer/ILog.h>
 
 #include <memory.h>
-
-
-#ifndef DIRECT3D9RENDERER_NO_DEBUG
-	//[-------------------------------------------------------]
-	//[ Anonymous detail namespace                            ]
-	//[-------------------------------------------------------]
-	namespace
-	{
-		namespace detail
-		{
-
-
-			//[-------------------------------------------------------]
-			//[ Global functions                                      ]
-			//[-------------------------------------------------------]
-			void checkSamplerState(Direct3D9Renderer::Direct3D9Renderer& direct3D9Renderer, const Renderer::RootSignature& rootSignature, uint32_t samplerRootParameterIndex)
-			{
-				if (samplerRootParameterIndex >= rootSignature.numberOfParameters)
-				{
-					RENDERER_LOG(direct3D9Renderer.getContext(), CRITICAL, "Direct3D 9 renderer backend sampler root parameter index is out of bounds")
-					return;
-				}
-				const Renderer::RootParameter& samplerRootParameter = rootSignature.parameters[samplerRootParameterIndex];
-				if (Renderer::RootParameterType::DESCRIPTOR_TABLE != samplerRootParameter.parameterType)
-				{
-					RENDERER_LOG(direct3D9Renderer.getContext(), CRITICAL, "Direct3D 9 renderer backend sampler root parameter index doesn't point to a descriptor table")
-					return;
-				}
-
-				// TODO(co) For now, we only support a single descriptor range
-				if (1 != samplerRootParameter.descriptorTable.numberOfDescriptorRanges)
-				{
-					RENDERER_LOG(direct3D9Renderer.getContext(), CRITICAL, "Direct3D 9 renderer backend sampler root parameter: Only a single descriptor range is supported")
-					return;
-				}
-				if (Renderer::DescriptorRangeType::SAMPLER != reinterpret_cast<const Renderer::DescriptorRange*>(samplerRootParameter.descriptorTable.descriptorRanges)[0].rangeType)
-				{
-					RENDERER_LOG(direct3D9Renderer.getContext(), CRITICAL, "Direct3D 9 renderer backend sampler root parameter index is out of bounds")
-					return;
-				}
-			}
-
-
-	//[-------------------------------------------------------]
-	//[ Anonymous detail namespace                            ]
-	//[-------------------------------------------------------]
-		} // detail
-	}
-#endif
 
 
 //[-------------------------------------------------------]
@@ -92,8 +40,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	RootSignature::RootSignature(Direct3D9Renderer& direct3D9Renderer, const Renderer::RootSignature& rootSignature) :
 		IRootSignature(direct3D9Renderer),
-		mRootSignature(rootSignature),
-		mSamplerStates(nullptr)
+		mRootSignature(rootSignature)
 	{
 		{ // Copy the parameter data
 			const uint32_t numberOfParameters = mRootSignature.numberOfParameters;
@@ -126,31 +73,10 @@ namespace Direct3D9Renderer
 				memcpy(const_cast<Renderer::StaticSampler*>(mRootSignature.staticSamplers), rootSignature.staticSamplers, sizeof(Renderer::StaticSampler) * numberOfStaticSamplers);
 			}
 		}
-
-		// Initialize sampler state references
-		if (mRootSignature.numberOfParameters > 0)
-		{
-			mSamplerStates = new SamplerState*[mRootSignature.numberOfParameters];
-			memset(mSamplerStates, 0, sizeof(SamplerState*) * mRootSignature.numberOfParameters);
-		}
 	}
 
 	RootSignature::~RootSignature()
 	{
-		// Release all sampler state references
-		if (nullptr != mSamplerStates)
-		{
-			for (uint32_t i = 0; i < mRootSignature.numberOfParameters; ++i)
-			{
-				SamplerState* samplerState = mSamplerStates[i];
-				if (nullptr != samplerState)
-				{
-					samplerState->releaseReference();
-				}
-			}
-			delete [] mSamplerStates;
-		}
-
 		// Destroy the root signature data
 		if (nullptr != mRootSignature.parameters)
 		{
@@ -167,49 +93,11 @@ namespace Direct3D9Renderer
 		delete [] mRootSignature.staticSamplers;
 	}
 
-	const SamplerState* RootSignature::getSamplerState(uint32_t samplerRootParameterIndex) const
-	{
-		// Security checks
-		#ifndef DIRECT3D9RENDERER_NO_DEBUG
-			Direct3D9Renderer& direct3D9Renderer = static_cast<Direct3D9Renderer&>(getRenderer());
-			detail::checkSamplerState(direct3D9Renderer, mRootSignature, samplerRootParameterIndex);
-			if (nullptr == mSamplerStates[samplerRootParameterIndex])
-			{
-				RENDERER_LOG(direct3D9Renderer.getContext(), CRITICAL, "Direct3D 9 renderer backend sampler root parameter index points to no sampler state instance")
-				return nullptr;
-			}
-		#endif
-		return mSamplerStates[samplerRootParameterIndex];
-	}
-
-	void RootSignature::setSamplerState(uint32_t samplerRootParameterIndex, SamplerState* samplerState) const
-	{
-		// Security checks
-		#ifndef DIRECT3D9RENDERER_NO_DEBUG
-			detail::checkSamplerState(static_cast<Direct3D9Renderer&>(getRenderer()), mRootSignature, samplerRootParameterIndex);
-		#endif
-
-		// Set sampler state
-		SamplerState** samplerStateSlot = &mSamplerStates[samplerRootParameterIndex];
-		if (samplerState != *samplerStateSlot)
-		{
-			if (nullptr != *samplerStateSlot)
-			{
-				(*samplerStateSlot)->releaseReference();
-			}
-			(*samplerStateSlot) = samplerState;
-			if (nullptr != *samplerStateSlot)
-			{
-				(*samplerStateSlot)->addReference();
-			}
-		}
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRootSignature methods       ]
 	//[-------------------------------------------------------]
-	Renderer::IResourceGroup* RootSignature::createResourceGroup(uint32_t rootParameterIndex, uint32_t numberOfResources, Renderer::IResource** resources)
+	Renderer::IResourceGroup* RootSignature::createResourceGroup(uint32_t rootParameterIndex, uint32_t numberOfResources, Renderer::IResource** resources, Renderer::ISamplerState** samplerStates)
 	{
 		// Sanity checks
 		assert(rootParameterIndex < mRootSignature.numberOfParameters && "The root parameter index is out-of-bounds");
@@ -217,7 +105,7 @@ namespace Direct3D9Renderer
 		assert(nullptr != resources && "The resource pointers must be valid");
 
 		// Create resource group
-		return new ResourceGroup(getRenderer(), rootParameterIndex, numberOfResources, resources);
+		return new ResourceGroup(getRenderer(), rootParameterIndex, numberOfResources, resources, samplerStates);
 	}
 
 
