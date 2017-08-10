@@ -135,6 +135,16 @@ namespace
 		{
 			const Renderer::Context* context = static_cast<const Renderer::Context*>(pUserData);
 
+			// TODO(co) Inside e.g. the "InstancedCubes"-example the log gets currently flooded with
+			//          "Warning: Vulkan debug report callback: Object type: "VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT" Object: "120" Location: "5460" Message code: "0" Layer prefix: "DS" Message: "DescriptorSet 0x78 previously bound as set #0 is incompatible with set 0xc82f498 newly bound as set #0 so set #1 and any subsequent sets were disturbed by newly bound pipelineLayout (0x8b)" ".
+			//          It's a known Vulkan API issue regarding validation. See https://github.com/KhronosGroup/Vulkan-Docs/issues/305 - "vkCmdBindDescriptorSets should be able to take NULL sets. #305".
+			//          Currently I see no other way then ignoring this message.
+			if (VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT == objectType && 120 == object && 5460 == location && 0 == messageCode)
+			{
+				// The Vulkan call should not be aborted to have the same behavior with and without validation layers enabled
+				return VK_FALSE;
+			}
+
 			// Get log message type
 			// -> Vulkan is using a flags combination, map it to our log message type enumeration
 			Renderer::ILog::Type type = Renderer::ILog::Type::TRACE;
