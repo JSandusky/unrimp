@@ -40,6 +40,10 @@ namespace Renderer
 #ifdef LINUX
 	// Copied from Xlib.h
 	struct _XDisplay;
+
+	// Copied from wayland-client.h
+	struct wl_display;
+	struct wl_surface;
 #endif
 
 
@@ -205,10 +209,10 @@ namespace Renderer
 
 		/**
 		*  @brief
-		*    Return the type of the context
+		*    Return the x11 display connection
 		*
 		*  @return
-		*    The context type
+		*    The x11 display connection
 		*/
 		inline _XDisplay* getDisplay() const;
 
@@ -218,6 +222,62 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	private:
 		_XDisplay* mDisplay;
+
+
+	};
+	/**
+	*  @brief
+	*    Wayland version of the context class
+	*/
+	class WaylandContext : public Context
+	{
+
+
+	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Constructor
+		*
+		*  @param[in] log
+		*    Log instance to use, the log instance must stay valid as long as the renderer instance exists
+		*  @param[in] display
+		*    The Wayland display connection
+		*  @param[in] surface
+		*    The wayland surface
+		*  @param[in] useExternalContext
+		*    Indicates if an external renderer context is used; in this case the renderer itself has nothing to do with the creation/managing of an renderer context
+		*/
+		inline WaylandContext(ILog& log, wl_display* display, wl_surface* surface = 0, bool useExternalContext = false);
+
+		/**
+		*  @brief
+		*    Return the wayland display conenction
+		*
+		*  @return
+		*    The wayland display connection
+		*/
+		inline wl_display* getDisplay() const;
+
+		/**
+		*  @brief
+		*    Return the wayland surface
+		*
+		*  @return
+		*    The wayland surface
+		*/
+		inline wl_surface* getSurface() const;
+
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		wl_display*	mDisplay;
+		wl_surface*	mSurface;
 
 
 	};

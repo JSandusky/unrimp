@@ -85,6 +85,25 @@ namespace Renderer
 	{
 		return mDisplay;
 	}
+
+
+	inline WaylandContext::WaylandContext(ILog& log, wl_display* display, wl_surface* surface, bool useExternalContext) :
+		Context(Context::ContextType::WAYLAND, log, 1, useExternalContext), // Under wayland the surface (aka window) handle is not an integer, but the renderer implementation expects an integer as window handle so we give here an value != 0 so that a swapchain is created
+		mDisplay(display),
+		mSurface(surface)
+	{
+		// Nothing here
+	}
+
+	inline wl_display* WaylandContext::getDisplay() const
+	{
+		return mDisplay;
+	}
+
+	inline wl_surface* WaylandContext::getSurface() const
+	{
+		return mSurface;
+	}
 #endif
 
 

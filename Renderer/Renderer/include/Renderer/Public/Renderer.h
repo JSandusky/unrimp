@@ -41,6 +41,10 @@
 #ifdef LINUX
 	// Copied from Xlib.h
 	struct _XDisplay;
+
+	// Copied from wayland-client.h
+	struct wl_display;
+	struct wl_surface;
 #endif
 
 
@@ -223,6 +227,28 @@ namespace Renderer
 			}
 		private:
 			_XDisplay* mDisplay;
+		};
+		class WaylandContext : public Context
+		{
+		public:
+			inline WaylandContext(ILog& log, wl_display* display, wl_surface* surface = 0, bool useExternalContext = false) :
+				Context(Context::ContextType::WAYLAND, log, 1, useExternalContext), // Under wayland the surface (aka window) handle is not an integer, but the renderer implementation expects an integer as window handle so we give here an value != 0 so that a swapchain is created
+				mDisplay(display),
+				mSurface(surface)
+			{
+				// Nothing here
+			}
+			inline wl_display* getDisplay() const
+			{
+				return mDisplay;
+			}
+			inline wl_surface* getSurface() const
+			{
+				return mSurface;
+			}
+		private:
+			wl_display*	mDisplay;
+			wl_surface*	mSurface;
 		};
 	#endif
 		#define RENDERER_LOG(context, type, format, ...) (context).getLog().print(Renderer::ILog::Type::type, format, ##__VA_ARGS__);
