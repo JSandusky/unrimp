@@ -297,7 +297,14 @@ void IApplicationRenderer::onDrawRequest()
 			}
 
 			// Present the content of the current back buffer
-			SDL_GL_SwapWindow(mMainWindow);
+			if (nullptr != mOpenGLContext)
+			{
+				SDL_GL_SwapWindow(mMainWindow);
+			}
+			else
+			{
+				swapChain->present();
+			}
 			//std::cout<<"SDL error?: " <<SDL_GetError()<<'\n';
 		}
 	}
@@ -315,7 +322,10 @@ void IApplicationRenderer::getWidthAndHeight(uint32_t& width, uint32_t& height) 
 
 void IApplicationRenderer::present()
 {
-	SDL_GL_SwapWindow(mMainWindow);
+	if (nullptr != mOpenGLContext)
+	{
+		SDL_GL_SwapWindow(mMainWindow);
+	}
 }
 
 
@@ -331,51 +341,65 @@ bool IApplicationRenderer::onInitializeApplication()
 	else
 	{
 		// TODO(sw) Add support for vulkan and under windows for D3D renderer. For both cases We don't manage the rendering context here
-		if (mRendererName == "OpenGLES3")
+		const bool isOpenGLRenderer = mRendererName == "OpenGLES3" || mRendererName == "OpenGL";
+		Uint32 windowFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE;
+		if (isOpenGLRenderer)
 		{
-			//Use OpenGL ES 3.0
-			SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-			SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-			SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-			SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
+			windowFlags |= SDL_WINDOW_OPENGL;
+
+			if (mRendererName == "OpenGLES3")
+			{
+				//Use OpenGL ES 3.0
+				SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+				SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+				SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+				SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
+			}
+			else
+			{
+				SDL_GL_LoadLibrary(NULL); // Default OpenGL is fine.
+
+				//Use OpenGL 4.1 core
+				SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+				SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+				SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+				SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
+				
+				SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+				SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+				SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+				SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+				SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+				SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+			}
+		}
+
+		mMainWindow = SDL_CreateWindow(mWindowTitle.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, mCurrentWindowWidth, mCurrentWindowHeight, windowFlags);
+
+		if (isOpenGLRenderer)
+		{
+			if (nullptr != mMainWindow)
+			{
+				mOpenGLContext = SDL_GL_CreateContext(mMainWindow);
+			}
+
+			if (nullptr != mMainWindow && nullptr != mOpenGLContext)
+			{
+				if( SDL_GL_SetSwapInterval( 1 ) < 0 )
+				{
+					std::cout<<"Warning: Unable to set VSync! SDL Error: "<< SDL_GetError()<<'\n';
+				}
+
+				// Make the opengl context current. This is needed so that the opengl renderer can be properly initialized
+				SDL_GL_MakeCurrent(mMainWindow, mOpenGLContext);
+				
+				// Initialization went fine
+				return true;
+			}
 		}
 		else
 		{
-			SDL_GL_LoadLibrary(NULL); // Default OpenGL is fine.
-
-			//Use OpenGL 4.1 core
-			SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-			SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
-			SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-			SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
-			
-			SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
-			SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
-			SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
-			SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-			SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-			SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
-		}
-
-		mMainWindow = SDL_CreateWindow( mWindowTitle.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, mCurrentWindowWidth, mCurrentWindowHeight, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-		
-		if (nullptr != mMainWindow)
-		{
-			mOpenGLContext = SDL_GL_CreateContext(mMainWindow);
-		}
-
-		if (nullptr != mMainWindow && nullptr != mOpenGLContext)
-		{
-			if( SDL_GL_SetSwapInterval( 1 ) < 0 )
-			{
-				std::cout<<"Warning: Unable to set VSync! SDL Error: "<< SDL_GetError()<<'\n';
-			}
-
-			// Make the opengl context current. This is needed so that the opengl renderer can be properly initialized
-			SDL_GL_MakeCurrent(mMainWindow, mOpenGLContext);
-			
-			// Initialization went fine
-			return true;
+			return (nullptr != mMainWindow);
 		}
 	}
 
@@ -656,20 +680,22 @@ Renderer::Context* IApplicationRenderer::createRendererContext() const
 	{
 		SDL_SysWMinfo info;
 		SDL_VERSION(&info.version);
+
+		const bool isOpenGLRenderer = mRendererName == "OpenGLES3" || mRendererName == "OpenGL";
 	  
 		if(SDL_GetWindowWMInfo(mMainWindow,&info))
 		{
 			switch(info.subsystem) {
 		#ifdef WIN32
 				case SDL_SYSWM_WINDOWS:
-					return new Renderer::Context(Renderer::Context::ContextType::WINDOWS, ::detail::g_RendererLog, info.info.win.window, true);
+					return new Renderer::Context(Renderer::Context::ContextType::WINDOWS, ::detail::g_RendererLog, info.info.win.window, isOpenGLRenderer);
 		#endif
 #ifdef LINUX
 				case SDL_SYSWM_X11:
-					return new Renderer::X11Context(::detail::g_RendererLog, info.info.x11.display, info.info.x11.window, true);
+					return new Renderer::X11Context(::detail::g_RendererLog, info.info.x11.display, info.info.x11.window, isOpenGLRenderer);
 				case SDL_SYSWM_WAYLAND:
 					// TODO(sw) For now we misuse the win32 context, the nativ window handle is only used by the renderer instance to determine if a main swapchain should be created or not, because we tell the renderer instance that an external context is used
-					return new Renderer::Context(Renderer::Context::ContextType::WINDOWS, ::detail::g_RendererLog, reinterpret_cast<uintptr_t>(info.info.wl.surface));
+					return new Renderer::WaylandContext(::detail::g_RendererLog, info.info.wl.display, info.info.wl.surface, isOpenGLRenderer);
 #endif
 			}
 		}
