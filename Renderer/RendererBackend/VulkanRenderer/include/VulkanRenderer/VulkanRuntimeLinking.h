@@ -322,9 +322,15 @@ FNPTR(vkGetPhysicalDeviceSurfacePresentModesKHR)
 	// "VK_KHR_android_surface"-extension
 	#warning "TODO(co) Not tested"
 	FNPTR(vkCreateAndroidSurfaceKHR)
-#elif defined VK_USE_PLATFORM_XLIB_KHR
-	// "VK_KHR_xlib_surface"-extension
-	FNPTR(vkCreateXlibSurfaceKHR)
+#elif defined VK_USE_PLATFORM_XLIB_KHR || defined VK_USE_PLATFORM_WAYLAND_KHR
+	#if defined VK_USE_PLATFORM_XLIB_KHR
+		// "VK_KHR_xlib_surface"-extension
+		FNPTR(vkCreateXlibSurfaceKHR)
+	#endif
+	#if defined VK_USE_PLATFORM_WAYLAND_KHR
+		// "VK_KHR_wayland_surface"-extension
+		FNPTR(vkCreateWaylandSurfaceKHR)
+	#endif
 #elif defined VK_USE_PLATFORM_XCB_KHR
 	// "VK_KHR_xcb_surface"-extension
 	#warning "TODO(co) Not tested"

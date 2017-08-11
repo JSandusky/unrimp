@@ -77,10 +77,10 @@ namespace
 					// TODO(co) Can we ensure "vkSurfaceKHR" doesn't get touched by "vkCreateAndroidSurfaceKHR()" in case of failure?
 					vkSurfaceKHR = VK_NULL_HANDLE;
 				}
-			#elif defined VK_USE_PLATFORM_XLIB_KHR
+			#elif defined VK_USE_PLATFORM_XLIB_KHR || defined VK_USE_PLATFORM_WAYLAND_KHR
 				VulkanRenderer::VulkanRenderer& vulkanRenderer = vulkanContext.getVulkanRenderer();
 				const Renderer::Context& context = vulkanRenderer.getContext();
-				assert(context.getType() == Renderer::Context::ContextType::X11);
+				assert(context.getType() == Renderer::Context::ContextType::X11 || context.getType() == Renderer::Context::ContextType::WAYLAND);
 
 				// If the given renderer context is an X11 context use the display connection object provided by the context
 				if (context.getType() == Renderer::Context::ContextType::X11)
@@ -97,6 +97,23 @@ namespace
 					if (vkCreateXlibSurfaceKHR(vkInstance, &vkXlibSurfaceCreateInfoKHR, nullptr, &vkSurfaceKHR) != VK_SUCCESS)
 					{
 						// TODO(co) Can we ensure "vkSurfaceKHR" doesn't get touched by "vkCreateXlibSurfaceKHR()" in case of failure?
+						vkSurfaceKHR = VK_NULL_HANDLE;
+					}
+				}
+				else if (context.getType() == Renderer::Context::ContextType::WAYLAND)
+				{
+					const Renderer::WaylandContext& waylandContext = static_cast<const Renderer::WaylandContext&>(context);
+					const VkWaylandSurfaceCreateInfoKHR vkWaylandSurfaceCreateInfoKHR =
+					{
+						VK_STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR,	// sType (VkStructureType)
+						nullptr,											// pNext (const void*)
+						0,													// flags (VkWaylandSurfaceCreateInfoKHR)
+						waylandContext.getDisplay(),						// display (wl_display*)
+						waylandContext.getSurface()							// surface (wl_surface*)
+					};
+					if (vkCreateWaylandSurfaceKHR(vkInstance, &vkWaylandSurfaceCreateInfoKHR, nullptr, &vkSurfaceKHR) != VK_SUCCESS)
+					{
+						// TODO(co) Can we ensure "vkSurfaceKHR" doesn't get touched by "vkCreateWaylandSurfaceKHR()" in case of failure?
 						vkSurfaceKHR = VK_NULL_HANDLE;
 					}
 				}

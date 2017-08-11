@@ -398,8 +398,13 @@ namespace VulkanRenderer
 		#elif defined VK_USE_PLATFORM_ANDROID_KHR
 			#warning "TODO(co) Not tested"
 			enabledExtensions.push_back(VK_KHR_ANDROID_SURFACE_EXTENSION_NAME);
-		#elif defined VK_USE_PLATFORM_XLIB_KHR
-			enabledExtensions.push_back(VK_KHR_XLIB_SURFACE_EXTENSION_NAME);
+		#elif defined VK_USE_PLATFORM_XLIB_KHR || defined VK_USE_PLATFORM_WAYLAND_KHR
+			#if defined VK_USE_PLATFORM_XLIB_KHR
+				enabledExtensions.push_back(VK_KHR_XLIB_SURFACE_EXTENSION_NAME);
+			#endif
+			#if defined VK_USE_PLATFORM_WAYLAND_KHR
+				enabledExtensions.push_back(VK_KHR_WAYLAND_SURFACE_EXTENSION_NAME);
+			#endif
 		#elif defined VK_USE_PLATFORM_XCB_KHR
 			#warning "TODO(co) Not tested"
 			enabledExtensions.push_back(VK_KHR_XCB_SURFACE_EXTENSION_NAME);
@@ -603,9 +608,15 @@ namespace VulkanRenderer
 			// "VK_KHR_android_surface"-extension
 			#warning "TODO(co) Not tested"
 			IMPORT_FUNC(vkCreateAndroidSurfaceKHR);
-		#elif defined VK_USE_PLATFORM_XLIB_KHR
-			// "VK_KHR_xlib_surface"-extension
-			IMPORT_FUNC(vkCreateXlibSurfaceKHR);
+		#elif defined VK_USE_PLATFORM_XLIB_KHR || defined VK_USE_PLATFORM_WAYLAND_KHR
+			#if defined VK_USE_PLATFORM_XLIB_KHR
+				// "VK_KHR_xlib_surface"-extension
+				IMPORT_FUNC(vkCreateXlibSurfaceKHR);
+			#endif
+			#if defined VK_USE_PLATFORM_XLIB_KHR
+				// "VK_KHR_wayland_surface"-extension
+				IMPORT_FUNC(vkCreateWaylandSurfaceKHR);
+			#endif
 		#elif defined VK_USE_PLATFORM_XCB_KHR
 			// "VK_KHR_xcb_surface"-extension
 			#warning "TODO(co) Not tested"
