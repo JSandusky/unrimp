@@ -37,8 +37,10 @@ X11Application* X11Application::_self = nullptr;
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
 X11Application::X11Application() :
-	mDisplay(XOpenDisplay(0))
+	mDisplay(nullptr)
 {
+	XInitThreads(); // Required by Vulkan, when using XLib. (Vulkan spec 1.0.57 section: 29.2.6 Xlib Platform)
+	mDisplay = XOpenDisplay(0);
 	_self = this;
 }
 
