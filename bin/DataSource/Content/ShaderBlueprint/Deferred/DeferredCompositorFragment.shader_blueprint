@@ -60,34 +60,34 @@ struct PassDataStruct
 	float2   ViewportSize;
 	float2   ProjectionParameters;
 };
-UNIFORM_BUFFER_BEGIN(0, PassUniformBuffer, 0)
+UNIFORM_BUFFER_BEGIN(0, 0, PassUniformBuffer, 0)
 	PassDataStruct PassData;
 UNIFORM_BUFFER_END
 
 // Texture buffers
-TEXTURE_BUFFER(1, float4, LightTextureBuffer, 0)	// "LIGHT"
-
-// Samplers
-SAMPLER_STATE(2, SamplerPoint, 0)
-SAMPLER_STATE(3, SamplerLinear, 1)
+TEXTURE_BUFFER(0, 1, float4, LightTextureBuffer, 0)	// "LIGHT"
 
 // Textures
 @property(NumberOfMultisamples)
-	TEXTURE_2D_MS(4, GBufferMap0, @value(NumberOfMultisamples), 1)	// GBuffer 0: rgb = diffuse color, a = alpha unused (required for blend operations)
-	TEXTURE_2D_MS(5, GBufferMap1, @value(NumberOfMultisamples), 2)	// GBuffer 1: rgb = view space normal, a = roughness
-	TEXTURE_2D_MS(6, GBufferMap2, @value(NumberOfMultisamples), 3)	// GBuffer 2: rgb = emissive color, a = metallic
-	TEXTURE_2D_MS(7, DepthMap, @value(NumberOfMultisamples), 4)
+	TEXTURE_2D_MS(0, 2, GBufferMap0, @value(NumberOfMultisamples), 1)	// GBuffer 0: rgb = diffuse color, a = alpha unused (required for blend operations)
+	TEXTURE_2D_MS(0, 3, GBufferMap1, @value(NumberOfMultisamples), 2)	// GBuffer 1: rgb = view space normal, a = roughness
+	TEXTURE_2D_MS(0, 4, GBufferMap2, @value(NumberOfMultisamples), 3)	// GBuffer 2: rgb = emissive color, a = metallic
+	TEXTURE_2D_MS(0, 5, DepthMap, @value(NumberOfMultisamples), 4)
 @end
 @property(!NumberOfMultisamples)
-	TEXTURE_2D(4, GBufferMap0, 1)	// GBuffer 0: rgb = diffuse color, a = alpha unused (required for blend operations)
-	TEXTURE_2D(5, GBufferMap1, 2)	// GBuffer 1: rgb = view space normal, a = roughness
-	TEXTURE_2D(6, GBufferMap2, 3)	// GBuffer 2: rgb = emissive color, a = metallic
-	TEXTURE_2D(7, DepthMap, 4)
+	TEXTURE_2D(0, 2, GBufferMap0, 1)	// GBuffer 0: rgb = diffuse color, a = alpha unused (required for blend operations)
+	TEXTURE_2D(0, 3, GBufferMap1, 2)	// GBuffer 1: rgb = view space normal, a = roughness
+	TEXTURE_2D(0, 4, GBufferMap2, 3)	// GBuffer 2: rgb = emissive color, a = metallic
+	TEXTURE_2D(0, 5, DepthMap, 4)
 @end
-TEXTURE_2D_ARRAY(8, ShadowMap, 5)
-TEXTURE_2D(9, ScreenSpaceAmbientOcclusionMap, 6)
-TEXTURE_CUBE(10, ReflectionCubeMap, 7)
-TEXTURE_3D_UINT(11, LightClustersMap3D, 8)
+TEXTURE_2D_ARRAY(0, 6, ShadowMap, 5)
+TEXTURE_2D(0, 7, ScreenSpaceAmbientOcclusionMap, 6)
+TEXTURE_CUBE(0, 8, ReflectionCubeMap, 7)
+TEXTURE_3D_UINT(0, 9, LightClustersMap3D, 8)
+
+// Samplers
+SAMPLER_STATE(1, 0, SamplerPoint, 0)
+SAMPLER_STATE(1, 1, SamplerLinear, 1)
 
 
 //[-------------------------------------------------------]

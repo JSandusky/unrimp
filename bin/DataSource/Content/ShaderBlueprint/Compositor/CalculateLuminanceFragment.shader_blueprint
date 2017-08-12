@@ -36,11 +36,11 @@ OUTPUT_BEGIN
 	OUTPUT_COLOR(0)
 OUTPUT_END
 
-// Samplers
-SAMPLER_STATE(0, SamplerLinear, 0)
-
 // Textures
-TEXTURE_2D(1, ColorMap, 0)
+TEXTURE_2D(0, 0, ColorMap, 0)
+
+// Samplers
+SAMPLER_STATE(1, 0, SamplerLinear, 0)
 
 
 //[-------------------------------------------------------]

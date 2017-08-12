@@ -2,7 +2,7 @@
 	"Format":
 	{
 		"Type": "MaterialBlueprintAsset",
-		"Version": "1"
+		"Version": "2"
 	},
 	"MaterialBlueprintAsset":
 	{
@@ -63,82 +63,6 @@
 				"Description": "1D lens color map"
 			}
 		},
-		"RootSignature":
-		{
-			"RootParameters":
-			{
-				"0":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "UBV",
-							"BaseShaderRegister": "0",
-							"BaseShaderRegisterName": "PassUniformBuffer",
-							"ShaderVisibility": "FRAGMENT"
-						}
-					}
-				},
-				"1":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "SAMPLER",
-							"BaseShaderRegister": "0",
-							"ShaderVisibility": "FRAGMENT"
-						}
-					}
-				},
-				"2":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "SAMPLER",
-							"BaseShaderRegister": "1",
-							"ShaderVisibility": "FRAGMENT"
-						}
-					}
-				},
-				"3":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "SRV",
-							"BaseShaderRegister": "0",
-							"BaseShaderRegisterName": "ColorMap",
-							"SamplerRootParameterIndex": "1",
-							"ShaderVisibility": "FRAGMENT"
-						}
-					}
-				},
-				"4":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "SRV",
-							"BaseShaderRegister": "1",
-							"BaseShaderRegisterName": "LensColorMap",
-							"SamplerRootParameterIndex": "2",
-							"ShaderVisibility": "FRAGMENT"
-						}
-					}
-				}
-			}
-		},
 		"PipelineState":
 		{
 			"VertexAttributes": "VertexAttributes/Default/Compositor.asset",
@@ -157,12 +81,16 @@
 				"DepthWriteMask": "ZERO"
 			}
 		},
-		"Resources":
+		"ResourceGroups":
 		{
-			"UniformBuffers":
+			"0":
 			{
-				"PassUniformBuffer":
+				"0":
 				{
+					"BaseShaderRegisterName": "PassUniformBuffer",
+					"BaseShaderRegister": "0",
+					"ShaderVisibility": "FRAGMENT",
+					"ResourceType": "UNIFORM_BUFFER",
 					"BufferUsage": "PASS",
 					"NumberOfElements": "1",
 					"ElementProperties":
@@ -198,43 +126,58 @@
 							"Value": "@HaloWidth"
 						}
 					}
-				}
-			},
-			"SamplerStates":
-			{
-				"SamplerLinear":
-				{
-					"Filter": "MIN_MAG_LINEAR_MIP_POINT",
-					"MaxAnisotropy": "1",
-					"MaxLOD": "0.0"
 				},
-				"SamplerPoint":
+				"1":
 				{
-					"Filter": "MIN_MAG_MIP_POINT",
-					"AddressU": "WRAP",
-					"AddressV": "WRAP",
-					"MaxAnisotropy": "1",
-					"MaxLOD": "0.0"
-				}
-			},
-			"Textures":
-			{
-				"ColorMap":
-				{
+					"BaseShaderRegisterName": "ColorMap",
+					"BaseShaderRegister": "0",
+					"ShaderVisibility": "FRAGMENT",
+					"ResourceType": "TEXTURE",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@ColorMap",
 					"FallbackTexture": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
-					"MipmapsUsed": "FALSE"
+					"MipmapsUsed": "FALSE",
+					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
 				},
-				"LensColorMap":
+				"2":
 				{
+					"BaseShaderRegisterName": "LensColorMap",
+					"BaseShaderRegister": "1",
+					"ShaderVisibility": "FRAGMENT",
+					"ResourceType": "TEXTURE",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@LensColorMap",
 					"FallbackTexture": "Unrimp/Texture/DynamicByCode/WhiteMap1D",
 					"RgbHardwareGammaCorrection": "TRUE",
-					"MipmapsUsed": "FALSE"
+					"MipmapsUsed": "FALSE",
+					"SamplerStateBaseShaderRegisterName": "SamplerPoint"
+				}
+			},
+			"1":
+			{
+				"0":
+				{
+					"BaseShaderRegisterName": "SamplerLinear",
+					"BaseShaderRegister": "0",
+					"ShaderVisibility": "FRAGMENT",
+					"ResourceType": "SAMPLER_STATE",
+					"Filter": "MIN_MAG_LINEAR_MIP_POINT",
+					"MaxAnisotropy": "1",
+					"MaxLOD": "0.0"
+				},
+				"1":
+				{
+					"BaseShaderRegisterName": "SamplerPoint",
+					"BaseShaderRegister": "1",
+					"ShaderVisibility": "FRAGMENT",
+					"ResourceType": "SAMPLER_STATE",
+					"Filter": "MIN_MAG_MIP_POINT",
+					"AddressU": "WRAP",
+					"AddressV": "WRAP",
+					"MaxAnisotropy": "1",
+					"MaxLOD": "0.0"
 				}
 			}
 		}

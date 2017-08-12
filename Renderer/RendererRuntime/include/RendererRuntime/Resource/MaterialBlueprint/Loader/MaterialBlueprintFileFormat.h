@@ -47,8 +47,10 @@ namespace RendererRuntime
 	//   - Shader blueprints, rasterization state etc.
 	// - Resources
 	//   - Uniform buffers
+	//   - Texture buffers
 	//   - Sampler states
 	//   - Textures
+	// - Resource groups
 	namespace v1MaterialBlueprint
 	{
 

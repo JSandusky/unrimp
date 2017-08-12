@@ -39,7 +39,7 @@ OUTPUT_BEGIN
 OUTPUT_END
 
 // Textures
-TEXTURE_2D(1, ColorMap, 0)
+TEXTURE_2D(0, 0, ColorMap, 0)
 
 
 //[-------------------------------------------------------]

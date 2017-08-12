@@ -71,21 +71,21 @@
 		#define DDY(x) ddy(x)
 
 		// Uniform buffer
-		#define UNIFORM_BUFFER_BEGIN(rootParameterIndex, name, registerIndex) cbuffer name : register(b##registerIndex) {
+		#define UNIFORM_BUFFER_BEGIN(resourceGroupIndex, resourceIndex, name, registerIndex) cbuffer name : register(b##registerIndex) {
 		#define UNIFORM_BUFFER_END }
 
 		// Texture buffer
-		#define TEXTURE_BUFFER(rootParameterIndex, type, name, registerIndex) Buffer<type> name : register(t##registerIndex);
+		#define TEXTURE_BUFFER(resourceGroupIndex, resourceIndex, type, name, registerIndex) Buffer<type> name : register(t##registerIndex);
 		#define TEXTURE_BUFFER_FETCH(name, texelIndex) name.Load(texelIndex)
 
 		// Texture
-		#define TEXTURE_1D(rootParameterIndex, name, registerIndex) Texture1D name : register(t##registerIndex);
-		#define TEXTURE_2D(rootParameterIndex, name, registerIndex) Texture2D name : register(t##registerIndex);
-		#define TEXTURE_2D_ARRAY(rootParameterIndex, name, registerIndex) Texture2DArray name : register(t##registerIndex);
-		#define TEXTURE_2D_MS(rootParameterIndex, name, numberOfMultisamples, registerIndex) Texture2DMS<float4, numberOfMultisamples> name : register(t##registerIndex);
-		#define TEXTURE_3D(rootParameterIndex, name, registerIndex) Texture3D name : register(t##registerIndex);
-		#define TEXTURE_3D_UINT(rootParameterIndex, name, registerIndex) Texture3D<uint> name : register(t##registerIndex);
-		#define TEXTURE_CUBE(rootParameterIndex, name, registerIndex) TextureCube name : register(t##registerIndex);
+		#define TEXTURE_1D(resourceGroupIndex, resourceIndex, name, registerIndex) Texture1D name : register(t##registerIndex);
+		#define TEXTURE_2D(resourceGroupIndex, resourceIndex, name, registerIndex) Texture2D name : register(t##registerIndex);
+		#define TEXTURE_2D_ARRAY(resourceGroupIndex, resourceIndex, name, registerIndex) Texture2DArray name : register(t##registerIndex);
+		#define TEXTURE_2D_MS(resourceGroupIndex, resourceIndex, name, numberOfMultisamples, registerIndex) Texture2DMS<float4, numberOfMultisamples> name : register(t##registerIndex);
+		#define TEXTURE_3D(resourceGroupIndex, resourceIndex, name, registerIndex) Texture3D name : register(t##registerIndex);
+		#define TEXTURE_3D_UINT(resourceGroupIndex, resourceIndex, name, registerIndex) Texture3D<uint> name : register(t##registerIndex);
+		#define TEXTURE_CUBE(resourceGroupIndex, resourceIndex, name, registerIndex) TextureCube name : register(t##registerIndex);
 		float2 getDirect3DTexture2DSize(Texture2D textureObject)
 		{
 			uint width;
@@ -104,8 +104,8 @@
 		#define GET_TEXTURE_CUBE_SIZE(textureObject) getDirect3DTextureCubeSize(textureObject)
 
 		// Sampler
-		#define SAMPLER_STATE(rootParameterIndex, name, registerIndex) SamplerState name : register(s##registerIndex);
-		#define SAMPLER_COMPARISON_STATE(rootParameterIndex, name, registerIndex) SamplerComparisonState name : register(s##registerIndex);
+		#define SAMPLER_STATE(resourceGroupIndex, resourceIndex, name, registerIndex) SamplerState name : register(s##registerIndex);
+		#define SAMPLER_COMPARISON_STATE(resourceGroupIndex, resourceIndex, name, registerIndex) SamplerComparisonState name : register(s##registerIndex);
 		#define SAMPLE_1D(textureObject, samplerObject, coordinate) textureObject.Sample(samplerObject, coordinate)
 		#define SAMPLE_1D_LOD(textureObject, samplerObject, coordinate) textureObject.SampleLevel(samplerObject, coordinate.x, coordinate.w)
 		#define SAMPLE_2D(textureObject, samplerObject, coordinate) textureObject.Sample(samplerObject, coordinate)
@@ -203,27 +203,27 @@
 		#define DDY(x) dFdy(x)
 
 		// Uniform buffer
-		#define UNIFORM_BUFFER_BEGIN(rootParameterIndex, name, registerIndex) layout(std140, binding = rootParameterIndex) uniform name {
+		#define UNIFORM_BUFFER_BEGIN(resourceGroupIndex, resourceIndex, name, registerIndex) layout(std140, set = resourceGroupIndex, binding = resourceIndex) uniform name {
 		#define UNIFORM_BUFFER_END };
 
 		// Texture buffer
-		#define TEXTURE_BUFFER(rootParameterIndex, type, name, registerIndex) layout(binding = rootParameterIndex) uniform samplerBuffer name;
+		#define TEXTURE_BUFFER(resourceGroupIndex, resourceIndex, type, name, registerIndex) layout(set = resourceGroupIndex, binding = resourceIndex) uniform samplerBuffer name;
 		#define TEXTURE_BUFFER_FETCH(name, texelIndex) texelFetch(name, int(texelIndex))
 
 		// Texture
-		#define TEXTURE_1D(rootParameterIndex, name, registerIndex) layout(binding = rootParameterIndex) uniform sampler1D name;
-		#define TEXTURE_2D(rootParameterIndex, name, registerIndex) layout(binding = rootParameterIndex) uniform sampler2D name;
-		#define TEXTURE_2D_MS(rootParameterIndex, name, numberOfMultisamples, registerIndex) layout(binding = rootParameterIndex) uniform sampler2DMS name;
-		#define TEXTURE_2D_ARRAY(rootParameterIndex, name, registerIndex) layout(binding = rootParameterIndex) uniform sampler2DArray name;
-		#define TEXTURE_3D(rootParameterIndex, name, registerIndex) layout(binding = rootParameterIndex) uniform sampler3D name;
-		#define TEXTURE_3D_UINT(rootParameterIndex, name, registerIndex) layout(binding = rootParameterIndex) uniform isampler3D name;
-		#define TEXTURE_CUBE(rootParameterIndex, name, registerIndex) layout(binding = rootParameterIndex) uniform samplerCube name;
+		#define TEXTURE_1D(resourceGroupIndex, resourceIndex, name, registerIndex) layout(set = resourceGroupIndex, binding = resourceIndex) uniform sampler1D name;
+		#define TEXTURE_2D(resourceGroupIndex, resourceIndex, name, registerIndex) layout(set = resourceGroupIndex, binding = resourceIndex) uniform sampler2D name;
+		#define TEXTURE_2D_MS(resourceGroupIndex, resourceIndex, name, numberOfMultisamples, registerIndex) layout(set = resourceGroupIndex, binding = resourceIndex) uniform sampler2DMS name;
+		#define TEXTURE_2D_ARRAY(resourceGroupIndex, resourceIndex, name, registerIndex) layout(set = resourceGroupIndex, binding = resourceIndex) uniform sampler2DArray name;
+		#define TEXTURE_3D(resourceGroupIndex, resourceIndex, name, registerIndex) layout(set = resourceGroupIndex, binding = resourceIndex) uniform sampler3D name;
+		#define TEXTURE_3D_UINT(resourceGroupIndex, resourceIndex, name, registerIndex) layout(set = resourceGroupIndex, binding = resourceIndex) uniform isampler3D name;
+		#define TEXTURE_CUBE(resourceGroupIndex, resourceIndex, name, registerIndex) layout(set = resourceGroupIndex, binding = resourceIndex) uniform samplerCube name;
 		#define GET_TEXTURE_2D_SIZE(textureObject) textureSize(textureObject, 0)
 		#define GET_TEXTURE_CUBE_SIZE(textureObject) textureSize(textureObject, 0)
 
 		// Sampler
-		#define SAMPLER_STATE(rootParameterIndex, name, registerIndex) int name = registerIndex;	// We need something to pass into functions
-		#define SAMPLER_COMPARISON_STATE(rootParameterIndex, name, registerIndex)
+		#define SAMPLER_STATE(resourceGroupIndex, resourceIndex, name, registerIndex) int name = registerIndex;	// We need something to pass into functions
+		#define SAMPLER_COMPARISON_STATE(resourceGroupIndex, resourceIndex, name, registerIndex)
 		#define SAMPLE_1D(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
 		#define SAMPLE_1D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.x, coordinate.w)
 		#define SAMPLE_2D(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
@@ -334,27 +334,27 @@
 		#define DDY(x) dFdy(x)
 
 		// Uniform buffer
-		#define UNIFORM_BUFFER_BEGIN(rootParameterIndex, name, registerIndex) layout(std140) uniform name {
+		#define UNIFORM_BUFFER_BEGIN(resourceGroupIndex, resourceIndex, name, registerIndex) layout(std140) uniform name {
 		#define UNIFORM_BUFFER_END };
 
 		// Texture buffer
-		#define TEXTURE_BUFFER(rootParameterIndex, type, name, registerIndex) uniform samplerBuffer name;
+		#define TEXTURE_BUFFER(resourceGroupIndex, resourceIndex, type, name, registerIndex) uniform samplerBuffer name;
 		#define TEXTURE_BUFFER_FETCH(name, texelIndex) texelFetch(name, int(texelIndex))
 
 		// Texture
-		#define TEXTURE_1D(rootParameterIndex, name, registerIndex) uniform sampler1D name;
-		#define TEXTURE_2D(rootParameterIndex, name, registerIndex) uniform sampler2D name;
-		#define TEXTURE_2D_MS(rootParameterIndex, name, numberOfMultisamples, registerIndex) uniform sampler2DMS name;
-		#define TEXTURE_2D_ARRAY(rootParameterIndex, name, registerIndex) uniform sampler2DArray name;
-		#define TEXTURE_3D(rootParameterIndex, name, registerIndex) uniform sampler3D name;
-		#define TEXTURE_3D_UINT(rootParameterIndex, name, registerIndex) uniform isampler3D name;
-		#define TEXTURE_CUBE(rootParameterIndex, name, registerIndex) uniform samplerCube name;
+		#define TEXTURE_1D(resourceGroupIndex, resourceIndex, name, registerIndex) uniform sampler1D name;
+		#define TEXTURE_2D(resourceGroupIndex, resourceIndex, name, registerIndex) uniform sampler2D name;
+		#define TEXTURE_2D_MS(resourceGroupIndex, resourceIndex, name, numberOfMultisamples, registerIndex) uniform sampler2DMS name;
+		#define TEXTURE_2D_ARRAY(resourceGroupIndex, resourceIndex, name, registerIndex) uniform sampler2DArray name;
+		#define TEXTURE_3D(resourceGroupIndex, resourceIndex, name, registerIndex) uniform sampler3D name;
+		#define TEXTURE_3D_UINT(resourceGroupIndex, resourceIndex, name, registerIndex) uniform isampler3D name;
+		#define TEXTURE_CUBE(resourceGroupIndex, resourceIndex, name, registerIndex) uniform samplerCube name;
 		#define GET_TEXTURE_2D_SIZE(textureObject) textureSize(textureObject, 0)
 		#define GET_TEXTURE_CUBE_SIZE(textureObject) textureSize(textureObject, 0)
 
 		// Sampler
-		#define SAMPLER_STATE(rootParameterIndex, name, registerIndex) int name = registerIndex;	// We need something to pass into functions
-		#define SAMPLER_COMPARISON_STATE(rootParameterIndex, name, registerIndex)
+		#define SAMPLER_STATE(resourceGroupIndex, resourceIndex, name, registerIndex) int name = registerIndex;	// We need something to pass into functions
+		#define SAMPLER_COMPARISON_STATE(resourceGroupIndex, resourceIndex, name, registerIndex)
 		#define SAMPLE_1D(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
 		#define SAMPLE_1D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.x, coordinate.w)
 		#define SAMPLE_2D(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
@@ -468,30 +468,30 @@
 		#define DDY(x) dFdy(x)
 
 		// Uniform buffer
-		#define UNIFORM_BUFFER_BEGIN(rootParameterIndex, name, registerIndex) layout(std140) uniform name {
+		#define UNIFORM_BUFFER_BEGIN(resourceGroupIndex, resourceIndex, name, registerIndex) layout(std140) uniform name {
 		#define UNIFORM_BUFFER_END };
 
 		// Texture buffer
 		// TODO(co) Currently we only emulate texture buffer using limited uniform buffer
-		// #define TEXTURE_BUFFER(rootParameterIndex, type, name, registerIndex) uniform highp samplerBuffer name;
+		// #define TEXTURE_BUFFER(resourceGroupIndex, resourceIndex, type, name, registerIndex) uniform highp samplerBuffer name;
 		// #define TEXTURE_BUFFER_FETCH(name, texelIndex) texelFetch(name, int(texelIndex))
-		#define TEXTURE_BUFFER(rootParameterIndex, type, name, registerIndex) layout(std140) uniform name { highp float4 textureBufferEmulation_##name[4096]; };
+		#define TEXTURE_BUFFER(resourceGroupIndex, resourceIndex, type, name, registerIndex) layout(std140) uniform name { highp float4 textureBufferEmulation_##name[4096]; };
 		#define TEXTURE_BUFFER_FETCH(name, texelIndex) textureBufferEmulation_##name[int(texelIndex)]
 
 		// Texture
-		#define TEXTURE_1D(rootParameterIndex, name, registerIndex) uniform highp sampler2D name;	// OpenGL ES 3 has no 1D textures, just use a 2D texture with a height of one
-		#define TEXTURE_2D(rootParameterIndex, name, registerIndex) uniform highp sampler2D name;
-		#define TEXTURE_2D_MS(rootParameterIndex, name, numberOfMultisamples, registerIndex) uniform sampler2DMS name;
-		#define TEXTURE_2D_ARRAY(rootParameterIndex, name, registerIndex) uniform highp sampler2DArray name;
-		#define TEXTURE_3D(rootParameterIndex, name, registerIndex) uniform highp sampler3D name;
-		#define TEXTURE_3D_UINT(rootParameterIndex, name, registerIndex) uniform highp isampler3D name;
-		#define TEXTURE_CUBE(rootParameterIndex, name, registerIndex) uniform highp samplerCube name;
+		#define TEXTURE_1D(resourceGroupIndex, resourceIndex, name, registerIndex) uniform highp sampler2D name;	// OpenGL ES 3 has no 1D textures, just use a 2D texture with a height of one
+		#define TEXTURE_2D(resourceGroupIndex, resourceIndex, name, registerIndex) uniform highp sampler2D name;
+		#define TEXTURE_2D_MS(resourceGroupIndex, resourceIndex, name, numberOfMultisamples, registerIndex) uniform sampler2DMS name;
+		#define TEXTURE_2D_ARRAY(resourceGroupIndex, resourceIndex, name, registerIndex) uniform highp sampler2DArray name;
+		#define TEXTURE_3D(resourceGroupIndex, resourceIndex, name, registerIndex) uniform highp sampler3D name;
+		#define TEXTURE_3D_UINT(resourceGroupIndex, resourceIndex, name, registerIndex) uniform highp isampler3D name;
+		#define TEXTURE_CUBE(resourceGroupIndex, resourceIndex, name, registerIndex) uniform highp samplerCube name;
 		#define GET_TEXTURE_2D_SIZE(textureObject) textureSize(textureObject, 0)
 		#define GET_TEXTURE_CUBE_SIZE(textureObject) textureSize(textureObject, 0)
 
 		// Sampler
-		#define SAMPLER_STATE(rootParameterIndex, name, registerIndex) int name = registerIndex;	// We need something to pass into functions
-		#define SAMPLER_COMPARISON_STATE(rootParameterIndex, name, registerIndex)
+		#define SAMPLER_STATE(resourceGroupIndex, resourceIndex, name, registerIndex) int name = registerIndex;	// We need something to pass into functions
+		#define SAMPLER_COMPARISON_STATE(resourceGroupIndex, resourceIndex, name, registerIndex)
 		#define SAMPLE_1D(textureObject, samplerObject, coordinate) texture(textureObject, vec2(coordinate, 0.0f))							// OpenGL ES 3 has no 1D textures, just use a 2D texture with a height of one
 		#define SAMPLE_1D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, vec2(coordinate.x, 0.0f), coordinate.w)	// OpenGL ES 3 has no 1D textures, just use a 2D texture with a height of one
 		#define SAMPLE_2D(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)

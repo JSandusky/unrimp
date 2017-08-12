@@ -312,7 +312,7 @@ namespace RendererToolkit
 		const std::string absoluteMaterialBlueprintFilename = std_filesystem::path(absoluteMaterialBlueprintAssetFilename).parent_path().generic_string() + '/' + materialBlueprintInputFile;
 		std::ifstream materialBlueprintInputFileStream(absoluteMaterialBlueprintFilename, std::ios::binary);
 		rapidjson::Document rapidJsonDocument;
-		JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, materialBlueprintInputFileStream, absoluteMaterialBlueprintFilename, "MaterialBlueprintAsset", "1");
+		JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, materialBlueprintInputFileStream, absoluteMaterialBlueprintFilename, "MaterialBlueprintAsset", "2");
 		RendererRuntime::ShaderProperties visualImportanceOfShaderProperties;
 		RendererRuntime::ShaderProperties maximumIntegerValueOfShaderProperties;
 		readProperties(input, rapidJsonDocument["MaterialBlueprintAsset"]["Properties"], sortedMaterialPropertyVector, visualImportanceOfShaderProperties, maximumIntegerValueOfShaderProperties, true, true, materialPropertyIdToName);
@@ -528,58 +528,56 @@ namespace RendererToolkit
 		return RendererRuntime::MaterialPropertyValue::fromBoolean(false);
 	}
 
-	void JsonMaterialBlueprintHelper::readRootSignature(const rapidjson::Value& rapidJsonValueRootSignature, RendererRuntime::IFile& file, RendererRuntime::ShaderProperties& shaderProperties)
+	void JsonMaterialBlueprintHelper::readRootSignatureByResourceGroups(const rapidjson::Value& rapidJsonValueResourceGroups, RendererRuntime::IFile& file, RendererRuntime::ShaderProperties& shaderProperties)
 	{
 		// First: Collect everything we need instead of directly writing it down using an inefficient data layout
 		std::vector<Renderer::RootParameterData> rootParameters;
 		std::vector<Renderer::DescriptorRange> descriptorRanges;
 		{
-			const rapidjson::Value& rapidJsonValueRootParameters = rapidJsonValueRootSignature["RootParameters"];
-			rootParameters.reserve(rapidJsonValueRootParameters.MemberCount());
-			descriptorRanges.reserve(rapidJsonValueRootParameters.MemberCount());
-
-			for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorRootParameters = rapidJsonValueRootParameters.MemberBegin(); rapidJsonMemberIteratorRootParameters != rapidJsonValueRootParameters.MemberEnd(); ++rapidJsonMemberIteratorRootParameters)
+			// Iterate through all resource groups, we're only interested in the following resource parameters
+			// - "BaseShaderRegisterName"
+			// - "BaseShaderRegister"
+			// - "ShaderVisibility"
+			// - "ResourceType"
+			int resourceGroupIndex = 0;
+			for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorResourceGroup = rapidJsonValueResourceGroups.MemberBegin(); rapidJsonMemberIteratorResourceGroup != rapidJsonValueResourceGroups.MemberEnd(); ++rapidJsonMemberIteratorResourceGroup)
 			{
-				const rapidjson::Value& rapidJsonValueRootParameter = rapidJsonMemberIteratorRootParameters->value;
-				const rapidjson::Value& rapidJsonValueParameterType = rapidJsonValueRootParameter["ParameterType"];
-				const char* parameterTypeAsString = rapidJsonValueParameterType.GetString();
-				const rapidjson::SizeType parameterTypeStringLength = rapidJsonValueParameterType.GetStringLength();
-
-				// TODO(co) Add support for the other root parameter types
-				if (strncmp(parameterTypeAsString, "DESCRIPTOR_TABLE", parameterTypeStringLength) == 0)
+				// Sanity check
+				if (std::atoi(rapidJsonMemberIteratorResourceGroup->name.GetString()) != resourceGroupIndex)
 				{
-					const rapidjson::Value& rapidJsonValueDescriptorRanges = rapidJsonValueRootParameter["DescriptorRanges"];
+					throw std::runtime_error("Invalid material blueprint resource group index found, should be " + std::to_string(resourceGroupIndex) + " but is " + rapidJsonMemberIteratorResourceGroup->name.GetString());
+				}
 
-					{ // Collect the root parameter
-						Renderer::RootParameterData rootParameter;
-						rootParameter.parameterType = Renderer::RootParameterType::DESCRIPTOR_TABLE;
-						rootParameter.numberOfDescriptorRanges = rapidJsonValueDescriptorRanges.MemberCount();
-						rootParameters.push_back(rootParameter);
+				// Iterate through all resources inside the current resource group
+				int resourceIndex = 0;
+				for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorResource = rapidJsonMemberIteratorResourceGroup->value.MemberBegin(); rapidJsonMemberIteratorResource != rapidJsonMemberIteratorResourceGroup->value.MemberEnd(); ++rapidJsonMemberIteratorResource)
+				{
+					// Sanity check
+					if (std::atoi(rapidJsonMemberIteratorResource->name.GetString()) != resourceIndex)
+					{
+						throw std::runtime_error("Invalid material blueprint resource index inside resource group " + std::to_string(resourceGroupIndex) + " found, should be " + std::to_string(resourceIndex) + " but is " + rapidJsonMemberIteratorResource->name.GetString());
 					}
 
-					// Descriptor ranges
-					for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorDescriptorRanges = rapidJsonValueDescriptorRanges.MemberBegin(); rapidJsonMemberIteratorDescriptorRanges != rapidJsonValueDescriptorRanges.MemberEnd(); ++rapidJsonMemberIteratorDescriptorRanges)
-					{
-						const rapidjson::Value& rapidJsonValueDescriptorRange = rapidJsonMemberIteratorDescriptorRanges->value;
+					{ // Process resource
+						const rapidjson::Value& rapidJsonValue = rapidJsonMemberIteratorResource->value;
 						Renderer::DescriptorRange descriptorRange;
 
-						{ // Range type
-							const rapidjson::Value& rapidJsonValueRangeType = rapidJsonValueDescriptorRange["RangeType"];
-							const char* rangeTypeAsString = rapidJsonValueRangeType.GetString();
-							const rapidjson::SizeType rangeTypeStringLength = rapidJsonValueRangeType.GetStringLength();
+						{ // Mandatory range type
+							const rapidjson::Value& rapidJsonValueResourceType = rapidJsonValue["ResourceType"];
+							const char* resourceTypeAsString = rapidJsonValueResourceType.GetString();
 
 							// Define helper macros
-							#define IF_VALUE(name)			 if (strncmp(rangeTypeAsString, #name, rangeTypeStringLength) == 0) descriptorRange.rangeType = Renderer::DescriptorRangeType::name;
-							#define ELSE_IF_VALUE(name) else if (strncmp(rangeTypeAsString, #name, rangeTypeStringLength) == 0) descriptorRange.rangeType = Renderer::DescriptorRangeType::name;
+							#define IF_VALUE(name, rangeTypeValue)			 if (strcmp(resourceTypeAsString, name) == 0) descriptorRange.rangeType = Renderer::DescriptorRangeType::rangeTypeValue;
+							#define ELSE_IF_VALUE(name, rangeTypeValue) else if (strcmp(resourceTypeAsString, name) == 0) descriptorRange.rangeType = Renderer::DescriptorRangeType::rangeTypeValue;
 
 							// Evaluate value
-							IF_VALUE(SRV)
-							ELSE_IF_VALUE(UAV)
-							ELSE_IF_VALUE(UBV)
-							ELSE_IF_VALUE(SAMPLER)
+							IF_VALUE("UNIFORM_BUFFER", UBV)
+							ELSE_IF_VALUE("TEXTURE_BUFFER", SRV)
+							ELSE_IF_VALUE("SAMPLER_STATE", SAMPLER)
+							ELSE_IF_VALUE("TEXTURE", SRV)
 							else
 							{
-								throw std::runtime_error("Invalid range type \"" + std::string(rangeTypeAsString) + "\", must be \"SRV\", \"UAV\", \"UBV\" or \"SAMPLER\"");
+								throw std::runtime_error("Invalid resource type \"" + std::string(resourceTypeAsString) + "\", must be \"UniformBuffer\", \"TextureBuffer\", \"SamplerState\" or \"Texture\"");
 							}
 
 							// Undefine helper macros
@@ -587,41 +585,46 @@ namespace RendererToolkit
 							#undef ELSE_IF_VALUE
 						}
 
-						// Optional number of descriptors
+						// Fixed number of descriptors is always one
 						descriptorRange.numberOfDescriptors = 1;
-						JsonHelper::optionalIntegerProperty(rapidJsonValueDescriptorRange, "NumberOfDescriptors", descriptorRange.numberOfDescriptors);
 
 						// Mandatory base shader register
-						descriptorRange.baseShaderRegister = ::detail::getIntegerFromInstructionString(rapidJsonValueDescriptorRange["BaseShaderRegister"].GetString(), shaderProperties);
+						descriptorRange.baseShaderRegister = ::detail::getIntegerFromInstructionString(rapidJsonValue["BaseShaderRegister"].GetString(), shaderProperties);
 
-						// Optional register space
+						// Fixed register space is always zero
 						descriptorRange.registerSpace = 0;
-						JsonHelper::optionalIntegerProperty(rapidJsonValueDescriptorRange, "RegisterSpace", descriptorRange.registerSpace);
 
-						// Optional offset in descriptors from table start
+						// Fixed offset in descriptors from table start is always zero
 						descriptorRange.offsetInDescriptorsFromTableStart = 0;
-						JsonHelper::optionalIntegerProperty(rapidJsonValueDescriptorRange, "OffsetInDescriptorsFromTableStart", descriptorRange.offsetInDescriptorsFromTableStart);
 
 						// Optional base shader register name
 						descriptorRange.baseShaderRegisterName[0] = '\0';
-						JsonHelper::optionalStringProperty(rapidJsonValueDescriptorRange, "BaseShaderRegisterName", descriptorRange.baseShaderRegisterName, Renderer::DescriptorRange::NAME_LENGTH);
+						JsonHelper::optionalStringProperty(rapidJsonValue, "BaseShaderRegisterName", descriptorRange.baseShaderRegisterName, Renderer::DescriptorRange::NAME_LENGTH);
 
-						// Optional sampler root parameter index
+						// Fixed sampler root parameter index is always zero
 						descriptorRange.samplerRootParameterIndex = 0;
-						JsonHelper::optionalIntegerProperty(rapidJsonValueDescriptorRange, "SamplerRootParameterIndex", descriptorRange.samplerRootParameterIndex);
 
 						// Optional shader visibility
 						descriptorRange.shaderVisibility = Renderer::ShaderVisibility::ALL;
-						optionalShaderVisibilityProperty(rapidJsonValueDescriptorRange, "ShaderVisibility", descriptorRange.shaderVisibility);
+						optionalShaderVisibilityProperty(rapidJsonValue, "ShaderVisibility", descriptorRange.shaderVisibility);
 
-						// Collect the descriptor range
+						// Add the descriptor range
 						descriptorRanges.push_back(descriptorRange);
 					}
+
+					// Advance resource index
+					++resourceIndex;
 				}
-				else
-				{
-					throw std::runtime_error("Root parameter type must be \"DESCRIPTOR_TABLE\"");
+
+				{ // Add the root parameter
+					Renderer::RootParameterData rootParameter;
+					rootParameter.parameterType = Renderer::RootParameterType::DESCRIPTOR_TABLE;
+					rootParameter.numberOfDescriptorRanges = static_cast<uint32_t>(resourceIndex);
+					rootParameters.push_back(rootParameter);
 				}
+
+				// Advance resource group index
+				++resourceGroupIndex;
 			}
 		}
 
@@ -887,249 +890,378 @@ namespace RendererToolkit
 		file.write(&pipelineState, sizeof(Renderer::SerializedPipelineState));
 	}
 
-	void JsonMaterialBlueprintHelper::readUniformBuffers(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValueUniformBuffers, RendererRuntime::IFile& file, RendererRuntime::ShaderProperties& shaderProperties)
+	void JsonMaterialBlueprintHelper::readUniformBuffersByResourceGroups(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValueResourceGroups, RendererRuntime::IFile& file, RendererRuntime::ShaderProperties& shaderProperties)
 	{
-		for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorUniformBuffers = rapidJsonValueUniformBuffers.MemberBegin(); rapidJsonMemberIteratorUniformBuffers != rapidJsonValueUniformBuffers.MemberEnd(); ++rapidJsonMemberIteratorUniformBuffers)
+		// Iterate through all resource groups, we're only interested in the following resource parameters
+		// - "ResourceType" = "UNIFORM_BUFFER"
+		// - "BufferUsage"
+		// - "NumberOfElements"
+		// - "ElementProperties"
+		int resourceGroupIndex = 0;
+		for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorResourceGroup = rapidJsonValueResourceGroups.MemberBegin(); rapidJsonMemberIteratorResourceGroup != rapidJsonValueResourceGroups.MemberEnd(); ++rapidJsonMemberIteratorResourceGroup)
 		{
-			const rapidjson::Value& rapidJsonValueUniformBuffer = rapidJsonMemberIteratorUniformBuffers->value;
-			const rapidjson::Value& rapidJsonValueElementProperties = rapidJsonValueUniformBuffer["ElementProperties"];
-
-			// Gather all element properties, don't sort because the user defined order is important in here (data layout in memory)
-			RendererRuntime::MaterialProperties::SortedPropertyVector elementProperties;
-			RendererRuntime::ShaderProperties visualImportanceOfShaderProperties;
-			RendererRuntime::ShaderProperties maximumIntegerValueOfShaderProperties;
-			readProperties(input, rapidJsonValueElementProperties, elementProperties, visualImportanceOfShaderProperties, maximumIntegerValueOfShaderProperties, true, false);
-
-			// Calculate the uniform buffer size, including handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
-			// -> Sum up the number of bytes required by all uniform buffer element properties
-			uint32_t numberOfPackageBytes = 0;
-			uint32_t numberOfBytesPerElement = 0;
-			const size_t numberOfUniformBufferElementProperties = elementProperties.size();
-			for (size_t i = 0; i < numberOfUniformBufferElementProperties; ++i)
+			// Sanity check
+			if (std::atoi(rapidJsonMemberIteratorResourceGroup->name.GetString()) != resourceGroupIndex)
 			{
-				// Get value type number of bytes
-				const uint32_t valueTypeNumberOfBytes = RendererRuntime::MaterialPropertyValue::getValueTypeNumberOfBytes(elementProperties[i].getValueType());
-				numberOfBytesPerElement += valueTypeNumberOfBytes;
+				throw std::runtime_error("Invalid material blueprint resource group index found, should be " + std::to_string(resourceGroupIndex) + " but is " + rapidJsonMemberIteratorResourceGroup->name.GetString());
+			}
 
-				// Handling of packing rules for uniform variables
-				//  -> We have to take into account HLSL packing (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
-				//  -> GLSL is even more restrictive, with aligning e.g. float2 to an offset divisible by 2 * 4 bytes (float2 size) and float3 to an offset divisible by 4 * 4 bytes (float4 size -- yes, there is no actual float3 alignment)
-				if (0 != numberOfPackageBytes)	// No problem if no package was started yet
+			// Iterate through all resources inside the current resource group
+			int resourceIndex = 0;
+			for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorResource = rapidJsonMemberIteratorResourceGroup->value.MemberBegin(); rapidJsonMemberIteratorResource != rapidJsonMemberIteratorResourceGroup->value.MemberEnd(); ++rapidJsonMemberIteratorResource)
+			{
+				// Sanity check
+				if (std::atoi(rapidJsonMemberIteratorResource->name.GetString()) != resourceIndex)
 				{
-					// Taking into account GLSL rules here, for HLSL this would always be "numberOfPackageBytes"
-					const uint32_t alignmentStartByteOffsetInPackage = ::detail::roundUpToNextIntegerDivisibleByFactor(numberOfPackageBytes, valueTypeNumberOfBytes);
-
-					// Check for float4-size package "overflow" (relevant for both HLSL and GLSL)
-					if (numberOfPackageBytes + valueTypeNumberOfBytes > 16)
-					{
-						// Take the wasted bytes due to aligned packaging into account and restart the package bytes counter
-						numberOfBytesPerElement += 4 * 4 - numberOfPackageBytes;
-						numberOfPackageBytes = 0;
-
-						// TODO(co) Profiling information: We could provide the material blueprint resource writer with information how many bytes get wasted with the defined layout
-					}
-
-					// For GLSL, we are running into problems if there is not overflow, but alignment is not correct
-					// TODO(co) Check the documentation, whether there are 16-byte packages at all for GLSL - otherwise this has to be rewritten!
-					else if (numberOfPackageBytes != alignmentStartByteOffsetInPackage)
-					{
-						// TODO(co) Error handling: General error handling strategy required
-						const std::string materialBlueprint = "TODO";
-						const std::string propertyName = "TODO";
-						throw std::runtime_error("Material blueprint " + materialBlueprint + ": Uniform buffer element property alignment is problematic for property " + propertyName + " at offset " + std::to_string(numberOfPackageBytes) + ", which would be aligned to offset " + std::to_string(alignmentStartByteOffsetInPackage));
-					}
-				}
-				numberOfPackageBytes += valueTypeNumberOfBytes % 16;
-			}
-
-			// Handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
-			// -> Make a "float 4"-full-house, if required
-			if (0 != numberOfPackageBytes)
-			{
-				// Take the wasted bytes due to aligned packaging into account
-				numberOfBytesPerElement += 4 * 4 - numberOfPackageBytes;
-			}
-
-			{ // Write down the uniform buffer header
-				RendererRuntime::v1MaterialBlueprint::UniformBufferHeader uniformBufferHeader;
-				uniformBufferHeader.rootParameterIndex = ::detail::getRootParameterIndex(rapidJsonValueUniformBuffer, shaderProperties);
-				detail::optionalBufferUsageProperty(rapidJsonValueUniformBuffer, "BufferUsage", uniformBufferHeader.bufferUsage);
-				JsonHelper::optionalIntegerProperty(rapidJsonValueUniformBuffer, "NumberOfElements", uniformBufferHeader.numberOfElements);
-				uniformBufferHeader.numberOfElementProperties = static_cast<uint32_t>(elementProperties.size());
-				uniformBufferHeader.uniformBufferNumberOfBytes = numberOfBytesPerElement * uniformBufferHeader.numberOfElements;
-				file.write(&uniformBufferHeader, sizeof(RendererRuntime::v1MaterialBlueprint::UniformBufferHeader));
-			}
-
-			// Write down the uniform buffer element properties
-			file.write(elementProperties.data(), sizeof(RendererRuntime::MaterialProperty) * elementProperties.size());
-		}
-	}
-
-	void JsonMaterialBlueprintHelper::readTextureBuffers(const rapidjson::Value& rapidJsonValueTextureBuffers, RendererRuntime::IFile& file, RendererRuntime::ShaderProperties& shaderProperties)
-	{
-		for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorTextureBuffers = rapidJsonValueTextureBuffers.MemberBegin(); rapidJsonMemberIteratorTextureBuffers != rapidJsonValueTextureBuffers.MemberEnd(); ++rapidJsonMemberIteratorTextureBuffers)
-		{
-			const rapidjson::Value& rapidJsonValueTextureBuffer = rapidJsonMemberIteratorTextureBuffers->value;
-
-			{ // Write down the texture buffer header
-				RendererRuntime::v1MaterialBlueprint::TextureBufferHeader textureBufferHeader;
-				{ // Value type and value
-					const RendererRuntime::MaterialProperty::ValueType valueType = mandatoryMaterialPropertyValueType(rapidJsonValueTextureBuffer);
-
-					// Get the reference value as string
-					static const uint32_t NAME_LENGTH = 128;
-					char referenceAsString[NAME_LENGTH];
-					memset(&referenceAsString[0], 0, sizeof(char) * NAME_LENGTH);
-					JsonHelper::optionalStringProperty(rapidJsonValueTextureBuffer, "Value", referenceAsString, NAME_LENGTH);
-
-					// Construct the material property value
-					const RendererRuntime::StringId referenceAsInteger(&referenceAsString[1]);	// Skip the '@'
-					textureBufferHeader.materialPropertyValue = RendererRuntime::MaterialProperty::materialPropertyValueFromReference(valueType, referenceAsInteger);
-				}
-				textureBufferHeader.rootParameterIndex = ::detail::getRootParameterIndex(rapidJsonValueTextureBuffer, shaderProperties);
-				detail::optionalBufferUsageProperty(rapidJsonValueTextureBuffer, "BufferUsage", textureBufferHeader.bufferUsage);
-				file.write(&textureBufferHeader, sizeof(RendererRuntime::v1MaterialBlueprint::TextureBufferHeader));
-			}
-		}
-	}
-
-	void JsonMaterialBlueprintHelper::readSamplerStates(const rapidjson::Value& rapidJsonValueSamplerStates, RendererRuntime::IFile& file, RendererRuntime::ShaderProperties& shaderProperties, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector)
-	{
-		for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorSamplerStates = rapidJsonValueSamplerStates.MemberBegin(); rapidJsonMemberIteratorSamplerStates != rapidJsonValueSamplerStates.MemberEnd(); ++rapidJsonMemberIteratorSamplerStates)
-		{
-			const rapidjson::Value& rapidJsonValueSamplerState = rapidJsonMemberIteratorSamplerStates->value;
-
-			// Start with the default sampler state
-			RendererRuntime::v1MaterialBlueprint::SamplerState materialBlueprintSamplerState;
-			materialBlueprintSamplerState.rootParameterIndex = 0;
-			Renderer::SamplerState& samplerState = materialBlueprintSamplerState;
-			samplerState = Renderer::ISamplerState::getDefaultSamplerState();
-
-			// By default, inside the material blueprint system the texture filter and maximum anisotropy are set to uninitialized. Unless explicitly
-			// set by a material blueprint author, those values are dynamic during runtime so the user can decide about the performance/quality trade-off.
-			samplerState.filter = Renderer::FilterMode::UNKNOWN;
-			RendererRuntime::setUninitialized(samplerState.maxAnisotropy);
-
-			// The optional properties
-			materialBlueprintSamplerState.rootParameterIndex = ::detail::getRootParameterIndex(rapidJsonValueSamplerState, shaderProperties);
-			JsonMaterialHelper::optionalFilterProperty(rapidJsonValueSamplerState, "Filter", samplerState.filter, &sortedMaterialPropertyVector);
-			JsonMaterialHelper::optionalTextureAddressModeProperty(rapidJsonValueSamplerState, "AddressU", samplerState.addressU, &sortedMaterialPropertyVector);
-			JsonMaterialHelper::optionalTextureAddressModeProperty(rapidJsonValueSamplerState, "AddressV", samplerState.addressV, &sortedMaterialPropertyVector);
-			JsonMaterialHelper::optionalTextureAddressModeProperty(rapidJsonValueSamplerState, "AddressW", samplerState.addressW, &sortedMaterialPropertyVector);
-			JsonHelper::optionalFloatProperty(rapidJsonValueSamplerState, "MipLODBias", samplerState.mipLODBias);
-			JsonHelper::optionalIntegerProperty(rapidJsonValueSamplerState, "MaxAnisotropy", samplerState.maxAnisotropy);
-			JsonMaterialHelper::optionalComparisonFuncProperty(rapidJsonValueSamplerState, "ComparisonFunc", samplerState.comparisonFunc, &sortedMaterialPropertyVector);
-			JsonHelper::optionalFloatNProperty(rapidJsonValueSamplerState, "BorderColor", samplerState.borderColor, 4);
-			JsonHelper::optionalFloatProperty(rapidJsonValueSamplerState, "MinLOD", samplerState.minLOD);
-			JsonHelper::optionalFloatProperty(rapidJsonValueSamplerState, "MaxLOD", samplerState.maxLOD);
-
-			// Write down the sampler state
-			file.write(&materialBlueprintSamplerState, sizeof(RendererRuntime::v1MaterialBlueprint::SamplerState));
-		}
-	}
-
-	void JsonMaterialBlueprintHelper::readTextures(const IAssetCompiler::Input& input, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, const rapidjson::Value& rapidJsonValueTextures, RendererRuntime::IFile& file, RendererRuntime::ShaderProperties& shaderProperties)
-	{
-		for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorTextures = rapidJsonValueTextures.MemberBegin(); rapidJsonMemberIteratorTextures != rapidJsonValueTextures.MemberEnd(); ++rapidJsonMemberIteratorTextures)
-		{
-			const rapidjson::Value& rapidJsonValueTexture = rapidJsonMemberIteratorTextures->value;
-
-			// Mandatory root parameter index
-			const uint32_t rootParameterIndex = ::detail::getRootParameterIndex(rapidJsonValueTexture, shaderProperties);
-
-			// Mandatory fallback texture asset ID
-			// -> We could make this optional, but it's better to be totally restrictive in here so asynchronous texture loading always works nicely (easy when done from the beginning, hard to add this afterwards)
-			// -> Often, but not always this value is identical to a texture asset referencing material property. So, we really have to define an own property for this.
-			const RendererRuntime::AssetId fallbackTextureAssetId = JsonHelper::getCompiledAssetId(input, rapidJsonValueTexture, "FallbackTexture");
-
-			// Optional RGB hardware gamma correction
-			bool rgbHardwareGammaCorrection = false;
-			JsonHelper::optionalBooleanProperty(rapidJsonValueTexture, "RgbHardwareGammaCorrection", rgbHardwareGammaCorrection);
-
-			// "MipmapsUsed" with the default value "TRUE" isn't used, but it should be defined if mipmaps are not used to support debugging and optimization possibility spotting
-
-			// Mandatory usage
-			const RendererRuntime::MaterialProperty::Usage usage = mandatoryMaterialPropertyUsage(rapidJsonValueTexture);
-			const RendererRuntime::MaterialProperty::ValueType valueType = mandatoryMaterialPropertyValueType(rapidJsonValueTexture);
-			switch (usage)
-			{
-				case RendererRuntime::MaterialProperty::Usage::STATIC:
-				{
-					if (RendererRuntime::MaterialProperty::ValueType::TEXTURE_ASSET_ID == valueType)
-					{
-						// Mandatory asset ID
-						const RendererRuntime::MaterialPropertyValue materialPropertyValue = RendererRuntime::MaterialPropertyValue::fromTextureAssetId(StringHelper::getAssetIdByString(rapidJsonValueTexture["Value"].GetString(), input));
-
-						// Write down the texture
-						const RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture(rootParameterIndex, RendererRuntime::MaterialProperty(RendererRuntime::getUninitialized<RendererRuntime::MaterialPropertyId>(), usage, materialPropertyValue), fallbackTextureAssetId, rgbHardwareGammaCorrection);
-						file.write(&materialBlueprintTexture, sizeof(RendererRuntime::v1MaterialBlueprint::Texture));
-
-						// TODO(co) Error handling: Compiled asset ID not found (meaning invalid source asset ID given)
-						break;
-					}
-					else
-					{
-						throw std::runtime_error("Textures with \"STATIC\"-usage must have the value type \"TEXTURE_ASSET_ID\"");
-					}
+					throw std::runtime_error("Invalid material blueprint resource index inside resource group " + std::to_string(resourceGroupIndex) + " found, should be " + std::to_string(resourceIndex) + " but is " + rapidJsonMemberIteratorResource->name.GetString());
 				}
 
-				case RendererRuntime::MaterialProperty::Usage::MATERIAL_REFERENCE:
+				// We're only interested in uniform buffer resource types
+				const rapidjson::Value& rapidJsonValue = rapidJsonMemberIteratorResource->value;
+				if (strcmp(rapidJsonValue["ResourceType"].GetString(), "UNIFORM_BUFFER") == 0)
 				{
-					if (RendererRuntime::MaterialProperty::ValueType::TEXTURE_ASSET_ID == valueType)
+					const rapidjson::Value& rapidJsonValueElementProperties = rapidJsonValue["ElementProperties"];
+
+					// Gather all element properties, don't sort because the user defined order is important in here (data layout in memory)
+					RendererRuntime::MaterialProperties::SortedPropertyVector elementProperties;
+					RendererRuntime::ShaderProperties visualImportanceOfShaderProperties;
+					RendererRuntime::ShaderProperties maximumIntegerValueOfShaderProperties;
+					readProperties(input, rapidJsonValueElementProperties, elementProperties, visualImportanceOfShaderProperties, maximumIntegerValueOfShaderProperties, true, false);
+
+					// Calculate the uniform buffer size, including handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
+					// -> Sum up the number of bytes required by all uniform buffer element properties
+					uint32_t numberOfPackageBytes = 0;
+					uint32_t numberOfBytesPerElement = 0;
+					const size_t numberOfUniformBufferElementProperties = elementProperties.size();
+					for (size_t i = 0; i < numberOfUniformBufferElementProperties; ++i)
 					{
-						// Get mandatory asset ID
-						// -> The character "@" is used to reference a material property value
-						const std::string sourceAssetIdAsString = rapidJsonValueTexture["Value"].GetString();
-						if (sourceAssetIdAsString.length() > 0 && sourceAssetIdAsString[0] == '@')
+						// Get value type number of bytes
+						const uint32_t valueTypeNumberOfBytes = RendererRuntime::MaterialPropertyValue::getValueTypeNumberOfBytes(elementProperties[i].getValueType());
+						numberOfBytesPerElement += valueTypeNumberOfBytes;
+
+						// Handling of packing rules for uniform variables
+						//  -> We have to take into account HLSL packing (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
+						//  -> GLSL is even more restrictive, with aligning e.g. float2 to an offset divisible by 2 * 4 bytes (float2 size) and float3 to an offset divisible by 4 * 4 bytes (float4 size -- yes, there is no actual float3 alignment)
+						if (0 != numberOfPackageBytes)	// No problem if no package was started yet
 						{
-							// Reference a material property value
-							const RendererRuntime::MaterialPropertyId materialPropertyId(sourceAssetIdAsString.substr(1).c_str());
+							// Taking into account GLSL rules here, for HLSL this would always be "numberOfPackageBytes"
+							const uint32_t alignmentStartByteOffsetInPackage = ::detail::roundUpToNextIntegerDivisibleByFactor(numberOfPackageBytes, valueTypeNumberOfBytes);
 
-							// Figure out the material property value
-							RendererRuntime::MaterialProperties::SortedPropertyVector::const_iterator iterator = std::lower_bound(sortedMaterialPropertyVector.cbegin(), sortedMaterialPropertyVector.cend(), materialPropertyId, RendererRuntime::detail::OrderByMaterialPropertyId());
-							if (iterator != sortedMaterialPropertyVector.end())
+							// Check for float4-size package "overflow" (relevant for both HLSL and GLSL)
+							if (numberOfPackageBytes + valueTypeNumberOfBytes > 16)
 							{
-								const RendererRuntime::MaterialProperty& materialProperty = *iterator;
-								if (materialProperty.getMaterialPropertyId() == materialPropertyId)
-								{
-									// TODO(co) Error handling: Usage mismatch etc.
+								// Take the wasted bytes due to aligned packaging into account and restart the package bytes counter
+								numberOfBytesPerElement += 4 * 4 - numberOfPackageBytes;
+								numberOfPackageBytes = 0;
 
-									// Write down the texture
-									const RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture(rootParameterIndex, RendererRuntime::MaterialProperty(materialPropertyId, usage, materialProperty), fallbackTextureAssetId, rgbHardwareGammaCorrection);
-									file.write(&materialBlueprintTexture, sizeof(RendererRuntime::v1MaterialBlueprint::Texture));
-								}
+								// TODO(co) Profiling information: We could provide the material blueprint resource writer with information how many bytes get wasted with the defined layout
+							}
+
+							// For GLSL, we are running into problems if there is not overflow, but alignment is not correct
+							// TODO(co) Check the documentation, whether there are 16-byte packages at all for GLSL - otherwise this has to be rewritten!
+							else if (numberOfPackageBytes != alignmentStartByteOffsetInPackage)
+							{
+								// TODO(co) Error handling: General error handling strategy required
+								const std::string materialBlueprint = "TODO";
+								const std::string propertyName = "TODO";
+								throw std::runtime_error("Material blueprint " + materialBlueprint + ": Uniform buffer element property alignment is problematic for property " + propertyName + " at offset " + std::to_string(numberOfPackageBytes) + ", which would be aligned to offset " + std::to_string(alignmentStartByteOffsetInPackage));
 							}
 						}
-						else
-						{
-							throw std::runtime_error("Textures with \"MATERIAL_REFERENCE\"-usage and the value type \"TEXTURE_ASSET_ID\" must have a value starting with @");
-						}
+						numberOfPackageBytes += valueTypeNumberOfBytes % 16;
 					}
-					else
+
+					// Handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
+					// -> Make a "float 4"-full-house, if required
+					if (0 != numberOfPackageBytes)
 					{
-						throw std::runtime_error("Textures with \"MATERIAL_REFERENCE\"-usage must have the value type \"TEXTURE_ASSET_ID\"");
+						// Take the wasted bytes due to aligned packaging into account
+						numberOfBytesPerElement += 4 * 4 - numberOfPackageBytes;
 					}
-					break;
+
+					{ // Write down the uniform buffer header
+						RendererRuntime::v1MaterialBlueprint::UniformBufferHeader uniformBufferHeader;
+						uniformBufferHeader.rootParameterIndex = ::detail::getRootParameterIndex(rapidJsonValue, shaderProperties);
+						detail::optionalBufferUsageProperty(rapidJsonValue, "BufferUsage", uniformBufferHeader.bufferUsage);
+						JsonHelper::optionalIntegerProperty(rapidJsonValue, "NumberOfElements", uniformBufferHeader.numberOfElements);
+						uniformBufferHeader.numberOfElementProperties = static_cast<uint32_t>(elementProperties.size());
+						uniformBufferHeader.uniformBufferNumberOfBytes = numberOfBytesPerElement * uniformBufferHeader.numberOfElements;
+						file.write(&uniformBufferHeader, sizeof(RendererRuntime::v1MaterialBlueprint::UniformBufferHeader));
+					}
+
+					// Write down the uniform buffer element properties
+					file.write(elementProperties.data(), sizeof(RendererRuntime::MaterialProperty) * elementProperties.size());
 				}
 
-				case RendererRuntime::MaterialProperty::Usage::UNKNOWN:
-				case RendererRuntime::MaterialProperty::Usage::SHADER_UNIFORM:
-				case RendererRuntime::MaterialProperty::Usage::SHADER_COMBINATION:
-				case RendererRuntime::MaterialProperty::Usage::RASTERIZER_STATE:
-				case RendererRuntime::MaterialProperty::Usage::DEPTH_STENCIL_STATE:
-				case RendererRuntime::MaterialProperty::Usage::BLEND_STATE:
-				case RendererRuntime::MaterialProperty::Usage::SAMPLER_STATE:
-				case RendererRuntime::MaterialProperty::Usage::TEXTURE_REFERENCE:
-				case RendererRuntime::MaterialProperty::Usage::GLOBAL_REFERENCE:
-				case RendererRuntime::MaterialProperty::Usage::UNKNOWN_REFERENCE:
-				case RendererRuntime::MaterialProperty::Usage::PASS_REFERENCE:
-				case RendererRuntime::MaterialProperty::Usage::INSTANCE_REFERENCE:
-				case RendererRuntime::MaterialProperty::Usage::GLOBAL_REFERENCE_FALLBACK:
-				default:
-				{
-					throw std::runtime_error("Invalid texture usage");
-				}
+				// Advance resource index
+				++resourceIndex;
 			}
+
+			// Advance resource group index
+			++resourceGroupIndex;
+		}
+	}
+
+	void JsonMaterialBlueprintHelper::readTextureBuffersByResourceGroups(const rapidjson::Value& rapidJsonValueResourceGroups, RendererRuntime::IFile& file, RendererRuntime::ShaderProperties& shaderProperties)
+	{
+		// Iterate through all resource groups, we're only interested in the following resource parameters
+		// - "ResourceType" = "TEXTURE_BUFFER"
+		// - "BufferUsage"
+		// - "Value"
+		int resourceGroupIndex = 0;
+		for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorResourceGroup = rapidJsonValueResourceGroups.MemberBegin(); rapidJsonMemberIteratorResourceGroup != rapidJsonValueResourceGroups.MemberEnd(); ++rapidJsonMemberIteratorResourceGroup)
+		{
+			// Sanity check
+			if (std::atoi(rapidJsonMemberIteratorResourceGroup->name.GetString()) != resourceGroupIndex)
+			{
+				throw std::runtime_error("Invalid material blueprint resource group index found, should be " + std::to_string(resourceGroupIndex) + " but is " + rapidJsonMemberIteratorResourceGroup->name.GetString());
+			}
+
+			// Iterate through all resources inside the current resource group
+			int resourceIndex = 0;
+			for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorResource = rapidJsonMemberIteratorResourceGroup->value.MemberBegin(); rapidJsonMemberIteratorResource != rapidJsonMemberIteratorResourceGroup->value.MemberEnd(); ++rapidJsonMemberIteratorResource)
+			{
+				// Sanity check
+				if (std::atoi(rapidJsonMemberIteratorResource->name.GetString()) != resourceIndex)
+				{
+					throw std::runtime_error("Invalid material blueprint resource index inside resource group " + std::to_string(resourceGroupIndex) + " found, should be " + std::to_string(resourceIndex) + " but is " + rapidJsonMemberIteratorResource->name.GetString());
+				}
+
+				// We're only interested in texture buffer resource types
+				const rapidjson::Value& rapidJsonValue = rapidJsonMemberIteratorResource->value;
+				if (strcmp(rapidJsonValue["ResourceType"].GetString(), "TEXTURE_BUFFER") == 0)
+				{
+					// Write down the texture buffer header
+					RendererRuntime::v1MaterialBlueprint::TextureBufferHeader textureBufferHeader;
+					{ // Value type and value
+						const RendererRuntime::MaterialProperty::ValueType valueType = mandatoryMaterialPropertyValueType(rapidJsonValue);
+
+						// Get the reference value as string
+						static const uint32_t NAME_LENGTH = 128;
+						char referenceAsString[NAME_LENGTH];
+						memset(&referenceAsString[0], 0, sizeof(char) * NAME_LENGTH);
+						JsonHelper::optionalStringProperty(rapidJsonValue, "Value", referenceAsString, NAME_LENGTH);
+
+						// Construct the material property value
+						const RendererRuntime::StringId referenceAsInteger(&referenceAsString[1]);	// Skip the '@'
+						textureBufferHeader.materialPropertyValue = RendererRuntime::MaterialProperty::materialPropertyValueFromReference(valueType, referenceAsInteger);
+					}
+					textureBufferHeader.rootParameterIndex = ::detail::getRootParameterIndex(rapidJsonValue, shaderProperties);
+					detail::optionalBufferUsageProperty(rapidJsonValue, "BufferUsage", textureBufferHeader.bufferUsage);
+					file.write(&textureBufferHeader, sizeof(RendererRuntime::v1MaterialBlueprint::TextureBufferHeader));
+				}
+
+				// Advance resource index
+				++resourceIndex;
+			}
+
+			// Advance resource group index
+			++resourceGroupIndex;
+		}
+	}
+
+	void JsonMaterialBlueprintHelper::readSamplerStatesByResourceGroups(const rapidjson::Value& rapidJsonValueResourceGroups, RendererRuntime::IFile& file, RendererRuntime::ShaderProperties& shaderProperties, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector)
+	{
+		// Iterate through all resource groups, we're only interested in the following resource parameters
+		// - "ResourceType" = "SAMPLER_STATE"
+		// - "BufferUsage"
+		// - "Value"
+		int resourceGroupIndex = 0;
+		for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorResourceGroup = rapidJsonValueResourceGroups.MemberBegin(); rapidJsonMemberIteratorResourceGroup != rapidJsonValueResourceGroups.MemberEnd(); ++rapidJsonMemberIteratorResourceGroup)
+		{
+			// Sanity check
+			if (std::atoi(rapidJsonMemberIteratorResourceGroup->name.GetString()) != resourceGroupIndex)
+			{
+				throw std::runtime_error("Invalid material blueprint resource group index found, should be " + std::to_string(resourceGroupIndex) + " but is " + rapidJsonMemberIteratorResourceGroup->name.GetString());
+			}
+
+			// Iterate through all resources inside the current resource group
+			int resourceIndex = 0;
+			for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorResource = rapidJsonMemberIteratorResourceGroup->value.MemberBegin(); rapidJsonMemberIteratorResource != rapidJsonMemberIteratorResourceGroup->value.MemberEnd(); ++rapidJsonMemberIteratorResource)
+			{
+				// Sanity check
+				if (std::atoi(rapidJsonMemberIteratorResource->name.GetString()) != resourceIndex)
+				{
+					throw std::runtime_error("Invalid material blueprint resource index inside resource group " + std::to_string(resourceGroupIndex) + " found, should be " + std::to_string(resourceIndex) + " but is " + rapidJsonMemberIteratorResource->name.GetString());
+				}
+
+				// We're only interested in sampler state resource types
+				const rapidjson::Value& rapidJsonValue = rapidJsonMemberIteratorResource->value;
+				if (strcmp(rapidJsonValue["ResourceType"].GetString(), "SAMPLER_STATE") == 0)
+				{
+					// Start with the default sampler state
+					RendererRuntime::v1MaterialBlueprint::SamplerState materialBlueprintSamplerState;
+					materialBlueprintSamplerState.rootParameterIndex = 0;
+					Renderer::SamplerState& samplerState = materialBlueprintSamplerState;
+					samplerState = Renderer::ISamplerState::getDefaultSamplerState();
+
+					// By default, inside the material blueprint system the texture filter and maximum anisotropy are set to uninitialized. Unless explicitly
+					// set by a material blueprint author, those values are dynamic during runtime so the user can decide about the performance/quality trade-off.
+					samplerState.filter = Renderer::FilterMode::UNKNOWN;
+					RendererRuntime::setUninitialized(samplerState.maxAnisotropy);
+
+					// The optional properties
+					materialBlueprintSamplerState.rootParameterIndex = ::detail::getRootParameterIndex(rapidJsonValue, shaderProperties);
+					JsonMaterialHelper::optionalFilterProperty(rapidJsonValue, "Filter", samplerState.filter, &sortedMaterialPropertyVector);
+					JsonMaterialHelper::optionalTextureAddressModeProperty(rapidJsonValue, "AddressU", samplerState.addressU, &sortedMaterialPropertyVector);
+					JsonMaterialHelper::optionalTextureAddressModeProperty(rapidJsonValue, "AddressV", samplerState.addressV, &sortedMaterialPropertyVector);
+					JsonMaterialHelper::optionalTextureAddressModeProperty(rapidJsonValue, "AddressW", samplerState.addressW, &sortedMaterialPropertyVector);
+					JsonHelper::optionalFloatProperty(rapidJsonValue, "MipLODBias", samplerState.mipLODBias);
+					JsonHelper::optionalIntegerProperty(rapidJsonValue, "MaxAnisotropy", samplerState.maxAnisotropy);
+					JsonMaterialHelper::optionalComparisonFuncProperty(rapidJsonValue, "ComparisonFunc", samplerState.comparisonFunc, &sortedMaterialPropertyVector);
+					JsonHelper::optionalFloatNProperty(rapidJsonValue, "BorderColor", samplerState.borderColor, 4);
+					JsonHelper::optionalFloatProperty(rapidJsonValue, "MinLOD", samplerState.minLOD);
+					JsonHelper::optionalFloatProperty(rapidJsonValue, "MaxLOD", samplerState.maxLOD);
+
+					// Write down the sampler state
+					file.write(&materialBlueprintSamplerState, sizeof(RendererRuntime::v1MaterialBlueprint::SamplerState));
+				}
+
+				// Advance resource index
+				++resourceIndex;
+			}
+
+			// Advance resource group index
+			++resourceGroupIndex;
+		}
+	}
+
+	void JsonMaterialBlueprintHelper::readTexturesByResourceGroups(const IAssetCompiler::Input& input, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, const rapidjson::Value& rapidJsonValueResourceGroups, RendererRuntime::IFile& file, RendererRuntime::ShaderProperties& shaderProperties)
+	{
+		// Iterate through all resource groups, we're only interested in the following resource parameters
+		// - "ResourceType" = "TEXTURE"
+		// - "BufferUsage"
+		// - "ValueType"
+		// - "Value"
+		// - "FallbackTexture"
+		// - "RgbHardwareGammaCorrection"
+		// - "SamplerStateBaseShaderRegisterName"
+		int resourceGroupIndex = 0;
+		for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorResourceGroup = rapidJsonValueResourceGroups.MemberBegin(); rapidJsonMemberIteratorResourceGroup != rapidJsonValueResourceGroups.MemberEnd(); ++rapidJsonMemberIteratorResourceGroup)
+		{
+			// Sanity check
+			if (std::atoi(rapidJsonMemberIteratorResourceGroup->name.GetString()) != resourceGroupIndex)
+			{
+				throw std::runtime_error("Invalid material blueprint resource group index found, should be " + std::to_string(resourceGroupIndex) + " but is " + rapidJsonMemberIteratorResourceGroup->name.GetString());
+			}
+
+			// Iterate through all resources inside the current resource group
+			int resourceIndex = 0;
+			for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorResource = rapidJsonMemberIteratorResourceGroup->value.MemberBegin(); rapidJsonMemberIteratorResource != rapidJsonMemberIteratorResourceGroup->value.MemberEnd(); ++rapidJsonMemberIteratorResource)
+			{
+				// Sanity check
+				if (std::atoi(rapidJsonMemberIteratorResource->name.GetString()) != resourceIndex)
+				{
+					throw std::runtime_error("Invalid material blueprint resource index inside resource group " + std::to_string(resourceGroupIndex) + " found, should be " + std::to_string(resourceIndex) + " but is " + rapidJsonMemberIteratorResource->name.GetString());
+				}
+
+				// We're only interested in texture resource types
+				const rapidjson::Value& rapidJsonValue = rapidJsonMemberIteratorResource->value;
+				if (strcmp(rapidJsonValue["ResourceType"].GetString(), "TEXTURE") == 0)
+				{
+					// Mandatory root parameter index
+					const uint32_t rootParameterIndex = ::detail::getRootParameterIndex(rapidJsonValue, shaderProperties);
+
+					// Mandatory fallback texture asset ID
+					// -> We could make this optional, but it's better to be totally restrictive in here so asynchronous texture loading always works nicely (easy when done from the beginning, hard to add this afterwards)
+					// -> Often, but not always this value is identical to a texture asset referencing material property. So, we really have to define an own property for this.
+					const RendererRuntime::AssetId fallbackTextureAssetId = JsonHelper::getCompiledAssetId(input, rapidJsonValue, "FallbackTexture");
+
+					// Optional RGB hardware gamma correction
+					bool rgbHardwareGammaCorrection = false;
+					JsonHelper::optionalBooleanProperty(rapidJsonValue, "RgbHardwareGammaCorrection", rgbHardwareGammaCorrection);
+
+					// "MipmapsUsed" with the default value "TRUE" isn't used, but it should be defined if mipmaps are not used to support debugging and optimization possibility spotting
+
+					// Mandatory usage
+					const RendererRuntime::MaterialProperty::Usage usage = mandatoryMaterialPropertyUsage(rapidJsonValue);
+					const RendererRuntime::MaterialProperty::ValueType valueType = mandatoryMaterialPropertyValueType(rapidJsonValue);
+					switch (usage)
+					{
+						case RendererRuntime::MaterialProperty::Usage::STATIC:
+						{
+							if (RendererRuntime::MaterialProperty::ValueType::TEXTURE_ASSET_ID == valueType)
+							{
+								// Mandatory asset ID
+								const RendererRuntime::MaterialPropertyValue materialPropertyValue = RendererRuntime::MaterialPropertyValue::fromTextureAssetId(StringHelper::getAssetIdByString(rapidJsonValue["Value"].GetString(), input));
+
+								// Write down the texture
+								const RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture(rootParameterIndex, RendererRuntime::MaterialProperty(RendererRuntime::getUninitialized<RendererRuntime::MaterialPropertyId>(), usage, materialPropertyValue), fallbackTextureAssetId, rgbHardwareGammaCorrection);
+								file.write(&materialBlueprintTexture, sizeof(RendererRuntime::v1MaterialBlueprint::Texture));
+
+								// TODO(co) Error handling: Compiled asset ID not found (meaning invalid source asset ID given)
+								break;
+							}
+							else
+							{
+								throw std::runtime_error("Textures with \"STATIC\"-usage must have the value type \"TEXTURE_ASSET_ID\"");
+							}
+						}
+
+						case RendererRuntime::MaterialProperty::Usage::MATERIAL_REFERENCE:
+						{
+							if (RendererRuntime::MaterialProperty::ValueType::TEXTURE_ASSET_ID == valueType)
+							{
+								// Get mandatory asset ID
+								// -> The character "@" is used to reference a material property value
+								const std::string sourceAssetIdAsString = rapidJsonValue["Value"].GetString();
+								if (sourceAssetIdAsString.length() > 0 && sourceAssetIdAsString[0] == '@')
+								{
+									// Reference a material property value
+									const RendererRuntime::MaterialPropertyId materialPropertyId(sourceAssetIdAsString.substr(1).c_str());
+
+									// Figure out the material property value
+									RendererRuntime::MaterialProperties::SortedPropertyVector::const_iterator iterator = std::lower_bound(sortedMaterialPropertyVector.cbegin(), sortedMaterialPropertyVector.cend(), materialPropertyId, RendererRuntime::detail::OrderByMaterialPropertyId());
+									if (iterator != sortedMaterialPropertyVector.end())
+									{
+										const RendererRuntime::MaterialProperty& materialProperty = *iterator;
+										if (materialProperty.getMaterialPropertyId() == materialPropertyId)
+										{
+											// TODO(co) Error handling: Usage mismatch etc.
+
+											// Write down the texture
+											const RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture(rootParameterIndex, RendererRuntime::MaterialProperty(materialPropertyId, usage, materialProperty), fallbackTextureAssetId, rgbHardwareGammaCorrection);
+											file.write(&materialBlueprintTexture, sizeof(RendererRuntime::v1MaterialBlueprint::Texture));
+										}
+									}
+								}
+								else
+								{
+									throw std::runtime_error("Textures with \"MATERIAL_REFERENCE\"-usage and the value type \"TEXTURE_ASSET_ID\" must have a value starting with @");
+								}
+							}
+							else
+							{
+								throw std::runtime_error("Textures with \"MATERIAL_REFERENCE\"-usage must have the value type \"TEXTURE_ASSET_ID\"");
+							}
+							break;
+						}
+
+						case RendererRuntime::MaterialProperty::Usage::UNKNOWN:
+						case RendererRuntime::MaterialProperty::Usage::SHADER_UNIFORM:
+						case RendererRuntime::MaterialProperty::Usage::SHADER_COMBINATION:
+						case RendererRuntime::MaterialProperty::Usage::RASTERIZER_STATE:
+						case RendererRuntime::MaterialProperty::Usage::DEPTH_STENCIL_STATE:
+						case RendererRuntime::MaterialProperty::Usage::BLEND_STATE:
+						case RendererRuntime::MaterialProperty::Usage::SAMPLER_STATE:
+						case RendererRuntime::MaterialProperty::Usage::TEXTURE_REFERENCE:
+						case RendererRuntime::MaterialProperty::Usage::GLOBAL_REFERENCE:
+						case RendererRuntime::MaterialProperty::Usage::UNKNOWN_REFERENCE:
+						case RendererRuntime::MaterialProperty::Usage::PASS_REFERENCE:
+						case RendererRuntime::MaterialProperty::Usage::INSTANCE_REFERENCE:
+						case RendererRuntime::MaterialProperty::Usage::GLOBAL_REFERENCE_FALLBACK:
+						default:
+						{
+							throw std::runtime_error("Invalid texture usage");
+						}
+					}
+				}
+
+				// Advance resource index
+				++resourceIndex;
+			}
+
+			// Advance resource group index
+			++resourceGroupIndex;
 		}
 	}
 

@@ -2,7 +2,7 @@
 	"Format":
 	{
 		"Type": "MaterialBlueprintAsset",
-		"Version": "1"
+		"Version": "2"
 	},
 	"MaterialBlueprintAsset":
 	{
@@ -33,53 +33,6 @@
 				"Description": "Environment cube map, only used if no procedural sky is used"
 			}
 		},
-		"RootSignature":
-		{
-			"RootParameters":
-			{
-				"0":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "UBV",
-							"BaseShaderRegister": "0",
-							"BaseShaderRegisterName": "PassUniformBuffer"
-						}
-					}
-				},
-				"1":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "SAMPLER",
-							"BaseShaderRegister": "0",
-							"ShaderVisibility": "FRAGMENT"
-						}
-					}
-				},
-				"2":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "SRV",
-							"BaseShaderRegister": "0",
-							"BaseShaderRegisterName": "EnvironmentCubeMap",
-							"SamplerRootParameterIndex": "1",
-							"ShaderVisibility": "FRAGMENT"
-						}
-					}
-				}
-			}
-		},
 		"PipelineState":
 		{
 			"VertexAttributes": "VertexAttributes/Default/Position.asset",
@@ -98,12 +51,15 @@
 				"DepthFunc": "LESS_EQUAL"
 			}
 		},
-		"Resources":
+		"ResourceGroups":
 		{
-			"UniformBuffers":
+			"0":
 			{
-				"PassUniformBuffer":
+				"0":
 				{
+					"BaseShaderRegisterName": "PassUniformBuffer",
+					"BaseShaderRegister": "0",
+					"ResourceType": "UNIFORM_BUFFER",
 					"BufferUsage": "PASS",
 					"NumberOfElements": "1",
 					"ElementProperties":
@@ -153,24 +109,33 @@
 					}
 				}
 			},
-			"SamplerStates":
+			"1":
 			{
-				"SamplerLinear":
+				"0":
 				{
-					"AddressU": "CLAMP",
-					"AddressV": "CLAMP",
-					"AddressW": "CLAMP"
-				}
-			},
-			"Textures":
-			{
-				"EnvironmentCubeMap":
-				{
+					"BaseShaderRegisterName": "EnvironmentCubeMap",
+					"BaseShaderRegister": "0",
+					"ShaderVisibility": "FRAGMENT",
+					"ResourceType": "TEXTURE",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@EnvironmentCubeMap",
 					"FallbackTexture": "Unrimp/Texture/DynamicByCode/BlackMapCube",
-					"RgbHardwareGammaCorrection": "TRUE"
+					"RgbHardwareGammaCorrection": "TRUE",
+					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
+				}
+			},
+			"2":
+			{
+				"0":
+				{
+					"BaseShaderRegisterName": "SamplerLinear",
+					"BaseShaderRegister": "0",
+					"ShaderVisibility": "FRAGMENT",
+					"ResourceType": "SAMPLER_STATE",
+					"AddressU": "CLAMP",
+					"AddressV": "CLAMP",
+					"AddressW": "CLAMP"
 				}
 			}
 		}

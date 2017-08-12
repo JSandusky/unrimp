@@ -46,23 +46,23 @@ struct PassDataStruct
 	float  FarBlurDepth;
 	float  BlurrinessCutoff;	// Blurriness cutoff constant for objects behind the focal plane
 };
-UNIFORM_BUFFER_BEGIN(0, PassUniformBuffer, 0)
+UNIFORM_BUFFER_BEGIN(0, 0, PassUniformBuffer, 0)
 	PassDataStruct PassData;
 UNIFORM_BUFFER_END
 
-// Samplers
-SAMPLER_STATE(1, SamplerPointClamp, 0)
-SAMPLER_STATE(2, SamplerLinear, 1)
-
 // Textures
-TEXTURE_2D(3, ColorMap, 0)
+TEXTURE_2D(0, 1, ColorMap, 0)
 @property(NumberOfMultisamples)
-	TEXTURE_2D_MS(4, DepthMap, @value(NumberOfMultisamples), 1)
+	TEXTURE_2D_MS(0, 2, DepthMap, @value(NumberOfMultisamples), 1)
 @end
 @property(!NumberOfMultisamples)
-	TEXTURE_2D(4, DepthMap, 1)
+	TEXTURE_2D(0, 2, DepthMap, 1)
 @end
-TEXTURE_2D(5, BlurMap, 2)	// Blurred low resolution version of the color map
+TEXTURE_2D(0, 3, BlurMap, 2)	// Blurred low resolution version of the color map
+
+// Samplers
+SAMPLER_STATE(1, 0, SamplerPointClamp, 0)
+SAMPLER_STATE(1, 1, SamplerLinear, 1)
 
 
 //[-------------------------------------------------------]

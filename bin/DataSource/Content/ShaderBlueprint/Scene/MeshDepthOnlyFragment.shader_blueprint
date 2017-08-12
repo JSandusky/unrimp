@@ -47,15 +47,15 @@
 	{
 		float AlphaReference;
 	};
-	UNIFORM_BUFFER_BEGIN(1, MaterialUniformBuffer, 1)
+	UNIFORM_BUFFER_BEGIN(1, 0, MaterialUniformBuffer, 1)
 		Material Materials[@insertpiece(MaximumNumberOfMaterials)];
 	UNIFORM_BUFFER_END
 
-	// Samplers
-	SAMPLER_STATE(4, SamplerLinear, 0)
-
 	// Textures: We need to start at texture unit 1 instead of texture unit 0 because the vertex shader has an instance texture buffer bound at texture unit 0 (OpenGL shares those bindings accros all shader stages while Direct3D doesn't)
-	TEXTURE_2D(5, AlphaMap, 1)
+	TEXTURE_2D(3, 0, AlphaMap, 1)
+
+	// Samplers
+	SAMPLER_STATE(4, 0, SamplerLinear, 0)
 @end
 @property(!UseAlphaMap)
 	//[-------------------------------------------------------]

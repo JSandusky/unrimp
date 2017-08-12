@@ -47,6 +47,87 @@ PRAGMA_WARNING_POP
 
 
 //[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		void setMaterialBlueprintHeaderNumberOfResourcesByResourceType(const rapidjson::Value& rapidJsonValueResourceType, RendererRuntime::v1MaterialBlueprint::MaterialBlueprintHeader& materialBlueprintHeader)
+		{
+			const char* valueAsString = rapidJsonValueResourceType.GetString();
+
+			// Define helper macros
+			#define IF_VALUE(name, value)			if (strcmp(valueAsString, name) == 0) ++materialBlueprintHeader.value;
+			#define ELSE_IF_VALUE(name, value) else if (strcmp(valueAsString, name) == 0) ++materialBlueprintHeader.value;
+
+			// Evaluate value
+			IF_VALUE("UNIFORM_BUFFER", numberOfUniformBuffers)
+			ELSE_IF_VALUE("TEXTURE_BUFFER", numberOfTextureBuffers)
+			ELSE_IF_VALUE("SAMPLER_STATE", numberOfSamplerStates)
+			ELSE_IF_VALUE("TEXTURE", numberOfTextures)
+			else
+			{
+				throw std::runtime_error("Invalid resource type \"" + std::string(valueAsString) + '\"');
+			}
+
+			// Undefine helper macros
+			#undef IF_VALUE
+			#undef ELSE_IF_VALUE
+		}
+
+		void setMaterialBlueprintHeaderNumberOfResourcesByResourceGroups(const rapidjson::Value& rapidJsonValueResourceGroups, RendererRuntime::v1MaterialBlueprint::MaterialBlueprintHeader& materialBlueprintHeader)
+		{
+			// Initialize number of resources
+			materialBlueprintHeader.numberOfUniformBuffers = materialBlueprintHeader.numberOfTextureBuffers = materialBlueprintHeader.numberOfSamplerStates = materialBlueprintHeader.numberOfTextures = 0;
+
+			// Iterate through all resource groups, we're only interested in the "ResourceType" resource parameter
+			int resourceGroupIndex = 0;
+			for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorResourceGroup = rapidJsonValueResourceGroups.MemberBegin(); rapidJsonMemberIteratorResourceGroup != rapidJsonValueResourceGroups.MemberEnd(); ++rapidJsonMemberIteratorResourceGroup)
+			{
+				// Sanity check
+				if (std::atoi(rapidJsonMemberIteratorResourceGroup->name.GetString()) != resourceGroupIndex)
+				{
+					throw std::runtime_error("Invalid material blueprint resource group index found, should be " + std::to_string(resourceGroupIndex) + " but is " + rapidJsonMemberIteratorResourceGroup->name.GetString());
+				}
+
+				// Iterate through all resources inside the current resource group
+				int resourceIndex = 0;
+				for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorResource = rapidJsonMemberIteratorResourceGroup->value.MemberBegin(); rapidJsonMemberIteratorResource != rapidJsonMemberIteratorResourceGroup->value.MemberEnd(); ++rapidJsonMemberIteratorResource)
+				{
+					// Sanity check
+					if (std::atoi(rapidJsonMemberIteratorResource->name.GetString()) != resourceIndex)
+					{
+						throw std::runtime_error("Invalid material blueprint resource index inside resource group " + std::to_string(resourceGroupIndex) + " found, should be " + std::to_string(resourceIndex) + " but is " + rapidJsonMemberIteratorResource->name.GetString());
+					}
+
+					// Check the resource type
+					setMaterialBlueprintHeaderNumberOfResourcesByResourceType(rapidJsonMemberIteratorResource->value["ResourceType"], materialBlueprintHeader);
+
+					// Advance resource index
+					++resourceIndex;
+				}
+
+				// Advance resource group index
+				++resourceGroupIndex;
+			}
+		}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererToolkit
@@ -116,17 +197,15 @@ namespace RendererToolkit
 			{ // Material blueprint
 				// Parse JSON
 				rapidjson::Document rapidJsonDocument;
-				JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, inputFilename, "MaterialBlueprintAsset", "1");
+				JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, inputFilename, "MaterialBlueprintAsset", "2");
 
 				// Mandatory and optional main sections of the material blueprint
+				// -> For ease-of-use the material blueprint is edited by the user in a resource-group-style containing all needed information
+				// -> Internally, the material blueprint file content is split into the root signature, resources as well as resource groups
 				static const rapidjson::Value EMPTY_VALUE;
 				const rapidjson::Value& rapidJsonValueMaterialBlueprintAsset = rapidJsonDocument["MaterialBlueprintAsset"];
-				const rapidjson::Value& rapidJsonValueProperties			 = rapidJsonValueMaterialBlueprintAsset.HasMember("Properties")								   ? rapidJsonValueMaterialBlueprintAsset["Properties"]	: EMPTY_VALUE;
-				const rapidjson::Value& rapidJsonValueResources				 = rapidJsonValueMaterialBlueprintAsset.HasMember("Resources")								   ? rapidJsonValueMaterialBlueprintAsset["Resources"]	: EMPTY_VALUE;
-				const rapidjson::Value& rapidJsonValueUniformBuffers		 = (rapidJsonValueResources.IsObject() && rapidJsonValueResources.HasMember("UniformBuffers")) ? rapidJsonValueResources["UniformBuffers"]			: EMPTY_VALUE;
-				const rapidjson::Value& rapidJsonValueTextureBuffers		 = (rapidJsonValueResources.IsObject() && rapidJsonValueResources.HasMember("TextureBuffers")) ? rapidJsonValueResources["TextureBuffers"]			: EMPTY_VALUE;
-				const rapidjson::Value& rapidJsonValueSamplerStates			 = (rapidJsonValueResources.IsObject() && rapidJsonValueResources.HasMember("SamplerStates"))  ? rapidJsonValueResources["SamplerStates"]			: EMPTY_VALUE;
-				const rapidjson::Value& rapidJsonValueTextures				 = (rapidJsonValueResources.IsObject() && rapidJsonValueResources.HasMember("Textures"))	   ? rapidJsonValueResources["Textures"]				: EMPTY_VALUE;
+				const rapidjson::Value& rapidJsonValueProperties			 = rapidJsonValueMaterialBlueprintAsset.HasMember("Properties") ? rapidJsonValueMaterialBlueprintAsset["Properties"] : EMPTY_VALUE;
+				const rapidjson::Value& rapidJsonValueResourceGroups		 = rapidJsonValueMaterialBlueprintAsset["ResourceGroups"];
 
 				// Gather all material properties
 				RendererRuntime::MaterialProperties::SortedPropertyVector sortedMaterialPropertyVector;
@@ -162,10 +241,7 @@ namespace RendererToolkit
 					materialBlueprintHeader.numberOfProperties							= rapidJsonValueProperties.MemberCount();
 					materialBlueprintHeader.numberOfShaderCombinationProperties			= static_cast<uint32_t>(visualImportanceOfShaderPropertiesVector.size());
 					materialBlueprintHeader.numberOfIntegerShaderCombinationProperties	= static_cast<uint32_t>(maximumIntegerValueOfShaderPropertiesVector.size());	// Each integer shader combination property must have a defined maximum value
-					materialBlueprintHeader.numberOfUniformBuffers						= rapidJsonValueUniformBuffers.IsObject() ? rapidJsonValueUniformBuffers.MemberCount() : 0;
-					materialBlueprintHeader.numberOfTextureBuffers						= rapidJsonValueTextureBuffers.IsObject() ? rapidJsonValueTextureBuffers.MemberCount() : 0;
-					materialBlueprintHeader.numberOfSamplerStates						= rapidJsonValueSamplerStates.IsObject() ? rapidJsonValueSamplerStates.MemberCount() : 0;
-					materialBlueprintHeader.numberOfTextures							= rapidJsonValueTextures.IsObject() ? rapidJsonValueTextures.MemberCount() : 0;
+					::detail::setMaterialBlueprintHeaderNumberOfResourcesByResourceGroups(rapidJsonValueResourceGroups, materialBlueprintHeader);
 					memoryFile.write(&materialBlueprintHeader, sizeof(RendererRuntime::v1MaterialBlueprint::MaterialBlueprintHeader));
 				}
 
@@ -180,36 +256,27 @@ namespace RendererToolkit
 
 				// Root signature
 				RendererRuntime::ShaderProperties shaderProperties;
-				JsonMaterialBlueprintHelper::readRootSignature(rapidJsonValueMaterialBlueprintAsset["RootSignature"], memoryFile, shaderProperties);
+				JsonMaterialBlueprintHelper::readRootSignatureByResourceGroups(rapidJsonValueResourceGroups, memoryFile, shaderProperties);
 
 				// Pipeline state object (PSO)
 				JsonMaterialBlueprintHelper::readPipelineStateObject(input, rapidJsonValueMaterialBlueprintAsset["PipelineState"], memoryFile, sortedMaterialPropertyVector);
 
 				{ // Resources
 					// Uniform buffers
-					if (rapidJsonValueUniformBuffers.IsObject())
-					{
-						JsonMaterialBlueprintHelper::readUniformBuffers(input, rapidJsonValueUniformBuffers, memoryFile, shaderProperties);
-					}
+					JsonMaterialBlueprintHelper::readUniformBuffersByResourceGroups(input, rapidJsonValueResourceGroups, memoryFile, shaderProperties);
 
 					// Texture buffers
-					if (rapidJsonValueTextureBuffers.IsObject())
-					{
-						JsonMaterialBlueprintHelper::readTextureBuffers(rapidJsonValueTextureBuffers, memoryFile, shaderProperties);
-					}
+					JsonMaterialBlueprintHelper::readTextureBuffersByResourceGroups(rapidJsonValueResourceGroups, memoryFile, shaderProperties);
 
 					// Sampler states
-					if (rapidJsonValueSamplerStates.IsObject())
-					{
-						JsonMaterialBlueprintHelper::readSamplerStates(rapidJsonValueSamplerStates, memoryFile, shaderProperties, sortedMaterialPropertyVector);
-					}
+					JsonMaterialBlueprintHelper::readSamplerStatesByResourceGroups(rapidJsonValueResourceGroups, memoryFile, shaderProperties, sortedMaterialPropertyVector);
 
 					// Textures
-					if (rapidJsonValueTextures.IsObject())
-					{
-						JsonMaterialBlueprintHelper::readTextures(input, sortedMaterialPropertyVector, rapidJsonValueTextures, memoryFile, shaderProperties);
-					}
+					JsonMaterialBlueprintHelper::readTexturesByResourceGroups(input, sortedMaterialPropertyVector, rapidJsonValueResourceGroups, memoryFile, shaderProperties);
 				}
+
+				// TODO(co) Add resource groups
+				NOP;
 			}
 
 			// Write LZ4 compressed output

@@ -37,13 +37,13 @@ OUTPUT_BEGIN
 	OUTPUT_COLOR(0)
 OUTPUT_END
 
-// Samplers
-SAMPLER_STATE(1, GlyphSampler, 0)
-SAMPLER_STATE(2, BackgroundSampler, 1)
-
 // Textures
-TEXTURE_2D(3, GlyphMap, 0)
-TEXTURE_2D(4, BackgroundMap, 1)
+TEXTURE_2D(0, 1, GlyphMap, 0)
+TEXTURE_2D(0, 2, BackgroundMap, 1)
+
+// Samplers
+SAMPLER_STATE(1, 0, GlyphSampler, 0)
+SAMPLER_STATE(1, 1, BackgroundSampler, 1)
 
 
 //[-------------------------------------------------------]
