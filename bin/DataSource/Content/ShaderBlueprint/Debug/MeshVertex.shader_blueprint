@@ -33,11 +33,12 @@
 INPUT_BEGIN
 	INPUT_VERTEX_POSITION(0, float3, Position)				// Object space vertex position
 	INPUT_TEXTURE_COORDINATE(1, float2, TexCoord, 0)		// 32 bit texture coordinate
+	INPUT_TEXTURE_COORDINATE(2, int4, QTangent, 1)			// 16 bit QTangent, not needed but added to avoid Vulkan warning "Vertex attribute at location <x> not consumed by vertex shader"
 	INPUT_VERTEX_DRAW_ID(3)									// Draw ID
-	@property(UseGpuSkinning)
+	// @property(UseGpuSkinning)							// No property-check to avoid Vulkan warning "Vertex attribute at location <x> not consumed by vertex shader"
 		INPUT_VERTEX_BLEND_INDICES(4, uint4, BlendIndices)	// 8 bit bone indices
 		INPUT_VERTEX_BLEND_WEIGHTS(5, uint4, BlendWeights)	// 8 bit bone weights
-	@end
+	// @end
 INPUT_END
 OUTPUT_BEGIN
 	OUTPUT_TEXTURE_COORDINATE_NOINTERPOLATION(1, uint,   AssignedMaterialSlotVS, 0)	// The assigned material slot inside the material uniform buffer
@@ -98,6 +99,11 @@ MAIN_BEGIN
 
 	// Calculate the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
 	MAIN_OUTPUT_POSITION = MATRIX_MUL(PassData.WorldSpaceToClipSpaceMatrix, float4(worldSpacePosition, 1.0f));
+	
+	// Compensate for different Vulkan coordinate system
+	@property(Vulkan)
+		MAIN_OUTPUT_POSITION.y = -MAIN_OUTPUT_POSITION.y;
+	@end
 
 	// Pass through the assigned material slot inside the material uniform buffer
 	MAIN_OUTPUT(AssignedMaterialSlotVS) = instanceIndices.y;

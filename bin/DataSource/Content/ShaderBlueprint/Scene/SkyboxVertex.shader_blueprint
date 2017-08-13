@@ -68,4 +68,9 @@ MAIN_BEGIN
 
 	// Pass through the object space position as texture coordinate
 	MAIN_OUTPUT(TexCoordVS) = MAIN_INPUT(Position);
+
+	// Compensate for different Vulkan coordinate system
+	@property(Vulkan)
+		MAIN_OUTPUT(TexCoordVS).y = -MAIN_OUTPUT(TexCoordVS).y;
+	@end
 MAIN_END

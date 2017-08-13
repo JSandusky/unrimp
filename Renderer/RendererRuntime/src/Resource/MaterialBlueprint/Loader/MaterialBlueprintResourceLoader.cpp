@@ -347,6 +347,7 @@ namespace RendererRuntime
 				samplerState.samplerStatePtr = renderer.createSamplerState(*materialBlueprintSamplerState);
 				RENDERER_SET_RESOURCE_DEBUG_NAME(samplerState.samplerStatePtr, getAsset().assetFilename)
 			}
+			mMaterialBlueprintResource->mSamplerStateGroup = nullptr;
 		}
 
 		{ // Get the textures

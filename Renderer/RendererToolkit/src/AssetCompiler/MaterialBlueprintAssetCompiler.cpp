@@ -255,24 +255,23 @@ namespace RendererToolkit
 				memoryFile.write(maximumIntegerValueOfShaderPropertiesVector.data(), sizeof(RendererRuntime::ShaderProperties::Property) * maximumIntegerValueOfShaderPropertiesVector.size());
 
 				// Root signature
-				RendererRuntime::ShaderProperties shaderProperties;
-				JsonMaterialBlueprintHelper::readRootSignatureByResourceGroups(rapidJsonValueResourceGroups, memoryFile, shaderProperties);
+				JsonMaterialBlueprintHelper::readRootSignatureByResourceGroups(rapidJsonValueResourceGroups, memoryFile);
 
 				// Pipeline state object (PSO)
 				JsonMaterialBlueprintHelper::readPipelineStateObject(input, rapidJsonValueMaterialBlueprintAsset["PipelineState"], memoryFile, sortedMaterialPropertyVector);
 
 				{ // Resources
 					// Uniform buffers
-					JsonMaterialBlueprintHelper::readUniformBuffersByResourceGroups(input, rapidJsonValueResourceGroups, memoryFile, shaderProperties);
+					JsonMaterialBlueprintHelper::readUniformBuffersByResourceGroups(input, rapidJsonValueResourceGroups, memoryFile);
 
 					// Texture buffers
-					JsonMaterialBlueprintHelper::readTextureBuffersByResourceGroups(rapidJsonValueResourceGroups, memoryFile, shaderProperties);
+					JsonMaterialBlueprintHelper::readTextureBuffersByResourceGroups(rapidJsonValueResourceGroups, memoryFile);
 
 					// Sampler states
-					JsonMaterialBlueprintHelper::readSamplerStatesByResourceGroups(rapidJsonValueResourceGroups, memoryFile, shaderProperties, sortedMaterialPropertyVector);
+					JsonMaterialBlueprintHelper::readSamplerStatesByResourceGroups(rapidJsonValueResourceGroups, memoryFile, sortedMaterialPropertyVector);
 
 					// Textures
-					JsonMaterialBlueprintHelper::readTexturesByResourceGroups(input, sortedMaterialPropertyVector, rapidJsonValueResourceGroups, memoryFile, shaderProperties);
+					JsonMaterialBlueprintHelper::readTexturesByResourceGroups(input, sortedMaterialPropertyVector, rapidJsonValueResourceGroups, memoryFile);
 				}
 
 				// TODO(co) Add resource groups
