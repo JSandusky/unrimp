@@ -162,8 +162,21 @@ namespace RendererRuntime
 	//[ Private definitions                                   ]
 	//[-------------------------------------------------------]
 	private:
-		typedef std::vector<Renderer::IUniformBuffer*> UniformBuffers;
-		typedef std::vector<uint8_t>				   ScratchBuffer;
+		struct UniformBuffer
+		{
+			Renderer::IUniformBuffer* uniformBuffer;
+			Renderer::IResourceGroup* resourceGroup;
+
+			UniformBuffer(Renderer::IUniformBuffer* _uniformBuffer, Renderer::IResourceGroup* _resourceGroup) :
+				uniformBuffer(_uniformBuffer),
+				resourceGroup(_resourceGroup)
+			{
+				uniformBuffer->addReference();
+				resourceGroup->addReference();
+			}
+		};
+		typedef std::vector<UniformBuffer> UniformBuffers;
+		typedef std::vector<uint8_t>	   ScratchBuffer;
 
 
 	//[-------------------------------------------------------]

@@ -84,7 +84,7 @@ namespace RendererRuntime
 
 			struct UniformBufferHeader
 			{
-				uint32_t							   rootParameterIndex;
+				uint32_t							   rootParameterIndex;			///< Root parameter index = resource group index
 				MaterialBlueprintResource::BufferUsage bufferUsage;
 				uint32_t							   numberOfElements;
 				uint32_t							   numberOfElementProperties;
@@ -94,18 +94,18 @@ namespace RendererRuntime
 			struct TextureBufferHeader
 			{
 				MaterialPropertyValue				   materialPropertyValue = MaterialPropertyValue::fromUnknown();
-				uint32_t							   rootParameterIndex	 = getUninitialized<uint32_t>();
+				uint32_t							   rootParameterIndex	 = getUninitialized<uint32_t>();	///< Root parameter index = resource group index
 				MaterialBlueprintResource::BufferUsage bufferUsage			 = MaterialBlueprintResource::BufferUsage::UNKNOWN;
 			};
 
 			struct SamplerState : public Renderer::SamplerState
 			{
-				uint32_t rootParameterIndex;
+				uint32_t rootParameterIndex;	///< Root parameter index = resource group index
 			};
 
 			struct Texture
 			{
-				uint32_t		 rootParameterIndex;
+				uint32_t		 rootParameterIndex;	///< Root parameter index = resource group index
 				MaterialProperty materialProperty;
 				AssetId			 fallbackTextureAssetId;
 				bool			 rgbHardwareGammaCorrection;

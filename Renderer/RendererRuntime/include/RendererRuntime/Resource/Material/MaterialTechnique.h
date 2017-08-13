@@ -27,6 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Resource/IResourceListener.h"
 #include "RendererRuntime/Resource/Material/MaterialProperty.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialBufferSlot.h"
 
@@ -65,7 +66,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Material technique
 	*/
-	class MaterialTechnique : public MaterialBufferSlot
+	class MaterialTechnique : public MaterialBufferSlot, public IResourceListener
 	{
 
 
@@ -139,7 +140,7 @@ namespace RendererRuntime
 		*  @return
 		*    The textures
 		*/
-		const Textures& getTextures(const IRendererRuntime& rendererRuntime) const;
+		const Textures& getTextures(const IRendererRuntime& rendererRuntime);
 
 		/**
 		*  @brief
@@ -163,6 +164,13 @@ namespace RendererRuntime
 		*    "true" on assigned material pool change, else "false"
 		*/
 		bool fillCommandBuffer(const IRendererRuntime& rendererRuntime, Renderer::CommandBuffer& commandBuffer);
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual RendererRuntime::IResourceListener methods ]
+	//[-------------------------------------------------------]
+	protected:
+		virtual void onLoadingStateChange(const RendererRuntime::IResource& resource) override;
 
 
 	//[-------------------------------------------------------]
@@ -194,6 +202,7 @@ namespace RendererRuntime
 		MaterialBlueprintResourceId	mMaterialBlueprintResourceId;	///< Material blueprint resource ID, can be set to uninitialized value
 		mutable Textures			mTextures;
 		uint32_t					mSerializedPipelineStateHash;	///< FNV1a hash of "Renderer::SerializedPipelineState"
+		Renderer::IResourceGroupPtr	mTextureResourceGroup;			///< Texture resource group, can be a null pointer
 
 
 	};

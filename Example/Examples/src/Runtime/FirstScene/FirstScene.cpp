@@ -129,6 +129,10 @@ void FirstScene::onInitialization()
 	RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
 	if (nullptr != rendererRuntime)
 	{
+		// TODO(co) Remove this after the Vulkan renderer backend is fully up-and-running (currently done for all renderer backends by intent)
+		mCurrentCompositor = mInstancedCompositor = Compositor::DEBUG;
+		rendererRuntime->getMaterialBlueprintResourceManager().setCreateInitialPipelineStateCaches(false);
+
 		// Create the scene resource
 		rendererRuntime->getSceneResourceManager().loadSceneResourceByAssetId(::detail::SCENE_ASSET_ID, mSceneResourceId, this);
 

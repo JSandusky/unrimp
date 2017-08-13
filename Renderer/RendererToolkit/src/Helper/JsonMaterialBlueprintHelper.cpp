@@ -144,18 +144,6 @@ namespace
 			return static_cast<uint32_t>((strncmp(instructionAsString, "@counter(", 7) == 0) ? executeCounterInstruction(instructionAsString, shaderProperties) : std::atoi(instructionAsString));
 		}
 
-		uint32_t getRootParameterIndex(const rapidjson::Value& rapidJsonValue, RendererRuntime::ShaderProperties& shaderProperties)
-		{
-			if (rapidJsonValue.HasMember("RootParameterIndex"))
-			{
-				return getIntegerFromInstructionString(rapidJsonValue["RootParameterIndex"].GetString(), shaderProperties);
-			}
-			else
-			{
-				return getIntegerFromInstructionString("@counter(RootParameterIndex)", shaderProperties);
-			}
-		}
-
 
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]
@@ -528,7 +516,7 @@ namespace RendererToolkit
 		return RendererRuntime::MaterialPropertyValue::fromBoolean(false);
 	}
 
-	void JsonMaterialBlueprintHelper::readRootSignatureByResourceGroups(const rapidjson::Value& rapidJsonValueResourceGroups, RendererRuntime::IFile& file, RendererRuntime::ShaderProperties& shaderProperties)
+	void JsonMaterialBlueprintHelper::readRootSignatureByResourceGroups(const rapidjson::Value& rapidJsonValueResourceGroups, RendererRuntime::IFile& file)
 	{
 		// First: Collect everything we need instead of directly writing it down using an inefficient data layout
 		std::vector<Renderer::RootParameterData> rootParameters;
@@ -540,6 +528,7 @@ namespace RendererToolkit
 			// - "ShaderVisibility"
 			// - "ResourceType"
 			int resourceGroupIndex = 0;
+			RendererRuntime::ShaderProperties shaderProperties;
 			for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorResourceGroup = rapidJsonValueResourceGroups.MemberBegin(); rapidJsonMemberIteratorResourceGroup != rapidJsonValueResourceGroups.MemberEnd(); ++rapidJsonMemberIteratorResourceGroup)
 			{
 				// Sanity check
@@ -572,7 +561,7 @@ namespace RendererToolkit
 
 							// Evaluate value
 							IF_VALUE("UNIFORM_BUFFER", UBV)
-							ELSE_IF_VALUE("TEXTURE_BUFFER", SRV)
+							ELSE_IF_VALUE("TEXTURE_BUFFER", UAV)	// TODO(co) Usage of "UAV" is just a temporary hack", also search for other "UAV"-places
 							ELSE_IF_VALUE("SAMPLER_STATE", SAMPLER)
 							ELSE_IF_VALUE("TEXTURE", SRV)
 							else
@@ -890,7 +879,7 @@ namespace RendererToolkit
 		file.write(&pipelineState, sizeof(Renderer::SerializedPipelineState));
 	}
 
-	void JsonMaterialBlueprintHelper::readUniformBuffersByResourceGroups(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValueResourceGroups, RendererRuntime::IFile& file, RendererRuntime::ShaderProperties& shaderProperties)
+	void JsonMaterialBlueprintHelper::readUniformBuffersByResourceGroups(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValueResourceGroups, RendererRuntime::IFile& file)
 	{
 		// Iterate through all resource groups, we're only interested in the following resource parameters
 		// - "ResourceType" = "UNIFORM_BUFFER"
@@ -980,7 +969,7 @@ namespace RendererToolkit
 
 					{ // Write down the uniform buffer header
 						RendererRuntime::v1MaterialBlueprint::UniformBufferHeader uniformBufferHeader;
-						uniformBufferHeader.rootParameterIndex = ::detail::getRootParameterIndex(rapidJsonValue, shaderProperties);
+						uniformBufferHeader.rootParameterIndex = static_cast<uint32_t>(resourceGroupIndex);
 						detail::optionalBufferUsageProperty(rapidJsonValue, "BufferUsage", uniformBufferHeader.bufferUsage);
 						JsonHelper::optionalIntegerProperty(rapidJsonValue, "NumberOfElements", uniformBufferHeader.numberOfElements);
 						uniformBufferHeader.numberOfElementProperties = static_cast<uint32_t>(elementProperties.size());
@@ -1001,7 +990,7 @@ namespace RendererToolkit
 		}
 	}
 
-	void JsonMaterialBlueprintHelper::readTextureBuffersByResourceGroups(const rapidjson::Value& rapidJsonValueResourceGroups, RendererRuntime::IFile& file, RendererRuntime::ShaderProperties& shaderProperties)
+	void JsonMaterialBlueprintHelper::readTextureBuffersByResourceGroups(const rapidjson::Value& rapidJsonValueResourceGroups, RendererRuntime::IFile& file)
 	{
 		// Iterate through all resource groups, we're only interested in the following resource parameters
 		// - "ResourceType" = "TEXTURE_BUFFER"
@@ -1045,7 +1034,7 @@ namespace RendererToolkit
 						const RendererRuntime::StringId referenceAsInteger(&referenceAsString[1]);	// Skip the '@'
 						textureBufferHeader.materialPropertyValue = RendererRuntime::MaterialProperty::materialPropertyValueFromReference(valueType, referenceAsInteger);
 					}
-					textureBufferHeader.rootParameterIndex = ::detail::getRootParameterIndex(rapidJsonValue, shaderProperties);
+					textureBufferHeader.rootParameterIndex = static_cast<uint32_t>(resourceGroupIndex);
 					detail::optionalBufferUsageProperty(rapidJsonValue, "BufferUsage", textureBufferHeader.bufferUsage);
 					file.write(&textureBufferHeader, sizeof(RendererRuntime::v1MaterialBlueprint::TextureBufferHeader));
 				}
@@ -1059,7 +1048,7 @@ namespace RendererToolkit
 		}
 	}
 
-	void JsonMaterialBlueprintHelper::readSamplerStatesByResourceGroups(const rapidjson::Value& rapidJsonValueResourceGroups, RendererRuntime::IFile& file, RendererRuntime::ShaderProperties& shaderProperties, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector)
+	void JsonMaterialBlueprintHelper::readSamplerStatesByResourceGroups(const rapidjson::Value& rapidJsonValueResourceGroups, RendererRuntime::IFile& file, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector)
 	{
 		// Iterate through all resource groups, we're only interested in the following resource parameters
 		// - "ResourceType" = "SAMPLER_STATE"
@@ -1100,7 +1089,7 @@ namespace RendererToolkit
 					RendererRuntime::setUninitialized(samplerState.maxAnisotropy);
 
 					// The optional properties
-					materialBlueprintSamplerState.rootParameterIndex = ::detail::getRootParameterIndex(rapidJsonValue, shaderProperties);
+					materialBlueprintSamplerState.rootParameterIndex = static_cast<uint32_t>(resourceGroupIndex);
 					JsonMaterialHelper::optionalFilterProperty(rapidJsonValue, "Filter", samplerState.filter, &sortedMaterialPropertyVector);
 					JsonMaterialHelper::optionalTextureAddressModeProperty(rapidJsonValue, "AddressU", samplerState.addressU, &sortedMaterialPropertyVector);
 					JsonMaterialHelper::optionalTextureAddressModeProperty(rapidJsonValue, "AddressV", samplerState.addressV, &sortedMaterialPropertyVector);
@@ -1125,7 +1114,7 @@ namespace RendererToolkit
 		}
 	}
 
-	void JsonMaterialBlueprintHelper::readTexturesByResourceGroups(const IAssetCompiler::Input& input, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, const rapidjson::Value& rapidJsonValueResourceGroups, RendererRuntime::IFile& file, RendererRuntime::ShaderProperties& shaderProperties)
+	void JsonMaterialBlueprintHelper::readTexturesByResourceGroups(const IAssetCompiler::Input& input, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, const rapidjson::Value& rapidJsonValueResourceGroups, RendererRuntime::IFile& file)
 	{
 		// Iterate through all resource groups, we're only interested in the following resource parameters
 		// - "ResourceType" = "TEXTURE"
@@ -1159,7 +1148,7 @@ namespace RendererToolkit
 				if (strcmp(rapidJsonValue["ResourceType"].GetString(), "TEXTURE") == 0)
 				{
 					// Mandatory root parameter index
-					const uint32_t rootParameterIndex = ::detail::getRootParameterIndex(rapidJsonValue, shaderProperties);
+					const uint32_t rootParameterIndex = static_cast<uint32_t>(resourceGroupIndex);
 
 					// Mandatory fallback texture asset ID
 					// -> We could make this optional, but it's better to be totally restrictive in here so asynchronous texture loading always works nicely (easy when done from the beginning, hard to add this afterwards)

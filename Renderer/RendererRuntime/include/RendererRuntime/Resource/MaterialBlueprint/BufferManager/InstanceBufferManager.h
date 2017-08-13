@@ -139,10 +139,12 @@ namespace RendererRuntime
 		{
 			Renderer::IUniformBuffer* uniformBuffer;	///< Uniform buffer instance, always valid
 			Renderer::ITextureBuffer* textureBuffer;	///< Texture buffer instance, always valid
+			Renderer::IResourceGroup* resourceGroup;	///< Resource group instance, can be a null pointer
 			bool					  mapped;
 			InstanceBuffer(Renderer::IUniformBuffer& _uniformBuffer, Renderer::ITextureBuffer& _textureBuffer) :
 				uniformBuffer(&_uniformBuffer),
 				textureBuffer(&_textureBuffer),
+				resourceGroup(nullptr),
 				mapped(false)
 			{
 				// Nothing here
