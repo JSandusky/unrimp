@@ -127,8 +127,11 @@
 							"Value": "@SampleKernelSize"
 						}
 					}
-				},
-				"1":
+				}
+			},
+			"1":
+			{
+				"0":
 				{
 					"BaseShaderRegisterName": "NormalMap",
 					"BaseShaderRegister": "0",
@@ -141,7 +144,7 @@
 					"MipmapsUsed": "FALSE",
 					"SamplerStateBaseShaderRegisterName": "SamplerPointClamp"
 				},
-				"2":
+				"1":
 				{
 					"BaseShaderRegisterName": "DepthMap",
 					"BaseShaderRegister": "1",
@@ -154,7 +157,7 @@
 					"MipmapsUsed": "FALSE",
 					"SamplerStateBaseShaderRegisterName": "SamplerPointClamp"
 				},
-				"3":
+				"2":
 				{
 					"BaseShaderRegisterName": "SsaoSampleKernelMap",
 					"BaseShaderRegister": "2",
@@ -168,7 +171,7 @@
 					"MipmapsUsed": "FALSE",
 					"SamplerStateBaseShaderRegisterName": "SamplerPointClamp"
 				},
-				"4":
+				"3":
 				{
 					"BaseShaderRegisterName": "SsaoNoise4x4Map",
 					"BaseShaderRegister": "3",
@@ -183,7 +186,7 @@
 					"SamplerStateBaseShaderRegisterName": "SamplerPointWrap"
 				}
 			},
-			"1":
+			"2":
 			{
 				"0":
 				{

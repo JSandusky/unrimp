@@ -638,12 +638,14 @@ namespace Direct3D9Renderer
 								mDirect3DDevice9->SetTexture(vertexFetchStartSlot, direct3DBaseTexture9);
 								mDirect3DDevice9->SetTexture(startSlot, direct3DBaseTexture9);
 
-								{ // Set sampler
+								{ // Set sampler, it's valid that there's no sampler state (e.g. texel fetch instead of sampling might be used)
 									assert(nullptr != d3d9ResourceGroup->getSamplerState());
 									const SamplerState* samplerState = static_cast<const SamplerState*>(d3d9ResourceGroup->getSamplerState()[resourceIndex]);
-									assert(nullptr != samplerState);
-									samplerState->setDirect3D9SamplerStates(vertexFetchStartSlot, *mDirect3DDevice9);
-									samplerState->setDirect3D9SamplerStates(startSlot, *mDirect3DDevice9);
+									if (nullptr != samplerState)
+									{
+										samplerState->setDirect3D9SamplerStates(vertexFetchStartSlot, *mDirect3DDevice9);
+										samplerState->setDirect3D9SamplerStates(startSlot, *mDirect3DDevice9);
+									}
 								}
 
 								// End debug event
@@ -658,11 +660,13 @@ namespace Direct3D9Renderer
 								// Set texture
 								mDirect3DDevice9->SetTexture(vertexFetchStartSlot, direct3DBaseTexture9);
 
-								{ // Set sampler
+								{ // Set sampler, it's valid that there's no sampler state (e.g. texel fetch instead of sampling might be used)
 									assert(nullptr != d3d9ResourceGroup->getSamplerState());
 									const SamplerState* samplerState = static_cast<const SamplerState*>(d3d9ResourceGroup->getSamplerState()[resourceIndex]);
-									assert(nullptr != samplerState);
-									samplerState->setDirect3D9SamplerStates(vertexFetchStartSlot, *mDirect3DDevice9);
+									if (nullptr != samplerState)
+									{
+										samplerState->setDirect3D9SamplerStates(vertexFetchStartSlot, *mDirect3DDevice9);
+									}
 								}
 
 								// End debug event
@@ -690,11 +694,13 @@ namespace Direct3D9Renderer
 								// Set texture
 								mDirect3DDevice9->SetTexture(startSlot, direct3DBaseTexture9);
 
-								{ // Set sampler
+								{ // Set sampler, it's valid that there's no sampler state (e.g. texel fetch instead of sampling might be used)
 									assert(nullptr != d3d9ResourceGroup->getSamplerState());
 									const SamplerState* samplerState = static_cast<const SamplerState*>(d3d9ResourceGroup->getSamplerState()[resourceIndex]);
-									assert(nullptr != samplerState);
-									samplerState->setDirect3D9SamplerStates(startSlot, *mDirect3DDevice9);
+									if (nullptr != samplerState)
+									{
+										samplerState->setDirect3D9SamplerStates(startSlot, *mDirect3DDevice9);
+									}
 								}
 
 								// End debug event

@@ -49,16 +49,16 @@ UNIFORM_BUFFER_BEGIN(0, 0, PassUniformBuffer, 0)
 UNIFORM_BUFFER_END
 
 // Textures
-TEXTURE_2D(0, 1, ColorMap, 0)
+TEXTURE_2D(1, 0, ColorMap, 0)
 @property(NumberOfMultisamples)
-	TEXTURE_2D_MS(0, 2, VelocityMap, @value(NumberOfMultisamples), 1)
+	TEXTURE_2D_MS(1, 1, VelocityMap, @value(NumberOfMultisamples), 1)
 @end
 @property(!NumberOfMultisamples)
-	TEXTURE_2D(0, 2, VelocityMap, 1)
+	TEXTURE_2D(1, 1, VelocityMap, 1)
 @end
 
 // Samplers
-SAMPLER_STATE(1, 0, SamplerPoint, 0)
+SAMPLER_STATE(2, 0, SamplerPoint, 0)
 
 
 //[-------------------------------------------------------]

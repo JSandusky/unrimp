@@ -126,8 +126,11 @@
 							"Value": "@HaloWidth"
 						}
 					}
-				},
-				"1":
+				}
+			},
+			"1":
+			{
+				"0":
 				{
 					"BaseShaderRegisterName": "ColorMap",
 					"BaseShaderRegister": "0",
@@ -140,7 +143,7 @@
 					"MipmapsUsed": "FALSE",
 					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
 				},
-				"2":
+				"1":
 				{
 					"BaseShaderRegisterName": "LensColorMap",
 					"BaseShaderRegister": "1",
@@ -155,7 +158,7 @@
 					"SamplerStateBaseShaderRegisterName": "SamplerPoint"
 				}
 			},
-			"1":
+			"2":
 			{
 				"0":
 				{

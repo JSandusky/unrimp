@@ -129,8 +129,11 @@
 							"Value": "@BloomIntensity"
 						}
 					}
-				},
-				"1":
+				}
+			},
+			"1":
+			{
+				"0":
 				{
 					"BaseShaderRegisterName": "ColorMap",
 					"BaseShaderRegister": "0",
@@ -143,7 +146,7 @@
 					"MipmapsUsed": "FALSE",
 					"SamplerStateBaseShaderRegisterName": "SamplerPoint"
 				},
-				"2":
+				"1":
 				{
 					"BaseShaderRegisterName": "LuminanceMap",
 					"BaseShaderRegister": "1",
@@ -156,7 +159,7 @@
 					"MipmapsUsed": "FALSE",
 					"SamplerStateBaseShaderRegisterName": "SamplerPoint"
 				},
-				"3":
+				"2":
 				{
 					"BaseShaderRegisterName": "BloomMap",
 					"BaseShaderRegister": "2",
@@ -169,7 +172,7 @@
 					"MipmapsUsed": "FALSE",
 					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
 				},
-				"4":
+				"3":
 				{
 					"BaseShaderRegisterName": "DirtyLensMap",
 					"BaseShaderRegister": "3",
@@ -183,7 +186,7 @@
 					"MipmapsUsed": "FALSE",
 					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
 				},
-				"5":
+				"4":
 				{
 					"BaseShaderRegisterName": "LensFlareMap",
 					"BaseShaderRegister": "4",
@@ -196,7 +199,7 @@
 					"MipmapsUsed": "FALSE",
 					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
 				},
-				"6":
+				"5":
 				{
 					"BaseShaderRegisterName": "LensStarMap",
 					"BaseShaderRegister": "5",
@@ -211,7 +214,7 @@
 					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
 				}
 			},
-			"1":
+			"2":
 			{
 				"0":
 				{

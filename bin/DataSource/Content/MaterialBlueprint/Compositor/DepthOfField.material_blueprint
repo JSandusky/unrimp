@@ -149,8 +149,11 @@
 							"Value": "@BlurrinessCutoff"
 						}
 					}
-				},
-				"1":
+				}
+			},
+			"1":
+			{
+				"0":
 				{
 					"BaseShaderRegisterName": "ColorMap",
 					"BaseShaderRegister": "0",
@@ -163,7 +166,7 @@
 					"MipmapsUsed": "FALSE",
 					"SamplerStateBaseShaderRegisterName": "SamplerPointClamp"
 				},
-				"2":
+				"1":
 				{
 					"BaseShaderRegisterName": "DepthMap",
 					"BaseShaderRegister": "1",
@@ -176,7 +179,7 @@
 					"MipmapsUsed": "FALSE",
 					"SamplerStateBaseShaderRegisterName": "SamplerPointClamp"
 				},
-				"3":
+				"2":
 				{
 					"BaseShaderRegisterName": "BlurMap",
 					"BaseShaderRegister": "2",
@@ -190,7 +193,7 @@
 					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
 				}
 			},
-			"1":
+			"2":
 			{
 				"0":
 				{

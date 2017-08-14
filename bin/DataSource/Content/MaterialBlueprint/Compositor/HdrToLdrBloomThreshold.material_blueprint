@@ -88,8 +88,11 @@
 							"Value": "@BloomThreshold"
 						}
 					}
-				},
-				"1":
+				}
+			},
+			"1":
+			{
+				"0":
 				{
 					"BaseShaderRegisterName": "ColorMap",
 					"BaseShaderRegister": "0",
@@ -102,7 +105,7 @@
 					"MipmapsUsed": "FALSE",
 					"SamplerStateBaseShaderRegisterName": "SamplerPoint"
 				},
-				"2":
+				"1":
 				{
 					"BaseShaderRegisterName": "LuminanceMap",
 					"BaseShaderRegister": "1",
@@ -115,9 +118,8 @@
 					"MipmapsUsed": "FALSE",
 					"SamplerStateBaseShaderRegisterName": "SamplerPoint"
 				}
-				
 			},
-			"1":
+			"2":
 			{
 				"0":
 				{

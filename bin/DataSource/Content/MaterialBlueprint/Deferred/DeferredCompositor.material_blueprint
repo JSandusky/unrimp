@@ -260,8 +260,11 @@
 							"Value": "@PROJECTION_PARAMETERS"
 						}
 					}
-				},
-				"1":
+				}
+			},
+			"1":
+			{
+				"0":
 				{
 					"ValueType": "FLOAT_4",
 					"BaseShaderRegisterName": "LightTextureBuffer",
@@ -270,8 +273,11 @@
 					"ResourceType": "TEXTURE_BUFFER",
 					"BufferUsage": "LIGHT",
 					"Value": "@LIGHT"
-				},
-				"2":
+				}
+			},
+			"2":
+			{
+				"0":
 				{
 					"BaseShaderRegisterName": "GBufferMap0",
 					"BaseShaderRegister": "1",
@@ -284,7 +290,7 @@
 					"MipmapsUsed": "FALSE",
 					"SamplerStateBaseShaderRegisterName": "SamplerPoint"
 				},
-				"3":
+				"1":
 				{
 					"BaseShaderRegisterName": "GBufferMap1",
 					"BaseShaderRegister": "2",
@@ -297,7 +303,7 @@
 					"MipmapsUsed": "FALSE",
 					"SamplerStateBaseShaderRegisterName": "SamplerPoint"
 				},
-				"4":
+				"2":
 				{
 					"BaseShaderRegisterName": "GBufferMap2",
 					"BaseShaderRegister": "3",
@@ -310,7 +316,7 @@
 					"MipmapsUsed": "FALSE",
 					"SamplerStateBaseShaderRegisterName": "SamplerPoint"
 				},
-				"5":
+				"3":
 				{
 					"BaseShaderRegisterName": "DepthMap",
 					"BaseShaderRegister": "4",
@@ -323,7 +329,7 @@
 					"MipmapsUsed": "FALSE",
 					"SamplerStateBaseShaderRegisterName": "SamplerPoint"
 				},
-				"6":
+				"4":
 				{
 					"BaseShaderRegisterName": "ShadowMap",
 					"BaseShaderRegister": "5",
@@ -336,7 +342,7 @@
 					"MipmapsUsed": "FALSE",
 					"SamplerStateBaseShaderRegisterName": "SamplerPoint"
 				},
-				"7":
+				"5":
 				{
 					"BaseShaderRegisterName": "ScreenSpaceAmbientOcclusionMap",
 					"BaseShaderRegister": "6",
@@ -349,7 +355,7 @@
 					"MipmapsUsed": "FALSE",
 					"SamplerStateBaseShaderRegisterName": "SamplerPoint"
 				},
-				"8":
+				"6":
 				{
 					"BaseShaderRegisterName": "ReflectionCubeMap",
 					"BaseShaderRegister": "7",
@@ -362,7 +368,7 @@
 					"RgbHardwareGammaCorrection": "TRUE",
 					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
 				},
-				"9":
+				"7":
 				{
 					"BaseShaderRegisterName": "LightClustersMap3D",
 					"BaseShaderRegister": "8",
@@ -375,7 +381,7 @@
 					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
 				}
 			},
-			"1":
+			"3":
 			{
 				"0":
 				{

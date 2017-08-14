@@ -62,19 +62,19 @@ UNIFORM_BUFFER_END
 
 // Textures
 @property(NumberOfMultisamples)
-	TEXTURE_2D_MS(0, 1, ColorMap, NUMBER_OF_MSAA_SAMPLES, 0)
-	TEXTURE_2D_MS(0, 2, DepthMap, NUMBER_OF_MSAA_SAMPLES, 1)
-	TEXTURE_2D_MS(0, 3, VelocityMap, NUMBER_OF_MSAA_SAMPLES, 2)
+	TEXTURE_2D_MS(1, 0, ColorMap, NUMBER_OF_MSAA_SAMPLES, 0)
+	TEXTURE_2D_MS(1, 1, DepthMap, NUMBER_OF_MSAA_SAMPLES, 1)
+	TEXTURE_2D_MS(1, 2, VelocityMap, NUMBER_OF_MSAA_SAMPLES, 2)
 @end
 @property(!NumberOfMultisamples)
-	TEXTURE_2D(0, 1, ColorMap, 0)
-	TEXTURE_2D(0, 2, DepthMap, 1)
-	TEXTURE_2D(0, 3, VelocityMap, 2)
+	TEXTURE_2D(1, 0, ColorMap, 0)
+	TEXTURE_2D(1, 1, DepthMap, 1)
+	TEXTURE_2D(1, 2, VelocityMap, 2)
 @end
-TEXTURE_2D(0, 4, PreviousColorMap, 3)
+TEXTURE_2D(1, 3, PreviousColorMap, 3)
 
 // Samplers
-SAMPLER_STATE(1, 0, SamplerPoint, 0)
+SAMPLER_STATE(2, 0, SamplerPoint, 0)
 
 
 //[-------------------------------------------------------]

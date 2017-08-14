@@ -50,12 +50,12 @@ UNIFORM_BUFFER_BEGIN(0, 0, PassUniformBuffer, 0)
 UNIFORM_BUFFER_END
 
 // Textures
-TEXTURE_2D(0, 1, ColorMap, 0)
-TEXTURE_1D(0, 2, LensColorMap, 1)
+TEXTURE_2D(1, 0, ColorMap, 0)
+TEXTURE_1D(1, 1, LensColorMap, 1)
 
 // Samplers
-SAMPLER_STATE(1, 0, SamplerLinear, 0)
-SAMPLER_STATE(1, 1, SamplerPoint, 1)
+SAMPLER_STATE(2, 0, SamplerLinear, 0)
+SAMPLER_STATE(2, 1, SamplerPoint, 1)
 
 
 //[-------------------------------------------------------]

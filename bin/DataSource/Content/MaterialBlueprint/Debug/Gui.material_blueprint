@@ -73,8 +73,11 @@
 							"Value": "@IMGUI_OBJECT_SPACE_TO_CLIP_SPACE_MATRIX"
 						}
 					}
-				},
-				"1":
+				}
+			},
+			"1":
+			{
+				"0":
 				{
 					"BaseShaderRegisterName": "GlyphMap",
 					"BaseShaderRegister": "0",
@@ -86,7 +89,7 @@
 					"FallbackTexture": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
 					"SamplerStateBaseShaderRegisterName": "GlyphSampler"
 				},
-				"2":
+				"1":
 				{
 					"BaseShaderRegisterName": "BackgroundMap",
 					"BaseShaderRegister": "1",
@@ -100,7 +103,7 @@
 					"SamplerStateBaseShaderRegisterName": "BackgroundSampler"
 				}
 			},
-			"1":
+			"2":
 			{
 				"0":
 				{

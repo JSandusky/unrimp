@@ -38,12 +38,12 @@ OUTPUT_BEGIN
 OUTPUT_END
 
 // Textures
-TEXTURE_2D(0, 1, GlyphMap, 0)
-TEXTURE_2D(0, 2, BackgroundMap, 1)
+TEXTURE_2D(1, 0, GlyphMap, 0)
+TEXTURE_2D(1, 1, BackgroundMap, 1)
 
 // Samplers
-SAMPLER_STATE(1, 0, GlyphSampler, 0)
-SAMPLER_STATE(1, 1, BackgroundSampler, 1)
+SAMPLER_STATE(2, 0, GlyphSampler, 0)
+SAMPLER_STATE(2, 1, BackgroundSampler, 1)
 
 
 //[-------------------------------------------------------]

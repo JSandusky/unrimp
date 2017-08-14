@@ -49,10 +49,10 @@ UNIFORM_BUFFER_END
 
 // Textures
 @property(VerticalBlur)
-	TEXTURE_2D(0, 1, ColorMap, 0)
+	TEXTURE_2D(1, 0, ColorMap, 0)
 @end
 @property(!VerticalBlur)
-	TEXTURE_2D_ARRAY(0, 1, ColorMap, 0)
+	TEXTURE_2D_ARRAY(1, 0, ColorMap, 0)
 @end
 
 

@@ -86,8 +86,11 @@
 							"Value": "@GlobalPastSecondsSinceLastFrame"
 						}
 					}
-				},
-				"1":
+				}
+			},
+			"1":
+			{
+				"0":
 				{
 					"BaseShaderRegisterName": "CurrentLuminanceMap",
 					"BaseShaderRegister": "0",
@@ -99,7 +102,7 @@
 					"FallbackTexture": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
 					"SamplerStateBaseShaderRegisterName": "SamplerPoint"
 				},
-				"2":
+				"1":
 				{
 					"BaseShaderRegisterName": "PreviousLuminanceMap",
 					"BaseShaderRegister": "1",
@@ -113,7 +116,7 @@
 					"SamplerStateBaseShaderRegisterName": "SamplerPoint"
 				}
 			},
-			"1":
+			"2":
 			{
 				"0":
 				{

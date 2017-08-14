@@ -47,14 +47,14 @@ UNIFORM_BUFFER_END
 
 // Textures
 @property(NumberOfMultisamples)
-	TEXTURE_2D_MS(0, 1, DepthMap, @value(NumberOfMultisamples), 0)
+	TEXTURE_2D_MS(1, 0, DepthMap, @value(NumberOfMultisamples), 0)
 @end
 @property(!NumberOfMultisamples)
-	TEXTURE_2D(0, 1, DepthMap, 0)
+	TEXTURE_2D(1, 0, DepthMap, 0)
 @end
 
 // Samplers
-SAMPLER_STATE(1, 0, SamplerPoint, 0)
+SAMPLER_STATE(2, 0, SamplerPoint, 0)
 
 
 //[-------------------------------------------------------]

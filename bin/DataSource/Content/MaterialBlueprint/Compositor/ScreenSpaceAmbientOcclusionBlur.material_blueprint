@@ -55,8 +55,11 @@
 							"Value": "@INVERSE_VIEWPORT_SIZE"
 						}
 					}
-				},
-				"1":
+				}
+			},
+			"1":
+			{
+				"0":
 				{
 					"BaseShaderRegisterName": "ScreenSpaceAmbientOcclusionMap",
 					"BaseShaderRegister": "0",
@@ -70,7 +73,7 @@
 					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
 				}
 			},
-			"1":
+			"2":
 			{
 				"0":
 				{

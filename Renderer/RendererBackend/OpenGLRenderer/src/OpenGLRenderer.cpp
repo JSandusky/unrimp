@@ -780,48 +780,49 @@ namespace OpenGLRenderer
 									break;
 							}
 
-							// Set the OpenGL sampler states, if required (texture buffer has no sampler state)
+							// Set the OpenGL sampler states, if required (texture buffer has no sampler state), it's valid that there's no sampler state (e.g. texel fetch instead of sampling might be used)
 							if (Renderer::ResourceType::TEXTURE_BUFFER != resourceType)
 							{
 								assert(nullptr != openGLResourceGroup->getSamplerState());
 								const SamplerState* samplerState = static_cast<const SamplerState*>(openGLResourceGroup->getSamplerState()[resourceIndex]);
-								assert(nullptr != samplerState);
-
-								// Is "GL_ARB_sampler_objects" there?
-								if (mExtensions->isGL_ARB_sampler_objects())
+								if (nullptr != samplerState)
 								{
-									// Effective sampler object (SO)
-									glBindSampler(descriptorRange.baseShaderRegister, static_cast<const SamplerStateSo*>(samplerState)->getOpenGLSampler());
-								}
-								else
-								{
-									#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-										// Backup the currently active OpenGL texture
-										GLint openGLActiveTextureBackup = 0;
-										glGetIntegerv(GL_ACTIVE_TEXTURE, &openGLActiveTextureBackup);
-									#endif
-
-									// TODO(co) Some security checks might be wise *maximum number of texture units*
-									// Activate the texture unit we want to manipulate
-									// -> "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
-									glActiveTextureARB(GL_TEXTURE0_ARB + unit);
-
-									// Is "GL_EXT_direct_state_access" there?
-									if (mExtensions->isGL_EXT_direct_state_access())
+									// Is "GL_ARB_sampler_objects" there?
+									if (mExtensions->isGL_ARB_sampler_objects())
 									{
-										// Direct state access (DSA) version to emulate a sampler object
-										static_cast<const SamplerStateDsa*>(samplerState)->setOpenGLSamplerStates();
+										// Effective sampler object (SO)
+										glBindSampler(descriptorRange.baseShaderRegister, static_cast<const SamplerStateSo*>(samplerState)->getOpenGLSampler());
 									}
 									else
 									{
-										// Traditional bind version to emulate a sampler object
-										static_cast<const SamplerStateBind*>(samplerState)->setOpenGLSamplerStates();
-									}
+										#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+											// Backup the currently active OpenGL texture
+											GLint openGLActiveTextureBackup = 0;
+											glGetIntegerv(GL_ACTIVE_TEXTURE, &openGLActiveTextureBackup);
+										#endif
 
-									#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-										// Be polite and restore the previous active OpenGL texture
-										glActiveTextureARB(static_cast<GLenum>(openGLActiveTextureBackup));
-									#endif
+										// TODO(co) Some security checks might be wise *maximum number of texture units*
+										// Activate the texture unit we want to manipulate
+										// -> "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
+										glActiveTextureARB(GL_TEXTURE0_ARB + unit);
+
+										// Is "GL_EXT_direct_state_access" there?
+										if (mExtensions->isGL_EXT_direct_state_access())
+										{
+											// Direct state access (DSA) version to emulate a sampler object
+											static_cast<const SamplerStateDsa*>(samplerState)->setOpenGLSamplerStates();
+										}
+										else
+										{
+											// Traditional bind version to emulate a sampler object
+											static_cast<const SamplerStateBind*>(samplerState)->setOpenGLSamplerStates();
+										}
+
+										#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+											// Be polite and restore the previous active OpenGL texture
+											glActiveTextureARB(static_cast<GLenum>(openGLActiveTextureBackup));
+										#endif
+									}
 								}
 							}
 						}
@@ -895,29 +896,30 @@ namespace OpenGLRenderer
 										break;
 								}
 
-								// Set the OpenGL sampler states, if required (texture buffer has no sampler state)
+								// Set the OpenGL sampler states, if required (texture buffer has no sampler state), it's valid that there's no sampler state (e.g. texel fetch instead of sampling might be used)
 								if (Renderer::ResourceType::TEXTURE_BUFFER != resourceType)
 								{
 									assert(nullptr != openGLResourceGroup->getSamplerState());
 									const SamplerState* samplerState = static_cast<const SamplerState*>(openGLResourceGroup->getSamplerState()[resourceIndex]);
-									assert(nullptr != samplerState);
-
-									// Is "GL_ARB_sampler_objects" there?
-									if (mExtensions->isGL_ARB_sampler_objects())
+									if (nullptr != samplerState)
 									{
-										// Effective sampler object (SO)
-										glBindSampler(descriptorRange.baseShaderRegister, static_cast<const SamplerStateSo*>(samplerState)->getOpenGLSampler());
-									}
-									// Is "GL_EXT_direct_state_access" there?
-									else if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
-									{
-										// Direct state access (DSA) version to emulate a sampler object
-										static_cast<const SamplerStateDsa*>(samplerState)->setOpenGLSamplerStates();
-									}
-									else
-									{
-										// Traditional bind version to emulate a sampler object
-										static_cast<const SamplerStateBind*>(samplerState)->setOpenGLSamplerStates();
+										// Is "GL_ARB_sampler_objects" there?
+										if (mExtensions->isGL_ARB_sampler_objects())
+										{
+											// Effective sampler object (SO)
+											glBindSampler(descriptorRange.baseShaderRegister, static_cast<const SamplerStateSo*>(samplerState)->getOpenGLSampler());
+										}
+										// Is "GL_EXT_direct_state_access" there?
+										else if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
+										{
+											// Direct state access (DSA) version to emulate a sampler object
+											static_cast<const SamplerStateDsa*>(samplerState)->setOpenGLSamplerStates();
+										}
+										else
+										{
+											// Traditional bind version to emulate a sampler object
+											static_cast<const SamplerStateBind*>(samplerState)->setOpenGLSamplerStates();
+										}
 									}
 								}
 

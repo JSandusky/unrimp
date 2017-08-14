@@ -361,8 +361,11 @@
 					"ResourceType": "TEXTURE_BUFFER",
 					"BufferUsage": "INSTANCE",
 					"Value": "@POSITION_ROTATION_SCALE"
-				},
-				"2":
+				}
+			},
+			"3":
+			{
+				"0":
 				{
 					"ValueType": "FLOAT_4",
 					"BaseShaderRegisterName": "LightTextureBuffer",
@@ -371,8 +374,11 @@
 					"ResourceType": "TEXTURE_BUFFER",
 					"BufferUsage": "LIGHT",
 					"Value": "@LIGHT"
-				},
-				"3":
+				}
+			},
+			"4":
+			{
+				"0":
 				{
 					"BaseShaderRegisterName": "ShadowMap",
 					"BaseShaderRegister": "2",
@@ -385,7 +391,7 @@
 					"MipmapsUsed": "FALSE",
 					"SamplerStateBaseShaderRegisterName": "SamplerPoint"
 				},
-				"4":
+				"1":
 				{
 					"BaseShaderRegisterName": "ReflectionCubeMap",
 					"BaseShaderRegister": "3",
@@ -398,7 +404,7 @@
 					"RgbHardwareGammaCorrection": "TRUE",
 					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
 				},
-				"5":
+				"2":
 				{
 					"BaseShaderRegisterName": "LightClustersMap3D",
 					"BaseShaderRegister": "4",
@@ -409,11 +415,8 @@
 					"Value": "Unrimp/Texture/DynamicByCode/LightClustersMap3D",
 					"FallbackTexture": "Unrimp/Texture/DynamicByCode/LightClustersMap3D",
 					"SamplerStateBaseShaderRegisterName": "SamplerPoint"
-				}
-			},
-			"3":
-			{
-				"0":
+				},
+				"3":
 				{
 					"BaseShaderRegisterName": "_drgb_nxa",
 					"BaseShaderRegister": "5",
@@ -426,7 +429,7 @@
 					"RgbHardwareGammaCorrection": "TRUE",
 					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
 				},
-				"1":
+				"4":
 				{
 					"BaseShaderRegisterName": "_hr_rg_mb_nya",
 					"BaseShaderRegister": "6",
@@ -438,7 +441,7 @@
 					"FallbackTexture": "Unrimp/Texture/DynamicByCode/Identity_hr_rg_mb_nya2D",
 					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
 				},
-				"2":
+				"5":
 				{
 					"BaseShaderRegisterName": "AlphaMap",
 					"BaseShaderRegister": "7",
@@ -450,7 +453,7 @@
 					"FallbackTexture": "Unrimp/Texture/DynamicByCode/IdentityAlphaMap2D",
 					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
 				},
-				"3":
+				"6":
 				{
 					"BaseShaderRegisterName": "EmissiveMap",
 					"BaseShaderRegister": "8",
@@ -464,7 +467,7 @@
 					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
 				}
 			},
-			"4":
+			"5":
 			{
 				"0":
 				{

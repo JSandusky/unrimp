@@ -65,8 +65,11 @@
 							"Value": "@CURRENT_SHADOW_CASCADE_SCALE"
 						}
 					}
-				},
-				"1":
+				}
+			},
+			"1":
+			{
+				"0":
 				{
 					"BaseShaderRegisterName": "DepthMap",
 					"BaseShaderRegister": "0",
@@ -80,7 +83,7 @@
 					"SamplerStateBaseShaderRegisterName": "SamplerPoint"
 				}
 			},
-			"1":
+			"2":
 			{
 				"0":
 				{

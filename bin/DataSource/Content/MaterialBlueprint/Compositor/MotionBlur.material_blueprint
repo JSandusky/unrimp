@@ -110,8 +110,11 @@
 							"Value": "@NumberOfSamples"
 						}
 					}
-				},
-				"1":
+				}
+			},
+			"1":
+			{
+				"0":
 				{
 					"BaseShaderRegisterName": "ColorMap",
 					"BaseShaderRegister": "0",
@@ -124,7 +127,7 @@
 					"MipmapsUsed": "FALSE",
 					"SamplerStateBaseShaderRegisterName": "SamplerPoint"
 				},
-				"2":
+				"1":
 				{
 					"BaseShaderRegisterName": "VelocityMap",
 					"BaseShaderRegister": "1",
@@ -138,7 +141,7 @@
 					"SamplerStateBaseShaderRegisterName": "SamplerPoint"
 				}
 			},
-			"1":
+			"2":
 			{
 				"0":
 				{

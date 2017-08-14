@@ -641,14 +641,16 @@ namespace OpenGLES3Renderer
 									glBindTexture(GL_TEXTURE_2D, static_cast<Texture2D*>(resource)->getOpenGLES3Texture());
 								}
 
+								// Set the OpenGL ES 3 sampler states, if required (texture buffer has no sampler state), it's valid that there's no sampler state (e.g. texel fetch instead of sampling might be used)
 								if (Renderer::ResourceType::TEXTURE_BUFFER != resourceType)
 								{
 									assert(nullptr != openGLES3ResourceGroup->getSamplerState());
 									const SamplerState* samplerState = static_cast<const SamplerState*>(openGLES3ResourceGroup->getSamplerState()[resourceIndex]);
-									assert(nullptr != samplerState);
-
-									// Traditional bind version to emulate a sampler object
-									samplerState->setOpenGLES3SamplerStates();
+									if (nullptr != samplerState)
+									{
+										// Traditional bind version to emulate a sampler object
+										samplerState->setOpenGLES3SamplerStates();
+									}
 								}
 
 								#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
