@@ -140,7 +140,7 @@
 				{
 					"ValueType": "FLOAT_4",
 					"BaseShaderRegisterName": "InstanceTextureBuffer",
-					"BaseShaderRegister": "3",
+					"BaseShaderRegister": "0",
 					"ShaderVisibility": "VERTEX",
 					"ResourceType": "TEXTURE_BUFFER",
 					"BufferUsage": "INSTANCE",
