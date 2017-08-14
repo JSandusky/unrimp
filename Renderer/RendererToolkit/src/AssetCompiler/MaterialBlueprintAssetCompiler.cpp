@@ -268,14 +268,12 @@ namespace RendererToolkit
 					JsonMaterialBlueprintHelper::readTextureBuffersByResourceGroups(rapidJsonValueResourceGroups, memoryFile);
 
 					// Sampler states
-					JsonMaterialBlueprintHelper::readSamplerStatesByResourceGroups(rapidJsonValueResourceGroups, memoryFile, sortedMaterialPropertyVector);
+					SamplerBaseShaderRegisterNameToIndex samplerBaseShaderRegisterNameToIndex;
+					JsonMaterialBlueprintHelper::readSamplerStatesByResourceGroups(rapidJsonValueResourceGroups, sortedMaterialPropertyVector, memoryFile, samplerBaseShaderRegisterNameToIndex);
 
 					// Textures
-					JsonMaterialBlueprintHelper::readTexturesByResourceGroups(input, sortedMaterialPropertyVector, rapidJsonValueResourceGroups, memoryFile);
+					JsonMaterialBlueprintHelper::readTexturesByResourceGroups(input, sortedMaterialPropertyVector, rapidJsonValueResourceGroups, samplerBaseShaderRegisterNameToIndex, memoryFile);
 				}
-
-				// TODO(co) Add resource groups
-				NOP;
 			}
 
 			// Write LZ4 compressed output

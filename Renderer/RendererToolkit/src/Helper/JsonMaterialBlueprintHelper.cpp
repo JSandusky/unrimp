@@ -1045,13 +1045,23 @@ namespace RendererToolkit
 		}
 	}
 
-	void JsonMaterialBlueprintHelper::readSamplerStatesByResourceGroups(const rapidjson::Value& rapidJsonValueResourceGroups, RendererRuntime::IFile& file, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector)
+	void JsonMaterialBlueprintHelper::readSamplerStatesByResourceGroups(const rapidjson::Value& rapidJsonValueResourceGroups, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, RendererRuntime::IFile& file, SamplerBaseShaderRegisterNameToIndex& samplerBaseShaderRegisterNameToIndex)
 	{
 		// Iterate through all resource groups, we're only interested in the following resource parameters
 		// - "ResourceType" = "SAMPLER_STATE"
-		// - "BufferUsage"
-		// - "Value"
+		// - "BaseShaderRegisterName"
+		// - "Filter"
+		// - "AddressU"
+		// - "AddressV"
+		// - "AddressW"
+		// - "MipLODBias"
+		// - "MaxAnisotropy"
+		// - "ComparisonFunc"
+		// - "BorderColor"
+		// - "MinLOD"
+		// - "MaxLOD"
 		int resourceGroupIndex = 0;
+		uint32_t samplerStateIndex = 0;
 		for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorResourceGroup = rapidJsonValueResourceGroups.MemberBegin(); rapidJsonMemberIteratorResourceGroup != rapidJsonValueResourceGroups.MemberEnd(); ++rapidJsonMemberIteratorResourceGroup)
 		{
 			// Sanity check
@@ -1079,6 +1089,18 @@ namespace RendererToolkit
 					materialBlueprintSamplerState.rootParameterIndex = 0;
 					Renderer::SamplerState& samplerState = materialBlueprintSamplerState;
 					samplerState = Renderer::ISamplerState::getDefaultSamplerState();
+
+					{ // Mandatory base shader register name
+						char baseShaderRegisterName[Renderer::DescriptorRange::NAME_LENGTH] = {};
+						JsonHelper::mandatoryStringProperty(rapidJsonValue, "BaseShaderRegisterName", baseShaderRegisterName, Renderer::DescriptorRange::NAME_LENGTH);
+						const uint32_t key = RendererRuntime::StringId(baseShaderRegisterName);
+						if (samplerBaseShaderRegisterNameToIndex.find(key) != samplerBaseShaderRegisterNameToIndex.cend())
+						{
+							throw std::runtime_error("Sampler state base shader register name \"" + std::string(baseShaderRegisterName) + "\" is defined multiple times");
+						}
+						samplerBaseShaderRegisterNameToIndex.emplace(key, samplerStateIndex);
+						++samplerStateIndex;
+					}
 
 					// By default, inside the material blueprint system the texture filter and maximum anisotropy are set to uninitialized. Unless explicitly
 					// set by a material blueprint author, those values are dynamic during runtime so the user can decide about the performance/quality trade-off.
@@ -1111,7 +1133,7 @@ namespace RendererToolkit
 		}
 	}
 
-	void JsonMaterialBlueprintHelper::readTexturesByResourceGroups(const IAssetCompiler::Input& input, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, const rapidjson::Value& rapidJsonValueResourceGroups, RendererRuntime::IFile& file)
+	void JsonMaterialBlueprintHelper::readTexturesByResourceGroups(const IAssetCompiler::Input& input, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, const rapidjson::Value& rapidJsonValueResourceGroups, const SamplerBaseShaderRegisterNameToIndex& samplerBaseShaderRegisterNameToIndex, RendererRuntime::IFile& file)
 	{
 		// Iterate through all resource groups, we're only interested in the following resource parameters
 		// - "ResourceType" = "TEXTURE"
@@ -1158,6 +1180,21 @@ namespace RendererToolkit
 
 					// "MipmapsUsed" with the default value "TRUE" isn't used, but it should be defined if mipmaps are not used to support debugging and optimization possibility spotting
 
+					// Map optional (e.g. texel fetch instead of sampling might be used) "SamplerStateBaseShaderRegisterName" to the index of the material blueprint sampler state resource to use
+					uint32_t samplerStateIndex = RendererRuntime::getUninitialized<uint32_t>();
+					if (rapidJsonValue.HasMember("SamplerStateBaseShaderRegisterName"))
+					{
+						char baseShaderRegisterName[Renderer::DescriptorRange::NAME_LENGTH] = {};
+						JsonHelper::mandatoryStringProperty(rapidJsonValue, "SamplerStateBaseShaderRegisterName", baseShaderRegisterName, Renderer::DescriptorRange::NAME_LENGTH);
+						const uint32_t key = RendererRuntime::StringId(baseShaderRegisterName);
+						SamplerBaseShaderRegisterNameToIndex::const_iterator iterator = samplerBaseShaderRegisterNameToIndex.find(RendererRuntime::StringId(baseShaderRegisterName));
+						if (iterator == samplerBaseShaderRegisterNameToIndex.cend())
+						{
+							throw std::runtime_error("Unknown sampler state base shader register name \"" + std::string(baseShaderRegisterName) + '\"');
+						}
+						samplerStateIndex = iterator->second;
+					}
+
 					// Mandatory usage
 					const RendererRuntime::MaterialProperty::Usage usage = mandatoryMaterialPropertyUsage(rapidJsonValue);
 					const RendererRuntime::MaterialProperty::ValueType valueType = mandatoryMaterialPropertyValueType(rapidJsonValue);
@@ -1171,7 +1208,7 @@ namespace RendererToolkit
 								const RendererRuntime::MaterialPropertyValue materialPropertyValue = RendererRuntime::MaterialPropertyValue::fromTextureAssetId(StringHelper::getAssetIdByString(rapidJsonValue["Value"].GetString(), input));
 
 								// Write down the texture
-								const RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture(rootParameterIndex, RendererRuntime::MaterialProperty(RendererRuntime::getUninitialized<RendererRuntime::MaterialPropertyId>(), usage, materialPropertyValue), fallbackTextureAssetId, rgbHardwareGammaCorrection);
+								const RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture(rootParameterIndex, RendererRuntime::MaterialProperty(RendererRuntime::getUninitialized<RendererRuntime::MaterialPropertyId>(), usage, materialPropertyValue), fallbackTextureAssetId, rgbHardwareGammaCorrection, samplerStateIndex);
 								file.write(&materialBlueprintTexture, sizeof(RendererRuntime::v1MaterialBlueprint::Texture));
 
 								// TODO(co) Error handling: Compiled asset ID not found (meaning invalid source asset ID given)
@@ -1205,7 +1242,7 @@ namespace RendererToolkit
 											// TODO(co) Error handling: Usage mismatch etc.
 
 											// Write down the texture
-											const RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture(rootParameterIndex, RendererRuntime::MaterialProperty(materialPropertyId, usage, materialProperty), fallbackTextureAssetId, rgbHardwareGammaCorrection);
+											const RendererRuntime::v1MaterialBlueprint::Texture materialBlueprintTexture(rootParameterIndex, RendererRuntime::MaterialProperty(materialPropertyId, usage, materialProperty), fallbackTextureAssetId, rgbHardwareGammaCorrection, samplerStateIndex);
 											file.write(&materialBlueprintTexture, sizeof(RendererRuntime::v1MaterialBlueprint::Texture));
 										}
 									}

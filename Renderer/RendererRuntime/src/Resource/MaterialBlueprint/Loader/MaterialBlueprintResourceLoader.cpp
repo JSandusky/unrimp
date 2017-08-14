@@ -362,6 +362,7 @@ namespace RendererRuntime
 				const MaterialProperty& materialProperty = texture.materialProperty = materialBlueprintTexture->materialProperty;
 				texture.fallbackTextureAssetId = materialBlueprintTexture->fallbackTextureAssetId;
 				texture.rgbHardwareGammaCorrection = materialBlueprintTexture->rgbHardwareGammaCorrection;
+				texture.samplerStateIndex = materialBlueprintTexture->samplerStateIndex;
 				if (materialProperty.getValueType() == MaterialPropertyValue::ValueType::TEXTURE_ASSET_ID)
 				{
 					textureResourceManager.loadTextureResourceByAssetId(materialProperty.getTextureAssetIdValue(), texture.fallbackTextureAssetId, texture.textureResourceId, nullptr, texture.rgbHardwareGammaCorrection);

@@ -165,14 +165,25 @@ namespace RendererRuntime
 				std::vector<Renderer::ISamplerState*> samplerStates;
 				textureResources.resize(numberOfTextures);
 				samplerStates.resize(numberOfTextures);
+				const MaterialBlueprintResource::Textures& materialBlueprintResourceTextures = materialBlueprintResource->getTextures();
+				const MaterialBlueprintResource::SamplerStates& materialBlueprintResourceSamplerStates = materialBlueprintResource->getSamplerStates();
 				for (size_t i = 0; i < numberOfTextures; ++i)
 				{
+					// Set texture resource
 					TextureResource* textureResource = textureResourceManager.tryGetById(textures[i].textureResourceId);
 					assert(nullptr != textureResource);
 					textureResources[i] = textureResource->getTexture();
 
-					// TODO(co) Implement "SamplerStateBaseShaderRegisterName"
-					samplerStates[i] = materialBlueprintResource->getSamplerStates()[i].samplerStatePtr;
+					// Set sampler state, if there's one (e.g. texel fetch instead of sampling might be used)
+					if (isInitialized(materialBlueprintResourceTextures[i].samplerStateIndex))
+					{
+						assert(materialBlueprintResourceTextures[i].samplerStateIndex < materialBlueprintResourceSamplerStates.size());
+						samplerStates[i] = materialBlueprintResourceSamplerStates[materialBlueprintResourceTextures[i].samplerStateIndex].samplerStatePtr;
+					}
+					else
+					{
+						samplerStates[i] = nullptr;
+					}
 				}
 				// TODO(co) All textures need to be inside the same resource group, this needs to be guaranteed by design
 				mTextureResourceGroup = materialBlueprintResource->getRootSignaturePtr()->createResourceGroup(textures[0].rootParameterIndex, static_cast<uint32_t>(numberOfTextures), textureResources.data(), samplerStates.data());

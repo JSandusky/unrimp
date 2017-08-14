@@ -179,6 +179,7 @@ namespace RendererRuntime
 			MaterialProperty  materialProperty;
 			AssetId			  fallbackTextureAssetId;
 			bool			  rgbHardwareGammaCorrection;
+			uint32_t		  samplerStateIndex;	///< Index of the material blueprint sampler state resource to use, can be uninitialized (e.g. texel fetch instead of sampling might be used)
 
 			// Derived data
 			TextureResourceId textureResourceId;
@@ -187,6 +188,7 @@ namespace RendererRuntime
 			Texture() :
 				rootParameterIndex(getUninitialized<uint32_t>()),
 				rgbHardwareGammaCorrection(false),
+				samplerStateIndex(getUninitialized<uint32_t>()),
 				textureResourceId(getUninitialized<TextureResourceId>())
 			{
 				// Nothing here
