@@ -81,10 +81,10 @@ void FirstMesh::onInitialization()
 		{
 			{ // Create the root signature
 				Renderer::DescriptorRangeBuilder ranges[5];
-				ranges[0].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockDynamicVs", 0, Renderer::ShaderVisibility::VERTEX);
-				ranges[1].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "_drgb_nxa", 1, Renderer::ShaderVisibility::FRAGMENT);
-				ranges[2].initialize(Renderer::DescriptorRangeType::SRV, 1, 1, "_hr_rg_mb_nya", 1, Renderer::ShaderVisibility::FRAGMENT);
-				ranges[3].initialize(Renderer::DescriptorRangeType::SRV, 1, 2, "EmissiveMap", 1, Renderer::ShaderVisibility::FRAGMENT);
+				ranges[0].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockDynamicVs", Renderer::ShaderVisibility::VERTEX);
+				ranges[1].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "_drgb_nxa", Renderer::ShaderVisibility::FRAGMENT);
+				ranges[2].initialize(Renderer::DescriptorRangeType::SRV, 1, 1, "_hr_rg_mb_nya", Renderer::ShaderVisibility::FRAGMENT);
+				ranges[3].initialize(Renderer::DescriptorRangeType::SRV, 1, 2, "EmissiveMap", Renderer::ShaderVisibility::FRAGMENT);
 				ranges[4].initializeSampler(1, 0, Renderer::ShaderVisibility::FRAGMENT);
 
 				Renderer::RootParameterBuilder rootParameters[2];

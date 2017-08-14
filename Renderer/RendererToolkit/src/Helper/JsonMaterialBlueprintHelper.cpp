@@ -590,9 +590,6 @@ namespace RendererToolkit
 						descriptorRange.baseShaderRegisterName[0] = '\0';
 						JsonHelper::optionalStringProperty(rapidJsonValue, "BaseShaderRegisterName", descriptorRange.baseShaderRegisterName, Renderer::DescriptorRange::NAME_LENGTH);
 
-						// Fixed sampler root parameter index is always zero
-						descriptorRange.samplerRootParameterIndex = 0;
-
 						// Optional shader visibility
 						descriptorRange.shaderVisibility = Renderer::ShaderVisibility::ALL;
 						optionalShaderVisibilityProperty(rapidJsonValue, "ShaderVisibility", descriptorRange.shaderVisibility);

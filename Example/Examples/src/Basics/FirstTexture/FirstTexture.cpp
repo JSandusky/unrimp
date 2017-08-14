@@ -63,8 +63,8 @@ void FirstTexture::onInitialization()
 
 		{ // Create the root signature
 			Renderer::DescriptorRangeBuilder ranges[4];
-			ranges[0].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "GradientMap", 1, Renderer::ShaderVisibility::FRAGMENT);
-			ranges[1].initialize(Renderer::DescriptorRangeType::SRV, 1, 1, "DiffuseMap", 1, Renderer::ShaderVisibility::FRAGMENT);
+			ranges[0].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "GradientMap", Renderer::ShaderVisibility::FRAGMENT);
+			ranges[1].initialize(Renderer::DescriptorRangeType::SRV, 1, 1, "DiffuseMap", Renderer::ShaderVisibility::FRAGMENT);
 			ranges[2].initializeSampler(1, 0, Renderer::ShaderVisibility::FRAGMENT);
 			ranges[3].initializeSampler(1, 1, Renderer::ShaderVisibility::FRAGMENT);
 

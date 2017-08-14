@@ -125,11 +125,11 @@ CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer& render
 
 	{ // Create the root signature
 		Renderer::DescriptorRangeBuilder ranges[6];
-		ranges[0].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockStaticVs", 0, Renderer::ShaderVisibility::VERTEX);
-		ranges[1].initialize(Renderer::DescriptorRangeType::UBV, 1, 1, "UniformBlockDynamicVs", 0, Renderer::ShaderVisibility::VERTEX);
-		ranges[2].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap", 2, Renderer::ShaderVisibility::FRAGMENT);
-		ranges[3].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockDynamicFs", 0, Renderer::ShaderVisibility::FRAGMENT);
-		ranges[4].initialize(Renderer::DescriptorRangeType::UAV, 1, 0, "PerInstanceTextureBufferVs", 0, Renderer::ShaderVisibility::VERTEX);	// TODO(co) Usage of "UAV" is just a temporary hack
+		ranges[0].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockStaticVs", Renderer::ShaderVisibility::VERTEX);
+		ranges[1].initialize(Renderer::DescriptorRangeType::UBV, 1, 1, "UniformBlockDynamicVs", Renderer::ShaderVisibility::VERTEX);
+		ranges[2].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap", Renderer::ShaderVisibility::FRAGMENT);
+		ranges[3].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockDynamicFs", Renderer::ShaderVisibility::FRAGMENT);
+		ranges[4].initialize(Renderer::DescriptorRangeType::UAV, 1, 0, "PerInstanceTextureBufferVs", Renderer::ShaderVisibility::VERTEX);	// TODO(co) Usage of "UAV" is just a temporary hack
 		ranges[5].initializeSampler(1, 0, Renderer::ShaderVisibility::FRAGMENT);
 
 		Renderer::RootParameterBuilder rootParameters[3];

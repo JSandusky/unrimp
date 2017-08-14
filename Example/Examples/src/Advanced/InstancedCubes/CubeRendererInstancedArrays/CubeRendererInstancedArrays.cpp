@@ -148,10 +148,10 @@ CubeRendererInstancedArrays::CubeRendererInstancedArrays(Renderer::IRenderer& re
 
 	{ // Create the root signature
 		Renderer::DescriptorRangeBuilder ranges[5];
-		ranges[0].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockStaticVs", 0, Renderer::ShaderVisibility::VERTEX);
-		ranges[1].initialize(Renderer::DescriptorRangeType::UBV, 1, 1, "UniformBlockDynamicVs", 0, Renderer::ShaderVisibility::VERTEX);
-		ranges[2].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap", 1, Renderer::ShaderVisibility::FRAGMENT);
-		ranges[3].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockDynamicFs", 0, Renderer::ShaderVisibility::FRAGMENT);
+		ranges[0].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockStaticVs", Renderer::ShaderVisibility::VERTEX);
+		ranges[1].initialize(Renderer::DescriptorRangeType::UBV, 1, 1, "UniformBlockDynamicVs", Renderer::ShaderVisibility::VERTEX);
+		ranges[2].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap", Renderer::ShaderVisibility::FRAGMENT);
+		ranges[3].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockDynamicFs", Renderer::ShaderVisibility::FRAGMENT);
 		ranges[4].initializeSampler(1, 0, Renderer::ShaderVisibility::FRAGMENT);
 
 		Renderer::RootParameterBuilder rootParameters[2];

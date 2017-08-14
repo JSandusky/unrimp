@@ -96,14 +96,13 @@ namespace Renderer
 	{
 		DescriptorRangeType rangeType;
 		uint32_t			numberOfDescriptors;
-		uint32_t			baseShaderRegister;					///< When using explicit binding locations
+		uint32_t			baseShaderRegister;						///< When using explicit binding locations
 		uint32_t			registerSpace;
 		uint32_t			offsetInDescriptorsFromTableStart;
 
 		// The rest is not part of "D3D12_DESCRIPTOR_RANGE" and was added to support OpenGL and Direct3D 9 as well
 		static const uint32_t NAME_LENGTH = 32;
 		char				  baseShaderRegisterName[NAME_LENGTH];	///< When not using explicit binding locations (OpenGL ES 2, legacy GLSL profiles)
-		uint32_t			  samplerRootParameterIndex;			///< In case this is a texture, the sampler root parameter index is required for OpenGL, OpenGL ES 2 and DirectX 9
 		ShaderVisibility	  shaderVisibility;
 	};
 	struct DescriptorRangeBuilder : public DescriptorRange
@@ -122,12 +121,11 @@ namespace Renderer
 			uint32_t _numberOfDescriptors,
 			uint32_t _baseShaderRegister,
 			const char _baseShaderRegisterName[NAME_LENGTH],
-			uint32_t _samplerRootParameterIndex,
 			ShaderVisibility _shaderVisibility,
 			uint32_t _registerSpace = 0,
 			uint32_t _offsetInDescriptorsFromTableStart = OFFSET_APPEND)
 		{
-			initialize(_rangeType, _numberOfDescriptors, _baseShaderRegister, _baseShaderRegisterName, _samplerRootParameterIndex, _shaderVisibility, _registerSpace, _offsetInDescriptorsFromTableStart);
+			initialize(_rangeType, _numberOfDescriptors, _baseShaderRegister, _baseShaderRegisterName, _shaderVisibility, _registerSpace, _offsetInDescriptorsFromTableStart);
 		}
 		inline void initializeSampler(
 			uint32_t _numberOfDescriptors,
@@ -136,19 +134,18 @@ namespace Renderer
 			uint32_t _registerSpace = 0,
 			uint32_t _offsetInDescriptorsFromTableStart = OFFSET_APPEND)
 		{
-			initialize(*this, DescriptorRangeType::SAMPLER, _numberOfDescriptors, _baseShaderRegister, "", 0, _shaderVisibility, _registerSpace, _offsetInDescriptorsFromTableStart);
+			initialize(*this, DescriptorRangeType::SAMPLER, _numberOfDescriptors, _baseShaderRegister, "", _shaderVisibility, _registerSpace, _offsetInDescriptorsFromTableStart);
 		}
 		inline void initialize(
 			DescriptorRangeType _rangeType,
 			uint32_t _numberOfDescriptors,
 			uint32_t _baseShaderRegister,
 			const char _baseShaderRegisterName[NAME_LENGTH],
-			uint32_t _samplerRootParameterIndex,
 			ShaderVisibility _shaderVisibility,
 			uint32_t _registerSpace = 0,
 			uint32_t _offsetInDescriptorsFromTableStart = OFFSET_APPEND)
 		{
-			initialize(*this, _rangeType, _numberOfDescriptors, _baseShaderRegister, _baseShaderRegisterName, _samplerRootParameterIndex, _shaderVisibility, _registerSpace, _offsetInDescriptorsFromTableStart);
+			initialize(*this, _rangeType, _numberOfDescriptors, _baseShaderRegister, _baseShaderRegisterName, _shaderVisibility, _registerSpace, _offsetInDescriptorsFromTableStart);
 		}
 		static inline void initialize(
 			DescriptorRange& range,
@@ -156,7 +153,6 @@ namespace Renderer
 			uint32_t _numberOfDescriptors,
 			uint32_t _baseShaderRegister,
 			const char _baseShaderRegisterName[NAME_LENGTH],
-			uint32_t _samplerRootParameterIndex,
 			ShaderVisibility _shaderVisibility,
 			uint32_t _registerSpace = 0,
 			uint32_t _offsetInDescriptorsFromTableStart = OFFSET_APPEND)
@@ -167,7 +163,6 @@ namespace Renderer
 			range.registerSpace = _registerSpace;
 			range.offsetInDescriptorsFromTableStart = _offsetInDescriptorsFromTableStart;
 			strcpy(range.baseShaderRegisterName, _baseShaderRegisterName);
-			range.samplerRootParameterIndex = _samplerRootParameterIndex;
 			range.shaderVisibility = _shaderVisibility;
 		}
 	};
@@ -520,7 +515,7 @@ namespace Renderer
 	*  @note
 	*    - "Renderer::RootSignature" is not totally identical to "D3D12_ROOT_SIGNATURE_DESC" because it had to be extended by information required by OpenGL, so can't cast to Direct3D 12 structure
 	*    - In order to be renderer API independent, do always define and set samplers first
-	*    - "Renderer::DescriptorRange": In order to be renderer API independent, do always provide "baseShaderRegisterName" and "samplerRootParameterIndex" for "Renderer::DescriptorRangeType::SRV" range types
+	*    - "Renderer::DescriptorRange": In order to be renderer API independent, do always provide "baseShaderRegisterName" for "Renderer::DescriptorRangeType::SRV" range types
 	*
 	*  @see
 	*    - "D3D12_ROOT_SIGNATURE_DESC"-documentation for details
