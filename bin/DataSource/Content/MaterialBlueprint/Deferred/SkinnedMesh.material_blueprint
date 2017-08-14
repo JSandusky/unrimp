@@ -24,14 +24,6 @@
 				"Value": "TRUE",
 				"Description": "Cast shadows?"
 			},
-			"HighQualityLighting":
-			{
-				"Usage": "SHADER_COMBINATION",
-				"ValueType": "GLOBAL_MATERIAL_PROPERTY_ID",
-				"Value": "@GlobalHighQualityLighting",
-				"Description": "If high quality lighting is true physically based shading (PBS) is used, else a cheaper lighting model is used instead",
-				"VisualImportance": "100"
-			},
 			"CullMode":
 			{
 				"Usage": "RASTERIZER_STATE",
@@ -121,42 +113,22 @@
 				"Value": "1.0",
 				"Description": "Material emissive intensity, has only an effect if there's an emissive map"
 			},
-			"ReflectionCubeMap":
+			"UseGpuSkinning":
 			{
-				"Usage": "TEXTURE_REFERENCE",
-				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Texture/CubeMap/Maskonaive3/Maskonaive3_rcube.asset",
-				"Description": "Reflection cube map"
-			},
-			"GlobalHighQualityLighting":
-			{
-				"Usage": "GLOBAL_REFERENCE_FALLBACK",
+				"Usage": "SHADER_COMBINATION",
 				"ValueType": "BOOLEAN",
 				"Value": "TRUE",
-				"Description": "Fallback value in case there's no global high quality lighting global material property"
-			},
-			"GlobalWetness":
-			{
-				"Usage": "GLOBAL_REFERENCE_FALLBACK",
-				"ValueType": "FLOAT",
-				"Value": "0.0",
-				"Description": "Fallback value in case there's no wetness global material property"
-			},
-			"GlobalAmbientColor":
-			{
-				"Usage": "GLOBAL_REFERENCE_FALLBACK",
-				"ValueType": "FLOAT_3",
-				"Value": "0.2 0.2 0.2",
-				"Description": "Fallback value in case there's no ambient color global material property"
+				"Description": "Use GPU skinning?",
+				"VisualImportance": "MANDATORY"
 			}
 		},
 		"PipelineState":
 		{
-			"VertexAttributes": "VertexAttributes/Default/Mesh.asset",
+			"VertexAttributes": "VertexAttributes/Default/SkinnedMesh.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprint": "ShaderBlueprint/Forward/MeshVertex.asset",
-				"FragmentShaderBlueprint": "ShaderBlueprint/Forward/MeshFragment.asset"
+				"VertexShaderBlueprint": "ShaderBlueprint/Deferred/MeshVertex.asset",
+				"FragmentShaderBlueprint": "ShaderBlueprint/Deferred/MeshFragment.asset"
 			},
 			"RasterizerState":
 			{
@@ -188,89 +160,11 @@
 							"ValueType": "FLOAT_4_4",
 							"Value": "@PREVIOUS_WORLD_SPACE_TO_CLIP_SPACE_MATRIX"
 						},
-						"ShadowMatrix":
-						{
-							"Usage": "PASS_REFERENCE",
-							"ValueType": "FLOAT_4_4",
-							"Value": "@SHADOW_MATRIX"
-						},
-						"ShadowCascadeOffsets":
-						{
-							"Usage": "PASS_REFERENCE",
-							"ValueType": "FLOAT_4_4",
-							"Value": "@SHADOW_CASCADE_OFFSETS"
-						},
-						"ShadowCascadeScales":
-						{
-							"Usage": "PASS_REFERENCE",
-							"ValueType": "FLOAT_4_4",
-							"Value": "@SHADOW_CASCADE_SCALES"
-						},
-						"ShadowCascadeSplits":
-						{
-							"Usage": "PASS_REFERENCE",
-							"ValueType": "FLOAT_4",
-							"Value": "@SHADOW_CASCADE_SPLITS"
-						},
-						"ViewSpaceToWorldSpaceQuaternion":
-						{
-							"Usage": "PASS_REFERENCE",
-							"ValueType": "FLOAT_4",
-							"Value": "@VIEW_SPACE_TO_WORLD_SPACE_QUATERNION"
-						},
 						"WorldSpaceToViewSpaceQuaternion":
 						{
 							"Usage": "PASS_REFERENCE",
 							"ValueType": "FLOAT_4",
 							"Value": "@WORLD_SPACE_TO_VIEW_SPACE_QUATERNION"
-						},
-						"ViewSpaceSunlightDirection":
-						{
-							"Usage": "PASS_REFERENCE",
-							"ValueType": "FLOAT_3",
-							"Value": "@VIEW_SPACE_SUNLIGHT_DIRECTION"
-						},
-						"Wetness":
-						{
-							"Usage": "GLOBAL_REFERENCE",
-							"ValueType": "FLOAT",
-							"Value": "@GlobalWetness"
-						},
-						"AmbientColor":
-						{
-							"Usage": "GLOBAL_REFERENCE",
-							"ValueType": "FLOAT_3",
-							"Value": "@GlobalAmbientColor"
-						},
-						"SunlightColor":
-						{
-							"Usage": "PASS_REFERENCE",
-							"ValueType": "FLOAT_3",
-							"Value": "@SUNLIGHT_COLOR"
-						},
-						"CameraWorldSpacePosition":
-						{
-							"Usage": "PASS_REFERENCE",
-							"ValueType": "FLOAT_3",
-							"Value": "@CAMERA_WORLD_SPACE_POSITION"
-						},
-						"LightClustersScale":
-						{
-							"Usage": "PASS_REFERENCE",
-							"ValueType": "FLOAT_3",
-							"Value": "@LIGHT_CLUSTERS_SCALE"
-						},
-						"LightClustersBias":
-						{
-							"Usage": "PASS_REFERENCE",
-							"ValueType": "FLOAT_3",
-							"Value": "@LIGHT_CLUSTERS_BIAS"
-						},
-						"FullCoverageMask":
-						{
-							"Usage": "PASS_REFERENCE",
-							"ValueType": "INTEGER",
-							"Value": "@FULL_COVERAGE_MASK"
 						},
 						"ViewportSize":
 						{
@@ -278,11 +172,11 @@
 							"ValueType": "FLOAT_2",
 							"Value": "@VIEWPORT_SIZE"
 						},
-						"ProjectionParameters":
+						"FullCoverageMask":
 						{
 							"Usage": "PASS_REFERENCE",
-							"ValueType": "FLOAT_2",
-							"Value": "@PROJECTION_PARAMETERS"
+							"ValueType": "INTEGER",
+							"Value": "@FULL_COVERAGE_MASK"
 						}
 					}
 				}
@@ -361,54 +255,6 @@
 					"ResourceType": "TEXTURE_BUFFER",
 					"BufferUsage": "INSTANCE",
 					"Value": "@POSITION_ROTATION_SCALE"
-				},
-				"2":
-				{
-					"ValueType": "FLOAT_4",
-					"BaseShaderRegisterName": "LightTextureBuffer",
-					"BaseShaderRegister": "1",
-					"ShaderVisibility": "FRAGMENT",
-					"ResourceType": "TEXTURE_BUFFER",
-					"BufferUsage": "LIGHT",
-					"Value": "@LIGHT"
-				},
-				"3":
-				{
-					"BaseShaderRegisterName": "ShadowMap",
-					"BaseShaderRegister": "2",
-					"ShaderVisibility": "FRAGMENT",
-					"ResourceType": "TEXTURE",
-					"Usage": "STATIC",
-					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "Example/Texture/Dynamic/ShadowMapRenderTarget",
-					"FallbackTexture": "Unrimp/Texture/DynamicByCode/BlackMap2D",
-					"MipmapsUsed": "FALSE",
-					"SamplerStateBaseShaderRegisterName": "SamplerPoint"
-				},
-				"4":
-				{
-					"BaseShaderRegisterName": "ReflectionCubeMap",
-					"BaseShaderRegister": "3",
-					"ShaderVisibility": "FRAGMENT",
-					"ResourceType": "TEXTURE",
-					"Usage": "MATERIAL_REFERENCE",
-					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@ReflectionCubeMap",
-					"FallbackTexture": "Unrimp/Texture/DynamicByCode/WhiteMapCube",
-					"RgbHardwareGammaCorrection": "TRUE",
-					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
-				},
-				"5":
-				{
-					"BaseShaderRegisterName": "LightClustersMap3D",
-					"BaseShaderRegister": "4",
-					"ShaderVisibility": "FRAGMENT",
-					"ResourceType": "TEXTURE",
-					"Usage": "STATIC",
-					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "Unrimp/Texture/DynamicByCode/LightClustersMap3D",
-					"FallbackTexture": "Unrimp/Texture/DynamicByCode/LightClustersMap3D",
-					"SamplerStateBaseShaderRegisterName": "SamplerPoint"
 				}
 			},
 			"3":
@@ -416,7 +262,7 @@
 				"0":
 				{
 					"BaseShaderRegisterName": "_drgb_nxa",
-					"BaseShaderRegister": "5",
+					"BaseShaderRegister": "1",
 					"ShaderVisibility": "FRAGMENT",
 					"ResourceType": "TEXTURE",
 					"Usage": "MATERIAL_REFERENCE",
@@ -429,7 +275,7 @@
 				"1":
 				{
 					"BaseShaderRegisterName": "_hr_rg_mb_nya",
-					"BaseShaderRegister": "6",
+					"BaseShaderRegister": "2",
 					"ShaderVisibility": "FRAGMENT",
 					"ResourceType": "TEXTURE",
 					"Usage": "MATERIAL_REFERENCE",
@@ -441,7 +287,7 @@
 				"2":
 				{
 					"BaseShaderRegisterName": "AlphaMap",
-					"BaseShaderRegister": "7",
+					"BaseShaderRegister": "3",
 					"ShaderVisibility": "FRAGMENT",
 					"ResourceType": "TEXTURE",
 					"Usage": "MATERIAL_REFERENCE",
@@ -453,7 +299,7 @@
 				"3":
 				{
 					"BaseShaderRegisterName": "EmissiveMap",
-					"BaseShaderRegister": "8",
+					"BaseShaderRegister": "4",
 					"ShaderVisibility": "FRAGMENT",
 					"ResourceType": "TEXTURE",
 					"Usage": "MATERIAL_REFERENCE",
@@ -468,18 +314,8 @@
 			{
 				"0":
 				{
-					"BaseShaderRegisterName": "SamplerPoint",
-					"BaseShaderRegister": "0",
-					"ShaderVisibility": "FRAGMENT",
-					"ResourceType": "SAMPLER_STATE",
-					"Filter": "MIN_MAG_MIP_POINT",
-					"MaxAnisotropy": "1",
-					"MaxLOD": "0.0"
-				},
-				"1":
-				{
 					"BaseShaderRegisterName": "SamplerLinear",
-					"BaseShaderRegister": "1",
+					"BaseShaderRegister": "0",
 					"ShaderVisibility": "FRAGMENT",
 					"ResourceType": "SAMPLER_STATE",
 					"AddressU": "WRAP",

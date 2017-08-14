@@ -24,39 +24,52 @@
 				"Value": "TRUE",
 				"Description": "Cast shadows?"
 			},
-			"CullMode":
+			"UseAlphaMap":
 			{
-				"Usage": "RASTERIZER_STATE",
-				"ValueType": "CULL_MODE",
-				"Value": "BACK",
-				"Description": "Cull mode rasterizer state"
+				"Usage": "SHADER_COMBINATION",
+				"ValueType": "BOOLEAN",
+				"Value": "FALSE",
+				"Description": "Use alpha map?",
+				"VisualImportance": "100"
 			},
-			"DiffuseColor":
-			{
-				"Usage": "SHADER_UNIFORM",
-				"ValueType": "FLOAT_3",
-				"Value": "1.0 1.0 1.0",
-				"Description": "Material diffuse color"
-			},
-			"_drgb_nxa":
+			"AlphaMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/DynamicByCode/Identity_drgb_nxa2D",
-				"Description": "RGB channel = Diffuse map ('_d'-postfix), A channel = x component of normal map ('_n'-postfix)"
+				"Value": "Unrimp/Texture/DynamicByCode/IdentityAlphaMap2D",
+				"Description": "2D material alpha map"
+			},
+			"AlphaReference":
+			{
+				"Usage": "SHADER_UNIFORM",
+				"ValueType": "FLOAT",
+				"Value": "0.05",
+				"Description": "Alpha reference. Only used if 'UseAlphaMap' is true.",
+				"RangeMin": "0.0",
+				"RangeMax": "1.0",
+				"RangeStep": "0.05"
+			},
+			"UseGpuSkinning":
+			{
+				"Usage": "SHADER_COMBINATION",
+				"ValueType": "BOOLEAN",
+				"Value": "TRUE",
+				"Description": "Use GPU skinning?",
+				"VisualImportance": "MANDATORY"
 			}
 		},
 		"PipelineState":
 		{
-			"VertexAttributes": "VertexAttributes/Default/Mesh.asset",
+			"VertexAttributes": "VertexAttributes/Default/SkinnedMesh.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprint": "ShaderBlueprint/Debug/MeshVertex.asset",
-				"FragmentShaderBlueprint": "ShaderBlueprint/Debug/MeshFragment.asset"
+				"VertexShaderBlueprint": "ShaderBlueprint/Scene/MeshDepthOnlyVertex.asset",
+				"FragmentShaderBlueprint": "ShaderBlueprint/Scene/MeshDepthOnlyFragment.asset"
 			},
 			"RasterizerState":
 			{
-				"CullMode": "@CullMode"
+				"CullMode": "NONE",
+				"DepthClipEnable": "FALSE"
 			}
 		},
 		"ResourceGroups":
@@ -94,11 +107,11 @@
 					"NumberOfElements": "2",
 					"ElementProperties":
 					{
-						"DiffuseColor":
+						"AlphaReference":
 						{
 							"Usage": "MATERIAL_REFERENCE",
-							"ValueType": "FLOAT_3",
-							"Value": "@DiffuseColor"
+							"ValueType": "FLOAT",
+							"Value": "@AlphaReference"
 						}
 					}
 				}
@@ -138,15 +151,14 @@
 			{
 				"0":
 				{
-					"BaseShaderRegisterName": "_drgb_nxa",
+					"BaseShaderRegisterName": "AlphaMap",
 					"BaseShaderRegister": "1",
 					"ShaderVisibility": "FRAGMENT",
 					"ResourceType": "TEXTURE",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@_drgb_nxa",
-					"FallbackTexture": "Unrimp/Texture/DynamicByCode/Identity_drgb_nxa2D",
-					"RgbHardwareGammaCorrection": "TRUE",
+					"Value": "@AlphaMap",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/IdentityAlphaMap2D",
 					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
 				}
 			},

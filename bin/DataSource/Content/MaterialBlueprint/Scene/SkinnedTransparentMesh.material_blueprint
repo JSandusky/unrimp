@@ -12,17 +12,10 @@
 			{
 				"Usage": "STATIC",
 				"ValueType": "INTEGER",
-				"Value": "0",
+				"Value": "255",
 				"Description": "Render queue index [0, 255]",
 				"MinimumIntegerValue": "0",
 				"MaximumIntegerValue": "255"
-			},
-			"CastShadows":
-			{
-				"Usage": "STATIC",
-				"ValueType": "BOOLEAN",
-				"Value": "TRUE",
-				"Description": "Cast shadows?"
 			},
 			"HighQualityLighting":
 			{
@@ -38,6 +31,13 @@
 				"ValueType": "CULL_MODE",
 				"Value": "BACK",
 				"Description": "Cull mode rasterizer state"
+			},
+			"Opacity":
+			{
+				"Usage": "SHADER_UNIFORM",
+				"ValueType": "FLOAT",
+				"Value": "0.9",
+				"Description": "Opacity, 0..1 = transparent..solid"
 			},
 			"DiffuseColor":
 			{
@@ -148,19 +148,41 @@
 				"ValueType": "FLOAT_3",
 				"Value": "0.2 0.2 0.2",
 				"Description": "Fallback value in case there's no ambient color global material property"
+			},
+			"UseGpuSkinning":
+			{
+				"Usage": "SHADER_COMBINATION",
+				"ValueType": "BOOLEAN",
+				"Value": "TRUE",
+				"Description": "Use GPU skinning?",
+				"VisualImportance": "MANDATORY"
 			}
 		},
 		"PipelineState":
 		{
-			"VertexAttributes": "VertexAttributes/Default/Mesh.asset",
+			"VertexAttributes": "VertexAttributes/Default/SkinnedMesh.asset",
 			"ShaderBlueprints":
 			{
 				"VertexShaderBlueprint": "ShaderBlueprint/Forward/MeshVertex.asset",
-				"FragmentShaderBlueprint": "ShaderBlueprint/Forward/MeshFragment.asset"
+				"FragmentShaderBlueprint": "ShaderBlueprint/Scene/TransparentMeshFragment.asset"
 			},
 			"RasterizerState":
 			{
 				"CullMode": "@CullMode"
+			},
+			"DepthStencilState":
+			{
+				"DepthWriteMask": "ZERO"
+			},
+			"BlendState":
+			{
+				"RenderTarget[0]":
+				{
+					"BlendEnable": "TRUE",
+					"SrcBlend": "SRC_ALPHA",
+					"DestBlend": "INV_SRC_ALPHA",
+					"SrcBlendAlpha": "INV_SRC_ALPHA"
+				}
 			}
 		},
 		"ResourceGroups":
@@ -328,6 +350,12 @@
 							"Usage": "MATERIAL_REFERENCE",
 							"ValueType": "FLOAT",
 							"Value": "@EmissiveIntensity"
+						},
+						"Opacity":
+						{
+							"Usage": "MATERIAL_REFERENCE",
+							"ValueType": "FLOAT",
+							"Value": "@Opacity"
 						}
 					}
 				}

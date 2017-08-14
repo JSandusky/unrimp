@@ -52,14 +52,6 @@
 				"Value": "0.0",
 				"Description": "Metal-rough-worfkow: Metallic tells the shader if something is metal or not. Raw Metal = 1.0 white and non metal = 0.0 black. There can be transitional gray values that indicate something covering the raw metal such as dirt. With metal/rough, you only have control over metal reflectance values. The dielectric values are set to 0.04 or 4% which is most dielectric materials."
 			},
-			"UseGpuSkinning":
-			{
-				"Usage": "SHADER_COMBINATION",
-				"ValueType": "BOOLEAN",
-				"Value": "FALSE",
-				"Description": "Use GPU skinning?",
-				"VisualImportance": "MANDATORY"
-			},
 			"_drgb_nxa":
 			{
 				"Usage": "TEXTURE_REFERENCE",

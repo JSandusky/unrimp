@@ -153,9 +153,17 @@ namespace RendererRuntime
 			vertexAttributes.numberOfAttributes = static_cast<uint32_t>(glm::countof(vertexAttributesLayout));
 			vertexAttributes.attributes = vertexAttributesLayout;
 		}
-		else
+		else if (1156289207 == getAsset().assetId)	// "VertexAttributes/Default/Mesh"
+		{
+			mVertexAttributesResource->mVertexAttributes = Renderer::VertexAttributes(MeshResource::VERTEX_ATTRIBUTES.numberOfAttributes, MeshResource::VERTEX_ATTRIBUTES.attributes);
+		}
+		else if (871545499 == getAsset().assetId)	// "VertexAttributes/Default/SkinnedMesh"
 		{
 			mVertexAttributesResource->mVertexAttributes = Renderer::VertexAttributes(MeshResource::SKINNED_VERTEX_ATTRIBUTES.numberOfAttributes, MeshResource::SKINNED_VERTEX_ATTRIBUTES.attributes);
+		}
+		else
+		{
+			assert(false && "Unknown vertex attributes asset");
 		}
 	}
 

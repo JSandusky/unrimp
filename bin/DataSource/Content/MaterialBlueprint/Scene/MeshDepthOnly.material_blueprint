@@ -24,14 +24,6 @@
 				"Value": "TRUE",
 				"Description": "Cast shadows?"
 			},
-			"UseGpuSkinning":
-			{
-				"Usage": "SHADER_COMBINATION",
-				"ValueType": "BOOLEAN",
-				"Value": "FALSE",
-				"Description": "Use GPU skinning?",
-				"VisualImportance": "MANDATORY"
-			},
 			"UseAlphaMap":
 			{
 				"Usage": "SHADER_COMBINATION",

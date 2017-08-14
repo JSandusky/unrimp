@@ -44,11 +44,19 @@
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "Unrimp/Texture/DynamicByCode/Identity_drgb_nxa2D",
 				"Description": "RGB channel = Diffuse map ('_d'-postfix), A channel = x component of normal map ('_n'-postfix)"
+			},
+			"UseGpuSkinning":
+			{
+				"Usage": "SHADER_COMBINATION",
+				"ValueType": "BOOLEAN",
+				"Value": "TRUE",
+				"Description": "Use GPU skinning?",
+				"VisualImportance": "MANDATORY"
 			}
 		},
 		"PipelineState":
 		{
-			"VertexAttributes": "VertexAttributes/Default/Mesh.asset",
+			"VertexAttributes": "VertexAttributes/Default/SkinnedMesh.asset",
 			"ShaderBlueprints":
 			{
 				"VertexShaderBlueprint": "ShaderBlueprint/Debug/MeshVertex.asset",
