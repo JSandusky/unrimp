@@ -259,12 +259,12 @@ void FirstInstancing::onInitialization()
 void FirstInstancing::onDeinitialization()
 {
 	// Release the used resources
-	mCommandBuffer.clear();
 	mVertexArrayDrawInstanced = nullptr;
 	mPipelineStateDrawInstanced = nullptr;
 	mVertexArrayInstancedArrays = nullptr;
 	mPipelineStateInstancedArrays = nullptr;
 	mRootSignature = nullptr;
+	mCommandBuffer.clear();
 	mBufferManager = nullptr;
 
 	// Call the base implementation
@@ -289,13 +289,13 @@ void FirstInstancing::onDraw()
 void FirstInstancing::fillCommandBuffer()
 {
 	// Sanity checks
-	assert(nullptr != mRootSignature);
 	assert(nullptr != getRenderer());
+	assert(mCommandBuffer.isEmpty());
+	assert(nullptr != mRootSignature);
 	assert(nullptr != mPipelineStateInstancedArrays);
 	assert(nullptr != mVertexArrayInstancedArrays);
-	assert(nullptr != mPipelineStateDrawInstanced);
-	assert(nullptr != mVertexArrayDrawInstanced);
-	assert(mCommandBuffer.isEmpty());
+	assert(!getRenderer()->getCapabilities().drawInstanced || nullptr != mPipelineStateDrawInstanced);
+	assert(!getRenderer()->getCapabilities().drawInstanced || nullptr != mVertexArrayDrawInstanced);
 
 	// Begin debug event
 	COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(mCommandBuffer)

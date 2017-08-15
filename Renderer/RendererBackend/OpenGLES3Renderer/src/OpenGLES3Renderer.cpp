@@ -26,6 +26,7 @@
 #include "OpenGLES3Renderer/Mapping.h"
 #include "OpenGLES3Renderer/IExtensions.h"
 #include "OpenGLES3Renderer/RootSignature.h"
+#include "OpenGLES3Renderer/ResourceGroup.h"
 #include "OpenGLES3Renderer/OpenGLES3ContextRuntimeLinking.h"
 #include "OpenGLES3Renderer/RenderTarget/SwapChain.h"
 #include "OpenGLES3Renderer/RenderTarget/Framebuffer.h"
@@ -138,6 +139,17 @@ namespace
 
 
 			//[-------------------------------------------------------]
+			//[ Command buffer                                        ]
+			//[-------------------------------------------------------]
+			void ExecuteCommandBuffer(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::ExecuteCommandBuffer* realData = static_cast<const Renderer::Command::ExecuteCommandBuffer*>(data);
+				assert(nullptr != realData->commandBufferToExecute);
+				renderer.submitCommandBuffer(*realData->commandBufferToExecute);
+			}
+
+
+			//[-------------------------------------------------------]
 			//[ Resource handling                                     ]
 			//[-------------------------------------------------------]
 			void CopyUniformBufferData(const void* data, Renderer::IRenderer&)
@@ -161,10 +173,10 @@ namespace
 				static_cast<OpenGLES3Renderer::OpenGLES3Renderer&>(renderer).setGraphicsRootSignature(realData->rootSignature);
 			}
 
-			void SetGraphicsRootDescriptorTable(const void* data, Renderer::IRenderer& renderer)
+			void SetGraphicsResourceGroup(const void* data, Renderer::IRenderer& renderer)
 			{
-				const Renderer::Command::SetGraphicsRootDescriptorTable* realData = static_cast<const Renderer::Command::SetGraphicsRootDescriptorTable*>(data);
-				static_cast<OpenGLES3Renderer::OpenGLES3Renderer&>(renderer).setGraphicsRootDescriptorTable(realData->rootParameterIndex, realData->resource);
+				const Renderer::Command::SetGraphicsResourceGroup* realData = static_cast<const Renderer::Command::SetGraphicsResourceGroup*>(data);
+				static_cast<OpenGLES3Renderer::OpenGLES3Renderer&>(renderer).setGraphicsResourceGroup(realData->rootParameterIndex, realData->resourceGroup);
 			}
 
 			//[-------------------------------------------------------]
@@ -290,12 +302,14 @@ namespace
 		//[-------------------------------------------------------]
 		static const Renderer::BackendDispatchFunction DISPATCH_FUNCTIONS[Renderer::CommandDispatchFunctionIndex::NumberOfFunctions] =
 		{
+			// Command buffer
+			&BackendDispatch::ExecuteCommandBuffer,
 			// Resource handling
 			&BackendDispatch::CopyUniformBufferData,
 			&BackendDispatch::CopyTextureBufferData,
 			// Graphics root
 			&BackendDispatch::SetGraphicsRootSignature,
-			&BackendDispatch::SetGraphicsRootDescriptorTable,
+			&BackendDispatch::SetGraphicsResourceGroup,
 			// States
 			&BackendDispatch::SetPipelineState,
 			// Input-assembler (IA) stage
@@ -499,7 +513,7 @@ namespace OpenGLES3Renderer
 		}
 	}
 
-	void OpenGLES3Renderer::setGraphicsRootDescriptorTable(uint32_t rootParameterIndex, Renderer::IResource* resource)
+	void OpenGLES3Renderer::setGraphicsResourceGroup(uint32_t rootParameterIndex, Renderer::IResourceGroup* resourceGroup)
 	{
 		// Security checks
 		#ifndef OPENGLES3RENDERER_NO_DEBUG
@@ -521,13 +535,6 @@ namespace OpenGLES3Renderer
 				RENDERER_LOG(mContext, CRITICAL, "The OpenGL ES 3 renderer backend root parameter index doesn't reference a descriptor table")
 				return;
 			}
-
-			// TODO(co) For now, we only support a single descriptor range
-			if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
-			{
-				RENDERER_LOG(mContext, CRITICAL, "Only a single descriptor range is supported by the OpenGL ES 3 renderer backend")
-				return;
-			}
 			if (nullptr == reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges))
 			{
 				RENDERER_LOG(mContext, CRITICAL, "The OpenGL ES 3 renderer backend descriptor ranges is a null pointer")
@@ -536,172 +543,165 @@ namespace OpenGLES3Renderer
 		}
 		#endif
 
-		if (nullptr != resource)
+		if (nullptr != resourceGroup)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLES3RENDERER_RENDERERMATCHCHECK_RETURN(*this, *resource)
+			OPENGLES3RENDERER_RENDERERMATCHCHECK_RETURN(*this, *resourceGroup)
 
-			// Get the root signature parameter instance
+			// Set graphics resource group
+			const ResourceGroup* openGLES3ResourceGroup = static_cast<ResourceGroup*>(resourceGroup);
+			const uint32_t numberOfResources = openGLES3ResourceGroup->getNumberOfResources();
+			Renderer::IResource** resources = openGLES3ResourceGroup->getResources();
 			const Renderer::RootParameter& rootParameter = mGraphicsRootSignature->getRootSignature().parameters[rootParameterIndex];
-			const Renderer::DescriptorRange* descriptorRange = reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges);
-
-			// Check the type of resource to set
-			// TODO(co) Some additional resource type root signature security checks in debug build?
-			// TODO(co) There's room for binding API call related optimization in here (will certainly be no huge overall efficiency gain)
-			const Renderer::ResourceType resourceType = resource->getResourceType();
-			switch (resourceType)
+			for (uint32_t resourceIndex = 0; resourceIndex < numberOfResources; ++resourceIndex, ++resources)
 			{
-				case Renderer::ResourceType::UNIFORM_BUFFER:
+				Renderer::IResource* resource = *resources;
+				assert(nullptr != reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges));
+				const Renderer::DescriptorRange& descriptorRange = reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges)[resourceIndex];
+
+				// Check the type of resource to set
+				// TODO(co) Some additional resource type root signature security checks in debug build?
+				const Renderer::ResourceType resourceType = resource->getResourceType();
+				switch (resourceType)
 				{
-					// Attach the buffer to the given UBO binding point
-					// -> Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
-					// -> Direct3D 10 and Direct3D 11 have explicit binding points
-					glBindBufferBase(GL_UNIFORM_BUFFER, rootParameterIndex, static_cast<UniformBuffer*>(resource)->getOpenGLES3UniformBuffer());
-					break;
-				}
-
-				case Renderer::ResourceType::TEXTURE_BUFFER:
-					if (mOpenGLES3Context->getExtensions().isGL_EXT_texture_buffer())
-					{
-						// Fall through by intent
-					}
-					else
-					{
-						// We can only emulate the "Renderer::TextureFormat::R32G32B32A32F" texture format using an uniform buffer
-
+					case Renderer::ResourceType::UNIFORM_BUFFER:
 						// Attach the buffer to the given UBO binding point
 						// -> Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 						// -> Direct3D 10 and Direct3D 11 have explicit binding points
-						glBindBufferBase(GL_UNIFORM_BUFFER, rootParameterIndex, static_cast<TextureBuffer*>(resource)->getOpenGLES3TextureBuffer());
+						assert(nullptr != openGLES3ResourceGroup->getResourceIndexToUniformBlockBindingIndex());
+						glBindBufferBase(GL_UNIFORM_BUFFER, openGLES3ResourceGroup->getResourceIndexToUniformBlockBindingIndex()[resourceIndex], static_cast<UniformBuffer*>(resource)->getOpenGLES3UniformBuffer());
 						break;
-					}
 
-				case Renderer::ResourceType::TEXTURE_1D:
-				case Renderer::ResourceType::TEXTURE_2D:
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-				case Renderer::ResourceType::TEXTURE_3D:
-				case Renderer::ResourceType::TEXTURE_CUBE:
-				{
-					switch (rootParameter.shaderVisibility)
-					{
-						// In OpenGL ES 3, all shaders share the same texture units
-						case Renderer::ShaderVisibility::ALL:
-						case Renderer::ShaderVisibility::VERTEX:
-						case Renderer::ShaderVisibility::FRAGMENT:
+					case Renderer::ResourceType::TEXTURE_BUFFER:
+						if (mOpenGLES3Context->getExtensions().isGL_EXT_texture_buffer())
 						{
-							#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
-								// Backup the currently active OpenGL ES 3 texture
-								GLint openGLES3ActiveTextureBackup = 0;
-								glGetIntegerv(GL_ACTIVE_TEXTURE, &openGLES3ActiveTextureBackup);
-							#endif
+							// Fall through by intent
+						}
+						else
+						{
+							// We can only emulate the "Renderer::TextureFormat::R32G32B32A32F" texture format using an uniform buffer
 
-							// TODO(co) Some security checks might be wise *maximum number of texture units*
-							glActiveTexture(static_cast<GLenum>(GL_TEXTURE0 + descriptorRange->baseShaderRegister));
-
-							// Bind texture or texture buffer
-							if (resourceType == Renderer::ResourceType::TEXTURE_BUFFER)
-							{
-								glBindTexture(GL_TEXTURE_BUFFER_EXT, static_cast<TextureBuffer*>(resource)->getOpenGLES3Texture());
-							}
-							else if (resourceType == Renderer::ResourceType::TEXTURE_1D)
-							{
-								// OpenGL ES 3 has no 1D textures, just use a 2D texture with a height of one
-								glBindTexture(GL_TEXTURE_2D, static_cast<Texture1D*>(resource)->getOpenGLES3Texture());
-							}
-							else if (resourceType == Renderer::ResourceType::TEXTURE_2D_ARRAY)
-							{
-								// No extension check required, if we in here we already know it must exist
-								glBindTexture(GL_TEXTURE_2D_ARRAY, static_cast<Texture2DArray*>(resource)->getOpenGLES3Texture());
-							}
-							else if (resourceType == Renderer::ResourceType::TEXTURE_3D)
-							{
-								// No extension check required, if we in here we already know it must exist
-								glBindTexture(GL_TEXTURE_3D, static_cast<Texture3D*>(resource)->getOpenGLES3Texture());
-							}
-							else if (resourceType == Renderer::ResourceType::TEXTURE_CUBE)
-							{
-								// No extension check required, if we in here we already know it must exist
-								glBindTexture(GL_TEXTURE_CUBE_MAP, static_cast<TextureCube*>(resource)->getOpenGLES3Texture());
-							}
-							else
-							{
-								glBindTexture(GL_TEXTURE_2D, static_cast<Texture2D*>(resource)->getOpenGLES3Texture());
-							}
-
-							if (Renderer::ResourceType::TEXTURE_BUFFER != resourceType)
-							{
-								// Set the OpenGL ES 3 sampler states
-								mGraphicsRootSignature->setOpenGLES3SamplerStates(descriptorRange->samplerRootParameterIndex);
-							}
-
-							#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
-								// Be polite and restore the previous active OpenGL ES 3 texture
-								glActiveTexture(static_cast<GLuint>(openGLES3ActiveTextureBackup));
-							#endif
+							// Attach the buffer to the given UBO binding point
+							// -> Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
+							// -> Direct3D 10 and Direct3D 11 have explicit binding points
+							assert(nullptr != openGLES3ResourceGroup->getResourceIndexToUniformBlockBindingIndex());
+							glBindBufferBase(GL_UNIFORM_BUFFER, openGLES3ResourceGroup->getResourceIndexToUniformBlockBindingIndex()[resourceIndex], static_cast<TextureBuffer*>(resource)->getOpenGLES3TextureBuffer());
 							break;
 						}
 
-						case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
-							RENDERER_LOG(mContext, CRITICAL, "OpenGL ES 3 has no tessellation control shader support (hull shader in Direct3D terminology)")
-							break;
+					case Renderer::ResourceType::TEXTURE_1D:
+					case Renderer::ResourceType::TEXTURE_2D:
+					case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+					case Renderer::ResourceType::TEXTURE_3D:
+					case Renderer::ResourceType::TEXTURE_CUBE:
+					{
+						switch (descriptorRange.shaderVisibility)
+						{
+							// In OpenGL ES 3, all shaders share the same texture units
+							case Renderer::ShaderVisibility::ALL:
+							case Renderer::ShaderVisibility::VERTEX:
+							case Renderer::ShaderVisibility::FRAGMENT:
+							{
+								#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
+									// Backup the currently active OpenGL ES 3 texture
+									GLint openGLES3ActiveTextureBackup = 0;
+									glGetIntegerv(GL_ACTIVE_TEXTURE, &openGLES3ActiveTextureBackup);
+								#endif
 
-						case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
-							RENDERER_LOG(mContext, CRITICAL, "OpenGL ES 3 has no tessellation evaluation shader support (domain shader in Direct3D terminology)")
-							break;
+								// TODO(co) Some security checks might be wise *maximum number of texture units*
+								glActiveTexture(static_cast<GLenum>(GL_TEXTURE0 + descriptorRange.baseShaderRegister));
 
-						case Renderer::ShaderVisibility::GEOMETRY:
-							RENDERER_LOG(mContext, CRITICAL, "OpenGL ES 3 has no geometry shader support")
-							break;
+								// Bind texture or texture buffer
+								if (resourceType == Renderer::ResourceType::TEXTURE_BUFFER)
+								{
+									glBindTexture(GL_TEXTURE_BUFFER_EXT, static_cast<TextureBuffer*>(resource)->getOpenGLES3Texture());
+								}
+								else if (resourceType == Renderer::ResourceType::TEXTURE_1D)
+								{
+									// OpenGL ES 3 has no 1D textures, just use a 2D texture with a height of one
+									glBindTexture(GL_TEXTURE_2D, static_cast<Texture1D*>(resource)->getOpenGLES3Texture());
+								}
+								else if (resourceType == Renderer::ResourceType::TEXTURE_2D_ARRAY)
+								{
+									// No extension check required, if we in here we already know it must exist
+									glBindTexture(GL_TEXTURE_2D_ARRAY, static_cast<Texture2DArray*>(resource)->getOpenGLES3Texture());
+								}
+								else if (resourceType == Renderer::ResourceType::TEXTURE_3D)
+								{
+									// No extension check required, if we in here we already know it must exist
+									glBindTexture(GL_TEXTURE_3D, static_cast<Texture3D*>(resource)->getOpenGLES3Texture());
+								}
+								else if (resourceType == Renderer::ResourceType::TEXTURE_CUBE)
+								{
+									// No extension check required, if we in here we already know it must exist
+									glBindTexture(GL_TEXTURE_CUBE_MAP, static_cast<TextureCube*>(resource)->getOpenGLES3Texture());
+								}
+								else
+								{
+									glBindTexture(GL_TEXTURE_2D, static_cast<Texture2D*>(resource)->getOpenGLES3Texture());
+								}
+
+								// Set the OpenGL ES 3 sampler states, if required (texture buffer has no sampler state), it's valid that there's no sampler state (e.g. texel fetch instead of sampling might be used)
+								if (Renderer::ResourceType::TEXTURE_BUFFER != resourceType)
+								{
+									assert(nullptr != openGLES3ResourceGroup->getSamplerState());
+									const SamplerState* samplerState = static_cast<const SamplerState*>(openGLES3ResourceGroup->getSamplerState()[resourceIndex]);
+									if (nullptr != samplerState)
+									{
+										// Traditional bind version to emulate a sampler object
+										samplerState->setOpenGLES3SamplerStates();
+									}
+								}
+
+								#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
+									// Be polite and restore the previous active OpenGL ES 3 texture
+									glActiveTexture(static_cast<GLuint>(openGLES3ActiveTextureBackup));
+								#endif
+								break;
+							}
+
+							case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
+								RENDERER_LOG(mContext, CRITICAL, "OpenGL ES 3 has no tessellation control shader support (hull shader in Direct3D terminology)")
+								break;
+
+							case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
+								RENDERER_LOG(mContext, CRITICAL, "OpenGL ES 3 has no tessellation evaluation shader support (domain shader in Direct3D terminology)")
+								break;
+
+							case Renderer::ShaderVisibility::GEOMETRY:
+								RENDERER_LOG(mContext, CRITICAL, "OpenGL ES 3 has no geometry shader support")
+								break;
+						}
+						break;
 					}
-					break;
-				}
 
-				case Renderer::ResourceType::SAMPLER_STATE:
-				{
-					// Unlike Direct3D >=10, OpenGL ES 3 directly attaches the sampler settings to the texture
-					mGraphicsRootSignature->setSamplerState(rootParameterIndex, static_cast<SamplerState*>(resource));
-					break;
-				}
+					case Renderer::ResourceType::SAMPLER_STATE:
+						// Unlike Direct3D >=10, OpenGL ES 3 directly attaches the sampler settings to the texture
+						break;
 
-				case Renderer::ResourceType::ROOT_SIGNATURE:
-				case Renderer::ResourceType::PROGRAM:
-				case Renderer::ResourceType::VERTEX_ARRAY:
-				case Renderer::ResourceType::SWAP_CHAIN:
-				case Renderer::ResourceType::FRAMEBUFFER:
-				case Renderer::ResourceType::INDEX_BUFFER:
-				case Renderer::ResourceType::VERTEX_BUFFER:
-				case Renderer::ResourceType::INDIRECT_BUFFER:
-				case Renderer::ResourceType::PIPELINE_STATE:
-				case Renderer::ResourceType::VERTEX_SHADER:
-				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-				case Renderer::ResourceType::GEOMETRY_SHADER:
-				case Renderer::ResourceType::FRAGMENT_SHADER:
-					RENDERER_LOG(mContext, CRITICAL, "Invalid OpenGL ES 3 renderer backend resource type")
-					break;
+					case Renderer::ResourceType::ROOT_SIGNATURE:
+					case Renderer::ResourceType::RESOURCE_GROUP:
+					case Renderer::ResourceType::PROGRAM:
+					case Renderer::ResourceType::VERTEX_ARRAY:
+					case Renderer::ResourceType::SWAP_CHAIN:
+					case Renderer::ResourceType::FRAMEBUFFER:
+					case Renderer::ResourceType::INDEX_BUFFER:
+					case Renderer::ResourceType::VERTEX_BUFFER:
+					case Renderer::ResourceType::INDIRECT_BUFFER:
+					case Renderer::ResourceType::PIPELINE_STATE:
+					case Renderer::ResourceType::VERTEX_SHADER:
+					case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+					case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+					case Renderer::ResourceType::GEOMETRY_SHADER:
+					case Renderer::ResourceType::FRAGMENT_SHADER:
+						RENDERER_LOG(mContext, CRITICAL, "Invalid Direct3D 11 renderer backend resource type")
+						break;
+				}
 			}
 		}
 		else
 		{
 			// TODO(co) Handle this situation?
-			/*
-			#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
-				// Backup the currently active OpenGL ES 3 texture
-				GLint openGLES3ActiveTextureBackup = 0;
-				glGetIntegerv(GL_ACTIVE_TEXTURE, &openGLES3ActiveTextureBackup);
-			#endif
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			glActiveTexture(GL_TEXTURE0 + unit);
-
-			// Unbind the texture at the given texture unit
-			glBindTexture(GL_TEXTURE_2D, 0);
-
-			#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
-				// Be polite and restore the previous active OpenGL ES 3 texture
-				glActiveTexture(openGLES3ActiveTextureBackup);
-			#endif
-			*/
 		}
 	}
 
@@ -920,6 +920,7 @@ namespace OpenGLES3Renderer
 					}
 
 					case Renderer::ResourceType::ROOT_SIGNATURE:
+					case Renderer::ResourceType::RESOURCE_GROUP:
 					case Renderer::ResourceType::PROGRAM:
 					case Renderer::ResourceType::VERTEX_ARRAY:
 					case Renderer::ResourceType::INDEX_BUFFER:
@@ -1094,6 +1095,7 @@ namespace OpenGLES3Renderer
 				break;
 
 			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::RESOURCE_GROUP:
 			case Renderer::ResourceType::PROGRAM:
 			case Renderer::ResourceType::VERTEX_ARRAY:
 			case Renderer::ResourceType::SWAP_CHAIN:
@@ -1508,6 +1510,7 @@ namespace OpenGLES3Renderer
 			}
 
 			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::RESOURCE_GROUP:
 			case Renderer::ResourceType::PROGRAM:
 			case Renderer::ResourceType::VERTEX_ARRAY:
 			case Renderer::ResourceType::SWAP_CHAIN:
@@ -1612,6 +1615,7 @@ namespace OpenGLES3Renderer
 			}
 
 			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::RESOURCE_GROUP:
 			case Renderer::ResourceType::PROGRAM:
 			case Renderer::ResourceType::VERTEX_ARRAY:
 			case Renderer::ResourceType::SWAP_CHAIN:

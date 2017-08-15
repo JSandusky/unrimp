@@ -78,6 +78,9 @@
     <None Include="include\Direct3D9Renderer\Texture\Texture1D.inl">
       <Filter>Source Files\Texture</Filter>
     </None>
+    <None Include="include\Direct3D9Renderer\ResourceGroup.inl">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Direct3D9Renderer\Shader\ProgramHlsl.h">
@@ -170,6 +173,9 @@
     <ClInclude Include="include\Direct3D9Renderer\Texture\Texture3D.h">
       <Filter>Source Files\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="include\Direct3D9Renderer\ResourceGroup.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Shader\ProgramHlsl.cpp">
@@ -249,6 +255,9 @@
     </ClCompile>
     <ClCompile Include="src\Texture\Texture1D.cpp">
       <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ResourceGroup.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -53,6 +53,7 @@
     <ClInclude Include="include\Renderer\ILog.h" />
     <ClInclude Include="include\Renderer\IRenderer.h" />
     <ClInclude Include="include\Renderer\IResource.h" />
+    <ClInclude Include="include\Renderer\IResourceGroup.h" />
     <ClInclude Include="include\Renderer\IRootSignature.h" />
     <ClInclude Include="include\Renderer\LinuxHeader.h" />
     <ClInclude Include="include\Renderer\PlatformTypes.h" />
@@ -111,6 +112,7 @@
     <None Include="include\Renderer\ILog.inl" />
     <None Include="include\Renderer\IRenderer.inl" />
     <None Include="include\Renderer\IResource.inl" />
+    <None Include="include\Renderer\IResourceGroup.inl" />
     <None Include="include\Renderer\IRootSignature.inl" />
     <None Include="include\Renderer\Public\StdLog.inl" />
     <None Include="include\Renderer\RefCount.inl" />

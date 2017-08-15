@@ -22,7 +22,9 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "VulkanRenderer/Texture/TextureCube.h"
-#include "VulkanRenderer/VulkanRuntimeLinking.h"
+#include "VulkanRenderer/VulkanRenderer.h"
+#include "VulkanRenderer/VulkanContext.h"
+#include "VulkanRenderer/Helper.h"
 
 
 //[-------------------------------------------------------]
@@ -35,15 +37,18 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	TextureCube::TextureCube(VulkanRenderer& vulkanRenderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum, const void*, uint32_t) :
-		ITextureCube(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer), width, height)
+	TextureCube::TextureCube(VulkanRenderer& vulkanRenderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags) :
+		ITextureCube(vulkanRenderer, width, height),
+		mVkImage(VK_NULL_HANDLE),
+		mVkDeviceMemory(VK_NULL_HANDLE),
+		mVkImageView(VK_NULL_HANDLE)
 	{
-		// TODO(co) Implement me
+		Helper::createAndFillVkImage(vulkanRenderer, VK_IMAGE_TYPE_2D, VK_IMAGE_VIEW_TYPE_CUBE, { width, height, 6 }, textureFormat, data, flags, mVkImage, mVkDeviceMemory, mVkImageView);
 	}
 
 	TextureCube::~TextureCube()
 	{
-		// TODO(co) Implement me
+		Helper::destroyAndFreeVkImage(static_cast<VulkanRenderer&>(getRenderer()), mVkImage, mVkDeviceMemory, mVkImageView);
 	}
 
 

@@ -152,7 +152,7 @@ namespace Renderer
 		*  @param[in] numberOfVertexBuffers
 		*    Number of vertex buffers, having zero vertex buffers is valid
 		*  @param[in] vertexBuffers
-		*    At least numberOfVertexBuffers instances of vertex array vertex buffers, can be a null pointer in case there are zero vertex buffers, the data is internally copied and you have to free your memory if you no longer need it
+		*    At least "numberOfVertexBuffers" instances of vertex array vertex buffers, can be a null pointer in case there are zero vertex buffers, the data is internally copied and you have to free your memory if you no longer need it
 		*  @param[in] indexBuffer
 		*    Optional index buffer to use, can be a null pointer, the vertex array instance keeps a reference to the index buffer
 		*

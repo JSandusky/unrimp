@@ -46,29 +46,29 @@ layout(location = 2) out vec3 TexCoordVs;	// z component = texture ID
 layout(location = 3) out vec3 NormalVs;
 
 // Uniforms
-layout(binding = 0) uniform samplerBuffer PerInstanceDataMapVs;	// Texture buffer with per instance data (used via vertex texture fetch)
-																// -> Layout: [Position][Rotation][Position][Rotation]...
-																//    - Position: xyz=Position, w=Slice of the 2D texture array to use
-																//    - Rotation: Rotation quaternion (xyz) and scale (w)
-																//      -> We don't need to store the w component of the quaternion. It's normalized and storing
-																//         three components while recomputing the fourths component is be sufficient.
-layout(std140, binding = 1) uniform UniformBlockStaticVs
+layout(std140, set = 0, binding = 0) uniform UniformBlockStaticVs
 {
 	mat4 MVP;
 };
-layout(std140, binding = 2) uniform UniformBlockDynamicVs
+layout(std140, set = 0, binding = 1) uniform UniformBlockDynamicVs
 {
 	vec2 TimerAndGlobalScale;	// x=Timer, y=Global scale
 };
+layout(set = 1, binding = 0) uniform samplerBuffer PerInstanceTextureBufferVs;	// Texture buffer with per instance data (used via vertex texture fetch)
+																				// -> Layout: [Position][Rotation][Position][Rotation]...
+																				//    - Position: xyz=Position, w=Slice of the 2D texture array to use
+																				//    - Rotation: Rotation quaternion (xyz) and scale (w)
+																				//      -> We don't need to store the w component of the quaternion. It's normalized and storing
+																				//         three components while recomputing the fourths component is be sufficient.
 
 // Programs
 void main()
 {
 	// Get the per instance position (xyz=Position, w=Slice of the 2D texture array to use)
-	vec4 perInstancePositionTexture = texelFetch(PerInstanceDataMapVs, gl_InstanceID * 2);
+	vec4 perInstancePositionTexture = texelFetch(PerInstanceTextureBufferVs, gl_InstanceIndex * 2);
 
 	// Get the per instance rotation quaternion (xyz) and scale (w)
-	vec4 perInstanceRotationScale = texelFetch(PerInstanceDataMapVs, gl_InstanceID * 2 + 1);
+	vec4 perInstanceRotationScale = texelFetch(PerInstanceTextureBufferVs, gl_InstanceIndex * 2 + 1);
 
 	// Compute last component (w) of the quaternion (rotation quaternions are always normalized)
 	float sqw = 1.0 - perInstanceRotationScale.x * perInstanceRotationScale.x
@@ -158,6 +158,8 @@ void main()
 	position = MVP * position;
 
 	// Write out the final vertex data
+	// -> Compensate for different Vulkan coordinate system
+	position.y = -position.y;
 	gl_Position = position;
 	TexCoordVs.xy = TexCoord;
 	TexCoordVs.z = perInstancePositionTexture.w;
@@ -180,8 +182,8 @@ layout(location = 3) in vec3 NormalVs;
 layout(location = 0, index = 0) out vec4 Color0;
 
 // Uniforms
-layout(binding = 4) uniform sampler2DArray DiffuseMap;
-layout(std140, binding = 5) uniform UniformBlockDynamicFs
+layout(set = 0, binding = 2) uniform sampler2DArray DiffuseMap;
+layout(std140, set = 0, binding = 3) uniform UniformBlockDynamicFs
 {
 	vec3 LightPosition;	// World space light position
 };

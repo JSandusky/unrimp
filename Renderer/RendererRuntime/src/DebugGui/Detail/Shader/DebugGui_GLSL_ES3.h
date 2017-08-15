@@ -40,7 +40,10 @@ in  highp vec4 Color;		// Color as input
 out highp vec4 ColorVs;		// Color as output
 
 // Uniforms
-uniform highp mat4 ObjectSpaceToClipSpaceMatrix;
+layout(std140) uniform UniformBlockDynamicVs
+{
+	highp mat4 ObjectSpaceToClipSpaceMatrix;
+};
 
 // Programs
 void main()

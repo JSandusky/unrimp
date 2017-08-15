@@ -33,6 +33,16 @@ namespace RendererRuntime
 		return mRendererRuntime;
 	}
 
+	inline bool MaterialBlueprintResourceManager::getCreateInitialPipelineStateCaches() const
+	{
+		return mCreateInitialPipelineStateCaches;
+	}
+
+	inline void MaterialBlueprintResourceManager::setCreateInitialPipelineStateCaches(bool createInitialPipelineStateCaches)
+	{
+		mCreateInitialPipelineStateCaches = createInitialPipelineStateCaches;
+	}
+
 	inline IMaterialBlueprintResourceListener& MaterialBlueprintResourceManager::getMaterialBlueprintResourceListener() const
 	{
 		// We know this pointer must always be valid

@@ -72,6 +72,8 @@ namespace Renderer
 		//[-------------------------------------------------------]
 		std::atomic<uint32_t> currentNumberOfRootSignatures;				///< Current number of root signature instances
 		std::atomic<uint32_t> numberOfCreatedRootSignatures;				///< Number of created root signature instances
+		std::atomic<uint32_t> currentNumberOfResourceGroups;				///< Current number of resource group instances
+		std::atomic<uint32_t> numberOfCreatedResourceGroups;				///< Number of created resource group instances
 		std::atomic<uint32_t> currentNumberOfPrograms;						///< Current number of program instances
 		std::atomic<uint32_t> numberOfCreatedPrograms;						///< Number of created program instances
 		std::atomic<uint32_t> currentNumberOfVertexArrays;					///< Current number of vertex array object (VAO, input-assembler (IA) stage) instances

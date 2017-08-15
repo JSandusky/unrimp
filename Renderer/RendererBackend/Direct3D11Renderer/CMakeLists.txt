@@ -76,6 +76,7 @@ set(SOURCE_CODES
 	src/Guid.cpp
 	src/Mapping.cpp
 	src/RootSignature.cpp
+	src/ResourceGroup.cpp
 )
 
 

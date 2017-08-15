@@ -44,7 +44,10 @@ in  vec4 Color;			// Color as input
 out vec4 ColorVs;		// Color as output
 
 // Uniforms
-uniform mat4 ObjectSpaceToClipSpaceMatrix;
+layout(std140) uniform UniformBlockDynamicVs
+{
+	mat4 ObjectSpaceToClipSpaceMatrix;
+};
 
 // Programs
 void main()

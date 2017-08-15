@@ -96,6 +96,7 @@ namespace Direct3D9Renderer
 						}
 
 						case Renderer::ResourceType::ROOT_SIGNATURE:
+						case Renderer::ResourceType::RESOURCE_GROUP:
 						case Renderer::ResourceType::PROGRAM:
 						case Renderer::ResourceType::VERTEX_ARRAY:
 						case Renderer::ResourceType::SWAP_CHAIN:
@@ -162,6 +163,7 @@ namespace Direct3D9Renderer
 				}
 
 				case Renderer::ResourceType::ROOT_SIGNATURE:
+				case Renderer::ResourceType::RESOURCE_GROUP:
 				case Renderer::ResourceType::PROGRAM:
 				case Renderer::ResourceType::VERTEX_ARRAY:
 				case Renderer::ResourceType::SWAP_CHAIN:

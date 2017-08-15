@@ -102,6 +102,9 @@
     <None Include="include\Direct3D10Renderer\Texture\Texture1D.inl">
       <Filter>Source Files\Texture</Filter>
     </None>
+    <None Include="include\Direct3D10Renderer\ResourceGroup.inl">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Direct3D10Renderer\Shader\GeometryShaderHlsl.h">
@@ -209,6 +212,9 @@
     <ClInclude Include="include\Direct3D10Renderer\Texture\Texture3D.h">
       <Filter>Source Files\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\ResourceGroup.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Shader\GeometryShaderHlsl.cpp">
@@ -303,6 +309,9 @@
     </ClCompile>
     <ClCompile Include="src\Texture\Texture1D.cpp">
       <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ResourceGroup.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -30,6 +30,7 @@
 #include <RendererRuntime/Resource/Mesh/MeshResourceManager.h>
 #include <RendererRuntime/Resource/Texture/TextureResource.h>
 #include <RendererRuntime/Resource/Texture/TextureResourceManager.h>
+#include <RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h>
 
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -71,17 +72,40 @@ void FirstMesh::onInitialization()
 	{
 		Renderer::IRendererPtr renderer(getRenderer());
 
-		// Create uniform buffer
-		// -> Direct3D 9 does not support uniform buffers
-		// -> Direct3D 10, 11 and 12 do not support individual uniforms
-		// -> The renderer is just a light weight abstraction layer, so we need to handle the differences
-		// -> Allocate enough memory for two 4x4 floating point matrices
-		mUniformBuffer = rendererRuntime->getBufferManager().createUniformBuffer(2 * 4 * 4 * sizeof(float), nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+		// Don't create initial pipeline state caches after a material blueprint has been loaded since this example isn't using the material blueprint system
+		rendererRuntime->getMaterialBlueprintResourceManager().setCreateInitialPipelineStateCaches(false);
 
 		// Decide which shader language should be used (for example "GLSL" or "HLSL")
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
 		if (nullptr != shaderLanguage)
 		{
+			{ // Create the root signature
+				Renderer::DescriptorRangeBuilder ranges[5];
+				ranges[0].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockDynamicVs", Renderer::ShaderVisibility::VERTEX);
+				ranges[1].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "_drgb_nxa", Renderer::ShaderVisibility::FRAGMENT);
+				ranges[2].initialize(Renderer::DescriptorRangeType::SRV, 1, 1, "_hr_rg_mb_nya", Renderer::ShaderVisibility::FRAGMENT);
+				ranges[3].initialize(Renderer::DescriptorRangeType::SRV, 1, 2, "EmissiveMap", Renderer::ShaderVisibility::FRAGMENT);
+				ranges[4].initializeSampler(1, 0, Renderer::ShaderVisibility::FRAGMENT);
+
+				Renderer::RootParameterBuilder rootParameters[2];
+				rootParameters[0].initializeAsDescriptorTable(4, &ranges[0]);
+				rootParameters[1].initializeAsDescriptorTable(1, &ranges[4]);
+
+				// Setup
+				Renderer::RootSignatureBuilder rootSignature;
+				rootSignature.initialize(static_cast<uint32_t>(glm::countof(rootParameters)), rootParameters, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+				// Create the instance
+				mRootSignature = renderer->createRootSignature(rootSignature);
+			}
+
+			// Create uniform buffer
+			// -> Direct3D 9 does not support uniform buffers
+			// -> Direct3D 10, 11 and 12 do not support individual uniforms
+			// -> The renderer is just a light weight abstraction layer, so we need to handle the differences
+			// -> Allocate enough memory for two 4x4 floating point matrices
+			mUniformBuffer = rendererRuntime->getBufferManager().createUniformBuffer(2 * 4 * 4 * sizeof(float), nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+
 			// Vertex input layout
 			const Renderer::VertexAttribute vertexAttributesLayout[] =
 			{
@@ -124,27 +148,12 @@ void FirstMesh::onInitialization()
 			};
 			const Renderer::VertexAttributes vertexAttributes(static_cast<uint32_t>(glm::countof(vertexAttributesLayout)), vertexAttributesLayout);
 
-			{ // Create the root signature
-				Renderer::DescriptorRangeBuilder ranges[5];
-				ranges[0].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockDynamicVs", 0);
-				ranges[1].initializeSampler(1, 0);
-				ranges[2].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "_drgb_nxa", 1);
-				ranges[3].initialize(Renderer::DescriptorRangeType::SRV, 1, 1, "_hr_rg_mb_nya", 1);
-				ranges[4].initialize(Renderer::DescriptorRangeType::SRV, 1, 2, "EmissiveMap", 1);
-
-				Renderer::RootParameterBuilder rootParameters[5];
-				rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::VERTEX);
-				rootParameters[1].initializeAsDescriptorTable(1, &ranges[1], Renderer::ShaderVisibility::FRAGMENT);
-				rootParameters[2].initializeAsDescriptorTable(1, &ranges[2], Renderer::ShaderVisibility::FRAGMENT);
-				rootParameters[3].initializeAsDescriptorTable(1, &ranges[3], Renderer::ShaderVisibility::FRAGMENT);
-				rootParameters[4].initializeAsDescriptorTable(1, &ranges[4], Renderer::ShaderVisibility::FRAGMENT);
-
-				// Setup
-				Renderer::RootSignatureBuilder rootSignature;
-				rootSignature.initialize(static_cast<uint32_t>(glm::countof(rootParameters)), rootParameters, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
-
-				// Create the instance
-				mRootSignature = renderer->createRootSignature(rootSignature);
+			{ // Create sampler state and wrap it into a resource group instance
+				Renderer::SamplerState samplerStateSettings = Renderer::ISamplerState::getDefaultSamplerState();
+				samplerStateSettings.addressU = Renderer::TextureAddressMode::WRAP;
+				samplerStateSettings.addressV = Renderer::TextureAddressMode::WRAP;
+				Renderer::IResource* samplerStateResource = mSamplerStatePtr = renderer->createSamplerState(samplerStateSettings);
+				mSamplerStateGroup = mRootSignature->createResourceGroup(1, 1, &samplerStateResource);
 			}
 
 			// Create the program
@@ -187,16 +196,9 @@ void FirstMesh::onInitialization()
 
 			{ // Load in the diffuse, emissive, normal and roughness texture
 				RendererRuntime::TextureResourceManager& textureResourceManager = rendererRuntime->getTextureResourceManager();
-				textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_drgb_nxa",     "Unrimp/Texture/DynamicByCode/Identity_drgb_nxa2D",     m_drgb_nxaTextureResourceId);
-				textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_hr_rg_mb_nya", "Unrimp/Texture/DynamicByCode/Identity_hr_rg_mb_nya2D", m_hr_rg_mb_nyaTextureResourceId);
-				textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_e",            "Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D",   mEmissiveTextureResourceId);
-			}
-
-			{ // Create sampler state
-				Renderer::SamplerState samplerStateSettings = Renderer::ISamplerState::getDefaultSamplerState();
-				samplerStateSettings.addressU = Renderer::TextureAddressMode::WRAP;
-				samplerStateSettings.addressV = Renderer::TextureAddressMode::WRAP;
-				mSamplerState = renderer->createSamplerState(samplerStateSettings);
+				textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_drgb_nxa",     "Unrimp/Texture/DynamicByCode/Identity_drgb_nxa2D",     m_drgb_nxaTextureResourceId, this);
+				textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_hr_rg_mb_nya", "Unrimp/Texture/DynamicByCode/Identity_hr_rg_mb_nya2D", m_hr_rg_mb_nyaTextureResourceId, this);
+				textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_e",            "Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D",   mEmissiveTextureResourceId, this);
 			}
 		}
 	}
@@ -205,16 +207,20 @@ void FirstMesh::onInitialization()
 void FirstMesh::onDeinitialization()
 {
 	// Release the used renderer resources
-	mCommandBuffer.clear();
-	mSamplerState = nullptr;
-	RendererRuntime::setUninitialized(m_drgb_nxaTextureResourceId);
-	RendererRuntime::setUninitialized(m_hr_rg_mb_nyaTextureResourceId);
+	mObjectSpaceToViewSpaceMatrixUniformHandle = NULL_HANDLE;
+	mObjectSpaceToClipSpaceMatrixUniformHandle = NULL_HANDLE;
+	mSamplerStateGroup = nullptr;
+	mSamplerStatePtr = nullptr;
+	mResourceGroup = nullptr;
 	RendererRuntime::setUninitialized(mEmissiveTextureResourceId);
+	RendererRuntime::setUninitialized(m_hr_rg_mb_nyaTextureResourceId);
+	RendererRuntime::setUninitialized(m_drgb_nxaTextureResourceId);
 	RendererRuntime::setUninitialized(mMeshResourceId);
-	mPipelineState = nullptr;
 	mProgram	   = nullptr;
-	mRootSignature = nullptr;
+	mPipelineState = nullptr;
 	mUniformBuffer = nullptr;
+	mRootSignature = nullptr;
+	mCommandBuffer.clear();
 
 	// Call the base implementation
 	ExampleBase::onDeinitialization();
@@ -254,6 +260,13 @@ void FirstMesh::onDraw()
 	{
 		return;
 	}
+	if (nullptr == mResourceGroup)
+	{
+		// Create resource group
+		Renderer::IResource* resources[4] = { mUniformBuffer, _drgb_nxaTextureResource->getTexture(), _hr_rg_mb_nyaTextureResource->getTexture(), emissiveTextureResource->getTexture() };
+		Renderer::ISamplerState* samplerStates[4] = { nullptr, mSamplerStatePtr, mSamplerStatePtr, mSamplerStatePtr };
+		mResourceGroup = mRootSignature->createResourceGroup(0, static_cast<uint32_t>(glm::countof(resources)), resources, samplerStates);
+	}
 
 	// Get and check the renderer instance
 	Renderer::IRendererPtr renderer(getRenderer());
@@ -266,7 +279,7 @@ void FirstMesh::onDraw()
 		float aspectRatio = 4.0f / 3.0f;
 		{
 			// Get the render target with and height
-			Renderer::IRenderTarget* renderTarget = getMainRenderTarget();
+			const Renderer::IRenderTarget* renderTarget = getMainRenderTarget();
 			if (nullptr != renderTarget)
 			{
 				uint32_t width  = 1;
@@ -284,15 +297,12 @@ void FirstMesh::onDraw()
 		// Set the used graphics root signature
 		Renderer::Command::SetGraphicsRootSignature::create(mCommandBuffer, mRootSignature);
 
-		// Set sampler and textures
-		Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 0, mUniformBuffer);
-		Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 1, mSamplerState);
-		Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 2, _drgb_nxaTextureResource->getTexture());
-		Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 3, _hr_rg_mb_nyaTextureResource->getTexture());
-		Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 4, emissiveTextureResource->getTexture());
-
 		// Set the used pipeline state object (PSO)
 		Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineState);
+
+		// Set resource groups
+		Renderer::Command::SetGraphicsResourceGroup::create(mCommandBuffer, 0, mResourceGroup);
+		Renderer::Command::SetGraphicsResourceGroup::create(mCommandBuffer, 1, mSamplerStateGroup);
 
 		{ // Set uniform
 			// Calculate the object space to clip space matrix
@@ -350,4 +360,14 @@ void FirstMesh::onDraw()
 		// Submit command buffer to the renderer backend
 		mCommandBuffer.submitAndClear(*renderer);
 	}
+}
+
+
+//[-------------------------------------------------------]
+//[ Protected virtual RendererRuntime::IResourceListener methods ]
+//[-------------------------------------------------------]
+void FirstMesh::onLoadingStateChange(const RendererRuntime::IResource&)
+{
+	// Forget about the resource group so it's rebuild
+	mResourceGroup = nullptr;
 }

@@ -88,7 +88,7 @@ namespace RendererRuntime
 		}
 		if (iterator == iteratorEnd)
 		{
-			mBufferPools.push_back(new BufferPool(mBufferSize, mSlotsPerPool, mRendererRuntime.getBufferManager()));
+			mBufferPools.push_back(new BufferPool(mBufferSize, mSlotsPerPool, mRendererRuntime.getBufferManager(), mMaterialBlueprintResource));
 			iterator = mBufferPools.end() - 1;
 		}
 
@@ -162,9 +162,11 @@ namespace RendererRuntime
 		{
 			mLastBoundPool = static_cast<BufferPool*>(materialBufferSlot.mAssignedMaterialPool);
 			assert(nullptr != mLastBoundPool);
+
+			// Set resource group
 			const MaterialBlueprintResource::UniformBuffer* materialUniformBuffer = mMaterialBlueprintResource.getMaterialUniformBuffer();
 			assert(nullptr != materialUniformBuffer);
-			Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, materialUniformBuffer->rootParameterIndex, mLastBoundPool->uniformBuffer);
+			Renderer::Command::SetGraphicsResourceGroup::create(commandBuffer, materialUniformBuffer->rootParameterIndex, mLastBoundPool->resourceGroup);
 
 			// Assigned material pool change
 			return true;
@@ -298,10 +300,16 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public RendererRuntime::MaterialBufferManager::BufferPool methods ]
 	//[-------------------------------------------------------]
-	MaterialBufferManager::BufferPool::BufferPool(uint32_t bufferSize, uint32_t slotsPerPool, Renderer::IBufferManager& bufferManager) :
-		uniformBuffer(bufferManager.createUniformBuffer(bufferSize, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW))
+	MaterialBufferManager::BufferPool::BufferPool(uint32_t bufferSize, uint32_t slotsPerPool, Renderer::IBufferManager& bufferManager, const MaterialBlueprintResource& materialBlueprintResource) :
+		uniformBuffer(bufferManager.createUniformBuffer(bufferSize, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW)),
+		resourceGroup(nullptr)
 	{
 		RENDERER_SET_RESOURCE_DEBUG_NAME(uniformBuffer, "Material buffer manager")
+		uniformBuffer->addReference();
+		Renderer::IResource* resource = static_cast<Renderer::IResource*>(uniformBuffer);
+		resourceGroup = materialBlueprintResource.getRootSignaturePtr()->createResourceGroup(materialBlueprintResource.getMaterialUniformBuffer()->rootParameterIndex, 1, &resource);
+		RENDERER_SET_RESOURCE_DEBUG_NAME(resourceGroup, "Material buffer manager")
+		resourceGroup->addReference();
 		freeSlots.reserve(slotsPerPool);
 		for (uint32_t i = 0; i < slotsPerPool; ++i)
 		{
@@ -311,6 +319,7 @@ namespace RendererRuntime
 
 	MaterialBufferManager::BufferPool::~BufferPool()
 	{
+		resourceGroup->releaseReference();
 		uniformBuffer->releaseReference();
 	}
 

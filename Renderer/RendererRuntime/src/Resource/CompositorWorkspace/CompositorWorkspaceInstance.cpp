@@ -234,8 +234,7 @@ namespace RendererRuntime
 
 				{ // Submit command buffer to the renderer backend
 					// The command buffer is about to be submitted, inform everyone who cares about this
-					materialBlueprintResourceManager.getInstanceBufferManager().onPreCommandBufferExecution();
-					materialBlueprintResourceManager.getIndirectBufferManager().onPreCommandBufferExecution();
+					materialBlueprintResourceManager.onPreCommandBufferExecution();
 
 					// Submit command buffer to the renderer backend
 					mCommandBuffer.submitAndClear(renderer);

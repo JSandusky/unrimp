@@ -129,6 +129,13 @@ void FirstScene::onInitialization()
 	RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
 	if (nullptr != rendererRuntime)
 	{
+		// TODO(co) Remove this after the Vulkan renderer backend is fully up-and-running
+		if (strcmp(rendererRuntime->getRenderer().getName(), "Vulkan") == 0)
+		{
+			mCurrentCompositor = mInstancedCompositor = Compositor::DEBUG;
+			rendererRuntime->getMaterialBlueprintResourceManager().setCreateInitialPipelineStateCaches(false);
+		}
+
 		// Create the scene resource
 		rendererRuntime->getSceneResourceManager().loadSceneResourceByAssetId(::detail::SCENE_ASSET_ID, mSceneResourceId, this);
 
@@ -136,7 +143,8 @@ void FirstScene::onInitialization()
 		rendererRuntime->getMaterialResourceManager().loadMaterialResourceByAssetId(::detail::IMROD_MATERIAL_ASSET_ID, mMaterialResourceId, this);
 
 		// When using OpenGL ES 3, switch to a compositor which is designed for mobile devices
-		if (strcmp(rendererRuntime->getRenderer().getName(), "OpenGLES3") == 0)
+		// TODO(co) The Vulkan renderer backend is under construction, so debug compositor for now
+		if (strcmp(rendererRuntime->getRenderer().getName(), "OpenGLES3") == 0 || strcmp(rendererRuntime->getRenderer().getName(), "Vulkan") == 0)
 		{
 			// TODO(co) Add compositor designed for mobile devices, for now we're using the most simple debug compositor to have something on the screen
 			mCurrentCompositor = mInstancedCompositor = Compositor::DEBUG;

@@ -30,7 +30,7 @@
 	{
 		float2 exponents = GetEvsmExponents(PassData.ShadowCascadeScales[cascadeIndex].xyz);
 		float2 warpedDepth = WarpDepth(shadowPosition.z, exponents);
-		float4 occluder = SAMPLE_ARRAY_GRAD(ShadowMap, SamplerLinear, float4(shadowPosition.xy, cascadeIndex, 0.0f), shadowPositionDX.xy, shadowPositionDY.xy);
+		float4 occluder = SAMPLE_2D_ARRAY_GRAD(ShadowMap, SamplerLinear, float4(shadowPosition.xy, cascadeIndex, 0.0f), shadowPositionDX.xy, shadowPositionDY.xy);
 
 		// Derivative of warping at depth
 		float2 depthScale = 0.0001f * exponents * warpedDepth;

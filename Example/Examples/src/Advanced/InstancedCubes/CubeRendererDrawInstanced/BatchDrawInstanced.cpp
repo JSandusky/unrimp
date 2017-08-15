@@ -43,13 +43,13 @@ BatchDrawInstanced::~BatchDrawInstanced()
 	// The renderer resource pointers are released automatically
 }
 
-void BatchDrawInstanced::initialize(Renderer::IBufferManager& bufferManager, Renderer::IRootSignature &rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IProgram &program, uint32_t numberOfCubeInstances, bool alphaBlending, uint32_t numberOfTextures, uint32_t sceneRadius)
+void BatchDrawInstanced::initialize(Renderer::IBufferManager& bufferManager, Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IProgram &program, uint32_t numberOfCubeInstances, bool alphaBlending, uint32_t numberOfTextures, uint32_t sceneRadius)
 {
 	// Set owner renderer instance
 	mRenderer = &program.getRenderer();
 
 	// Release previous data if required
-	mTextureBufferPerInstanceData = nullptr;
+	mTextureBufferGroup = nullptr;
 
 	// Set the number of cube instance
 	mNumberOfCubeInstances = numberOfCubeInstances;
@@ -102,8 +102,10 @@ void BatchDrawInstanced::initialize(Renderer::IBufferManager& bufferManager, Ren
 			}
 		}
 
-		// Create the texture buffer instance
-		mTextureBufferPerInstanceData = bufferManager.createTextureBuffer(sizeof(float) * numberOfElements, Renderer::TextureFormat::R32G32B32A32F, data, Renderer::BufferUsage::STATIC_DRAW);
+		{ // Create the texture buffer instance and wrap it into a resource group instance
+			Renderer::IResource* resource = bufferManager.createTextureBuffer(sizeof(float) * numberOfElements, Renderer::TextureFormat::R32G32B32A32F, data, Renderer::BufferUsage::STATIC_DRAW);
+			mTextureBufferGroup = rootSignature.createResourceGroup(1, 1, &resource);
+		}
 
 		// Free local per instance data
 		delete [] data;
@@ -123,11 +125,11 @@ void BatchDrawInstanced::fillCommandBuffer(Renderer::CommandBuffer& commandBuffe
 	// Begin debug event
 	COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
 
-	// Set the used texture
-	Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, 0, mTextureBufferPerInstanceData);
-
 	// Set the used pipeline state object (PSO)
 	Renderer::Command::SetPipelineState::create(commandBuffer, mPipelineState);
+
+	// Set resource groups
+	Renderer::Command::SetGraphicsResourceGroup::create(commandBuffer, 1, mTextureBufferGroup);
 
 	// Use instancing in order to draw multiple cubes with just a single draw call
 	// -> Draw calls are one of the most expensive rendering, avoid them if possible

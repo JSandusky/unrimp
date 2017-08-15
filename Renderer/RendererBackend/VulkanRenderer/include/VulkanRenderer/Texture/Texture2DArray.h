@@ -30,6 +30,8 @@
 #include <Renderer/Texture/ITexture2DArray.h>
 #include <Renderer/Texture/TextureTypes.h>
 
+#include "VulkanRenderer/Vulkan.h"
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -89,6 +91,15 @@ namespace VulkanRenderer
 		*/
 		virtual ~Texture2DArray();
 
+		/**
+		*  @brief
+		*    Return the Vulkan image view
+		*
+		*  @return
+		*    The Vulkan image view
+		*/
+		inline VkImageView getVkImageView() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
@@ -102,7 +113,9 @@ namespace VulkanRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		// TODO(co) Implement me
+		VkImage		   mVkImage;
+		VkDeviceMemory mVkDeviceMemory;
+		VkImageView	   mVkImageView;
 
 
 	};

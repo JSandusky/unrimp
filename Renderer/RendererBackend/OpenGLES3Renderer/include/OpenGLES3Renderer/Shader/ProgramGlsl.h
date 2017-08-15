@@ -139,10 +139,9 @@ namespace OpenGLES3Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		uint32_t mNumberOfRootSignatureParameters;				///< Number of root signature parameters
-		int32_t* mRootSignatureParameterIndexToUniformLocation;	///< Root signature parameter index to OpenGL ES 3 uniform location mapping, can be a null pointer (type "GLint" not used in here in order to keep the header slim)
-		uint32_t mOpenGLES3Program;								///< OpenGL ES 3 program, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
-		int		 mDrawIdUniformLocation;						///< Draw ID uniform location (type "GLuint" not used in here in order to keep the header slim), used for "GL_EXT_base_instance"-emulation (see "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html)
+		uint32_t mNumberOfRootSignatureParameters;	///< Number of root signature parameters
+		uint32_t mOpenGLES3Program;					///< OpenGL ES 3 program, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		int		 mDrawIdUniformLocation;			///< Draw ID uniform location (type "GLuint" not used in here in order to keep the header slim), used for "GL_EXT_base_instance"-emulation (see "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html)
 
 
 	};

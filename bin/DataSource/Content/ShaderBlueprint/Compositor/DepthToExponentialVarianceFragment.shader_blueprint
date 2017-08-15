@@ -41,20 +41,20 @@ struct PassDataStruct
 {
 	float3 CurrentShadowCascadeScale;
 };
-UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
+UNIFORM_BUFFER_BEGIN(0, 0, PassUniformBuffer, 0)
 	PassDataStruct PassData;
 UNIFORM_BUFFER_END
 
-// Samplers
-SAMPLER_STATE(SamplerPoint, 0)
-
 // Textures
 @property(NumberOfMultisamples)
-	TEXTURE_2D_MS(DepthMap, @value(NumberOfMultisamples), 0)
+	TEXTURE_2D_MS(1, 0, DepthMap, @value(NumberOfMultisamples), 0)
 @end
 @property(!NumberOfMultisamples)
-	TEXTURE_2D(DepthMap, 0)
+	TEXTURE_2D(1, 0, DepthMap, 0)
 @end
+
+// Samplers
+SAMPLER_STATE(2, 0, SamplerPoint, 0)
 
 
 //[-------------------------------------------------------]

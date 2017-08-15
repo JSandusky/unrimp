@@ -40,6 +40,7 @@ namespace Renderer
 	class CommandBuffer;
 	class IUniformBuffer;
 	class IBufferManager;
+	class IResourceGroup;
 }
 namespace RendererRuntime
 {
@@ -148,8 +149,9 @@ namespace RendererRuntime
 		{
 			std::vector<uint32_t>	  freeSlots;
 			Renderer::IUniformBuffer* uniformBuffer;	///< Memory is managed by this buffer pool instance
+			Renderer::IResourceGroup* resourceGroup;	///< Memory is managed by this buffer pool instance
 
-			BufferPool(uint32_t bufferSize, uint32_t slotsPerPool, Renderer::IBufferManager& bufferManager);
+			BufferPool(uint32_t bufferSize, uint32_t slotsPerPool, Renderer::IBufferManager& bufferManager, const MaterialBlueprintResource& materialBlueprintResource);
 			~BufferPool();
 		};
 

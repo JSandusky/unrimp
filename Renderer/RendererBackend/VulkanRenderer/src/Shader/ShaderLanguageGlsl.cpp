@@ -260,7 +260,7 @@ namespace VulkanRenderer
 				const char* sourcePointers[] = { sourceCode };
 				shader.setStrings(sourcePointers, 1);
 			}
-			shader.parse(&::detail::DefaultTBuiltInResource, 450, false, EShMsgDefault);
+			shader.parse(&::detail::DefaultTBuiltInResource, 450, false, static_cast<EShMessages>(EShMsgDefault | EShMsgSpvRules | EShMsgVulkanRules));
 			glslang::TProgram program;
 			program.addShader(&shader);
 			program.link(EShMsgDefault);

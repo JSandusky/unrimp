@@ -90,6 +90,10 @@ namespace RendererRuntime
 		// Release uniform and texture buffer instances
 		for (InstanceBuffer& instanceBuffer : mInstanceBuffers)
 		{
+			if (nullptr != instanceBuffer.resourceGroup)
+			{
+				instanceBuffer.resourceGroup->releaseReference();
+			}
 			instanceBuffer.uniformBuffer->releaseReference();
 			instanceBuffer.textureBuffer->releaseReference();
 		}
@@ -103,20 +107,27 @@ namespace RendererRuntime
 		// Map the current instance buffer
 		mapCurrentInstanceBuffer();
 
-		{ // Instance uniform buffer
-			const MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer = materialBlueprintResource.getInstanceUniformBuffer();
-			if (nullptr != instanceUniformBuffer)
-			{
-				Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, instanceUniformBuffer->rootParameterIndex, mCurrentInstanceBuffer->uniformBuffer);
-			}
-		}
+		// Get buffer pointers
+		const MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer = materialBlueprintResource.getInstanceUniformBuffer();
+		const MaterialBlueprintResource::TextureBuffer* instanceTextureBuffer = materialBlueprintResource.getInstanceTextureBuffer();
+		if (nullptr != instanceUniformBuffer)
+		{
+			// Sanity checks
+			assert(nullptr != instanceTextureBuffer);
+			assert(instanceUniformBuffer->rootParameterIndex == instanceTextureBuffer->rootParameterIndex);
 
-		{ // Instance texture buffer
-			const MaterialBlueprintResource::TextureBuffer* instanceTextureBuffer = materialBlueprintResource.getInstanceTextureBuffer();
-			if (nullptr != instanceTextureBuffer)
+			// Create resource group, if needed
+			// TODO(co) We probably need to move the instance buffer manager into the material blueprint resource
+			if (nullptr == mCurrentInstanceBuffer->resourceGroup)
 			{
-				Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, instanceTextureBuffer->rootParameterIndex, mCurrentInstanceBuffer->textureBuffer);
+				Renderer::IResource* resources[2] = { mCurrentInstanceBuffer->uniformBuffer, mCurrentInstanceBuffer->textureBuffer };
+				mCurrentInstanceBuffer->resourceGroup = materialBlueprintResource.getRootSignaturePtr()->createResourceGroup(instanceUniformBuffer->rootParameterIndex, static_cast<uint32_t>(glm::countof(resources)), resources);
+				RENDERER_SET_RESOURCE_DEBUG_NAME(mCurrentInstanceBuffer->resourceGroup, "Instance buffer manager")
+				mCurrentInstanceBuffer->resourceGroup->addReference();
 			}
+
+			// Set resource group
+			Renderer::Command::SetGraphicsResourceGroup::create(commandBuffer, instanceUniformBuffer->rootParameterIndex, mCurrentInstanceBuffer->resourceGroup);
 		}
 	}
 
@@ -324,10 +335,12 @@ namespace RendererRuntime
 			// Create uniform buffer instance
 			Renderer::IUniformBuffer* uniformBuffer = bufferManager.createUniformBuffer(mMaximumUniformBufferSize, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 			RENDERER_SET_RESOURCE_DEBUG_NAME(uniformBuffer, "Instance buffer manager")
+			uniformBuffer->addReference();
 
 			// Create texture buffer instance
 			Renderer::ITextureBuffer* textureBuffer = bufferManager.createTextureBuffer(mMaximumTextureBufferSize, Renderer::TextureFormat::R32G32B32A32F, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 			RENDERER_SET_RESOURCE_DEBUG_NAME(textureBuffer, "Instance buffer manager")
+			textureBuffer->addReference();
 
 			// Create instance buffer instance
 			mInstanceBuffers.emplace_back(*uniformBuffer, *textureBuffer);

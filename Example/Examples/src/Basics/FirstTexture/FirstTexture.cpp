@@ -61,80 +61,16 @@ void FirstTexture::onInitialization()
 		mBufferManager = renderer->createBufferManager();
 		mTextureManager = renderer->createTextureManager();
 
-		{ // Create the 1D texture
-			static const uint32_t TEXTURE_WIDTH   = 256;
-			static const uint32_t TEXEL_ELEMENTS  = 1;
-			static const uint32_t NUMBER_OF_BYTES = TEXTURE_WIDTH;
-			uint8_t data[NUMBER_OF_BYTES];
-
-			// Fill the texture data with a color gradient
-			for (uint32_t n = 0; n < NUMBER_OF_BYTES; n += TEXEL_ELEMENTS)
-			{
-				data[n] = static_cast<uint8_t>(n);
-			}
-
-			// Create the texture instance
-			mTexture1D = mTextureManager->createTexture1D(TEXTURE_WIDTH, Renderer::TextureFormat::R8, data, Renderer::TextureFlag::GENERATE_MIPMAPS);
-		}
-
-		{ // Create the 2D texture
-			static const uint32_t TEXTURE_WIDTH   = 64;
-			static const uint32_t TEXTURE_HEIGHT  = 64;
-			static const uint32_t TEXEL_ELEMENTS  = 4;
-			static const uint32_t NUMBER_OF_BYTES = TEXTURE_WIDTH * TEXTURE_HEIGHT * TEXEL_ELEMENTS;
-			uint8_t data[NUMBER_OF_BYTES];
-
-			{ // Fill the texture data with a defective checkboard
-				const uint32_t rowPitch   = TEXTURE_WIDTH * TEXEL_ELEMENTS;
-				const uint32_t cellPitch  = rowPitch >> 3;		// The width of a cell in the checkboard texture
-				const uint32_t cellHeight = TEXTURE_WIDTH >> 3;	// The height of a cell in the checkerboard texture
-				for (uint32_t n = 0; n < NUMBER_OF_BYTES; n += TEXEL_ELEMENTS)
-				{
-					const uint32_t x = n % rowPitch;
-					const uint32_t y = n / rowPitch;
-					const uint32_t i = x / cellPitch;
-					const uint32_t j = y / cellHeight;
-
-					if (i % 2 == j % 2)
-					{
-						// Black
-						data[n + 0] = 0;	// R
-						data[n + 1] = 0;	// G
-						data[n + 2] = 0;	// B
-						data[n + 3] = 255;	// A
-					}
-					else
-					{
-						// Add some color fun instead of just boring white
-						data[n + 0] = static_cast<uint8_t>(rand() % 255);	// R
-						data[n + 1] = static_cast<uint8_t>(rand() % 255);	// G
-						data[n + 2] = static_cast<uint8_t>(rand() % 255);	// B
-						data[n + 3] = static_cast<uint8_t>(rand() % 255);	// A
-					}
-				}
-			}
-
-			// Create the texture instance
-			mTexture2D = mTextureManager->createTexture2D(TEXTURE_WIDTH, TEXTURE_HEIGHT, Renderer::TextureFormat::R8G8B8A8, data, Renderer::TextureFlag::GENERATE_MIPMAPS);
-		}
-
-		{ // Create sampler state
-			Renderer::SamplerState samplerState = Renderer::ISamplerState::getDefaultSamplerState();
-			samplerState.addressU = Renderer::TextureAddressMode::WRAP;
-			samplerState.addressV = Renderer::TextureAddressMode::WRAP;
-			mSamplerState = renderer->createSamplerState(samplerState);
-		}
-
 		{ // Create the root signature
-			Renderer::DescriptorRangeBuilder ranges[3];
-			ranges[0].initializeSampler(1, 0);
-			ranges[1].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "GradientMap", 0);
-			ranges[2].initialize(Renderer::DescriptorRangeType::SRV, 1, 1, "DiffuseMap", 0);
+			Renderer::DescriptorRangeBuilder ranges[4];
+			ranges[0].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "GradientMap", Renderer::ShaderVisibility::FRAGMENT);
+			ranges[1].initialize(Renderer::DescriptorRangeType::SRV, 1, 1, "DiffuseMap", Renderer::ShaderVisibility::FRAGMENT);
+			ranges[2].initializeSampler(1, 0, Renderer::ShaderVisibility::FRAGMENT);
+			ranges[3].initializeSampler(1, 1, Renderer::ShaderVisibility::FRAGMENT);
 
-			Renderer::RootParameterBuilder rootParameters[3];
-			rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::FRAGMENT);
-			rootParameters[1].initializeAsDescriptorTable(1, &ranges[1], Renderer::ShaderVisibility::FRAGMENT);
-			rootParameters[2].initializeAsDescriptorTable(1, &ranges[2], Renderer::ShaderVisibility::FRAGMENT);
+			Renderer::RootParameterBuilder rootParameters[2];
+			rootParameters[0].initializeAsDescriptorTable(2, &ranges[0]);
+			rootParameters[1].initializeAsDescriptorTable(2, &ranges[2]);
 
 			// Setup
 			Renderer::RootSignatureBuilder rootSignature;
@@ -142,6 +78,88 @@ void FirstTexture::onInitialization()
 
 			// Create the instance
 			mRootSignature = renderer->createRootSignature(rootSignature);
+		}
+
+		// Create sampler state and wrap it into a resource group instance
+		Renderer::ISamplerState* linearSamplerResource = nullptr;
+		Renderer::ISamplerState* pointSamplerResource = nullptr;
+		{
+			// Create the sampler resources
+			Renderer::SamplerState samplerState = Renderer::ISamplerState::getDefaultSamplerState();
+			samplerState.addressU = Renderer::TextureAddressMode::WRAP;
+			samplerState.addressV = Renderer::TextureAddressMode::WRAP;
+			linearSamplerResource = renderer->createSamplerState(samplerState);
+			samplerState.filter = Renderer::FilterMode::MIN_MAG_MIP_POINT;
+			pointSamplerResource = renderer->createSamplerState(samplerState);
+
+			// Create the resource group
+			Renderer::IResource* resources[2] = { linearSamplerResource, pointSamplerResource };
+			mSamplerStateGroup = mRootSignature->createResourceGroup(1, static_cast<uint32_t>(glm::countof(resources)), resources);
+		}
+
+		{ // Create the texture group
+			Renderer::IResource* resources[2];
+
+			{ // Create the 1D texture
+				static const uint32_t TEXTURE_WIDTH   = 256;
+				static const uint32_t TEXEL_ELEMENTS  = 1;
+				static const uint32_t NUMBER_OF_BYTES = TEXTURE_WIDTH;
+				uint8_t data[NUMBER_OF_BYTES];
+
+				// Fill the texture data with a color gradient
+				for (uint32_t n = 0; n < NUMBER_OF_BYTES; n += TEXEL_ELEMENTS)
+				{
+					data[n] = static_cast<uint8_t>(n);
+				}
+
+				// Create the texture instance
+				resources[0] = mTextureManager->createTexture1D(TEXTURE_WIDTH, Renderer::TextureFormat::R8, data, Renderer::TextureFlag::GENERATE_MIPMAPS);
+			}
+
+			{ // Create the 2D texture
+				static const uint32_t TEXTURE_WIDTH   = 64;
+				static const uint32_t TEXTURE_HEIGHT  = 64;
+				static const uint32_t TEXEL_ELEMENTS  = 4;
+				static const uint32_t NUMBER_OF_BYTES = TEXTURE_WIDTH * TEXTURE_HEIGHT * TEXEL_ELEMENTS;
+				uint8_t data[NUMBER_OF_BYTES];
+
+				{ // Fill the texture data with a defective checkboard
+					const uint32_t rowPitch   = TEXTURE_WIDTH * TEXEL_ELEMENTS;
+					const uint32_t cellPitch  = rowPitch >> 3;		// The width of a cell in the checkboard texture
+					const uint32_t cellHeight = TEXTURE_WIDTH >> 3;	// The height of a cell in the checkerboard texture
+					for (uint32_t n = 0; n < NUMBER_OF_BYTES; n += TEXEL_ELEMENTS)
+					{
+						const uint32_t x = n % rowPitch;
+						const uint32_t y = n / rowPitch;
+						const uint32_t i = x / cellPitch;
+						const uint32_t j = y / cellHeight;
+
+						if (i % 2 == j % 2)
+						{
+							// Black
+							data[n + 0] = 0;	// R
+							data[n + 1] = 0;	// G
+							data[n + 2] = 0;	// B
+							data[n + 3] = 255;	// A
+						}
+						else
+						{
+							// Add some color fun instead of just boring white
+							data[n + 0] = static_cast<uint8_t>(rand() % 255);	// R
+							data[n + 1] = static_cast<uint8_t>(rand() % 255);	// G
+							data[n + 2] = static_cast<uint8_t>(rand() % 255);	// B
+							data[n + 3] = static_cast<uint8_t>(rand() % 255);	// A
+						}
+					}
+				}
+
+				// Create the texture instance
+				resources[1] = mTextureManager->createTexture2D(TEXTURE_WIDTH, TEXTURE_HEIGHT, Renderer::TextureFormat::R8G8B8A8, data, Renderer::TextureFlag::GENERATE_MIPMAPS);
+			}
+
+			// Create the texture group
+			Renderer::ISamplerState* samplerStates[2] = { linearSamplerResource, pointSamplerResource };
+			mTextureGroup = mRootSignature->createResourceGroup(0, static_cast<uint32_t>(glm::countof(resources)), resources, samplerStates);
 		}
 
 		// Vertex input layout
@@ -223,15 +241,14 @@ void FirstTexture::onInitialization()
 void FirstTexture::onDeinitialization()
 {
 	// Release the used resources
-	mCommandBuffer.clear();
 	mVertexArray = nullptr;
 	mPipelineState = nullptr;
+	mSamplerStateGroup = nullptr;
+	mTextureGroup = nullptr;
 	mRootSignature = nullptr;
-	mSamplerState = nullptr;
-	mTexture1D = nullptr;
-	mTexture2D = nullptr;
-	mBufferManager = nullptr;
+	mCommandBuffer.clear();
 	mTextureManager = nullptr;
+	mBufferManager = nullptr;
 
 	// Call the base implementation
 	ExampleBase::onDeinitialization();
@@ -255,13 +272,12 @@ void FirstTexture::onDraw()
 void FirstTexture::fillCommandBuffer()
 {
 	// Sanity checks
+	assert(mCommandBuffer.isEmpty());
 	assert(nullptr != mRootSignature);
-	assert(nullptr != mSamplerState);
-	assert(nullptr != mTexture1D);
-	assert(nullptr != mTexture2D);
+	assert(nullptr != mTextureGroup);
+	assert(nullptr != mSamplerStateGroup);
 	assert(nullptr != mPipelineState);
 	assert(nullptr != mVertexArray);
-	assert(mCommandBuffer.isEmpty());
 
 	// Begin debug event
 	COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(mCommandBuffer)
@@ -272,13 +288,12 @@ void FirstTexture::fillCommandBuffer()
 	// Set the used graphics root signature
 	Renderer::Command::SetGraphicsRootSignature::create(mCommandBuffer, mRootSignature);
 
-	// Set diffuse map
-	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 0, mSamplerState);
-	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 1, mTexture1D);
-	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 2, mTexture2D);
-
 	// Set the used pipeline state object (PSO)
 	Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineState);
+
+	// Set resource groups
+	Renderer::Command::SetGraphicsResourceGroup::create(mCommandBuffer, 0, mTextureGroup);
+	Renderer::Command::SetGraphicsResourceGroup::create(mCommandBuffer, 1, mSamplerStateGroup);
 
 	// Input assembly (IA): Set the used vertex array
 	Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArray);

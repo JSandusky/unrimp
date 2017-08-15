@@ -383,6 +383,20 @@ namespace RendererRuntime
 									Renderer::IPipelineStatePtr pipelineStatePtr = materialBlueprintResource->getPipelineStateCacheManager().getPipelineStateCacheByCombination(renderable.getPrimitiveTopology(), materialTechnique->getSerializedPipelineStateHash(), mScratchShaderProperties, mScratchDynamicShaderPieces, false);
 									if (nullptr != pipelineStatePtr)
 									{
+										// Set the used pipeline state object (PSO)
+										if (currentPipelineState != pipelineStatePtr)
+										{
+											currentPipelineState = pipelineStatePtr;
+											Renderer::Command::SetPipelineState::create(commandBuffer, currentPipelineState);
+										}
+
+										// Setup input assembly (IA): Set the used vertex array
+										if (currentVertexArray != vertexArrayPtr)
+										{
+											currentVertexArray = vertexArrayPtr;
+											Renderer::Command::SetVertexArray::create(commandBuffer, currentVertexArray);
+										}
+
 										// Expensive state change: Handle material blueprint resource switches
 										// -> Render queue should be sorted by material blueprint resource first to reduce those expensive state changes
 										bool bindMaterialBlueprint = false;
@@ -427,20 +441,6 @@ namespace RendererRuntime
 											NOP;
 										}
 										// TODO(co) Detect texture hash change: Break instancing
-
-										// Setup input assembly (IA): Set the used vertex array
-										if (currentVertexArray != vertexArrayPtr)
-										{
-											currentVertexArray = vertexArrayPtr;
-											Renderer::Command::SetVertexArray::create(commandBuffer, currentVertexArray);
-										}
-
-										// Set the used pipeline state object (PSO)
-										if (currentPipelineState != pipelineStatePtr)
-										{
-											currentPipelineState = pipelineStatePtr;
-											Renderer::Command::SetPipelineState::create(commandBuffer, currentPipelineState);
-										}
 
 										// Fill the instance buffer manager
 										const uint32_t startInstanceLocation = (nullptr != instanceUniformBuffer) ? instanceBufferManager.fillBuffer(*materialBlueprintResource, materialBlueprintResource->getPassBufferManager(), *instanceUniformBuffer, renderable, *materialTechnique, commandBuffer) : 0;

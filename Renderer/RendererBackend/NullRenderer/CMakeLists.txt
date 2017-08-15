@@ -67,6 +67,7 @@ set(SOURCE_CODES
 	src/Texture/TextureManager.cpp
 	src/NullRenderer.cpp
 	src/RootSignature.cpp
+	src/ResourceGroup.cpp
 )
 
 

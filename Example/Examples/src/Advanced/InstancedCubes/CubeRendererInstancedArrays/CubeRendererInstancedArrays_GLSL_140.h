@@ -45,6 +45,10 @@ in vec4 PerInstanceRotationScale;	// Rotation: Rotation quaternion (xyz) and sca
 									//    three components while recomputing the fourths component is be sufficient.
 
 // Attribute output
+out gl_PerVertex
+{
+	vec4 gl_Position;
+};
 out vec3 WorldPositionVs;
 out vec2 TexCoordVs;
 out vec3 NormalVs;

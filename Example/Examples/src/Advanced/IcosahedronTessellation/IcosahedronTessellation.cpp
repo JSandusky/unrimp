@@ -71,16 +71,13 @@ void IcosahedronTessellation::onInitialization()
 		{ // Create the root signature
 			// Setup
 			Renderer::DescriptorRangeBuilder ranges[4];
-			ranges[0].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockDynamicTcs", 0);
-			ranges[1].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockStaticTes", 0);
-			ranges[2].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockStaticGs", 0);
-			ranges[3].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockStaticFs", 0);
+			ranges[0].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockDynamicTcs", Renderer::ShaderVisibility::TESSELLATION_CONTROL);
+			ranges[1].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockStaticTes", Renderer::ShaderVisibility::TESSELLATION_EVALUATION);
+			ranges[2].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockStaticGs", Renderer::ShaderVisibility::GEOMETRY);
+			ranges[3].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockStaticFs", Renderer::ShaderVisibility::FRAGMENT);
 
-			Renderer::RootParameterBuilder rootParameters[4];
-			rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::TESSELLATION_CONTROL);
-			rootParameters[1].initializeAsDescriptorTable(1, &ranges[1], Renderer::ShaderVisibility::TESSELLATION_EVALUATION);
-			rootParameters[2].initializeAsDescriptorTable(1, &ranges[2], Renderer::ShaderVisibility::GEOMETRY);
-			rootParameters[3].initializeAsDescriptorTable(1, &ranges[3], Renderer::ShaderVisibility::FRAGMENT);
+			Renderer::RootParameterBuilder rootParameters[1];
+			rootParameters[0].initializeAsDescriptorTable(4, &ranges[0]);
 
 			// Setup
 			Renderer::RootSignatureBuilder rootSignature;
@@ -165,30 +162,37 @@ void IcosahedronTessellation::onInitialization()
 			mVertexArray = mBufferManager->createVertexArray(vertexAttributes, static_cast<uint32_t>(glm::countof(vertexArrayVertexBuffers)), vertexArrayVertexBuffers, indexBuffer);
 		}
 
-		// Create uniform buffers and fill the static buffers at once
-		mUniformBufferDynamicTcs = mBufferManager->createUniformBuffer(sizeof(float) * 2, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
-		{ // "ObjectSpaceToClipSpaceMatrix"
-			glm::mat4 worldSpaceToViewSpaceMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 3.0f));		// Also known as "view matrix"
-			glm::mat4 viewSpaceToClipSpaceMatrix = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.001f, 1000.0f);	// Also known as "projection matrix"
-			glm::mat4 objectSpaceToClipSpaceMatrix = viewSpaceToClipSpaceMatrix * worldSpaceToViewSpaceMatrix;			// Also known as "model view projection matrix"
-			mUniformBufferStaticTes = mBufferManager->createUniformBuffer(sizeof(float) * 4 * 4, glm::value_ptr(objectSpaceToClipSpaceMatrix), Renderer::BufferUsage::STATIC_DRAW);
-			{ // "NormalMatrix"
-				worldSpaceToViewSpaceMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-				viewSpaceToClipSpaceMatrix = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.001f, 1000.0f);
-				objectSpaceToClipSpaceMatrix = viewSpaceToClipSpaceMatrix * worldSpaceToViewSpaceMatrix;
-				glm::mat3 nMVP(objectSpaceToClipSpaceMatrix);
-				glm::mat4 tMVP(nMVP);
-				mUniformBufferStaticGs = mBufferManager->createUniformBuffer(sizeof(float) * 4 * 4, glm::value_ptr(tMVP), Renderer::BufferUsage::STATIC_DRAW);
+		{ // Create the uniform buffer group
+			Renderer::IResource* resources[4];
+
+			// Create uniform buffers and fill the static buffers at once
+			resources[0] = mUniformBufferDynamicTcs = mBufferManager->createUniformBuffer(sizeof(float) * 2, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+			{ // "ObjectSpaceToClipSpaceMatrix"
+				glm::mat4 worldSpaceToViewSpaceMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 3.0f));		// Also known as "view matrix"
+				glm::mat4 viewSpaceToClipSpaceMatrix = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.001f, 1000.0f);	// Also known as "projection matrix"
+				glm::mat4 objectSpaceToClipSpaceMatrix = viewSpaceToClipSpaceMatrix * worldSpaceToViewSpaceMatrix;			// Also known as "model view projection matrix"
+				resources[1] = mBufferManager->createUniformBuffer(sizeof(float) * 4 * 4, glm::value_ptr(objectSpaceToClipSpaceMatrix), Renderer::BufferUsage::STATIC_DRAW);
+				{ // "NormalMatrix"
+					worldSpaceToViewSpaceMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+					viewSpaceToClipSpaceMatrix = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.001f, 1000.0f);
+					objectSpaceToClipSpaceMatrix = viewSpaceToClipSpaceMatrix * worldSpaceToViewSpaceMatrix;
+					glm::mat3 nMVP(objectSpaceToClipSpaceMatrix);
+					glm::mat4 tMVP(nMVP);
+					resources[2] = mBufferManager->createUniformBuffer(sizeof(float) * 4 * 4, glm::value_ptr(tMVP), Renderer::BufferUsage::STATIC_DRAW);
+				}
 			}
-		}
-		{ // Light and material
-			static const float LIGHT_AND_MATERIAL[] =
-			{
-				0.25f, 0.25f, 1.0f,  1.0,	// "LightPosition"
-				 0.0f, 0.75f, 0.75f, 1.0, 	// "DiffuseMaterial"
-				0.04f, 0.04f, 0.04f, 1.0,	// "AmbientMaterial"
-			};
-			mUniformBufferStaticFs = mBufferManager->createUniformBuffer(sizeof(LIGHT_AND_MATERIAL), LIGHT_AND_MATERIAL, Renderer::BufferUsage::STATIC_DRAW);
+			{ // Light and material
+				static const float LIGHT_AND_MATERIAL[] =
+				{
+					0.25f, 0.25f, 1.0f,  1.0,	// "LightPosition"
+					 0.0f, 0.75f, 0.75f, 1.0, 	// "DiffuseMaterial"
+					0.04f, 0.04f, 0.04f, 1.0,	// "AmbientMaterial"
+				};
+				resources[3] = mBufferManager->createUniformBuffer(sizeof(LIGHT_AND_MATERIAL), LIGHT_AND_MATERIAL, Renderer::BufferUsage::STATIC_DRAW);
+			}
+
+			// Create the uniform buffer group
+			mUniformBufferGroup = mRootSignature->createResourceGroup(0, static_cast<uint32_t>(glm::countof(resources)), resources);
 		}
 
 		// Decide which shader language should be used (for example "GLSL" or "HLSL")
@@ -238,14 +242,12 @@ void IcosahedronTessellation::onInitialization()
 void IcosahedronTessellation::onDeinitialization()
 {
 	// Release the used resources
-	mCommandBuffer.clear();
-	mUniformBufferStaticFs = nullptr;
-	mUniformBufferStaticGs = nullptr;
-	mUniformBufferStaticTes = nullptr;
-	mUniformBufferDynamicTcs = nullptr;
 	mVertexArray = nullptr;
 	mPipelineState = nullptr;
+	mUniformBufferGroup = nullptr;
+	mUniformBufferDynamicTcs = nullptr;
 	mRootSignature = nullptr;
+	mCommandBuffer.clear();
 	mBufferManager = nullptr;
 
 	// Call the base implementation
@@ -282,14 +284,12 @@ void IcosahedronTessellation::onDraw()
 void IcosahedronTessellation::fillCommandBuffer()
 {
 	// Sanity checks
+	assert(mCommandBuffer.isEmpty());
 	assert(nullptr != mRootSignature);
 	assert(nullptr != mUniformBufferDynamicTcs);
-	assert(nullptr != mUniformBufferStaticTes);
-	assert(nullptr != mUniformBufferStaticGs);
-	assert(nullptr != mUniformBufferStaticFs);
+	assert(nullptr != mUniformBufferGroup);
 	assert(nullptr != mPipelineState);
 	assert(nullptr != mVertexArray);
-	assert(mCommandBuffer.isEmpty());
 
 	// Begin debug event
 	COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(mCommandBuffer)
@@ -300,14 +300,11 @@ void IcosahedronTessellation::fillCommandBuffer()
 	// Set the used graphics root signature
 	Renderer::Command::SetGraphicsRootSignature::create(mCommandBuffer, mRootSignature);
 
-	// Set the used uniform buffers
-	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 0, mUniformBufferDynamicTcs);
-	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 1, mUniformBufferStaticTes);
-	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 2, mUniformBufferStaticGs);
-	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 3, mUniformBufferStaticFs);
-
 	// Set the used pipeline state object (PSO)
 	Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineState);
+
+	// Set resource groups
+	Renderer::Command::SetGraphicsResourceGroup::create(mCommandBuffer, 0, mUniformBufferGroup);
 
 	// Input assembly (IA): Set the used vertex array
 	Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArray);

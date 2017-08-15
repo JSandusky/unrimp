@@ -177,6 +177,7 @@ namespace
 
 		VkResult createVkDevice(VkPhysicalDevice vkPhysicalDevice, const VkDeviceQueueCreateInfo& vkDeviceQueueCreateInfo, bool enableValidation, VkDevice& vkDevice)
 		{
+			// See http://vulkan.gpuinfo.org/listfeatures.php to check out GPU hardware capabilities
 			const std::array<const char*, 1> enabledExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 			const VkPhysicalDeviceFeatures vkPhysicalDeviceFeatures =
 			{
@@ -186,7 +187,7 @@ namespace
 				VK_FALSE,	// independentBlend (VkBool32)
 				VK_TRUE,	// geometryShader (VkBool32)
 				VK_TRUE,	// tessellationShader (VkBool32)
-				VK_FALSE,	// sampleRateShading (VkBool32)
+				VK_TRUE,	// sampleRateShading (VkBool32)
 				VK_FALSE,	// dualSrcBlend (VkBool32)
 				VK_FALSE,	// logicOp (VkBool32)
 				VK_TRUE,	// multiDrawIndirect (VkBool32)

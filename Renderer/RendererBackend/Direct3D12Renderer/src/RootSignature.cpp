@@ -49,30 +49,48 @@ namespace Direct3D12Renderer
 		D3D12_ROOT_SIGNATURE_DESC d3d12RootSignatureDesc;
 		{
 			{ // Copy the parameter data
-				const uint32_t numberOfParameters = rootSignature.numberOfParameters;
-				d3d12RootSignatureDesc.NumParameters = numberOfParameters;
-				if (numberOfParameters > 0)
+				const uint32_t numberOfRootParameters = rootSignature.numberOfParameters;
+				d3d12RootSignatureDesc.NumParameters = numberOfRootParameters;
+				if (numberOfRootParameters > 0)
 				{
-					d3d12RootSignatureDesc.pParameters = new D3D12_ROOT_PARAMETER[numberOfParameters];
+					d3d12RootSignatureDesc.pParameters = new D3D12_ROOT_PARAMETER[numberOfRootParameters];
 					D3D12_ROOT_PARAMETER* d3dRootParameters = const_cast<D3D12_ROOT_PARAMETER*>(d3d12RootSignatureDesc.pParameters);
-					memcpy(d3dRootParameters, rootSignature.parameters, sizeof(Renderer::RootParameter) * numberOfParameters);
-
-					// Copy the descriptor table data
-					for (uint32_t parameterIndex = 0; parameterIndex < numberOfParameters; ++parameterIndex)
+					for (uint32_t parameterIndex = 0; parameterIndex < numberOfRootParameters; ++parameterIndex)
 					{
 						D3D12_ROOT_PARAMETER& d3dRootParameter = d3dRootParameters[parameterIndex];
 						const Renderer::RootParameter& rootParameter = rootSignature.parameters[parameterIndex];
+
+						// Copy the descriptor table data and determine the shader visibility of the Direct3D 12 root parameter
+						uint32_t shaderVisibility = ~0u;
 						if (D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE == d3dRootParameter.ParameterType)
 						{
 							const uint32_t numberOfDescriptorRanges = d3dRootParameter.DescriptorTable.NumDescriptorRanges;
+							d3dRootParameter.DescriptorTable.NumDescriptorRanges = numberOfDescriptorRanges;
 							d3dRootParameter.DescriptorTable.pDescriptorRanges = new D3D12_DESCRIPTOR_RANGE[numberOfDescriptorRanges];
 
 							// "Renderer::DescriptorRange" is not identical to "D3D12_DESCRIPTOR_RANGE" because it had to be extended by information required by OpenGL
 							for (uint32_t descriptorRangeIndex = 0; descriptorRangeIndex < numberOfDescriptorRanges; ++descriptorRangeIndex)
 							{
-								memcpy(const_cast<D3D12_DESCRIPTOR_RANGE*>(&d3dRootParameter.DescriptorTable.pDescriptorRanges[descriptorRangeIndex]), &reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges)[descriptorRangeIndex], sizeof(D3D12_DESCRIPTOR_RANGE));
+								const Renderer::DescriptorRange& descriptorRange = reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges)[descriptorRangeIndex];
+								memcpy(const_cast<D3D12_DESCRIPTOR_RANGE*>(&d3dRootParameter.DescriptorTable.pDescriptorRanges[descriptorRangeIndex]), &descriptorRange, sizeof(D3D12_DESCRIPTOR_RANGE));
+								if (~0u == shaderVisibility)
+								{
+									shaderVisibility = static_cast<uint32_t>(descriptorRange.shaderVisibility);
+								}
+								else if (shaderVisibility != static_cast<uint32_t>(descriptorRange.shaderVisibility))
+								{
+									shaderVisibility = static_cast<uint32_t>(Renderer::ShaderVisibility::ALL);
+								}
 							}
 						}
+						if (~0u == shaderVisibility)
+						{
+							shaderVisibility = static_cast<uint32_t>(Renderer::ShaderVisibility::ALL);
+						}
+
+						// Set root parameter
+						d3dRootParameters->ParameterType = static_cast<D3D12_ROOT_PARAMETER_TYPE>(rootParameter.parameterType);
+						d3dRootParameters->ShaderVisibility = static_cast<D3D12_SHADER_VISIBILITY>(shaderVisibility);
 					}
 				}
 				else
@@ -148,6 +166,17 @@ namespace Direct3D12Renderer
 		{
 			mD3D12RootSignature->Release();
 		}
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IRootSignature methods       ]
+	//[-------------------------------------------------------]
+	Renderer::IResourceGroup* RootSignature::createResourceGroup(uint32_t, uint32_t, Renderer::IResource**, Renderer::ISamplerState**)
+	{
+		// TODO(co) Implement resource group
+		assert(false);
+		return nullptr;
 	}
 
 

@@ -87,6 +87,27 @@ namespace RendererRuntime
 			vertexAttributes.numberOfAttributes = static_cast<uint32_t>(glm::countof(vertexAttributesLayout));
 			vertexAttributes.attributes = vertexAttributesLayout;
 		}
+		else if (4054156081 == getAsset().assetId)	// "VertexAttributes/Default/Position"
+		{
+			Renderer::VertexAttributes& vertexAttributes = const_cast<Renderer::VertexAttributes&>(mVertexAttributesResource->mVertexAttributes);
+			static const Renderer::VertexAttribute vertexAttributesLayout[] =
+			{
+				{ // Attribute 0
+					// Data destination
+					Renderer::VertexAttributeFormat::FLOAT_3,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
+					"Position",									// name[32] (char)
+					"POSITION",									// semanticName[32] (char)
+					0,											// semanticIndex (uint32_t)
+					// Data source
+					0,											// inputSlot (uint32_t)
+					0,											// alignedByteOffset (uint32_t)
+					sizeof(float) * 3,							// strideInBytes (uint32_t)
+					0											// instancesPerElement (uint32_t)
+				}
+			};
+			vertexAttributes.numberOfAttributes = static_cast<uint32_t>(glm::countof(vertexAttributesLayout));
+			vertexAttributes.attributes = vertexAttributesLayout;
+		}
 		else if (4212832814 == getAsset().assetId)	// "VertexAttributes/Default/DebugGui"
 		{
 			Renderer::VertexAttributes& vertexAttributes = const_cast<Renderer::VertexAttributes&>(mVertexAttributesResource->mVertexAttributes);
@@ -132,9 +153,17 @@ namespace RendererRuntime
 			vertexAttributes.numberOfAttributes = static_cast<uint32_t>(glm::countof(vertexAttributesLayout));
 			vertexAttributes.attributes = vertexAttributesLayout;
 		}
-		else
+		else if (1156289207 == getAsset().assetId)	// "VertexAttributes/Default/Mesh"
+		{
+			mVertexAttributesResource->mVertexAttributes = Renderer::VertexAttributes(MeshResource::VERTEX_ATTRIBUTES.numberOfAttributes, MeshResource::VERTEX_ATTRIBUTES.attributes);
+		}
+		else if (871545499 == getAsset().assetId)	// "VertexAttributes/Default/SkinnedMesh"
 		{
 			mVertexAttributesResource->mVertexAttributes = Renderer::VertexAttributes(MeshResource::SKINNED_VERTEX_ATTRIBUTES.numberOfAttributes, MeshResource::SKINNED_VERTEX_ATTRIBUTES.attributes);
+		}
+		else
+		{
+			assert(false && "Unknown vertex attributes asset");
 		}
 	}
 

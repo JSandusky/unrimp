@@ -153,10 +153,10 @@ void FirstTriangle::onInitialization()
 void FirstTriangle::onDeinitialization()
 {
 	// Release the used resources
-	mCommandBuffer.clear();
 	mVertexArray = nullptr;
 	mPipelineState = nullptr;
 	mRootSignature = nullptr;
+	mCommandBuffer.clear();
 	mBufferManager = nullptr;
 
 	// Call the base implementation
@@ -181,10 +181,10 @@ void FirstTriangle::onDraw()
 void FirstTriangle::fillCommandBuffer()
 {
 	// Sanity checks
+	assert(mCommandBuffer.isEmpty());
 	assert(nullptr != mRootSignature);
 	assert(nullptr != mPipelineState);
 	assert(nullptr != mVertexArray);
-	assert(mCommandBuffer.isEmpty());
 
 	// Begin debug event
 	COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(mCommandBuffer)

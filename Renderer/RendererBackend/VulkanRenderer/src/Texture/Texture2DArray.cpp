@@ -22,7 +22,9 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "VulkanRenderer/Texture/Texture2DArray.h"
-#include "VulkanRenderer/VulkanRuntimeLinking.h"
+#include "VulkanRenderer/VulkanRenderer.h"
+#include "VulkanRenderer/VulkanContext.h"
+#include "VulkanRenderer/Helper.h"
 
 
 //[-------------------------------------------------------]
@@ -35,15 +37,18 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2DArray::Texture2DArray(VulkanRenderer& vulkanRenderer, uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum, const void*, uint32_t) :
-		ITexture2DArray(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer), width, height, numberOfSlices)
+	Texture2DArray::Texture2DArray(VulkanRenderer& vulkanRenderer, uint32_t width, uint32_t height, uint32_t numberOfSlices, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags) :
+		ITexture2DArray(vulkanRenderer, width, height, numberOfSlices),
+		mVkImage(VK_NULL_HANDLE),
+		mVkDeviceMemory(VK_NULL_HANDLE),
+		mVkImageView(VK_NULL_HANDLE)
 	{
-		// TODO(co) Implement me
+		Helper::createAndFillVkImage(vulkanRenderer, VK_IMAGE_TYPE_2D, VK_IMAGE_VIEW_TYPE_2D_ARRAY, { width, height, numberOfSlices }, textureFormat, data, flags, mVkImage, mVkDeviceMemory, mVkImageView);
 	}
 
 	Texture2DArray::~Texture2DArray()
 	{
-		// TODO(co) Implement me
+		Helper::destroyAndFreeVkImage(static_cast<VulkanRenderer&>(getRenderer()), mVkImage, mVkDeviceMemory, mVkImageView);
 	}
 
 

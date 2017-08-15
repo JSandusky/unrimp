@@ -33,6 +33,16 @@ namespace VulkanRenderer
 		return mVkBuffer;
 	}
 
+	inline VkDeviceMemory TextureBuffer::getVkDeviceMemory() const
+	{
+		return mVkDeviceMemory;
+	}
+
+	inline VkBufferView TextureBuffer::getVkBufferView() const
+	{
+		return mVkBufferView;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

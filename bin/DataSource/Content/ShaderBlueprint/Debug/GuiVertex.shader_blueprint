@@ -30,14 +30,14 @@
 //[-------------------------------------------------------]
 // Attribute input / output
 INPUT_BEGIN
-	INPUT_VERTEX_POSITION	(float2, Position)		// GUI space vertex position as input
-	INPUT_TEXTURE_COORDINATE(float2, TexCoord, 0)	// 32 bit texture coordinate
-	INPUT_VERTEX_COLOR	 	(float4, Color)			// Vertex color
+	INPUT_VERTEX_POSITION	(0, float2, Position)		// GUI space vertex position as input
+	INPUT_TEXTURE_COORDINATE(1, float2, TexCoord, 0)	// 32 bit texture coordinate
+	INPUT_VERTEX_COLOR	 	(2, float4, Color)			// Vertex color
 INPUT_END
 OUTPUT_BEGIN
-	OUTPUT_TEXTURE_COORDINATE(float4, TexCoordVS, 0)	// xy = glyph texture coordinate, zw = background texture coordinate
-	OUTPUT_TEXTURE_COORDINATE(float4, ColorVS, 1)		// Vertex color
-	OUTPUT_POSITION										// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
+	OUTPUT_TEXTURE_COORDINATE(1, float4, TexCoordVS, 0)	// xy = glyph texture coordinate, zw = background texture coordinate
+	OUTPUT_TEXTURE_COORDINATE(2, float4, ColorVS, 1)	// Vertex color
+	OUTPUT_POSITION			 (0)						// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
 OUTPUT_END
 
 // Uniform buffers
@@ -45,7 +45,7 @@ struct PassDataStruct
 {
 	float4x4 ObjectSpaceToClipSpaceMatrix;
 };
-UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
+UNIFORM_BUFFER_BEGIN(0, 0, PassUniformBuffer, 0)
 	PassDataStruct PassData;
 UNIFORM_BUFFER_END
 

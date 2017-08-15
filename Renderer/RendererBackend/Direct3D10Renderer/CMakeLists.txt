@@ -75,6 +75,7 @@ set(SOURCE_CODES
 	src/Guid.cpp
 	src/Mapping.cpp
 	src/RootSignature.cpp
+	src/ResourceGroup.cpp
 )
 if(NOT DIRECT3D10RENDERER_NO_DEBUG)
 	# Support Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box) debug features

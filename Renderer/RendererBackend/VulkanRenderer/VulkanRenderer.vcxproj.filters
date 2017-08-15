@@ -298,6 +298,9 @@
     <ClInclude Include="..\..\..\External\glslang\src\SPIRV\spvIR.h">
       <Filter>External\SPIRV</Filter>
     </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\ResourceGroup.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\ExtensionsWindows.cpp">
@@ -507,6 +510,9 @@
     <ClCompile Include="..\..\..\External\glslang\src\SPIRV\SpvBuilder.cpp">
       <Filter>External\SPIRV</Filter>
     </ClCompile>
+    <ClCompile Include="src\ResourceGroup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -597,6 +603,9 @@
     </None>
     <None Include="include\VulkanRenderer\State\SamplerState.inl">
       <Filter>Source Files\State</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\ResourceGroup.inl">
+      <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
 </Project>

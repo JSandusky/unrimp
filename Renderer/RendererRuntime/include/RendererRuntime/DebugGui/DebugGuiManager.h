@@ -120,7 +120,8 @@ namespace RendererRuntime
 		Renderer::IPipelineStatePtr	mPipelineState;
 		Renderer::IUniformBufferPtr	mVertexShaderUniformBuffer;
 		Renderer::handle			mObjectSpaceToClipSpaceMatrixUniformHandle;
-		Renderer::ISamplerStatePtr	mSamplerState;
+		Renderer::IResourceGroupPtr	mResourceGroup;		///< Resource group, can be a null pointer
+		Renderer::IResourceGroupPtr	mSamplerStateGroup;	///< Sampler state resource group, can be a null pointer
 		// Vertex and index buffer
 		Renderer::IVertexBufferPtr	mVertexBufferPtr;
 		uint32_t					mNumberOfAllocatedVertices;

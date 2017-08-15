@@ -273,7 +273,7 @@ namespace RendererRuntime
 		}
 	}
 
-	void MaterialBlueprintResource::fillCommandBuffer(Renderer::CommandBuffer& commandBuffer) const
+	void MaterialBlueprintResource::fillCommandBuffer(Renderer::CommandBuffer& commandBuffer)
 	{
 		// Set the used graphics root signature
 		Renderer::Command::SetGraphicsRootSignature::create(commandBuffer, mRootSignaturePtr);
@@ -284,13 +284,26 @@ namespace RendererRuntime
 			mPassBufferManager->fillCommandBuffer(commandBuffer);
 		}
 
-		{ // Graphics root descriptor table: Set our sampler states
-			const size_t numberOfSamplerStates = mSamplerStates.size();
-			for (size_t i = 0; i < numberOfSamplerStates; ++i)
+		// Set our sampler states
+		if (!mSamplerStates.empty())
+		{
+			// Create sampler resource group, if needed
+			if (nullptr == mSamplerStateGroup)
 			{
-				const SamplerState& samplerState = mSamplerStates[i];
-				Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, samplerState.rootParameterIndex, samplerState.samplerStatePtr);
+				std::vector<Renderer::IResource*> resources;
+				const size_t numberOfSamplerStates = mSamplerStates.size();
+				resources.resize(numberOfSamplerStates);
+				for (size_t i = 0; i < numberOfSamplerStates; ++i)
+				{
+					resources[i] = mSamplerStates[i].samplerStatePtr;
+				}
+				// TODO(co) All sampler states need to be inside the same resource group, this needs to be guaranteed by design
+				mSamplerStateGroup = mRootSignaturePtr->createResourceGroup(mSamplerStates[0].rootParameterIndex, static_cast<uint32_t>(numberOfSamplerStates), resources.data());
+				RENDERER_SET_RESOURCE_DEBUG_NAME(mSamplerStateGroup, "Material blueprint")
 			}
+
+			// Set resource group
+			Renderer::Command::SetGraphicsResourceGroup::create(commandBuffer, mSamplerStates[0].rootParameterIndex, mSamplerStateGroup);
 		}
 
 		// It's valid if a material blueprint resource doesn't contain a material uniform buffer (usually the case for compositor material blueprint resources)
@@ -473,6 +486,7 @@ namespace RendererRuntime
 			{
 				if (Renderer::FilterMode::UNKNOWN == samplerState.rendererSamplerState.filter || isUninitialized(samplerState.rendererSamplerState.maxAnisotropy))
 				{
+					mSamplerStateGroup = nullptr;
 					Renderer::SamplerState rendererSamplerState = samplerState.rendererSamplerState;
 					if (Renderer::FilterMode::UNKNOWN == rendererSamplerState.filter)
 					{

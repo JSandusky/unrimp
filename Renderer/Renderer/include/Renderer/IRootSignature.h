@@ -31,6 +31,16 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace Renderer
+{
+	class ISamplerState;
+	class IResourceGroup;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace Renderer
@@ -60,6 +70,29 @@ namespace Renderer
 		*    Destructor
 		*/
 		inline virtual ~IRootSignature();
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IRootSignature methods       ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Create a resource group instance
+		*
+		*  @param[in] rootParameterIndex
+		*    The root parameter index number for binding
+		*  @param[in] numberOfResources
+		*    Number of resources, having no resources is invalid
+		*  @param[in] resources
+		*    At least "numberOfResources" resource pointers, must be valid, the resource group will keep a reference to the resources
+		*  @param[in] samplerStates
+		*    If not a null pointer at least "numberOfResources" sampler state pointers, must be valid if there's at least one texture resource, the resource group will keep a reference to the sampler states
+		*
+		*  @return
+		*    The created resource group instance, a null pointer on error. Release the returned instance if you no longer need it.
+		*/
+		virtual IResourceGroup* createResourceGroup(uint32_t rootParameterIndex, uint32_t numberOfResources, IResource** resources, Renderer::ISamplerState** samplerStates = nullptr) = 0;
 
 
 	//[-------------------------------------------------------]

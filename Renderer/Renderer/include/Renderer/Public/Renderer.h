@@ -59,6 +59,7 @@ namespace Renderer
 	class IShaderLanguage;
 	class IResource;
 		class IRootSignature;
+		class IResourceGroup;
 		class IProgram;
 		class IVertexArray;
 		class IRenderTarget;
@@ -266,6 +267,8 @@ namespace Renderer
 				DEBUG,
 				INFORMATION,
 				WARNING,
+				PERFORMANCE_WARNING,
+				COMPATIBILITY_WARNING,
 				CRITICAL
 			};
 		public:
@@ -360,27 +363,28 @@ namespace Renderer
 		enum class ResourceType
 		{
 			ROOT_SIGNATURE				   = 0,
-			PROGRAM						   = 1,
-			VERTEX_ARRAY				   = 2,
-			SWAP_CHAIN					   = 3,
-			FRAMEBUFFER					   = 4,
-			INDEX_BUFFER				   = 5,
-			VERTEX_BUFFER				   = 6,
-			UNIFORM_BUFFER				   = 7,
-			TEXTURE_BUFFER				   = 8,
-			INDIRECT_BUFFER				   = 9,
-			TEXTURE_1D					   = 10,
-			TEXTURE_2D					   = 11,
-			TEXTURE_2D_ARRAY			   = 12,
-			TEXTURE_3D					   = 13,
-			TEXTURE_CUBE				   = 14,
-			PIPELINE_STATE				   = 15,
-			SAMPLER_STATE				   = 16,
-			VERTEX_SHADER				   = 17,
-			TESSELLATION_CONTROL_SHADER	   = 18,
-			TESSELLATION_EVALUATION_SHADER = 19,
-			GEOMETRY_SHADER				   = 20,
-			FRAGMENT_SHADER				   = 21
+			RESOURCE_GROUP				   = 1,
+			PROGRAM						   = 2,
+			VERTEX_ARRAY				   = 3,
+			SWAP_CHAIN					   = 4,
+			FRAMEBUFFER					   = 5,
+			INDEX_BUFFER				   = 6,
+			VERTEX_BUFFER				   = 7,
+			UNIFORM_BUFFER				   = 8,
+			TEXTURE_BUFFER				   = 9,
+			INDIRECT_BUFFER				   = 10,
+			TEXTURE_1D					   = 11,
+			TEXTURE_2D					   = 12,
+			TEXTURE_2D_ARRAY			   = 13,
+			TEXTURE_3D					   = 14,
+			TEXTURE_CUBE				   = 15,
+			PIPELINE_STATE				   = 16,
+			SAMPLER_STATE				   = 17,
+			VERTEX_SHADER				   = 18,
+			TESSELLATION_CONTROL_SHADER	   = 19,
+			TESSELLATION_EVALUATION_SHADER = 20,
+			GEOMETRY_SHADER				   = 21,
+			FRAGMENT_SHADER				   = 22
 		};
 	#endif
 
@@ -443,6 +447,15 @@ namespace Renderer
 			SAMPLER				  = UBV + 1,
 			NUMBER_OF_RANGE_TYPES = SAMPLER + 1
 		};
+		enum class ShaderVisibility
+		{
+			ALL                     = 0,
+			VERTEX                  = 1,
+			TESSELLATION_CONTROL    = 2,
+			TESSELLATION_EVALUATION = 3,
+			GEOMETRY                = 4,
+			FRAGMENT                = 5
+		};
 		struct DescriptorRange
 		{
 			static const uint32_t NAME_LENGTH = 32;
@@ -452,7 +465,7 @@ namespace Renderer
 			uint32_t			  registerSpace;
 			uint32_t			  offsetInDescriptorsFromTableStart;
 			char				  baseShaderRegisterName[NAME_LENGTH];
-			uint32_t			  samplerRootParameterIndex;
+			ShaderVisibility	  shaderVisibility;
 		};
 		struct DescriptorRangeBuilder : public DescriptorRange
 		{
@@ -462,34 +475,35 @@ namespace Renderer
 			explicit DescriptorRangeBuilder(const DescriptorRangeBuilder&)
 			{}
 			DescriptorRangeBuilder(
-				DescriptorRangeType	_rangeType,
+				DescriptorRangeType _rangeType,
 				uint32_t _numberOfDescriptors,
 				uint32_t _baseShaderRegister,
 				const char _baseShaderRegisterName[NAME_LENGTH],
-				uint32_t _samplerRootParameterIndex,
+				ShaderVisibility _shaderVisibility,
 				uint32_t _registerSpace = 0,
 				uint32_t _offsetInDescriptorsFromTableStart = OFFSET_APPEND)
 			{
-				initialize(_rangeType, _numberOfDescriptors, _baseShaderRegister, _baseShaderRegisterName, _samplerRootParameterIndex, _registerSpace, _offsetInDescriptorsFromTableStart);
+				initialize(_rangeType, _numberOfDescriptors, _baseShaderRegister, _baseShaderRegisterName, _shaderVisibility, _registerSpace, _offsetInDescriptorsFromTableStart);
 			}
 			inline void initializeSampler(
 				uint32_t _numberOfDescriptors,
 				uint32_t _baseShaderRegister,
+				ShaderVisibility _shaderVisibility,
 				uint32_t _registerSpace = 0,
 				uint32_t _offsetInDescriptorsFromTableStart = OFFSET_APPEND)
 			{
-				initialize(*this, DescriptorRangeType::SAMPLER, _numberOfDescriptors, _baseShaderRegister, "", 0, _registerSpace, _offsetInDescriptorsFromTableStart);
+				initialize(*this, DescriptorRangeType::SAMPLER, _numberOfDescriptors, _baseShaderRegister, "", _shaderVisibility, _registerSpace, _offsetInDescriptorsFromTableStart);
 			}
 			inline void initialize(
-				DescriptorRangeType	_rangeType,
+				DescriptorRangeType _rangeType,
 				uint32_t _numberOfDescriptors,
 				uint32_t _baseShaderRegister,
 				const char _baseShaderRegisterName[NAME_LENGTH],
-				uint32_t _samplerRootParameterIndex,
+				ShaderVisibility _shaderVisibility,
 				uint32_t _registerSpace = 0,
 				uint32_t _offsetInDescriptorsFromTableStart = OFFSET_APPEND)
 			{
-				initialize(*this, _rangeType, _numberOfDescriptors, _baseShaderRegister, _baseShaderRegisterName, _samplerRootParameterIndex, _registerSpace, _offsetInDescriptorsFromTableStart);
+				initialize(*this, _rangeType, _numberOfDescriptors, _baseShaderRegister, _baseShaderRegisterName, _shaderVisibility, _registerSpace, _offsetInDescriptorsFromTableStart);
 			}
 			static inline void initialize(
 				DescriptorRange& range,
@@ -497,7 +511,7 @@ namespace Renderer
 				uint32_t _numberOfDescriptors,
 				uint32_t _baseShaderRegister,
 				const char _baseShaderRegisterName[NAME_LENGTH],
-				uint32_t _samplerRootParameterIndex,
+				ShaderVisibility _shaderVisibility,
 				uint32_t _registerSpace = 0,
 				uint32_t _offsetInDescriptorsFromTableStart = OFFSET_APPEND)
 			{
@@ -507,7 +521,7 @@ namespace Renderer
 				range.registerSpace = _registerSpace;
 				range.offsetInDescriptorsFromTableStart = _offsetInDescriptorsFromTableStart;
 				strcpy(range.baseShaderRegisterName, _baseShaderRegisterName);
-				range.samplerRootParameterIndex = _samplerRootParameterIndex;
+				range.shaderVisibility = _shaderVisibility;
 			}
 		};
 		struct RootDescriptorTable
@@ -616,15 +630,6 @@ namespace Renderer
 				table.registerSpace = _registerSpace;
 			}
 		};
-		enum class ShaderVisibility
-		{
-			ALL                     = 0,
-			VERTEX                  = 1,
-			TESSELLATION_CONTROL    = 2,
-			TESSELLATION_EVALUATION = 3,
-			GEOMETRY                = 4,
-			FRAGMENT                = 5
-		};
 		struct RootParameter
 		{
 			RootParameterType		parameterType;
@@ -634,13 +639,11 @@ namespace Renderer
 				RootConstants		constants;
 				RootDescriptor		descriptor;
 			};
-			ShaderVisibility		shaderVisibility;
 		};
 		struct RootParameterData
 		{
-			RootParameterType	parameterType;
-			ShaderVisibility	shaderVisibility;
-			uint32_t			numberOfDescriptorRanges;
+			RootParameterType parameterType;
+			uint32_t		  numberOfDescriptorRanges;
 		};
 		struct RootParameterBuilder : public RootParameter
 		{
@@ -651,89 +654,74 @@ namespace Renderer
 			static inline void initializeAsDescriptorTable(
 				RootParameter& rootParam,
 				uint32_t numberOfDescriptorRanges,
-				const DescriptorRange* descriptorRanges,
-				ShaderVisibility visibility = ShaderVisibility::ALL)
+				const DescriptorRange* descriptorRanges)
 			{
 				rootParam.parameterType = RootParameterType::DESCRIPTOR_TABLE;
-				rootParam.shaderVisibility = visibility;
 				RootDescriptorTableBuilder::initialize(rootParam.descriptorTable, numberOfDescriptorRanges, descriptorRanges);
 			}
 			static inline void initializeAsConstants(
 				RootParameter& rootParam,
 				uint32_t numberOf32BitValues,
 				uint32_t shaderRegister,
-				uint32_t registerSpace = 0,
-				ShaderVisibility visibility = ShaderVisibility::ALL)
+				uint32_t registerSpace = 0)
 			{
 				rootParam.parameterType = RootParameterType::CONSTANTS_32BIT;
-				rootParam.shaderVisibility = visibility;
 				RootConstantsBuilder::initialize(rootParam.constants, numberOf32BitValues, shaderRegister, registerSpace);
 			}
 			static inline void initializeAsConstantBufferView(
 				RootParameter& rootParam,
 				uint32_t shaderRegister,
-				uint32_t registerSpace = 0,
-				ShaderVisibility visibility = ShaderVisibility::ALL)
+				uint32_t registerSpace = 0)
 			{
 				rootParam.parameterType = RootParameterType::UBV;
-				rootParam.shaderVisibility = visibility;
 				RootDescriptorBuilder::initialize(rootParam.descriptor, shaderRegister, registerSpace);
 			}
 			static inline void initializeAsShaderResourceView(
 				RootParameter& rootParam,
 				uint32_t shaderRegister,
-				uint32_t registerSpace = 0,
-				ShaderVisibility visibility = ShaderVisibility::ALL)
+				uint32_t registerSpace = 0)
 			{
 				rootParam.parameterType = RootParameterType::SRV;
-				rootParam.shaderVisibility = visibility;
 				RootDescriptorBuilder::initialize(rootParam.descriptor, shaderRegister, registerSpace);
 			}
 			static inline void initializeAsUnorderedAccessView(
 				RootParameter& rootParam,
 				uint32_t shaderRegister,
-				uint32_t registerSpace = 0,
-				ShaderVisibility visibility = ShaderVisibility::ALL)
+				uint32_t registerSpace = 0)
 			{
 				rootParam.parameterType = RootParameterType::UAV;
-				rootParam.shaderVisibility = visibility;
 				RootDescriptorBuilder::initialize(rootParam.descriptor, shaderRegister, registerSpace);
 			}
 			inline void initializeAsDescriptorTable(
 				uint32_t numberOfDescriptorRanges,
-				const DescriptorRange* descriptorRanges,
-				ShaderVisibility visibility = ShaderVisibility::ALL)
+				const DescriptorRange* descriptorRanges)
 			{
-				initializeAsDescriptorTable(*this, numberOfDescriptorRanges, descriptorRanges, visibility);
+				initializeAsDescriptorTable(*this, numberOfDescriptorRanges, descriptorRanges);
 			}
 			inline void initializeAsConstants(
 				uint32_t numberOf32BitValues,
 				uint32_t shaderRegister,
-				uint32_t registerSpace = 0,
-				ShaderVisibility visibility = ShaderVisibility::ALL)
+				uint32_t registerSpace = 0)
 			{
-				initializeAsConstants(*this, numberOf32BitValues, shaderRegister, registerSpace, visibility);
+				initializeAsConstants(*this, numberOf32BitValues, shaderRegister, registerSpace);
 			}
 			inline void initializeAsConstantBufferView(
 				uint32_t shaderRegister,
-				uint32_t registerSpace = 0,
-				ShaderVisibility visibility = ShaderVisibility::ALL)
+				uint32_t registerSpace = 0)
 			{
-				initializeAsConstantBufferView(*this, shaderRegister, registerSpace, visibility);
+				initializeAsConstantBufferView(*this, shaderRegister, registerSpace);
 			}
 			inline void initializeAsShaderResourceView(
 				uint32_t shaderRegister,
-				uint32_t registerSpace = 0,
-				ShaderVisibility visibility = ShaderVisibility::ALL)
+				uint32_t registerSpace = 0)
 			{
-				initializeAsShaderResourceView(*this, shaderRegister, registerSpace, visibility);
+				initializeAsShaderResourceView(*this, shaderRegister, registerSpace);
 			}
 			inline void initializeAsUnorderedAccessView(
 				uint32_t shaderRegister,
-				uint32_t registerSpace = 0,
-				ShaderVisibility visibility = ShaderVisibility::ALL)
+				uint32_t registerSpace = 0)
 			{
-				initializeAsUnorderedAccessView(*this, shaderRegister, registerSpace, visibility);
+				initializeAsUnorderedAccessView(*this, shaderRegister, registerSpace);
 			}
 		};
 		struct RootSignatureFlags
@@ -1846,6 +1834,8 @@ namespace Renderer
 		public:
 			std::atomic<uint32_t> currentNumberOfRootSignatures;
 			std::atomic<uint32_t> numberOfCreatedRootSignatures;
+			std::atomic<uint32_t> currentNumberOfResourceGroups;
+			std::atomic<uint32_t> numberOfCreatedResourceGroups;
 			std::atomic<uint32_t> currentNumberOfPrograms;
 			std::atomic<uint32_t> numberOfCreatedPrograms;
 			std::atomic<uint32_t> currentNumberOfVertexArrays;
@@ -1892,6 +1882,8 @@ namespace Renderer
 			inline Statistics() :
 				currentNumberOfRootSignatures(0),
 				numberOfCreatedRootSignatures(0),
+				currentNumberOfResourceGroups(0),
+				numberOfCreatedResourceGroups(0),
 				currentNumberOfPrograms(0),
 				numberOfCreatedPrograms(0),
 				currentNumberOfVertexArrays(0),
@@ -2121,12 +2113,29 @@ namespace Renderer
 		{
 		public:
 			virtual ~IRootSignature();
+		public:
+			virtual IResourceGroup* createResourceGroup(uint32_t rootParameterIndex, uint32_t numberOfResources, IResource** resources, Renderer::ISamplerState** samplerStates = nullptr) = 0;
 		protected:
 			explicit IRootSignature(IRenderer& renderer);
 			explicit IRootSignature(const IRootSignature& source) = delete;
 			IRootSignature& operator =(const IRootSignature& source) = delete;
 		};
 		typedef SmartRefCount<IRootSignature> IRootSignaturePtr;
+	#endif
+
+	// Renderer/ResourceGroup.h
+	#ifndef __RENDERER_IRESOURCEGROUP_H__
+	#define __RENDERER_IRESOURCEGROUP_H__
+		class IResourceGroup : public IResource
+		{
+		public:
+			virtual ~IResourceGroup();
+		protected:
+			explicit IResourceGroup(IRenderer& renderer);
+			explicit IResourceGroup(const IResourceGroup& source) = delete;
+			IResourceGroup& operator =(const IResourceGroup& source) = delete;
+		};
+		typedef SmartRefCount<IResourceGroup> IResourceGroupPtr;
 	#endif
 
 	// Renderer/Shader/IProgram.h
@@ -2734,10 +2743,11 @@ namespace Renderer
 	#define __RENDERER_COMMANDBUFFER_H__
 		enum CommandDispatchFunctionIndex : uint8_t
 		{
-			CopyUniformBufferData = 0,
+			ExecuteCommandBuffer = 0,
+			CopyUniformBufferData,
 			CopyTextureBufferData,
 			SetGraphicsRootSignature,
-			SetGraphicsRootDescriptorTable,
+			SetGraphicsResourceGroup,
 			SetPipelineState,
 			SetVertexArray,
 			SetViewports,
@@ -2894,6 +2904,21 @@ namespace Renderer
 		};
 		namespace Command
 		{
+			struct ExecuteCommandBuffer
+			{
+				inline static void create(CommandBuffer& commandBuffer, CommandBuffer* commandBufferToExecute)
+				{
+					#ifndef RENDERER_NO_DEBUG
+						assert(nullptr != commandBufferToExecute);
+					#endif
+					*commandBuffer.addCommand<ExecuteCommandBuffer>() = ExecuteCommandBuffer(commandBufferToExecute);
+				}
+				inline ExecuteCommandBuffer(CommandBuffer* _commandBufferToExecute) :
+					commandBufferToExecute(_commandBufferToExecute)
+				{}
+				CommandBuffer* commandBufferToExecute;
+				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::ExecuteCommandBuffer;
+			};
 			struct CopyUniformBufferData
 			{
 				inline static void create(CommandBuffer& commandBuffer, IUniformBuffer* uniformBuffer, uint32_t numberOfBytes, void* data)
@@ -2946,19 +2971,19 @@ namespace Renderer
 				IRootSignature* rootSignature;
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetGraphicsRootSignature;
 			};
-			struct SetGraphicsRootDescriptorTable
+			struct SetGraphicsResourceGroup
 			{
-				inline static void create(CommandBuffer& commandBuffer, uint32_t rootParameterIndex, IResource* resource)
+				inline static void create(CommandBuffer& commandBuffer, uint32_t rootParameterIndex, IResourceGroup* resourceGroup)
 				{
-					*commandBuffer.addCommand<SetGraphicsRootDescriptorTable>() = SetGraphicsRootDescriptorTable(rootParameterIndex, resource);
+					*commandBuffer.addCommand<SetGraphicsResourceGroup>() = SetGraphicsResourceGroup(rootParameterIndex, resourceGroup);
 				}
-				inline SetGraphicsRootDescriptorTable(uint32_t _rootParameterIndex, IResource* _resource) :
+				inline SetGraphicsResourceGroup(uint32_t _rootParameterIndex, IResourceGroup* _resourceGroup) :
 					rootParameterIndex(_rootParameterIndex),
-					resource(_resource)
+					resourceGroup(_resourceGroup)
 				{}
-				uint32_t   rootParameterIndex;
-				IResource* resource;
-				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetGraphicsRootDescriptorTable;
+				uint32_t		rootParameterIndex;
+				IResourceGroup* resourceGroup;
+				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetGraphicsResourceGroup;
 			};
 			struct SetPipelineState
 			{

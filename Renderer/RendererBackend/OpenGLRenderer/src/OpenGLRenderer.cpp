@@ -26,6 +26,7 @@
 #include "OpenGLRenderer/Mapping.h"
 #include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/RootSignature.h"
+#include "OpenGLRenderer/ResourceGroup.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 #include "OpenGLRenderer/RenderTarget/SwapChain.h"
 #include "OpenGLRenderer/RenderTarget/FramebufferDsa.h"
@@ -194,6 +195,17 @@ namespace
 
 
 			//[-------------------------------------------------------]
+			//[ Command buffer                                        ]
+			//[-------------------------------------------------------]
+			void ExecuteCommandBuffer(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::ExecuteCommandBuffer* realData = static_cast<const Renderer::Command::ExecuteCommandBuffer*>(data);
+				assert(nullptr != realData->commandBufferToExecute);
+				renderer.submitCommandBuffer(*realData->commandBufferToExecute);
+			}
+
+
+			//[-------------------------------------------------------]
 			//[ Resource handling                                     ]
 			//[-------------------------------------------------------]
 			void CopyUniformBufferData(const void* data, Renderer::IRenderer&)
@@ -217,10 +229,10 @@ namespace
 				static_cast<OpenGLRenderer::OpenGLRenderer&>(renderer).setGraphicsRootSignature(realData->rootSignature);
 			}
 
-			void SetGraphicsRootDescriptorTable(const void* data, Renderer::IRenderer& renderer)
+			void SetGraphicsResourceGroup(const void* data, Renderer::IRenderer& renderer)
 			{
-				const Renderer::Command::SetGraphicsRootDescriptorTable* realData = static_cast<const Renderer::Command::SetGraphicsRootDescriptorTable*>(data);
-				static_cast<OpenGLRenderer::OpenGLRenderer&>(renderer).setGraphicsRootDescriptorTable(realData->rootParameterIndex, realData->resource);
+				const Renderer::Command::SetGraphicsResourceGroup* realData = static_cast<const Renderer::Command::SetGraphicsResourceGroup*>(data);
+				static_cast<OpenGLRenderer::OpenGLRenderer&>(renderer).setGraphicsResourceGroup(realData->rootParameterIndex, realData->resourceGroup);
 			}
 
 			//[-------------------------------------------------------]
@@ -344,12 +356,14 @@ namespace
 		//[-------------------------------------------------------]
 		static const Renderer::BackendDispatchFunction DISPATCH_FUNCTIONS[Renderer::CommandDispatchFunctionIndex::NumberOfFunctions] =
 		{
+			// Command buffer
+			&BackendDispatch::ExecuteCommandBuffer,
 			// Resource handling
 			&BackendDispatch::CopyUniformBufferData,
 			&BackendDispatch::CopyTextureBufferData,
 			// Graphics root
 			&BackendDispatch::SetGraphicsRootSignature,
-			&BackendDispatch::SetGraphicsRootDescriptorTable,
+			&BackendDispatch::SetGraphicsResourceGroup,
 			// States
 			&BackendDispatch::SetPipelineState,
 			// Input-assembler (IA) stage
@@ -583,7 +597,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	void OpenGLRenderer::setGraphicsRootDescriptorTable(uint32_t rootParameterIndex, Renderer::IResource* resource)
+	void OpenGLRenderer::setGraphicsResourceGroup(uint32_t rootParameterIndex, Renderer::IResourceGroup* resourceGroup)
 	{
 		// Security checks
 		#ifndef OPENGLRENDERER_NO_DEBUG
@@ -605,13 +619,6 @@ namespace OpenGLRenderer
 				RENDERER_LOG(mContext, CRITICAL, "The OpenGL renderer backend root parameter index doesn't reference a descriptor table")
 				return;
 			}
-
-			// TODO(co) For now, we only support a single descriptor range
-			if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
-			{
-				RENDERER_LOG(mContext, CRITICAL, "Only a single descriptor range is supported by the OpenGL renderer backend")
-				return;
-			}
 			if (nullptr == reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges))
 			{
 				RENDERER_LOG(mContext, CRITICAL, "The OpenGL renderer backend descriptor ranges is a null pointer")
@@ -620,244 +627,140 @@ namespace OpenGLRenderer
 		}
 		#endif
 
-		if (nullptr != resource)
+		if (nullptr != resourceGroup)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *resource)
+			OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *resourceGroup)
 
-			// Get the root signature parameter instance
+			// Set graphics resource group
+			const ResourceGroup* openGLResourceGroup = static_cast<ResourceGroup*>(resourceGroup);
+			const uint32_t numberOfResources = openGLResourceGroup->getNumberOfResources();
+			Renderer::IResource** resources = openGLResourceGroup->getResources();
 			const Renderer::RootParameter& rootParameter = mGraphicsRootSignature->getRootSignature().parameters[rootParameterIndex];
-			const Renderer::DescriptorRange* descriptorRange = reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges);
-
-			// Check the type of resource to set
-			// TODO(co) Some additional resource type root signature security checks in debug build?
-			// TODO(co) There's room for binding API call related optimization in here (will certainly be no huge overall efficiency gain)
-			const Renderer::ResourceType resourceType = resource->getResourceType();
-			switch (resourceType)
+			for (uint32_t resourceIndex = 0; resourceIndex < numberOfResources; ++resourceIndex, ++resources)
 			{
-				case Renderer::ResourceType::UNIFORM_BUFFER:
-					// "GL_ARB_uniform_buffer_object" required
-					if (mExtensions->isGL_ARB_uniform_buffer_object())
-					{
-						// Attach the buffer to the given UBO binding point
-						// -> Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
-						// -> Direct3D 10 and Direct3D 11 have explicit binding points
-						glBindBufferBase(GL_UNIFORM_BUFFER, rootParameterIndex, static_cast<UniformBuffer*>(resource)->getOpenGLUniformBuffer());
-					}
-					break;
+				Renderer::IResource* resource = *resources;
+				assert(nullptr != reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges));
+				const Renderer::DescriptorRange& descriptorRange = reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges)[resourceIndex];
 
-				case Renderer::ResourceType::TEXTURE_BUFFER:
-				case Renderer::ResourceType::TEXTURE_1D:
-				case Renderer::ResourceType::TEXTURE_2D:
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-				case Renderer::ResourceType::TEXTURE_3D:
-				case Renderer::ResourceType::TEXTURE_CUBE:
+				// Check the type of resource to set
+				// TODO(co) Some additional resource type root signature security checks in debug build?
+				const Renderer::ResourceType resourceType = resource->getResourceType();
+				switch (resourceType)
 				{
-					// In OpenGL, all shaders share the same texture units (= "Renderer::RootParameter::shaderVisibility" stays unused)
-
-					// Is "GL_ARB_direct_state_access" or "GL_EXT_direct_state_access" there?
-					if (mExtensions->isGL_ARB_direct_state_access() || mExtensions->isGL_EXT_direct_state_access())
-					{
-						// Effective direct state access (DSA)
-						const bool isArbDsa = mExtensions->isGL_ARB_direct_state_access();
-
-						// "glBindTextureUnit()" unit parameter is zero based so we can simply use the value we received
-						const GLuint unit = descriptorRange->baseShaderRegister;
-
-						// TODO(co) Some security checks might be wise *maximum number of texture units*
-						// Evaluate the texture type
-						switch (resourceType)
+					case Renderer::ResourceType::UNIFORM_BUFFER:
+						// "GL_ARB_uniform_buffer_object" required
+						if (mExtensions->isGL_ARB_uniform_buffer_object())
 						{
-							case Renderer::ResourceType::TEXTURE_BUFFER:
-								if (isArbDsa)
-								{
-									glBindTextureUnit(unit, static_cast<TextureBuffer*>(resource)->getOpenGLTexture());
-								}
-								else
-								{
-									// "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
-									glBindMultiTextureEXT(GL_TEXTURE0_ARB + unit, GL_TEXTURE_BUFFER_ARB, static_cast<TextureBuffer*>(resource)->getOpenGLTexture());
-								}
-								break;
-
-							case Renderer::ResourceType::TEXTURE_1D:
-								if (isArbDsa)
-								{
-									glBindTextureUnit(unit, static_cast<Texture1D*>(resource)->getOpenGLTexture());
-								}
-								else
-								{
-									// "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
-									const Texture1D* texture1D = static_cast<Texture1D*>(resource);
-									glBindMultiTextureEXT(GL_TEXTURE0_ARB + unit, GL_TEXTURE_1D, texture1D->getOpenGLTexture());
-								}
-								break;
-
-							case Renderer::ResourceType::TEXTURE_2D:
-								if (isArbDsa)
-								{
-									glBindTextureUnit(unit, static_cast<Texture2D*>(resource)->getOpenGLTexture());
-								}
-								else
-								{
-									// "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
-									const Texture2D* texture2D = static_cast<Texture2D*>(resource);
-									glBindMultiTextureEXT(GL_TEXTURE0_ARB + unit, static_cast<GLenum>((texture2D->getNumberOfMultisamples() > 1) ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D), texture2D->getOpenGLTexture());
-								}
-								break;
-
-							case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-								// No texture 2D array extension check required, if we in here we already know it must exist
-								if (isArbDsa)
-								{
-									glBindTextureUnit(unit, static_cast<Texture2DArray*>(resource)->getOpenGLTexture());
-								}
-								else
-								{
-									// "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
-									glBindMultiTextureEXT(GL_TEXTURE0_ARB + unit, GL_TEXTURE_2D_ARRAY_EXT, static_cast<Texture2DArray*>(resource)->getOpenGLTexture());
-								}
-								break;
-
-							case Renderer::ResourceType::TEXTURE_3D:
-								if (isArbDsa)
-								{
-									glBindTextureUnit(unit, static_cast<Texture3D*>(resource)->getOpenGLTexture());
-								}
-								else
-								{
-									// "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
-									const Texture3D* texture3D = static_cast<Texture3D*>(resource);
-									glBindMultiTextureEXT(GL_TEXTURE0_ARB + unit, GL_TEXTURE_3D, texture3D->getOpenGLTexture());
-								}
-								break;
-
-							case Renderer::ResourceType::TEXTURE_CUBE:
-								if (isArbDsa)
-								{
-									glBindTextureUnit(unit, static_cast<TextureCube*>(resource)->getOpenGLTexture());
-								}
-								else
-								{
-									// "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
-									const TextureCube* textureCube = static_cast<TextureCube*>(resource);
-									glBindMultiTextureEXT(GL_TEXTURE0_ARB + unit, GL_TEXTURE_CUBE_MAP, textureCube->getOpenGLTexture());
-								}
-								break;
-
-							case Renderer::ResourceType::ROOT_SIGNATURE:
-							case Renderer::ResourceType::PROGRAM:
-							case Renderer::ResourceType::VERTEX_ARRAY:
-							case Renderer::ResourceType::SWAP_CHAIN:
-							case Renderer::ResourceType::FRAMEBUFFER:
-							case Renderer::ResourceType::INDEX_BUFFER:
-							case Renderer::ResourceType::VERTEX_BUFFER:
-							case Renderer::ResourceType::UNIFORM_BUFFER:
-							case Renderer::ResourceType::INDIRECT_BUFFER:
-							case Renderer::ResourceType::PIPELINE_STATE:
-							case Renderer::ResourceType::SAMPLER_STATE:
-							case Renderer::ResourceType::VERTEX_SHADER:
-							case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-							case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-							case Renderer::ResourceType::GEOMETRY_SHADER:
-							case Renderer::ResourceType::FRAGMENT_SHADER:
-								RENDERER_LOG(mContext, CRITICAL, "Invalid OpenGL renderer backend resource type")
-								break;
+							// Attach the buffer to the given UBO binding point
+							// -> Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
+							// -> Direct3D 10 and Direct3D 11 have explicit binding points
+							assert(nullptr != openGLResourceGroup->getResourceIndexToUniformBlockBindingIndex());
+							glBindBufferBase(GL_UNIFORM_BUFFER, openGLResourceGroup->getResourceIndexToUniformBlockBindingIndex()[resourceIndex], static_cast<UniformBuffer*>(resource)->getOpenGLUniformBuffer());
 						}
+						break;
 
-						// Set the OpenGL sampler states, if required (texture buffer has no sampler state)
-						if (Renderer::ResourceType::TEXTURE_BUFFER != resourceType)
-						{
-							const SamplerState* samplerState = mGraphicsRootSignature->getSamplerState(descriptorRange->samplerRootParameterIndex);
-
-							// Is "GL_ARB_sampler_objects" there?
-							if (mExtensions->isGL_ARB_sampler_objects())
-							{
-								// Effective sampler object (SO)
-								glBindSampler(descriptorRange->baseShaderRegister, static_cast<const SamplerStateSo*>(samplerState)->getOpenGLSampler());
-							}
-							else
-							{
-								#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-									// Backup the currently active OpenGL texture
-									GLint openGLActiveTextureBackup = 0;
-									glGetIntegerv(GL_ACTIVE_TEXTURE, &openGLActiveTextureBackup);
-								#endif
-
-								// TODO(co) Some security checks might be wise *maximum number of texture units*
-								// Activate the texture unit we want to manipulate
-								// -> "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
-								glActiveTextureARB(GL_TEXTURE0_ARB + unit);
-
-								// Is "GL_EXT_direct_state_access" there?
-								if (mExtensions->isGL_EXT_direct_state_access())
-								{
-									// Direct state access (DSA) version to emulate a sampler object
-									static_cast<const SamplerStateDsa*>(samplerState)->setOpenGLSamplerStates();
-								}
-								else
-								{
-									// Traditional bind version to emulate a sampler object
-									static_cast<const SamplerStateBind*>(samplerState)->setOpenGLSamplerStates();
-								}
-
-								#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-									// Be polite and restore the previous active OpenGL texture
-									glActiveTextureARB(static_cast<GLenum>(openGLActiveTextureBackup));
-								#endif
-							}
-						}
-					}
-					else
+					case Renderer::ResourceType::TEXTURE_BUFFER:
+					case Renderer::ResourceType::TEXTURE_1D:
+					case Renderer::ResourceType::TEXTURE_2D:
+					case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+					case Renderer::ResourceType::TEXTURE_3D:
+					case Renderer::ResourceType::TEXTURE_CUBE:
 					{
-						// Traditional bind version
+						// In OpenGL, all shaders share the same texture units (= "Renderer::RootParameter::shaderVisibility" stays unused)
 
-						// "GL_ARB_multitexture" required
-						if (mExtensions->isGL_ARB_multitexture())
+						// Is "GL_ARB_direct_state_access" or "GL_EXT_direct_state_access" there?
+						if (mExtensions->isGL_ARB_direct_state_access() || mExtensions->isGL_EXT_direct_state_access())
 						{
-							#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-								// Backup the currently active OpenGL texture
-								GLint openGLActiveTextureBackup = 0;
-								glGetIntegerv(GL_ACTIVE_TEXTURE, &openGLActiveTextureBackup);
-							#endif
+							// Effective direct state access (DSA)
+							const bool isArbDsa = mExtensions->isGL_ARB_direct_state_access();
+
+							// "glBindTextureUnit()" unit parameter is zero based so we can simply use the value we received
+							const GLuint unit = descriptorRange.baseShaderRegister;
 
 							// TODO(co) Some security checks might be wise *maximum number of texture units*
-							// Activate the texture unit we want to manipulate
-							// -> "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
-							glActiveTextureARB(GL_TEXTURE0_ARB + descriptorRange->baseShaderRegister);
-
-							// Evaluate the resource type
+							// Evaluate the texture type
 							switch (resourceType)
 							{
 								case Renderer::ResourceType::TEXTURE_BUFFER:
-									glBindTexture(GL_TEXTURE_BUFFER_ARB, static_cast<TextureBuffer*>(resource)->getOpenGLTexture());
+									if (isArbDsa)
+									{
+										glBindTextureUnit(unit, static_cast<TextureBuffer*>(resource)->getOpenGLTexture());
+									}
+									else
+									{
+										// "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
+										glBindMultiTextureEXT(GL_TEXTURE0_ARB + unit, GL_TEXTURE_BUFFER_ARB, static_cast<TextureBuffer*>(resource)->getOpenGLTexture());
+									}
 									break;
 
 								case Renderer::ResourceType::TEXTURE_1D:
-									glBindTexture(GL_TEXTURE_1D, static_cast<Texture1D*>(resource)->getOpenGLTexture());
+									if (isArbDsa)
+									{
+										glBindTextureUnit(unit, static_cast<Texture1D*>(resource)->getOpenGLTexture());
+									}
+									else
+									{
+										// "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
+										const Texture1D* texture1D = static_cast<Texture1D*>(resource);
+										glBindMultiTextureEXT(GL_TEXTURE0_ARB + unit, GL_TEXTURE_1D, texture1D->getOpenGLTexture());
+									}
 									break;
 
 								case Renderer::ResourceType::TEXTURE_2D:
-								{
-									const Texture2D* texture2D = static_cast<Texture2D*>(resource);
-									glBindTexture(static_cast<GLenum>((texture2D->getNumberOfMultisamples() > 1) ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D), texture2D->getOpenGLTexture());
+									if (isArbDsa)
+									{
+										glBindTextureUnit(unit, static_cast<Texture2D*>(resource)->getOpenGLTexture());
+									}
+									else
+									{
+										// "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
+										const Texture2D* texture2D = static_cast<Texture2D*>(resource);
+										glBindMultiTextureEXT(GL_TEXTURE0_ARB + unit, static_cast<GLenum>((texture2D->getNumberOfMultisamples() > 1) ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D), texture2D->getOpenGLTexture());
+									}
 									break;
-								}
 
 								case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-									// No extension check required, if we in here we already know it must exist
-									glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, static_cast<Texture2DArray*>(resource)->getOpenGLTexture());
+									// No texture 2D array extension check required, if we in here we already know it must exist
+									if (isArbDsa)
+									{
+										glBindTextureUnit(unit, static_cast<Texture2DArray*>(resource)->getOpenGLTexture());
+									}
+									else
+									{
+										// "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
+										glBindMultiTextureEXT(GL_TEXTURE0_ARB + unit, GL_TEXTURE_2D_ARRAY_EXT, static_cast<Texture2DArray*>(resource)->getOpenGLTexture());
+									}
 									break;
 
 								case Renderer::ResourceType::TEXTURE_3D:
-									glBindTexture(GL_TEXTURE_3D, static_cast<Texture3D*>(resource)->getOpenGLTexture());
+									if (isArbDsa)
+									{
+										glBindTextureUnit(unit, static_cast<Texture3D*>(resource)->getOpenGLTexture());
+									}
+									else
+									{
+										// "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
+										const Texture3D* texture3D = static_cast<Texture3D*>(resource);
+										glBindMultiTextureEXT(GL_TEXTURE0_ARB + unit, GL_TEXTURE_3D, texture3D->getOpenGLTexture());
+									}
 									break;
 
 								case Renderer::ResourceType::TEXTURE_CUBE:
-									glBindTexture(GL_TEXTURE_CUBE_MAP, static_cast<TextureCube*>(resource)->getOpenGLTexture());
+									if (isArbDsa)
+									{
+										glBindTextureUnit(unit, static_cast<TextureCube*>(resource)->getOpenGLTexture());
+									}
+									else
+									{
+										// "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
+										const TextureCube* textureCube = static_cast<TextureCube*>(resource);
+										glBindMultiTextureEXT(GL_TEXTURE0_ARB + unit, GL_TEXTURE_CUBE_MAP, textureCube->getOpenGLTexture());
+									}
 									break;
 
 								case Renderer::ResourceType::ROOT_SIGNATURE:
+								case Renderer::ResourceType::RESOURCE_GROUP:
 								case Renderer::ResourceType::PROGRAM:
 								case Renderer::ResourceType::VERTEX_ARRAY:
 								case Renderer::ResourceType::SWAP_CHAIN:
@@ -877,85 +780,185 @@ namespace OpenGLRenderer
 									break;
 							}
 
-							// Set the OpenGL sampler states, if required (texture buffer has no sampler state)
+							// Set the OpenGL sampler states, if required (texture buffer has no sampler state), it's valid that there's no sampler state (e.g. texel fetch instead of sampling might be used)
 							if (Renderer::ResourceType::TEXTURE_BUFFER != resourceType)
 							{
-								const SamplerState* samplerState = mGraphicsRootSignature->getSamplerState(descriptorRange->samplerRootParameterIndex);
+								assert(nullptr != openGLResourceGroup->getSamplerState());
+								const SamplerState* samplerState = static_cast<const SamplerState*>(openGLResourceGroup->getSamplerState()[resourceIndex]);
+								if (nullptr != samplerState)
+								{
+									// Is "GL_ARB_sampler_objects" there?
+									if (mExtensions->isGL_ARB_sampler_objects())
+									{
+										// Effective sampler object (SO)
+										glBindSampler(descriptorRange.baseShaderRegister, static_cast<const SamplerStateSo*>(samplerState)->getOpenGLSampler());
+									}
+									else
+									{
+										#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+											// Backup the currently active OpenGL texture
+											GLint openGLActiveTextureBackup = 0;
+											glGetIntegerv(GL_ACTIVE_TEXTURE, &openGLActiveTextureBackup);
+										#endif
 
-								// Is "GL_ARB_sampler_objects" there?
-								if (mExtensions->isGL_ARB_sampler_objects())
-								{
-									// Effective sampler object (SO)
-									glBindSampler(descriptorRange->baseShaderRegister, static_cast<const SamplerStateSo*>(samplerState)->getOpenGLSampler());
-								}
-								// Is "GL_EXT_direct_state_access" there?
-								else if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
-								{
-									// Direct state access (DSA) version to emulate a sampler object
-									static_cast<const SamplerStateDsa*>(samplerState)->setOpenGLSamplerStates();
-								}
-								else
-								{
-									// Traditional bind version to emulate a sampler object
-									static_cast<const SamplerStateBind*>(samplerState)->setOpenGLSamplerStates();
+										// TODO(co) Some security checks might be wise *maximum number of texture units*
+										// Activate the texture unit we want to manipulate
+										// -> "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
+										glActiveTextureARB(GL_TEXTURE0_ARB + unit);
+
+										// Is "GL_EXT_direct_state_access" there?
+										if (mExtensions->isGL_EXT_direct_state_access())
+										{
+											// Direct state access (DSA) version to emulate a sampler object
+											static_cast<const SamplerStateDsa*>(samplerState)->setOpenGLSamplerStates();
+										}
+										else
+										{
+											// Traditional bind version to emulate a sampler object
+											static_cast<const SamplerStateBind*>(samplerState)->setOpenGLSamplerStates();
+										}
+
+										#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+											// Be polite and restore the previous active OpenGL texture
+											glActiveTextureARB(static_cast<GLenum>(openGLActiveTextureBackup));
+										#endif
+									}
 								}
 							}
-
-							#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-								// Be polite and restore the previous active OpenGL texture
-								glActiveTextureARB(static_cast<GLenum>(openGLActiveTextureBackup));
-							#endif
 						}
+						else
+						{
+							// Traditional bind version
+
+							// "GL_ARB_multitexture" required
+							if (mExtensions->isGL_ARB_multitexture())
+							{
+								#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+									// Backup the currently active OpenGL texture
+									GLint openGLActiveTextureBackup = 0;
+									glGetIntegerv(GL_ACTIVE_TEXTURE, &openGLActiveTextureBackup);
+								#endif
+
+								// TODO(co) Some security checks might be wise *maximum number of texture units*
+								// Activate the texture unit we want to manipulate
+								// -> "GL_TEXTURE0_ARB" is the first texture unit, while the unit we received is zero based
+								glActiveTextureARB(GL_TEXTURE0_ARB + descriptorRange.baseShaderRegister);
+
+								// Evaluate the resource type
+								switch (resourceType)
+								{
+									case Renderer::ResourceType::TEXTURE_BUFFER:
+										glBindTexture(GL_TEXTURE_BUFFER_ARB, static_cast<TextureBuffer*>(resource)->getOpenGLTexture());
+										break;
+
+									case Renderer::ResourceType::TEXTURE_1D:
+										glBindTexture(GL_TEXTURE_1D, static_cast<Texture1D*>(resource)->getOpenGLTexture());
+										break;
+
+									case Renderer::ResourceType::TEXTURE_2D:
+									{
+										const Texture2D* texture2D = static_cast<Texture2D*>(resource);
+										glBindTexture(static_cast<GLenum>((texture2D->getNumberOfMultisamples() > 1) ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D), texture2D->getOpenGLTexture());
+										break;
+									}
+
+									case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+										// No extension check required, if we in here we already know it must exist
+										glBindTexture(GL_TEXTURE_2D_ARRAY_EXT, static_cast<Texture2DArray*>(resource)->getOpenGLTexture());
+										break;
+
+									case Renderer::ResourceType::TEXTURE_3D:
+										glBindTexture(GL_TEXTURE_3D, static_cast<Texture3D*>(resource)->getOpenGLTexture());
+										break;
+
+									case Renderer::ResourceType::TEXTURE_CUBE:
+										glBindTexture(GL_TEXTURE_CUBE_MAP, static_cast<TextureCube*>(resource)->getOpenGLTexture());
+										break;
+
+									case Renderer::ResourceType::ROOT_SIGNATURE:
+									case Renderer::ResourceType::RESOURCE_GROUP:
+									case Renderer::ResourceType::PROGRAM:
+									case Renderer::ResourceType::VERTEX_ARRAY:
+									case Renderer::ResourceType::SWAP_CHAIN:
+									case Renderer::ResourceType::FRAMEBUFFER:
+									case Renderer::ResourceType::INDEX_BUFFER:
+									case Renderer::ResourceType::VERTEX_BUFFER:
+									case Renderer::ResourceType::UNIFORM_BUFFER:
+									case Renderer::ResourceType::INDIRECT_BUFFER:
+									case Renderer::ResourceType::PIPELINE_STATE:
+									case Renderer::ResourceType::SAMPLER_STATE:
+									case Renderer::ResourceType::VERTEX_SHADER:
+									case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+									case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+									case Renderer::ResourceType::GEOMETRY_SHADER:
+									case Renderer::ResourceType::FRAGMENT_SHADER:
+										RENDERER_LOG(mContext, CRITICAL, "Invalid OpenGL renderer backend resource type")
+										break;
+								}
+
+								// Set the OpenGL sampler states, if required (texture buffer has no sampler state), it's valid that there's no sampler state (e.g. texel fetch instead of sampling might be used)
+								if (Renderer::ResourceType::TEXTURE_BUFFER != resourceType)
+								{
+									assert(nullptr != openGLResourceGroup->getSamplerState());
+									const SamplerState* samplerState = static_cast<const SamplerState*>(openGLResourceGroup->getSamplerState()[resourceIndex]);
+									if (nullptr != samplerState)
+									{
+										// Is "GL_ARB_sampler_objects" there?
+										if (mExtensions->isGL_ARB_sampler_objects())
+										{
+											// Effective sampler object (SO)
+											glBindSampler(descriptorRange.baseShaderRegister, static_cast<const SamplerStateSo*>(samplerState)->getOpenGLSampler());
+										}
+										// Is "GL_EXT_direct_state_access" there?
+										else if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
+										{
+											// Direct state access (DSA) version to emulate a sampler object
+											static_cast<const SamplerStateDsa*>(samplerState)->setOpenGLSamplerStates();
+										}
+										else
+										{
+											// Traditional bind version to emulate a sampler object
+											static_cast<const SamplerStateBind*>(samplerState)->setOpenGLSamplerStates();
+										}
+									}
+								}
+
+								#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+									// Be polite and restore the previous active OpenGL texture
+									glActiveTextureARB(static_cast<GLenum>(openGLActiveTextureBackup));
+								#endif
+							}
+						}
+						break;
 					}
-					break;
-				}
 
-				case Renderer::ResourceType::SAMPLER_STATE:
-				{
-					// Unlike Direct3D >=10, OpenGL directly attaches the sampler settings to the texture (unless the sampler object extension is used)
-					mGraphicsRootSignature->setSamplerState(rootParameterIndex, static_cast<SamplerState*>(resource));
-					break;
-				}
+					case Renderer::ResourceType::SAMPLER_STATE:
+						// Unlike Direct3D >=10, OpenGL directly attaches the sampler settings to the texture (unless the sampler object extension is used)
+						break;
 
-				case Renderer::ResourceType::ROOT_SIGNATURE:
-				case Renderer::ResourceType::PROGRAM:
-				case Renderer::ResourceType::VERTEX_ARRAY:
-				case Renderer::ResourceType::SWAP_CHAIN:
-				case Renderer::ResourceType::FRAMEBUFFER:
-				case Renderer::ResourceType::INDEX_BUFFER:
-				case Renderer::ResourceType::VERTEX_BUFFER:
-				case Renderer::ResourceType::INDIRECT_BUFFER:
-				case Renderer::ResourceType::PIPELINE_STATE:
-				case Renderer::ResourceType::VERTEX_SHADER:
-				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-				case Renderer::ResourceType::GEOMETRY_SHADER:
-				case Renderer::ResourceType::FRAGMENT_SHADER:
-					RENDERER_LOG(mContext, CRITICAL, "Invalid OpenGL renderer backend resource type")
-					break;
+					case Renderer::ResourceType::ROOT_SIGNATURE:
+					case Renderer::ResourceType::RESOURCE_GROUP:
+					case Renderer::ResourceType::PROGRAM:
+					case Renderer::ResourceType::VERTEX_ARRAY:
+					case Renderer::ResourceType::SWAP_CHAIN:
+					case Renderer::ResourceType::FRAMEBUFFER:
+					case Renderer::ResourceType::INDEX_BUFFER:
+					case Renderer::ResourceType::VERTEX_BUFFER:
+					case Renderer::ResourceType::INDIRECT_BUFFER:
+					case Renderer::ResourceType::PIPELINE_STATE:
+					case Renderer::ResourceType::VERTEX_SHADER:
+					case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+					case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+					case Renderer::ResourceType::GEOMETRY_SHADER:
+					case Renderer::ResourceType::FRAGMENT_SHADER:
+						RENDERER_LOG(mContext, CRITICAL, "Invalid Direct3D 11 renderer backend resource type")
+						break;
+				}
 			}
 		}
 		else
 		{
 			// TODO(co) Handle this situation?
-			/*
-			#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-				// Backup the currently active OpenGL texture
-				GLint openGLActiveTextureBackup = 0;
-				glGetIntegerv(GL_ACTIVE_TEXTURE, &openGLActiveTextureBackup);
-			#endif
-
-			// TODO(co) Some security checks might be wise *maximum number of texture units*
-			glActiveTexture(GL_TEXTURE0 + unit);
-
-			// Unbind the texture at the given texture unit
-			glBindTexture(GL_TEXTURE_2D, 0);
-
-			#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-				// Be polite and restore the previous active OpenGL texture
-				glActiveTexture(openGLActiveTextureBackup);
-			#endif
-			*/
 		}
 	}
 
@@ -1194,6 +1197,7 @@ namespace OpenGLRenderer
 					}
 
 					case Renderer::ResourceType::ROOT_SIGNATURE:
+					case Renderer::ResourceType::RESOURCE_GROUP:
 					case Renderer::ResourceType::PROGRAM:
 					case Renderer::ResourceType::VERTEX_ARRAY:
 					case Renderer::ResourceType::INDEX_BUFFER:
@@ -1351,6 +1355,7 @@ namespace OpenGLRenderer
 			}
 
 			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::RESOURCE_GROUP:
 			case Renderer::ResourceType::PROGRAM:
 			case Renderer::ResourceType::VERTEX_ARRAY:
 			case Renderer::ResourceType::INDEX_BUFFER:
@@ -1440,6 +1445,7 @@ namespace OpenGLRenderer
 				break;
 
 			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::RESOURCE_GROUP:
 			case Renderer::ResourceType::PROGRAM:
 			case Renderer::ResourceType::VERTEX_ARRAY:
 			case Renderer::ResourceType::SWAP_CHAIN:
@@ -2031,6 +2037,7 @@ namespace OpenGLRenderer
 			}
 
 			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::RESOURCE_GROUP:
 			case Renderer::ResourceType::PROGRAM:
 			case Renderer::ResourceType::VERTEX_ARRAY:
 			case Renderer::ResourceType::SWAP_CHAIN:
@@ -2141,6 +2148,7 @@ namespace OpenGLRenderer
 			}
 
 			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::RESOURCE_GROUP:
 			case Renderer::ResourceType::PROGRAM:
 			case Renderer::ResourceType::VERTEX_ARRAY:
 			case Renderer::ResourceType::SWAP_CHAIN:

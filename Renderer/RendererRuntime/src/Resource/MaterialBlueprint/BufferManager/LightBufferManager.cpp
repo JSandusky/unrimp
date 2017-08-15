@@ -75,27 +75,33 @@ namespace RendererRuntime
 	LightBufferManager::LightBufferManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime),
 		mTextureBuffer(nullptr),
+		mResourceGroup(nullptr),
 		mClusters3DTextureResourceId(getUninitialized<TextureResourceId>()),
 		mLightClustersAabbMinimum(-16.0f, -0.5f, -6.0f),	// TODO(co) Just for the clusters shading kickoff
 		mLightClustersAabbMaximum(14.0f, 15.0f, 7.0f)		// TODO(co) Just for the clusters shading kickoff
 	{
 		// Create texture buffer instance
-		mTextureScratchBuffer.resize(std::min(rendererRuntime.getRenderer().getCapabilities().maximumTextureBufferSize, ::detail::DEFAULT_TEXTURE_BUFFER_NUMBER_OF_BYTES));
-		mTextureBuffer = rendererRuntime.getBufferManager().createTextureBuffer(static_cast<uint32_t>(mTextureScratchBuffer.size()), Renderer::TextureFormat::R32G32B32A32F, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+		mTextureScratchBuffer.resize(std::min(mRendererRuntime.getRenderer().getCapabilities().maximumTextureBufferSize, ::detail::DEFAULT_TEXTURE_BUFFER_NUMBER_OF_BYTES));
+		mTextureBuffer = mRendererRuntime.getBufferManager().createTextureBuffer(static_cast<uint32_t>(mTextureScratchBuffer.size()), Renderer::TextureFormat::R32G32B32A32F, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 		RENDERER_SET_RESOURCE_DEBUG_NAME(mTextureBuffer, "Light buffer manager")
+		mTextureBuffer->addReference();
 
 		{ // Create the clusters 3D texture resource
 			// Create the renderer texture resource
-			Renderer::ITexturePtr texturePtr(rendererRuntime.getTextureManager().createTexture3D(::detail::CLUSTER_X, ::detail::CLUSTER_Y, ::detail::CLUSTER_Z, Renderer::TextureFormat::R32_UINT, nullptr, 0, Renderer::TextureUsage::DYNAMIC));
+			Renderer::ITexturePtr texturePtr(mRendererRuntime.getTextureManager().createTexture3D(::detail::CLUSTER_X, ::detail::CLUSTER_Y, ::detail::CLUSTER_Z, Renderer::TextureFormat::R32_UINT, nullptr, 0, Renderer::TextureUsage::DYNAMIC));
 			RENDERER_SET_RESOURCE_DEBUG_NAME(texturePtr, "Clusters 3D texture resource")
 
 			// Create dynamic texture asset
-			mClusters3DTextureResourceId = rendererRuntime.getTextureResourceManager().createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/LightClustersMap3D", *texturePtr);
+			mClusters3DTextureResourceId = mRendererRuntime.getTextureResourceManager().createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/LightClustersMap3D", *texturePtr);
 		}
 	}
 
 	LightBufferManager::~LightBufferManager()
 	{
+		if (nullptr != mResourceGroup)
+		{
+			mResourceGroup->releaseReference();
+		}
 		mTextureBuffer->releaseReference();
 		mRendererRuntime.getTextureResourceManager().destroyTextureResource(mClusters3DTextureResourceId);
 	}
@@ -112,7 +118,20 @@ namespace RendererRuntime
 		const MaterialBlueprintResource::TextureBuffer* lightTextureBuffer = materialBlueprintResource.getLightTextureBuffer();
 		if (nullptr != lightTextureBuffer)
 		{
-			Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, lightTextureBuffer->rootParameterIndex, mTextureBuffer);
+			// TODO(co) We probably need to move the light buffer manager into the material blueprint resource
+			// Create resource group instance, if needed
+			if (nullptr == mResourceGroup)
+			{
+				// TODO(co) We probably should put the clusters 3D texture resource into the light buffer manager resource group as well
+				// Renderer::IResource* resources[2] = { mTextureBuffer, mRendererRuntime.getTextureResourceManager().getById(mClusters3DTextureResourceId).getTexture() };
+				Renderer::IResource* resources[1] = { mTextureBuffer };
+				mResourceGroup = materialBlueprintResource.getRootSignaturePtr()->createResourceGroup(lightTextureBuffer->rootParameterIndex, static_cast<uint32_t>(glm::countof(resources)), resources);
+				RENDERER_SET_RESOURCE_DEBUG_NAME(mResourceGroup, "Light buffer manager resource group")
+				mResourceGroup->addReference();
+			}
+
+			// Set resource group
+			Renderer::Command::SetGraphicsResourceGroup::create(commandBuffer, lightTextureBuffer->rootParameterIndex, mResourceGroup);
 		}
 	}
 

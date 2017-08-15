@@ -43,7 +43,7 @@ BatchInstancedArrays::~BatchInstancedArrays()
 	// The renderer resource pointers are released automatically
 }
 
-void BatchInstancedArrays::initialize(Renderer::IBufferManager& bufferManager, Renderer::IRootSignature &rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IVertexBuffer &vertexBuffer, Renderer::IIndexBuffer &indexBuffer, Renderer::IProgram &program, uint32_t numberOfCubeInstances, bool alphaBlending, uint32_t numberOfTextures, uint32_t sceneRadius)
+void BatchInstancedArrays::initialize(Renderer::IBufferManager& bufferManager, Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IVertexBuffer &vertexBuffer, Renderer::IIndexBuffer &indexBuffer, Renderer::IProgram &program, uint32_t numberOfCubeInstances, bool alphaBlending, uint32_t numberOfTextures, uint32_t sceneRadius)
 {
 	// Set owner renderer instance
 	mRenderer = &program.getRenderer();
@@ -133,13 +133,11 @@ void BatchInstancedArrays::fillCommandBuffer(Renderer::CommandBuffer& commandBuf
 	// Begin debug event
 	COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
 
-	{ // Setup input assembly (IA)
-		// Set the used vertex array
-		Renderer::Command::SetVertexArray::create(commandBuffer, mVertexArray);
-	}
-
 	// Set the used pipeline state object (PSO)
 	Renderer::Command::SetPipelineState::create(commandBuffer, mPipelineState);
+
+	// Setup input assembly (IA): Set the used vertex array
+	Renderer::Command::SetVertexArray::create(commandBuffer, mVertexArray);
 
 	// Use instancing in order to draw multiple cubes with just a single draw call
 	// -> Draw calls are one of the most expensive rendering, avoid them if possible

@@ -2,7 +2,7 @@
 	"Format":
 	{
 		"Type": "MaterialBlueprintAsset",
-		"Version": "1"
+		"Version": "2"
 	},
 	"MaterialBlueprintAsset":
 	{
@@ -78,142 +78,6 @@
 				"Description": "2D lens star map for diffraction starburst, only used of the lens flare map is used"
 			}
 		},
-		"RootSignature":
-		{
-			"RootParameters":
-			{
-				"0":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "UBV",
-							"BaseShaderRegister": "0",
-							"BaseShaderRegisterName": "PassUniformBuffer"
-						}
-					},
-					"ShaderVisibility": "FRAGMENT"
-				},
-				"1":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "SAMPLER",
-							"BaseShaderRegister": "0"
-						}
-					},
-					"ShaderVisibility": "FRAGMENT"
-				},
-				"2":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "SAMPLER",
-							"BaseShaderRegister": "1"
-						}
-					},
-					"ShaderVisibility": "FRAGMENT"
-				},
-				"3":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "SRV",
-							"BaseShaderRegister": "0",
-							"BaseShaderRegisterName": "ColorMap",
-							"SamplerRootParameterIndex": "1"
-						}
-					},
-					"ShaderVisibility": "FRAGMENT"
-				},
-				"4":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "SRV",
-							"BaseShaderRegister": "1",
-							"BaseShaderRegisterName": "LuminanceMap",
-							"SamplerRootParameterIndex": "1"
-						}
-					},
-					"ShaderVisibility": "FRAGMENT"
-				},
-				"5":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "SRV",
-							"BaseShaderRegister": "2",
-							"BaseShaderRegisterName": "BloomMap",
-							"SamplerRootParameterIndex": "2"
-						}
-					},
-					"ShaderVisibility": "FRAGMENT"
-				},
-				"6":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "SRV",
-							"BaseShaderRegister": "3",
-							"BaseShaderRegisterName": "DirtyLensMap",
-							"SamplerRootParameterIndex": "2"
-						}
-					},
-					"ShaderVisibility": "FRAGMENT"
-				},
-				"7":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "SRV",
-							"BaseShaderRegister": "4",
-							"BaseShaderRegisterName": "LensFlareMap",
-							"SamplerRootParameterIndex": "2"
-						}
-					},
-					"ShaderVisibility": "FRAGMENT"
-				},
-				"8":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "SRV",
-							"BaseShaderRegister": "5",
-							"BaseShaderRegisterName": "LensStarMap",
-							"SamplerRootParameterIndex": "2"
-						}
-					},
-					"ShaderVisibility": "FRAGMENT"
-				}
-			}
-		},
 		"PipelineState":
 		{
 			"VertexAttributes": "VertexAttributes/Default/Compositor.asset",
@@ -232,12 +96,16 @@
 				"DepthWriteMask": "ZERO"
 			}
 		},
-		"Resources":
+		"ResourceGroups":
 		{
-			"UniformBuffers":
+			"0":
 			{
-				"PassUniformBuffer":
+				"0":
 				{
+					"BaseShaderRegisterName": "PassUniformBuffer",
+					"BaseShaderRegister": "0",
+					"ShaderVisibility": "FRAGMENT",
+					"ResourceType": "UNIFORM_BUFFER",
 					"BufferUsage": "PASS",
 					"NumberOfElements": "1",
 					"ElementProperties":
@@ -263,72 +131,110 @@
 					}
 				}
 			},
-			"SamplerStates":
+			"1":
 			{
-				"SamplerPoint":
+				"0":
 				{
-					"Filter": "MIN_MAG_MIP_POINT",
-					"MaxAnisotropy": "1",
-					"MaxLOD": "0.0"
-				},
-				"SamplerLinear":
-				{
-					"Filter": "MIN_MAG_LINEAR_MIP_POINT",
-					"MaxAnisotropy": "1",
-					"MaxLOD": "0.0"
-				}
-			},
-			"Textures":
-			{
-				"ColorMap":
-				{
+					"BaseShaderRegisterName": "ColorMap",
+					"BaseShaderRegister": "0",
+					"ShaderVisibility": "FRAGMENT",
+					"ResourceType": "TEXTURE",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@ColorMap",
 					"FallbackTexture": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
-					"MipmapsUsed": "FALSE"
+					"MipmapsUsed": "FALSE",
+					"SamplerStateBaseShaderRegisterName": "SamplerPoint"
 				},
-				"LuminanceMap":
+				"1":
 				{
+					"BaseShaderRegisterName": "LuminanceMap",
+					"BaseShaderRegister": "1",
+					"ShaderVisibility": "FRAGMENT",
+					"ResourceType": "TEXTURE",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@LuminanceMap",
 					"FallbackTexture": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
-					"MipmapsUsed": "FALSE"
+					"MipmapsUsed": "FALSE",
+					"SamplerStateBaseShaderRegisterName": "SamplerPoint"
 				},
-				"BloomMap":
+				"2":
 				{
+					"BaseShaderRegisterName": "BloomMap",
+					"BaseShaderRegister": "2",
+					"ShaderVisibility": "FRAGMENT",
+					"ResourceType": "TEXTURE",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@BloomMap",
 					"FallbackTexture": "Unrimp/Texture/DynamicByCode/BlackMap2D",
-					"MipmapsUsed": "FALSE"
+					"MipmapsUsed": "FALSE",
+					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
 				},
-				"DirtyLensMap":
+				"3":
 				{
+					"BaseShaderRegisterName": "DirtyLensMap",
+					"BaseShaderRegister": "3",
+					"ShaderVisibility": "FRAGMENT",
+					"ResourceType": "TEXTURE",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@DirtyLensMap",
 					"RgbHardwareGammaCorrection": "TRUE",
 					"FallbackTexture": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
-					"MipmapsUsed": "FALSE"
+					"MipmapsUsed": "FALSE",
+					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
 				},
-				"LensFlareMap":
+				"4":
 				{
+					"BaseShaderRegisterName": "LensFlareMap",
+					"BaseShaderRegister": "4",
+					"ShaderVisibility": "FRAGMENT",
+					"ResourceType": "TEXTURE",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@LensFlareMap",
 					"FallbackTexture": "Unrimp/Texture/DynamicByCode/BlackMap2D",
-					"MipmapsUsed": "FALSE"
+					"MipmapsUsed": "FALSE",
+					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
 				},
-				"LensStarMap":
+				"5":
 				{
+					"BaseShaderRegisterName": "LensStarMap",
+					"BaseShaderRegister": "5",
+					"ShaderVisibility": "FRAGMENT",
+					"ResourceType": "TEXTURE",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@LensStarMap",
 					"RgbHardwareGammaCorrection": "TRUE",
 					"FallbackTexture": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
-					"MipmapsUsed": "FALSE"
+					"MipmapsUsed": "FALSE",
+					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
+				}
+			},
+			"2":
+			{
+				"0":
+				{
+					"BaseShaderRegisterName": "SamplerPoint",
+					"BaseShaderRegister": "0",
+					"ShaderVisibility": "FRAGMENT",
+					"ResourceType": "SAMPLER_STATE",
+					"Filter": "MIN_MAG_MIP_POINT",
+					"MaxAnisotropy": "1",
+					"MaxLOD": "0.0"
+				},
+				"1":
+				{
+					"BaseShaderRegisterName": "SamplerLinear",
+					"BaseShaderRegister": "1",
+					"ShaderVisibility": "FRAGMENT",
+					"ResourceType": "SAMPLER_STATE",
+					"Filter": "MIN_MAG_LINEAR_MIP_POINT",
+					"MaxAnisotropy": "1",
+					"MaxLOD": "0.0"
 				}
 			}
 		}

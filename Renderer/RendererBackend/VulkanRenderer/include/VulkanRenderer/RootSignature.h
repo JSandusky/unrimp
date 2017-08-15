@@ -32,13 +32,14 @@
 
 #include "VulkanRenderer/Vulkan.h"
 
+#include <vector>
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 namespace VulkanRenderer
 {
-	class SamplerState;
 	class VulkanRenderer;
 }
 
@@ -93,35 +94,6 @@ namespace VulkanRenderer
 
 		/**
 		*  @brief
-		*    Return the sampler state at the given sampler root parameter index
-		*
-		*  @return
-		*    Sampler state, null pointer on error, don't destroy the returned instance
-		*/
-		const SamplerState* getSamplerState(uint32_t samplerRootParameterIndex) const;
-
-		/**
-		*  @brief
-		*    Set the sampler state
-		*
-		*  @param[in] samplerRootParameterIndex
-		*    Sampler root parameter index
-		*  @param[in] samplerState
-		*    Sampler state
-		*/
-		void setSamplerState(uint32_t samplerRootParameterIndex, SamplerState* samplerState) const;
-
-		/**
-		*  @brief
-		*    Return the Vulkan descriptor set layout
-		*
-		*  @return
-		*    The Vulkan descriptor set layout
-		*/
-		inline VkDescriptorSetLayout getVkDescriptorSetLayout() const;
-
-		/**
-		*  @brief
 		*    Return the Vulkan pipeline layout
 		*
 		*  @return
@@ -131,12 +103,19 @@ namespace VulkanRenderer
 
 		/**
 		*  @brief
-		*    Return the Vulkan descriptor set
+		*    Return the Vulkan descriptor pool
 		*
 		*  @return
-		*    The Vulkan descriptor set, can be a null handle
+		*    The Vulkan descriptor pool
 		*/
-		inline VkDescriptorSet getVkDescriptorSet() const;
+		inline VkDescriptorPool getVkDescriptorPool() const;
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IRootSignature methods       ]
+	//[-------------------------------------------------------]
+	public:
+		virtual Renderer::IResourceGroup* createResourceGroup(uint32_t rootParameterIndex, uint32_t numberOfResources, Renderer::IResource** resources, Renderer::ISamplerState** samplerStates = nullptr) override;
 
 
 	//[-------------------------------------------------------]
@@ -148,15 +127,20 @@ namespace VulkanRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		typedef std::vector<VkDescriptorSetLayout> VkDescriptorSetLayouts;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
 		Renderer::RootSignature	mRootSignature;
-		SamplerState**			mSamplerStates;
-		VkDescriptorSetLayout	mVkDescriptorSetLayout;
+		VkDescriptorSetLayouts	mVkDescriptorSetLayouts;
 		VkPipelineLayout		mVkPipelineLayout;
 		VkDescriptorPool		mVkDescriptorPool;
-		VkDescriptorSet			mVkDescriptorSet;	///< "mVkDescriptorPool" is the owner which manages the memory, can be a null handle
 
 
 	};

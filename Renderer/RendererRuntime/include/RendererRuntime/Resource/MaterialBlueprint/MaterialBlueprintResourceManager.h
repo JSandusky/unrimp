@@ -93,6 +93,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline IRendererRuntime& getRendererRuntime() const;
+		inline bool getCreateInitialPipelineStateCaches() const;
+		inline void setCreateInitialPipelineStateCaches(bool createInitialPipelineStateCaches);
 		RENDERERRUNTIME_API_EXPORT void loadMaterialBlueprintResourceByAssetId(AssetId assetId, MaterialBlueprintResourceId& materialBlueprintResourceId, IResourceListener* resourceListener = nullptr, bool reload = false, ResourceLoaderTypeId resourceLoaderTypeId = getUninitialized<ResourceLoaderTypeId>());	// Asynchronous
 		inline IMaterialBlueprintResourceListener& getMaterialBlueprintResourceListener() const;
 		RENDERERRUNTIME_API_EXPORT void setMaterialBlueprintResourceListener(IMaterialBlueprintResourceListener* materialBlueprintResourceListener);	// Does not take over the control of the memory
@@ -112,6 +114,12 @@ namespace RendererRuntime
 		*/
 		inline MaterialProperties& getGlobalMaterialProperties();
 		inline const MaterialProperties& getGlobalMaterialProperties() const;
+
+		/**
+		*  @brief
+		*    Called pre command buffer execution
+		*/
+		void onPreCommandBufferExecution();
 
 		//[-------------------------------------------------------]
 		//[ Default texture filtering                             ]
@@ -172,6 +180,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		IRendererRuntime&					mRendererRuntime;					///< Renderer runtime instance, do not destroy the instance
+		bool								mCreateInitialPipelineStateCaches;	///< Create initial pipeline state caches after a material blueprint has been loaded?
 		IMaterialBlueprintResourceListener*	mMaterialBlueprintResourceListener;	///< Material blueprint resource listener, always valid, do not destroy the instance
 		MaterialProperties					mGlobalMaterialProperties;			///< Global material properties
 		Renderer::FilterMode				mDefaultTextureFilterMode;			///< Default texture filter mode

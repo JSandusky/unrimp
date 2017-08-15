@@ -24,6 +24,7 @@
 #include "NullRenderer/NullRenderer.h"
 #include "NullRenderer/NullDebug.h"	// For "NULLRENDERER_RENDERERMATCHCHECK_RETURN()"
 #include "NullRenderer/RootSignature.h"
+#include "NullRenderer/ResourceGroup.h"
 #include "NullRenderer/RenderTarget/SwapChain.h"
 #include "NullRenderer/RenderTarget/Framebuffer.h"
 #include "NullRenderer/Buffer/BufferManager.h"
@@ -80,6 +81,17 @@ namespace
 
 
 			//[-------------------------------------------------------]
+			//[ Command buffer                                        ]
+			//[-------------------------------------------------------]
+			void ExecuteCommandBuffer(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::ExecuteCommandBuffer* realData = static_cast<const Renderer::Command::ExecuteCommandBuffer*>(data);
+				assert(nullptr != realData->commandBufferToExecute);
+				renderer.submitCommandBuffer(*realData->commandBufferToExecute);
+			}
+
+
+			//[-------------------------------------------------------]
 			//[ Resource handling                                     ]
 			//[-------------------------------------------------------]
 			void CopyUniformBufferData(const void* data, Renderer::IRenderer&)
@@ -103,10 +115,10 @@ namespace
 				static_cast<NullRenderer::NullRenderer&>(renderer).setGraphicsRootSignature(realData->rootSignature);
 			}
 
-			void SetGraphicsRootDescriptorTable(const void* data, Renderer::IRenderer& renderer)
+			void SetGraphicsResourceGroup(const void* data, Renderer::IRenderer& renderer)
 			{
-				const Renderer::Command::SetGraphicsRootDescriptorTable* realData = static_cast<const Renderer::Command::SetGraphicsRootDescriptorTable*>(data);
-				static_cast<NullRenderer::NullRenderer&>(renderer).setGraphicsRootDescriptorTable(realData->rootParameterIndex, realData->resource);
+				const Renderer::Command::SetGraphicsResourceGroup* realData = static_cast<const Renderer::Command::SetGraphicsResourceGroup*>(data);
+				static_cast<NullRenderer::NullRenderer&>(renderer).setGraphicsResourceGroup(realData->rootParameterIndex, realData->resourceGroup);
 			}
 
 			//[-------------------------------------------------------]
@@ -232,12 +244,14 @@ namespace
 		//[-------------------------------------------------------]
 		static const Renderer::BackendDispatchFunction DISPATCH_FUNCTIONS[Renderer::CommandDispatchFunctionIndex::NumberOfFunctions] =
 		{
+			// Command buffer
+			&BackendDispatch::ExecuteCommandBuffer,
 			// Resource handling
 			&BackendDispatch::CopyUniformBufferData,
 			&BackendDispatch::CopyTextureBufferData,
 			// Graphics root
 			&BackendDispatch::SetGraphicsRootSignature,
-			&BackendDispatch::SetGraphicsRootDescriptorTable,
+			&BackendDispatch::SetGraphicsResourceGroup,
 			// States
 			&BackendDispatch::SetPipelineState,
 			// Input-assembler (IA) stage
@@ -367,7 +381,7 @@ namespace NullRenderer
 		}
 	}
 
-	void NullRenderer::setGraphicsRootDescriptorTable(uint32_t rootParameterIndex, Renderer::IResource* resource)
+	void NullRenderer::setGraphicsResourceGroup(uint32_t rootParameterIndex, Renderer::IResourceGroup* resourceGroup)
 	{
 		// Security checks
 		#ifndef NULLRENDERER_NO_DEBUG
@@ -389,13 +403,6 @@ namespace NullRenderer
 				RENDERER_LOG(mContext, CRITICAL, "The null renderer backend root parameter index doesn't reference a descriptor table")
 				return;
 			}
-
-			// TODO(co) For now, we only support a single descriptor range
-			if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
-			{
-				RENDERER_LOG(mContext, CRITICAL, "Only a single descriptor range is supported by the null renderer backend")
-				return;
-			}
 			if (nullptr == reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges))
 			{
 				RENDERER_LOG(mContext, CRITICAL, "The null renderer backend descriptor ranges is a null pointer")
@@ -404,10 +411,10 @@ namespace NullRenderer
 		}
 		#endif
 
-		if (nullptr != resource)
+		if (nullptr != resourceGroup)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *resource)
+			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *resourceGroup)
 
 			// TODO(co) Some additional resource type root signature security checks in debug build?
 		}

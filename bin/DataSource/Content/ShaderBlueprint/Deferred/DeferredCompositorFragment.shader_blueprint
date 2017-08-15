@@ -30,8 +30,8 @@
 //[-------------------------------------------------------]
 // Attribute input / output
 INPUT_BEGIN
-	INPUT_TEXTURE_COORDINATE(float2, TexCoordVS, 0)	// Texture coordinate
-	INPUT_TEXTURE_COORDINATE(float3, ViewRayVS,  1)	// View space ray used for view space position reconstruction
+	INPUT_TEXTURE_COORDINATE(1, float2, TexCoordVS, 0)	// Texture coordinate
+	INPUT_TEXTURE_COORDINATE(2, float3, ViewRayVS,  1)	// View space ray used for view space position reconstruction
 INPUT_END
 OUTPUT_BEGIN
 	OUTPUT_COLOR(0)
@@ -60,34 +60,34 @@ struct PassDataStruct
 	float2   ViewportSize;
 	float2   ProjectionParameters;
 };
-UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
+UNIFORM_BUFFER_BEGIN(0, 0, PassUniformBuffer, 0)
 	PassDataStruct PassData;
 UNIFORM_BUFFER_END
 
 // Texture buffers
-TEXTURE_BUFFER(float4, LightTextureBuffer, 0)	// "LIGHT"
-
-// Samplers
-SAMPLER_STATE(SamplerPoint, 0)
-SAMPLER_STATE(SamplerLinear, 1)
+TEXTURE_BUFFER(1, 0, float4, LightTextureBuffer, 0)	// "LIGHT"
 
 // Textures
 @property(NumberOfMultisamples)
-	TEXTURE_2D_MS(GBufferMap0, @value(NumberOfMultisamples), 1)	// GBuffer 0: rgb = diffuse color, a = alpha unused (required for blend operations)
-	TEXTURE_2D_MS(GBufferMap1, @value(NumberOfMultisamples), 2)	// GBuffer 1: rgb = view space normal, a = roughness
-	TEXTURE_2D_MS(GBufferMap2, @value(NumberOfMultisamples), 3)	// GBuffer 2: rgb = emissive color, a = metallic
-	TEXTURE_2D_MS(DepthMap, @value(NumberOfMultisamples), 4)
+	TEXTURE_2D_MS(2, 0, GBufferMap0, @value(NumberOfMultisamples), 1)	// GBuffer 0: rgb = diffuse color, a = alpha unused (required for blend operations)
+	TEXTURE_2D_MS(2, 1, GBufferMap1, @value(NumberOfMultisamples), 2)	// GBuffer 1: rgb = view space normal, a = roughness
+	TEXTURE_2D_MS(2, 2, GBufferMap2, @value(NumberOfMultisamples), 3)	// GBuffer 2: rgb = emissive color, a = metallic
+	TEXTURE_2D_MS(2, 3, DepthMap, @value(NumberOfMultisamples), 4)
 @end
 @property(!NumberOfMultisamples)
-	TEXTURE_2D(GBufferMap0, 1)	// GBuffer 0: rgb = diffuse color, a = alpha unused (required for blend operations)
-	TEXTURE_2D(GBufferMap1, 2)	// GBuffer 1: rgb = view space normal, a = roughness
-	TEXTURE_2D(GBufferMap2, 3)	// GBuffer 2: rgb = emissive color, a = metallic
-	TEXTURE_2D(DepthMap, 4)
+	TEXTURE_2D(2, 0, GBufferMap0, 1)	// GBuffer 0: rgb = diffuse color, a = alpha unused (required for blend operations)
+	TEXTURE_2D(2, 1, GBufferMap1, 2)	// GBuffer 1: rgb = view space normal, a = roughness
+	TEXTURE_2D(2, 2, GBufferMap2, 3)	// GBuffer 2: rgb = emissive color, a = metallic
+	TEXTURE_2D(2, 3, DepthMap, 4)
 @end
-TEXTURE_ARRAY(ShadowMap, 5)
-TEXTURE_2D(ScreenSpaceAmbientOcclusionMap, 6)
-TEXTURE_CUBE(ReflectionCubeMap, 7)
-TEXTURE_3D_UINT(LightClustersMap3D, 8)
+TEXTURE_2D_ARRAY(2, 4, ShadowMap, 5)
+TEXTURE_2D(2, 5, ScreenSpaceAmbientOcclusionMap, 6)
+TEXTURE_CUBE(2, 6, ReflectionCubeMap, 7)
+TEXTURE_3D_UINT(2, 7, LightClustersMap3D, 8)
+
+// Samplers
+SAMPLER_STATE(2, 0, SamplerPoint, 0)
+SAMPLER_STATE(2, 1, SamplerLinear, 1)
 
 
 //[-------------------------------------------------------]

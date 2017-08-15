@@ -31,8 +31,8 @@
 //[-------------------------------------------------------]
 // Attribute input / output
 INPUT_BEGIN
-	INPUT_TEXTURE_COORDINATE(float3, TexCoordVS, 				  0)	// Texture coordinate
-	INPUT_TEXTURE_COORDINATE(float3, PreviousClipSpacePositionVS, 1)	// Previous clip space position
+	INPUT_TEXTURE_COORDINATE(1, float3, TexCoordVS, 				 0)	// Texture coordinate
+	INPUT_TEXTURE_COORDINATE(2, float3, PreviousClipSpacePositionVS, 1)	// Previous clip space position
 	DECLARE_FRAGMENT_POSITION
 INPUT_END
 OUTPUT_BEGIN
@@ -51,16 +51,16 @@ struct PassDataStruct
 	float3   WorldSpaceSunlightDirection;
 	float2   ViewportSize;
 };
-UNIFORM_BUFFER_BEGIN(PassUniformBuffer, 0)
+UNIFORM_BUFFER_BEGIN(0, 0, PassUniformBuffer, 0)
 	PassDataStruct PassData;
 UNIFORM_BUFFER_END
 
 @property(!UseProceduralSky)
-	// Samplers
-	SAMPLER_STATE(SamplerLinear, 0)
-
 	// Textures
-	TEXTURE_CUBE(EnvironmentCubeMap, 0)
+	TEXTURE_CUBE(1, 0, EnvironmentCubeMap, 0)
+
+	// Samplers
+	SAMPLER_STATE(2, 0, SamplerLinear, 0)
 @end
 
 

@@ -58,6 +58,7 @@ VS_OUTPUT main(float2 Position : POSITION)	// Clip space vertex position as inpu
 fragmentShaderSourceCode = R"(
 // Uniforms
 SamplerState SamplerLinear : register(s0);
+SamplerState SamplerPoint : register(s1);
 Texture1D GradientMap : register(t0);
 Texture2D DiffuseMap  : register(t1);
 
@@ -65,7 +66,7 @@ Texture2D DiffuseMap  : register(t1);
 float4 main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0) : SV_TARGET
 {
 	// Fetch the texel at the given texture coordinate and return it's color
-	return GradientMap.Sample(SamplerLinear, TexCoord.y).r * DiffuseMap.Sample(SamplerLinear, TexCoord);
+	return GradientMap.Sample(SamplerLinear, TexCoord.y).r * DiffuseMap.Sample(SamplerPoint, TexCoord);
 }
 )";
 

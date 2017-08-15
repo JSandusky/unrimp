@@ -82,6 +82,7 @@ set(SOURCE_CODES
 	src/Helper.cpp
 	src/Mapping.cpp
 	src/RootSignature.cpp
+	src/ResourceGroup.cpp
 	src/VulkanContext.cpp
 	src/VulkanRenderer.cpp
 	src/VulkanRuntimeLinking.cpp

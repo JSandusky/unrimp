@@ -136,13 +136,13 @@ namespace VulkanRenderer
 		VkCommandBuffer vkCommandBuffer = beginSingleTimeCommands(vulkanRenderer);
 
 		// Vulkan image memory barrier
-		transitionVkImageLayout(vulkanRenderer, vkCommandBuffer, vkImage, vkFormat, 1, oldVkImageLayout, newVkImageLayout);
+		transitionVkImageLayout(vulkanRenderer, vkCommandBuffer, vkImage, vkFormat, 1, 1, oldVkImageLayout, newVkImageLayout);
 
 		// End and destroy Vulkan command buffer
 		endSingleTimeCommands(vulkanRenderer, vkCommandBuffer);
 	}
 
-	void Helper::transitionVkImageLayout(const VulkanRenderer& vulkanRenderer, VkCommandBuffer vkCommandBuffer, VkImage vkImage, VkFormat vkFormat, uint32_t levelCount, VkImageLayout oldVkImageLayout, VkImageLayout newVkImageLayout)
+	void Helper::transitionVkImageLayout(const VulkanRenderer& vulkanRenderer, VkCommandBuffer vkCommandBuffer, VkImage vkImage, VkFormat vkFormat, uint32_t levelCount, uint32_t layerCount, VkImageLayout oldVkImageLayout, VkImageLayout newVkImageLayout)
 	{
 		VkImageMemoryBarrier vkImageMemoryBarrier =
 		{
@@ -160,7 +160,7 @@ namespace VulkanRenderer
 				0,							// baseMipLevel (uint32_t)
 				levelCount,					// levelCount (uint32_t)
 				0,							// baseArrayLayer (uint32_t)
-				1							// layerCount (uint32_t)
+				layerCount					// layerCount (uint32_t)
 			}
 		};
 
@@ -275,22 +275,26 @@ namespace VulkanRenderer
 		// TODO(co) Add support for "Renderer::TextureFlag::RENDER_TARGET"
 
 		// Get Vulkan format
-		const VkFormat vkFormat = Mapping::getVulkanFormat(textureFormat);
+		const VkFormat vkFormat   = Mapping::getVulkanFormat(textureFormat);
+		const bool     layered    = (VK_IMAGE_VIEW_TYPE_2D_ARRAY == vkImageViewType || VK_IMAGE_VIEW_TYPE_CUBE == vkImageViewType);
+		const uint32_t layerCount = layered ? vkExtent3D.depth : 1;
+		const uint32_t depth	  = layered ? 1 : vkExtent3D.depth;
 
 		// Calculate the number of bytes
 		uint32_t numberOfBytes = 0;
 		if (dataContainsMipmaps)
 		{
-			uint32_t width = vkExtent3D.width;
-			uint32_t height = vkExtent3D.height;
-			uint32_t depth = vkExtent3D.depth;
+			uint32_t currentWidth  = vkExtent3D.width;
+			uint32_t currentHeight = vkExtent3D.height;
+			uint32_t currentDepth  = depth;
 			for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
 			{
-				numberOfBytes += Renderer::TextureFormat::getNumberOfBytesPerSlice(static_cast<Renderer::TextureFormat::Enum>(textureFormat), width, height) * depth;
-				width = std::max(width >> 1, 1u);	// /= 2
-				height = std::max(height >> 1, 1u);	// /= 2
-				depth = std::max(depth >> 1, 1u);	// /= 2
+				numberOfBytes += Renderer::TextureFormat::getNumberOfBytesPerSlice(static_cast<Renderer::TextureFormat::Enum>(textureFormat), currentWidth, currentHeight) * currentDepth;
+				currentWidth  = std::max(currentWidth  >> 1, 1u);	// /= 2
+				currentHeight = std::max(currentHeight >> 1, 1u);	// /= 2
+				currentDepth  = std::max(currentDepth  >> 1, 1u);	// /= 2
 			}
+			numberOfBytes *= vkExtent3D.depth;
 		}
 		else
 		{
@@ -300,11 +304,13 @@ namespace VulkanRenderer
 			numberOfMipmaps = 1;
 		}
 
-		// Create and fill Vulkan image
-		createAndAllocateVkImage(vulkanRenderer, vkImageType, vkExtent3D, numberOfMipmaps, vkFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vkImage, vkDeviceMemory);
+		{ // Create and fill Vulkan image
+			const VkImageCreateFlags vkImageCreateFlags = (VK_IMAGE_VIEW_TYPE_CUBE == vkImageViewType) ? VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT : 0u;
+			createAndAllocateVkImage(vulkanRenderer, vkImageCreateFlags, vkImageType, VkExtent3D{vkExtent3D.width, vkExtent3D.height, depth}, numberOfMipmaps, layerCount, vkFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vkImage, vkDeviceMemory);
+		}
 
 		// Create the Vulkan image view
-		createVkImageView(vulkanRenderer, vkImage, vkImageViewType, numberOfMipmaps, vkFormat, VK_IMAGE_ASPECT_COLOR_BIT, vkImageView);
+		createVkImageView(vulkanRenderer, vkImage, vkImageViewType, numberOfMipmaps, layerCount, vkFormat, VK_IMAGE_ASPECT_COLOR_BIT, vkImageView);
 
 		// Upload all mipmaps
 		if (nullptr != data)
@@ -317,13 +323,13 @@ namespace VulkanRenderer
 			{ // Upload all mipmaps
 				// Create and begin Vulkan command buffer
 				VkCommandBuffer vkCommandBuffer = beginSingleTimeCommands(vulkanRenderer);
-				transitionVkImageLayout(vulkanRenderer, vkCommandBuffer, vkImage, vkFormat, numberOfMipmaps, VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+				transitionVkImageLayout(vulkanRenderer, vkCommandBuffer, vkImage, vkFormat, numberOfMipmaps, layerCount, VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
 				// Upload all mipmaps
-				uint32_t bufferOffset = 0;
-				uint32_t width = vkExtent3D.width;
-				uint32_t height = vkExtent3D.height;
-				uint32_t depth = vkExtent3D.depth;
+				uint32_t bufferOffset  = 0;
+				uint32_t currentWidth  = vkExtent3D.width;
+				uint32_t currentHeight = vkExtent3D.height;
+				uint32_t currentDepth  = depth;
 
 				// Allocate list of VkBufferImageCopy and setup VkBufferImageCopy data for each mipmap level
 				std::vector<VkBufferImageCopy> vkBufferImageCopyList;
@@ -331,31 +337,31 @@ namespace VulkanRenderer
 				for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
 				{
 					vkBufferImageCopyList.push_back({
-						bufferOffset,					// bufferOffset (VkDeviceSize)
-						0,								// bufferRowLength (uint32_t)
-						0,								// bufferImageHeight (uint32_t)
+						bufferOffset,									// bufferOffset (VkDeviceSize)
+						0,												// bufferRowLength (uint32_t)
+						0,												// bufferImageHeight (uint32_t)
 						{ // imageSubresource (VkImageSubresourceLayers)
-							VK_IMAGE_ASPECT_COLOR_BIT,	// aspectMask (VkImageAspectFlags)
-							mipmap,						// mipLevel (uint32_t)
-							0,							// baseArrayLayer (uint32_t)
-							1							// layerCount (uint32_t)
+							VK_IMAGE_ASPECT_COLOR_BIT,					// aspectMask (VkImageAspectFlags)
+							mipmap,										// mipLevel (uint32_t)
+							0,											// baseArrayLayer (uint32_t)
+							layerCount									// layerCount (uint32_t)
 						},
-						{ 0, 0, 0 },					// imageOffset (VkOffset3D)
-						{ width, height, depth }		// imageExtent (VkExtent3D)
+						{ 0, 0, 0 },									// imageOffset (VkOffset3D)
+						{ currentWidth, currentHeight, currentDepth }	// imageExtent (VkExtent3D)
 					});
 
 					// Move on to the next mipmap
-					bufferOffset += Renderer::TextureFormat::getNumberOfBytesPerSlice(static_cast<Renderer::TextureFormat::Enum>(textureFormat), width, height) * depth;
-					width = std::max(width >> 1, 1u);	// /= 2
-					height = std::max(height >> 1, 1u);	// /= 2
-					depth = std::max(depth >> 1, 1u);	// /= 2
+					bufferOffset += Renderer::TextureFormat::getNumberOfBytesPerSlice(static_cast<Renderer::TextureFormat::Enum>(textureFormat), currentWidth, currentHeight) * currentDepth;
+					currentWidth  = std::max(currentWidth >> 1, 1u);	// /= 2
+					currentHeight = std::max(currentHeight >> 1, 1u);	// /= 2
+					currentDepth  = std::max(currentDepth >> 1, 1u);	// /= 2
 				}
 
 				// Copy Vulkan buffer to Vulkan image
 				vkCmdCopyBufferToImage(vkCommandBuffer, stagingVkBuffer, vkImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, static_cast<uint32_t>(vkBufferImageCopyList.size()), vkBufferImageCopyList.data());
 
 				// End and destroy Vulkan command buffer
-				transitionVkImageLayout(vulkanRenderer, vkCommandBuffer, vkImage, vkFormat, numberOfMipmaps, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+				transitionVkImageLayout(vulkanRenderer, vkCommandBuffer, vkImage, vkFormat, numberOfMipmaps, layerCount, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 				endSingleTimeCommands(vulkanRenderer, vkCommandBuffer);
 			}
 
@@ -364,7 +370,7 @@ namespace VulkanRenderer
 		}
 	}
 
-	void Helper::createAndAllocateVkImage(const VulkanRenderer& vulkanRenderer, VkImageType vkImageType, const VkExtent3D& vkExtent3D, uint32_t mipLevels, VkFormat vkFormat, VkImageTiling vkImageTiling, VkImageUsageFlags vkImageUsageFlags, VkMemoryPropertyFlags vkMemoryPropertyFlags, VkImage& vkImage, VkDeviceMemory& vkDeviceMemory)
+	void Helper::createAndAllocateVkImage(const VulkanRenderer& vulkanRenderer, VkImageCreateFlags vkImageCreateFlags, VkImageType vkImageType, const VkExtent3D& vkExtent3D, uint32_t mipLevels, uint32_t arrayLayers, VkFormat vkFormat, VkImageTiling vkImageTiling, VkImageUsageFlags vkImageUsageFlags, VkMemoryPropertyFlags vkMemoryPropertyFlags, VkImage& vkImage, VkDeviceMemory& vkDeviceMemory)
 	{
 		const VulkanContext& vulkanContext = vulkanRenderer.getVulkanContext();
 		const VkDevice vkDevice = vulkanContext.getVkDevice();
@@ -374,12 +380,12 @@ namespace VulkanRenderer
 			{
 				VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,	// sType (VkStructureType)
 				nullptr,								// pNext (const void*)
-				0,										// flags (VkImageCreateFlags)
+				vkImageCreateFlags,						// flags (VkImageCreateFlags)
 				vkImageType,							// imageType (VkImageType)
 				vkFormat,								// format (VkFormat)
 				vkExtent3D,								// extent (VkExtent3D)
 				mipLevels,								// mipLevels (uint32_t)
-				1,										// arrayLayers (uint32_t)
+				arrayLayers,							// arrayLayers (uint32_t)
 				VK_SAMPLE_COUNT_1_BIT,					// samples (VkSampleCountFlagBits)
 				vkImageTiling,							// tiling (VkImageTiling)
 				vkImageUsageFlags,						// usage (VkImageUsageFlags)
@@ -440,7 +446,7 @@ namespace VulkanRenderer
 		destroyAndFreeVkImage(vulkanRenderer, vkImage, vkDeviceMemory);
 	}
 
-	void Helper::createVkImageView(const VulkanRenderer& vulkanRenderer, VkImage vkImage, VkImageViewType vkImageViewType, uint32_t mipLevels, VkFormat vkFormat, VkImageAspectFlags vkImageAspectFlags, VkImageView& vkImageView)
+	void Helper::createVkImageView(const VulkanRenderer& vulkanRenderer, VkImage vkImage, VkImageViewType vkImageViewType, uint32_t levelCount, uint32_t layerCount, VkFormat vkFormat, VkImageAspectFlags vkImageAspectFlags, VkImageView& vkImageView)
 	{
 		const VkImageViewCreateInfo vkImageViewCreateInfo =
 		{
@@ -459,9 +465,9 @@ namespace VulkanRenderer
 			{ // subresourceRange (VkImageSubresourceRange)
 				vkImageAspectFlags,						// aspectMask (VkImageAspectFlags)
 				0,										// baseMipLevel (uint32_t)
-				mipLevels,								// levelCount (uint32_t)
+				levelCount,								// levelCount (uint32_t)
 				0,										// baseArrayLayer (uint32_t)
-				1										// layerCount (uint32_t)
+				layerCount								// layerCount (uint32_t)
 			}
 		};
 		if (vkCreateImageView(vulkanRenderer.getVulkanContext().getVkDevice(), &vkImageViewCreateInfo, nullptr, &vkImageView) != VK_SUCCESS)

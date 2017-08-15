@@ -27,6 +27,7 @@
 #include "Direct3D10Renderer/Direct3D9RuntimeLinking.h"	// For the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box) used for debugging, also works directly within VisualStudio 2012 out-of-the-box
 #include "Direct3D10Renderer/Direct3D10RuntimeLinking.h"
 #include "Direct3D10Renderer/RootSignature.h"
+#include "Direct3D10Renderer/ResourceGroup.h"
 #include "Direct3D10Renderer/Mapping.h"
 #include "Direct3D10Renderer/RenderTarget/SwapChain.h"
 #include "Direct3D10Renderer/RenderTarget/Framebuffer.h"
@@ -115,6 +116,17 @@ namespace
 
 
 			//[-------------------------------------------------------]
+			//[ Command buffer                                        ]
+			//[-------------------------------------------------------]
+			void ExecuteCommandBuffer(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::ExecuteCommandBuffer* realData = static_cast<const Renderer::Command::ExecuteCommandBuffer*>(data);
+				assert(nullptr != realData->commandBufferToExecute);
+				renderer.submitCommandBuffer(*realData->commandBufferToExecute);
+			}
+
+
+			//[-------------------------------------------------------]
 			//[ Resource handling                                     ]
 			//[-------------------------------------------------------]
 			void CopyUniformBufferData(const void* data, Renderer::IRenderer&)
@@ -138,10 +150,10 @@ namespace
 				static_cast<Direct3D10Renderer::Direct3D10Renderer&>(renderer).setGraphicsRootSignature(realData->rootSignature);
 			}
 
-			void SetGraphicsRootDescriptorTable(const void* data, Renderer::IRenderer& renderer)
+			void SetGraphicsResourceGroup(const void* data, Renderer::IRenderer& renderer)
 			{
-				const Renderer::Command::SetGraphicsRootDescriptorTable* realData = static_cast<const Renderer::Command::SetGraphicsRootDescriptorTable*>(data);
-				static_cast<Direct3D10Renderer::Direct3D10Renderer&>(renderer).setGraphicsRootDescriptorTable(realData->rootParameterIndex, realData->resource);
+				const Renderer::Command::SetGraphicsResourceGroup* realData = static_cast<const Renderer::Command::SetGraphicsResourceGroup*>(data);
+				static_cast<Direct3D10Renderer::Direct3D10Renderer&>(renderer).setGraphicsResourceGroup(realData->rootParameterIndex, realData->resourceGroup);
 			}
 
 			//[-------------------------------------------------------]
@@ -267,12 +279,14 @@ namespace
 		//[-------------------------------------------------------]
 		static const Renderer::BackendDispatchFunction DISPATCH_FUNCTIONS[Renderer::CommandDispatchFunctionIndex::NumberOfFunctions] =
 		{
+			// Command buffer
+			&BackendDispatch::ExecuteCommandBuffer,
 			// Resource handling
 			&BackendDispatch::CopyUniformBufferData,
 			&BackendDispatch::CopyTextureBufferData,
 			// Graphics root
 			&BackendDispatch::SetGraphicsRootSignature,
-			&BackendDispatch::SetGraphicsRootDescriptorTable,
+			&BackendDispatch::SetGraphicsResourceGroup,
 			// States
 			&BackendDispatch::SetPipelineState,
 			// Input-assembler (IA) stage
@@ -526,7 +540,7 @@ namespace Direct3D10Renderer
 		}
 	}
 
-	void Direct3D10Renderer::setGraphicsRootDescriptorTable(uint32_t rootParameterIndex, Renderer::IResource* resource)
+	void Direct3D10Renderer::setGraphicsResourceGroup(uint32_t rootParameterIndex, Renderer::IResourceGroup* resourceGroup)
 	{
 		// Security checks
 		#ifndef DIRECT3D10RENDERER_NO_DEBUG
@@ -548,13 +562,6 @@ namespace Direct3D10Renderer
 				RENDERER_LOG(mContext, CRITICAL, "The Direct3D 10 renderer backend root parameter index doesn't reference a descriptor table")
 				return;
 			}
-
-			// TODO(co) For now, we only support a single descriptor range
-			if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
-			{
-				RENDERER_LOG(mContext, CRITICAL, "Only a single descriptor range is supported by the Direct3D 10 renderer backend")
-				return;
-			}
 			if (nullptr == reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges))
 			{
 				RENDERER_LOG(mContext, CRITICAL, "The Direct3D 10 renderer backend descriptor ranges is a null pointer")
@@ -563,195 +570,204 @@ namespace Direct3D10Renderer
 		}
 		#endif
 
-		if (nullptr != resource)
+		if (nullptr != resourceGroup)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *resource)
+			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *resourceGroup)
 
-			// Get the root signature parameter instance
+			// Set graphics resource group
+			const ResourceGroup* d3d10ResourceGroup = static_cast<ResourceGroup*>(resourceGroup);
+			const uint32_t numberOfResources = d3d10ResourceGroup->getNumberOfResources();
+			Renderer::IResource** resources = d3d10ResourceGroup->getResources();
 			const Renderer::RootParameter& rootParameter = mGraphicsRootSignature->getRootSignature().parameters[rootParameterIndex];
-			const Renderer::DescriptorRange* descriptorRange = reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges);
-
-			// Check the type of resource to set
-			// TODO(co) Some additional resource type root signature security checks in debug build?
-			const Renderer::ResourceType resourceType = resource->getResourceType();
-			switch (resourceType)
+			for (uint32_t resourceIndex = 0; resourceIndex < numberOfResources; ++resourceIndex, ++resources)
 			{
-				case Renderer::ResourceType::UNIFORM_BUFFER:
+				const Renderer::IResource* resource = *resources;
+				assert(nullptr != reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges));
+				const Renderer::DescriptorRange& descriptorRange = reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges)[resourceIndex];
+
+				// Check the type of resource to set
+				// TODO(co) Some additional resource type root signature security checks in debug build?
+				const Renderer::ResourceType resourceType = resource->getResourceType();
+				switch (resourceType)
 				{
-					ID3D10Buffer* d3d10Buffers = static_cast<UniformBuffer*>(resource)->getD3D10Buffer();
-					const UINT startSlot = descriptorRange->baseShaderRegister;
-					switch (rootParameter.shaderVisibility)
+					case Renderer::ResourceType::UNIFORM_BUFFER:
 					{
-						case Renderer::ShaderVisibility::ALL:
-							mD3D10Device->VSSetConstantBuffers(startSlot, 1, &d3d10Buffers);
-							mD3D10Device->GSSetConstantBuffers(startSlot, 1, &d3d10Buffers);
-							mD3D10Device->PSSetConstantBuffers(startSlot, 1, &d3d10Buffers);
-							break;
+						ID3D10Buffer* d3d10Buffers = static_cast<const UniformBuffer*>(resource)->getD3D10Buffer();
+						const UINT startSlot = descriptorRange.baseShaderRegister;
+						switch (descriptorRange.shaderVisibility)
+						{
+							case Renderer::ShaderVisibility::ALL:
+								mD3D10Device->VSSetConstantBuffers(startSlot, 1, &d3d10Buffers);
+								mD3D10Device->GSSetConstantBuffers(startSlot, 1, &d3d10Buffers);
+								mD3D10Device->PSSetConstantBuffers(startSlot, 1, &d3d10Buffers);
+								break;
 
-						case Renderer::ShaderVisibility::VERTEX:
-							mD3D10Device->VSSetConstantBuffers(startSlot, 1, &d3d10Buffers);
-							break;
+							case Renderer::ShaderVisibility::VERTEX:
+								mD3D10Device->VSSetConstantBuffers(startSlot, 1, &d3d10Buffers);
+								break;
 
-						case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
-							RENDERER_LOG(mContext, CRITICAL, "Direct3D 10 has no tessellation control shader support (hull shader in Direct3D terminology)")
-							break;
+							case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
+								RENDERER_LOG(mContext, CRITICAL, "Direct3D 10 has no tessellation control shader support (hull shader in Direct3D terminology)")
+								break;
 
-						case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
-							RENDERER_LOG(mContext, CRITICAL, "Direct3D 10 has no tessellation evaluation shader support (domain shader in Direct3D terminology)")
-							break;
+							case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
+								RENDERER_LOG(mContext, CRITICAL, "Direct3D 10 has no tessellation evaluation shader support (domain shader in Direct3D terminology)")
+								break;
 
-						case Renderer::ShaderVisibility::GEOMETRY:
-							mD3D10Device->GSSetConstantBuffers(startSlot, 1, &d3d10Buffers);
-							break;
+							case Renderer::ShaderVisibility::GEOMETRY:
+								mD3D10Device->GSSetConstantBuffers(startSlot, 1, &d3d10Buffers);
+								break;
 
-						case Renderer::ShaderVisibility::FRAGMENT:
-							// "pixel shader" in Direct3D terminology
-							mD3D10Device->PSSetConstantBuffers(startSlot, 1, &d3d10Buffers);
-							break;
+							case Renderer::ShaderVisibility::FRAGMENT:
+								// "pixel shader" in Direct3D terminology
+								mD3D10Device->PSSetConstantBuffers(startSlot, 1, &d3d10Buffers);
+								break;
+						}
+						break;
 					}
-					break;
+
+					case Renderer::ResourceType::TEXTURE_BUFFER:
+					case Renderer::ResourceType::TEXTURE_1D:
+					case Renderer::ResourceType::TEXTURE_2D:
+					case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+					case Renderer::ResourceType::TEXTURE_3D:
+					case Renderer::ResourceType::TEXTURE_CUBE:
+					{
+						ID3D10ShaderResourceView* d3d10ShaderResourceView = nullptr;
+						switch (resourceType)
+						{
+							case Renderer::ResourceType::TEXTURE_BUFFER:
+								d3d10ShaderResourceView = static_cast<const TextureBuffer*>(resource)->getD3D10ShaderResourceView();
+								break;
+
+							case Renderer::ResourceType::TEXTURE_1D:
+								d3d10ShaderResourceView = static_cast<const Texture1D*>(resource)->getD3D10ShaderResourceView();
+								break;
+
+							case Renderer::ResourceType::TEXTURE_2D:
+								d3d10ShaderResourceView = static_cast<const Texture2D*>(resource)->getD3D10ShaderResourceView();
+								break;
+
+							case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+								d3d10ShaderResourceView = static_cast<const Texture2DArray*>(resource)->getD3D10ShaderResourceView();
+								break;
+
+							case Renderer::ResourceType::TEXTURE_3D:
+								d3d10ShaderResourceView = static_cast<const Texture3D*>(resource)->getD3D10ShaderResourceView();
+								break;
+
+							case Renderer::ResourceType::TEXTURE_CUBE:
+								d3d10ShaderResourceView = static_cast<const TextureCube*>(resource)->getD3D10ShaderResourceView();
+								break;
+
+							case Renderer::ResourceType::ROOT_SIGNATURE:
+							case Renderer::ResourceType::RESOURCE_GROUP:
+							case Renderer::ResourceType::PROGRAM:
+							case Renderer::ResourceType::VERTEX_ARRAY:
+							case Renderer::ResourceType::SWAP_CHAIN:
+							case Renderer::ResourceType::FRAMEBUFFER:
+							case Renderer::ResourceType::INDEX_BUFFER:
+							case Renderer::ResourceType::VERTEX_BUFFER:
+							case Renderer::ResourceType::UNIFORM_BUFFER:
+							case Renderer::ResourceType::INDIRECT_BUFFER:
+							case Renderer::ResourceType::PIPELINE_STATE:
+							case Renderer::ResourceType::SAMPLER_STATE:
+							case Renderer::ResourceType::VERTEX_SHADER:
+							case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+							case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+							case Renderer::ResourceType::GEOMETRY_SHADER:
+							case Renderer::ResourceType::FRAGMENT_SHADER:
+								RENDERER_LOG(mContext, CRITICAL, "Invalid Direct3D 10 renderer backend resource type")
+								break;
+						}
+						const UINT startSlot = descriptorRange.baseShaderRegister;
+						switch (descriptorRange.shaderVisibility)
+						{
+							case Renderer::ShaderVisibility::ALL:
+								mD3D10Device->VSSetShaderResources(startSlot, 1, &d3d10ShaderResourceView);
+								mD3D10Device->GSSetShaderResources(startSlot, 1, &d3d10ShaderResourceView);
+								mD3D10Device->PSSetShaderResources(startSlot, 1, &d3d10ShaderResourceView);
+								break;
+
+							case Renderer::ShaderVisibility::VERTEX:
+								mD3D10Device->VSSetShaderResources(startSlot, 1, &d3d10ShaderResourceView);
+								break;
+
+							case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
+								RENDERER_LOG(mContext, CRITICAL, "Direct3D 10 has no tessellation control shader support (hull shader in Direct3D terminology)")
+								break;
+
+							case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
+								RENDERER_LOG(mContext, CRITICAL, "Direct3D 10 has no tessellation evaluation shader support (domain shader in Direct3D terminology)")
+								break;
+
+							case Renderer::ShaderVisibility::GEOMETRY:
+								mD3D10Device->GSSetShaderResources(startSlot, 1, &d3d10ShaderResourceView);
+								break;
+
+							case Renderer::ShaderVisibility::FRAGMENT:
+								// "pixel shader" in Direct3D terminology
+								mD3D10Device->PSSetShaderResources(startSlot, 1, &d3d10ShaderResourceView);
+								break;
+						}
+						break;
+					}
+
+					case Renderer::ResourceType::SAMPLER_STATE:
+					{
+						ID3D10SamplerState* d3d10SamplerState = static_cast<const SamplerState*>(resource)->getD3D10SamplerState();
+						const UINT startSlot = descriptorRange.baseShaderRegister;
+						switch (descriptorRange.shaderVisibility)
+						{
+							case Renderer::ShaderVisibility::ALL:
+								mD3D10Device->VSSetSamplers(startSlot, 1, &d3d10SamplerState);
+								mD3D10Device->GSSetSamplers(startSlot, 1, &d3d10SamplerState);
+								mD3D10Device->PSSetSamplers(startSlot, 1, &d3d10SamplerState);
+								break;
+
+							case Renderer::ShaderVisibility::VERTEX:
+								mD3D10Device->VSSetSamplers(startSlot, 1, &d3d10SamplerState);
+								break;
+
+							case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
+								RENDERER_LOG(mContext, CRITICAL, "Direct3D 10 has no tessellation control shader support (hull shader in Direct3D terminology)")
+								break;
+
+							case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
+								RENDERER_LOG(mContext, CRITICAL, "Direct3D 10 has no tessellation evaluation shader support (domain shader in Direct3D terminology)")
+								break;
+
+							case Renderer::ShaderVisibility::GEOMETRY:
+								mD3D10Device->GSSetSamplers(startSlot, 1, &d3d10SamplerState);
+								break;
+
+							case Renderer::ShaderVisibility::FRAGMENT:
+								// "pixel shader" in Direct3D terminology
+								mD3D10Device->PSSetSamplers(startSlot, 1, &d3d10SamplerState);
+								break;
+						}
+						break;
+					}
+
+					case Renderer::ResourceType::ROOT_SIGNATURE:
+					case Renderer::ResourceType::RESOURCE_GROUP:
+					case Renderer::ResourceType::PROGRAM:
+					case Renderer::ResourceType::VERTEX_ARRAY:
+					case Renderer::ResourceType::SWAP_CHAIN:
+					case Renderer::ResourceType::FRAMEBUFFER:
+					case Renderer::ResourceType::INDEX_BUFFER:
+					case Renderer::ResourceType::VERTEX_BUFFER:
+					case Renderer::ResourceType::INDIRECT_BUFFER:
+					case Renderer::ResourceType::PIPELINE_STATE:
+					case Renderer::ResourceType::VERTEX_SHADER:
+					case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+					case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+					case Renderer::ResourceType::GEOMETRY_SHADER:
+					case Renderer::ResourceType::FRAGMENT_SHADER:
+						RENDERER_LOG(mContext, CRITICAL, "Invalid Direct3D 10 renderer backend resource type")
+						break;
 				}
-
-				case Renderer::ResourceType::TEXTURE_BUFFER:
-				case Renderer::ResourceType::TEXTURE_1D:
-				case Renderer::ResourceType::TEXTURE_2D:
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-				case Renderer::ResourceType::TEXTURE_3D:
-				case Renderer::ResourceType::TEXTURE_CUBE:
-				{
-					ID3D10ShaderResourceView* d3d10ShaderResourceView = nullptr;
-					switch (resourceType)
-					{
-						case Renderer::ResourceType::TEXTURE_BUFFER:
-							d3d10ShaderResourceView = static_cast<TextureBuffer*>(resource)->getD3D10ShaderResourceView();
-							break;
-
-						case Renderer::ResourceType::TEXTURE_1D:
-							d3d10ShaderResourceView = static_cast<Texture1D*>(resource)->getD3D10ShaderResourceView();
-							break;
-
-						case Renderer::ResourceType::TEXTURE_2D:
-							d3d10ShaderResourceView = static_cast<Texture2D*>(resource)->getD3D10ShaderResourceView();
-							break;
-
-						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-							d3d10ShaderResourceView = static_cast<Texture2DArray*>(resource)->getD3D10ShaderResourceView();
-							break;
-
-						case Renderer::ResourceType::TEXTURE_3D:
-							d3d10ShaderResourceView = static_cast<Texture3D*>(resource)->getD3D10ShaderResourceView();
-							break;
-
-						case Renderer::ResourceType::TEXTURE_CUBE:
-							d3d10ShaderResourceView = static_cast<TextureCube*>(resource)->getD3D10ShaderResourceView();
-							break;
-
-						case Renderer::ResourceType::ROOT_SIGNATURE:
-						case Renderer::ResourceType::PROGRAM:
-						case Renderer::ResourceType::VERTEX_ARRAY:
-						case Renderer::ResourceType::SWAP_CHAIN:
-						case Renderer::ResourceType::FRAMEBUFFER:
-						case Renderer::ResourceType::INDEX_BUFFER:
-						case Renderer::ResourceType::VERTEX_BUFFER:
-						case Renderer::ResourceType::UNIFORM_BUFFER:
-						case Renderer::ResourceType::INDIRECT_BUFFER:
-						case Renderer::ResourceType::PIPELINE_STATE:
-						case Renderer::ResourceType::SAMPLER_STATE:
-						case Renderer::ResourceType::VERTEX_SHADER:
-						case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-						case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-						case Renderer::ResourceType::GEOMETRY_SHADER:
-						case Renderer::ResourceType::FRAGMENT_SHADER:
-							RENDERER_LOG(mContext, CRITICAL, "Invalid Direct3D 10 renderer backend resource type")
-							break;
-					}
-					const UINT startSlot = descriptorRange->baseShaderRegister;
-					switch (rootParameter.shaderVisibility)
-					{
-						case Renderer::ShaderVisibility::ALL:
-							mD3D10Device->VSSetShaderResources(startSlot, 1, &d3d10ShaderResourceView);
-							mD3D10Device->GSSetShaderResources(startSlot, 1, &d3d10ShaderResourceView);
-							mD3D10Device->PSSetShaderResources(startSlot, 1, &d3d10ShaderResourceView);
-							break;
-
-						case Renderer::ShaderVisibility::VERTEX:
-							mD3D10Device->VSSetShaderResources(startSlot, 1, &d3d10ShaderResourceView);
-							break;
-
-						case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
-							RENDERER_LOG(mContext, CRITICAL, "Direct3D 10 has no tessellation control shader support (hull shader in Direct3D terminology)")
-							break;
-
-						case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
-							RENDERER_LOG(mContext, CRITICAL, "Direct3D 10 has no tessellation evaluation shader support (domain shader in Direct3D terminology)")
-
-							break;
-
-						case Renderer::ShaderVisibility::GEOMETRY:
-							mD3D10Device->GSSetShaderResources(startSlot, 1, &d3d10ShaderResourceView);
-							break;
-
-						case Renderer::ShaderVisibility::FRAGMENT:
-							// "pixel shader" in Direct3D terminology
-							mD3D10Device->PSSetShaderResources(startSlot, 1, &d3d10ShaderResourceView);
-							break;
-					}
-					break;
-				}
-
-				case Renderer::ResourceType::SAMPLER_STATE:
-				{
-					ID3D10SamplerState* d3d10SamplerState = static_cast<SamplerState*>(resource)->getD3D10SamplerState();
-					const UINT startSlot = descriptorRange->baseShaderRegister;
-					switch (rootParameter.shaderVisibility)
-					{
-						case Renderer::ShaderVisibility::ALL:
-							mD3D10Device->VSSetSamplers(startSlot, 1, &d3d10SamplerState);
-							mD3D10Device->GSSetSamplers(startSlot, 1, &d3d10SamplerState);
-							mD3D10Device->PSSetSamplers(startSlot, 1, &d3d10SamplerState);
-							break;
-
-						case Renderer::ShaderVisibility::VERTEX:
-							mD3D10Device->VSSetSamplers(startSlot, 1, &d3d10SamplerState);
-							break;
-
-						case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
-							RENDERER_LOG(mContext, CRITICAL, "Direct3D 10 has no tessellation control shader support (hull shader in Direct3D terminology)")
-							break;
-
-						case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
-							RENDERER_LOG(mContext, CRITICAL, "Direct3D 10 has no tessellation evaluation shader support (domain shader in Direct3D terminology)")
-							break;
-
-						case Renderer::ShaderVisibility::GEOMETRY:
-							mD3D10Device->GSSetSamplers(startSlot, 1, &d3d10SamplerState);
-							break;
-
-						case Renderer::ShaderVisibility::FRAGMENT:
-							// "pixel shader" in Direct3D terminology
-							mD3D10Device->PSSetSamplers(startSlot, 1, &d3d10SamplerState);
-							break;
-					}
-					break;
-				}
-
-				case Renderer::ResourceType::ROOT_SIGNATURE:
-				case Renderer::ResourceType::PROGRAM:
-				case Renderer::ResourceType::VERTEX_ARRAY:
-				case Renderer::ResourceType::SWAP_CHAIN:
-				case Renderer::ResourceType::FRAMEBUFFER:
-				case Renderer::ResourceType::INDEX_BUFFER:
-				case Renderer::ResourceType::VERTEX_BUFFER:
-				case Renderer::ResourceType::INDIRECT_BUFFER:
-				case Renderer::ResourceType::PIPELINE_STATE:
-				case Renderer::ResourceType::VERTEX_SHADER:
-				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-				case Renderer::ResourceType::GEOMETRY_SHADER:
-				case Renderer::ResourceType::FRAGMENT_SHADER:
-					RENDERER_LOG(mContext, CRITICAL, "Invalid Direct3D 10 renderer backend resource type")
-					break;
 			}
 		}
 		else
@@ -914,6 +930,7 @@ namespace Direct3D10Renderer
 					}
 
 					case Renderer::ResourceType::ROOT_SIGNATURE:
+					case Renderer::ResourceType::RESOURCE_GROUP:
 					case Renderer::ResourceType::PROGRAM:
 					case Renderer::ResourceType::VERTEX_ARRAY:
 					case Renderer::ResourceType::INDEX_BUFFER:
@@ -1045,6 +1062,7 @@ namespace Direct3D10Renderer
 				}
 
 				case Renderer::ResourceType::ROOT_SIGNATURE:
+				case Renderer::ResourceType::RESOURCE_GROUP:
 				case Renderer::ResourceType::PROGRAM:
 				case Renderer::ResourceType::VERTEX_ARRAY:
 				case Renderer::ResourceType::INDEX_BUFFER:
@@ -1131,6 +1149,7 @@ namespace Direct3D10Renderer
 			}
 
 			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::RESOURCE_GROUP:
 			case Renderer::ResourceType::PROGRAM:
 			case Renderer::ResourceType::VERTEX_ARRAY:
 			case Renderer::ResourceType::INDEX_BUFFER:
@@ -1183,6 +1202,7 @@ namespace Direct3D10Renderer
 				break;
 
 			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::RESOURCE_GROUP:
 			case Renderer::ResourceType::PROGRAM:
 			case Renderer::ResourceType::VERTEX_ARRAY:
 			case Renderer::ResourceType::SWAP_CHAIN:
@@ -1550,6 +1570,7 @@ namespace Direct3D10Renderer
 				return false;
 
 			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::RESOURCE_GROUP:
 			case Renderer::ResourceType::PROGRAM:
 			case Renderer::ResourceType::VERTEX_ARRAY:
 			case Renderer::ResourceType::SWAP_CHAIN:
@@ -1629,6 +1650,7 @@ namespace Direct3D10Renderer
 				break;
 
 			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::RESOURCE_GROUP:
 			case Renderer::ResourceType::PROGRAM:
 			case Renderer::ResourceType::VERTEX_ARRAY:
 			case Renderer::ResourceType::SWAP_CHAIN:

@@ -2,7 +2,7 @@
 	"Format":
 	{
 		"Type": "MaterialBlueprintAsset",
-		"Version": "1"
+		"Version": "2"
 	},
 	"MaterialBlueprintAsset":
 	{
@@ -14,40 +14,6 @@
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
 				"Description": "2D color map"
-			}
-		},
-		"RootSignature":
-		{
-			"RootParameters":
-			{
-				"0":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "SAMPLER",
-							"BaseShaderRegister": "0"
-						}
-					},
-					"ShaderVisibility": "FRAGMENT"
-				},
-				"1":
-				{
-					"ParameterType": "DESCRIPTOR_TABLE",
-					"DescriptorRanges":
-					{
-						"0":
-						{
-							"RangeType": "SRV",
-							"BaseShaderRegister": "0",
-							"BaseShaderRegisterName": "ColorMap",
-							"SamplerRootParameterIndex": "0"
-						}
-					},
-					"ShaderVisibility": "FRAGMENT"
-				}
 			}
 		},
 		"PipelineState":
@@ -68,26 +34,34 @@
 				"DepthWriteMask": "ZERO"
 			}
 		},
-		"Resources":
+		"ResourceGroups":
 		{
-			"SamplerStates":
+			"0":
 			{
-				"SamplerLinear":
+				"0":
 				{
-					"Filter": "MIN_MAG_LINEAR_MIP_POINT",
-					"MaxAnisotropy": "1",
-					"MaxLOD": "0.0"
-				}
-			},
-			"Textures":
-			{
-				"ColorMap":
-				{
+					"BaseShaderRegisterName": "ColorMap",
+					"BaseShaderRegister": "0",
+					"ResourceType": "TEXTURE",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@ColorMap",
 					"FallbackTexture": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
-					"MipmapsUsed": "FALSE"
+					"MipmapsUsed": "FALSE",
+					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
+				}
+			},
+			"1":
+			{
+				"0":
+				{
+					"BaseShaderRegisterName": "SamplerLinear",
+					"BaseShaderRegister": "0",
+					"ShaderVisibility": "FRAGMENT",
+					"ResourceType": "SAMPLER_STATE",
+					"Filter": "MIN_MAG_LINEAR_MIP_POINT",
+					"MaxAnisotropy": "1",
+					"MaxLOD": "0.0"
 				}
 			}
 		}

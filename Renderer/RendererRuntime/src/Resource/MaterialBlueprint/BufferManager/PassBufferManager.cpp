@@ -57,9 +57,10 @@ namespace RendererRuntime
 	PassBufferManager::~PassBufferManager()
 	{
 		// Destroy all uniform buffers
-		for (Renderer::IUniformBuffer* uniformBuffer : mUniformBuffers)
+		for (UniformBuffer& uniformBuffer : mUniformBuffers)
 		{
-			uniformBuffer->releaseReference();
+			uniformBuffer.resourceGroup->releaseReference();
+			uniformBuffer.uniformBuffer->releaseReference();
 		}
 	}
 
@@ -167,13 +168,15 @@ namespace RendererRuntime
 			// Update the uniform buffer by using our scratch buffer
 			if (mCurrentUniformBufferIndex >= static_cast<uint32_t>(mUniformBuffers.size()))
 			{
-				Renderer::IUniformBuffer* uniformBuffer = mBufferManager.createUniformBuffer(passUniformBuffer->uniformBufferNumberOfBytes, mScratchBuffer.data(), Renderer::BufferUsage::DYNAMIC_DRAW);
-				mUniformBuffers.push_back(uniformBuffer);
+				Renderer::IResource* uniformBuffer = mBufferManager.createUniformBuffer(passUniformBuffer->uniformBufferNumberOfBytes, mScratchBuffer.data(), Renderer::BufferUsage::DYNAMIC_DRAW);
 				RENDERER_SET_RESOURCE_DEBUG_NAME(uniformBuffer, "Pass buffer manager")
+				Renderer::IResourceGroup* resourceGroup = mMaterialBlueprintResource.getRootSignaturePtr()->createResourceGroup(passUniformBuffer->rootParameterIndex, 1, &uniformBuffer);
+				RENDERER_SET_RESOURCE_DEBUG_NAME(resourceGroup, "Pass buffer manager")
+				mUniformBuffers.emplace_back(static_cast<Renderer::IUniformBuffer*>(uniformBuffer), resourceGroup);
 			}
 			else
 			{
-				mUniformBuffers[mCurrentUniformBufferIndex]->copyDataFrom(static_cast<uint32_t>(mScratchBuffer.size()), mScratchBuffer.data());
+				mUniformBuffers[mCurrentUniformBufferIndex].uniformBuffer->copyDataFrom(static_cast<uint32_t>(mScratchBuffer.size()), mScratchBuffer.data());
 			}
 			++mCurrentUniformBufferIndex;
 		}
@@ -181,12 +184,13 @@ namespace RendererRuntime
 
 	void PassBufferManager::fillCommandBuffer(Renderer::CommandBuffer& commandBuffer) const
 	{
+		// Set resource group
 		if (!mUniformBuffers.empty())
 		{
 			const MaterialBlueprintResource::UniformBuffer* passUniformBuffer = mMaterialBlueprintResource.getPassUniformBuffer();
 			if (nullptr != passUniformBuffer)
 			{
-				Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, passUniformBuffer->rootParameterIndex, mUniformBuffers[mCurrentUniformBufferIndex - 1]);
+				Renderer::Command::SetGraphicsResourceGroup::create(commandBuffer, passUniformBuffer->rootParameterIndex, mUniformBuffers[mCurrentUniformBufferIndex - 1].resourceGroup);
 			}
 		}
 	}

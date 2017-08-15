@@ -276,13 +276,12 @@ namespace RendererRuntime
 				// Set the used graphics root signature
 				Renderer::Command::SetGraphicsRootSignature::create(commandBuffer, mRootSignature);
 
-				// Set graphics root descriptors
-				Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, 0, mVertexShaderUniformBuffer);
-				Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, 1, mSamplerState);
-				Renderer::Command::SetGraphicsRootDescriptorTable::create(commandBuffer, 2, mTexture2D);
-
 				// Set the used pipeline state object (PSO)
 				Renderer::Command::SetPipelineState::create(commandBuffer, mPipelineState);
+
+				// Set resource groups
+				Renderer::Command::SetGraphicsResourceGroup::create(commandBuffer, 0, mResourceGroup);
+				Renderer::Command::SetGraphicsResourceGroup::create(commandBuffer, 1, mSamplerStateGroup);
 			}
 
 			// Setup input assembly (IA): Set the used vertex array
@@ -374,14 +373,13 @@ namespace RendererRuntime
 		{ // Create the root signature instance
 			// Create the root signature
 			Renderer::DescriptorRangeBuilder ranges[3];
-			ranges[0].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockDynamicVs", 0);
-			ranges[1].initializeSampler(1, 0);
-			ranges[2].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "GlyphMap", 1);
+			ranges[0].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockDynamicVs", Renderer::ShaderVisibility::VERTEX);
+			ranges[1].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "GlyphMap", Renderer::ShaderVisibility::FRAGMENT);
+			ranges[2].initializeSampler(1, 0, Renderer::ShaderVisibility::FRAGMENT);
 
-			Renderer::RootParameterBuilder rootParameters[3];
-			rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::VERTEX);
-			rootParameters[1].initializeAsDescriptorTable(1, &ranges[1], Renderer::ShaderVisibility::FRAGMENT);
-			rootParameters[2].initializeAsDescriptorTable(1, &ranges[2], Renderer::ShaderVisibility::FRAGMENT);
+			Renderer::RootParameterBuilder rootParameters[2];
+			rootParameters[0].initializeAsDescriptorTable(2, &ranges[0]);
+			rootParameters[1].initializeAsDescriptorTable(1, &ranges[2]);
 
 			// Setup
 			Renderer::RootSignatureBuilder rootSignature;
@@ -442,8 +440,7 @@ namespace RendererRuntime
 		}
 
 		// Create vertex uniform buffer instance
-		// -> Don't use "renderer.getCapabilities().maximumUniformBufferSize > 0" here since for OpenGL we're not using uniform buffers in here
-		if (0 != strcmp(renderer.getName(), "OpenGL") && 0 != strcmp(renderer.getName(), "OpenGLES3"))
+		if (renderer.getCapabilities().maximumUniformBufferSize > 0)
 		{
 			mVertexShaderUniformBuffer = mRendererRuntime.getBufferManager().createUniformBuffer(sizeof(float) * 4 * 4, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 			RENDERER_SET_RESOURCE_DEBUG_NAME(mVertexShaderUniformBuffer, "Debug GUI")
@@ -453,12 +450,21 @@ namespace RendererRuntime
 			mObjectSpaceToClipSpaceMatrixUniformHandle = mProgram->getUniformHandle("ObjectSpaceToClipSpaceMatrix");
 		}
 
-		{ // Create sampler state instance
+		// Create sampler state instance and wrap it into a resource group instance
+		Renderer::IResource* samplerStateResource = nullptr;
+		{
 			Renderer::SamplerState samplerState = Renderer::ISamplerState::getDefaultSamplerState();
 			samplerState.addressU = Renderer::TextureAddressMode::WRAP;
 			samplerState.addressV = Renderer::TextureAddressMode::WRAP;
-			mSamplerState = renderer.createSamplerState(samplerState);
-			RENDERER_SET_RESOURCE_DEBUG_NAME(mSamplerState, "Debug GUI")
+			samplerStateResource = renderer.createSamplerState(samplerState);
+			RENDERER_SET_RESOURCE_DEBUG_NAME(samplerStateResource, "Debug GUI")
+			mSamplerStateGroup = mRootSignature->createResourceGroup(1, 1, &samplerStateResource);
+		}
+
+		{ // Create resource group
+			Renderer::IResource* resources[2] = { mVertexShaderUniformBuffer, mTexture2D };
+			Renderer::ISamplerState* samplerStates[2] = { nullptr, static_cast<Renderer::ISamplerState*>(samplerStateResource) };
+			mResourceGroup = mRootSignature->createResourceGroup(0, static_cast<uint32_t>(glm::countof(resources)), resources, samplerStates);
 		}
 	}
 

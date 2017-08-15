@@ -90,6 +90,17 @@ namespace
 
 
 			//[-------------------------------------------------------]
+			//[ Command buffer                                        ]
+			//[-------------------------------------------------------]
+			void ExecuteCommandBuffer(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::ExecuteCommandBuffer* realData = static_cast<const Renderer::Command::ExecuteCommandBuffer*>(data);
+				assert(nullptr != realData->commandBufferToExecute);
+				renderer.submitCommandBuffer(*realData->commandBufferToExecute);
+			}
+
+
+			//[-------------------------------------------------------]
 			//[ Resource handling                                     ]
 			//[-------------------------------------------------------]
 			void CopyUniformBufferData(const void* data, Renderer::IRenderer&)
@@ -113,10 +124,10 @@ namespace
 				static_cast<Direct3D12Renderer::Direct3D12Renderer&>(renderer).setGraphicsRootSignature(realData->rootSignature);
 			}
 
-			void SetGraphicsRootDescriptorTable(const void* data, Renderer::IRenderer& renderer)
+			void SetGraphicsResourceGroup(const void* data, Renderer::IRenderer& renderer)
 			{
-				const Renderer::Command::SetGraphicsRootDescriptorTable* realData = static_cast<const Renderer::Command::SetGraphicsRootDescriptorTable*>(data);
-				static_cast<Direct3D12Renderer::Direct3D12Renderer&>(renderer).setGraphicsRootDescriptorTable(realData->rootParameterIndex, realData->resource);
+				const Renderer::Command::SetGraphicsResourceGroup* realData = static_cast<const Renderer::Command::SetGraphicsResourceGroup*>(data);
+				static_cast<Direct3D12Renderer::Direct3D12Renderer&>(renderer).setGraphicsResourceGroup(realData->rootParameterIndex, realData->resourceGroup);
 			}
 
 			//[-------------------------------------------------------]
@@ -244,12 +255,14 @@ namespace
 		//[-------------------------------------------------------]
 		static const Renderer::BackendDispatchFunction DISPATCH_FUNCTIONS[Renderer::CommandDispatchFunctionIndex::NumberOfFunctions] =
 		{
+			// Command buffer
+			&BackendDispatch::ExecuteCommandBuffer,
 			// Resource handling
 			&BackendDispatch::CopyUniformBufferData,
 			&BackendDispatch::CopyTextureBufferData,
 			// Graphics root
 			&BackendDispatch::SetGraphicsRootSignature,
-			&BackendDispatch::SetGraphicsRootDescriptorTable,
+			&BackendDispatch::SetGraphicsResourceGroup,
 			// States
 			&BackendDispatch::SetPipelineState,
 			// Input-assembler (IA) stage
@@ -528,8 +541,11 @@ namespace Direct3D12Renderer
 		}
 	}
 
-	void Direct3D12Renderer::setGraphicsRootDescriptorTable(uint32_t rootParameterIndex, Renderer::IResource* resource)
+	void Direct3D12Renderer::setGraphicsResourceGroup(uint32_t, Renderer::IResourceGroup*)
 	{
+		// TODO(co) Implement resource group
+		assert(false);
+		/*
 		if (nullptr != resource)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
@@ -582,17 +598,15 @@ namespace Direct3D12Renderer
 				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
 				{
 					// TODO(co) Implement 2D texture array
-					/*
-					ID3D12DescriptorHeap* d3D12DescriptorHeap = static_cast<Texture2DArray*>(resource)->getD3D12DescriptorHeap();
-					if (nullptr != d3D12DescriptorHeap)
-					{
-						// TODO(co) Just a first Direct3D 12 test, don't call "ID3D12GraphicsCommandList::SetDescriptorHeaps()" that often (pipeline flush)
-						ID3D12DescriptorHeap* ppHeaps[] = { d3D12DescriptorHeap };
-						mD3D12GraphicsCommandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+				//	ID3D12DescriptorHeap* d3D12DescriptorHeap = static_cast<Texture2DArray*>(resource)->getD3D12DescriptorHeap();
+				//	if (nullptr != d3D12DescriptorHeap)
+				//	{
+				//		// TODO(co) Just a first Direct3D 12 test, don't call "ID3D12GraphicsCommandList::SetDescriptorHeaps()" that often (pipeline flush)
+				//		ID3D12DescriptorHeap* ppHeaps[] = { d3D12DescriptorHeap };
+				//		mD3D12GraphicsCommandList->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
-						mD3D12GraphicsCommandList->SetGraphicsRootDescriptorTable(rootParameterIndex, d3D12DescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-					}
-					*/
+				//		mD3D12GraphicsCommandList->SetGraphicsRootDescriptorTable(rootParameterIndex, d3D12DescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+				//	}
 					break;
 				}
 
@@ -639,6 +653,7 @@ namespace Direct3D12Renderer
 				}
 
 				case Renderer::ResourceType::ROOT_SIGNATURE:
+				case Renderer::ResourceType::RESOURCE_GROUP:
 				case Renderer::ResourceType::PROGRAM:
 				case Renderer::ResourceType::VERTEX_ARRAY:
 				case Renderer::ResourceType::SWAP_CHAIN:
@@ -661,6 +676,7 @@ namespace Direct3D12Renderer
 		{
 			// TODO(co) Handle this situation?
 		}
+		*/
 	}
 
 	void Direct3D12Renderer::setPipelineState(Renderer::IPipelineState* pipelineState)
@@ -792,6 +808,7 @@ namespace Direct3D12Renderer
 					}
 
 					case Renderer::ResourceType::ROOT_SIGNATURE:
+					case Renderer::ResourceType::RESOURCE_GROUP:
 					case Renderer::ResourceType::PROGRAM:
 					case Renderer::ResourceType::VERTEX_ARRAY:
 					case Renderer::ResourceType::INDEX_BUFFER:
@@ -896,6 +913,7 @@ namespace Direct3D12Renderer
 					}
 
 					case Renderer::ResourceType::ROOT_SIGNATURE:
+					case Renderer::ResourceType::RESOURCE_GROUP:
 					case Renderer::ResourceType::PROGRAM:
 					case Renderer::ResourceType::VERTEX_ARRAY:
 					case Renderer::ResourceType::INDEX_BUFFER:
@@ -1016,6 +1034,7 @@ namespace Direct3D12Renderer
 				}
 
 				case Renderer::ResourceType::ROOT_SIGNATURE:
+				case Renderer::ResourceType::RESOURCE_GROUP:
 				case Renderer::ResourceType::PROGRAM:
 				case Renderer::ResourceType::VERTEX_ARRAY:
 				case Renderer::ResourceType::INDEX_BUFFER:

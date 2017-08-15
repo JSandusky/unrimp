@@ -43,12 +43,12 @@ out highp vec3 TexCoordVs;	// z component = texture ID
 out highp vec3 NormalVs;
 
 // Uniforms
-uniform highp samplerBuffer PerInstanceDataMapVs;	// Texture buffer with per instance data (used via vertex texture fetch) - Usage of 'layout(binding = 1)' would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
-													// -> Layout: [Position][Rotation][Position][Rotation]...
-													//    - Position: xyz=Position, w=Slice of the 2D texture array to use
-													//    - Rotation: Rotation quaternion (xyz) and scale (w)
-													//      -> We don't need to store the w component of the quaternion. It's normalized and storing
-													//         three components while recomputing the fourths component is be sufficient.
+uniform highp samplerBuffer PerInstanceTextureBufferVs;	// Texture buffer with per instance data (used via vertex texture fetch) - Usage of 'layout(binding = 1)' would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
+														// -> Layout: [Position][Rotation][Position][Rotation]...
+														//    - Position: xyz=Position, w=Slice of the 2D texture array to use
+														//    - Rotation: Rotation quaternion (xyz) and scale (w)
+														//      -> We don't need to store the w component of the quaternion. It's normalized and storing
+														//         three components while recomputing the fourths component is be sufficient.
 uniform highp mat4 MVP;
 uniform highp vec2 TimerAndGlobalScale;	// x=Timer, y=Global scale
 
@@ -56,10 +56,10 @@ uniform highp vec2 TimerAndGlobalScale;	// x=Timer, y=Global scale
 void main()
 {
 	// Get the per instance position (xyz=Position, w=Slice of the 2D texture array to use)
-	vec4 perInstancePositionTexture = texelFetch(PerInstanceDataMapVs, gl_InstanceID * 2);
+	vec4 perInstancePositionTexture = texelFetch(PerInstanceTextureBufferVs, gl_InstanceID * 2);
 
 	// Get the per instance rotation quaternion (xyz) and scale (w)
-	vec4 perInstanceRotationScale = texelFetch(PerInstanceDataMapVs, gl_InstanceID * 2 + 1);
+	vec4 perInstanceRotationScale = texelFetch(PerInstanceTextureBufferVs, gl_InstanceID * 2 + 1);
 
 	// Compute last component (w) of the quaternion (rotation quaternions are always normalized)
 	float sqw = 1.0 - perInstanceRotationScale.x * perInstanceRotationScale.x
@@ -173,13 +173,13 @@ out vec3 TexCoordVs;	// z component = texture ID
 out vec3 NormalVs;
 
 // Uniforms
-uniform highp samplerBuffer PerInstanceDataMapVs;	// Texture buffer with per instance data (used via vertex texture fetch) - Usage of 'layout(binding = 1)' would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
-													// -> Layout: [Position][Rotation][Position][Rotation]...
-													//    - Position: xyz=Position, w=Slice of the 2D texture array to use
-													//    - Rotation: Rotation quaternion (xyz) and scale (w)
-													//      -> We don't need to store the w component of the quaternion. It's normalized and storing
-													//         three components while recomputing the fourths component is be sufficient.
-layout(std140) uniform UniformBlockStaticVs			// Usage of 'layout(binding = 0)' would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
+uniform highp samplerBuffer PerInstanceTextureBufferVs;	// Texture buffer with per instance data (used via vertex texture fetch) - Usage of 'layout(binding = 1)' would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
+														// -> Layout: [Position][Rotation][Position][Rotation]...
+														//    - Position: xyz=Position, w=Slice of the 2D texture array to use
+														//    - Rotation: Rotation quaternion (xyz) and scale (w)
+														//      -> We don't need to store the w component of the quaternion. It's normalized and storing
+														//         three components while recomputing the fourths component is be sufficient.
+layout(std140) uniform UniformBlockStaticVs				// Usage of 'layout(binding = 0)' would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 {
 	mat4 MVP;
 };
@@ -192,10 +192,10 @@ layout(std140) uniform UniformBlockDynamicVs	// Usage of 'layout(binding = 1)' w
 void main()
 {
 	// Get the per instance position (xyz=Position, w=Slice of the 2D texture array to use)
-	vec4 perInstancePositionTexture = texelFetch(PerInstanceDataMapVs, gl_InstanceID * 2);
+	vec4 perInstancePositionTexture = texelFetch(PerInstanceTextureBufferVs, gl_InstanceID * 2);
 
 	// Get the per instance rotation quaternion (xyz) and scale (w)
-	vec4 perInstanceRotationScale = texelFetch(PerInstanceDataMapVs, gl_InstanceID * 2 + 1);
+	vec4 perInstanceRotationScale = texelFetch(PerInstanceTextureBufferVs, gl_InstanceID * 2 + 1);
 
 	// Compute last component (w) of the quaternion (rotation quaternions are always normalized)
 	float sqw = 1.0 - perInstanceRotationScale.x * perInstanceRotationScale.x

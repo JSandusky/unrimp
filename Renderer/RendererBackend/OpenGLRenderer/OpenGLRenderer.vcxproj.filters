@@ -430,6 +430,9 @@
     <ClInclude Include="include\OpenGLRenderer\Linux\OpenGLContextLinux.h">
       <Filter>Source Files\Linux</Filter>
     </ClInclude>
+    <ClInclude Include="include\OpenGLRenderer\ResourceGroup.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\ExtensionsWindows.cpp">
@@ -765,6 +768,9 @@
     <ClCompile Include="src\Linux\OpenGLContextLinux.cpp">
       <Filter>Source Files\Linux</Filter>
     </ClCompile>
+    <ClCompile Include="src\ResourceGroup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -888,6 +894,9 @@
     </None>
     <None Include="include\OpenGLRenderer\State\PipelineState.inl">
       <Filter>Source Files\State</Filter>
+    </None>
+    <None Include="include\OpenGLRenderer\ResourceGroup.inl">
+      <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
 </Project>

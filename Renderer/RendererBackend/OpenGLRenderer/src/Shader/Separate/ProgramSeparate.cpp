@@ -47,7 +47,7 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
-		void bindUniformBlock(const Renderer::DescriptorRange& descriptorRange, uint32_t parameterIndex, uint32_t openGLProgram)
+		void bindUniformBlock(const Renderer::DescriptorRange& descriptorRange, uint32_t openGLProgram, uint32_t uniformBlockBindingIndex)
 		{
 			// Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension,
 			// for backward compatibility, ask for the uniform block index
@@ -55,7 +55,7 @@ namespace
 			if (GL_INVALID_INDEX != uniformBlockIndex)
 			{
 				// Associate the uniform block with the given binding point
-				OpenGLRenderer::glUniformBlockBinding(openGLProgram, uniformBlockIndex, parameterIndex);
+				OpenGLRenderer::glUniformBlockBinding(openGLProgram, uniformBlockIndex, uniformBlockBindingIndex);
 			}
 		}
 
@@ -177,26 +177,24 @@ namespace OpenGLRenderer
 			// The actual locations assigned to uniform variables are not known until the program object is linked successfully
 			// -> So we have to build a root signature parameter index -> uniform location mapping here
 			const Renderer::RootSignature& rootSignatureData = static_cast<const RootSignature&>(rootSignature).getRootSignature();
-			const uint32_t numberOfParameters = rootSignatureData.numberOfParameters;
-			for (uint32_t parameterIndex = 0; parameterIndex < numberOfParameters; ++parameterIndex)
+			const uint32_t numberOfRootParameters = rootSignatureData.numberOfParameters;
+			uint32_t uniformBlockBindingIndex = 0;
+			for (uint32_t rootParameterIndex = 0; rootParameterIndex < numberOfRootParameters; ++rootParameterIndex)
 			{
-				const Renderer::RootParameter& rootParameter = rootSignatureData.parameters[parameterIndex];
+				const Renderer::RootParameter& rootParameter = rootSignatureData.parameters[rootParameterIndex];
 				if (Renderer::RootParameterType::DESCRIPTOR_TABLE == rootParameter.parameterType)
 				{
-					// TODO(co) For now, we only support a single descriptor range
-					if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
+					assert(nullptr != reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges));
+					const uint32_t numberOfDescriptorRanges = rootParameter.descriptorTable.numberOfDescriptorRanges;
+					for (uint32_t descriptorRangeIndex = 0; descriptorRangeIndex < numberOfDescriptorRanges; ++descriptorRangeIndex)
 					{
-						RENDERER_LOG(openGLRenderer.getContext(), CRITICAL, "Only a single descriptor range is supported by the OpenGL renderer backend")
-					}
-					else
-					{
-						const Renderer::DescriptorRange* descriptorRange = reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges);
+						const Renderer::DescriptorRange& descriptorRange = reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges)[descriptorRangeIndex];
 
 						// Ignore sampler range types in here (OpenGL handles samplers in a different way then Direct3D 10>=)
-						if (Renderer::DescriptorRangeType::UBV == descriptorRange->rangeType)
+						if (Renderer::DescriptorRangeType::UBV == descriptorRange.rangeType)
 						{
-							#define BIND_UNIFORM_BLOCK(ShaderSeparate) if (nullptr != ShaderSeparate) ::detail::bindUniformBlock(*descriptorRange, parameterIndex, ShaderSeparate->getOpenGLShaderProgram());
-							switch (rootParameter.shaderVisibility)
+							#define BIND_UNIFORM_BLOCK(ShaderSeparate) if (nullptr != ShaderSeparate) ::detail::bindUniformBlock(descriptorRange, ShaderSeparate->getOpenGLShaderProgram(), uniformBlockBindingIndex);
+							switch (descriptorRange.shaderVisibility)
 							{
 								case Renderer::ShaderVisibility::ALL:
 									BIND_UNIFORM_BLOCK(mVertexShaderSeparate)
@@ -227,11 +225,12 @@ namespace OpenGLRenderer
 									break;
 							}
 							#undef BIND_UNIFORM_BLOCK
+							++uniformBlockBindingIndex;
 						}
-						else if (Renderer::DescriptorRangeType::SAMPLER != descriptorRange->rangeType)
+						else if (Renderer::DescriptorRangeType::SAMPLER != descriptorRange.rangeType)
 						{
-							#define BIND_UNIFORM_LOCATION(ShaderSeparate) if (nullptr != ShaderSeparate) ::detail::bindUniformLocation(*descriptorRange, mOpenGLProgramPipeline, ShaderSeparate->getOpenGLShaderProgram());
-							switch (rootParameter.shaderVisibility)
+							#define BIND_UNIFORM_LOCATION(ShaderSeparate) if (nullptr != ShaderSeparate) ::detail::bindUniformLocation(descriptorRange, mOpenGLProgramPipeline, ShaderSeparate->getOpenGLShaderProgram());
+							switch (descriptorRange.shaderVisibility)
 							{
 								case Renderer::ShaderVisibility::ALL:
 									BIND_UNIFORM_LOCATION(mVertexShaderSeparate)

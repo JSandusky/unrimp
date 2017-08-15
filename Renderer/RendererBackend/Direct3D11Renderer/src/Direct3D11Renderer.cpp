@@ -26,6 +26,7 @@
 #include "Direct3D11Renderer/Direct3D11Debug.h"	// For "DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN()"
 #include "Direct3D11Renderer/Direct3D11RuntimeLinking.h"
 #include "Direct3D11Renderer/RootSignature.h"
+#include "Direct3D11Renderer/ResourceGroup.h"
 #include "Direct3D11Renderer/Mapping.h"
 #include "Direct3D11Renderer/RenderTarget/SwapChain.h"
 #include "Direct3D11Renderer/RenderTarget/Framebuffer.h"
@@ -126,6 +127,17 @@ namespace
 
 
 			//[-------------------------------------------------------]
+			//[ Command buffer                                        ]
+			//[-------------------------------------------------------]
+			void ExecuteCommandBuffer(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::ExecuteCommandBuffer* realData = static_cast<const Renderer::Command::ExecuteCommandBuffer*>(data);
+				assert(nullptr != realData->commandBufferToExecute);
+				renderer.submitCommandBuffer(*realData->commandBufferToExecute);
+			}
+
+
+			//[-------------------------------------------------------]
 			//[ Resource handling                                     ]
 			//[-------------------------------------------------------]
 			void CopyUniformBufferData(const void* data, Renderer::IRenderer&)
@@ -149,10 +161,10 @@ namespace
 				static_cast<Direct3D11Renderer::Direct3D11Renderer&>(renderer).setGraphicsRootSignature(realData->rootSignature);
 			}
 
-			void SetGraphicsRootDescriptorTable(const void* data, Renderer::IRenderer& renderer)
+			void SetGraphicsResourceGroup(const void* data, Renderer::IRenderer& renderer)
 			{
-				const Renderer::Command::SetGraphicsRootDescriptorTable* realData = static_cast<const Renderer::Command::SetGraphicsRootDescriptorTable*>(data);
-				static_cast<Direct3D11Renderer::Direct3D11Renderer&>(renderer).setGraphicsRootDescriptorTable(realData->rootParameterIndex, realData->resource);
+				const Renderer::Command::SetGraphicsResourceGroup* realData = static_cast<const Renderer::Command::SetGraphicsResourceGroup*>(data);
+				static_cast<Direct3D11Renderer::Direct3D11Renderer&>(renderer).setGraphicsResourceGroup(realData->rootParameterIndex, realData->resourceGroup);
 			}
 
 			//[-------------------------------------------------------]
@@ -280,12 +292,14 @@ namespace
 		//[-------------------------------------------------------]
 		static const Renderer::BackendDispatchFunction DISPATCH_FUNCTIONS[Renderer::CommandDispatchFunctionIndex::NumberOfFunctions] =
 		{
+			// Command buffer
+			&BackendDispatch::ExecuteCommandBuffer,
 			// Resource handling
 			&BackendDispatch::CopyUniformBufferData,
 			&BackendDispatch::CopyTextureBufferData,
 			// Graphics root
 			&BackendDispatch::SetGraphicsRootSignature,
-			&BackendDispatch::SetGraphicsRootDescriptorTable,
+			&BackendDispatch::SetGraphicsResourceGroup,
 			// States
 			&BackendDispatch::SetPipelineState,
 			// Input-assembler (IA) stage
@@ -546,7 +560,7 @@ namespace Direct3D11Renderer
 		}
 	}
 
-	void Direct3D11Renderer::setGraphicsRootDescriptorTable(uint32_t rootParameterIndex, Renderer::IResource* resource)
+	void Direct3D11Renderer::setGraphicsResourceGroup(uint32_t rootParameterIndex, Renderer::IResourceGroup* resourceGroup)
 	{
 		// Security checks
 		#ifndef DIRECT3D11RENDERER_NO_DEBUG
@@ -568,13 +582,6 @@ namespace Direct3D11Renderer
 				RENDERER_LOG(mContext, CRITICAL, "The Direct3D 11 renderer backend root parameter index doesn't reference a descriptor table")
 				return;
 			}
-
-			// TODO(co) For now, we only support a single descriptor range
-			if (1 != rootParameter.descriptorTable.numberOfDescriptorRanges)
-			{
-				RENDERER_LOG(mContext, CRITICAL, "Only a single descriptor range is supported by the Direct3D 11 renderer backend")
-				return;
-			}
 			if (nullptr == reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges))
 			{
 				RENDERER_LOG(mContext, CRITICAL, "The Direct3D 11 renderer backend descriptor ranges is a null pointer")
@@ -583,206 +590,216 @@ namespace Direct3D11Renderer
 		}
 		#endif
 
-		if (nullptr != resource)
+		if (nullptr != resourceGroup)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *resource)
+			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *resourceGroup)
 
-			// Get the root signature parameter instance
+			// Set graphics resource group
+			const ResourceGroup* d3d11ResourceGroup = static_cast<ResourceGroup*>(resourceGroup);
+			const uint32_t numberOfResources = d3d11ResourceGroup->getNumberOfResources();
+			Renderer::IResource** resources = d3d11ResourceGroup->getResources();
 			const Renderer::RootParameter& rootParameter = mGraphicsRootSignature->getRootSignature().parameters[rootParameterIndex];
-			const Renderer::DescriptorRange* descriptorRange = reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges);
-
-			// Check the type of resource to set
-			// TODO(co) Some additional resource type root signature security checks in debug build?
-			const Renderer::ResourceType resourceType = resource->getResourceType();
-			switch (resourceType)
+			for (uint32_t resourceIndex = 0; resourceIndex < numberOfResources; ++resourceIndex, ++resources)
 			{
-				case Renderer::ResourceType::UNIFORM_BUFFER:
+				const Renderer::IResource* resource = *resources;
+				assert(nullptr != reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges));
+				const Renderer::DescriptorRange& descriptorRange = reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges)[resourceIndex];
+
+				// Check the type of resource to set
+				// TODO(co) Some additional resource type root signature security checks in debug build?
+				const Renderer::ResourceType resourceType = resource->getResourceType();
+				switch (resourceType)
 				{
-					ID3D11Buffer* d3d11Buffers = static_cast<UniformBuffer*>(resource)->getD3D11Buffer();
-					const UINT startSlot = descriptorRange->baseShaderRegister;
-					switch (rootParameter.shaderVisibility)
+					case Renderer::ResourceType::UNIFORM_BUFFER:
 					{
-						case Renderer::ShaderVisibility::ALL:
-							mD3D11DeviceContext->VSSetConstantBuffers(startSlot, 1, &d3d11Buffers);
-							mD3D11DeviceContext->HSSetConstantBuffers(startSlot, 1, &d3d11Buffers);
-							mD3D11DeviceContext->DSSetConstantBuffers(startSlot, 1, &d3d11Buffers);
-							mD3D11DeviceContext->GSSetConstantBuffers(startSlot, 1, &d3d11Buffers);
-							mD3D11DeviceContext->PSSetConstantBuffers(startSlot, 1, &d3d11Buffers);
-							break;
+						ID3D11Buffer* d3d11Buffers = static_cast<const UniformBuffer*>(resource)->getD3D11Buffer();
+						const UINT startSlot = descriptorRange.baseShaderRegister;
+						switch (descriptorRange.shaderVisibility)
+						{
+							case Renderer::ShaderVisibility::ALL:
+								mD3D11DeviceContext->VSSetConstantBuffers(startSlot, 1, &d3d11Buffers);
+								mD3D11DeviceContext->HSSetConstantBuffers(startSlot, 1, &d3d11Buffers);
+								mD3D11DeviceContext->DSSetConstantBuffers(startSlot, 1, &d3d11Buffers);
+								mD3D11DeviceContext->GSSetConstantBuffers(startSlot, 1, &d3d11Buffers);
+								mD3D11DeviceContext->PSSetConstantBuffers(startSlot, 1, &d3d11Buffers);
+								break;
 
-						case Renderer::ShaderVisibility::VERTEX:
-							mD3D11DeviceContext->VSSetConstantBuffers(startSlot, 1, &d3d11Buffers);
-							break;
+							case Renderer::ShaderVisibility::VERTEX:
+								mD3D11DeviceContext->VSSetConstantBuffers(startSlot, 1, &d3d11Buffers);
+								break;
 
-						case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
-							// "hull shader" in Direct3D terminology
-							mD3D11DeviceContext->HSSetConstantBuffers(startSlot, 1, &d3d11Buffers);
-							break;
+							case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
+								// "hull shader" in Direct3D terminology
+								mD3D11DeviceContext->HSSetConstantBuffers(startSlot, 1, &d3d11Buffers);
+								break;
 
-						case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
-							// "domain shader" in Direct3D terminology
-							mD3D11DeviceContext->DSSetConstantBuffers(startSlot, 1, &d3d11Buffers);
-							break;
+							case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
+								// "domain shader" in Direct3D terminology
+								mD3D11DeviceContext->DSSetConstantBuffers(startSlot, 1, &d3d11Buffers);
+								break;
 
-						case Renderer::ShaderVisibility::GEOMETRY:
-							mD3D11DeviceContext->GSSetConstantBuffers(startSlot, 1, &d3d11Buffers);
-							break;
+							case Renderer::ShaderVisibility::GEOMETRY:
+								mD3D11DeviceContext->GSSetConstantBuffers(startSlot, 1, &d3d11Buffers);
+								break;
 
-						case Renderer::ShaderVisibility::FRAGMENT:
-							// "pixel shader" in Direct3D terminology
-							mD3D11DeviceContext->PSSetConstantBuffers(startSlot, 1, &d3d11Buffers);
-							break;
+							case Renderer::ShaderVisibility::FRAGMENT:
+								// "pixel shader" in Direct3D terminology
+								mD3D11DeviceContext->PSSetConstantBuffers(startSlot, 1, &d3d11Buffers);
+								break;
+						}
+						break;
 					}
-					break;
+
+					case Renderer::ResourceType::TEXTURE_BUFFER:
+					case Renderer::ResourceType::TEXTURE_1D:
+					case Renderer::ResourceType::TEXTURE_2D:
+					case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+					case Renderer::ResourceType::TEXTURE_3D:
+					case Renderer::ResourceType::TEXTURE_CUBE:
+					{
+						ID3D11ShaderResourceView* d3d11ShaderResourceView = nullptr;
+						switch (resourceType)
+						{
+							case Renderer::ResourceType::TEXTURE_BUFFER:
+								d3d11ShaderResourceView = static_cast<const TextureBuffer*>(resource)->getD3D11ShaderResourceView();
+								break;
+
+							case Renderer::ResourceType::TEXTURE_1D:
+								d3d11ShaderResourceView = static_cast<const Texture1D*>(resource)->getD3D11ShaderResourceView();
+								break;
+
+							case Renderer::ResourceType::TEXTURE_2D:
+								d3d11ShaderResourceView = static_cast<const Texture2D*>(resource)->getD3D11ShaderResourceView();
+								break;
+
+							case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+								d3d11ShaderResourceView = static_cast<const Texture2DArray*>(resource)->getD3D11ShaderResourceView();
+								break;
+
+							case Renderer::ResourceType::TEXTURE_3D:
+								d3d11ShaderResourceView = static_cast<const Texture3D*>(resource)->getD3D11ShaderResourceView();
+								break;
+
+							case Renderer::ResourceType::TEXTURE_CUBE:
+								d3d11ShaderResourceView = static_cast<const TextureCube*>(resource)->getD3D11ShaderResourceView();
+								break;
+
+							case Renderer::ResourceType::ROOT_SIGNATURE:
+							case Renderer::ResourceType::RESOURCE_GROUP:
+							case Renderer::ResourceType::PROGRAM:
+							case Renderer::ResourceType::VERTEX_ARRAY:
+							case Renderer::ResourceType::SWAP_CHAIN:
+							case Renderer::ResourceType::FRAMEBUFFER:
+							case Renderer::ResourceType::INDEX_BUFFER:
+							case Renderer::ResourceType::VERTEX_BUFFER:
+							case Renderer::ResourceType::UNIFORM_BUFFER:
+							case Renderer::ResourceType::INDIRECT_BUFFER:
+							case Renderer::ResourceType::PIPELINE_STATE:
+							case Renderer::ResourceType::SAMPLER_STATE:
+							case Renderer::ResourceType::VERTEX_SHADER:
+							case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+							case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+							case Renderer::ResourceType::GEOMETRY_SHADER:
+							case Renderer::ResourceType::FRAGMENT_SHADER:
+								RENDERER_LOG(mContext, CRITICAL, "Invalid Direct3D 11 renderer backend resource type")
+								break;
+						}
+						const UINT startSlot = descriptorRange.baseShaderRegister;
+						switch (descriptorRange.shaderVisibility)
+						{
+							case Renderer::ShaderVisibility::ALL:
+								mD3D11DeviceContext->VSSetShaderResources(startSlot, 1, &d3d11ShaderResourceView);
+								mD3D11DeviceContext->HSSetShaderResources(startSlot, 1, &d3d11ShaderResourceView);
+								mD3D11DeviceContext->DSSetShaderResources(startSlot, 1, &d3d11ShaderResourceView);
+								mD3D11DeviceContext->GSSetShaderResources(startSlot, 1, &d3d11ShaderResourceView);
+								mD3D11DeviceContext->PSSetShaderResources(startSlot, 1, &d3d11ShaderResourceView);
+								break;
+
+							case Renderer::ShaderVisibility::VERTEX:
+								mD3D11DeviceContext->VSSetShaderResources(startSlot, 1, &d3d11ShaderResourceView);
+								break;
+
+							case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
+								// "hull shader" in Direct3D terminology
+								mD3D11DeviceContext->HSSetShaderResources(startSlot, 1, &d3d11ShaderResourceView);
+								break;
+
+							case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
+								// "domain shader" in Direct3D terminology
+								mD3D11DeviceContext->DSSetShaderResources(startSlot, 1, &d3d11ShaderResourceView);
+								break;
+
+							case Renderer::ShaderVisibility::GEOMETRY:
+								mD3D11DeviceContext->GSSetShaderResources(startSlot, 1, &d3d11ShaderResourceView);
+								break;
+
+							case Renderer::ShaderVisibility::FRAGMENT:
+								// "pixel shader" in Direct3D terminology
+								mD3D11DeviceContext->PSSetShaderResources(startSlot, 1, &d3d11ShaderResourceView);
+								break;
+						}
+						break;
+					}
+
+					case Renderer::ResourceType::SAMPLER_STATE:
+					{
+						ID3D11SamplerState* d3d11SamplerState = static_cast<const SamplerState*>(resource)->getD3D11SamplerState();
+						const UINT startSlot = descriptorRange.baseShaderRegister;
+						switch (descriptorRange.shaderVisibility)
+						{
+							case Renderer::ShaderVisibility::ALL:
+								mD3D11DeviceContext->VSSetSamplers(startSlot, 1, &d3d11SamplerState);
+								mD3D11DeviceContext->HSSetSamplers(startSlot, 1, &d3d11SamplerState);
+								mD3D11DeviceContext->DSSetSamplers(startSlot, 1, &d3d11SamplerState);
+								mD3D11DeviceContext->GSSetSamplers(startSlot, 1, &d3d11SamplerState);
+								mD3D11DeviceContext->PSSetSamplers(startSlot, 1, &d3d11SamplerState);
+								break;
+
+							case Renderer::ShaderVisibility::VERTEX:
+								mD3D11DeviceContext->VSSetSamplers(startSlot, 1, &d3d11SamplerState);
+								break;
+
+							case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
+								// "hull shader" in Direct3D terminology
+								mD3D11DeviceContext->HSSetSamplers(startSlot, 1, &d3d11SamplerState);
+								break;
+
+							case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
+								// "domain shader" in Direct3D terminology
+								mD3D11DeviceContext->DSSetSamplers(startSlot, 1, &d3d11SamplerState);
+								break;
+
+							case Renderer::ShaderVisibility::GEOMETRY:
+								mD3D11DeviceContext->GSSetSamplers(startSlot, 1, &d3d11SamplerState);
+								break;
+
+							case Renderer::ShaderVisibility::FRAGMENT:
+								// "pixel shader" in Direct3D terminology
+								mD3D11DeviceContext->PSSetSamplers(startSlot, 1, &d3d11SamplerState);
+								break;
+						}
+						break;
+					}
+
+					case Renderer::ResourceType::ROOT_SIGNATURE:
+					case Renderer::ResourceType::RESOURCE_GROUP:
+					case Renderer::ResourceType::PROGRAM:
+					case Renderer::ResourceType::VERTEX_ARRAY:
+					case Renderer::ResourceType::SWAP_CHAIN:
+					case Renderer::ResourceType::FRAMEBUFFER:
+					case Renderer::ResourceType::INDEX_BUFFER:
+					case Renderer::ResourceType::VERTEX_BUFFER:
+					case Renderer::ResourceType::INDIRECT_BUFFER:
+					case Renderer::ResourceType::PIPELINE_STATE:
+					case Renderer::ResourceType::VERTEX_SHADER:
+					case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+					case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+					case Renderer::ResourceType::GEOMETRY_SHADER:
+					case Renderer::ResourceType::FRAGMENT_SHADER:
+						RENDERER_LOG(mContext, CRITICAL, "Invalid Direct3D 11 renderer backend resource type")
+						break;
 				}
-
-				case Renderer::ResourceType::TEXTURE_BUFFER:
-				case Renderer::ResourceType::TEXTURE_1D:
-				case Renderer::ResourceType::TEXTURE_2D:
-				case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-				case Renderer::ResourceType::TEXTURE_3D:
-				case Renderer::ResourceType::TEXTURE_CUBE:
-				{
-					ID3D11ShaderResourceView* d3d11ShaderResourceView = nullptr;
-					switch (resourceType)
-					{
-						case Renderer::ResourceType::TEXTURE_BUFFER:
-							d3d11ShaderResourceView = static_cast<TextureBuffer*>(resource)->getD3D11ShaderResourceView();
-							break;
-
-						case Renderer::ResourceType::TEXTURE_1D:
-							d3d11ShaderResourceView = static_cast<Texture1D*>(resource)->getD3D11ShaderResourceView();
-							break;
-
-						case Renderer::ResourceType::TEXTURE_2D:
-							d3d11ShaderResourceView = static_cast<Texture2D*>(resource)->getD3D11ShaderResourceView();
-							break;
-
-						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-							d3d11ShaderResourceView = static_cast<Texture2DArray*>(resource)->getD3D11ShaderResourceView();
-							break;
-
-						case Renderer::ResourceType::TEXTURE_3D:
-							d3d11ShaderResourceView = static_cast<Texture3D*>(resource)->getD3D11ShaderResourceView();
-							break;
-
-						case Renderer::ResourceType::TEXTURE_CUBE:
-							d3d11ShaderResourceView = static_cast<TextureCube*>(resource)->getD3D11ShaderResourceView();
-							break;
-
-						case Renderer::ResourceType::ROOT_SIGNATURE:
-						case Renderer::ResourceType::PROGRAM:
-						case Renderer::ResourceType::VERTEX_ARRAY:
-						case Renderer::ResourceType::SWAP_CHAIN:
-						case Renderer::ResourceType::FRAMEBUFFER:
-						case Renderer::ResourceType::INDEX_BUFFER:
-						case Renderer::ResourceType::VERTEX_BUFFER:
-						case Renderer::ResourceType::UNIFORM_BUFFER:
-						case Renderer::ResourceType::INDIRECT_BUFFER:
-						case Renderer::ResourceType::PIPELINE_STATE:
-						case Renderer::ResourceType::SAMPLER_STATE:
-						case Renderer::ResourceType::VERTEX_SHADER:
-						case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-						case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-						case Renderer::ResourceType::GEOMETRY_SHADER:
-						case Renderer::ResourceType::FRAGMENT_SHADER:
-							RENDERER_LOG(mContext, CRITICAL, "Invalid Direct3D 11 renderer backend resource type")
-							break;
-					}
-					const UINT startSlot = descriptorRange->baseShaderRegister;
-					switch (rootParameter.shaderVisibility)
-					{
-						case Renderer::ShaderVisibility::ALL:
-							mD3D11DeviceContext->VSSetShaderResources(startSlot, 1, &d3d11ShaderResourceView);
-							mD3D11DeviceContext->HSSetShaderResources(startSlot, 1, &d3d11ShaderResourceView);
-							mD3D11DeviceContext->DSSetShaderResources(startSlot, 1, &d3d11ShaderResourceView);
-							mD3D11DeviceContext->GSSetShaderResources(startSlot, 1, &d3d11ShaderResourceView);
-							mD3D11DeviceContext->PSSetShaderResources(startSlot, 1, &d3d11ShaderResourceView);
-							break;
-
-						case Renderer::ShaderVisibility::VERTEX:
-							mD3D11DeviceContext->VSSetShaderResources(startSlot, 1, &d3d11ShaderResourceView);
-							break;
-
-						case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
-							// "hull shader" in Direct3D terminology
-							mD3D11DeviceContext->HSSetShaderResources(startSlot, 1, &d3d11ShaderResourceView);
-							break;
-
-						case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
-							// "domain shader" in Direct3D terminology
-							mD3D11DeviceContext->DSSetShaderResources(startSlot, 1, &d3d11ShaderResourceView);
-							break;
-
-						case Renderer::ShaderVisibility::GEOMETRY:
-							mD3D11DeviceContext->GSSetShaderResources(startSlot, 1, &d3d11ShaderResourceView);
-							break;
-
-						case Renderer::ShaderVisibility::FRAGMENT:
-							// "pixel shader" in Direct3D terminology
-							mD3D11DeviceContext->PSSetShaderResources(startSlot, 1, &d3d11ShaderResourceView);
-							break;
-					}
-					break;
-				}
-
-				case Renderer::ResourceType::SAMPLER_STATE:
-				{
-					ID3D11SamplerState* d3d11SamplerState = static_cast<SamplerState*>(resource)->getD3D11SamplerState();
-					const UINT startSlot = descriptorRange->baseShaderRegister;
-					switch (rootParameter.shaderVisibility)
-					{
-						case Renderer::ShaderVisibility::ALL:
-							mD3D11DeviceContext->VSSetSamplers(startSlot, 1, &d3d11SamplerState);
-							mD3D11DeviceContext->HSSetSamplers(startSlot, 1, &d3d11SamplerState);
-							mD3D11DeviceContext->DSSetSamplers(startSlot, 1, &d3d11SamplerState);
-							mD3D11DeviceContext->GSSetSamplers(startSlot, 1, &d3d11SamplerState);
-							mD3D11DeviceContext->PSSetSamplers(startSlot, 1, &d3d11SamplerState);
-							break;
-
-						case Renderer::ShaderVisibility::VERTEX:
-							mD3D11DeviceContext->VSSetSamplers(startSlot, 1, &d3d11SamplerState);
-							break;
-
-						case Renderer::ShaderVisibility::TESSELLATION_CONTROL:
-							// "hull shader" in Direct3D terminology
-							mD3D11DeviceContext->HSSetSamplers(startSlot, 1, &d3d11SamplerState);
-							break;
-
-						case Renderer::ShaderVisibility::TESSELLATION_EVALUATION:
-							// "domain shader" in Direct3D terminology
-							mD3D11DeviceContext->DSSetSamplers(startSlot, 1, &d3d11SamplerState);
-							break;
-
-						case Renderer::ShaderVisibility::GEOMETRY:
-							mD3D11DeviceContext->GSSetSamplers(startSlot, 1, &d3d11SamplerState);
-							break;
-
-						case Renderer::ShaderVisibility::FRAGMENT:
-							// "pixel shader" in Direct3D terminology
-							mD3D11DeviceContext->PSSetSamplers(startSlot, 1, &d3d11SamplerState);
-							break;
-					}
-					break;
-				}
-
-				case Renderer::ResourceType::ROOT_SIGNATURE:
-				case Renderer::ResourceType::PROGRAM:
-				case Renderer::ResourceType::VERTEX_ARRAY:
-				case Renderer::ResourceType::SWAP_CHAIN:
-				case Renderer::ResourceType::FRAMEBUFFER:
-				case Renderer::ResourceType::INDEX_BUFFER:
-				case Renderer::ResourceType::VERTEX_BUFFER:
-				case Renderer::ResourceType::INDIRECT_BUFFER:
-				case Renderer::ResourceType::PIPELINE_STATE:
-				case Renderer::ResourceType::VERTEX_SHADER:
-				case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-				case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-				case Renderer::ResourceType::GEOMETRY_SHADER:
-				case Renderer::ResourceType::FRAGMENT_SHADER:
-					RENDERER_LOG(mContext, CRITICAL, "Invalid Direct3D 11 renderer backend resource type")
-					break;
 			}
 		}
 		else
@@ -928,6 +945,7 @@ namespace Direct3D11Renderer
 					}
 
 					case Renderer::ResourceType::ROOT_SIGNATURE:
+					case Renderer::ResourceType::RESOURCE_GROUP:
 					case Renderer::ResourceType::PROGRAM:
 					case Renderer::ResourceType::VERTEX_ARRAY:
 					case Renderer::ResourceType::INDEX_BUFFER:
@@ -1059,6 +1077,7 @@ namespace Direct3D11Renderer
 				}
 
 				case Renderer::ResourceType::ROOT_SIGNATURE:
+				case Renderer::ResourceType::RESOURCE_GROUP:
 				case Renderer::ResourceType::PROGRAM:
 				case Renderer::ResourceType::VERTEX_ARRAY:
 				case Renderer::ResourceType::INDEX_BUFFER:
@@ -1145,6 +1164,7 @@ namespace Direct3D11Renderer
 			}
 
 			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::RESOURCE_GROUP:
 			case Renderer::ResourceType::PROGRAM:
 			case Renderer::ResourceType::VERTEX_ARRAY:
 			case Renderer::ResourceType::INDEX_BUFFER:
@@ -1197,6 +1217,7 @@ namespace Direct3D11Renderer
 				break;
 
 			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::RESOURCE_GROUP:
 			case Renderer::ResourceType::PROGRAM:
 			case Renderer::ResourceType::VERTEX_ARRAY:
 			case Renderer::ResourceType::SWAP_CHAIN:
@@ -1514,6 +1535,7 @@ namespace Direct3D11Renderer
 			TEXTURE_RESOURCE(Renderer::ResourceType::TEXTURE_CUBE, TextureCube)
 
 			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::RESOURCE_GROUP:
 			case Renderer::ResourceType::PROGRAM:
 			case Renderer::ResourceType::VERTEX_ARRAY:
 			case Renderer::ResourceType::SWAP_CHAIN:
@@ -1586,6 +1608,7 @@ namespace Direct3D11Renderer
 			TEXTURE_RESOURCE(Renderer::ResourceType::TEXTURE_CUBE, TextureCube)
 
 			case Renderer::ResourceType::ROOT_SIGNATURE:
+			case Renderer::ResourceType::RESOURCE_GROUP:
 			case Renderer::ResourceType::PROGRAM:
 			case Renderer::ResourceType::VERTEX_ARRAY:
 			case Renderer::ResourceType::SWAP_CHAIN:

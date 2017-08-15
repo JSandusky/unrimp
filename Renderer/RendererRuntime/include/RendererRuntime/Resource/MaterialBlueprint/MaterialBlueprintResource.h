@@ -131,7 +131,7 @@ namespace RendererRuntime
 
 		struct UniformBuffer
 		{
-			uint32_t					   rootParameterIndex;
+			uint32_t					   rootParameterIndex;			///< Root parameter index = resource group index
 			BufferUsage					   bufferUsage;
 			uint32_t					   numberOfElements;
 			UniformBufferElementProperties uniformBufferElementProperties;
@@ -141,7 +141,7 @@ namespace RendererRuntime
 
 		struct TextureBuffer
 		{
-			uint32_t			  rootParameterIndex;
+			uint32_t			  rootParameterIndex;	///< Root parameter index = resource group index
 			BufferUsage			  bufferUsage;
 			MaterialPropertyValue materialPropertyValue;
 
@@ -167,7 +167,7 @@ namespace RendererRuntime
 		struct SamplerState
 		{
 			Renderer::SamplerState	   rendererSamplerState;
-			uint32_t				   rootParameterIndex;
+			uint32_t				   rootParameterIndex;	///< Root parameter index = resource group index
 			Renderer::ISamplerStatePtr samplerStatePtr;
 		};
 		typedef std::vector<SamplerState> SamplerStates;
@@ -175,10 +175,11 @@ namespace RendererRuntime
 		struct Texture
 		{
 			// Loaded from material blueprint
-			uint32_t		  rootParameterIndex;
+			uint32_t		  rootParameterIndex;	///< Root parameter index = resource group index
 			MaterialProperty  materialProperty;
 			AssetId			  fallbackTextureAssetId;
 			bool			  rgbHardwareGammaCorrection;
+			uint32_t		  samplerStateIndex;	///< Index of the material blueprint sampler state resource to use, can be uninitialized (e.g. texel fetch instead of sampling might be used)
 
 			// Derived data
 			TextureResourceId textureResourceId;
@@ -187,6 +188,7 @@ namespace RendererRuntime
 			Texture() :
 				rootParameterIndex(getUninitialized<uint32_t>()),
 				rgbHardwareGammaCorrection(false),
+				samplerStateIndex(getUninitialized<uint32_t>()),
 				textureResourceId(getUninitialized<TextureResourceId>())
 			{
 				// Nothing here
@@ -417,7 +419,7 @@ namespace RendererRuntime
 		*  @param[out] commandBuffer
 		*    Command buffer to fill
 		*/
-		RENDERERRUNTIME_API_EXPORT void fillCommandBuffer(Renderer::CommandBuffer& commandBuffer) const;
+		RENDERERRUNTIME_API_EXPORT void fillCommandBuffer(Renderer::CommandBuffer& commandBuffer);
 
 		/**
 		*  @brief
@@ -487,6 +489,8 @@ namespace RendererRuntime
 		TextureBuffers mTextureBuffers;
 		SamplerStates  mSamplerStates;
 		Textures	   mTextures;
+		// Resource groups
+		Renderer::IResourceGroupPtr mSamplerStateGroup;
 		// Ease-of-use direct access
 		UniformBuffer* mPassUniformBuffer;		///< Can be a null pointer, don't destroy the instance
 		UniformBuffer* mMaterialUniformBuffer;	///< Can be a null pointer, don't destroy the instance

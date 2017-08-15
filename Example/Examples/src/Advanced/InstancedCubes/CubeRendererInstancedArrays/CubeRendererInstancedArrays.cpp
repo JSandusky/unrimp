@@ -27,8 +27,8 @@
 
 #include <math.h>
 #include <string.h>
-#include <float.h> // For FLT_MAX
-#include <stdlib.h> // For rand()
+#include <float.h>	// For "FLT_MAX"
+#include <stdlib.h>	// For "rand()"
 
 
 //[-------------------------------------------------------]
@@ -146,6 +146,26 @@ CubeRendererInstancedArrays::CubeRendererInstancedArrays(Renderer::IRenderer& re
 	// -> To be on the safe side and not bumping into a limitation of less capable cards we set a decent maximum number of instances per batch
 	mMaximumNumberOfInstancesPerBatch = 65536;
 
+	{ // Create the root signature
+		Renderer::DescriptorRangeBuilder ranges[5];
+		ranges[0].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockStaticVs", Renderer::ShaderVisibility::VERTEX);
+		ranges[1].initialize(Renderer::DescriptorRangeType::UBV, 1, 1, "UniformBlockDynamicVs", Renderer::ShaderVisibility::VERTEX);
+		ranges[2].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap", Renderer::ShaderVisibility::FRAGMENT);
+		ranges[3].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockDynamicFs", Renderer::ShaderVisibility::FRAGMENT);
+		ranges[4].initializeSampler(1, 0, Renderer::ShaderVisibility::FRAGMENT);
+
+		Renderer::RootParameterBuilder rootParameters[2];
+		rootParameters[0].initializeAsDescriptorTable(4, &ranges[0]);
+		rootParameters[1].initializeAsDescriptorTable(1, &ranges[4]);
+
+		// Setup
+		Renderer::RootSignatureBuilder rootSignature;
+		rootSignature.initialize(static_cast<uint32_t>(glm::countof(rootParameters)), rootParameters, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+		// Create the instance
+		mRootSignature = mRenderer->createRootSignature(rootSignature);
+	}
+
 	{ // Create the textures
 		static const uint32_t TEXTURE_WIDTH   = 128;
 		static const uint32_t TEXTURE_HEIGHT  = 128;
@@ -194,31 +214,9 @@ CubeRendererInstancedArrays::CubeRendererInstancedArrays(Renderer::IRenderer& re
 		delete [] data;
 	}
 
-	// Create sampler state
-	mSamplerState = mRenderer->createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
-
-	{ // Create the root signature
-		Renderer::DescriptorRangeBuilder ranges[5];
-		ranges[0].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockStaticVs", 0);
-		ranges[1].initialize(Renderer::DescriptorRangeType::UBV, 1, 1, "UniformBlockDynamicVs", 0);
-		ranges[2].initializeSampler(1, 0);
-		ranges[3].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap", 2);
-		ranges[4].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockDynamicFs", 0);
-
-		Renderer::RootParameterBuilder rootParameters[5];
-		rootParameters[0].initializeAsDescriptorTable(1, &ranges[0], Renderer::ShaderVisibility::VERTEX);
-		rootParameters[1].initializeAsDescriptorTable(1, &ranges[1], Renderer::ShaderVisibility::VERTEX);
-		rootParameters[2].initializeAsDescriptorTable(1, &ranges[2], Renderer::ShaderVisibility::FRAGMENT);
-		rootParameters[3].initializeAsDescriptorTable(1, &ranges[3], Renderer::ShaderVisibility::FRAGMENT);
-		rootParameters[4].initializeAsDescriptorTable(1, &ranges[4], Renderer::ShaderVisibility::FRAGMENT);
-
-		// Setup
-		Renderer::RootSignatureBuilder rootSignature;
-		rootSignature.initialize(static_cast<uint32_t>(glm::countof(rootParameters)), rootParameters, 0, nullptr, Renderer::RootSignatureFlags::ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
-
-		// Create the instance
-		mRootSignature = mRenderer->createRootSignature(rootSignature);
-	}
+	// Create sampler state instance and wrap it into a resource group instance
+	Renderer::IResource* samplerStateResource = mRenderer->createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
+	mSamplerStateGroup = mRootSignature->createResourceGroup(1, 1, &samplerStateResource);
 
 	// Uniform buffer object (UBO, "constant buffer" in Direct3D terminology) supported?
 	// -> If they are there, we really want to use them (performance and ease of use)
@@ -240,6 +238,12 @@ CubeRendererInstancedArrays::CubeRendererInstancedArrays(Renderer::IRenderer& re
 		// Create dynamic uniform buffers
 		mUniformBufferDynamicVs = mBufferManager->createUniformBuffer(sizeof(float) * 2, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 		mUniformBufferDynamicFs = mBufferManager->createUniformBuffer(sizeof(float) * 3, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
+	}
+
+	{ // Create resource group
+		Renderer::IResource* resources[4] = { mUniformBufferStaticVs, mUniformBufferDynamicVs, mTexture2D, mUniformBufferDynamicFs };
+		Renderer::ISamplerState* samplerStates[4] = { nullptr, nullptr, static_cast<Renderer::ISamplerState*>(samplerStateResource), nullptr };
+		mResourceGroup = mRootSignature->createResourceGroup(0, static_cast<uint32_t>(glm::countof(resources)), resources, samplerStates);
 	}
 
 	// Create the program: Decide which shader language should be used (for example "GLSL" or "HLSL")
@@ -384,10 +388,10 @@ void CubeRendererInstancedArrays::setNumberOfCubes(uint32_t numberOfCubes)
 
 	// Since we're always submitting the same commands to the renderer, we can fill the command buffer once during initialization and then reuse it multiple times during runtime
 	mCommandBuffer.clear();
-	fillCommandBuffer();
+	fillReusableCommandBuffer();
 }
 
-void CubeRendererInstancedArrays::draw(float globalTimer, float globalScale, float lightPositionX, float lightPositionY, float lightPositionZ)
+void CubeRendererInstancedArrays::fillCommandBuffer(float globalTimer, float globalScale, float lightPositionX, float lightPositionY, float lightPositionZ, Renderer::CommandBuffer& commandBuffer)
 {
 	// Sanity checks
 	assert(nullptr != mProgram);
@@ -439,24 +443,25 @@ void CubeRendererInstancedArrays::draw(float globalTimer, float globalScale, flo
 		// mProgram->setUniformMatrix4fv(mProgram->getUniformHandle("MVP"), MVP);
 	}
 
-	// Submit command buffer to the renderer backend
-	mCommandBuffer.submit(*mRenderer);
+	// Execute pre-recorded command buffer
+	Renderer::Command::ExecuteCommandBuffer::create(commandBuffer, &mCommandBuffer);
 }
 
 
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
-void CubeRendererInstancedArrays::fillCommandBuffer()
+void CubeRendererInstancedArrays::fillReusableCommandBuffer()
 {
 	// Sanity checks
-	assert(nullptr != mRootSignature);
-	assert(nullptr != mUniformBufferStaticVs);
-	assert(nullptr != mUniformBufferDynamicVs);
-	assert(nullptr != mSamplerState);
-	assert(nullptr != mTexture2D);
-	assert(nullptr != mUniformBufferDynamicFs);
 	assert(mCommandBuffer.isEmpty());
+	assert(nullptr != mRootSignature);
+	assert(nullptr != mTexture2D);
+	assert(0 == mRenderer->getCapabilities().maximumUniformBufferSize || nullptr != mUniformBufferStaticVs);
+	assert(0 == mRenderer->getCapabilities().maximumUniformBufferSize || nullptr != mUniformBufferDynamicVs);
+	assert(0 == mRenderer->getCapabilities().maximumUniformBufferSize || nullptr != mUniformBufferDynamicFs);
+	assert(nullptr != mResourceGroup);
+	assert(nullptr != mSamplerStateGroup);
 
 	// Begin debug event
 	COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(mCommandBuffer)
@@ -464,12 +469,9 @@ void CubeRendererInstancedArrays::fillCommandBuffer()
 	// Set the used graphics root signature
 	Renderer::Command::SetGraphicsRootSignature::create(mCommandBuffer, mRootSignature);
 
-	// Set diffuse map
-	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 0, mUniformBufferStaticVs);
-	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 1, mUniformBufferDynamicVs);
-	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 2, mSamplerState);
-	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 3, mTexture2D);
-	Renderer::Command::SetGraphicsRootDescriptorTable::create(mCommandBuffer, 4, mUniformBufferDynamicFs);
+	// Set resource groups
+	Renderer::Command::SetGraphicsResourceGroup::create(mCommandBuffer, 0, mResourceGroup);
+	Renderer::Command::SetGraphicsResourceGroup::create(mCommandBuffer, 1, mSamplerStateGroup);
 
 	// Draw the batches
 	if (nullptr != mBatches)

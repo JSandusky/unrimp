@@ -45,7 +45,7 @@ void main()
 {
 	// Pass through the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
 	// -> Compensate for different Vulkan coordinate system
-	gl_Position = vec4(Position.x, -(Position.y - float(gl_InstanceID)), 0.0, 1.0);
+	gl_Position = vec4(Position.x, -(Position.y - float(gl_InstanceIndex)), 0.0, 1.0);
 }
 )";
 

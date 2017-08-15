@@ -760,29 +760,34 @@ namespace RendererToolkit
 		}
 	}
 
-	void JsonHelper::optionalStringProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, char* value, uint32_t maximumLength)
+	void JsonHelper::mandatoryStringProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, char* value, uint32_t maximumLength)
 	{
 		if (0 == maximumLength)
 		{
 			throw std::runtime_error('\"' + std::string(propertyName) + "\" maximum number of characters must be greater than zero");
 		}
+		const rapidjson::Value& rapidJsonValueFound = rapidJsonValue[propertyName];
+		const char* valueAsString = rapidJsonValueFound.GetString();
+		const rapidjson::SizeType valueLength = rapidJsonValueFound.GetStringLength();
+
+		// -1 for the terminating zero reserve
+		maximumLength -= 1;
+		if (valueLength <= maximumLength)
+		{
+			memcpy(value, valueAsString, valueLength);
+			value[valueLength] = '\0';
+		}
+		else
+		{
+			throw std::runtime_error('\"' + std::string(propertyName) + "\" maximum number of characters is " + std::to_string(maximumLength) + ", but the value \"" + std::string(valueAsString) + "\" has " + std::to_string(valueLength) + " characters");
+		}
+	}
+
+	void JsonHelper::optionalStringProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, char* value, uint32_t maximumLength)
+	{
 		if (rapidJsonValue.HasMember(propertyName))
 		{
-			const rapidjson::Value& rapidJsonValueFound = rapidJsonValue[propertyName];
-			const char* valueAsString = rapidJsonValueFound.GetString();
-			const rapidjson::SizeType valueLength = rapidJsonValueFound.GetStringLength();
-
-			// -1 for the terminating zero reserve
-			maximumLength -= 1;
-			if (valueLength <= maximumLength)
-			{
-				memcpy(value, valueAsString, valueLength);
-				value[valueLength] = '\0';
-			}
-			else
-			{
-				throw std::runtime_error('\"' + std::string(propertyName) + "\" maximum number of characters is " + std::to_string(maximumLength) + ", but the value \"" + std::string(valueAsString) + "\" has " + std::to_string(valueLength) + " characters");
-			}
+			mandatoryStringProperty(rapidJsonValue, propertyName, value, maximumLength);
 		}
 	}
 

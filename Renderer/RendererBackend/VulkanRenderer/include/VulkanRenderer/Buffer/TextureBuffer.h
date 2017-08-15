@@ -97,6 +97,24 @@ namespace VulkanRenderer
 		*/
 		inline VkBuffer getVkBuffer() const;
 
+		/**
+		*  @brief
+		*    Return the Vulkan device memory
+		*
+		*  @return
+		*    The Vulkan device memory
+		*/
+		inline VkDeviceMemory getVkDeviceMemory() const;
+
+		/**
+		*  @brief
+		*    Return the Vulkan buffer view
+		*
+		*  @return
+		*    The Vulkan buffer view
+		*/
+		inline VkBufferView getVkBufferView() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ITextureBuffer methods       ]
@@ -117,7 +135,9 @@ namespace VulkanRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		VkBuffer mVkBuffer;	///< The Vulkan texture buffer
+		VkBuffer	   mVkBuffer;		///< Vulkan uniform texel buffer
+		VkDeviceMemory mVkDeviceMemory;	///< Vulkan uniform texel memory
+		VkBufferView   mVkBufferView;	///< Vulkan buffer view
 
 
 	};

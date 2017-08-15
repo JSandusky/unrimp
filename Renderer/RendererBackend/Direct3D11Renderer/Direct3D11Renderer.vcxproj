@@ -45,6 +45,7 @@
     <None Include="include\Direct3D11Renderer\Direct3D11Renderer.inl" />
     <None Include="include\Direct3D11Renderer\RenderTarget\Framebuffer.inl" />
     <None Include="include\Direct3D11Renderer\RenderTarget\SwapChain.inl" />
+    <None Include="include\Direct3D11Renderer\ResourceGroup.inl" />
     <None Include="include\Direct3D11Renderer\RootSignature.inl" />
     <None Include="include\Direct3D11Renderer\Shader\FragmentShaderHlsl.inl" />
     <None Include="include\Direct3D11Renderer\Shader\GeometryShaderHlsl.inl" />
@@ -82,6 +83,7 @@
     <ClInclude Include="include\Direct3D11Renderer\Mapping.h" />
     <ClInclude Include="include\Direct3D11Renderer\RenderTarget\Framebuffer.h" />
     <ClInclude Include="include\Direct3D11Renderer\RenderTarget\SwapChain.h" />
+    <ClInclude Include="include\Direct3D11Renderer\ResourceGroup.h" />
     <ClInclude Include="include\Direct3D11Renderer\RootSignature.h" />
     <ClInclude Include="include\Direct3D11Renderer\Shader\FragmentShaderHlsl.h" />
     <ClInclude Include="include\Direct3D11Renderer\Shader\GeometryShaderHlsl.h" />
@@ -117,6 +119,7 @@
     <ClCompile Include="src\Mapping.cpp" />
     <ClCompile Include="src\RenderTarget\Framebuffer.cpp" />
     <ClCompile Include="src\RenderTarget\SwapChain.cpp" />
+    <ClCompile Include="src\ResourceGroup.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\Shader\FragmentShaderHlsl.cpp" />
     <ClCompile Include="src\Shader\GeometryShaderHlsl.cpp" />

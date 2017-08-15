@@ -47,7 +47,7 @@ layout(location = 3) out vec3  BinormalVs;	// Tangent space to view space, y-axi
 layout(location = 4) out vec3  NormalVs;	// Tangent space to view space, z-axis
 
 // Uniforms
-layout(std140, binding = 0) uniform UniformBlockDynamicVs
+layout(std140, set = 0, binding = 0) uniform UniformBlockDynamicVs
 {
 	mat4 ObjectSpaceToClipSpaceMatrix;	// Object space to clip space matrix
 	mat4 ObjectSpaceToViewSpaceMatrix;	// Object space to view space matrix
@@ -107,9 +107,9 @@ layout(location = 4) in vec3 NormalVs;		// Tangent space to view space, z-axis
 layout(location = 0) out vec4 OutputColor;
 
 // Uniforms
-layout(binding = 2) uniform sampler2D _drgb_nxa;
-layout(binding = 3) uniform sampler2D _hr_rg_mb_nya;
-layout(binding = 4) uniform sampler2D EmissiveMap;
+layout(set = 0, binding = 1) uniform sampler2D _drgb_nxa;
+layout(set = 0, binding = 2) uniform sampler2D _hr_rg_mb_nya;
+layout(set = 0, binding = 3) uniform sampler2D EmissiveMap;
 
 // Programs
 void main()

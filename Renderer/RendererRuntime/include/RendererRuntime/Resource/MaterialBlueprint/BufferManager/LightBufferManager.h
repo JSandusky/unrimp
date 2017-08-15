@@ -45,6 +45,7 @@ namespace Renderer
 {
 	class CommandBuffer;
 	class ITextureBuffer;
+	class IResourceGroup;
 }
 namespace RendererRuntime
 {
@@ -169,6 +170,7 @@ namespace RendererRuntime
 		TextureResourceId		  mClusters3DTextureResourceId;
 		glm::vec3				  mLightClustersAabbMinimum;
 		glm::vec3				  mLightClustersAabbMaximum;
+		Renderer::IResourceGroup* mResourceGroup;	///< Resource group instance, always valid
 
 
 	};

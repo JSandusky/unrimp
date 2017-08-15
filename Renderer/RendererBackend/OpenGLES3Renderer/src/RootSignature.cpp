@@ -22,61 +22,10 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLES3Renderer/RootSignature.h"
+#include "OpenGLES3Renderer/ResourceGroup.h"
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
-#include "OpenGLES3Renderer/State/SamplerState.h"
-
-#include <Renderer/ILog.h>
 
 #include <memory.h>
-
-
-#ifndef OPENGLES3RENDERER_NO_DEBUG
-	//[-------------------------------------------------------]
-	//[ Anonymous detail namespace                            ]
-	//[-------------------------------------------------------]
-	namespace
-	{
-		namespace detail
-		{
-
-
-			//[-------------------------------------------------------]
-			//[ Global functions                                      ]
-			//[-------------------------------------------------------]
-			void checkSamplerState(OpenGLES3Renderer::OpenGLES3Renderer& openGLES3Renderer, const Renderer::RootSignature& rootSignature, uint32_t samplerRootParameterIndex)
-			{
-				if (samplerRootParameterIndex >= rootSignature.numberOfParameters)
-				{
-					RENDERER_LOG(openGLES3Renderer.getContext(), CRITICAL, "OpenGL ES 3 renderer backend sampler root parameter index is out of bounds")
-					return;
-				}
-				const Renderer::RootParameter& samplerRootParameter = rootSignature.parameters[samplerRootParameterIndex];
-				if (Renderer::RootParameterType::DESCRIPTOR_TABLE != samplerRootParameter.parameterType)
-				{
-					RENDERER_LOG(openGLES3Renderer.getContext(), CRITICAL, "OpenGL ES 3 renderer backend sampler root parameter index doesn't point to a descriptor table")
-					return;
-				}
-
-				// TODO(co) For now, we only support a single descriptor range
-				if (1 != samplerRootParameter.descriptorTable.numberOfDescriptorRanges)
-				{
-					RENDERER_LOG(openGLES3Renderer.getContext(), CRITICAL, "OpenGL ES 3 renderer backend sampler root parameter: Only a single descriptor range is supported")
-					return;
-				}
-				if (Renderer::DescriptorRangeType::SAMPLER != reinterpret_cast<const Renderer::DescriptorRange*>(samplerRootParameter.descriptorTable.descriptorRanges)[0].rangeType)
-				{
-					RENDERER_LOG(openGLES3Renderer.getContext(), CRITICAL, "OpenGL ES 3 renderer backend sampler root parameter index is out of bounds")
-					return;
-				}
-			}
-
-
-	//[-------------------------------------------------------]
-	//[ Anonymous detail namespace                            ]
-	//[-------------------------------------------------------]
-		} // detail
-	}
-#endif
 
 
 //[-------------------------------------------------------]
@@ -91,8 +40,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	RootSignature::RootSignature(OpenGLES3Renderer& openGLES3Renderer, const Renderer::RootSignature& rootSignature) :
 		IRootSignature(openGLES3Renderer),
-		mRootSignature(rootSignature),
-		mSamplerStates(nullptr)
+		mRootSignature(rootSignature)
 	{
 		{ // Copy the parameter data
 			const uint32_t numberOfParameters = mRootSignature.numberOfParameters;
@@ -125,31 +73,10 @@ namespace OpenGLES3Renderer
 				memcpy(const_cast<Renderer::StaticSampler*>(mRootSignature.staticSamplers), rootSignature.staticSamplers, sizeof(Renderer::StaticSampler) * numberOfStaticSamplers);
 			}
 		}
-
-		// Initialize sampler state references
-		if (mRootSignature.numberOfParameters > 0)
-		{
-			mSamplerStates = new SamplerState*[mRootSignature.numberOfParameters];
-			memset(mSamplerStates, 0, sizeof(SamplerState*) * mRootSignature.numberOfParameters);
-		}
 	}
 
 	RootSignature::~RootSignature()
 	{
-		// Release all sampler state references
-		if (nullptr != mSamplerStates)
-		{
-			for (uint32_t i = 0; i < mRootSignature.numberOfParameters; ++i)
-			{
-				SamplerState* samplerState = mSamplerStates[i];
-				if (nullptr != samplerState)
-				{
-					samplerState->releaseReference();
-				}
-			}
-			delete [] mSamplerStates;
-		}
-
 		// Destroy the root signature data
 		if (nullptr != mRootSignature.parameters)
 		{
@@ -166,44 +93,19 @@ namespace OpenGLES3Renderer
 		delete [] mRootSignature.staticSamplers;
 	}
 
-	void RootSignature::setSamplerState(uint32_t samplerRootParameterIndex, SamplerState* samplerState) const
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IRootSignature methods       ]
+	//[-------------------------------------------------------]
+	Renderer::IResourceGroup* RootSignature::createResourceGroup(uint32_t rootParameterIndex, uint32_t numberOfResources, Renderer::IResource** resources, Renderer::ISamplerState** samplerStates)
 	{
-		// Security checks
-		#ifndef OPENGLES3RENDERER_NO_DEBUG
-			detail::checkSamplerState(static_cast<OpenGLES3Renderer&>(getRenderer()), mRootSignature, samplerRootParameterIndex);
-		#endif
+		// Sanity checks
+		assert(rootParameterIndex < mRootSignature.numberOfParameters && "The root parameter index is out-of-bounds");
+		assert(numberOfResources > 0 && "The number of resources must not be zero");
+		assert(nullptr != resources && "The resource pointers must be valid");
 
-		// Set sampler state
-		SamplerState** samplerStateSlot = &mSamplerStates[samplerRootParameterIndex];
-		if (samplerState != *samplerStateSlot)
-		{
-			if (nullptr != *samplerStateSlot)
-			{
-				(*samplerStateSlot)->releaseReference();
-			}
-			(*samplerStateSlot) = samplerState;
-			if (nullptr != *samplerStateSlot)
-			{
-				(*samplerStateSlot)->addReference();
-			}
-		}
-	}
-
-	void RootSignature::setOpenGLES3SamplerStates(uint32_t samplerRootParameterIndex) const
-	{
-		// Security checks
-		#ifndef OPENGLES3RENDERER_NO_DEBUG
-			OpenGLES3Renderer& openGLES3Renderer = static_cast<OpenGLES3Renderer&>(getRenderer());
-			detail::checkSamplerState(openGLES3Renderer, mRootSignature, samplerRootParameterIndex);
-			if (nullptr == mSamplerStates[samplerRootParameterIndex])
-			{
-				RENDERER_LOG(openGLES3Renderer.getContext(), CRITICAL, "OpenGL ES 3 renderer backend sampler root parameter index points to no sampler state instance")
-				return;
-			}
-		#endif
-
-		// Set sampler state
-		mSamplerStates[samplerRootParameterIndex]->setOpenGLES3SamplerStates();
+		// Create resource group
+		return new ResourceGroup(*this, rootParameterIndex, numberOfResources, resources, samplerStates);
 	}
 
 

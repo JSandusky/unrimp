@@ -55,11 +55,13 @@ namespace Renderer
 		*/
 		enum class Type
 		{
-			TRACE,			///< Trace
-			DEBUG,			///< Debug
-			INFORMATION,	///< Information
-			WARNING,		///< Warning
-			CRITICAL		///< Critical
+			TRACE,					///< Trace
+			DEBUG,					///< Debug
+			INFORMATION,			///< Information
+			WARNING,				///< General warning
+			PERFORMANCE_WARNING,	///< Performance related warning
+			COMPATIBILITY_WARNING,	///< Compatibility related warning
+			CRITICAL				///< Critical
 		};
 
 

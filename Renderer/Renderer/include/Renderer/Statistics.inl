@@ -38,6 +38,8 @@ namespace Renderer
 	inline Statistics::Statistics() :
 		currentNumberOfRootSignatures(0),
 		numberOfCreatedRootSignatures(0),
+		currentNumberOfResourceGroups(0),
+		numberOfCreatedResourceGroups(0),
 		currentNumberOfPrograms(0),
 		numberOfCreatedPrograms(0),
 		currentNumberOfVertexArrays(0),
@@ -98,6 +100,7 @@ namespace Renderer
 	{
 		// Calculate the current number of resource instances
 		return	currentNumberOfRootSignatures +
+				currentNumberOfResourceGroups +
 				currentNumberOfPrograms +
 				currentNumberOfVertexArrays +
 				// IRenderTarget
@@ -133,6 +136,7 @@ namespace Renderer
 
 		// Misc
 		RENDERER_LOG(context, INFORMATION, "Root signatures: %d", currentNumberOfRootSignatures.load())
+		RENDERER_LOG(context, INFORMATION, "Resource groups: %d", currentNumberOfResourceGroups.load())
 		RENDERER_LOG(context, INFORMATION, "Programs: %d", currentNumberOfPrograms.load())
 		RENDERER_LOG(context, INFORMATION, "Vertex arrays: %d", currentNumberOfVertexArrays.load())
 

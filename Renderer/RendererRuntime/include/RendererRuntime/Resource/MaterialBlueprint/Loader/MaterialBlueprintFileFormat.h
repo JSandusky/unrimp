@@ -47,6 +47,7 @@ namespace RendererRuntime
 	//   - Shader blueprints, rasterization state etc.
 	// - Resources
 	//   - Uniform buffers
+	//   - Texture buffers
 	//   - Sampler states
 	//   - Textures
 	namespace v1MaterialBlueprint
@@ -57,7 +58,7 @@ namespace RendererRuntime
 		//[ Definitions                                           ]
 		//[-------------------------------------------------------]
 		static const uint32_t FORMAT_TYPE	 = StringId("MaterialBlueprint");
-		static const uint32_t FORMAT_VERSION = 5;
+		static const uint32_t FORMAT_VERSION = 8;
 
 		#pragma pack(push)
 		#pragma pack(1)
@@ -82,7 +83,7 @@ namespace RendererRuntime
 
 			struct UniformBufferHeader
 			{
-				uint32_t							   rootParameterIndex;
+				uint32_t							   rootParameterIndex;			///< Root parameter index = resource group index
 				MaterialBlueprintResource::BufferUsage bufferUsage;
 				uint32_t							   numberOfElements;
 				uint32_t							   numberOfElementProperties;
@@ -92,34 +93,37 @@ namespace RendererRuntime
 			struct TextureBufferHeader
 			{
 				MaterialPropertyValue				   materialPropertyValue = MaterialPropertyValue::fromUnknown();
-				uint32_t							   rootParameterIndex	 = getUninitialized<uint32_t>();
+				uint32_t							   rootParameterIndex	 = getUninitialized<uint32_t>();	///< Root parameter index = resource group index
 				MaterialBlueprintResource::BufferUsage bufferUsage			 = MaterialBlueprintResource::BufferUsage::UNKNOWN;
 			};
 
 			struct SamplerState : public Renderer::SamplerState
 			{
-				uint32_t rootParameterIndex;
+				uint32_t rootParameterIndex;	///< Root parameter index = resource group index
 			};
 
 			struct Texture
 			{
-				uint32_t		 rootParameterIndex;
+				uint32_t		 rootParameterIndex;	///< Root parameter index = resource group index
 				MaterialProperty materialProperty;
 				AssetId			 fallbackTextureAssetId;
 				bool			 rgbHardwareGammaCorrection;
+				uint32_t		 samplerStateIndex;		///< Index of the material blueprint sampler state resource to use, can be uninitialized (e.g. texel fetch instead of sampling might be used)
 
 				Texture() :
 					rootParameterIndex(getUninitialized<uint32_t>()),
-					rgbHardwareGammaCorrection(false)
+					rgbHardwareGammaCorrection(false),
+					samplerStateIndex(getUninitialized<uint32_t>())
 				{
 					// Nothing here
 				}
 
-				Texture(uint32_t _rootParameterIndex, MaterialProperty _materialProperty, AssetId _fallbackTextureAssetId, bool _rgbHardwareGammaCorrection) :
+				Texture(uint32_t _rootParameterIndex, MaterialProperty _materialProperty, AssetId _fallbackTextureAssetId, bool _rgbHardwareGammaCorrection, uint32_t _samplerStateIndex) :
 					rootParameterIndex(_rootParameterIndex),
 					materialProperty(_materialProperty),
 					fallbackTextureAssetId(_fallbackTextureAssetId),
-					rgbHardwareGammaCorrection(_rgbHardwareGammaCorrection)
+					rgbHardwareGammaCorrection(_rgbHardwareGammaCorrection),
+					samplerStateIndex(_samplerStateIndex)
 				{
 					// Nothing here
 				}

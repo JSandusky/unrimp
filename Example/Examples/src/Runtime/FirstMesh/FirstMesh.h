@@ -30,6 +30,7 @@
 #include "Framework/ExampleBase.h"
 
 #include <RendererRuntime/Core/Time/Stopwatch.h>
+#include <RendererRuntime/Resource/IResourceListener.h>
 
 
 //[-------------------------------------------------------]
@@ -65,7 +66,7 @@ namespace RendererRuntime
 *    - Optimization: Cache data to not bother the renderer API to much
 *    - Compact vertex format (32 bit texture coordinate, QTangent, 56 bytes vs. 28 bytes per vertex)
 */
-class FirstMesh : public ExampleBase
+class FirstMesh : public ExampleBase, public RendererRuntime::IResourceListener
 {
 
 
@@ -97,19 +98,36 @@ public:
 
 
 //[-------------------------------------------------------]
+//[ Protected virtual RendererRuntime::IResourceListener methods ]
+//[-------------------------------------------------------]
+protected:
+	virtual void onLoadingStateChange(const RendererRuntime::IResource& resource) override;
+
+
+//[-------------------------------------------------------]
+//[ Protected methods                                     ]
+//[-------------------------------------------------------]
+protected:
+	explicit FirstMesh(const FirstMesh&) = delete;
+	FirstMesh& operator=(const FirstMesh&) = delete;
+
+
+//[-------------------------------------------------------]
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	Renderer::IUniformBufferPtr			  mUniformBuffer;			///< Uniform buffer object (UBO), can be a null pointer
+	Renderer::CommandBuffer				  mCommandBuffer;			///< Command buffer
 	Renderer::IRootSignaturePtr			  mRootSignature;			///< Root signature, can be a null pointer
+	Renderer::IUniformBufferPtr			  mUniformBuffer;			///< Uniform buffer object (UBO), can be a null pointer
 	Renderer::IPipelineStatePtr			  mPipelineState;			///< Pipeline state object (PSO), can be a null pointer
 	Renderer::IProgramPtr				  mProgram;					///< Program, can be a null pointer
 	RendererRuntime::MeshResourceId		  mMeshResourceId;			///< Mesh resource ID, can be set to uninitialized value
 	RendererRuntime::TextureResourceId	  m_drgb_nxaTextureResourceId;
 	RendererRuntime::TextureResourceId	  m_hr_rg_mb_nyaTextureResourceId;
 	RendererRuntime::TextureResourceId	  mEmissiveTextureResourceId;
-	Renderer::ISamplerStatePtr			  mSamplerState;			///< Sampler state, can be a null pointer
-	Renderer::CommandBuffer				  mCommandBuffer;			///< Command buffer
+	Renderer::IResourceGroupPtr			  mResourceGroup;			///< Resource group, can be a null pointer
+	Renderer::ISamplerStatePtr			  mSamplerStatePtr;			///< Sampler state, can be a null pointer
+	Renderer::IResourceGroupPtr			  mSamplerStateGroup;		///< Sampler state resource group, can be a null pointer
 	// Optimization: Cache data to not bother the renderer API to much
 	handle	 mObjectSpaceToClipSpaceMatrixUniformHandle;	///< Object space to clip space matrix uniform handle, can be NULL_HANDLE
 	handle	 mObjectSpaceToViewSpaceMatrixUniformHandle;	///< Object space to view space matrix uniform handle, can be NULL_HANDLE

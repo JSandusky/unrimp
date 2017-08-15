@@ -67,7 +67,7 @@ public:
 
 	/**
 	*  @brief
-	*    Draw the cubes
+	*    Draw the cubes by filling a given command buffer
 	*
 	*  @param[in] globalTimer
 	*    Global timer
@@ -79,8 +79,10 @@ public:
 	*    Y component of the light position
 	*  @param[in] lightPositionZ
 	*    Z component of the light position
+	*  @param[out] commandBuffer
+	*    Command buffer to fill
 	*/
-	virtual void draw(float globalTimer, float globalScale, float lightPositionX, float lightPositionY, float lightPositionZ) = 0;
+	virtual void fillCommandBuffer(float globalTimer, float globalScale, float lightPositionX, float lightPositionY, float lightPositionZ, Renderer::CommandBuffer& commandBuffer) = 0;
 
 
 //[-------------------------------------------------------]

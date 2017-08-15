@@ -118,7 +118,6 @@ namespace RendererRuntime
 			{
 				mRootParameters[index].parameterType = rootParameterData[index].parameterType;
 				mRootParameters[index].descriptorTable.numberOfDescriptorRanges = rootParameterData[index].numberOfDescriptorRanges;
-				mRootParameters[index].shaderVisibility = rootParameterData[index].shaderVisibility;
 			}
 
 			// Load in the descriptor ranges
@@ -348,6 +347,7 @@ namespace RendererRuntime
 				samplerState.samplerStatePtr = renderer.createSamplerState(*materialBlueprintSamplerState);
 				RENDERER_SET_RESOURCE_DEBUG_NAME(samplerState.samplerStatePtr, getAsset().assetFilename)
 			}
+			mMaterialBlueprintResource->mSamplerStateGroup = nullptr;
 		}
 
 		{ // Get the textures
@@ -362,6 +362,7 @@ namespace RendererRuntime
 				const MaterialProperty& materialProperty = texture.materialProperty = materialBlueprintTexture->materialProperty;
 				texture.fallbackTextureAssetId = materialBlueprintTexture->fallbackTextureAssetId;
 				texture.rgbHardwareGammaCorrection = materialBlueprintTexture->rgbHardwareGammaCorrection;
+				texture.samplerStateIndex = materialBlueprintTexture->samplerStateIndex;
 				if (materialProperty.getValueType() == MaterialPropertyValue::ValueType::TEXTURE_ASSET_ID)
 				{
 					textureResourceManager.loadTextureResourceByAssetId(materialProperty.getTextureAssetIdValue(), texture.fallbackTextureAssetId, texture.textureResourceId, nullptr, texture.rgbHardwareGammaCorrection);
