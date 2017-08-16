@@ -35,6 +35,14 @@
 #include "RendererRuntime/Core/Math/Math.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
+	#include <glm/gtc/matrix_transform.hpp>
+PRAGMA_WARNING_POP
+
+#include <algorithm>
+
 
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]

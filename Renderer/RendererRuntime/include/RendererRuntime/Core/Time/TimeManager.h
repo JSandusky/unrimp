@@ -30,6 +30,8 @@
 #include "RendererRuntime/Core/Manager.h"
 #include "RendererRuntime/Core/Time/Stopwatch.h"
 
+#include <inttypes.h>	// For "uint32_t", "uint64_t" etc.
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

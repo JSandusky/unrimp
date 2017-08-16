@@ -32,6 +32,8 @@
 #include "RendererRuntime/Core/Math/Math.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
+#include <algorithm>
+
 
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]

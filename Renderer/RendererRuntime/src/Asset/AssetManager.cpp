@@ -28,6 +28,9 @@
 #include "RendererRuntime/Core/File/IFileManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
+#include <cassert>
+#include <algorithm>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

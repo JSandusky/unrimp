@@ -32,6 +32,8 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
+#include <unordered_set>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

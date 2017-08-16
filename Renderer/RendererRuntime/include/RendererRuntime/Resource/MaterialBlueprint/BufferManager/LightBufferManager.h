@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/Manager.h"
+#include "RendererRuntime/Core/Platform/PlatformTypes.h"
 
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
@@ -36,6 +37,8 @@ PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4324)	// warning C4324: '<x>': structure was padded due to alignment specifier
 	#include <glm/glm.hpp>
 PRAGMA_WARNING_POP
+
+#include <vector>
 
 
 //[-------------------------------------------------------]

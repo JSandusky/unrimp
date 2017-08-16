@@ -32,6 +32,13 @@
 #include "RendererRuntime/Core/Math/Transform.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4201)	// warning C4201: nonstandard extension used: nameless struct/union
+	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
+	#include <glm/gtc/type_ptr.hpp>
+PRAGMA_WARNING_POP
+
 #include <algorithm>
 
 
@@ -115,6 +122,7 @@ namespace RendererRuntime
 			// Sanity checks
 			assert(nullptr != instanceTextureBuffer);
 			assert(instanceUniformBuffer->rootParameterIndex == instanceTextureBuffer->rootParameterIndex);
+			std::ignore = instanceTextureBuffer;
 
 			// Create resource group, if needed
 			// TODO(co) We probably need to move the instance buffer manager into the material blueprint resource

@@ -28,9 +28,14 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/Manager.h"
+#include "RendererRuntime/Core/Platform/PlatformTypes.h"
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderType.h"
 
-#include <mutex>
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4548)	// warning C4548: expression before comma has no effect; expected expression with side-effect
+	#include <mutex>
+PRAGMA_WARNING_POP
 #include <unordered_map>
 
 

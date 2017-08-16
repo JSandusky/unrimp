@@ -31,6 +31,8 @@ PRAGMA_WARNING_PUSH
 	#include <lz4/lz4hc.h>
 PRAGMA_WARNING_POP
 
+#include <tuple>
+
 
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]

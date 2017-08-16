@@ -34,7 +34,11 @@
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
 
-#include <glm/detail/setup.hpp>	// For "glm::countof()"
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
+	#include <glm/detail/setup.hpp>	// For "glm::countof()"
+PRAGMA_WARNING_POP
 
 
 //[-------------------------------------------------------]

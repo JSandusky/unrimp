@@ -29,7 +29,11 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Resource/Detail/IResource.h"
 
-#include <glm/fwd.hpp>
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
+	#include <glm/fwd.hpp>
+PRAGMA_WARNING_POP
 
 
 //[-------------------------------------------------------]

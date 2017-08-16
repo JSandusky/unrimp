@@ -31,6 +31,9 @@
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
+#include <tuple>
+#include <algorithm>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

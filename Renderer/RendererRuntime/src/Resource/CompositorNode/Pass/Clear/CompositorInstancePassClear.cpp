@@ -27,6 +27,13 @@
 
 #include <Renderer/Public/Renderer.h>
 
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4201)	// warning C4201: nonstandard extension used: nameless struct/union
+	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
+	#include <glm/gtc/type_ptr.hpp>
+PRAGMA_WARNING_POP
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

@@ -29,6 +29,9 @@
 
 #include <openvr/openvr.h>
 
+#include <chrono>
+#include <thread>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

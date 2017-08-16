@@ -25,6 +25,8 @@
 #include "RendererRuntime/Resource/Scene/Item/Sky/HosekWilkieSky.h"
 #include "RendererRuntime/Core/Math/Math.h"
 
+#include <algorithm>
+
 
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]

@@ -29,6 +29,8 @@
 	#include <sys/prctl.h>
 #endif
 
+#include <tuple>
+#include <cassert>
 #include <inttypes.h>	// For uint32_t, uint64_t etc.
 
 

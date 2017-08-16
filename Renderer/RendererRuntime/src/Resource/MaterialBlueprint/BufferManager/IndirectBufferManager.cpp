@@ -25,6 +25,9 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/IndirectBufferManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
+#include <cassert>
+#include <algorithm>
+
 
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]

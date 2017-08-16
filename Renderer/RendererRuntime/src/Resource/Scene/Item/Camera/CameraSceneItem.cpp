@@ -34,6 +34,7 @@ PRAGMA_WARNING_PUSH
 	#include <glm/gtc/matrix_transform.hpp>
 PRAGMA_WARNING_POP
 
+#include <tuple>
 #include <cassert>
 
 
