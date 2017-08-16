@@ -1224,7 +1224,7 @@ namespace VulkanRenderer
 			mCapabilities.maximumIndirectBufferSize = 64 * 1024;	// 64 KiB
 
 			// Maximum number of multisamples (always at least 1, usually 8)
-			mCapabilities.maximumNumberOfMultisamples = 8;
+			mCapabilities.maximumNumberOfMultisamples = 1;	// TODO(co) Add multisample support, when setting "VkPhysicalDeviceFeatures" -> "sampleRateShading" -> VK_TRUE don't forget to check whether or not the device sup pots the feature
 
 			// Maximum anisotropy (always at least 1, usually 16)
 			mCapabilities.maximumAnisotropy = 16;
