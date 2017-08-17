@@ -159,7 +159,7 @@ namespace VulkanRenderer
 		}
 
 		// Create the Vulkan graphics pipeline
-		// TODO(co) Implement "VkPipeline" creation, this here is just a dummy for the first triangle on screen
+		// TODO(co) Implement the rest of the value mappings
 		const VkPipelineVertexInputStateCreateInfo vkPipelineVertexInputStateCreateInfo =
 		{
 			VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,			// sType (VkStructureType)
