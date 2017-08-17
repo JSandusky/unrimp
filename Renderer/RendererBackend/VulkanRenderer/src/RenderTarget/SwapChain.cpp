@@ -306,31 +306,31 @@ namespace
 		VkRenderPass createRenderPass(const Renderer::Context& context, VkDevice vkDevice, VkFormat colorVkFormat, VkFormat depthVkFormat)
 		{
 			// Render pass configuration
-			const VkAttachmentDescription colorVkAttachmentDescription =
-			{
-				0,									// flags (VkAttachmentDescriptionFlags)
-				colorVkFormat,						// format (VkFormat)
-				VK_SAMPLE_COUNT_1_BIT,				// samples (VkSampleCountFlagBits)
-				VK_ATTACHMENT_LOAD_OP_CLEAR,		// loadOp (VkAttachmentLoadOp)
-				VK_ATTACHMENT_STORE_OP_STORE,		// storeOp (VkAttachmentStoreOp)
-				VK_ATTACHMENT_LOAD_OP_DONT_CARE,	// stencilLoadOp (VkAttachmentLoadOp)
-				VK_ATTACHMENT_STORE_OP_DONT_CARE,	// stencilStoreOp (VkAttachmentStoreOp)
-				VK_IMAGE_LAYOUT_UNDEFINED,			// initialLayout (VkImageLayout)
-				VK_IMAGE_LAYOUT_PRESENT_SRC_KHR		// finalLayout (VkImageLayout)
-			};
-			const VkAttachmentDescription depthVkAttachmentDescription =
-			{
-				0,													// flags (VkAttachmentDescriptionFlags)
-				depthVkFormat,										// format (VkFormat)
-				VK_SAMPLE_COUNT_1_BIT,								// samples (VkSampleCountFlagBits)
-				VK_ATTACHMENT_LOAD_OP_CLEAR,						// loadOp (VkAttachmentLoadOp)
-				VK_ATTACHMENT_STORE_OP_STORE,						// storeOp (VkAttachmentStoreOp)
-				VK_ATTACHMENT_LOAD_OP_DONT_CARE,					// stencilLoadOp (VkAttachmentLoadOp)
-				VK_ATTACHMENT_STORE_OP_DONT_CARE,					// stencilStoreOp (VkAttachmentStoreOp)
-				VK_IMAGE_LAYOUT_UNDEFINED,							// initialLayout (VkImageLayout)
-				VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL	// finalLayout (VkImageLayout)
-			};
-			const std::array<VkAttachmentDescription, 2> vkAttachmentDescriptions = { colorVkAttachmentDescription, depthVkAttachmentDescription };
+			const std::array<VkAttachmentDescription, 2> vkAttachmentDescriptions =
+			{{
+				{
+					0,									// flags (VkAttachmentDescriptionFlags)
+					colorVkFormat,						// format (VkFormat)
+					VK_SAMPLE_COUNT_1_BIT,				// samples (VkSampleCountFlagBits)
+					VK_ATTACHMENT_LOAD_OP_CLEAR,		// loadOp (VkAttachmentLoadOp)
+					VK_ATTACHMENT_STORE_OP_STORE,		// storeOp (VkAttachmentStoreOp)
+					VK_ATTACHMENT_LOAD_OP_DONT_CARE,	// stencilLoadOp (VkAttachmentLoadOp)
+					VK_ATTACHMENT_STORE_OP_DONT_CARE,	// stencilStoreOp (VkAttachmentStoreOp)
+					VK_IMAGE_LAYOUT_UNDEFINED,			// initialLayout (VkImageLayout)
+					VK_IMAGE_LAYOUT_PRESENT_SRC_KHR		// finalLayout (VkImageLayout)
+				},
+				{
+					0,													// flags (VkAttachmentDescriptionFlags)
+					depthVkFormat,										// format (VkFormat)
+					VK_SAMPLE_COUNT_1_BIT,								// samples (VkSampleCountFlagBits)
+					VK_ATTACHMENT_LOAD_OP_CLEAR,						// loadOp (VkAttachmentLoadOp)
+					VK_ATTACHMENT_STORE_OP_STORE,						// storeOp (VkAttachmentStoreOp)
+					VK_ATTACHMENT_LOAD_OP_DONT_CARE,					// stencilLoadOp (VkAttachmentLoadOp)
+					VK_ATTACHMENT_STORE_OP_DONT_CARE,					// stencilStoreOp (VkAttachmentStoreOp)
+					VK_IMAGE_LAYOUT_UNDEFINED,							// initialLayout (VkImageLayout)
+					VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL	// finalLayout (VkImageLayout)
+				}
+			}};
 			const VkAttachmentReference colorVkAttachmentReference =
 			{
 				0,											// attachment (uint32_t)

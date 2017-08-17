@@ -65,115 +65,109 @@ namespace Direct3D12Renderer
 			Renderer::ITexture** colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
 			for (Renderer::ITexture** colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture, ++colorFramebufferAttachments, ++d3d12DescriptorHeapRenderTargetView)
 			{
-				// Valid entry?
-				if (nullptr != colorFramebufferAttachments->texture)
-				{
-					// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-					*colorTexture = colorFramebufferAttachments->texture;
-					(*colorTexture)->addReference();
+				// Sanity check
+				assert(nullptr != colorFramebufferAttachments->texture);
 
-					// Evaluate the color texture type
-					switch ((*colorTexture)->getResourceType())
+				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
+				*colorTexture = colorFramebufferAttachments->texture;
+				(*colorTexture)->addReference();
+
+				// Evaluate the color texture type
+				switch ((*colorTexture)->getResourceType())
+				{
+					case Renderer::ResourceType::TEXTURE_2D:
 					{
-						case Renderer::ResourceType::TEXTURE_2D:
+						// Sanity check
+						assert(0 == colorFramebufferAttachments->layerIndex);
+
+						// Update the framebuffer width and height if required
+						Texture2D* texture2D = static_cast<Texture2D*>(*colorTexture);
+						if (mWidth > texture2D->getWidth())
 						{
-							// Sanity check
-							assert(0 == colorFramebufferAttachments->layerIndex);
-
-							// Update the framebuffer width and height if required
-							Texture2D* texture2D = static_cast<Texture2D*>(*colorTexture);
-							if (mWidth > texture2D->getWidth())
-							{
-								mWidth = texture2D->getWidth();
-							}
-							if (mHeight > texture2D->getHeight())
-							{
-								mHeight = texture2D->getHeight();
-							}
-
-							// Get the Direct3D 12 resource
-							ID3D12Resource *d3d12Resource = texture2D->getD3D12Resource();
-
-							// Create the Direct3D 12 render target view instance
-							D3D12_DESCRIPTOR_HEAP_DESC d3d12DescriptorHeapDesc = {};
-							d3d12DescriptorHeapDesc.NumDescriptors = 1;
-							d3d12DescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-							if (SUCCEEDED(d3d12Device->CreateDescriptorHeap(&d3d12DescriptorHeapDesc, IID_PPV_ARGS(d3d12DescriptorHeapRenderTargetView))))
-							{
-								D3D12_RENDER_TARGET_VIEW_DESC d3d12RenderTargetViewDesc = {};
-								d3d12RenderTargetViewDesc.Format = static_cast<DXGI_FORMAT>(texture2D->getDxgiFormat());
-								d3d12RenderTargetViewDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
-								d3d12RenderTargetViewDesc.Texture2D.MipSlice = colorFramebufferAttachments->mipmapIndex;
-								d3d12Device->CreateRenderTargetView(d3d12Resource, &d3d12RenderTargetViewDesc, (*d3d12DescriptorHeapRenderTargetView)->GetCPUDescriptorHandleForHeapStart());
-							}
-							break;
+							mWidth = texture2D->getWidth();
+						}
+						if (mHeight > texture2D->getHeight())
+						{
+							mHeight = texture2D->getHeight();
 						}
 
-						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+						// Get the Direct3D 12 resource
+						ID3D12Resource *d3d12Resource = texture2D->getD3D12Resource();
+
+						// Create the Direct3D 12 render target view instance
+						D3D12_DESCRIPTOR_HEAP_DESC d3d12DescriptorHeapDesc = {};
+						d3d12DescriptorHeapDesc.NumDescriptors = 1;
+						d3d12DescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+						if (SUCCEEDED(d3d12Device->CreateDescriptorHeap(&d3d12DescriptorHeapDesc, IID_PPV_ARGS(d3d12DescriptorHeapRenderTargetView))))
 						{
-							// Update the framebuffer width and height if required
-							Texture2DArray* texture2DArray = static_cast<Texture2DArray*>(*colorTexture);
-							if (mWidth > texture2DArray->getWidth())
-							{
-								mWidth = texture2DArray->getWidth();
-							}
-							if (mHeight > texture2DArray->getHeight())
-							{
-								mHeight = texture2DArray->getHeight();
-							}
-
-							// Get the Direct3D 12 resource
-							ID3D12Resource *d3d12Resource = texture2DArray->getD3D12Resource();
-
-							// Create the Direct3D 12 render target view instance
-							D3D12_DESCRIPTOR_HEAP_DESC d3d12DescriptorHeapDesc = {};
-							d3d12DescriptorHeapDesc.NumDescriptors = 1;
-							d3d12DescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-							if (SUCCEEDED(d3d12Device->CreateDescriptorHeap(&d3d12DescriptorHeapDesc, IID_PPV_ARGS(d3d12DescriptorHeapRenderTargetView))))
-							{
-								D3D12_RENDER_TARGET_VIEW_DESC d3d12RenderTargetViewDesc = {};
-								d3d12RenderTargetViewDesc.Format = static_cast<DXGI_FORMAT>(texture2DArray->getDxgiFormat());
-								d3d12RenderTargetViewDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2DARRAY;
-								d3d12RenderTargetViewDesc.Texture2DArray.MipSlice		 = colorFramebufferAttachments->mipmapIndex;
-								d3d12RenderTargetViewDesc.Texture2DArray.FirstArraySlice = colorFramebufferAttachments->layerIndex;
-								d3d12RenderTargetViewDesc.Texture2DArray.ArraySize		 = 1;
-								d3d12RenderTargetViewDesc.Texture2DArray.PlaneSlice		 = 0;
-								d3d12Device->CreateRenderTargetView(d3d12Resource, &d3d12RenderTargetViewDesc, (*d3d12DescriptorHeapRenderTargetView)->GetCPUDescriptorHandleForHeapStart());
-							}
-							break;
+							D3D12_RENDER_TARGET_VIEW_DESC d3d12RenderTargetViewDesc = {};
+							d3d12RenderTargetViewDesc.Format = static_cast<DXGI_FORMAT>(texture2D->getDxgiFormat());
+							d3d12RenderTargetViewDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+							d3d12RenderTargetViewDesc.Texture2D.MipSlice = colorFramebufferAttachments->mipmapIndex;
+							d3d12Device->CreateRenderTargetView(d3d12Resource, &d3d12RenderTargetViewDesc, (*d3d12DescriptorHeapRenderTargetView)->GetCPUDescriptorHandleForHeapStart());
 						}
-
-						case Renderer::ResourceType::ROOT_SIGNATURE:
-						case Renderer::ResourceType::RESOURCE_GROUP:
-						case Renderer::ResourceType::PROGRAM:
-						case Renderer::ResourceType::VERTEX_ARRAY:
-						case Renderer::ResourceType::SWAP_CHAIN:
-						case Renderer::ResourceType::FRAMEBUFFER:
-						case Renderer::ResourceType::INDEX_BUFFER:
-						case Renderer::ResourceType::VERTEX_BUFFER:
-						case Renderer::ResourceType::UNIFORM_BUFFER:
-						case Renderer::ResourceType::TEXTURE_BUFFER:
-						case Renderer::ResourceType::INDIRECT_BUFFER:
-						case Renderer::ResourceType::TEXTURE_1D:
-						case Renderer::ResourceType::TEXTURE_3D:
-						case Renderer::ResourceType::TEXTURE_CUBE:
-						case Renderer::ResourceType::PIPELINE_STATE:
-						case Renderer::ResourceType::SAMPLER_STATE:
-						case Renderer::ResourceType::VERTEX_SHADER:
-						case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-						case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-						case Renderer::ResourceType::GEOMETRY_SHADER:
-						case Renderer::ResourceType::FRAGMENT_SHADER:
-						default:
-							RENDERER_LOG(direct3D12Renderer.getContext(), CRITICAL, "The type of the given color texture at index %d is not supported by the Direct3D 12 renderer backend", colorTexture - mColorTextures)
-							*d3d12DescriptorHeapRenderTargetView = nullptr;
-							break;
+						break;
 					}
-				}
-				else
-				{
-					*colorTexture = nullptr;
-					*d3d12DescriptorHeapRenderTargetView = nullptr;
+
+					case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+					{
+						// Update the framebuffer width and height if required
+						Texture2DArray* texture2DArray = static_cast<Texture2DArray*>(*colorTexture);
+						if (mWidth > texture2DArray->getWidth())
+						{
+							mWidth = texture2DArray->getWidth();
+						}
+						if (mHeight > texture2DArray->getHeight())
+						{
+							mHeight = texture2DArray->getHeight();
+						}
+
+						// Get the Direct3D 12 resource
+						ID3D12Resource *d3d12Resource = texture2DArray->getD3D12Resource();
+
+						// Create the Direct3D 12 render target view instance
+						D3D12_DESCRIPTOR_HEAP_DESC d3d12DescriptorHeapDesc = {};
+						d3d12DescriptorHeapDesc.NumDescriptors = 1;
+						d3d12DescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+						if (SUCCEEDED(d3d12Device->CreateDescriptorHeap(&d3d12DescriptorHeapDesc, IID_PPV_ARGS(d3d12DescriptorHeapRenderTargetView))))
+						{
+							D3D12_RENDER_TARGET_VIEW_DESC d3d12RenderTargetViewDesc = {};
+							d3d12RenderTargetViewDesc.Format = static_cast<DXGI_FORMAT>(texture2DArray->getDxgiFormat());
+							d3d12RenderTargetViewDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2DARRAY;
+							d3d12RenderTargetViewDesc.Texture2DArray.MipSlice		 = colorFramebufferAttachments->mipmapIndex;
+							d3d12RenderTargetViewDesc.Texture2DArray.FirstArraySlice = colorFramebufferAttachments->layerIndex;
+							d3d12RenderTargetViewDesc.Texture2DArray.ArraySize		 = 1;
+							d3d12RenderTargetViewDesc.Texture2DArray.PlaneSlice		 = 0;
+							d3d12Device->CreateRenderTargetView(d3d12Resource, &d3d12RenderTargetViewDesc, (*d3d12DescriptorHeapRenderTargetView)->GetCPUDescriptorHandleForHeapStart());
+						}
+						break;
+					}
+
+					case Renderer::ResourceType::ROOT_SIGNATURE:
+					case Renderer::ResourceType::RESOURCE_GROUP:
+					case Renderer::ResourceType::PROGRAM:
+					case Renderer::ResourceType::VERTEX_ARRAY:
+					case Renderer::ResourceType::SWAP_CHAIN:
+					case Renderer::ResourceType::FRAMEBUFFER:
+					case Renderer::ResourceType::INDEX_BUFFER:
+					case Renderer::ResourceType::VERTEX_BUFFER:
+					case Renderer::ResourceType::UNIFORM_BUFFER:
+					case Renderer::ResourceType::TEXTURE_BUFFER:
+					case Renderer::ResourceType::INDIRECT_BUFFER:
+					case Renderer::ResourceType::TEXTURE_1D:
+					case Renderer::ResourceType::TEXTURE_3D:
+					case Renderer::ResourceType::TEXTURE_CUBE:
+					case Renderer::ResourceType::PIPELINE_STATE:
+					case Renderer::ResourceType::SAMPLER_STATE:
+					case Renderer::ResourceType::VERTEX_SHADER:
+					case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+					case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+					case Renderer::ResourceType::GEOMETRY_SHADER:
+					case Renderer::ResourceType::FRAGMENT_SHADER:
+					default:
+						RENDERER_LOG(direct3D12Renderer.getContext(), CRITICAL, "The type of the given color texture at index %d is not supported by the Direct3D 12 renderer backend", colorTexture - mColorTextures)
+						*d3d12DescriptorHeapRenderTargetView = nullptr;
+						break;
 				}
 			}
 		}
@@ -310,11 +304,7 @@ namespace Direct3D12Renderer
 			ID3D12DescriptorHeap **d3d12DescriptorHeapRenderTargetViewsEnd = mD3D12DescriptorHeapRenderTargetViews + mNumberOfColorTextures;
 			for (ID3D12DescriptorHeap **d3d12DescriptorHeapRenderTargetView = mD3D12DescriptorHeapRenderTargetViews; d3d12DescriptorHeapRenderTargetView < d3d12DescriptorHeapRenderTargetViewsEnd; ++d3d12DescriptorHeapRenderTargetView)
 			{
-				// Valid entry?
-				if (nullptr != *d3d12DescriptorHeapRenderTargetView)
-				{
-					(*d3d12DescriptorHeapRenderTargetView)->Release();
-				}
+				(*d3d12DescriptorHeapRenderTargetView)->Release();
 			}
 
 			// Cleanup
@@ -326,11 +316,7 @@ namespace Direct3D12Renderer
 			Renderer::ITexture** colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
 			for (Renderer::ITexture** colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture)
 			{
-				// Valid entry?
-				if (nullptr != *colorTexture)
-				{
-					(*colorTexture)->releaseReference();
-				}
+				(*colorTexture)->releaseReference();
 			}
 
 			// Cleanup

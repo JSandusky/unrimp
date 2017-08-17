@@ -490,6 +490,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
     <ClInclude Include="src\Basics\FirstInstancing\FirstInstancing_InstancedArrays_Null.h" />
     <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets.h" />
     <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets_GLSL_410.h" />
+    <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets_GLSL_450.h" />
     <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets_GLSL_ES3.h" />
     <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets_HLSL_D3D10_D3D11_D3D12.h" />
     <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets_HLSL_D3D9.h" />
@@ -501,6 +502,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
     <ClInclude Include="src\Basics\FirstMultipleSwapChains\FirstMultipleSwapChains_Null.h" />
     <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture.h" />
     <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_GLSL_410.h" />
+    <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_GLSL_450.h" />
     <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_GLSL_ES3.h" />
     <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_HLSL_D3D10_D3D11_D3D12.h" />
     <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_HLSL_D3D9.h" />

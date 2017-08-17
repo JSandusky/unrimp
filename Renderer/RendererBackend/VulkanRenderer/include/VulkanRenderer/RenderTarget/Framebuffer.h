@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include <Renderer/RenderTarget/IFramebuffer.h>
 
+#include "VulkanRenderer/VulkanRuntimeLinking.h"
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -88,12 +90,21 @@ namespace VulkanRenderer
 
 		/**
 		*  @brief
-		*    Return the number of color render target textures
+		*    Return the Vulkan render pass
 		*
 		*  @return
-		*    The number of color render target textures
+		*    The Vulkan render pass
 		*/
-		inline uint32_t getNumberOfColorTextures() const;
+		inline VkRenderPass getVkRenderPass() const;
+
+		/**
+		*  @brief
+		*    Return the Vulkan framebuffer to render into
+		*
+		*  @return
+		*    The Vulkan framebuffer to render into
+		*/
+		inline VkFramebuffer getVkFramebuffer() const;
 
 
 	//[-------------------------------------------------------]
@@ -120,6 +131,8 @@ namespace VulkanRenderer
 		Renderer::ITexture  *mDepthStencilTexture;		///< The depth stencil render target texture (we keep a reference to it), can be a null pointer
 		uint32_t			 mWidth;					///< The framebuffer width
 		uint32_t			 mHeight;					///< The framebuffer height
+		VkRenderPass		 mVkRenderPass;				///< Vulkan render pass instance, can be a null handle
+		VkFramebuffer		 mVkFramebuffer;			///< Vulkan framebuffer instance, can be a null handle
 
 
 	};

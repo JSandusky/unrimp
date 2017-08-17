@@ -243,6 +243,30 @@ namespace
 
 		}
 
+		void beginVulkanRenderPass(const Renderer::IRenderTarget& renderTarget, VkRenderPass vkRenderPass, VkFramebuffer vkFramebuffer, const VulkanRenderer::VulkanRenderer::VkClearValues& vkClearValues, VkCommandBuffer vkCommandBuffer)
+		{
+			// Get render target dimension
+			uint32_t width = 1;
+			uint32_t height = 1;
+			renderTarget.getWidthAndHeight(width, height);
+
+			// Begin Vulkan render pass
+			const VkRenderPassBeginInfo vkRenderPassBeginInfo =
+			{
+				VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,		// sType (VkStructureType)
+				nullptr,										// pNext (const void*)
+				vkRenderPass,									// renderPass (VkRenderPass)
+				vkFramebuffer,									// framebuffer (VkFramebuffer)
+				{ // renderArea (VkRect2D)
+					{ 0, 0 },									// offset (VkOffset2D)
+					{ width, height }							// extent (VkExtent2D)
+				},
+				static_cast<uint32_t>(vkClearValues.size()),	// clearValueCount (uint32_t)
+				vkClearValues.data()							// pClearValues (const VkClearValue*)
+			};
+			vkCmdBeginRenderPass(vkCommandBuffer, &vkRenderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+		}
+
 
 		//[-------------------------------------------------------]
 		//[ Global definitions                                    ]
@@ -585,7 +609,13 @@ namespace VulkanRenderer
 			// Release the render target reference, in case we have one
 			if (nullptr != mRenderTarget)
 			{
-				// End Vulkan render pass if necessary
+				// Start Vulkan render pass, if necessary (for e.g. clearing)
+				if (!mInsideVulkanRenderPass && ((mRenderTarget->getResourceType() == Renderer::ResourceType::SWAP_CHAIN && nullptr == renderTarget) || mRenderTarget->getResourceType() == Renderer::ResourceType::FRAMEBUFFER))
+				{
+					beginVulkanRenderPass();
+				}
+
+				// End Vulkan render pass, if necessary
 				if (mInsideVulkanRenderPass)
 				{
 					vkCmdEndRenderPass(getVulkanContext().getVkCommandBuffer());
@@ -1294,33 +1324,14 @@ namespace VulkanRenderer
 			case Renderer::ResourceType::SWAP_CHAIN:
 			{
 				const SwapChain* swapChain = static_cast<SwapChain*>(mRenderTarget);
-
-				// Get render target dimension
-				uint32_t width = 1;
-				uint32_t height = 1;
-				mRenderTarget->getWidthAndHeight(width, height);
-
-				// Begin Vulkan render pass
-				const VkRenderPassBeginInfo vkRenderPassBeginInfo =
-				{
-					VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,		// sType (VkStructureType)
-					nullptr,										// pNext (const void*)
-					swapChain->getVkRenderPass(),					// renderPass (VkRenderPass)
-					swapChain->getCurrentVkFramebuffer(),			// framebuffer (VkFramebuffer)
-					{ // renderArea (VkRect2D)
-						{ 0, 0 },									// offset (VkOffset2D)
-						{ width, height }							// extent (VkExtent2D)
-					},
-					static_cast<uint32_t>(mVkClearValues.size()),	// clearValueCount (uint32_t)
-					mVkClearValues.data()							// pClearValues (const VkClearValue*)
-				};
-				vkCmdBeginRenderPass(getVulkanContext().getVkCommandBuffer(), &vkRenderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+				::detail::beginVulkanRenderPass(*mRenderTarget, swapChain->getVkRenderPass(), swapChain->getCurrentVkFramebuffer(), mVkClearValues, getVulkanContext().getVkCommandBuffer());
 				break;
 			}
 
 			case Renderer::ResourceType::FRAMEBUFFER:
 			{
-				// TODO(co) Implement me
+				const Framebuffer* framebuffer = static_cast<Framebuffer*>(mRenderTarget);
+				::detail::beginVulkanRenderPass(*mRenderTarget, framebuffer->getVkRenderPass(), framebuffer->getVkFramebuffer(), mVkClearValues, getVulkanContext().getVkCommandBuffer());
 				break;
 			}
 

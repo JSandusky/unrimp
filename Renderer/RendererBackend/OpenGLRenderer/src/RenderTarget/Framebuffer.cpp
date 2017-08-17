@@ -52,11 +52,7 @@ namespace OpenGLRenderer
 			Renderer::ITexture** colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
 			for (Renderer::ITexture** colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture)
 			{
-				// Valid entry?
-				if (nullptr != *colorTexture)
-				{
-					(*colorTexture)->releaseReference();
-				}
+				(*colorTexture)->releaseReference();
 			}
 
 			// Cleanup
@@ -100,84 +96,79 @@ namespace OpenGLRenderer
 			Renderer::ITexture** colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
 			for (Renderer::ITexture** colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture, ++colorFramebufferAttachments)
 			{
-				// Valid entry?
-				if (nullptr != colorFramebufferAttachments->texture)
-				{
-					// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-					*colorTexture = colorFramebufferAttachments->texture;
-					(*colorTexture)->addReference();
+				// Sanity check
+				assert(nullptr != colorFramebufferAttachments->texture);
 
-					// Evaluate the color texture type
-					switch ((*colorTexture)->getResourceType())
+				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
+				*colorTexture = colorFramebufferAttachments->texture;
+				(*colorTexture)->addReference();
+
+				// Evaluate the color texture type
+				switch ((*colorTexture)->getResourceType())
+				{
+					case Renderer::ResourceType::TEXTURE_2D:
 					{
-						case Renderer::ResourceType::TEXTURE_2D:
+						// Sanity check
+						assert(0 == colorFramebufferAttachments->layerIndex);
+
+						// Update the framebuffer width and height if required
+						Texture2D* texture2D = static_cast<Texture2D*>(*colorTexture);
+						if (mWidth > texture2D->getWidth())
 						{
-							// Sanity check
-							assert(0 == colorFramebufferAttachments->layerIndex);
-
-							// Update the framebuffer width and height if required
-							Texture2D* texture2D = static_cast<Texture2D*>(*colorTexture);
-							if (mWidth > texture2D->getWidth())
-							{
-								mWidth = texture2D->getWidth();
-							}
-							if (mHeight > texture2D->getHeight())
-							{
-								mHeight = texture2D->getHeight();
-							}
-
-							// Generate mipmaps?
-							if (texture2D->getGenerateMipmaps())
-							{
-								mGenerateMipmaps = true;
-							}
-							break;
+							mWidth = texture2D->getWidth();
+						}
+						if (mHeight > texture2D->getHeight())
+						{
+							mHeight = texture2D->getHeight();
 						}
 
-						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+						// Generate mipmaps?
+						if (texture2D->getGenerateMipmaps())
 						{
-							// Update the framebuffer width and height if required
-							Texture2DArray* texture2DArray = static_cast<Texture2DArray*>(*colorTexture);
-							if (mWidth > texture2DArray->getWidth())
-							{
-								mWidth = texture2DArray->getWidth();
-							}
-							if (mHeight > texture2DArray->getHeight())
-							{
-								mHeight = texture2DArray->getHeight();
-							}
-							break;
+							mGenerateMipmaps = true;
 						}
-
-						case Renderer::ResourceType::ROOT_SIGNATURE:
-						case Renderer::ResourceType::RESOURCE_GROUP:
-						case Renderer::ResourceType::PROGRAM:
-						case Renderer::ResourceType::VERTEX_ARRAY:
-						case Renderer::ResourceType::SWAP_CHAIN:
-						case Renderer::ResourceType::FRAMEBUFFER:
-						case Renderer::ResourceType::INDEX_BUFFER:
-						case Renderer::ResourceType::VERTEX_BUFFER:
-						case Renderer::ResourceType::UNIFORM_BUFFER:
-						case Renderer::ResourceType::TEXTURE_BUFFER:
-						case Renderer::ResourceType::INDIRECT_BUFFER:
-						case Renderer::ResourceType::TEXTURE_1D:
-						case Renderer::ResourceType::TEXTURE_3D:
-						case Renderer::ResourceType::TEXTURE_CUBE:
-						case Renderer::ResourceType::PIPELINE_STATE:
-						case Renderer::ResourceType::SAMPLER_STATE:
-						case Renderer::ResourceType::VERTEX_SHADER:
-						case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-						case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-						case Renderer::ResourceType::GEOMETRY_SHADER:
-						case Renderer::ResourceType::FRAGMENT_SHADER:
-						default:
-							// Nothing here
-							break;
+						break;
 					}
-				}
-				else
-				{
-					*colorTexture = nullptr;
+
+					case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+					{
+						// Update the framebuffer width and height if required
+						Texture2DArray* texture2DArray = static_cast<Texture2DArray*>(*colorTexture);
+						if (mWidth > texture2DArray->getWidth())
+						{
+							mWidth = texture2DArray->getWidth();
+						}
+						if (mHeight > texture2DArray->getHeight())
+						{
+							mHeight = texture2DArray->getHeight();
+						}
+						break;
+					}
+
+					case Renderer::ResourceType::ROOT_SIGNATURE:
+					case Renderer::ResourceType::RESOURCE_GROUP:
+					case Renderer::ResourceType::PROGRAM:
+					case Renderer::ResourceType::VERTEX_ARRAY:
+					case Renderer::ResourceType::SWAP_CHAIN:
+					case Renderer::ResourceType::FRAMEBUFFER:
+					case Renderer::ResourceType::INDEX_BUFFER:
+					case Renderer::ResourceType::VERTEX_BUFFER:
+					case Renderer::ResourceType::UNIFORM_BUFFER:
+					case Renderer::ResourceType::TEXTURE_BUFFER:
+					case Renderer::ResourceType::INDIRECT_BUFFER:
+					case Renderer::ResourceType::TEXTURE_1D:
+					case Renderer::ResourceType::TEXTURE_3D:
+					case Renderer::ResourceType::TEXTURE_CUBE:
+					case Renderer::ResourceType::PIPELINE_STATE:
+					case Renderer::ResourceType::SAMPLER_STATE:
+					case Renderer::ResourceType::VERTEX_SHADER:
+					case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+					case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+					case Renderer::ResourceType::GEOMETRY_SHADER:
+					case Renderer::ResourceType::FRAGMENT_SHADER:
+					default:
+						// Nothing here
+						break;
 				}
 			}
 		}

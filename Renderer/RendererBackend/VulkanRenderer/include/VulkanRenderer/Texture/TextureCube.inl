@@ -33,6 +33,11 @@ namespace VulkanRenderer
 		return mVkImageView;
 	}
 
+	inline VkImageLayout TextureCube::getVkImageLayout() const
+	{
+		return mVkImageLayout;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

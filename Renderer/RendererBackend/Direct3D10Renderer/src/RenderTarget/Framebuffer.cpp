@@ -69,108 +69,102 @@ namespace Direct3D10Renderer
 			Renderer::ITexture** colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
 			for (Renderer::ITexture** colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture, ++colorFramebufferAttachments, ++d3d10RenderTargetView)
 			{
-				// Valid entry?
-				if (nullptr != colorFramebufferAttachments->texture)
-				{
-					// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-					*colorTexture = colorFramebufferAttachments->texture;
-					(*colorTexture)->addReference();
+				// Sanity check
+				assert(nullptr != colorFramebufferAttachments->texture);
 
-					// Evaluate the color texture type
-					switch ((*colorTexture)->getResourceType())
+				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
+				*colorTexture = colorFramebufferAttachments->texture;
+				(*colorTexture)->addReference();
+
+				// Evaluate the color texture type
+				switch ((*colorTexture)->getResourceType())
+				{
+					case Renderer::ResourceType::TEXTURE_2D:
 					{
-						case Renderer::ResourceType::TEXTURE_2D:
+						// Sanity check
+						assert(0 == colorFramebufferAttachments->layerIndex);
+
+						// Update the framebuffer width and height if required
+						Texture2D* texture2D = static_cast<Texture2D*>(*colorTexture);
+						if (mWidth > texture2D->getWidth())
 						{
-							// Sanity check
-							assert(0 == colorFramebufferAttachments->layerIndex);
-
-							// Update the framebuffer width and height if required
-							Texture2D* texture2D = static_cast<Texture2D*>(*colorTexture);
-							if (mWidth > texture2D->getWidth())
-							{
-								mWidth = texture2D->getWidth();
-							}
-							if (mHeight > texture2D->getHeight())
-							{
-								mHeight = texture2D->getHeight();
-							}
-
-							// Create the Direct3D 10 render target view instance
-							D3D10_RENDER_TARGET_VIEW_DESC d3d10RenderTargetViewDesc = {};
-							d3d10RenderTargetViewDesc.Format			 = static_cast<DXGI_FORMAT>(Mapping::getDirect3D10Format(texture2D->getTextureFormat()));
-							d3d10RenderTargetViewDesc.ViewDimension		 = (texture2D->getNumberOfMultisamples() > 1) ? D3D10_RTV_DIMENSION_TEXTURE2DMS : D3D10_RTV_DIMENSION_TEXTURE2D;
-							d3d10RenderTargetViewDesc.Texture2D.MipSlice = colorFramebufferAttachments->mipmapIndex;
-							direct3D10Renderer.getD3D10Device()->CreateRenderTargetView(texture2D->getD3D10Texture2D(), &d3d10RenderTargetViewDesc, d3d10RenderTargetView);
-
-							// Generate mipmaps?
-							if (texture2D->getGenerateMipmaps())
-							{
-								mGenerateMipmaps = true;
-							}
-							break;
+							mWidth = texture2D->getWidth();
+						}
+						if (mHeight > texture2D->getHeight())
+						{
+							mHeight = texture2D->getHeight();
 						}
 
-						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+						// Create the Direct3D 10 render target view instance
+						D3D10_RENDER_TARGET_VIEW_DESC d3d10RenderTargetViewDesc = {};
+						d3d10RenderTargetViewDesc.Format			 = static_cast<DXGI_FORMAT>(Mapping::getDirect3D10Format(texture2D->getTextureFormat()));
+						d3d10RenderTargetViewDesc.ViewDimension		 = (texture2D->getNumberOfMultisamples() > 1) ? D3D10_RTV_DIMENSION_TEXTURE2DMS : D3D10_RTV_DIMENSION_TEXTURE2D;
+						d3d10RenderTargetViewDesc.Texture2D.MipSlice = colorFramebufferAttachments->mipmapIndex;
+						direct3D10Renderer.getD3D10Device()->CreateRenderTargetView(texture2D->getD3D10Texture2D(), &d3d10RenderTargetViewDesc, d3d10RenderTargetView);
+
+						// Generate mipmaps?
+						if (texture2D->getGenerateMipmaps())
 						{
-							// Update the framebuffer width and height if required
-							Texture2DArray* texture2DArray = static_cast<Texture2DArray*>(*colorTexture);
-							if (mWidth > texture2DArray->getWidth())
-							{
-								mWidth = texture2DArray->getWidth();
-							}
-							if (mHeight > texture2DArray->getHeight())
-							{
-								mHeight = texture2DArray->getHeight();
-							}
-
-							// Create the Direct3D 10 render target view instance
-							D3D10_RENDER_TARGET_VIEW_DESC d3d10RenderTargetViewDesc = {};
-							d3d10RenderTargetViewDesc.Format			 = static_cast<DXGI_FORMAT>(Mapping::getDirect3D10Format(texture2DArray->getTextureFormat()));
-							d3d10RenderTargetViewDesc.ViewDimension		 = (texture2DArray->getNumberOfMultisamples() > 1) ? D3D10_RTV_DIMENSION_TEXTURE2DMSARRAY : D3D10_RTV_DIMENSION_TEXTURE2DARRAY;
-							d3d10RenderTargetViewDesc.Texture2DArray.MipSlice		 = colorFramebufferAttachments->mipmapIndex;
-							d3d10RenderTargetViewDesc.Texture2DArray.FirstArraySlice = colorFramebufferAttachments->layerIndex;
-							d3d10RenderTargetViewDesc.Texture2DArray.ArraySize		 = 1;
-							direct3D10Renderer.getD3D10Device()->CreateRenderTargetView(texture2DArray->getD3D10Texture2D(), &d3d10RenderTargetViewDesc, d3d10RenderTargetView);
-
-							// Generate mipmaps?
-							if (texture2DArray->getGenerateMipmaps())
-							{
-								mGenerateMipmaps = true;
-							}
-							break;
+							mGenerateMipmaps = true;
 						}
-
-						case Renderer::ResourceType::ROOT_SIGNATURE:
-						case Renderer::ResourceType::RESOURCE_GROUP:
-						case Renderer::ResourceType::PROGRAM:
-						case Renderer::ResourceType::VERTEX_ARRAY:
-						case Renderer::ResourceType::SWAP_CHAIN:
-						case Renderer::ResourceType::FRAMEBUFFER:
-						case Renderer::ResourceType::INDEX_BUFFER:
-						case Renderer::ResourceType::VERTEX_BUFFER:
-						case Renderer::ResourceType::UNIFORM_BUFFER:
-						case Renderer::ResourceType::TEXTURE_BUFFER:
-						case Renderer::ResourceType::INDIRECT_BUFFER:
-						case Renderer::ResourceType::TEXTURE_1D:
-						case Renderer::ResourceType::TEXTURE_3D:
-						case Renderer::ResourceType::TEXTURE_CUBE:
-						case Renderer::ResourceType::PIPELINE_STATE:
-						case Renderer::ResourceType::SAMPLER_STATE:
-						case Renderer::ResourceType::VERTEX_SHADER:
-						case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-						case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-						case Renderer::ResourceType::GEOMETRY_SHADER:
-						case Renderer::ResourceType::FRAGMENT_SHADER:
-						default:
-							RENDERER_LOG(direct3D10Renderer.getContext(), CRITICAL, "The type of the given color texture at index %d is not supported by the Direct3D 10 renderer backend", colorTexture - mColorTextures)
-							*d3d10RenderTargetView = nullptr;
-							break;
+						break;
 					}
-				}
-				else
-				{
-					*colorTexture = nullptr;
-					*d3d10RenderTargetView = nullptr;
+
+					case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+					{
+						// Update the framebuffer width and height if required
+						Texture2DArray* texture2DArray = static_cast<Texture2DArray*>(*colorTexture);
+						if (mWidth > texture2DArray->getWidth())
+						{
+							mWidth = texture2DArray->getWidth();
+						}
+						if (mHeight > texture2DArray->getHeight())
+						{
+							mHeight = texture2DArray->getHeight();
+						}
+
+						// Create the Direct3D 10 render target view instance
+						D3D10_RENDER_TARGET_VIEW_DESC d3d10RenderTargetViewDesc = {};
+						d3d10RenderTargetViewDesc.Format			 = static_cast<DXGI_FORMAT>(Mapping::getDirect3D10Format(texture2DArray->getTextureFormat()));
+						d3d10RenderTargetViewDesc.ViewDimension		 = (texture2DArray->getNumberOfMultisamples() > 1) ? D3D10_RTV_DIMENSION_TEXTURE2DMSARRAY : D3D10_RTV_DIMENSION_TEXTURE2DARRAY;
+						d3d10RenderTargetViewDesc.Texture2DArray.MipSlice		 = colorFramebufferAttachments->mipmapIndex;
+						d3d10RenderTargetViewDesc.Texture2DArray.FirstArraySlice = colorFramebufferAttachments->layerIndex;
+						d3d10RenderTargetViewDesc.Texture2DArray.ArraySize		 = 1;
+						direct3D10Renderer.getD3D10Device()->CreateRenderTargetView(texture2DArray->getD3D10Texture2D(), &d3d10RenderTargetViewDesc, d3d10RenderTargetView);
+
+						// Generate mipmaps?
+						if (texture2DArray->getGenerateMipmaps())
+						{
+							mGenerateMipmaps = true;
+						}
+						break;
+					}
+
+					case Renderer::ResourceType::ROOT_SIGNATURE:
+					case Renderer::ResourceType::RESOURCE_GROUP:
+					case Renderer::ResourceType::PROGRAM:
+					case Renderer::ResourceType::VERTEX_ARRAY:
+					case Renderer::ResourceType::SWAP_CHAIN:
+					case Renderer::ResourceType::FRAMEBUFFER:
+					case Renderer::ResourceType::INDEX_BUFFER:
+					case Renderer::ResourceType::VERTEX_BUFFER:
+					case Renderer::ResourceType::UNIFORM_BUFFER:
+					case Renderer::ResourceType::TEXTURE_BUFFER:
+					case Renderer::ResourceType::INDIRECT_BUFFER:
+					case Renderer::ResourceType::TEXTURE_1D:
+					case Renderer::ResourceType::TEXTURE_3D:
+					case Renderer::ResourceType::TEXTURE_CUBE:
+					case Renderer::ResourceType::PIPELINE_STATE:
+					case Renderer::ResourceType::SAMPLER_STATE:
+					case Renderer::ResourceType::VERTEX_SHADER:
+					case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+					case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+					case Renderer::ResourceType::GEOMETRY_SHADER:
+					case Renderer::ResourceType::FRAGMENT_SHADER:
+					default:
+						RENDERER_LOG(direct3D10Renderer.getContext(), CRITICAL, "The type of the given color texture at index %d is not supported by the Direct3D 10 renderer backend", colorTexture - mColorTextures)
+						*d3d10RenderTargetView = nullptr;
+						break;
 				}
 			}
 		}
@@ -300,11 +294,7 @@ namespace Direct3D10Renderer
 			ID3D10RenderTargetView** d3d10RenderTargetViewsEnd = mD3D10RenderTargetViews + mNumberOfColorTextures;
 			for (ID3D10RenderTargetView** d3d10RenderTargetView = mD3D10RenderTargetViews; d3d10RenderTargetView < d3d10RenderTargetViewsEnd; ++d3d10RenderTargetView)
 			{
-				// Valid entry?
-				if (nullptr != *d3d10RenderTargetView)
-				{
-					(*d3d10RenderTargetView)->Release();
-				}
+				(*d3d10RenderTargetView)->Release();
 			}
 
 			// Cleanup
@@ -316,11 +306,7 @@ namespace Direct3D10Renderer
 			Renderer::ITexture** colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
 			for (Renderer::ITexture** colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture)
 			{
-				// Valid entry?
-				if (nullptr != *colorTexture)
-				{
-					(*colorTexture)->releaseReference();
-				}
+				(*colorTexture)->releaseReference();
 			}
 
 			// Cleanup
@@ -350,7 +336,7 @@ namespace Direct3D10Renderer
 		for (Renderer::ITexture** colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture)
 		{
 			// Valid entry?
-			if (nullptr != *colorTexture && (*colorTexture)->getResourceType() == Renderer::ResourceType::TEXTURE_2D)
+			if ((*colorTexture)->getResourceType() == Renderer::ResourceType::TEXTURE_2D)
 			{
 				Texture2D* texture2D = static_cast<Texture2D*>(*colorTexture);
 				if (texture2D->getGenerateMipmaps())

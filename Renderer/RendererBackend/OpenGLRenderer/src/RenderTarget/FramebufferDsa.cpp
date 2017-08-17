@@ -297,7 +297,7 @@ namespace OpenGLRenderer
 		for (Renderer::ITexture** colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture)
 		{
 			// Valid entry?
-			if (nullptr != *colorTexture && (*colorTexture)->getResourceType() == Renderer::ResourceType::TEXTURE_2D)
+			if ((*colorTexture)->getResourceType() == Renderer::ResourceType::TEXTURE_2D)
 			{
 				Texture2D* texture2D = static_cast<Texture2D*>(*colorTexture);
 				if (texture2D->getGenerateMipmaps())

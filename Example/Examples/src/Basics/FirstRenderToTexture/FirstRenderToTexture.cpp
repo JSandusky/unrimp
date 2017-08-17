@@ -154,7 +154,8 @@ void FirstRenderToTexture::onInitialization()
 				// Get the shader source code (outsourced to keep an overview)
 				const char* vertexShaderSourceCode = nullptr;
 				const char* fragmentShaderSourceCode = nullptr;
-				#include "FirstRenderToTexture_GLSL_410.h"
+				#include "FirstRenderToTexture_GLSL_450.h"	// For Vulkan
+				#include "FirstRenderToTexture_GLSL_410.h"	// macOS 10.11 only supports OpenGL 4.1 hence it's our OpenGL minimum
 				#include "FirstRenderToTexture_GLSL_ES3.h"
 				#include "FirstRenderToTexture_HLSL_D3D9.h"
 				#include "FirstRenderToTexture_HLSL_D3D10_D3D11_D3D12.h"

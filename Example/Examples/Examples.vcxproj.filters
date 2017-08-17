@@ -447,6 +447,12 @@
     <ClInclude Include="src\Runtime\FirstMesh\FirstMesh_GLSL_450.h">
       <Filter>Runtime\FirstMesh</Filter>
     </ClInclude>
+    <ClInclude Include="src\Basics\FirstRenderToTexture\FirstRenderToTexture_GLSL_450.h">
+      <Filter>Basics\FirstRenderToTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets_GLSL_450.h">
+      <Filter>Basics\FirstMultipleRenderTargets</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Framework\IApplication.cpp">

@@ -71,6 +71,7 @@ namespace Direct3D9Renderer
 		// Use this texture as render target?
 		if (flags & Renderer::TextureFlag::RENDER_TARGET)
 		{
+			assert(nullptr == data && "Render target textures can't be filled using provided data");
 			direct3D9Usage |= D3DUSAGE_RENDERTARGET;
 		}
 

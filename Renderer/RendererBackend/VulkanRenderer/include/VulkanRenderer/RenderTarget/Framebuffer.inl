@@ -28,9 +28,14 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline uint32_t Framebuffer::getNumberOfColorTextures() const
+	inline VkRenderPass Framebuffer::getVkRenderPass() const
 	{
-		return mNumberOfColorTextures;
+		return mVkRenderPass;
+	}
+
+	inline VkFramebuffer Framebuffer::getVkFramebuffer() const
+	{
+		return mVkFramebuffer;
 	}
 
 

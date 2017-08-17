@@ -43,6 +43,7 @@ namespace OpenGLRenderer
 	{
 		// Sanity checks
 		assert(0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data);
+		assert((flags & Renderer::TextureFlag::RENDER_TARGET) == 0 || nullptr == data && "Render target textures can't be filled using provided data");
 
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently set alignment

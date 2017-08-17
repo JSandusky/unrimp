@@ -47,6 +47,9 @@ namespace Direct3D10Renderer
 	{
 		static const uint32_t NUMBER_OF_SLICES = 6;	// In Direct3D 10, a cube map is a 2D array texture with six slices
 
+		// Sanity checks
+		assert((flags & Renderer::TextureFlag::RENDER_TARGET) == 0 || nullptr == data && "Render target textures can't be filled using provided data");
+
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D10Renderer)
 

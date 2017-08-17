@@ -33,6 +33,11 @@ namespace VulkanRenderer
 		return mVkImageView;
 	}
 
+	inline VkImageLayout Texture1D::getVkImageLayout() const
+	{
+		return mVkImageLayout;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

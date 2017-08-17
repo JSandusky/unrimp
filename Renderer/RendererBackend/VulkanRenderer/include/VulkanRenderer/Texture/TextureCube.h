@@ -98,6 +98,15 @@ namespace VulkanRenderer
 		*/
 		inline VkImageView getVkImageView() const;
 
+		/**
+		*  @brief
+		*    Return the Vulkan image layout
+		*
+		*  @return
+		*    The Vulkan image layout
+		*/
+		inline VkImageLayout getVkImageLayout() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
@@ -112,6 +121,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	private:
 		VkImage		   mVkImage;
+		VkImageLayout  mVkImageLayout;
 		VkDeviceMemory mVkDeviceMemory;
 		VkImageView	   mVkImageView;
 

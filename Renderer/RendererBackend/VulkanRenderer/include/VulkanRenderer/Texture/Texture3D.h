@@ -100,6 +100,15 @@ namespace VulkanRenderer
 		*/
 		inline VkImageView getVkImageView() const;
 
+		/**
+		*  @brief
+		*    Return the Vulkan image layout
+		*
+		*  @return
+		*    The Vulkan image layout
+		*/
+		inline VkImageLayout getVkImageLayout() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ITexture3D methods           ]
@@ -121,6 +130,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	private:
 		VkImage		   mVkImage;
+		VkImageLayout  mVkImageLayout;
 		VkDeviceMemory mVkDeviceMemory;
 		VkImageView	   mVkImageView;
 

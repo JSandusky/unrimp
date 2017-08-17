@@ -40,6 +40,7 @@ namespace VulkanRenderer
 	Texture1D::Texture1D(VulkanRenderer& vulkanRenderer, uint32_t width, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags) :
 		ITexture1D(vulkanRenderer, width),
 		mVkImage(VK_NULL_HANDLE),
+		mVkImageLayout((flags & Renderer::TextureFlag::RENDER_TARGET) ? VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_PREINITIALIZED),
 		mVkDeviceMemory(VK_NULL_HANDLE),
 		mVkImageView(VK_NULL_HANDLE)
 	{

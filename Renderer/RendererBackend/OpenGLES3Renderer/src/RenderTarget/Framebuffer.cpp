@@ -80,96 +80,91 @@ namespace OpenGLES3Renderer
 			const Renderer::FramebufferAttachment* colorFramebufferAttachmentEnd = colorFramebufferAttachments + numberOfColorFramebufferAttachments;
 			for (GLenum openGLES3Attachment = GL_COLOR_ATTACHMENT0; colorFramebufferAttachment < colorFramebufferAttachmentEnd; ++colorFramebufferAttachment, ++openGLES3Attachment, ++colorTexture)
 			{
-				// Valid entry?
-				if (nullptr != colorFramebufferAttachment->texture)
-				{
-					// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-					*colorTexture = colorFramebufferAttachment->texture;
-					(*colorTexture)->addReference();
+				// Sanity check
+				assert(nullptr != colorFramebufferAttachments->texture);
 
-					// Security check: Is the given resource owned by this renderer?
-					#ifndef OPENGLES3RENDERER_NO_RENDERERMATCHCHECK
-						if (&openGLES3Renderer != &(*colorTexture)->getRenderer())
-						{
-							// Output an error message and keep on going in order to keep a reasonable behaviour even in case on an error
-							RENDERER_LOG(openGLES3Renderer.getContext(), CRITICAL, "OpenGL ES 3 error: The given color texture at index %d is owned by another renderer instance", colorTexture - mColorTextures)
+				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
+				*colorTexture = colorFramebufferAttachment->texture;
+				(*colorTexture)->addReference();
 
-							// Continue, there's no point in trying to do any error handling in here
-							continue;
-						}
-					#endif
-
-					// Evaluate the color texture type
-					switch ((*colorTexture)->getResourceType())
+				// Security check: Is the given resource owned by this renderer?
+				#ifndef OPENGLES3RENDERER_NO_RENDERERMATCHCHECK
+					if (&openGLES3Renderer != &(*colorTexture)->getRenderer())
 					{
-						case Renderer::ResourceType::TEXTURE_2D:
-						{
-							// Sanity check
-							assert(0 == colorFramebufferAttachment->layerIndex);
+						// Output an error message and keep on going in order to keep a reasonable behaviour even in case on an error
+						RENDERER_LOG(openGLES3Renderer.getContext(), CRITICAL, "OpenGL ES 3 error: The given color texture at index %d is owned by another renderer instance", colorTexture - mColorTextures)
 
-							// Set the OpenGL ES 3 framebuffer color attachment
-							Texture2D* texture2D = static_cast<Texture2D*>(*colorTexture);
-							glFramebufferTexture2D(GL_FRAMEBUFFER, openGLES3Attachment, GL_TEXTURE_2D, texture2D->getOpenGLES3Texture(), static_cast<GLint>(colorFramebufferAttachment->mipmapIndex));
-
-							// If this is the primary render target, get the framebuffer width and height
-							if (GL_COLOR_ATTACHMENT0 == openGLES3Attachment)
-							{
-								mWidth  = texture2D->getWidth();
-								mHeight = texture2D->getHeight();
-							}
-
-							// Generate mipmaps?
-							if (texture2D->getGenerateMipmaps())
-							{
-								mGenerateMipmaps = true;
-							}
-							break;
-						}
-
-						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-						{
-							// Set the OpenGL ES 3 framebuffer color attachment
-							Texture2DArray* texture2DArray = static_cast<Texture2DArray*>(*colorTexture);
-							glFramebufferTextureLayer(GL_FRAMEBUFFER, openGLES3Attachment, texture2DArray->getOpenGLES3Texture(), static_cast<GLint>(colorFramebufferAttachment->mipmapIndex), static_cast<GLint>(colorFramebufferAttachment->layerIndex));
-
-							// If this is the primary render target, get the framebuffer width and height
-							if (GL_COLOR_ATTACHMENT0 == openGLES3Attachment)
-							{
-								mWidth  = texture2DArray->getWidth();
-								mHeight = texture2DArray->getHeight();
-							}
-							break;
-						}
-
-						case Renderer::ResourceType::ROOT_SIGNATURE:
-						case Renderer::ResourceType::RESOURCE_GROUP:
-						case Renderer::ResourceType::PROGRAM:
-						case Renderer::ResourceType::VERTEX_ARRAY:
-						case Renderer::ResourceType::SWAP_CHAIN:
-						case Renderer::ResourceType::FRAMEBUFFER:
-						case Renderer::ResourceType::INDEX_BUFFER:
-						case Renderer::ResourceType::VERTEX_BUFFER:
-						case Renderer::ResourceType::UNIFORM_BUFFER:
-						case Renderer::ResourceType::TEXTURE_BUFFER:
-						case Renderer::ResourceType::INDIRECT_BUFFER:
-						case Renderer::ResourceType::TEXTURE_1D:
-						case Renderer::ResourceType::TEXTURE_3D:
-						case Renderer::ResourceType::TEXTURE_CUBE:
-						case Renderer::ResourceType::PIPELINE_STATE:
-						case Renderer::ResourceType::SAMPLER_STATE:
-						case Renderer::ResourceType::VERTEX_SHADER:
-						case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
-						case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
-						case Renderer::ResourceType::GEOMETRY_SHADER:
-						case Renderer::ResourceType::FRAGMENT_SHADER:
-						default:
-							RENDERER_LOG(openGLES3Renderer.getContext(), CRITICAL, "The type of the given color texture at index %ld is not supported by the OpenGL ES 3 renderer backend", colorTexture - mColorTextures)
-							break;
+						// Continue, there's no point in trying to do any error handling in here
+						continue;
 					}
-				}
-				else
+				#endif
+
+				// Evaluate the color texture type
+				switch ((*colorTexture)->getResourceType())
 				{
-					*colorTexture = nullptr;
+					case Renderer::ResourceType::TEXTURE_2D:
+					{
+						// Sanity check
+						assert(0 == colorFramebufferAttachment->layerIndex);
+
+						// Set the OpenGL ES 3 framebuffer color attachment
+						Texture2D* texture2D = static_cast<Texture2D*>(*colorTexture);
+						glFramebufferTexture2D(GL_FRAMEBUFFER, openGLES3Attachment, GL_TEXTURE_2D, texture2D->getOpenGLES3Texture(), static_cast<GLint>(colorFramebufferAttachment->mipmapIndex));
+
+						// If this is the primary render target, get the framebuffer width and height
+						if (GL_COLOR_ATTACHMENT0 == openGLES3Attachment)
+						{
+							mWidth  = texture2D->getWidth();
+							mHeight = texture2D->getHeight();
+						}
+
+						// Generate mipmaps?
+						if (texture2D->getGenerateMipmaps())
+						{
+							mGenerateMipmaps = true;
+						}
+						break;
+					}
+
+					case Renderer::ResourceType::TEXTURE_2D_ARRAY:
+					{
+						// Set the OpenGL ES 3 framebuffer color attachment
+						Texture2DArray* texture2DArray = static_cast<Texture2DArray*>(*colorTexture);
+						glFramebufferTextureLayer(GL_FRAMEBUFFER, openGLES3Attachment, texture2DArray->getOpenGLES3Texture(), static_cast<GLint>(colorFramebufferAttachment->mipmapIndex), static_cast<GLint>(colorFramebufferAttachment->layerIndex));
+
+						// If this is the primary render target, get the framebuffer width and height
+						if (GL_COLOR_ATTACHMENT0 == openGLES3Attachment)
+						{
+							mWidth  = texture2DArray->getWidth();
+							mHeight = texture2DArray->getHeight();
+						}
+						break;
+					}
+
+					case Renderer::ResourceType::ROOT_SIGNATURE:
+					case Renderer::ResourceType::RESOURCE_GROUP:
+					case Renderer::ResourceType::PROGRAM:
+					case Renderer::ResourceType::VERTEX_ARRAY:
+					case Renderer::ResourceType::SWAP_CHAIN:
+					case Renderer::ResourceType::FRAMEBUFFER:
+					case Renderer::ResourceType::INDEX_BUFFER:
+					case Renderer::ResourceType::VERTEX_BUFFER:
+					case Renderer::ResourceType::UNIFORM_BUFFER:
+					case Renderer::ResourceType::TEXTURE_BUFFER:
+					case Renderer::ResourceType::INDIRECT_BUFFER:
+					case Renderer::ResourceType::TEXTURE_1D:
+					case Renderer::ResourceType::TEXTURE_3D:
+					case Renderer::ResourceType::TEXTURE_CUBE:
+					case Renderer::ResourceType::PIPELINE_STATE:
+					case Renderer::ResourceType::SAMPLER_STATE:
+					case Renderer::ResourceType::VERTEX_SHADER:
+					case Renderer::ResourceType::TESSELLATION_CONTROL_SHADER:
+					case Renderer::ResourceType::TESSELLATION_EVALUATION_SHADER:
+					case Renderer::ResourceType::GEOMETRY_SHADER:
+					case Renderer::ResourceType::FRAGMENT_SHADER:
+					default:
+						RENDERER_LOG(openGLES3Renderer.getContext(), CRITICAL, "The type of the given color texture at index %ld is not supported by the OpenGL ES 3 renderer backend", colorTexture - mColorTextures)
+						break;
 				}
 			}
 		}
@@ -319,11 +314,7 @@ namespace OpenGLES3Renderer
 			Renderer::ITexture** colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
 			for (Renderer::ITexture** colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture)
 			{
-				// Valid entry?
-				if (nullptr != *colorTexture)
-				{
-					(*colorTexture)->releaseReference();
-				}
+				(*colorTexture)->releaseReference();
 			}
 
 			// Cleanup
@@ -348,7 +339,7 @@ namespace OpenGLES3Renderer
 		for (Renderer::ITexture** colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture)
 		{
 			// Valid entry?
-			if (nullptr != *colorTexture && (*colorTexture)->getResourceType() == Renderer::ResourceType::TEXTURE_2D)
+			if ((*colorTexture)->getResourceType() == Renderer::ResourceType::TEXTURE_2D)
 			{
 				Texture2D* texture2D = static_cast<Texture2D*>(*colorTexture);
 				if (texture2D->getGenerateMipmaps())

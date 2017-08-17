@@ -163,7 +163,8 @@ void FirstMultipleRenderTargets::onInitialization()
 					const char* vertexShaderSourceCode = nullptr;
 					const char* fragmentShaderSourceCode_MultipleRenderTargets = nullptr;
 					const char* fragmentShaderSourceCode = nullptr;
-					#include "FirstMultipleRenderTargets_GLSL_410.h"
+					#include "FirstMultipleRenderTargets_GLSL_450.h"	// For Vulkan
+					#include "FirstMultipleRenderTargets_GLSL_410.h"	// macOS 10.11 only supports OpenGL 4.1 hence it's our OpenGL minimum
 					#include "FirstMultipleRenderTargets_GLSL_ES3.h"
 					#include "FirstMultipleRenderTargets_HLSL_D3D9.h"
 					#include "FirstMultipleRenderTargets_HLSL_D3D10_D3D11_D3D12.h"

@@ -122,27 +122,48 @@ namespace VulkanRenderer
 				{
 					// Evaluate the texture type and get the Vulkan image view
 					VkImageView vkImageView = VK_NULL_HANDLE;
+					VkImageLayout vkImageLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 					switch (resourceType)
 					{
 						case Renderer::ResourceType::TEXTURE_1D:
-							vkImageView = static_cast<Texture1D*>(resource)->getVkImageView();
+						{
+							const Texture1D* texture1D = static_cast<Texture1D*>(resource);
+							vkImageView = texture1D->getVkImageView();
+							vkImageLayout = texture1D->getVkImageLayout();
 							break;
+						}
 
 						case Renderer::ResourceType::TEXTURE_2D:
-							vkImageView = static_cast<Texture2D*>(resource)->getVkImageView();
+						{
+							const Texture2D* texture2D = static_cast<Texture2D*>(resource);
+							vkImageView = texture2D->getVkImageView();
+							vkImageLayout = texture2D->getVkImageLayout();
 							break;
+						}
 
 						case Renderer::ResourceType::TEXTURE_2D_ARRAY:
-							vkImageView = static_cast<Texture2DArray*>(resource)->getVkImageView();
+						{
+							const Texture2DArray* texture2DArray = static_cast<Texture2DArray*>(resource);
+							vkImageView = texture2DArray->getVkImageView();
+							vkImageLayout = texture2DArray->getVkImageLayout();
 							break;
+						}
 
 						case Renderer::ResourceType::TEXTURE_3D:
-							vkImageView = static_cast<Texture3D*>(resource)->getVkImageView();
+						{
+							const Texture3D* texture3D = static_cast<Texture3D*>(resource);
+							vkImageView = texture3D->getVkImageView();
+							vkImageLayout = texture3D->getVkImageLayout();
 							break;
+						}
 
 						case Renderer::ResourceType::TEXTURE_CUBE:
-							vkImageView = static_cast<TextureCube*>(resource)->getVkImageView();
+						{
+							const TextureCube* textureCube = static_cast<TextureCube*>(resource);
+							vkImageView = textureCube->getVkImageView();
+							vkImageLayout = textureCube->getVkImageLayout();
 							break;
+						}
 
 						case Renderer::ResourceType::ROOT_SIGNATURE:
 						case Renderer::ResourceType::RESOURCE_GROUP:
@@ -176,7 +197,7 @@ namespace VulkanRenderer
 					{
 						samplerState->getVkSampler(),	// sampler (VkSampler)
 						vkImageView,					// imageView (VkImageView)
-						VK_IMAGE_LAYOUT_PREINITIALIZED	// imageLayout (VkImageLayout)
+						vkImageLayout					// imageLayout (VkImageLayout)
 					};
 					const VkWriteDescriptorSet vkWriteDescriptorSet =
 					{

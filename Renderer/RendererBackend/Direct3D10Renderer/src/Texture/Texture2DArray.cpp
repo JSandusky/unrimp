@@ -46,6 +46,9 @@ namespace Direct3D10Renderer
 		mD3D10Texture2D(nullptr),
 		mD3D10ShaderResourceViewTexture(nullptr)
 	{
+		// Sanity checks
+		assert((flags & Renderer::TextureFlag::RENDER_TARGET) == 0 || nullptr == data && "Render target textures can't be filled using provided data");
+
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D10Renderer)
 

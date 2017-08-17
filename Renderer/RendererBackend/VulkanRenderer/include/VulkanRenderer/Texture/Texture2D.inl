@@ -33,6 +33,16 @@ namespace VulkanRenderer
 		return mVkImageView;
 	}
 
+	inline VkImageLayout Texture2D::getVkImageLayout() const
+	{
+		return mVkImageLayout;
+	}
+
+	inline VkFormat Texture2D::getVkFormat() const
+	{
+		return mVkFormat;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

@@ -34,7 +34,7 @@ vertexShaderSourceCode = R"(#version 450 core	// OpenGL 4.5
 #extension GL_ARB_separate_shader_objects : enable	// The "GL_ARB_separate_shader_objects"-extension is required for Vulkan shaders to work
 
 // Attribute input/output
-layout(location = 0) in vec2 Position;	// Clip space control point position of the patch as input, left/bottom is (-1,-1) and right/top is (1,1)
+layout(location = 0) in vec2 Position;		// Clip space control point position of the patch as input, left/bottom is (-1,-1) and right/top is (1,1)
 layout(location = 0) out vec2 vPosition;	// Clip space control point position of the patch as output, left/bottom is (-1,-1) and right/top is (1,1)
 
 // Programs
