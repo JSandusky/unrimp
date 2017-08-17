@@ -1288,8 +1288,8 @@ namespace VulkanRenderer
 		// Vulkan has native multi-threading
 		mCapabilities.nativeMultiThreading = false;	// TODO(co) Enable native multi-threading when done
 
-		// Direct3D 11 has shader bytecode support
-		mCapabilities.shaderBytecode = true;
+		// Vulkan has shader bytecode support
+		mCapabilities.shaderBytecode = false;	// TODO(co) Vulkan has shader bytecode support, set "mCapabilities.shaderBytecode" to true later on
 
 		// Is there support for vertex shaders (VS)?
 		mCapabilities.vertexShader = true;
