@@ -578,7 +578,13 @@ namespace VulkanRenderer
 		assert((numberOfViewports > 0 && nullptr != viewports) && "Invalid rasterizer state viewports");
 
 		// Set Vulkan viewport
-		vkCmdSetViewport(getVulkanContext().getVkCommandBuffer(), 0, numberOfViewports, reinterpret_cast<const VkViewport*>(viewports));
+		// -> We're using the "VK_KHR_maintenance1"-extension ("VK_KHR_MAINTENANCE1_EXTENSION_NAME"-definition) to be able to specify a negative viewport height,
+		//    this way we don't have to apply "<output position>.y = -<output position>.y" inside vertex shaders to compensate for the Vulkan coordinate system
+		// TODO(co) Add support for multiple viewports
+		VkViewport vkViewport = reinterpret_cast<const VkViewport*>(viewports)[0];
+		vkViewport.y += vkViewport.height;
+		vkViewport.height = -vkViewport.height;
+		vkCmdSetViewport(getVulkanContext().getVkCommandBuffer(), 0, 1, &vkViewport);
 	}
 
 	void VulkanRenderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles)

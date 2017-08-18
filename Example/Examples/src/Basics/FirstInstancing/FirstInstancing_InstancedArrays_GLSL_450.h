@@ -47,8 +47,7 @@ layout(location = 1) in float InstanceID;	// Simple instance ID in order to keep
 void main()
 {
 	// Pass through the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
-	// -> Compensate for different Vulkan coordinate system
-	gl_Position = vec4(Position.x, -(Position.y - InstanceID), 0.0, 1.0);
+	gl_Position = vec4(Position.x, Position.y - InstanceID, 0.0, 1.0);
 }
 )";
 

@@ -41,8 +41,7 @@ layout(location = 0) out vec2 vPosition;	// Clip space control point position of
 void main()
 {
 	// Pass through the clip space control point position of the patch, left/bottom is (-1,-1) and right/top is (1,1)
-	// -> Compensate for different Vulkan coordinate system
-	vPosition = vec2(Position.x, -Position.y);
+	vPosition = Position;
 }
 )";
 

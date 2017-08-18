@@ -99,11 +99,6 @@ MAIN_BEGIN
 
 	// Calculate the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
 	MAIN_OUTPUT_POSITION = MATRIX_MUL(PassData.WorldSpaceToClipSpaceMatrix, float4(worldSpacePosition, 1.0f));
-	
-	// Compensate for different Vulkan coordinate system
-	@property(Vulkan)
-		MAIN_OUTPUT_POSITION.y = -MAIN_OUTPUT_POSITION.y;
-	@end
 
 	// Pass through the assigned material slot inside the material uniform buffer
 	MAIN_OUTPUT(AssignedMaterialSlotVS) = instanceIndices.y;

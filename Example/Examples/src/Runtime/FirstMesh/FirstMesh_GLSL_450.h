@@ -74,9 +74,7 @@ mat3 GetTangentFrame(mat3 objectSpaceToViewSpaceMatrix, vec4 q)
 void main()
 {
 	// Calculate the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
-	// -> Compensate for different Vulkan coordinate system
 	gl_Position = ObjectSpaceToClipSpaceMatrix * vec4(Position, 1.0);
-	gl_Position.y = -gl_Position.y;
 
 	// Pass through the 32 bit texture coordinate
 	TexCoordVs = TexCoord;

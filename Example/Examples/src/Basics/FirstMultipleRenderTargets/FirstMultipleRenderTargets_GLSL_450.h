@@ -45,8 +45,7 @@ layout(location = 1) out vec2 TexCoord;	// Normalized texture coordinate as outp
 void main()
 {
 	// Pass through the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
-	// -> Compensate for different Vulkan coordinate system
-	gl_Position = vec4(Position.x, -Position.y, 0.0, 1.0);
+	gl_Position = vec4(Position, 0.0, 1.0);
 
 	// Calculate the texture coordinate by mapping the clip space coordinate to a texture space coordinate
 	// -> In OpenGL, the texture origin is left/bottom which maps well to clip space coordinates

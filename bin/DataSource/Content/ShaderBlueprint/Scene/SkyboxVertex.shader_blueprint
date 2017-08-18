@@ -66,12 +66,6 @@ MAIN_BEGIN
 	MAIN_OUTPUT_POSITION = MATRIX_MUL(PassData.ViewSpaceToClipSpaceMatrix, float4(viewSpacePosition, 1.0f));
 	MAIN_OUTPUT(PreviousClipSpacePositionVS) = MATRIX_MUL(PassData.ViewSpaceToClipSpaceMatrix, float4(previousPiewSpacePosition, 1.0f)).xyw;
 
-	// Compensate for different Vulkan coordinate system
-	@property(Vulkan)
-		MAIN_OUTPUT_POSITION.y = -MAIN_OUTPUT_POSITION.y;
-		MAIN_OUTPUT(PreviousClipSpacePositionVS).y = -MAIN_OUTPUT(PreviousClipSpacePositionVS).y;
-	@end
-
 	// Pass through the object space position as texture coordinate
 	MAIN_OUTPUT(TexCoordVS) = MAIN_INPUT(Position);
 MAIN_END

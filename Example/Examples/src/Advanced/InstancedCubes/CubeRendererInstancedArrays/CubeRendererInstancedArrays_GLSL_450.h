@@ -154,8 +154,6 @@ void main()
 	position = MVP * position;
 
 	// Write out the final vertex data
-	// -> Compensate for different Vulkan coordinate system
-	position.y = -position.y;
 	gl_Position = position;
 	TexCoordVs = vec2(TexCoord.x, TexCoord.y / 8.0 + 1.0 / 8.0 * PerInstancePositionTexture.w);	// Fixed build in number of textures
 	NormalVs = Normal;

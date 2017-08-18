@@ -54,9 +54,7 @@ layout(std140, set = 0, binding = 0) uniform UniformBlockDynamicVs
 void main()
 {
 	// Calculate the clip space vertex position, lower/left is (-1,-1) and upper/right is (1,1)
-	// -> Compensate for different Vulkan coordinate system
 	gl_Position = ObjectSpaceToClipSpaceMatrix * vec4(Position, 0.0, 1.0);
-	gl_Position.y = -gl_Position.y;
 
 	// Pass through the vertex texture coordinate
 	TexCoordVs = TexCoord;

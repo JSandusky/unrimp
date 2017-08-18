@@ -119,9 +119,10 @@ namespace
 					}
 
 					// Check device extensions
-					const std::array<const char*, 1> deviceExtensions =
+					const std::array<const char*, 2> deviceExtensions =
 					{
-						VK_KHR_SWAPCHAIN_EXTENSION_NAME
+						VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+						VK_KHR_MAINTENANCE1_EXTENSION_NAME	// We want to be able to specify a negative viewport height, this way we don't have to apply "<output position>.y = -<output position>.y" inside vertex shaders to compensate for the Vulkan coordinate system
 					};
 					bool rejectDevice = false;
 					for (const char* deviceExtension : deviceExtensions)
@@ -178,7 +179,11 @@ namespace
 		VkResult createVkDevice(VkPhysicalDevice vkPhysicalDevice, const VkDeviceQueueCreateInfo& vkDeviceQueueCreateInfo, bool enableValidation, VkDevice& vkDevice)
 		{
 			// See http://vulkan.gpuinfo.org/listfeatures.php to check out GPU hardware capabilities
-			const std::array<const char*, 1> enabledExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
+			const std::array<const char*, 2> enabledExtensions =
+			{
+				VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+				VK_KHR_MAINTENANCE1_EXTENSION_NAME	// We want to be able to specify a negative viewport height, this way we don't have to apply "<output position>.y = -<output position>.y" inside vertex shaders to compensate for the Vulkan coordinate system
+			};
 			const VkPhysicalDeviceFeatures vkPhysicalDeviceFeatures =
 			{
 				VK_FALSE,	// robustBufferAccess (VkBool32)
