@@ -497,6 +497,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
     <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets_Null.h" />
     <ClInclude Include="src\Basics\FirstMultipleSwapChains\FirstMultipleSwapChains.h" />
     <ClInclude Include="src\Basics\FirstMultipleSwapChains\FirstMultipleSwapChains_GLSL_410.h" />
+    <ClInclude Include="src\Basics\FirstMultipleSwapChains\FirstMultipleSwapChains_GLSL_450.h" />
     <ClInclude Include="src\Basics\FirstMultipleSwapChains\FirstMultipleSwapChains_GLSL_ES3.h" />
     <ClInclude Include="src\Basics\FirstMultipleSwapChains\FirstMultipleSwapChains_HLSL_D3D9_D3D10_D3D11_D3D12.h" />
     <ClInclude Include="src\Basics\FirstMultipleSwapChains\FirstMultipleSwapChains_Null.h" />

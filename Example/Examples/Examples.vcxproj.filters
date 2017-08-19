@@ -453,6 +453,9 @@
     <ClInclude Include="src\Basics\FirstMultipleRenderTargets\FirstMultipleRenderTargets_GLSL_450.h">
       <Filter>Basics\FirstMultipleRenderTargets</Filter>
     </ClInclude>
+    <ClInclude Include="src\Basics\FirstMultipleSwapChains\FirstMultipleSwapChains_GLSL_450.h">
+      <Filter>Basics\FirstMultipleSwapChains</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Framework\IApplication.cpp">
