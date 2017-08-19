@@ -40,7 +40,16 @@ namespace VulkanRenderer
 
 	inline VkFormat Texture2D::getVkFormat() const
 	{
-		return mVkFormat;
+		return mVrVulkanTextureData.m_nFormat;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	inline void* Texture2D::getInternalResourceHandle() const
+	{
+		return reinterpret_cast<void*>(const_cast<VRVulkanTextureData_t*>(&mVrVulkanTextureData));
 	}
 
 

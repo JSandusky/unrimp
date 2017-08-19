@@ -275,10 +275,11 @@ namespace VulkanRenderer
 
 		// Get Vulkan image usage flags
 		assert((flags & Renderer::TextureFlag::RENDER_TARGET) == 0 || nullptr == data && "Render target textures can't be filled using provided data");
-		VkImageUsageFlags vkImageUsageFlags = VK_IMAGE_USAGE_SAMPLED_BIT;
+		const bool isDepthTextureFormat = Renderer::TextureFormat::isDepth(textureFormat);
+		VkImageUsageFlags vkImageUsageFlags = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
 		if (flags & Renderer::TextureFlag::RENDER_TARGET)
 		{
-			if (Renderer::TextureFormat::isDepth(textureFormat))
+			if (isDepthTextureFormat)
 			{
 				vkImageUsageFlags |= VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
 			}
@@ -286,10 +287,6 @@ namespace VulkanRenderer
 			{
 				vkImageUsageFlags |= VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 			}
-		}
-		else
-		{
-			vkImageUsageFlags |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 		}
 
 		// Get Vulkan format
@@ -328,7 +325,7 @@ namespace VulkanRenderer
 		}
 
 		// Create the Vulkan image view
-		createVkImageView(vulkanRenderer, vkImage, vkImageViewType, numberOfMipmaps, layerCount, vkFormat, VK_IMAGE_ASPECT_COLOR_BIT, vkImageView);
+		createVkImageView(vulkanRenderer, vkImage, vkImageViewType, numberOfMipmaps, layerCount, vkFormat, isDepthTextureFormat ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT, vkImageView);
 
 		// Upload all mipmaps
 		if (nullptr != data)

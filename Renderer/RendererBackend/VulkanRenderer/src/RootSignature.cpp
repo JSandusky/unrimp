@@ -49,7 +49,7 @@ namespace VulkanRenderer
 		mVkPipelineLayout(VK_NULL_HANDLE),
 		mVkDescriptorPool(VK_NULL_HANDLE)
 	{
-		static const uint32_t maxSets = 42;	// TODO(co) We probably need to get this provided from the outside
+		static const uint32_t maxSets = 4242;	// TODO(co) We probably need to get this provided from the outside
 
 		// Copy the parameter data
 		const uint32_t numberOfRootParameters = mRootSignature.numberOfParameters;

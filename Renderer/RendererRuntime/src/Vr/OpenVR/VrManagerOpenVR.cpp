@@ -224,6 +224,112 @@ namespace
 			}
 		}
 
+		/**
+		*  @brief
+		*    Ask OpenVR for the list of Vulkan instance extensions required
+		*
+		*  @note
+		*    - Basing on https://github.com/ValveSoftware/openvr/blob/master/samples/hellovr_vulkan/hellovr_vulkan_main.cpp
+		*    - See also https://github.com/ValveSoftware/openvr/wiki/Vulkan
+		*/
+		bool getVulkanInstanceExtensionsRequired(std::vector<std::string>& outInstanceExtensionList)
+		{
+			if (!vr::VRCompositor())
+			{
+				// Error!
+				return false;
+			}
+
+			outInstanceExtensionList.clear();
+			const uint32_t bufferSize = vr::VRCompositor()->GetVulkanInstanceExtensionsRequired(nullptr, 0);
+			if (bufferSize > 0)
+			{
+				// Allocate memory for the space separated list and query for it
+				char* extensionString = new char[bufferSize];
+				extensionString[0] = 0;
+				vr::VRCompositor()->GetVulkanInstanceExtensionsRequired(extensionString, bufferSize);
+
+				// Break up the space separated list into entries
+				std::string currentExtensionString;
+				uint32_t index = 0;
+				while (0 != extensionString[index] && (index < bufferSize))
+				{
+					if (' ' == extensionString[index])
+					{
+						outInstanceExtensionList.push_back(currentExtensionString);
+						currentExtensionString.clear();
+					}
+					else
+					{
+						currentExtensionString += extensionString[index];
+					}
+					++index;
+				}
+				if (!currentExtensionString.empty())
+				{
+					outInstanceExtensionList.push_back(currentExtensionString);
+				}
+
+				delete [] extensionString;
+			}
+
+			// Done
+			return true;
+		}
+
+		/**
+		*  @brief
+		*    Ask OpenVR for the list of Vulkan device extensions required
+		*
+		*  @note
+		*    - Basing on https://github.com/ValveSoftware/openvr/blob/master/samples/hellovr_vulkan/hellovr_vulkan_main.cpp
+		*    - See also https://github.com/ValveSoftware/openvr/wiki/Vulkan
+		*/
+		bool getVulkanDeviceExtensionsRequired(VkPhysicalDevice_T* vkPhysicalDevice_T, std::vector<std::string>& outDeviceExtensionList)
+		{
+			if (!vr::VRCompositor())
+			{
+				// Error!
+				return false;
+			}
+
+			outDeviceExtensionList.clear();
+			const uint32_t bufferSize = vr::VRCompositor()->GetVulkanDeviceExtensionsRequired(vkPhysicalDevice_T, nullptr, 0);
+			if (bufferSize > 0)
+			{
+				// Allocate memory for the space separated list and query for it
+				char* extensionString = new char[bufferSize];
+				extensionString[0] = 0;
+				vr::VRCompositor()->GetVulkanDeviceExtensionsRequired(vkPhysicalDevice_T, extensionString, bufferSize);
+
+				// Break up the space separated list into entries
+				std::string currentExtensionString;
+				uint32_t index = 0;
+				while (0 != extensionString[index] && (index < bufferSize))
+				{
+					if (' ' == extensionString[index])
+					{
+						outDeviceExtensionList.push_back(currentExtensionString);
+						currentExtensionString.clear();
+					}
+					else
+					{
+						currentExtensionString += extensionString[index];
+					}
+					++index;
+				}
+				if (!currentExtensionString.empty())
+				{
+					outDeviceExtensionList.push_back(currentExtensionString);
+				}
+
+				delete [] extensionString;
+			}
+
+			// Done
+			return true;
+		}
+
 
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]
@@ -289,17 +395,26 @@ namespace RendererRuntime
 		assert(nullptr == mVrSystem);
 		if (nullptr == mVrSystem)
 		{
-			// TODO(co) Add support for "vr::TextureType_Vulkan" and "vr::TextureType_DirectX12" as soon as those renderer backends are ready
+			// TODO(co) Add support for "vr::TextureType_DirectX12" as soon as the renderer backend is ready
 			Renderer::IRenderer& renderer = mRendererRuntime.getRenderer();
-			const bool isOpenGLRenderer = (0 == strcmp(renderer.getName(), "OpenGL"));
-			const bool isDirect3D11Renderer = (0 == strcmp(renderer.getName(), "Direct3D11"));
-			if (!isOpenGLRenderer && !isDirect3D11Renderer)
+			if (0 == strcmp(renderer.getName(), "Vulkan"))
+			{
+				mVrTextureType = vr::TextureType_Vulkan;
+			}
+			else if (0 == strcmp(renderer.getName(), "OpenGL"))
+			{
+				mVrTextureType = vr::TextureType_OpenGL;
+			}
+			else if (0 == strcmp(renderer.getName(), "Direct3D11"))
+			{
+				mVrTextureType = vr::TextureType_DirectX;
+			}
+			else
 			{
 				// Error!
-				RENDERER_LOG(mRendererRuntime.getContext(), CRITICAL, "The renderer runtime VR OpenVR manager currently only supports Direct3D 11 and OpenGL")
+				RENDERER_LOG(mRendererRuntime.getContext(), CRITICAL, "The renderer runtime VR OpenVR manager currently only supports Vulkan, OpenGL and Direct3D 11")
 				return false;
 			}
-			mVrTextureType = isOpenGLRenderer ? vr::TextureType_OpenGL : vr::TextureType_DirectX;
 
 			// Initialize the OpenVR system
 			vr::EVRInitError vrInitError = vr::VRInitError_None;
@@ -309,6 +424,27 @@ namespace RendererRuntime
 				// Error!
 				RENDERER_LOG(mRendererRuntime.getContext(), CRITICAL, "The renderer runtime was unable to initialize OpenVR runtime: %s", vr::VR_GetVRInitErrorAsEnglishDescription(vrInitError))
 				return false;
+			}
+			if (vr::TextureType_Vulkan == mVrTextureType)
+			{
+				// TODO(co) Vulkan support: Have a look into "GetVulkanInstanceExtensionsRequired()" and "GetVulkanDeviceExtensionsRequired()",
+				//          see https://github.com/ValveSoftware/openvr/wiki/Vulkan and https://github.com/ValveSoftware/openvr/blob/master/samples/hellovr_vulkan/hellovr_vulkan_main.cpp
+				//          The stuff here is currently just for debugging to check whether or not locally extensions are needed.
+				std::vector<std::string> outInstanceExtensionList;
+				::detail::getVulkanInstanceExtensionsRequired(outInstanceExtensionList);
+				if (!outInstanceExtensionList.empty())
+				{
+					RENDERER_LOG(mRendererRuntime.getContext(), CRITICAL, "OpenVR needs Vulkan instance extensions which are currently not supported")
+					outInstanceExtensionList.clear();
+				}
+				/*
+				VkPhysicalDevice_T* vkPhysicalDevice_T = TODO(co);
+				::detail::getVulkanDeviceExtensionsRequired(vkPhysicalDevice_T, outInstanceExtensionList);
+				if (!outInstanceExtensionList.empty())
+				{
+					RENDERER_LOG(mRendererRuntime.getContext(), CRITICAL, "OpenVR needs Vulkan device extensions which are currently not supported")
+				}
+				*/
 			}
 
 			// Get the OpenVR render models interface
@@ -403,13 +539,13 @@ namespace RendererRuntime
 			mRendererRuntime.getAssetManager().removeAssetPackage(::detail::ASSET_PACKAGE_ID);
 			mRenderModelNames.clear();
 
-			// Release renderer resources
-			mFramebuffer = nullptr;
-			mColorTexture2D = nullptr;
-
 			// De-initialize the OpenVR system
 			vr::VR_Shutdown();
 			mVrSystem = nullptr;
+
+			// Release renderer resources
+			mFramebuffer = nullptr;
+			mColorTexture2D = nullptr;
 		}
 	}
 

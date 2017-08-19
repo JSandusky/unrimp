@@ -50,6 +50,31 @@ namespace VulkanRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Structures                                            ]
+	//[-------------------------------------------------------]
+	/**
+	*  @brief
+	*    OpenVR-support: Data required for passing Vulkan textures to IVRCompositor::Submit; Be sure to call OpenVR_Shutdown before destroying these resources
+	*
+	*  @note
+	*    - From OpenVR SDK 1.0.7 "openvr.h"-header
+	*/
+	struct VRVulkanTextureData_t
+	{
+		VkImage			 m_nImage;
+		VkDevice		 m_pDevice;
+		VkPhysicalDevice m_pPhysicalDevice;
+		VkInstance		 m_pInstance;
+		VkQueue			 m_pQueue;
+		uint32_t		 m_nQueueFamilyIndex;
+		uint32_t		 m_nWidth;
+		uint32_t		 m_nHeight;
+		VkFormat		 m_nFormat;
+		uint32_t		 m_nSampleCount;
+	};
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
 	/**
@@ -120,6 +145,13 @@ namespace VulkanRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	public:
+		inline virtual void* getInternalResourceHandle() const override;
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
@@ -131,11 +163,10 @@ namespace VulkanRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		VkImage		   mVkImage;
-		VkImageLayout  mVkImageLayout;
-		VkDeviceMemory mVkDeviceMemory;
-		VkImageView	   mVkImageView;
-		VkFormat	   mVkFormat;
+		VRVulkanTextureData_t mVrVulkanTextureData;
+		VkImageLayout		  mVkImageLayout;
+		VkDeviceMemory		  mVkDeviceMemory;
+		VkImageView			  mVkImageView;
 
 
 	};

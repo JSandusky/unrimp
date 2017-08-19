@@ -37,20 +37,33 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture2D::Texture2D(VulkanRenderer& vulkanRenderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, uint8_t) :
+	Texture2D::Texture2D(VulkanRenderer& vulkanRenderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, uint8_t numberOfMultisamples) :
 		ITexture2D(vulkanRenderer, width, height),
-		mVkImage(VK_NULL_HANDLE),
+		mVrVulkanTextureData{},
 		mVkImageLayout((flags & Renderer::TextureFlag::RENDER_TARGET) ? VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_PREINITIALIZED),
 		mVkDeviceMemory(VK_NULL_HANDLE),
-		mVkImageView(VK_NULL_HANDLE),
-		mVkFormat(Helper::createAndFillVkImage(vulkanRenderer, VK_IMAGE_TYPE_2D, VK_IMAGE_VIEW_TYPE_2D, { width, height, 1 }, textureFormat, data, flags, mVkImage, mVkDeviceMemory, mVkImageView))
+		mVkImageView(VK_NULL_HANDLE)
 	{
-		// Nothing here
+		mVrVulkanTextureData.m_nFormat = Helper::createAndFillVkImage(vulkanRenderer, VK_IMAGE_TYPE_2D, VK_IMAGE_VIEW_TYPE_2D, { width, height, 1 }, textureFormat, data, flags, mVrVulkanTextureData.m_nImage, mVkDeviceMemory, mVkImageView);
+
+		// Fill the rest of the "VRVulkanTextureData_t"-structure
+		const VulkanContext& vulkanContext = vulkanRenderer.getVulkanContext();
+		const VulkanRuntimeLinking& vulkanRuntimeLinking = vulkanRenderer.getVulkanRuntimeLinking();
+																								// m_nImage (VkImage) was set by "VulkanRenderer::Helper::createAndFillVkImage()" above
+		mVrVulkanTextureData.m_pDevice			 = vulkanContext.getVkDevice();					// m_pDevice (VkDevice)
+		mVrVulkanTextureData.m_pPhysicalDevice	 = vulkanContext.getVkPhysicalDevice();			// m_pPhysicalDevice (VkPhysicalDevice)
+		mVrVulkanTextureData.m_pInstance		 = vulkanRuntimeLinking.getVkInstance();		// m_pInstance (VkInstance)
+		mVrVulkanTextureData.m_pQueue			 = vulkanContext.getGraphicsVkQueue();			// m_pQueue (VkQueue)
+		mVrVulkanTextureData.m_nQueueFamilyIndex = vulkanContext.getGraphicsQueueFamilyIndex();	// m_nQueueFamilyIndex (uint32_t)
+		mVrVulkanTextureData.m_nWidth			 = width;										// m_nWidth (uint32_t)
+		mVrVulkanTextureData.m_nHeight			 = height;										// m_nHeight (uint32_t)
+																								// m_nFormat (VkFormat)  was set by "VulkanRenderer::Helper::createAndFillVkImage()" above
+		mVrVulkanTextureData.m_nSampleCount		 = numberOfMultisamples;						// m_nSampleCount (uint32_t)
 	}
 
 	Texture2D::~Texture2D()
 	{
-		Helper::destroyAndFreeVkImage(static_cast<VulkanRenderer&>(getRenderer()), mVkImage, mVkDeviceMemory, mVkImageView);
+		Helper::destroyAndFreeVkImage(static_cast<VulkanRenderer&>(getRenderer()), mVrVulkanTextureData.m_nImage, mVkDeviceMemory, mVkImageView);
 	}
 
 

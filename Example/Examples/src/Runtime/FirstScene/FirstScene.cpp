@@ -142,16 +142,7 @@ void FirstScene::onInitialization()
 		// Load the material resource we're going to clone
 		rendererRuntime->getMaterialResourceManager().loadMaterialResourceByAssetId(::detail::IMROD_MATERIAL_ASSET_ID, mMaterialResourceId, this);
 
-		// When using OpenGL ES 3, switch to a compositor which is designed for mobile devices
-		// TODO(co) The Vulkan renderer backend is under construction, so debug compositor for now
-		if (strcmp(rendererRuntime->getRenderer().getName(), "OpenGLES3") == 0 || strcmp(rendererRuntime->getRenderer().getName(), "Vulkan") == 0)
-		{
-			// TODO(co) Add compositor designed for mobile devices, for now we're using the most simple debug compositor to have something on the screen
-			mCurrentCompositor = mInstancedCompositor = Compositor::DEBUG;
-		}
-		else
-		{
-			// Desktop-PC: Try to startup the VR-manager if a HMD is present
+		{ // Desktop-PC: Try to startup the VR-manager if a HMD is present
 			RendererRuntime::IVrManager& vrManager = rendererRuntime->getVrManager();
 			if (vrManager.isHmdPresent())
 			{
@@ -165,6 +156,16 @@ void FirstScene::onInitialization()
 					mCurrentTextureFiltering = TextureFiltering::ANISOTROPIC_4;
 				}
 			}
+		}
+
+		// When using OpenGL ES 3, switch to a compositor which is designed for mobile devices
+		// TODO(co) The Vulkan renderer backend is under construction, so debug compositor for now
+		if (strcmp(rendererRuntime->getRenderer().getName(), "OpenGLES3") == 0 || strcmp(rendererRuntime->getRenderer().getName(), "Vulkan") == 0)
+		{
+			// TODO(co) Add compositor designed for mobile devices, for now we're using the most simple debug compositor to have something on the screen
+			mCurrentCompositor = mInstancedCompositor = Compositor::DEBUG;
+			mCurrentMsaa = Msaa::NONE;
+			mCurrentTextureFiltering = TextureFiltering::BILINEAR;
 		}
 
 		// Create the compositor workspace instance
