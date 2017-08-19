@@ -275,7 +275,7 @@ namespace
 			if (bufferSize > 0)
 			{
 				// Allocate memory for the space separated list and query for it
-				// No need for manual memory management (it is not thread safe)
+				// No need for manual memory management (it is not exception safe)
 				// TODO(sw) with c++17 we could use std::string which contains a non const data method like std::vector
 				std::vector<char> extensionString;
 				extensionString.resize(bufferSize, 0);
@@ -310,7 +310,7 @@ namespace
 			if (bufferSize > 0)
 			{
 				// Allocate memory for the space separated list and query for it
-				// No need for manual memory management (it is not thread safe)
+				// No need for manual memory management (it is not exception safe)
 				// TODO(sw) with c++17 we could use std::string which contains a non const data method like std::vector
 				std::vector<char> extensionString;
 				extensionString.resize(bufferSize, 0);
