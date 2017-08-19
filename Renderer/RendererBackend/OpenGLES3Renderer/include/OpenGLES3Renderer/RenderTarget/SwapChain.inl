@@ -26,6 +26,15 @@ namespace OpenGLES3Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IRenderTarget methods        ]
+	//[-------------------------------------------------------]
+	inline const Renderer::IRenderPass& SwapChain::getRenderPass() const
+	{
+		return mRenderPass;
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ISwapChain methods           ]
 	//[-------------------------------------------------------]
 	inline handle SwapChain::getNativeWindowHandle() const

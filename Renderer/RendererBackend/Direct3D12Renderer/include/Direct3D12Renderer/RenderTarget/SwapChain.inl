@@ -28,17 +28,17 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline IDXGISwapChain3 *SwapChain::getDxgiSwapChain3() const
+	inline IDXGISwapChain3* SwapChain::getDxgiSwapChain3() const
 	{
 		return mDxgiSwapChain3;
 	}
 
-	inline ID3D12DescriptorHeap *SwapChain::getD3D12DescriptorHeapRenderTargetView() const
+	inline ID3D12DescriptorHeap* SwapChain::getD3D12DescriptorHeapRenderTargetView() const
 	{
 		return mD3D12DescriptorHeapRenderTargetView;
 	}
 
-	inline ID3D12DescriptorHeap *SwapChain::getD3D12DescriptorHeapDepthStencilView() const
+	inline ID3D12DescriptorHeap* SwapChain::getD3D12DescriptorHeapDepthStencilView() const
 	{
 		return mD3D12DescriptorHeapDepthStencilView;
 	}
@@ -53,9 +53,18 @@ namespace Direct3D12Renderer
 		return mFrameIndex;
 	}
 
-	inline ID3D12Resource *SwapChain::getBackD3D12ResourceRenderTarget() const
+	inline ID3D12Resource* SwapChain::getBackD3D12ResourceRenderTarget() const
 	{
 		return mD3D12ResourceRenderTargets[mFrameIndex];
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IRenderTarget methods        ]
+	//[-------------------------------------------------------]
+	inline const Renderer::IRenderPass& SwapChain::getRenderPass() const
+	{
+		return mRenderPass;
 	}
 
 

@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include <Renderer/RenderTarget/ISwapChain.h>
 
+#include "Direct3D11Renderer/RenderTarget/RenderPass.h"
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -126,6 +128,7 @@ namespace Direct3D11Renderer
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
+		inline virtual const Renderer::IRenderPass& getRenderPass() const override;
 		virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const override;
 
 
@@ -183,6 +186,7 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		RenderPass				mRenderPass;			///< Render pass instance
 		IDXGISwapChain*			mDxgiSwapChain;			///< The DXGI swap chain instance, null pointer on error
 		ID3D11RenderTargetView* mD3D11RenderTargetView;	///< The Direct3D 11 render target view instance, null pointer on error
 		ID3D11DepthStencilView* mD3D11DepthStencilView;	///< The Direct3D 11 depth stencil view instance, null pointer on error

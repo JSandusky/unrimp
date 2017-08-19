@@ -30,6 +30,8 @@
 #include <Renderer/RenderTarget/ISwapChain.h>
 #include <Renderer/WindowsHeader.h>	// For the MS Windows specific data types (UINT, HANDLE etc. for those we better use the real definition)
 
+#include "Direct3D12Renderer/RenderTarget/RenderPass.h"
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -164,6 +166,7 @@ namespace Direct3D12Renderer
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
+		inline virtual const Renderer::IRenderPass& getRenderPass() const override;
 		virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const override;
 
 
@@ -240,6 +243,7 @@ namespace Direct3D12Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		RenderPass			  mRenderPass;										///< Render pass instance
 		IDXGISwapChain3*	  mDxgiSwapChain3;									///< The DXGI swap chain 3 instance, null pointer on error
 		ID3D12DescriptorHeap* mD3D12DescriptorHeapRenderTargetView;				///< The Direct3D 12 render target view descriptor heap instance, null pointer on error
 		ID3D12DescriptorHeap* mD3D12DescriptorHeapDepthStencilView;				///< The Direct3D 12 depth stencil view descriptor heap instance, null pointer on error

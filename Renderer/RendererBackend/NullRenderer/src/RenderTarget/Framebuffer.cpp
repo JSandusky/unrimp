@@ -35,7 +35,8 @@ namespace NullRenderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	Framebuffer::Framebuffer(NullRenderer& nullRenderer) :
-		IFramebuffer(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
+		IFramebuffer(reinterpret_cast<Renderer::IRenderer&>(nullRenderer)),
+		mRenderPass(reinterpret_cast<Renderer::IRenderer&>(nullRenderer))
 	{
 		// Nothing here
 	}

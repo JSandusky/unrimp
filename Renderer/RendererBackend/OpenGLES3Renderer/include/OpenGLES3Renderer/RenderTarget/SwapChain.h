@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include <Renderer/RenderTarget/ISwapChain.h>
 
+#include "OpenGLES3Renderer/RenderTarget/RenderPass.h"
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -83,6 +85,7 @@ namespace OpenGLES3Renderer
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
+		inline virtual const Renderer::IRenderPass& getRenderPass() const override;
 		virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const override;
 
 
@@ -110,6 +113,7 @@ namespace OpenGLES3Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		RenderPass				 mRenderPass;			///< Render pass instance
 		handle					 mNativeWindowHandle;	///< Native window handle window, can be a null handle
 		Renderer::IRenderWindow* mRenderWindow;			///< Render window instance, can be a null pointer, don't destroy the instance since we don't own it
 

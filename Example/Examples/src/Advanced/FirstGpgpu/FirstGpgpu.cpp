@@ -248,12 +248,12 @@ void FirstGpgpu::onInitialization()
 		if (nullptr != programContentGeneration && nullptr != programContentProcessing)
 		{
 			{ // Content generation
-				Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, programContentGeneration, vertexAttributes);
+				Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, programContentGeneration, vertexAttributes, mFramebuffer[0]->getRenderPass());
 				pipelineState.depthStencilState.depthEnable = false;
 				mPipelineStateContentGeneration = mRenderer->createPipelineState(pipelineState);
 			}
 			{ // Content processing
-				Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, programContentProcessing, vertexAttributes);
+				Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, programContentProcessing, vertexAttributes, mFramebuffer[0]->getRenderPass());
 				pipelineState.primitiveTopology = Renderer::PrimitiveTopology::TRIANGLE_STRIP;
 				pipelineState.depthStencilState.depthEnable = false;
 				mPipelineStateContentProcessing = mRenderer->createPipelineState(pipelineState);

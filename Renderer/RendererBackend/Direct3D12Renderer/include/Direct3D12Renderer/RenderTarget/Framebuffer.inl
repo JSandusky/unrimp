@@ -43,14 +43,23 @@ namespace Direct3D12Renderer
 		return mDepthStencilTexture;
 	}
 
-	inline ID3D12DescriptorHeap **Framebuffer::getD3D12DescriptorHeapRenderTargetViews() const
+	inline ID3D12DescriptorHeap** Framebuffer::getD3D12DescriptorHeapRenderTargetViews() const
 	{
 		return mD3D12DescriptorHeapRenderTargetViews;
 	}
 
-	inline ID3D12DescriptorHeap *Framebuffer::getD3D12DescriptorHeapDepthStencilView() const
+	inline ID3D12DescriptorHeap* Framebuffer::getD3D12DescriptorHeapDepthStencilView() const
 	{
 		return mD3D12DescriptorHeapDepthStencilView;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IRenderTarget methods        ]
+	//[-------------------------------------------------------]
+	inline const Renderer::IRenderPass& Framebuffer::getRenderPass() const
+	{
+		return mRenderPass;
 	}
 
 

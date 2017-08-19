@@ -44,6 +44,7 @@
     <None Include="include\Direct3D10Renderer\Buffer\VertexBuffer.inl" />
     <None Include="include\Direct3D10Renderer\Direct3D10Renderer.inl" />
     <None Include="include\Direct3D10Renderer\RenderTarget\Framebuffer.inl" />
+    <None Include="include\Direct3D10Renderer\RenderTarget\RenderPass.inl" />
     <None Include="include\Direct3D10Renderer\RenderTarget\SwapChain.inl" />
     <None Include="include\Direct3D10Renderer\ResourceGroup.inl" />
     <None Include="include\Direct3D10Renderer\RootSignature.inl" />
@@ -82,6 +83,7 @@
     <ClInclude Include="include\Direct3D10Renderer\Guid.h" />
     <ClInclude Include="include\Direct3D10Renderer\Mapping.h" />
     <ClInclude Include="include\Direct3D10Renderer\RenderTarget\Framebuffer.h" />
+    <ClInclude Include="include\Direct3D10Renderer\RenderTarget\RenderPass.h" />
     <ClInclude Include="include\Direct3D10Renderer\RenderTarget\SwapChain.h" />
     <ClInclude Include="include\Direct3D10Renderer\ResourceGroup.h" />
     <ClInclude Include="include\Direct3D10Renderer\RootSignature.h" />

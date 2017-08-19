@@ -105,6 +105,9 @@
     <None Include="include\Direct3D10Renderer\ResourceGroup.inl">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="include\Direct3D10Renderer\RenderTarget\RenderPass.inl">
+      <Filter>Source Files\RenderTarget</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Direct3D10Renderer\Shader\GeometryShaderHlsl.h">
@@ -214,6 +217,9 @@
     </ClInclude>
     <ClInclude Include="include\Direct3D10Renderer\ResourceGroup.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D10Renderer\RenderTarget\RenderPass.h">
+      <Filter>Source Files\RenderTarget</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

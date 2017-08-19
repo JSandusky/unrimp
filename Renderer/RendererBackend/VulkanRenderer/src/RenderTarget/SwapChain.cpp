@@ -440,6 +440,7 @@ namespace VulkanRenderer
 		mVkSurfaceKHR(VK_NULL_HANDLE),
 		// Vulkan swap chain and color render target related
 		mVkSwapchainKHR(VK_NULL_HANDLE),
+		mRenderPass(vulkanRenderer, mVkRenderPass, 1, true),
 		mVkRenderPass(VK_NULL_HANDLE),
 		mImageAvailableVkSemaphore(VK_NULL_HANDLE),
 		mRenderingFinishedVkSemaphore(VK_NULL_HANDLE),
@@ -450,6 +451,8 @@ namespace VulkanRenderer
 		mDepthVkDeviceMemory(VK_NULL_HANDLE),
 		mDepthVkImageView(VK_NULL_HANDLE)
 	{
+		mRenderPass.addReference();
+
 		// Create the Vulkan presentation surface instance depending on the operation system
 		const VulkanContext&   vulkanContext	= vulkanRenderer.getVulkanContext();
 		const VkInstance	   vkInstance		= vulkanRenderer.getVulkanRuntimeLinking().getVkInstance();

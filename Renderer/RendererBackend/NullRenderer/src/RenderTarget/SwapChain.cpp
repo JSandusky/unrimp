@@ -43,6 +43,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	SwapChain::SwapChain(NullRenderer& nullRenderer, handle nativeWindowHandle) :
 		ISwapChain(nullRenderer),
+		mRenderPass(nullRenderer),
 		mNativeWindowHandle(nativeWindowHandle)
 	{
 		// Nothing here

@@ -22,7 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "VulkanRenderer/State/PipelineState.h"
-#include "VulkanRenderer/RenderTarget/SwapChain.h"
+#include "VulkanRenderer/RenderTarget/RenderPass.h"
 #include "VulkanRenderer/Shader/ProgramGlsl.h"
 #include "VulkanRenderer/Shader/VertexShaderGlsl.h"
 #include "VulkanRenderer/Shader/GeometryShaderGlsl.h"
@@ -99,11 +99,9 @@ namespace VulkanRenderer
 		assert(nullptr != pipelineState.rootSignature);
 		assert(nullptr != vulkanRenderer.getMainSwapChain());
 
-		// TODO(co) For now, we get some information from the main swap chain
-		const SwapChain* swapChain = static_cast<SwapChain*>(vulkanRenderer.getMainSwapChain());
-		uint32_t width = 0;
-		uint32_t height = 0;
-		swapChain->getWidthAndHeight(width, height);
+		// Our pipeline state needs to be independent of concrete render targets, so we're using dynamic viewport ("VK_DYNAMIC_STATE_VIEWPORT") and scissor ("VK_DYNAMIC_STATE_SCISSOR") states
+		const uint32_t width  = 42;
+		const uint32_t height = 42;
 
 		// Shaders
 		ProgramGlsl* programGlsl = static_cast<ProgramGlsl*>(mProgram);
@@ -277,18 +275,24 @@ namespace VulkanRenderer
 			0.0f,																									// minDepthBounds (float)
 			1.0f																									// maxDepthBounds (float)
 		};
-		const Renderer::RenderTargetBlendDesc& renderTargetBlendDesc = pipelineState.blendState.renderTarget[0];
-		const VkPipelineColorBlendAttachmentState vkPipelineColorBlendAttachmentState =
+		const RenderPass* renderPass = static_cast<const RenderPass*>(pipelineState.renderPass);
+		const uint32_t numberOfColorAttachments = renderPass->getNumberOfColorAttachments();
+		assert(numberOfColorAttachments < 8);
+		assert(numberOfColorAttachments == pipelineState.numberOfRenderTargets);
+		std::array<VkPipelineColorBlendAttachmentState, 8> vkPipelineColorBlendAttachmentStates;
+		for (uint8_t i = 0; i < numberOfColorAttachments; ++i)
 		{
-			static_cast<VkBool32>(renderTargetBlendDesc.blendEnable),				// blendEnable (VkBool32)
-			Mapping::getVulkanBlendFactor(renderTargetBlendDesc.srcBlend),			// srcColorBlendFactor (VkBlendFactor)
-			Mapping::getVulkanBlendFactor(renderTargetBlendDesc.destBlend),			// dstColorBlendFactor (VkBlendFactor)
-			Mapping::getVulkanBlendOp(renderTargetBlendDesc.blendOp),				// colorBlendOp (VkBlendOp)
-			Mapping::getVulkanBlendFactor(renderTargetBlendDesc.srcBlendAlpha),		// srcAlphaBlendFactor (VkBlendFactor)
-			Mapping::getVulkanBlendFactor(renderTargetBlendDesc.destBlendAlpha),	// dstAlphaBlendFactor (VkBlendFactor)
-			Mapping::getVulkanBlendOp(renderTargetBlendDesc.blendOpAlpha),			// alphaBlendOp (VkBlendOp)
-			renderTargetBlendDesc.renderTargetWriteMask								// colorWriteMask (VkColorComponentFlags)
-		};
+			const Renderer::RenderTargetBlendDesc& renderTargetBlendDesc = pipelineState.blendState.renderTarget[i];
+			VkPipelineColorBlendAttachmentState& vkPipelineColorBlendAttachmentState = vkPipelineColorBlendAttachmentStates[i];
+			vkPipelineColorBlendAttachmentState.blendEnable			= static_cast<VkBool32>(renderTargetBlendDesc.blendEnable);				// blendEnable (VkBool32)
+			vkPipelineColorBlendAttachmentState.srcColorBlendFactor	= Mapping::getVulkanBlendFactor(renderTargetBlendDesc.srcBlend);		// srcColorBlendFactor (VkBlendFactor)
+			vkPipelineColorBlendAttachmentState.dstColorBlendFactor	= Mapping::getVulkanBlendFactor(renderTargetBlendDesc.destBlend);		// dstColorBlendFactor (VkBlendFactor)
+			vkPipelineColorBlendAttachmentState.colorBlendOp		= Mapping::getVulkanBlendOp(renderTargetBlendDesc.blendOp);				// colorBlendOp (VkBlendOp)
+			vkPipelineColorBlendAttachmentState.srcAlphaBlendFactor	= Mapping::getVulkanBlendFactor(renderTargetBlendDesc.srcBlendAlpha);	// srcAlphaBlendFactor (VkBlendFactor)
+			vkPipelineColorBlendAttachmentState.dstAlphaBlendFactor	= Mapping::getVulkanBlendFactor(renderTargetBlendDesc.destBlendAlpha);	// dstAlphaBlendFactor (VkBlendFactor)
+			vkPipelineColorBlendAttachmentState.alphaBlendOp		= Mapping::getVulkanBlendOp(renderTargetBlendDesc.blendOpAlpha);		// alphaBlendOp (VkBlendOp)
+			vkPipelineColorBlendAttachmentState.colorWriteMask		= renderTargetBlendDesc.renderTargetWriteMask;							// colorWriteMask (VkColorComponentFlags)
+		}
 		const VkPipelineColorBlendStateCreateInfo vkPipelineColorBlendStateCreateInfo =
 		{
 			VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO,	// sType (VkStructureType)
@@ -296,8 +300,8 @@ namespace VulkanRenderer
 			0,															// flags (VkPipelineColorBlendStateCreateFlags)
 			VK_FALSE,													// logicOpEnable (VkBool32)
 			VK_LOGIC_OP_COPY,											// logicOp (VkLogicOp)
-			1,															// attachmentCount (uint32_t)
-			&vkPipelineColorBlendAttachmentState,						// pAttachments (const VkPipelineColorBlendAttachmentState*)
+			numberOfColorAttachments,									// attachmentCount (uint32_t)
+			vkPipelineColorBlendAttachmentStates.data(),				// pAttachments (const VkPipelineColorBlendAttachmentState*)
 			{ 0.0f, 0.0f, 0.0f, 0.0f }									// blendConstants[4] (float)
 		};
 		const std::array<VkDynamicState, 2> vkDynamicStates =
@@ -330,7 +334,7 @@ namespace VulkanRenderer
 			&vkPipelineColorBlendStateCreateInfo,													// pColorBlendState (const VkPipelineColorBlendStateCreateInfo*)
 			&vkPipelineDynamicStateCreateInfo,														// pDynamicState (const VkPipelineDynamicStateCreateInfo*)
 			static_cast<const RootSignature*>(pipelineState.rootSignature)->getVkPipelineLayout(),	// layout (VkPipelineLayout)
-			swapChain->getVkRenderPass(),															// renderPass (VkRenderPass)
+			renderPass->getVkRenderPass(),															// renderPass (VkRenderPass)
 			0,																						// subpass (uint32_t)
 			VK_NULL_HANDLE,																			// basePipelineHandle (VkPipeline)
 			0																						// basePipelineIndex (int32_t)

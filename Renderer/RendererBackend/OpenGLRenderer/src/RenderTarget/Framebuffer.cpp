@@ -80,7 +80,8 @@ namespace OpenGLRenderer
 		mWidth(UINT_MAX),
 		mHeight(UINT_MAX),
 		mMultisampleRenderTarget(false),
-		mGenerateMipmaps(false)
+		mGenerateMipmaps(false),
+		mRenderPass(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer))
 	{
 		// The "GL_ARB_framebuffer_object"-extension documentation says the following about the framebuffer width and height
 		//   "If the attachment sizes are not all identical, rendering will be limited to the largest area that can fit in
@@ -149,6 +150,7 @@ namespace OpenGLRenderer
 					case Renderer::ResourceType::RESOURCE_GROUP:
 					case Renderer::ResourceType::PROGRAM:
 					case Renderer::ResourceType::VERTEX_ARRAY:
+					case Renderer::ResourceType::RENDER_PASS:
 					case Renderer::ResourceType::SWAP_CHAIN:
 					case Renderer::ResourceType::FRAMEBUFFER:
 					case Renderer::ResourceType::INDEX_BUFFER:
@@ -226,6 +228,7 @@ namespace OpenGLRenderer
 				case Renderer::ResourceType::RESOURCE_GROUP:
 				case Renderer::ResourceType::PROGRAM:
 				case Renderer::ResourceType::VERTEX_ARRAY:
+				case Renderer::ResourceType::RENDER_PASS:
 				case Renderer::ResourceType::SWAP_CHAIN:
 				case Renderer::ResourceType::FRAMEBUFFER:
 				case Renderer::ResourceType::INDEX_BUFFER:

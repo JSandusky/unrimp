@@ -205,6 +205,9 @@
     <ClInclude Include="include\Renderer\IResourceGroup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Renderer\RenderTarget\IRenderPass.h">
+      <Filter>Header Files\RenderTarget</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="include\Renderer\IResource.inl">
@@ -346,6 +349,9 @@
     </None>
     <None Include="include\Renderer\IResourceGroup.inl">
       <Filter>Header Files</Filter>
+    </None>
+    <None Include="include\Renderer\RenderTarget\IRenderPass.inl">
+      <Filter>Header Files\RenderTarget</Filter>
     </None>
   </ItemGroup>
 </Project>

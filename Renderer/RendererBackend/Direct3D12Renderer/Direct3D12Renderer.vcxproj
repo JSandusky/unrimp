@@ -44,6 +44,7 @@
     <None Include="include\Direct3D12Renderer\Buffer\VertexBuffer.inl" />
     <None Include="include\Direct3D12Renderer\Direct3D12Renderer.inl" />
     <None Include="include\Direct3D12Renderer\RenderTarget\Framebuffer.inl" />
+    <None Include="include\Direct3D12Renderer\RenderTarget\RenderPass.inl" />
     <None Include="include\Direct3D12Renderer\RenderTarget\SwapChain.inl" />
     <None Include="include\Direct3D12Renderer\RootSignature.inl" />
     <None Include="include\Direct3D12Renderer\Shader\FragmentShaderHlsl.inl" />
@@ -78,6 +79,7 @@
     <ClInclude Include="include\Direct3D12Renderer\Guid.h" />
     <ClInclude Include="include\Direct3D12Renderer\Mapping.h" />
     <ClInclude Include="include\Direct3D12Renderer\RenderTarget\Framebuffer.h" />
+    <ClInclude Include="include\Direct3D12Renderer\RenderTarget\RenderPass.h" />
     <ClInclude Include="include\Direct3D12Renderer\RenderTarget\SwapChain.h" />
     <ClInclude Include="include\Direct3D12Renderer\RootSignature.h" />
     <ClInclude Include="include\Direct3D12Renderer\Shader\FragmentShaderHlsl.h" />

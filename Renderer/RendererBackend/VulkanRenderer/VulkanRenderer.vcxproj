@@ -90,6 +90,7 @@
     <ClInclude Include="include\VulkanRenderer\Helper.h" />
     <ClInclude Include="include\VulkanRenderer\Mapping.h" />
     <ClInclude Include="include\VulkanRenderer\RenderTarget\Framebuffer.h" />
+    <ClInclude Include="include\VulkanRenderer\RenderTarget\RenderPass.h" />
     <ClInclude Include="include\VulkanRenderer\RenderTarget\SwapChain.h" />
     <ClInclude Include="include\VulkanRenderer\ResourceGroup.h" />
     <ClInclude Include="include\VulkanRenderer\State\PipelineState.h" />
@@ -531,6 +532,7 @@
     <None Include="include\VulkanRenderer\Buffer\VertexArray.inl" />
     <None Include="include\VulkanRenderer\Buffer\VertexBuffer.inl" />
     <None Include="include\VulkanRenderer\RenderTarget\Framebuffer.inl" />
+    <None Include="include\VulkanRenderer\RenderTarget\RenderPass.inl" />
     <None Include="include\VulkanRenderer\RenderTarget\SwapChain.inl" />
     <None Include="include\VulkanRenderer\ResourceGroup.inl" />
     <None Include="include\VulkanRenderer\State\PipelineState.inl" />

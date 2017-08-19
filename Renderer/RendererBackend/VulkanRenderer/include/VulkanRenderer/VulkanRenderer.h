@@ -97,7 +97,7 @@ namespace VulkanRenderer
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		typedef std::array<VkClearValue, 2>	VkClearValues;
+		typedef std::array<VkClearValue, 9>	VkClearValues;	///< 8 color render targets and one depth stencil render target
 
 
 	//[-------------------------------------------------------]

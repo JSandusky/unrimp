@@ -140,7 +140,7 @@ void FirstTriangle::onInitialization()
 			// Create the pipeline state object (PSO)
 			if (nullptr != program)
 			{
-				mPipelineState = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes));
+				mPipelineState = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes, getMainRenderTarget()->getRenderPass()));
 				RENDERER_SET_RESOURCE_DEBUG_NAME(mPipelineState, "Triangle PSO")
 			}
 		}

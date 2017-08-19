@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include <Renderer/RenderTarget/ISwapChain.h>
 
+#include "NullRenderer/RenderTarget/RenderPass.h"
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -83,6 +85,7 @@ namespace NullRenderer
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
+		inline virtual const Renderer::IRenderPass& getRenderPass() const override;
 		virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const override;
 
 
@@ -110,7 +113,8 @@ namespace NullRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		handle mNativeWindowHandle;	///< Native window handle window, can be a null handle
+		RenderPass mRenderPass;			///< Render pass instance
+		handle	   mNativeWindowHandle;	///< Native window handle window, can be a null handle
 
 
 	};

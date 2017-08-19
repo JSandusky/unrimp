@@ -42,6 +42,7 @@
     <None Include="include\Direct3D9Renderer\Buffer\VertexBuffer.inl" />
     <None Include="include\Direct3D9Renderer\Direct3D9Renderer.inl" />
     <None Include="include\Direct3D9Renderer\RenderTarget\Framebuffer.inl" />
+    <None Include="include\Direct3D9Renderer\RenderTarget\RenderPass.inl" />
     <None Include="include\Direct3D9Renderer\RenderTarget\SwapChain.inl" />
     <None Include="include\Direct3D9Renderer\ResourceGroup.inl" />
     <None Include="include\Direct3D9Renderer\RootSignature.inl" />
@@ -71,6 +72,7 @@
     <ClInclude Include="include\Direct3D9Renderer\Guid.h" />
     <ClInclude Include="include\Direct3D9Renderer\Mapping.h" />
     <ClInclude Include="include\Direct3D9Renderer\RenderTarget\Framebuffer.h" />
+    <ClInclude Include="include\Direct3D9Renderer\RenderTarget\RenderPass.h" />
     <ClInclude Include="include\Direct3D9Renderer\RenderTarget\SwapChain.h" />
     <ClInclude Include="include\Direct3D9Renderer\ResourceGroup.h" />
     <ClInclude Include="include\Direct3D9Renderer\RootSignature.h" />

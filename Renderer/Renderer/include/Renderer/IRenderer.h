@@ -88,6 +88,7 @@ namespace Renderer
 		friend class IResourceGroup;
 		friend class IProgram;
 		friend class IVertexArray;
+		friend class IRenderPass;
 		friend class ISwapChain;
 		friend class IFramebuffer;
 		friend class IIndexBuffer;
@@ -301,7 +302,7 @@ namespace Renderer
 		*    - The framebuffer keeps a reference to the provided texture instances
 		*    - It's invalid to set the same color texture to multiple render targets at one and the same time
 		*    - Depending on the used graphics API and feature set, there might be the requirement that all provided textures have the same size
-		*      (in order to be on the save side, ensure that all provided textures have the same size)
+		*      (in order to be on the save side, ensure that all provided textures have the same size and same MSAA sample count)
 		*/
 		virtual IFramebuffer* createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const FramebufferAttachment* colorFramebufferAttachments, const FramebufferAttachment* depthStencilFramebufferAttachment = nullptr) = 0;
 

@@ -177,7 +177,7 @@ void FirstInstancing::onInitialization()
 				// Create the pipeline state object (PSO)
 				if (nullptr != program)
 				{
-					mPipelineStateInstancedArrays = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes));
+					mPipelineStateInstancedArrays = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes, getMainRenderTarget()->getRenderPass()));
 				}
 			}
 
@@ -246,7 +246,7 @@ void FirstInstancing::onInitialization()
 				// Create the pipeline state object (PSO)
 				if (nullptr != program)
 				{
-					mPipelineStateDrawInstanced = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes));
+					mPipelineStateDrawInstanced = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes, getMainRenderTarget()->getRenderPass()));
 				}
 			}
 		}

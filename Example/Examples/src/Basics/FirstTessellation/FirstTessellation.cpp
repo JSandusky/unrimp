@@ -138,7 +138,7 @@ void FirstTessellation::onInitialization()
 			// Create the pipeline state object (PSO)
 			if (nullptr != program)
 			{
-				Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes);
+				Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes, getMainRenderTarget()->getRenderPass());
 				pipelineState.primitiveTopology = Renderer::PrimitiveTopology::PATCH_LIST_3;	// Patch list with 3 vertices per patch (tessellation relevant topology type) - "Renderer::PrimitiveTopology::TriangleList" used for tessellation
 				pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::PATCH;
 				pipelineState.rasterizerState.fillMode = Renderer::FillMode::WIREFRAME;

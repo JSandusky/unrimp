@@ -108,6 +108,7 @@ namespace OpenGLRenderer
 				case Renderer::ResourceType::RESOURCE_GROUP:
 				case Renderer::ResourceType::PROGRAM:
 				case Renderer::ResourceType::VERTEX_ARRAY:
+				case Renderer::ResourceType::RENDER_PASS:
 				case Renderer::ResourceType::SWAP_CHAIN:
 				case Renderer::ResourceType::FRAMEBUFFER:
 				case Renderer::ResourceType::INDEX_BUFFER:
@@ -177,6 +178,7 @@ namespace OpenGLRenderer
 				case Renderer::ResourceType::RESOURCE_GROUP:
 				case Renderer::ResourceType::PROGRAM:
 				case Renderer::ResourceType::VERTEX_ARRAY:
+				case Renderer::ResourceType::RENDER_PASS:
 				case Renderer::ResourceType::SWAP_CHAIN:
 				case Renderer::ResourceType::FRAMEBUFFER:
 				case Renderer::ResourceType::INDEX_BUFFER:

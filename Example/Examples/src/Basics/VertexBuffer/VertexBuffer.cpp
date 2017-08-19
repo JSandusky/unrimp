@@ -200,7 +200,7 @@ void VertexBuffer::onInitialization()
 				// Create the pipeline state objects (PSO)
 				if (nullptr != program)
 				{
-					mPipelineStateVBO = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributesVBO));
+					mPipelineStateVBO = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributesVBO, getMainRenderTarget()->getRenderPass()));
 				}
 			}
 
@@ -216,7 +216,7 @@ void VertexBuffer::onInitialization()
 				// Create the pipeline state objects (PSO)
 				if (nullptr != program)
 				{
-					mPipelineStateVBOs = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributesVBOs));
+					mPipelineStateVBOs = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributesVBOs, getMainRenderTarget()->getRenderPass()));
 				}
 			}
 		}

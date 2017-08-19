@@ -62,6 +62,7 @@ namespace Renderer
 		class IResourceGroup;
 		class IProgram;
 		class IVertexArray;
+		class IRenderPass;
 		class IRenderTarget;
 			class ISwapChain;
 			class IFramebuffer;
@@ -366,25 +367,26 @@ namespace Renderer
 			RESOURCE_GROUP				   = 1,
 			PROGRAM						   = 2,
 			VERTEX_ARRAY				   = 3,
-			SWAP_CHAIN					   = 4,
-			FRAMEBUFFER					   = 5,
-			INDEX_BUFFER				   = 6,
-			VERTEX_BUFFER				   = 7,
-			UNIFORM_BUFFER				   = 8,
-			TEXTURE_BUFFER				   = 9,
-			INDIRECT_BUFFER				   = 10,
-			TEXTURE_1D					   = 11,
-			TEXTURE_2D					   = 12,
-			TEXTURE_2D_ARRAY			   = 13,
-			TEXTURE_3D					   = 14,
-			TEXTURE_CUBE				   = 15,
-			PIPELINE_STATE				   = 16,
-			SAMPLER_STATE				   = 17,
-			VERTEX_SHADER				   = 18,
-			TESSELLATION_CONTROL_SHADER	   = 19,
-			TESSELLATION_EVALUATION_SHADER = 20,
-			GEOMETRY_SHADER				   = 21,
-			FRAGMENT_SHADER				   = 22
+			RENDER_PASS					   = 4,
+			SWAP_CHAIN					   = 5,
+			FRAMEBUFFER					   = 6,
+			INDEX_BUFFER				   = 7,
+			VERTEX_BUFFER				   = 8,
+			UNIFORM_BUFFER				   = 9,
+			TEXTURE_BUFFER				   = 10,
+			INDIRECT_BUFFER				   = 11,
+			TEXTURE_1D					   = 12,
+			TEXTURE_2D					   = 13,
+			TEXTURE_2D_ARRAY			   = 14,
+			TEXTURE_3D					   = 15,
+			TEXTURE_CUBE				   = 16,
+			PIPELINE_STATE				   = 17,
+			SAMPLER_STATE				   = 18,
+			VERTEX_SHADER				   = 19,
+			TESSELLATION_CONTROL_SHADER	   = 20,
+			TESSELLATION_EVALUATION_SHADER = 21,
+			GEOMETRY_SHADER				   = 22,
+			FRAGMENT_SHADER				   = 23
 		};
 	#endif
 
@@ -1514,9 +1516,10 @@ namespace Renderer
 		};
 		struct PipelineState : public SerializedPipelineState
 		{
-			IRootSignature*  rootSignature;
-			IProgram*		 program;
-			VertexAttributes vertexAttributes;
+			IRootSignature*    rootSignature;
+			IProgram*		   program;
+			VertexAttributes   vertexAttributes;
+			const IRenderPass* renderPass;
 		};
 		struct PipelineStateBuilder : public PipelineState
 		{
@@ -1526,6 +1529,7 @@ namespace Renderer
 				program								= nullptr;
 				vertexAttributes.numberOfAttributes	= 0;
 				vertexAttributes.attributes			= nullptr;
+				renderPass							= nullptr;
 				primitiveTopology					= PrimitiveTopology::TRIANGLE_LIST;
 				primitiveTopologyType				= PrimitiveTopologyType::TRIANGLE;
 				rasterizerState						= RasterizerStateBuilder::getDefaultRasterizerState();
@@ -1542,11 +1546,12 @@ namespace Renderer
 				renderTargetViewFormats[7]			= TextureFormat::R8G8B8A8;
 				depthStencilViewFormat				= TextureFormat::D32_FLOAT;
 			}
-			PipelineStateBuilder(IRootSignature* _rootSignature, IProgram* _program, const VertexAttributes& _vertexAttributes)
+			PipelineStateBuilder(IRootSignature* _rootSignature, IProgram* _program, const VertexAttributes& _vertexAttributes, const IRenderPass& _renderPass)
 			{
 				rootSignature				= _rootSignature;
 				program						= _program;
 				vertexAttributes			= _vertexAttributes;
+				renderPass					= &_renderPass;
 				primitiveTopology			= PrimitiveTopology::TRIANGLE_LIST;
 				primitiveTopologyType		= PrimitiveTopologyType::TRIANGLE;
 				rasterizerState				= RasterizerStateBuilder::getDefaultRasterizerState();
@@ -1840,6 +1845,8 @@ namespace Renderer
 			std::atomic<uint32_t> numberOfCreatedPrograms;
 			std::atomic<uint32_t> currentNumberOfVertexArrays;
 			std::atomic<uint32_t> numberOfCreatedVertexArrays;
+			std::atomic<uint32_t> currentNumberOfRenderPasses;
+			std::atomic<uint32_t> numberOfCreatedRenderPasses;
 			std::atomic<uint32_t> currentNumberOfSwapChains;
 			std::atomic<uint32_t> numberOfCreatedSwapChains;
 			std::atomic<uint32_t> currentNumberOfFramebuffers;
@@ -1888,6 +1895,8 @@ namespace Renderer
 				numberOfCreatedPrograms(0),
 				currentNumberOfVertexArrays(0),
 				numberOfCreatedVertexArrays(0),
+				currentNumberOfRenderPasses(0),
+				numberOfCreatedRenderPasses(0),
 				currentNumberOfSwapChains(0),
 				numberOfCreatedSwapChains(0),
 				currentNumberOfFramebuffers(0),
@@ -2162,6 +2171,21 @@ namespace Renderer
 		typedef SmartRefCount<IProgram> IProgramPtr;
 	#endif
 
+	// Renderer/RenderTarget/IRenderPass.h
+	#ifndef __RENDERER_IRENDERPASS_H__
+	#define __RENDERER_IRENDERPASS_H__
+		class IRenderPass : public IResource
+		{
+		public:
+			virtual ~IRenderPass();
+		protected:
+			explicit IRenderPass(IRenderer& renderer);
+			explicit IRenderPass(const IRenderPass& source) = delete;
+			IRenderPass& operator =(const IRenderPass& source) = delete;
+		};
+		typedef SmartRefCount<IRenderTarget> IRenderTargetPtr;
+	#endif
+
 	// Renderer/RenderTarget/IRenderTarget.h
 	#ifndef __RENDERER_IRENDERTARGET_H__
 	#define __RENDERER_IRENDERTARGET_H__
@@ -2170,6 +2194,7 @@ namespace Renderer
 		public:
 			virtual ~IRenderTarget();
 		public:
+			virtual const IRenderPass& getRenderPass() const = 0;
 			virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const = 0;
 		protected:
 			IRenderTarget(ResourceType resourceType, IRenderer& renderer);

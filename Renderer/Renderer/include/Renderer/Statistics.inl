@@ -44,6 +44,8 @@ namespace Renderer
 		numberOfCreatedPrograms(0),
 		currentNumberOfVertexArrays(0),
 		numberOfCreatedVertexArrays(0),
+		currentNumberOfRenderPasses(0),
+		numberOfCreatedRenderPasses(0),
 		// IRenderTarget
 		currentNumberOfSwapChains(0),
 		numberOfCreatedSwapChains(0),
@@ -103,6 +105,7 @@ namespace Renderer
 				currentNumberOfResourceGroups +
 				currentNumberOfPrograms +
 				currentNumberOfVertexArrays +
+				currentNumberOfRenderPasses +
 				// IRenderTarget
 				currentNumberOfSwapChains +
 				currentNumberOfFramebuffers +
@@ -139,6 +142,7 @@ namespace Renderer
 		RENDERER_LOG(context, INFORMATION, "Resource groups: %d", currentNumberOfResourceGroups.load())
 		RENDERER_LOG(context, INFORMATION, "Programs: %d", currentNumberOfPrograms.load())
 		RENDERER_LOG(context, INFORMATION, "Vertex arrays: %d", currentNumberOfVertexArrays.load())
+		RENDERER_LOG(context, INFORMATION, "Render passes: %d", currentNumberOfRenderPasses.load())
 
 		// IRenderTarget
 		RENDERER_LOG(context, INFORMATION, "Swap chains: %d", currentNumberOfSwapChains.load())

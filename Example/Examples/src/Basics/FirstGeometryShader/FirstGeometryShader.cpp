@@ -132,7 +132,7 @@ void FirstGeometryShader::onInitialization()
 			// Create the pipeline state object (PSO)
 			if (nullptr != program)
 			{
-				Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes);
+				Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes, getMainRenderTarget()->getRenderPass());
 				pipelineState.primitiveTopology = Renderer::PrimitiveTopology::POINT_LIST;
 				pipelineState.primitiveTopologyType = Renderer::PrimitiveTopologyType::POINT;
 				mPipelineState = renderer->createPipelineState(pipelineState);

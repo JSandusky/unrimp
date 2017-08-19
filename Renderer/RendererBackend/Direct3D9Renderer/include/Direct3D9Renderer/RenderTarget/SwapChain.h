@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include <Renderer/RenderTarget/ISwapChain.h>
 
+#include "Direct3D9Renderer/RenderTarget/RenderPass.h"
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -125,6 +127,7 @@ namespace Direct3D9Renderer
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
+		inline virtual const Renderer::IRenderPass& getRenderPass() const override;
 		virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const override;
 
 
@@ -175,6 +178,7 @@ namespace Direct3D9Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		RenderPass			 mRenderPass;					///< Render pass instance
 		IDirect3DSwapChain9* mDirect3DSwapChain9;			///< The Direct3D 9 swap chain instance, null pointer on error
 		IDirect3DSurface9*	 mDirect3DSurface9RenderTarget;	///< The Direct3D 9 render target surface instance, null pointer on error
 		IDirect3DSurface9*	 mDirect3DSurface9DepthStencil;	///< The Direct3D 9 depth stencil surface instance, null pointer on error

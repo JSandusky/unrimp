@@ -30,10 +30,14 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	inline PipelineStateBuilder::PipelineStateBuilder()
 	{
+		// "PipelineState"-part
 		rootSignature						= nullptr;
 		program								= nullptr;
 		vertexAttributes.numberOfAttributes	= 0;
 		vertexAttributes.attributes			= nullptr;
+		renderPass							= nullptr;
+
+		// "SerializedPipelineState"-part
 		primitiveTopology					= PrimitiveTopology::TRIANGLE_LIST;
 		primitiveTopologyType				= PrimitiveTopologyType::TRIANGLE;
 		rasterizerState						= RasterizerStateBuilder::getDefaultRasterizerState();
@@ -51,11 +55,15 @@ namespace Renderer
 		depthStencilViewFormat				= TextureFormat::D32_FLOAT;
 	}
 
-	inline PipelineStateBuilder::PipelineStateBuilder(IRootSignature* _rootSignature, IProgram* _program, const VertexAttributes& _vertexAttributes)
+	inline PipelineStateBuilder::PipelineStateBuilder(IRootSignature* _rootSignature, IProgram* _program, const VertexAttributes& _vertexAttributes, const IRenderPass& _renderPass)
 	{
+		// "PipelineState"-part
 		rootSignature				= _rootSignature;
 		program						= _program;
 		vertexAttributes			= _vertexAttributes;
+		renderPass					= &_renderPass;
+
+		// "SerializedPipelineState"-part
 		primitiveTopology			= PrimitiveTopology::TRIANGLE_LIST;
 		primitiveTopologyType		= PrimitiveTopologyType::TRIANGLE;
 		rasterizerState				= RasterizerStateBuilder::getDefaultRasterizerState();

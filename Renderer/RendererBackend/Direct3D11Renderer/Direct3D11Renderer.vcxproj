@@ -44,6 +44,7 @@
     <None Include="include\Direct3D11Renderer\Buffer\VertexBuffer.inl" />
     <None Include="include\Direct3D11Renderer\Direct3D11Renderer.inl" />
     <None Include="include\Direct3D11Renderer\RenderTarget\Framebuffer.inl" />
+    <None Include="include\Direct3D11Renderer\RenderTarget\RenderPass.inl" />
     <None Include="include\Direct3D11Renderer\RenderTarget\SwapChain.inl" />
     <None Include="include\Direct3D11Renderer\ResourceGroup.inl" />
     <None Include="include\Direct3D11Renderer\RootSignature.inl" />
@@ -82,6 +83,7 @@
     <ClInclude Include="include\Direct3D11Renderer\Guid.h" />
     <ClInclude Include="include\Direct3D11Renderer\Mapping.h" />
     <ClInclude Include="include\Direct3D11Renderer\RenderTarget\Framebuffer.h" />
+    <ClInclude Include="include\Direct3D11Renderer\RenderTarget\RenderPass.h" />
     <ClInclude Include="include\Direct3D11Renderer\RenderTarget\SwapChain.h" />
     <ClInclude Include="include\Direct3D11Renderer\ResourceGroup.h" />
     <ClInclude Include="include\Direct3D11Renderer\RootSignature.h" />

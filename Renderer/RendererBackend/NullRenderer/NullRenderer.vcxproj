@@ -37,6 +37,8 @@
   <ItemGroup>
     <None Include="CMakeLists.txt" />
     <None Include="include\NullRenderer\Buffer\BufferManager.inl" />
+    <None Include="include\NullRenderer\RenderTarget\Framebuffer.inl" />
+    <None Include="include\NullRenderer\RenderTarget\RenderPass.inl" />
     <None Include="include\NullRenderer\RenderTarget\SwapChain.inl" />
     <None Include="include\NullRenderer\ResourceGroup.inl" />
     <None Include="include\NullRenderer\RootSignature.inl" />
@@ -55,6 +57,7 @@
     <ClInclude Include="include\NullRenderer\NullDebug.h" />
     <ClInclude Include="include\NullRenderer\NullRenderer.h" />
     <ClInclude Include="include\NullRenderer\RenderTarget\Framebuffer.h" />
+    <ClInclude Include="include\NullRenderer\RenderTarget\RenderPass.h" />
     <ClInclude Include="include\NullRenderer\RenderTarget\SwapChain.h" />
     <ClInclude Include="include\NullRenderer\ResourceGroup.h" />
     <ClInclude Include="include\NullRenderer\RootSignature.h" />

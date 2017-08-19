@@ -59,6 +59,15 @@ namespace Direct3D11Renderer
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IRenderTarget methods        ]
+	//[-------------------------------------------------------]
+	inline const Renderer::IRenderPass& Framebuffer::getRenderPass() const
+	{
+		return mRenderPass;
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

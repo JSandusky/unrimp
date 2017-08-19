@@ -39,6 +39,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	SwapChain::SwapChain(Direct3D10Renderer& direct3D10Renderer, handle nativeWindowHandle) :
 		ISwapChain(direct3D10Renderer),
+		mRenderPass(direct3D10Renderer),
 		mDxgiSwapChain(nullptr),
 		mD3D10RenderTargetView(nullptr),
 		mD3D10DepthStencilView(nullptr)

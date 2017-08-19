@@ -428,6 +428,8 @@ namespace RendererRuntime
 				// Create the pipeline state object (PSO)
 				if (nullptr != mProgram)
 				{
+					// TODO(co) Render pass update
+					/*
 					Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, mProgram, ::detail::VertexAttributes);
 					pipelineState.rasterizerState.cullMode				   = Renderer::CullMode::NONE;
 					pipelineState.rasterizerState.scissorEnable			   = 1;
@@ -439,6 +441,7 @@ namespace RendererRuntime
 					pipelineState.blendState.renderTarget[0].srcBlendAlpha = Renderer::Blend::INV_SRC_ALPHA;
 					mPipelineState = renderer.createPipelineState(pipelineState);
 					RENDERER_SET_RESOURCE_DEBUG_NAME(mPipelineState, "Debug GUI")
+					*/
 				}
 			}
 		}

@@ -78,6 +78,8 @@ namespace Renderer
 		std::atomic<uint32_t> numberOfCreatedPrograms;						///< Number of created program instances
 		std::atomic<uint32_t> currentNumberOfVertexArrays;					///< Current number of vertex array object (VAO, input-assembler (IA) stage) instances
 		std::atomic<uint32_t> numberOfCreatedVertexArrays;					///< Number of created vertex array object (VAO, input-assembler (IA) stage) instances
+		std::atomic<uint32_t> currentNumberOfRenderPasses;					///< Current number of render pass instances
+		std::atomic<uint32_t> numberOfCreatedRenderPasses;					///< Number of created render pass instances
 		// IRenderTarget
 		std::atomic<uint32_t> currentNumberOfSwapChains;					///< Current number of swap chain instances
 		std::atomic<uint32_t> numberOfCreatedSwapChains;					///< Number of created swap chain instances

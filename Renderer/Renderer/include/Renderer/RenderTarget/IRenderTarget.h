@@ -31,6 +31,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace Renderer
+{
+	class IRenderPass;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace Renderer
@@ -63,6 +72,15 @@ namespace Renderer
 	//[ Public virtual IRenderTarget methods                  ]
 	//[-------------------------------------------------------]
 	public:
+		/**
+		*  @brief
+		*    Return the render pass
+		*
+		*  @return
+		*    Render pass
+		*/
+		virtual const IRenderPass& getRenderPass() const = 0;
+
 		/**
 		*  @brief
 		*    Return the width and height of the render target

@@ -43,7 +43,7 @@ BatchDrawInstanced::~BatchDrawInstanced()
 	// The renderer resource pointers are released automatically
 }
 
-void BatchDrawInstanced::initialize(Renderer::IBufferManager& bufferManager, Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IProgram &program, uint32_t numberOfCubeInstances, bool alphaBlending, uint32_t numberOfTextures, uint32_t sceneRadius)
+void BatchDrawInstanced::initialize(Renderer::IBufferManager& bufferManager, Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IProgram& program, uint32_t numberOfCubeInstances, bool alphaBlending, uint32_t numberOfTextures, uint32_t sceneRadius)
 {
 	// Set owner renderer instance
 	mRenderer = &program.getRenderer();
@@ -111,6 +111,9 @@ void BatchDrawInstanced::initialize(Renderer::IBufferManager& bufferManager, Ren
 		delete [] data;
 	}
 
+	// TODO(co) Render pass update
+	alphaBlending = (0 != vertexAttributes.numberOfAttributes);
+	/*
 	{ // Create the pipeline state object (PSO)
 		Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(&rootSignature, &program, vertexAttributes);
 		pipelineState.blendState.renderTarget[0].blendEnable = alphaBlending;
@@ -118,6 +121,7 @@ void BatchDrawInstanced::initialize(Renderer::IBufferManager& bufferManager, Ren
 		pipelineState.blendState.renderTarget[0].destBlend   = Renderer::Blend::ONE;
 		mPipelineState = mRenderer->createPipelineState(pipelineState);
 	}
+	*/
 }
 
 void BatchDrawInstanced::fillCommandBuffer(Renderer::CommandBuffer& commandBuffer) const

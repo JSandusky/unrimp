@@ -96,6 +96,9 @@
     <None Include="include\Direct3D12Renderer\Texture\TextureCube.inl">
       <Filter>Source Files\Texture</Filter>
     </None>
+    <None Include="include\Direct3D12Renderer\RenderTarget\RenderPass.inl">
+      <Filter>Source Files\RenderTarget</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Direct3D12Renderer\Shader\ShaderLanguageHlsl.h">
@@ -193,6 +196,9 @@
     </ClInclude>
     <ClInclude Include="include\Direct3D12Renderer\Texture\Texture3D.h">
       <Filter>Source Files\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D12Renderer\RenderTarget\RenderPass.h">
+      <Filter>Source Files\RenderTarget</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

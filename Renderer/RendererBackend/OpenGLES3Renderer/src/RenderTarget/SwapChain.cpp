@@ -40,6 +40,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	SwapChain::SwapChain(OpenGLES3Renderer& openGLES3Renderer, handle nativeWindowHandle) :
 		ISwapChain(openGLES3Renderer),
+		mRenderPass(openGLES3Renderer),
 		mNativeWindowHandle(nativeWindowHandle),
 		mRenderWindow(nullptr)
 	{

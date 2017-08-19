@@ -44,6 +44,15 @@ namespace Direct3D9Renderer
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IRenderTarget methods        ]
+	//[-------------------------------------------------------]
+	inline const Renderer::IRenderPass& SwapChain::getRenderPass() const
+	{
+		return mRenderPass;
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

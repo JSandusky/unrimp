@@ -111,6 +111,9 @@
     <None Include="include\Direct3D11Renderer\ResourceGroup.inl">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="include\Direct3D11Renderer\RenderTarget\RenderPass.inl">
+      <Filter>Source Files\RenderTarget</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Direct3D11Renderer\Shader\ShaderLanguageHlsl.h">
@@ -220,6 +223,9 @@
     </ClInclude>
     <ClInclude Include="include\Direct3D11Renderer\ResourceGroup.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Direct3D11Renderer\RenderTarget\RenderPass.h">
+      <Filter>Source Files\RenderTarget</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

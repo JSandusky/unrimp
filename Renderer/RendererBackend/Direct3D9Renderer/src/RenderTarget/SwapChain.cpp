@@ -39,6 +39,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	SwapChain::SwapChain(Direct3D9Renderer& direct3D9Renderer, handle nativeWindowHandle) :
 		ISwapChain(direct3D9Renderer),
+		mRenderPass(direct3D9Renderer),
 		mDirect3DSwapChain9(nullptr),
 		mDirect3DSurface9RenderTarget(nullptr),
 		mDirect3DSurface9DepthStencil(nullptr)

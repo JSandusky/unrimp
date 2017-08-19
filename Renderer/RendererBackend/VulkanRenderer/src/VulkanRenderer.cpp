@@ -243,7 +243,7 @@ namespace
 
 		}
 
-		void beginVulkanRenderPass(const Renderer::IRenderTarget& renderTarget, VkRenderPass vkRenderPass, VkFramebuffer vkFramebuffer, const VulkanRenderer::VulkanRenderer::VkClearValues& vkClearValues, VkCommandBuffer vkCommandBuffer)
+		void beginVulkanRenderPass(const Renderer::IRenderTarget& renderTarget, VkRenderPass vkRenderPass, VkFramebuffer vkFramebuffer, uint32_t numberOfAttachments, const VulkanRenderer::VulkanRenderer::VkClearValues& vkClearValues, VkCommandBuffer vkCommandBuffer)
 		{
 			// Get render target dimension
 			uint32_t width = 1;
@@ -253,16 +253,16 @@ namespace
 			// Begin Vulkan render pass
 			const VkRenderPassBeginInfo vkRenderPassBeginInfo =
 			{
-				VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,		// sType (VkStructureType)
-				nullptr,										// pNext (const void*)
-				vkRenderPass,									// renderPass (VkRenderPass)
-				vkFramebuffer,									// framebuffer (VkFramebuffer)
+				VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,	// sType (VkStructureType)
+				nullptr,									// pNext (const void*)
+				vkRenderPass,								// renderPass (VkRenderPass)
+				vkFramebuffer,								// framebuffer (VkFramebuffer)
 				{ // renderArea (VkRect2D)
-					{ 0, 0 },									// offset (VkOffset2D)
-					{ width, height }							// extent (VkExtent2D)
+					{ 0, 0 },								// offset (VkOffset2D)
+					{ width, height }						// extent (VkExtent2D)
 				},
-				static_cast<uint32_t>(vkClearValues.size()),	// clearValueCount (uint32_t)
-				vkClearValues.data()							// pClearValues (const VkClearValue*)
+				numberOfAttachments,						// clearValueCount (uint32_t)
+				vkClearValues.data()						// pClearValues (const VkClearValue*)
 			};
 			vkCmdBeginRenderPass(vkCommandBuffer, &vkRenderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 		}
@@ -330,7 +330,7 @@ namespace VulkanRenderer
 		mGraphicsRootSignature(nullptr),
 		mDefaultSamplerState(nullptr),
 		mInsideVulkanRenderPass(false),
-		mVkClearValues{ VkClearValue{0.0f, 0.0f, 0.0f, 1.0f}, VkClearValue{ 1.0f, 0 } },
+		mVkClearValues{},
 		mVertexArray(nullptr),
 		mMainSwapChain(nullptr),
 		mRenderTarget(nullptr)
@@ -642,6 +642,15 @@ namespace VulkanRenderer
 				// Set new render target and add a reference to it
 				mRenderTarget = renderTarget;
 				mRenderTarget->addReference();
+
+				// Set clear color and clear depth stencil values
+				const uint32_t numberOfColorAttachments = static_cast<const RenderPass&>(mRenderTarget->getRenderPass()).getNumberOfColorAttachments();
+				assert(numberOfColorAttachments < 8);
+				for (uint32_t i = 0; i < numberOfColorAttachments; ++i)
+				{
+					mVkClearValues[i] = VkClearValue{0.0f, 0.0f, 0.0f, 1.0f};
+				}
+				mVkClearValues[numberOfColorAttachments] = VkClearValue{ 1.0f, 0 };
 			}
 		}
 	}
@@ -657,16 +666,21 @@ namespace VulkanRenderer
 		assert(!mInsideVulkanRenderPass && "Can't execute clear command inside a Vulkan render pass");
 
 		// Clear color
+		const uint32_t numberOfColorAttachments = static_cast<const RenderPass&>(mRenderTarget->getRenderPass()).getNumberOfColorAttachments();
+		assert(numberOfColorAttachments < 8);
 		if (flags & Renderer::ClearFlag::COLOR)
 		{
-			memcpy(mVkClearValues[0].color.float32, &color[0], sizeof(float) * 4);
+			for (uint32_t i = 0; i < numberOfColorAttachments; ++i)
+			{
+				memcpy(mVkClearValues[i].color.float32, &color[0], sizeof(float) * 4);
+			}
 		}
 
 		// Clear depth stencil
 		if ((flags & Renderer::ClearFlag::DEPTH) || (flags & Renderer::ClearFlag::STENCIL))
 		{
-			mVkClearValues[1].depthStencil.depth = z;
-			mVkClearValues[1].depthStencil.stencil = stencil;
+			mVkClearValues[numberOfColorAttachments].depthStencil.depth = z;
+			mVkClearValues[numberOfColorAttachments].depthStencil.stencil = stencil;
 		}
 	}
 
@@ -1019,6 +1033,7 @@ namespace VulkanRenderer
 			case Renderer::ResourceType::RESOURCE_GROUP:
 			case Renderer::ResourceType::PROGRAM:
 			case Renderer::ResourceType::VERTEX_ARRAY:
+			case Renderer::ResourceType::RENDER_PASS:
 			case Renderer::ResourceType::SWAP_CHAIN:
 			case Renderer::ResourceType::FRAMEBUFFER:
 			case Renderer::ResourceType::PIPELINE_STATE:
@@ -1138,6 +1153,7 @@ namespace VulkanRenderer
 			case Renderer::ResourceType::RESOURCE_GROUP:
 			case Renderer::ResourceType::PROGRAM:
 			case Renderer::ResourceType::VERTEX_ARRAY:
+			case Renderer::ResourceType::RENDER_PASS:
 			case Renderer::ResourceType::SWAP_CHAIN:
 			case Renderer::ResourceType::FRAMEBUFFER:
 			case Renderer::ResourceType::PIPELINE_STATE:
@@ -1325,19 +1341,21 @@ namespace VulkanRenderer
 		assert(nullptr != mRenderTarget && "Can't begin a Vulkan render pass without a render target set");
 
 		// Start Vulkan render pass
+		const uint32_t numberOfAttachments = static_cast<const RenderPass&>(mRenderTarget->getRenderPass()).getNumberOfAttachments();
+		assert(numberOfAttachments < 9);
 		switch (mRenderTarget->getResourceType())
 		{
 			case Renderer::ResourceType::SWAP_CHAIN:
 			{
 				const SwapChain* swapChain = static_cast<SwapChain*>(mRenderTarget);
-				::detail::beginVulkanRenderPass(*mRenderTarget, swapChain->getVkRenderPass(), swapChain->getCurrentVkFramebuffer(), mVkClearValues, getVulkanContext().getVkCommandBuffer());
+				::detail::beginVulkanRenderPass(*mRenderTarget, swapChain->getVkRenderPass(), swapChain->getCurrentVkFramebuffer(), numberOfAttachments, mVkClearValues, getVulkanContext().getVkCommandBuffer());
 				break;
 			}
 
 			case Renderer::ResourceType::FRAMEBUFFER:
 			{
 				const Framebuffer* framebuffer = static_cast<Framebuffer*>(mRenderTarget);
-				::detail::beginVulkanRenderPass(*mRenderTarget, framebuffer->getVkRenderPass(), framebuffer->getVkFramebuffer(), mVkClearValues, getVulkanContext().getVkCommandBuffer());
+				::detail::beginVulkanRenderPass(*mRenderTarget, framebuffer->getVkRenderPass(), framebuffer->getVkFramebuffer(), numberOfAttachments, mVkClearValues, getVulkanContext().getVkCommandBuffer());
 				break;
 			}
 
@@ -1345,6 +1363,7 @@ namespace VulkanRenderer
 			case Renderer::ResourceType::RESOURCE_GROUP:
 			case Renderer::ResourceType::PROGRAM:
 			case Renderer::ResourceType::VERTEX_ARRAY:
+			case Renderer::ResourceType::RENDER_PASS:
 			case Renderer::ResourceType::INDEX_BUFFER:
 			case Renderer::ResourceType::VERTEX_BUFFER:
 			case Renderer::ResourceType::UNIFORM_BUFFER:

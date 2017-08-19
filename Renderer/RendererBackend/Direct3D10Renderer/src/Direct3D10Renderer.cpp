@@ -665,6 +665,7 @@ namespace Direct3D10Renderer
 							case Renderer::ResourceType::RESOURCE_GROUP:
 							case Renderer::ResourceType::PROGRAM:
 							case Renderer::ResourceType::VERTEX_ARRAY:
+							case Renderer::ResourceType::RENDER_PASS:
 							case Renderer::ResourceType::SWAP_CHAIN:
 							case Renderer::ResourceType::FRAMEBUFFER:
 							case Renderer::ResourceType::INDEX_BUFFER:
@@ -754,6 +755,7 @@ namespace Direct3D10Renderer
 					case Renderer::ResourceType::RESOURCE_GROUP:
 					case Renderer::ResourceType::PROGRAM:
 					case Renderer::ResourceType::VERTEX_ARRAY:
+					case Renderer::ResourceType::RENDER_PASS:
 					case Renderer::ResourceType::SWAP_CHAIN:
 					case Renderer::ResourceType::FRAMEBUFFER:
 					case Renderer::ResourceType::INDEX_BUFFER:
@@ -933,6 +935,7 @@ namespace Direct3D10Renderer
 					case Renderer::ResourceType::RESOURCE_GROUP:
 					case Renderer::ResourceType::PROGRAM:
 					case Renderer::ResourceType::VERTEX_ARRAY:
+					case Renderer::ResourceType::RENDER_PASS:
 					case Renderer::ResourceType::INDEX_BUFFER:
 					case Renderer::ResourceType::VERTEX_BUFFER:
 					case Renderer::ResourceType::UNIFORM_BUFFER:
@@ -1065,6 +1068,7 @@ namespace Direct3D10Renderer
 				case Renderer::ResourceType::RESOURCE_GROUP:
 				case Renderer::ResourceType::PROGRAM:
 				case Renderer::ResourceType::VERTEX_ARRAY:
+				case Renderer::ResourceType::RENDER_PASS:
 				case Renderer::ResourceType::INDEX_BUFFER:
 				case Renderer::ResourceType::VERTEX_BUFFER:
 				case Renderer::ResourceType::UNIFORM_BUFFER:
@@ -1152,6 +1156,7 @@ namespace Direct3D10Renderer
 			case Renderer::ResourceType::RESOURCE_GROUP:
 			case Renderer::ResourceType::PROGRAM:
 			case Renderer::ResourceType::VERTEX_ARRAY:
+			case Renderer::ResourceType::RENDER_PASS:
 			case Renderer::ResourceType::INDEX_BUFFER:
 			case Renderer::ResourceType::VERTEX_BUFFER:
 			case Renderer::ResourceType::UNIFORM_BUFFER:
@@ -1205,6 +1210,7 @@ namespace Direct3D10Renderer
 			case Renderer::ResourceType::RESOURCE_GROUP:
 			case Renderer::ResourceType::PROGRAM:
 			case Renderer::ResourceType::VERTEX_ARRAY:
+			case Renderer::ResourceType::RENDER_PASS:
 			case Renderer::ResourceType::SWAP_CHAIN:
 			case Renderer::ResourceType::FRAMEBUFFER:
 			case Renderer::ResourceType::INDEX_BUFFER:
@@ -1573,6 +1579,7 @@ namespace Direct3D10Renderer
 			case Renderer::ResourceType::RESOURCE_GROUP:
 			case Renderer::ResourceType::PROGRAM:
 			case Renderer::ResourceType::VERTEX_ARRAY:
+			case Renderer::ResourceType::RENDER_PASS:
 			case Renderer::ResourceType::SWAP_CHAIN:
 			case Renderer::ResourceType::FRAMEBUFFER:
 			case Renderer::ResourceType::PIPELINE_STATE:
@@ -1653,6 +1660,7 @@ namespace Direct3D10Renderer
 			case Renderer::ResourceType::RESOURCE_GROUP:
 			case Renderer::ResourceType::PROGRAM:
 			case Renderer::ResourceType::VERTEX_ARRAY:
+			case Renderer::ResourceType::RENDER_PASS:
 			case Renderer::ResourceType::SWAP_CHAIN:
 			case Renderer::ResourceType::FRAMEBUFFER:
 			case Renderer::ResourceType::PIPELINE_STATE:

@@ -51,9 +51,12 @@ namespace VulkanRenderer
 		mDepthStencilTexture(nullptr),
 		mWidth(UINT_MAX),
 		mHeight(UINT_MAX),
+		mRenderPass(vulkanRenderer, mVkRenderPass, numberOfColorFramebufferAttachments, nullptr != depthStencilFramebufferAttachment),
 		mVkRenderPass(VK_NULL_HANDLE),
 		mVkFramebuffer(VK_NULL_HANDLE)
 	{
+		mRenderPass.addReference();
+
 		// Vulkan attachment descriptions and views to fill
 		std::vector<VkAttachmentDescription> vkAttachmentDescriptions;
 		vkAttachmentDescriptions.resize(mNumberOfColorTextures + ((nullptr != depthStencilFramebufferAttachment) ? 1u : 0u));
@@ -126,6 +129,7 @@ namespace VulkanRenderer
 					case Renderer::ResourceType::RESOURCE_GROUP:
 					case Renderer::ResourceType::PROGRAM:
 					case Renderer::ResourceType::VERTEX_ARRAY:
+					case Renderer::ResourceType::RENDER_PASS:
 					case Renderer::ResourceType::SWAP_CHAIN:
 					case Renderer::ResourceType::FRAMEBUFFER:
 					case Renderer::ResourceType::INDEX_BUFFER:
@@ -233,6 +237,7 @@ namespace VulkanRenderer
 				case Renderer::ResourceType::RESOURCE_GROUP:
 				case Renderer::ResourceType::PROGRAM:
 				case Renderer::ResourceType::VERTEX_ARRAY:
+				case Renderer::ResourceType::RENDER_PASS:
 				case Renderer::ResourceType::SWAP_CHAIN:
 				case Renderer::ResourceType::FRAMEBUFFER:
 				case Renderer::ResourceType::INDEX_BUFFER:

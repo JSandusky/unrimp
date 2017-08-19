@@ -55,6 +55,9 @@ void FirstMultipleRenderTargets::onInitialization()
 	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer)
 	{
+		// Sanity check
+		assert(nullptr != getMainRenderTarget());
+
 		// Create the buffer and texture manager
 		mBufferManager = renderer->createBufferManager();
 		mTextureManager = renderer->createTextureManager();
@@ -183,13 +186,13 @@ void FirstMultipleRenderTargets::onInitialization()
 				if (nullptr != programMultipleRenderTargets && nullptr != program)
 				{
 					{
-						Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, programMultipleRenderTargets, vertexAttributes);
+						Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, programMultipleRenderTargets, vertexAttributes, mFramebuffer->getRenderPass());
 						pipelineState.numberOfRenderTargets = NUMBER_OF_TEXTURES;
 						pipelineState.depthStencilState.depthEnable = 0;
 						pipelineState.depthStencilViewFormat = Renderer::TextureFormat::UNKNOWN;
 						mPipelineStateMultipleRenderTargets = renderer->createPipelineState(pipelineState);
 					}
-					mPipelineState = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes));
+					mPipelineState = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes, getMainRenderTarget()->getRenderPass()));
 				}
 			}
 		}

@@ -54,6 +54,15 @@ namespace VulkanRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IRenderTarget methods        ]
+	//[-------------------------------------------------------]
+	inline const Renderer::IRenderPass& SwapChain::getRenderPass() const
+	{
+		return mRenderPass;
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ISwapChain methods           ]
 	//[-------------------------------------------------------]
 	inline void SwapChain::setRenderWindow(Renderer::IRenderWindow* renderWindow)

@@ -119,6 +119,9 @@ void BatchInstancedArrays::initialize(Renderer::IBufferManager& bufferManager, R
 		delete [] data;
 	}
 
+	// TODO(co) Render pass update
+	alphaBlending = (rootSignature.getRefCount() != 0);
+	/*
 	{ // Create the pipeline state object (PSO)
 		Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(&rootSignature, &program, vertexAttributes);
 		pipelineState.blendState.renderTarget[0].blendEnable = alphaBlending;
@@ -126,6 +129,7 @@ void BatchInstancedArrays::initialize(Renderer::IBufferManager& bufferManager, R
 		pipelineState.blendState.renderTarget[0].destBlend   = Renderer::Blend::ONE;
 		mPipelineState = mRenderer->createPipelineState(pipelineState);
 	}
+	*/
 }
 
 void BatchInstancedArrays::fillCommandBuffer(Renderer::CommandBuffer& commandBuffer) const

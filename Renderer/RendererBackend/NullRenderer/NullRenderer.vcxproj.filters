@@ -42,6 +42,12 @@
     <None Include="include\NullRenderer\ResourceGroup.inl">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="include\NullRenderer\RenderTarget\RenderPass.inl">
+      <Filter>Source Files\RenderTarget</Filter>
+    </None>
+    <None Include="include\NullRenderer\RenderTarget\Framebuffer.inl">
+      <Filter>Source Files\RenderTarget</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\NullRenderer\Shader\GeometryShader.h">
@@ -127,6 +133,9 @@
     </ClInclude>
     <ClInclude Include="include\NullRenderer\ResourceGroup.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\NullRenderer\RenderTarget\RenderPass.h">
+      <Filter>Source Files\RenderTarget</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

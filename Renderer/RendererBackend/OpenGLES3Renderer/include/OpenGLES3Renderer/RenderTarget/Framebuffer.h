@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include <Renderer/RenderTarget/IFramebuffer.h>
 
+#include "OpenGLES3Renderer/RenderTarget/RenderPass.h"
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -131,6 +133,7 @@ namespace OpenGLES3Renderer
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
+		inline virtual const Renderer::IRenderPass& getRenderPass() const override;
 		virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const override;
 
 
@@ -146,6 +149,7 @@ namespace OpenGLES3Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		RenderPass			 mRenderPass;				///< Render pass instance
 		uint32_t			 mOpenGLES3Framebuffer;		///< OpenGL ES 3 framebuffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 		uint32_t			 mDepthRenderbuffer;		///< OpenGL ES render buffer for the depth component, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 		uint32_t			 mNumberOfColorTextures;	///< Number of color render target textures

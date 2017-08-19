@@ -63,6 +63,7 @@
     <ClInclude Include="include\Renderer\RefCount.h" />
     <ClInclude Include="include\Renderer\RendererTypes.h" />
     <ClInclude Include="include\Renderer\RenderTarget\IFramebuffer.h" />
+    <ClInclude Include="include\Renderer\RenderTarget\IRenderPass.h" />
     <ClInclude Include="include\Renderer\RenderTarget\IRenderTarget.h" />
     <ClInclude Include="include\Renderer\RenderTarget\ISwapChain.h" />
     <ClInclude Include="include\Renderer\ResourceTypes.h" />
@@ -117,6 +118,7 @@
     <None Include="include\Renderer\Public\StdLog.inl" />
     <None Include="include\Renderer\RefCount.inl" />
     <None Include="include\Renderer\RenderTarget\IFramebuffer.inl" />
+    <None Include="include\Renderer\RenderTarget\IRenderPass.inl" />
     <None Include="include\Renderer\RenderTarget\IRenderTarget.inl" />
     <None Include="include\Renderer\RenderTarget\ISwapChain.inl" />
     <None Include="include\Renderer\Shader\IFragmentShader.inl" />

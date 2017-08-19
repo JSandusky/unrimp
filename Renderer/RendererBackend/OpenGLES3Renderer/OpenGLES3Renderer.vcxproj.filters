@@ -87,6 +87,9 @@
     <None Include="include\OpenGLES3Renderer\ResourceGroup.inl">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="include\OpenGLES3Renderer\RenderTarget\RenderPass.inl">
+      <Filter>Source Files\RenderTarget</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
@@ -216,6 +219,9 @@
     </ClInclude>
     <ClInclude Include="include\OpenGLES3Renderer\ResourceGroup.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OpenGLES3Renderer\RenderTarget\RenderPass.h">
+      <Filter>Source Files\RenderTarget</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

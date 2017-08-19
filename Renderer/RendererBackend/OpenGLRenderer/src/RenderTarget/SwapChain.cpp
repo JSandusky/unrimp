@@ -46,6 +46,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	SwapChain::SwapChain(OpenGLRenderer& openGLRenderer, handle nativeWindowHandle, bool useExternalContext) :
 		ISwapChain(openGLRenderer),
+		mRenderPass(openGLRenderer),
 		mNativeWindowHandle(nativeWindowHandle),
 		#ifdef WIN32
 			mOpenGLContext(new OpenGLContextWindows(nativeWindowHandle, static_cast<const OpenGLContextWindows*>(&openGLRenderer.getOpenGLContext()))),
@@ -64,6 +65,7 @@ namespace OpenGLRenderer
 
 	SwapChain::SwapChain(OpenGLRenderer& openGLRenderer, handle nativeWindowHandle, IOpenGLContext& openGLContext) :
 		ISwapChain(openGLRenderer),
+		mRenderPass(openGLRenderer),
 		mNativeWindowHandle(nativeWindowHandle),
 		mOpenGLContext(&openGLContext),
 		mOwnsOpenGLContext(false),

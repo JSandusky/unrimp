@@ -29,7 +29,7 @@
 //[-------------------------------------------------------]
 #include <Renderer/RenderTarget/IFramebuffer.h>
 
-#include "VulkanRenderer/VulkanRuntimeLinking.h"
+#include "VulkanRenderer/RenderTarget/RenderPass.h"
 
 
 //[-------------------------------------------------------]
@@ -111,6 +111,7 @@ namespace VulkanRenderer
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
+		inline virtual const Renderer::IRenderPass& getRenderPass() const override;
 		virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const override;
 
 
@@ -131,6 +132,7 @@ namespace VulkanRenderer
 		Renderer::ITexture  *mDepthStencilTexture;		///< The depth stencil render target texture (we keep a reference to it), can be a null pointer
 		uint32_t			 mWidth;					///< The framebuffer width
 		uint32_t			 mHeight;					///< The framebuffer height
+		RenderPass			 mRenderPass;				///< Render pass instance
 		VkRenderPass		 mVkRenderPass;				///< Vulkan render pass instance, can be a null handle
 		VkFramebuffer		 mVkFramebuffer;			///< Vulkan framebuffer instance, can be a null handle
 

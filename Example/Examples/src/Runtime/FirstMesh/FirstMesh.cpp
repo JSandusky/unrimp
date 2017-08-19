@@ -181,7 +181,7 @@ void FirstMesh::onInitialization()
 			if (nullptr != program)
 			{
 				// Create the pipeline state object (PSO)
-				mPipelineState = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes));
+				mPipelineState = renderer->createPipelineState(Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes, getMainRenderTarget()->getRenderPass()));
 
 				// Optimization: Cached data to not bother the renderer API too much
 				if (nullptr == mUniformBuffer)

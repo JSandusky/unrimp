@@ -301,6 +301,9 @@
     <ClInclude Include="include\VulkanRenderer\ResourceGroup.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\VulkanRenderer\RenderTarget\RenderPass.h">
+      <Filter>Source Files\RenderTarget</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Windows\ExtensionsWindows.cpp">
@@ -606,6 +609,9 @@
     </None>
     <None Include="include\VulkanRenderer\ResourceGroup.inl">
       <Filter>Source Files</Filter>
+    </None>
+    <None Include="include\VulkanRenderer\RenderTarget\RenderPass.inl">
+      <Filter>Source Files\RenderTarget</Filter>
     </None>
   </ItemGroup>
 </Project>

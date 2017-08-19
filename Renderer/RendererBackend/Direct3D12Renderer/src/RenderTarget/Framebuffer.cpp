@@ -43,6 +43,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	Framebuffer::Framebuffer(Direct3D12Renderer& direct3D12Renderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment) :
 		IFramebuffer(direct3D12Renderer),
+		mRenderPass(direct3D12Renderer),
 		mNumberOfColorTextures(numberOfColorFramebufferAttachments),
 		mColorTextures(nullptr),	// Set below
 		mDepthStencilTexture(nullptr),
@@ -147,6 +148,7 @@ namespace Direct3D12Renderer
 					case Renderer::ResourceType::RESOURCE_GROUP:
 					case Renderer::ResourceType::PROGRAM:
 					case Renderer::ResourceType::VERTEX_ARRAY:
+					case Renderer::ResourceType::RENDER_PASS:
 					case Renderer::ResourceType::SWAP_CHAIN:
 					case Renderer::ResourceType::FRAMEBUFFER:
 					case Renderer::ResourceType::INDEX_BUFFER:
@@ -254,6 +256,7 @@ namespace Direct3D12Renderer
 				case Renderer::ResourceType::RESOURCE_GROUP:
 				case Renderer::ResourceType::PROGRAM:
 				case Renderer::ResourceType::VERTEX_ARRAY:
+				case Renderer::ResourceType::RENDER_PASS:
 				case Renderer::ResourceType::SWAP_CHAIN:
 				case Renderer::ResourceType::FRAMEBUFFER:
 				case Renderer::ResourceType::INDEX_BUFFER:

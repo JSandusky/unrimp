@@ -29,7 +29,7 @@
 //[-------------------------------------------------------]
 #include <Renderer/RenderTarget/ISwapChain.h>
 
-#include "VulkanRenderer/VulkanRuntimeLinking.h"
+#include "VulkanRenderer/RenderTarget/RenderPass.h"
 
 #include <vector>
 
@@ -123,6 +123,7 @@ namespace VulkanRenderer
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
+		inline virtual const Renderer::IRenderPass& getRenderPass() const override;
 		virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const override;
 
 
@@ -175,6 +176,7 @@ namespace VulkanRenderer
 		VkSurfaceKHR mVkSurfaceKHR;	///< Vulkan presentation surface, destroy if no longer needed
 		// Vulkan swap chain and color render target related
 		VkSwapchainKHR	 mVkSwapchainKHR;				///< Vulkan swap chain, destroy if no longer needed
+		RenderPass		 mRenderPass;					///< Render pass instance
 		VkRenderPass	 mVkRenderPass;					///< Vulkan render pass, destroy if no longer needed
 		SwapChainBuffers mSwapChainBuffer;				///< Swap chain buffer for managing the color render targets
 		VkSemaphore		 mImageAvailableVkSemaphore;	///< Vulkan semaphore, destroy if no longer needed

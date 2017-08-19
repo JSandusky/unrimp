@@ -41,6 +41,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	SwapChain::SwapChain(Direct3D12Renderer& direct3D12Renderer, handle nativeWindowHandle) :
 		ISwapChain(direct3D12Renderer),
+		mRenderPass(direct3D12Renderer),
 		mDxgiSwapChain3(nullptr),
 		mD3D12DescriptorHeapRenderTargetView(nullptr),
 		mD3D12DescriptorHeapDepthStencilView(nullptr),

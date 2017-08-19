@@ -110,6 +110,7 @@
     <ClInclude Include="include\OpenGLRenderer\RenderTarget\Framebuffer.h" />
     <ClInclude Include="include\OpenGLRenderer\RenderTarget\FramebufferBind.h" />
     <ClInclude Include="include\OpenGLRenderer\RenderTarget\FramebufferDsa.h" />
+    <ClInclude Include="include\OpenGLRenderer\RenderTarget\RenderPass.h" />
     <ClInclude Include="include\OpenGLRenderer\RenderTarget\SwapChain.h" />
     <ClInclude Include="include\OpenGLRenderer\ResourceGroup.h" />
     <ClInclude Include="include\OpenGLRenderer\RootSignature.h" />
@@ -627,6 +628,7 @@
     <None Include="include\OpenGLRenderer\Linux\OpenGLContextLinux.inl" />
     <None Include="include\OpenGLRenderer\OpenGLRenderer.inl" />
     <None Include="include\OpenGLRenderer\RenderTarget\Framebuffer.inl" />
+    <None Include="include\OpenGLRenderer\RenderTarget\RenderPass.inl" />
     <None Include="include\OpenGLRenderer\RenderTarget\SwapChain.inl" />
     <None Include="include\OpenGLRenderer\ResourceGroup.inl" />
     <None Include="include\OpenGLRenderer\RootSignature.inl" />

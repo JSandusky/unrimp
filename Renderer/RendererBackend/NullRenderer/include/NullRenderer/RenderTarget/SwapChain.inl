@@ -26,9 +26,12 @@ namespace NullRenderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
-	// TODO(co) Implement me
+	inline const Renderer::IRenderPass& SwapChain::getRenderPass() const
+	{
+		return mRenderPass;
+	}
 
 
 //[-------------------------------------------------------]
