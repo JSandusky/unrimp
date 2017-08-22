@@ -226,9 +226,9 @@ namespace
 
 		/**
 		*  @brief
-		*    Splits the vulkan extension string given by openvr. The extension names are separated by space
+		*    Split the Vulkan extension string given by OpenVR; the extension names are separated by space
 		*/
-		static void splitOpenVrVulkanExtensionString(const std::vector<char>& extensionString, std::vector<std::string>& outInstanceExtensionList)
+		void splitOpenVrVulkanExtensionString(const std::vector<char>& extensionString, std::vector<std::string>& outInstanceExtensionList)
 		{
 			// Break up the space separated list into entries
 			std::string currentExtensionString;
@@ -275,7 +275,6 @@ namespace
 			if (bufferSize > 0)
 			{
 				// Allocate memory for the space separated list and query for it
-				// No need for manual memory management (it is not exception safe)
 				// TODO(sw) with c++17 we could use std::string which contains a non const data method like std::vector
 				std::vector<char> extensionString;
 				extensionString.resize(bufferSize, 0);
@@ -310,7 +309,6 @@ namespace
 			if (bufferSize > 0)
 			{
 				// Allocate memory for the space separated list and query for it
-				// No need for manual memory management (it is not exception safe)
 				// TODO(sw) with c++17 we could use std::string which contains a non const data method like std::vector
 				std::vector<char> extensionString;
 				extensionString.resize(bufferSize, 0);
