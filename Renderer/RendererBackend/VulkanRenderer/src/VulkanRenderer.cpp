@@ -800,19 +800,52 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
-	void VulkanRenderer::setDebugMarker(const char*)
+	void VulkanRenderer::setDebugMarker(const char* name)
 	{
-		// TODO(co) Implement me
+		if (nullptr != vkCmdDebugMarkerInsertEXT)
+		{
+			VkDebugMarkerMarkerInfoEXT vkDebugMarkerMarkerInfoEXT =
+			{
+				VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT,	// sType (VkStructureType)
+				nullptr,										// pNext (const void*)
+				name,											// pMarkerName (const char*)
+				{ // color[4] (float)
+					0.0f,
+					0.0f,
+					1.0f,	// Blue
+					1.0f
+				}
+			};
+			vkCmdDebugMarkerInsertEXT(getVulkanContext().getVkCommandBuffer(), &vkDebugMarkerMarkerInfoEXT);
+		}
 	}
 
-	void VulkanRenderer::beginDebugEvent(const char*)
+	void VulkanRenderer::beginDebugEvent(const char* name)
 	{
-		// TODO(co) Implement me
+		if (nullptr != vkCmdDebugMarkerBeginEXT)
+		{
+			VkDebugMarkerMarkerInfoEXT vkDebugMarkerMarkerInfoEXT =
+			{
+				VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT,	// sType (VkStructureType)
+				nullptr,										// pNext (const void*)
+				name,											// pMarkerName (const char*)
+				{ // color[4] (float)
+					0.0f,
+					1.0f,	// Green
+					0.0f,
+					1.0f
+				}
+			};
+			vkCmdDebugMarkerBeginEXT(getVulkanContext().getVkCommandBuffer(), &vkDebugMarkerMarkerInfoEXT);
+		}
 	}
 
 	void VulkanRenderer::endDebugEvent()
 	{
-		// TODO(co) Implement me
+		if (nullptr != vkCmdDebugMarkerEndEXT)
+		{
+			vkCmdDebugMarkerEndEXT(getVulkanContext().getVkCommandBuffer());
+		}
 	}
 
 
@@ -827,15 +860,13 @@ namespace VulkanRenderer
 	bool VulkanRenderer::isInitialized() const
 	{
 		// Is the Vulkan context initialized?
-		return mVulkanContext->isInitialized();
+		return (nullptr != mVulkanContext && mVulkanContext->isInitialized());
 	}
 
 	bool VulkanRenderer::isDebugEnabled()
 	{
-		// TODO(co) Implement me
-
-		// Debug disabled
-		return false;
+		// Check for any "VK_EXT_debug_marker"-extension function pointer
+		return (nullptr != vkDebugMarkerSetObjectTagEXT || nullptr != vkDebugMarkerSetObjectNameEXT || nullptr != vkCmdDebugMarkerBeginEXT || nullptr != vkCmdDebugMarkerEndEXT || nullptr != vkCmdDebugMarkerInsertEXT);
 	}
 
 	Renderer::ISwapChain* VulkanRenderer::getMainSwapChain() const

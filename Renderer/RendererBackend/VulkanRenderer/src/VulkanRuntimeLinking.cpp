@@ -237,7 +237,7 @@ namespace VulkanRenderer
 		mEntryPointsRegistered(false),
 		mVkInstance(VK_NULL_HANDLE),
 		mVkDebugReportCallbackEXT(VK_NULL_HANDLE),
-		mFunctionsRegistered(false),
+		mInstanceLevelFunctionsRegistered(false),
 		mInitialized(false)
 	{
 		// Nothing here
@@ -284,19 +284,19 @@ namespace VulkanRenderer
 			// Load the shared libraries
 			if (loadSharedLibraries())
 			{
-				// Load the Vulkan entry points
-				mEntryPointsRegistered = loadVulkanEntryPoints();
+				// Load the global level Vulkan function entry points
+				mEntryPointsRegistered = loadGlobalLevelVulkanEntryPoints();
 				if (mEntryPointsRegistered)
 				{
 					// Create the Vulkan instance
 					const VkResult vkResult = createVulkanInstance(mValidationEnabled);
 					if (VK_SUCCESS == vkResult)
 					{
-						// Load instance based Vulkan function pointers
-						mFunctionsRegistered = loadVulkanFunctions();
+						// Load instance based instance level Vulkan function pointers
+						mInstanceLevelFunctionsRegistered = loadInstanceLevelVulkanEntryPoints();
 
 						// Setup debug callback
-						if (mFunctionsRegistered && mValidationEnabled)
+						if (mInstanceLevelFunctionsRegistered && mValidationEnabled)
 						{
 							setupDebugCallback();
 						}
@@ -311,7 +311,128 @@ namespace VulkanRenderer
 		}
 
 		// Entry points successfully registered?
-		return (mEntryPointsRegistered && (VK_NULL_HANDLE != mVkInstance) && mFunctionsRegistered);
+		return (mEntryPointsRegistered && (VK_NULL_HANDLE != mVkInstance) && mInstanceLevelFunctionsRegistered);
+	}
+
+	bool VulkanRuntimeLinking::loadDeviceLevelVulkanEntryPoints(VkDevice vkDevice) const
+	{
+		bool result = true;	// Success by default
+
+		// Define a helper macro
+		PRAGMA_WARNING_PUSH
+		PRAGMA_WARNING_DISABLE_MSVC(4191)	// 'reinterpret_cast': unsafe conversion from 'PFN_vkVoidFunction' to '<x>'
+		#define IMPORT_FUNC(funcName)																												\
+			if (result)																																\
+			{																																		\
+				funcName = reinterpret_cast<PFN_##funcName>(vkGetDeviceProcAddr(vkDevice, #funcName));												\
+				if (nullptr == funcName)																											\
+				{																																	\
+					RENDERER_LOG(mVulkanRenderer.getContext(), CRITICAL, "Failed to load instance based Vulkan function pointer \"%s\"", #funcName)	\
+					result = false;																													\
+				}																																	\
+			}
+
+		// Load the Vulkan device level function entry points
+		IMPORT_FUNC(vkDestroyDevice)
+		IMPORT_FUNC(vkCreateShaderModule)
+		IMPORT_FUNC(vkDestroyShaderModule)
+		IMPORT_FUNC(vkCreateBuffer)
+		IMPORT_FUNC(vkDestroyBuffer)
+		IMPORT_FUNC(vkMapMemory)
+		IMPORT_FUNC(vkUnmapMemory)
+		IMPORT_FUNC(vkCreateBufferView)
+		IMPORT_FUNC(vkDestroyBufferView)
+		IMPORT_FUNC(vkAllocateMemory)
+		IMPORT_FUNC(vkFreeMemory)
+		IMPORT_FUNC(vkGetBufferMemoryRequirements)
+		IMPORT_FUNC(vkBindBufferMemory)
+		IMPORT_FUNC(vkCreateRenderPass)
+		IMPORT_FUNC(vkDestroyRenderPass)
+		IMPORT_FUNC(vkCreateImage)
+		IMPORT_FUNC(vkDestroyImage)
+		IMPORT_FUNC(vkGetImageSubresourceLayout)
+		IMPORT_FUNC(vkGetImageMemoryRequirements)
+		IMPORT_FUNC(vkBindImageMemory)
+		IMPORT_FUNC(vkCreateImageView)
+		IMPORT_FUNC(vkDestroyImageView)
+		IMPORT_FUNC(vkCreateSampler)
+		IMPORT_FUNC(vkDestroySampler)
+		IMPORT_FUNC(vkCreateSemaphore)
+		IMPORT_FUNC(vkDestroySemaphore)
+		IMPORT_FUNC(vkCreateFence)
+		IMPORT_FUNC(vkDestroyFence)
+		IMPORT_FUNC(vkWaitForFences)
+		IMPORT_FUNC(vkCreateCommandPool)
+		IMPORT_FUNC(vkDestroyCommandPool)
+		IMPORT_FUNC(vkAllocateCommandBuffers)
+		IMPORT_FUNC(vkFreeCommandBuffers)
+		IMPORT_FUNC(vkBeginCommandBuffer)
+		IMPORT_FUNC(vkEndCommandBuffer)
+		IMPORT_FUNC(vkGetDeviceQueue)
+		IMPORT_FUNC(vkQueueSubmit)
+		IMPORT_FUNC(vkQueueWaitIdle)
+		IMPORT_FUNC(vkDeviceWaitIdle)
+		IMPORT_FUNC(vkCreateFramebuffer)
+		IMPORT_FUNC(vkDestroyFramebuffer)
+		IMPORT_FUNC(vkCreatePipelineCache)
+		IMPORT_FUNC(vkDestroyPipelineCache)
+		IMPORT_FUNC(vkCreatePipelineLayout)
+		IMPORT_FUNC(vkDestroyPipelineLayout)
+		IMPORT_FUNC(vkCreateGraphicsPipelines)
+		IMPORT_FUNC(vkCreateComputePipelines)
+		IMPORT_FUNC(vkDestroyPipeline)
+		IMPORT_FUNC(vkCreateDescriptorPool)
+		IMPORT_FUNC(vkDestroyDescriptorPool)
+		IMPORT_FUNC(vkCreateDescriptorSetLayout)
+		IMPORT_FUNC(vkDestroyDescriptorSetLayout)
+		IMPORT_FUNC(vkAllocateDescriptorSets)
+		IMPORT_FUNC(vkFreeDescriptorSets)
+		IMPORT_FUNC(vkUpdateDescriptorSets)
+		IMPORT_FUNC(vkCreateQueryPool)
+		IMPORT_FUNC(vkDestroyQueryPool)
+		IMPORT_FUNC(vkGetQueryPoolResults)
+		IMPORT_FUNC(vkCmdBeginQuery)
+		IMPORT_FUNC(vkCmdEndQuery)
+		IMPORT_FUNC(vkCmdResetQueryPool)
+		IMPORT_FUNC(vkCmdCopyQueryPoolResults)
+		IMPORT_FUNC(vkCmdPipelineBarrier)
+		IMPORT_FUNC(vkCmdBeginRenderPass)
+		IMPORT_FUNC(vkCmdEndRenderPass)
+		IMPORT_FUNC(vkCmdExecuteCommands)
+		IMPORT_FUNC(vkCmdCopyImage)
+		IMPORT_FUNC(vkCmdBlitImage)
+		IMPORT_FUNC(vkCmdCopyBufferToImage)
+		IMPORT_FUNC(vkCmdClearAttachments)
+		IMPORT_FUNC(vkCmdCopyBuffer)
+		IMPORT_FUNC(vkCmdBindDescriptorSets)
+		IMPORT_FUNC(vkCmdBindPipeline)
+		IMPORT_FUNC(vkCmdSetViewport)
+		IMPORT_FUNC(vkCmdSetScissor)
+		IMPORT_FUNC(vkCmdSetLineWidth)
+		IMPORT_FUNC(vkCmdSetDepthBias)
+		IMPORT_FUNC(vkCmdPushConstants)
+		IMPORT_FUNC(vkCmdBindIndexBuffer)
+		IMPORT_FUNC(vkCmdBindVertexBuffers)
+		IMPORT_FUNC(vkCmdDraw)
+		IMPORT_FUNC(vkCmdDrawIndexed)
+		IMPORT_FUNC(vkCmdDrawIndirect)
+		IMPORT_FUNC(vkCmdDrawIndexedIndirect)
+		IMPORT_FUNC(vkCmdDispatch)
+		IMPORT_FUNC(vkCmdClearColorImage)
+		IMPORT_FUNC(vkCmdClearDepthStencilImage)
+		// "VK_KHR_swapchain"-extension
+		IMPORT_FUNC(vkCreateSwapchainKHR)
+		IMPORT_FUNC(vkDestroySwapchainKHR)
+		IMPORT_FUNC(vkGetSwapchainImagesKHR)
+		IMPORT_FUNC(vkAcquireNextImageKHR)
+		IMPORT_FUNC(vkQueuePresentKHR)
+
+		// Undefine the helper macro
+		#undef IMPORT_FUNC
+		PRAGMA_WARNING_POP
+
+		// Done
+		return result;
 	}
 
 
@@ -341,7 +462,7 @@ namespace VulkanRenderer
 		return (nullptr != mVulkanSharedLibrary);
 	}
 
-	bool VulkanRuntimeLinking::loadVulkanEntryPoints()
+	bool VulkanRuntimeLinking::loadGlobalLevelVulkanEntryPoints() const
 	{
 		bool result = true;	// Success by default
 
@@ -389,12 +510,12 @@ namespace VulkanRenderer
 			#error "Unsupported platform"
 		#endif
 
-		// Load the entry points
-		IMPORT_FUNC(vkCreateInstance);
-		IMPORT_FUNC(vkDestroyInstance);
+		// Load the Vulkan global level function entry points
 		IMPORT_FUNC(vkGetInstanceProcAddr);
+		IMPORT_FUNC(vkGetDeviceProcAddr);
 		IMPORT_FUNC(vkEnumerateInstanceExtensionProperties);
-		IMPORT_FUNC(vkEnumerateInstanceLayerProperties );
+		IMPORT_FUNC(vkEnumerateInstanceLayerProperties);
+		IMPORT_FUNC(vkCreateInstance);
 
 		// Undefine the helper macro
 		#undef IMPORT_FUNC
@@ -489,7 +610,7 @@ namespace VulkanRenderer
 		return vkResult;
 	}
 
-	bool VulkanRuntimeLinking::loadVulkanFunctions()
+	bool VulkanRuntimeLinking::loadInstanceLevelVulkanEntryPoints() const
 	{
 		bool result = true;	// Success by default
 
@@ -507,147 +628,52 @@ namespace VulkanRenderer
 				}																																	\
 			}
 
-		// Load the function pointers
-		IMPORT_FUNC(vkEnumeratePhysicalDevices);
-		IMPORT_FUNC(vkGetPhysicalDeviceProperties);
-		IMPORT_FUNC(vkEnumerateDeviceLayerProperties);
-		IMPORT_FUNC(vkEnumerateDeviceExtensionProperties);
-		IMPORT_FUNC(vkGetPhysicalDeviceQueueFamilyProperties);
-		IMPORT_FUNC(vkGetPhysicalDeviceFeatures);
-		IMPORT_FUNC(vkCreateDevice);
-		IMPORT_FUNC(vkGetPhysicalDeviceFormatProperties);
-		IMPORT_FUNC(vkGetPhysicalDeviceMemoryProperties);
-		IMPORT_FUNC(vkCmdPipelineBarrier);
-		IMPORT_FUNC(vkCreateShaderModule);
-		IMPORT_FUNC(vkCreateBuffer);
-		IMPORT_FUNC(vkGetBufferMemoryRequirements);
-		IMPORT_FUNC(vkMapMemory);
-		IMPORT_FUNC(vkUnmapMemory);
-		IMPORT_FUNC(vkBindBufferMemory);
-		IMPORT_FUNC(vkDestroyBuffer);
-		IMPORT_FUNC(vkCreateBufferView);
-		IMPORT_FUNC(vkDestroyBufferView);
-		IMPORT_FUNC(vkAllocateMemory);
-		IMPORT_FUNC(vkFreeMemory);
-		IMPORT_FUNC(vkCreateRenderPass);
-		IMPORT_FUNC(vkCmdBeginRenderPass);
-		IMPORT_FUNC(vkCmdEndRenderPass);
-		IMPORT_FUNC(vkCmdExecuteCommands);
-		IMPORT_FUNC(vkCreateImage);
-		IMPORT_FUNC(vkGetImageMemoryRequirements);
-		IMPORT_FUNC(vkCreateImageView);
-		IMPORT_FUNC(vkDestroyImageView);
-		IMPORT_FUNC(vkBindImageMemory);
-		IMPORT_FUNC(vkGetImageSubresourceLayout);
-		IMPORT_FUNC(vkCmdCopyImage);
-		IMPORT_FUNC(vkCmdBlitImage);
-		IMPORT_FUNC(vkCmdCopyBufferToImage);
-		IMPORT_FUNC(vkDestroyImage);
-		IMPORT_FUNC(vkCmdClearAttachments);
-		IMPORT_FUNC(vkCmdCopyBuffer);
-		IMPORT_FUNC(vkCreateSampler);
-		IMPORT_FUNC(vkDestroySampler);
-		IMPORT_FUNC(vkCreateSemaphore);
-		IMPORT_FUNC(vkDestroySemaphore);
-		IMPORT_FUNC(vkCreateFence);
-		IMPORT_FUNC(vkDestroyFence);
-		IMPORT_FUNC(vkWaitForFences);
-		IMPORT_FUNC(vkCreateCommandPool);
-		IMPORT_FUNC(vkDestroyCommandPool);
-		IMPORT_FUNC(vkAllocateCommandBuffers);
-		IMPORT_FUNC(vkBeginCommandBuffer);
-		IMPORT_FUNC(vkEndCommandBuffer);
-		IMPORT_FUNC(vkGetDeviceQueue);
-		IMPORT_FUNC(vkQueueSubmit);
-		IMPORT_FUNC(vkQueueWaitIdle);
-		IMPORT_FUNC(vkDeviceWaitIdle);
-		IMPORT_FUNC(vkCreateFramebuffer);
-		IMPORT_FUNC(vkCreatePipelineCache);
-		IMPORT_FUNC(vkCreatePipelineLayout);
-		IMPORT_FUNC(vkCreateGraphicsPipelines);
-		IMPORT_FUNC(vkCreateComputePipelines);
-		IMPORT_FUNC(vkCreateDescriptorPool);
-		IMPORT_FUNC(vkCreateDescriptorSetLayout);
-		IMPORT_FUNC(vkAllocateDescriptorSets);
-		IMPORT_FUNC(vkFreeDescriptorSets);
-		IMPORT_FUNC(vkUpdateDescriptorSets);
-		IMPORT_FUNC(vkCmdBindDescriptorSets);
-		IMPORT_FUNC(vkCmdBindPipeline);
-		IMPORT_FUNC(vkCmdSetViewport);
-		IMPORT_FUNC(vkCmdSetScissor);
-		IMPORT_FUNC(vkCmdSetLineWidth);
-		IMPORT_FUNC(vkCmdSetDepthBias);
-		IMPORT_FUNC(vkCmdPushConstants);
-		IMPORT_FUNC(vkCmdBindIndexBuffer);
-		IMPORT_FUNC(vkCmdBindVertexBuffers);
-		IMPORT_FUNC(vkCmdDraw);
-		IMPORT_FUNC(vkCmdDrawIndexed);
-		IMPORT_FUNC(vkCmdDrawIndirect);
-		IMPORT_FUNC(vkCmdDrawIndexedIndirect);
-		IMPORT_FUNC(vkCmdDispatch);
-		IMPORT_FUNC(vkCmdClearColorImage);
-		IMPORT_FUNC(vkCmdClearDepthStencilImage);
-		IMPORT_FUNC(vkDestroyPipeline);
-		IMPORT_FUNC(vkDestroyPipelineLayout);
-		IMPORT_FUNC(vkDestroyDescriptorSetLayout);
-		IMPORT_FUNC(vkDestroyDevice);
-		IMPORT_FUNC(vkDestroyDescriptorPool);
-		IMPORT_FUNC(vkFreeCommandBuffers);
-		IMPORT_FUNC(vkDestroyRenderPass);
-		IMPORT_FUNC(vkDestroyFramebuffer);
-		IMPORT_FUNC(vkDestroyShaderModule);
-		IMPORT_FUNC(vkDestroyPipelineCache);
-		IMPORT_FUNC(vkCreateQueryPool);
-		IMPORT_FUNC(vkDestroyQueryPool);
-		IMPORT_FUNC(vkGetQueryPoolResults);
-		IMPORT_FUNC(vkCmdBeginQuery);
-		IMPORT_FUNC(vkCmdEndQuery);
-		IMPORT_FUNC(vkCmdResetQueryPool);
-		IMPORT_FUNC(vkCmdCopyQueryPoolResults);
-
-		// "VK_EXT_debug_report"-extension
+		// Load the Vulkan instance level function entry points
+		IMPORT_FUNC(vkDestroyInstance)
+		IMPORT_FUNC(vkEnumeratePhysicalDevices)
+		IMPORT_FUNC(vkEnumerateDeviceLayerProperties)
+		IMPORT_FUNC(vkEnumerateDeviceExtensionProperties)
+		IMPORT_FUNC(vkGetPhysicalDeviceQueueFamilyProperties)
+		IMPORT_FUNC(vkGetPhysicalDeviceFeatures)
+		IMPORT_FUNC(vkGetPhysicalDeviceFormatProperties)
+		IMPORT_FUNC(vkGetPhysicalDeviceMemoryProperties)
+		IMPORT_FUNC(vkGetPhysicalDeviceProperties)
+		IMPORT_FUNC(vkCreateDevice)
 		if (mValidationEnabled)
 		{
-			IMPORT_FUNC(vkCreateDebugReportCallbackEXT);
-			IMPORT_FUNC(vkDestroyDebugReportCallbackEXT);
+			// "VK_EXT_debug_report"-extension
+			IMPORT_FUNC(vkCreateDebugReportCallbackEXT)
+			IMPORT_FUNC(vkDestroyDebugReportCallbackEXT)
 		}
-
 		// "VK_KHR_surface"-extension
-		IMPORT_FUNC(vkDestroySurfaceKHR);
-		IMPORT_FUNC(vkGetPhysicalDeviceSurfaceSupportKHR);
-		IMPORT_FUNC(vkGetPhysicalDeviceSurfaceFormatsKHR);
-		IMPORT_FUNC(vkGetPhysicalDeviceSurfaceCapabilitiesKHR);
-		IMPORT_FUNC(vkGetPhysicalDeviceSurfacePresentModesKHR);
+		IMPORT_FUNC(vkDestroySurfaceKHR)
+		IMPORT_FUNC(vkGetPhysicalDeviceSurfaceSupportKHR)
+		IMPORT_FUNC(vkGetPhysicalDeviceSurfaceFormatsKHR)
+		IMPORT_FUNC(vkGetPhysicalDeviceSurfaceCapabilitiesKHR)
+		IMPORT_FUNC(vkGetPhysicalDeviceSurfacePresentModesKHR)
 		#ifdef VK_USE_PLATFORM_WIN32_KHR
 			// "VK_KHR_win32_surface"-extension
-			IMPORT_FUNC(vkCreateWin32SurfaceKHR);
+			IMPORT_FUNC(vkCreateWin32SurfaceKHR)
 		#elif defined VK_USE_PLATFORM_ANDROID_KHR
 			// "VK_KHR_android_surface"-extension
 			#warning "TODO(co) Not tested"
-			IMPORT_FUNC(vkCreateAndroidSurfaceKHR);
+			IMPORT_FUNC(vkCreateAndroidSurfaceKHR)
 		#elif defined VK_USE_PLATFORM_XLIB_KHR || defined VK_USE_PLATFORM_WAYLAND_KHR
 			#if defined VK_USE_PLATFORM_XLIB_KHR
 				// "VK_KHR_xlib_surface"-extension
-				IMPORT_FUNC(vkCreateXlibSurfaceKHR);
+				IMPORT_FUNC(vkCreateXlibSurfaceKHR)
 			#endif
-			#if defined VK_USE_PLATFORM_XLIB_KHR
+			#if defined VK_USE_PLATFORM_WAYLAND_KHR
 				// "VK_KHR_wayland_surface"-extension
-				IMPORT_FUNC(vkCreateWaylandSurfaceKHR);
+				IMPORT_FUNC(vkCreateWaylandSurfaceKHR)
 			#endif
 		#elif defined VK_USE_PLATFORM_XCB_KHR
 			// "VK_KHR_xcb_surface"-extension
 			#warning "TODO(co) Not tested"
-			IMPORT_FUNC(vkCreateXcbSurfaceKHR);
+			IMPORT_FUNC(vkCreateXcbSurfaceKHR)
 		#else
 			#error "Unsupported platform"
 		#endif
-
-		// "VK_KHR_swapchain"-extension
-		IMPORT_FUNC(vkCreateSwapchainKHR);
-		IMPORT_FUNC(vkDestroySwapchainKHR);
-		IMPORT_FUNC(vkGetSwapchainImagesKHR);
-		IMPORT_FUNC(vkAcquireNextImageKHR);
-		IMPORT_FUNC(vkQueuePresentKHR);
 
 		// Undefine the helper macro
 		#undef IMPORT_FUNC
