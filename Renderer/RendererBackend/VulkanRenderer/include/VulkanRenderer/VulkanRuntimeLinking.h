@@ -115,6 +115,18 @@ namespace VulkanRenderer
 		*/
 		inline VkInstance getVkInstance() const;
 
+		/**
+		*  @brief
+		*    Load the device level Vulkan function entry points
+		*
+		*  @param[in] vkDevice
+		*    Vulkan device instance to load the function entry pointers for
+		*
+		*  @return
+		*    "true" if all went fine, else "false"
+		*/
+		bool loadDeviceLevelVulkanEntryPoints(VkDevice vkDevice) const;
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
@@ -134,12 +146,12 @@ namespace VulkanRenderer
 
 		/**
 		*  @brief
-		*    Load the Vulkan entry points
+		*    Load the global level Vulkan function entry points
 		*
 		*  @return
 		*    "true" if all went fine, else "false"
 		*/
-		bool loadVulkanEntryPoints();
+		bool loadGlobalLevelVulkanEntryPoints() const;
 
 		/**
 		*  @brief
@@ -155,12 +167,12 @@ namespace VulkanRenderer
 
 		/**
 		*  @brief
-		*    Load instance based Vulkan function pointers
+		*    Load the instance level Vulkan function entry points
 		*
 		*  @return
 		*    "true" if all went fine, else "false"
 		*/
-		bool loadVulkanFunctions();
+		bool loadInstanceLevelVulkanEntryPoints() const;
 
 		/**
 		*  @brief
@@ -173,14 +185,14 @@ namespace VulkanRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		VulkanRenderer&			 mVulkanRenderer;			///< Owner Vulkan renderer instance
-		bool					 mValidationEnabled;		///< Validation enabled?
-		void*					 mVulkanSharedLibrary;		///< Vulkan shared library, can be a null pointer
-		bool					 mEntryPointsRegistered;	///< Entry points successfully registered?
-		VkInstance				 mVkInstance;				///< Vulkan instance, stores all per-application states
-		VkDebugReportCallbackEXT mVkDebugReportCallbackEXT;	///< Vulkan debug report callback, can be a null handle
-		bool					 mFunctionsRegistered;		///< Instance based Vulkan function pointers registered?
-		bool					 mInitialized;				///< Already initialized?
+		VulkanRenderer&			 mVulkanRenderer;					///< Owner Vulkan renderer instance
+		bool					 mValidationEnabled;				///< Validation enabled?
+		void*					 mVulkanSharedLibrary;				///< Vulkan shared library, can be a null pointer
+		bool					 mEntryPointsRegistered;			///< Entry points successfully registered?
+		VkInstance				 mVkInstance;						///< Vulkan instance, stores all per-application states
+		VkDebugReportCallbackEXT mVkDebugReportCallbackEXT;			///< Vulkan debug report callback, can be a null handle
+		bool					 mInstanceLevelFunctionsRegistered;	///< Instance level Vulkan function pointers registered?
+		bool					 mInitialized;						///< Already initialized?
 
 
 	};
@@ -204,114 +216,26 @@ namespace VulkanRenderer
 #endif
 
 // Global Vulkan function pointers
-FNPTR(vkCreateInstance)
-FNPTR(vkDestroyInstance)
 FNPTR(vkGetInstanceProcAddr)
+FNPTR(vkGetDeviceProcAddr)
 FNPTR(vkEnumerateInstanceExtensionProperties)
 FNPTR(vkEnumerateInstanceLayerProperties)
+FNPTR(vkCreateInstance)
 
 // Instance based Vulkan function pointers
+FNPTR(vkDestroyInstance)
 FNPTR(vkEnumeratePhysicalDevices)
-FNPTR(vkGetPhysicalDeviceProperties)
 FNPTR(vkEnumerateDeviceLayerProperties)
 FNPTR(vkEnumerateDeviceExtensionProperties)
 FNPTR(vkGetPhysicalDeviceQueueFamilyProperties)
 FNPTR(vkGetPhysicalDeviceFeatures)
-FNPTR(vkCreateDevice)
 FNPTR(vkGetPhysicalDeviceFormatProperties)
 FNPTR(vkGetPhysicalDeviceMemoryProperties)
-FNPTR(vkCmdPipelineBarrier)
-FNPTR(vkCreateShaderModule)
-FNPTR(vkCreateBuffer)
-FNPTR(vkGetBufferMemoryRequirements)
-FNPTR(vkMapMemory)
-FNPTR(vkUnmapMemory)
-FNPTR(vkBindBufferMemory)
-FNPTR(vkDestroyBuffer)
-FNPTR(vkCreateBufferView)
-FNPTR(vkDestroyBufferView)
-FNPTR(vkAllocateMemory)
-FNPTR(vkFreeMemory)
-FNPTR(vkCreateRenderPass)
-FNPTR(vkCmdBeginRenderPass)
-FNPTR(vkCmdEndRenderPass)
-FNPTR(vkCmdExecuteCommands)
-FNPTR(vkCreateImage)
-FNPTR(vkGetImageMemoryRequirements)
-FNPTR(vkCreateImageView)
-FNPTR(vkDestroyImageView)
-FNPTR(vkBindImageMemory)
-FNPTR(vkGetImageSubresourceLayout)
-FNPTR(vkCmdCopyImage)
-FNPTR(vkCmdBlitImage)
-FNPTR(vkCmdCopyBufferToImage)
-FNPTR(vkDestroyImage)
-FNPTR(vkCmdClearAttachments)
-FNPTR(vkCmdCopyBuffer)
-FNPTR(vkCreateSampler)
-FNPTR(vkDestroySampler)
-FNPTR(vkCreateSemaphore)
-FNPTR(vkDestroySemaphore)
-FNPTR(vkCreateFence)
-FNPTR(vkDestroyFence)
-FNPTR(vkWaitForFences)
-FNPTR(vkCreateCommandPool)
-FNPTR(vkDestroyCommandPool)
-FNPTR(vkAllocateCommandBuffers)
-FNPTR(vkBeginCommandBuffer)
-FNPTR(vkEndCommandBuffer)
-FNPTR(vkGetDeviceQueue)
-FNPTR(vkQueueSubmit)
-FNPTR(vkQueueWaitIdle)
-FNPTR(vkDeviceWaitIdle)
-FNPTR(vkCreateFramebuffer)
-FNPTR(vkCreatePipelineCache)
-FNPTR(vkCreatePipelineLayout)
-FNPTR(vkCreateGraphicsPipelines)
-FNPTR(vkCreateComputePipelines)
-FNPTR(vkCreateDescriptorPool)
-FNPTR(vkCreateDescriptorSetLayout)
-FNPTR(vkAllocateDescriptorSets)
-FNPTR(vkFreeDescriptorSets)
-FNPTR(vkUpdateDescriptorSets)
-FNPTR(vkCmdBindDescriptorSets)
-FNPTR(vkCmdBindPipeline)
-FNPTR(vkCmdSetViewport)
-FNPTR(vkCmdSetScissor)
-FNPTR(vkCmdSetLineWidth)
-FNPTR(vkCmdSetDepthBias)
-FNPTR(vkCmdPushConstants)
-FNPTR(vkCmdBindIndexBuffer)
-FNPTR(vkCmdBindVertexBuffers)
-FNPTR(vkCmdDraw)
-FNPTR(vkCmdDrawIndexed)
-FNPTR(vkCmdDrawIndirect)
-FNPTR(vkCmdDrawIndexedIndirect)
-FNPTR(vkCmdDispatch)
-FNPTR(vkCmdClearColorImage)
-FNPTR(vkCmdClearDepthStencilImage)
-FNPTR(vkDestroyPipeline)
-FNPTR(vkDestroyPipelineLayout)
-FNPTR(vkDestroyDescriptorSetLayout)
-FNPTR(vkDestroyDevice)
-FNPTR(vkDestroyDescriptorPool)
-FNPTR(vkFreeCommandBuffers)
-FNPTR(vkDestroyRenderPass)
-FNPTR(vkDestroyFramebuffer)
-FNPTR(vkDestroyShaderModule)
-FNPTR(vkDestroyPipelineCache)
-FNPTR(vkCreateQueryPool)
-FNPTR(vkDestroyQueryPool)
-FNPTR(vkGetQueryPoolResults)
-FNPTR(vkCmdBeginQuery)
-FNPTR(vkCmdEndQuery)
-FNPTR(vkCmdResetQueryPool)
-FNPTR(vkCmdCopyQueryPoolResults)
-
+FNPTR(vkGetPhysicalDeviceProperties)
+FNPTR(vkCreateDevice)
 // "VK_EXT_debug_report"-extension
 FNPTR(vkCreateDebugReportCallbackEXT)
 FNPTR(vkDestroyDebugReportCallbackEXT)
-
 // "VK_KHR_surface"-extension
 FNPTR(vkDestroySurfaceKHR)
 FNPTR(vkGetPhysicalDeviceSurfaceSupportKHR)
@@ -342,6 +266,100 @@ FNPTR(vkGetPhysicalDeviceSurfacePresentModesKHR)
 	#error "Unsupported platform"
 #endif
 
+// Device based Vulkan function pointers
+FNPTR(vkDestroyDevice)
+FNPTR(vkCreateShaderModule)
+FNPTR(vkDestroyShaderModule)
+FNPTR(vkCreateBuffer)
+FNPTR(vkDestroyBuffer)
+FNPTR(vkMapMemory)
+FNPTR(vkUnmapMemory)
+FNPTR(vkCreateBufferView)
+FNPTR(vkDestroyBufferView)
+FNPTR(vkAllocateMemory)
+FNPTR(vkFreeMemory)
+FNPTR(vkGetBufferMemoryRequirements)
+FNPTR(vkBindBufferMemory)
+FNPTR(vkCreateRenderPass)
+FNPTR(vkDestroyRenderPass)
+FNPTR(vkCreateImage)
+FNPTR(vkDestroyImage)
+FNPTR(vkGetImageSubresourceLayout)
+FNPTR(vkGetImageMemoryRequirements)
+FNPTR(vkBindImageMemory)
+FNPTR(vkCreateImageView)
+FNPTR(vkDestroyImageView)
+FNPTR(vkCreateSampler)
+FNPTR(vkDestroySampler)
+FNPTR(vkCreateSemaphore)
+FNPTR(vkDestroySemaphore)
+FNPTR(vkCreateFence)
+FNPTR(vkDestroyFence)
+FNPTR(vkWaitForFences)
+FNPTR(vkCreateCommandPool)
+FNPTR(vkDestroyCommandPool)
+FNPTR(vkAllocateCommandBuffers)
+FNPTR(vkFreeCommandBuffers)
+FNPTR(vkBeginCommandBuffer)
+FNPTR(vkEndCommandBuffer)
+FNPTR(vkGetDeviceQueue)
+FNPTR(vkQueueSubmit)
+FNPTR(vkQueueWaitIdle)
+FNPTR(vkDeviceWaitIdle)
+FNPTR(vkCreateFramebuffer)
+FNPTR(vkDestroyFramebuffer)
+FNPTR(vkCreatePipelineCache)
+FNPTR(vkDestroyPipelineCache)
+FNPTR(vkCreatePipelineLayout)
+FNPTR(vkDestroyPipelineLayout)
+FNPTR(vkCreateGraphicsPipelines)
+FNPTR(vkCreateComputePipelines)
+FNPTR(vkDestroyPipeline)
+FNPTR(vkCreateDescriptorPool)
+FNPTR(vkDestroyDescriptorPool)
+FNPTR(vkCreateDescriptorSetLayout)
+FNPTR(vkDestroyDescriptorSetLayout)
+FNPTR(vkAllocateDescriptorSets)
+FNPTR(vkFreeDescriptorSets)
+FNPTR(vkUpdateDescriptorSets)
+FNPTR(vkCreateQueryPool)
+FNPTR(vkDestroyQueryPool)
+FNPTR(vkGetQueryPoolResults)
+FNPTR(vkCmdBeginQuery)
+FNPTR(vkCmdEndQuery)
+FNPTR(vkCmdResetQueryPool)
+FNPTR(vkCmdCopyQueryPoolResults)
+FNPTR(vkCmdPipelineBarrier)
+FNPTR(vkCmdBeginRenderPass)
+FNPTR(vkCmdEndRenderPass)
+FNPTR(vkCmdExecuteCommands)
+FNPTR(vkCmdCopyImage)
+FNPTR(vkCmdBlitImage)
+FNPTR(vkCmdCopyBufferToImage)
+FNPTR(vkCmdClearAttachments)
+FNPTR(vkCmdCopyBuffer)
+FNPTR(vkCmdBindDescriptorSets)
+FNPTR(vkCmdBindPipeline)
+FNPTR(vkCmdSetViewport)
+FNPTR(vkCmdSetScissor)
+FNPTR(vkCmdSetLineWidth)
+FNPTR(vkCmdSetDepthBias)
+FNPTR(vkCmdPushConstants)
+FNPTR(vkCmdBindIndexBuffer)
+FNPTR(vkCmdBindVertexBuffers)
+FNPTR(vkCmdDraw)
+FNPTR(vkCmdDrawIndexed)
+FNPTR(vkCmdDrawIndirect)
+FNPTR(vkCmdDrawIndexedIndirect)
+FNPTR(vkCmdDispatch)
+FNPTR(vkCmdClearColorImage)
+FNPTR(vkCmdClearDepthStencilImage)
+// "VK_EXT_debug_marker"-extension
+FNPTR(vkDebugMarkerSetObjectTagEXT)
+FNPTR(vkDebugMarkerSetObjectNameEXT)
+FNPTR(vkCmdDebugMarkerBeginEXT)
+FNPTR(vkCmdDebugMarkerEndEXT)
+FNPTR(vkCmdDebugMarkerInsertEXT)
 // "VK_KHR_swapchain"-extension
 FNPTR(vkCreateSwapchainKHR)
 FNPTR(vkDestroySwapchainKHR)

@@ -42,7 +42,7 @@ namespace VulkanRenderer
 		IGeometryShader(vulkanRenderer),
 		mVkShaderModule(ShaderLanguageGlsl::createVkShaderModuleFromBytecode(vulkanRenderer, shaderBytecode))
 	{
-		// Nothing here
+		SET_DEFAULT_DEBUG_NAME	// setDebugName("");
 	}
 
 	// TODO(co) Remove unused parameters
@@ -50,7 +50,7 @@ namespace VulkanRenderer
 		IGeometryShader(vulkanRenderer),
 		mVkShaderModule(ShaderLanguageGlsl::createVkShaderModuleFromSourceCode(vulkanRenderer, VK_SHADER_STAGE_GEOMETRY_BIT, sourceCode, shaderBytecode))
 	{
-		// Nothing here
+		SET_DEFAULT_DEBUG_NAME	// setDebugName("");
 	}
 
 	GeometryShaderGlsl::~GeometryShaderGlsl()
@@ -60,6 +60,12 @@ namespace VulkanRenderer
 			vkDestroyShaderModule(static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), mVkShaderModule, nullptr);
 		}
 	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	DEFINE_SET_DEBUG_NAME_SHADER_MODULE(GeometryShaderGlsl)	// void GeometryShaderGlsl::setDebugName(const char* name)
 
 
 	//[-------------------------------------------------------]

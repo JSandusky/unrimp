@@ -47,6 +47,7 @@ namespace VulkanRenderer
 		mVkDeviceMemory(VK_NULL_HANDLE)
 	{
 		Helper::createAndAllocateVkBuffer(vulkanRenderer, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, numberOfBytes, data, mVkBuffer, mVkDeviceMemory);
+		SET_DEFAULT_DEBUG_NAME	// setDebugName("");
 	}
 
 	UniformBuffer::~UniformBuffer()
@@ -79,6 +80,12 @@ namespace VulkanRenderer
 			RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to map the Vulkan memory")
 		}
 	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	DEFINE_SET_DEBUG_NAME_VKBUFFER_VKDEVICEMEMORY(UniformBuffer, "UBO", 6)	// void UniformBuffer::setDebugName(const char* name)
 
 
 //[-------------------------------------------------------]

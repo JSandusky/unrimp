@@ -361,6 +361,10 @@ namespace VulkanRenderer
 		{
 			RENDERER_LOG(context, CRITICAL, "Failed to create Vulkan framebuffer")
 		}
+		else
+		{
+			SET_DEFAULT_DEBUG_NAME	// setDebugName("");
+		}
 	}
 
 	Framebuffer::~Framebuffer()
@@ -400,6 +404,22 @@ namespace VulkanRenderer
 			mDepthStencilTexture->releaseReference();
 		}
 	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifndef VULKANRENDERER_NO_DEBUG
+		void Framebuffer::setDebugName(const char* name)
+		{
+			if (nullptr != vkDebugMarkerSetObjectNameEXT)
+			{
+				const VkDevice vkDevice = static_cast<const VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice();
+				Helper::setDebugObjectName(vkDevice, VK_DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT, mVkRenderPass, name);
+				Helper::setDebugObjectName(vkDevice, VK_DEBUG_REPORT_OBJECT_TYPE_FRAMEBUFFER_EXT, mVkFramebuffer, name);
+			}
+		}
+	#endif
 
 
 	//[-------------------------------------------------------]

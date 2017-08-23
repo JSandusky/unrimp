@@ -65,6 +65,7 @@ namespace VulkanRenderer
 		{
 			RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create the Vulkan buffer view")
 		}
+		SET_DEFAULT_DEBUG_NAME	// setDebugName("");
 	}
 
 	TextureBuffer::~TextureBuffer()
@@ -102,6 +103,23 @@ namespace VulkanRenderer
 			RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to map the Vulkan memory")
 		}
 	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifndef VULKANRENDERER_NO_DEBUG
+		void TextureBuffer::setDebugName(const char* name)
+		{
+			if (nullptr != vkDebugMarkerSetObjectNameEXT)
+			{
+				const VkDevice vkDevice = static_cast<const VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice();
+				Helper::setDebugObjectName(vkDevice, VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT, mVkBuffer, name);
+				Helper::setDebugObjectName(vkDevice, VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT, mVkDeviceMemory, name);
+				Helper::setDebugObjectName(vkDevice, VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_VIEW_EXT, mVkBufferView, name);
+			}
+		}
+	#endif
 
 
 //[-------------------------------------------------------]

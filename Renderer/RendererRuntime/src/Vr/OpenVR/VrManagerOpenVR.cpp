@@ -226,6 +226,36 @@ namespace
 
 		/**
 		*  @brief
+		*    Split the Vulkan extension string given by OpenVR; the extension names are separated by space
+		*/
+		void splitOpenVrVulkanExtensionString(const std::vector<char>& extensionString, std::vector<std::string>& outInstanceExtensionList)
+		{
+			// Break up the space separated list into entries
+			std::string currentExtensionString;
+			size_t index = 0;
+			const size_t bufferSize = extensionString.size();
+			while ((index < bufferSize) && 0 != extensionString[index])
+			{
+				if (' ' == extensionString[index])
+				{
+					// Do move instead of a copy we don't need the content anymore
+					outInstanceExtensionList.emplace_back(std::move(currentExtensionString));
+				}
+				else
+				{
+					currentExtensionString += extensionString[index];
+				}
+				++index;
+			}
+			if (!currentExtensionString.empty())
+			{
+				// Do move instead of a copy we don't need the content anymore
+				outInstanceExtensionList.emplace_back(std::move(currentExtensionString));
+			}
+		}
+
+		/**
+		*  @brief
 		*    Ask OpenVR for the list of Vulkan instance extensions required
 		*
 		*  @note
@@ -245,32 +275,13 @@ namespace
 			if (bufferSize > 0)
 			{
 				// Allocate memory for the space separated list and query for it
-				char* extensionString = new char[bufferSize];
-				extensionString[0] = 0;
-				vr::VRCompositor()->GetVulkanInstanceExtensionsRequired(extensionString, bufferSize);
+				// TODO(sw) with c++17 we could use std::string which contains a non const data method like std::vector
+				std::vector<char> extensionString;
+				extensionString.resize(bufferSize, 0);
+				vr::VRCompositor()->GetVulkanInstanceExtensionsRequired(extensionString.data(), bufferSize);
 
 				// Break up the space separated list into entries
-				std::string currentExtensionString;
-				uint32_t index = 0;
-				while (0 != extensionString[index] && (index < bufferSize))
-				{
-					if (' ' == extensionString[index])
-					{
-						outInstanceExtensionList.push_back(currentExtensionString);
-						currentExtensionString.clear();
-					}
-					else
-					{
-						currentExtensionString += extensionString[index];
-					}
-					++index;
-				}
-				if (!currentExtensionString.empty())
-				{
-					outInstanceExtensionList.push_back(currentExtensionString);
-				}
-
-				delete [] extensionString;
+				splitOpenVrVulkanExtensionString(extensionString, outInstanceExtensionList);
 			}
 
 			// Done
@@ -298,32 +309,13 @@ namespace
 			if (bufferSize > 0)
 			{
 				// Allocate memory for the space separated list and query for it
-				char* extensionString = new char[bufferSize];
-				extensionString[0] = 0;
-				vr::VRCompositor()->GetVulkanDeviceExtensionsRequired(vkPhysicalDevice_T, extensionString, bufferSize);
+				// TODO(sw) with c++17 we could use std::string which contains a non const data method like std::vector
+				std::vector<char> extensionString;
+				extensionString.resize(bufferSize, 0);
+				vr::VRCompositor()->GetVulkanDeviceExtensionsRequired(vkPhysicalDevice_T, extensionString.data(), bufferSize);
 
 				// Break up the space separated list into entries
-				std::string currentExtensionString;
-				uint32_t index = 0;
-				while (0 != extensionString[index] && (index < bufferSize))
-				{
-					if (' ' == extensionString[index])
-					{
-						outDeviceExtensionList.push_back(currentExtensionString);
-						currentExtensionString.clear();
-					}
-					else
-					{
-						currentExtensionString += extensionString[index];
-					}
-					++index;
-				}
-				if (!currentExtensionString.empty())
-				{
-					outDeviceExtensionList.push_back(currentExtensionString);
-				}
-
-				delete [] extensionString;
+				splitOpenVrVulkanExtensionString(extensionString, outDeviceExtensionList);
 			}
 
 			// Done

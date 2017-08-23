@@ -30,6 +30,7 @@
 #include <Renderer/State/ISamplerState.h>
 
 #include "VulkanRenderer/Vulkan.h"
+#include "VulkanRenderer/Helper.h"
 
 
 //[-------------------------------------------------------]
@@ -88,6 +89,13 @@ namespace VulkanRenderer
 		*    The Vulkan sampler
 		*/
 		inline VkSampler getVkSampler() const;
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	public:
+		DECLARE_SET_DEBUG_NAME	// virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]

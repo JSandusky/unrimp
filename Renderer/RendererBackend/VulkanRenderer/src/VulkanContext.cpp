@@ -96,28 +96,26 @@ namespace
 			return false;
 		}
 
-		VkPhysicalDevice selectPhysicalDevice(VulkanRenderer::VulkanRenderer& vulkanRenderer, const VkPhysicalDevices& vkPhysicalDevices)
+		VkPhysicalDevice selectPhysicalDevice(VulkanRenderer::VulkanRenderer& vulkanRenderer, const VkPhysicalDevices& vkPhysicalDevices, bool& enableDebugMarker)
 		{
 			// TODO(co) I'am sure this selection can be improved (rating etc.)
 			for (const VkPhysicalDevice& vkPhysicalDevice : vkPhysicalDevices)
 			{
+				// Get of device extensions
+				uint32_t propertyCount = 0;
+				if ((vkEnumerateDeviceExtensionProperties(vkPhysicalDevice, nullptr, &propertyCount, nullptr) != VK_SUCCESS) || (0 == propertyCount))
+				{
+					// Reject physical Vulkan device
+					continue;
+				}
+				VkExtensionPropertiesVector vkExtensionPropertiesVector(propertyCount);
+				if (vkEnumerateDeviceExtensionProperties(vkPhysicalDevice, nullptr, &propertyCount, vkExtensionPropertiesVector.data()) != VK_SUCCESS)
+				{
+					// Reject physical Vulkan device
+					continue;
+				}
+
 				{ // Reject physical Vulkan devices basing on swap chain support
-					// Get number of device extensions
-					uint32_t propertyCount = 0;
-					if ((vkEnumerateDeviceExtensionProperties(vkPhysicalDevice, nullptr, &propertyCount, nullptr) != VK_SUCCESS) || (0 == propertyCount))
-					{
-						// Reject physical Vulkan device
-						continue;
-					}
-
-					// Get of device extensions
-					VkExtensionPropertiesVector vkExtensionPropertiesVector(propertyCount);
-					if (vkEnumerateDeviceExtensionProperties(vkPhysicalDevice, nullptr, &propertyCount, vkExtensionPropertiesVector.data()) != VK_SUCCESS)
-					{
-						// Reject physical Vulkan device
-						continue;
-					}
-
 					// Check device extensions
 					const std::array<const char*, 2> deviceExtensions =
 					{
@@ -165,6 +163,33 @@ namespace
 				{
 					if ((queueFamilyProperties[i].queueCount > 0) && (queueFamilyProperties[i].queueFlags & VK_QUEUE_GRAPHICS_BIT))
 					{
+						// Check whether or not the "VK_EXT_debug_marker"-extension is available
+						// -> The "VK_EXT_debug_marker"-extension is only available when the application gets started by tools like RenderDoc ( https://renderdoc.org/ )
+						// -> See "Offline debugging in Vulkan with VK_EXT_debug_marker and RenderDoc" - https://www.saschawillems.de/?page_id=2017
+						if (enableDebugMarker)
+						{
+							// Check whether or not the "VK_EXT_debug_marker"-extension is available
+							if (isExtensionAvailable(VK_EXT_DEBUG_MARKER_EXTENSION_NAME, vkExtensionPropertiesVector))
+							{
+								// TODO(co) Currently, when trying to use RenderDoc ( https://renderdoc.org/ ) while having Vulkan debug layers enabled, RenderDoc crashes
+								// -> Windows 10 x64
+								// -> Radeon software 17.7.2
+								// -> GPU: AMD 290X
+								// -> LunarG® Vulkan™ SDK 1.0.54.0
+								// -> Tried RenderDoc v0.91 as well as "Nightly v0.x @ 2017-08-21 (Win x64)" ("RenderDoc_2017_08_21_177d595d_64.zip")
+								if (vulkanRenderer.getVulkanRuntimeLinking().isValidationEnabled())
+								{
+									enableDebugMarker = false;
+									RENDERER_LOG(vulkanRenderer.getContext(), WARNING, "Vulkan validation layers are enabled: If you want to use debug markers (\"VK_EXT_debug_marker\"-extension) please disable the validation layers")
+								}
+							}
+							else
+							{
+								// Silently disable debug marker
+								enableDebugMarker = false;
+							}
+						}
+
 						// Select physical Vulkan device
 						return vkPhysicalDevice;
 					}
@@ -176,13 +201,14 @@ namespace
 			return VK_NULL_HANDLE;
 		}
 
-		VkResult createVkDevice(VkPhysicalDevice vkPhysicalDevice, const VkDeviceQueueCreateInfo& vkDeviceQueueCreateInfo, bool enableValidation, VkDevice& vkDevice)
+		VkResult createVkDevice(VulkanRenderer::VulkanRenderer& vulkanRenderer, VkPhysicalDevice vkPhysicalDevice, const VkDeviceQueueCreateInfo& vkDeviceQueueCreateInfo, bool enableValidation, bool enableDebugMarker, VkDevice& vkDevice)
 		{
 			// See http://vulkan.gpuinfo.org/listfeatures.php to check out GPU hardware capabilities
-			const std::array<const char*, 2> enabledExtensions =
+			const std::array<const char*, 3> enabledExtensions =
 			{
 				VK_KHR_SWAPCHAIN_EXTENSION_NAME,
-				VK_KHR_MAINTENANCE1_EXTENSION_NAME	// We want to be able to specify a negative viewport height, this way we don't have to apply "<output position>.y = -<output position>.y" inside vertex shaders to compensate for the Vulkan coordinate system
+				VK_KHR_MAINTENANCE1_EXTENSION_NAME,	// We want to be able to specify a negative viewport height, this way we don't have to apply "<output position>.y = -<output position>.y" inside vertex shaders to compensate for the Vulkan coordinate system
+				VK_EXT_DEBUG_MARKER_EXTENSION_NAME
 			};
 			const VkPhysicalDeviceFeatures vkPhysicalDeviceFeatures =
 			{
@@ -251,14 +277,42 @@ namespace
 				&vkDeviceQueueCreateInfo,																	// pQueueCreateInfos (const VkDeviceQueueCreateInfo*)
 				enableValidation ? VulkanRenderer::VulkanRuntimeLinking::NUMBER_OF_VALIDATION_LAYERS : 0,	// enabledLayerCount (uint32_t)
 				enableValidation ? VulkanRenderer::VulkanRuntimeLinking::VALIDATION_LAYER_NAMES : nullptr,	// ppEnabledLayerNames (const char* const*)
-				enabledExtensions.empty() ? 0 : static_cast<uint32_t>(enabledExtensions.size()),			// enabledExtensionCount (uint32_t)
+				enableDebugMarker ? 3u : 2u,																// enabledExtensionCount (uint32_t)
 				enabledExtensions.empty() ? nullptr : enabledExtensions.data(),								// ppEnabledExtensionNames (const char* const*)
 				&vkPhysicalDeviceFeatures																	// pEnabledFeatures (const VkPhysicalDeviceFeatures*)
 			};
-			return vkCreateDevice(vkPhysicalDevice, &vkDeviceCreateInfo, nullptr, &vkDevice);
+			const VkResult vkResult = vkCreateDevice(vkPhysicalDevice, &vkDeviceCreateInfo, nullptr, &vkDevice);
+			if (VK_SUCCESS == vkResult && enableDebugMarker)
+			{
+				// Get "VK_EXT_debug_marker"-extension function pointers
+
+				// Define a helper macro
+				PRAGMA_WARNING_PUSH
+				PRAGMA_WARNING_DISABLE_MSVC(4191)	// 'reinterpret_cast': unsafe conversion from 'PFN_vkVoidFunction' to '<x>'
+				#define IMPORT_FUNC(funcName)																											\
+					funcName = reinterpret_cast<PFN_##funcName>(vkGetDeviceProcAddr(vkDevice, #funcName));												\
+					if (nullptr == funcName)																											\
+					{																																	\
+						RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to load instance based Vulkan function pointer \"%s\"", #funcName)	\
+					}																																	\
+
+				// "VK_EXT_debug_marker"-extension
+				IMPORT_FUNC(vkDebugMarkerSetObjectTagEXT);
+				IMPORT_FUNC(vkDebugMarkerSetObjectNameEXT);
+				IMPORT_FUNC(vkCmdDebugMarkerBeginEXT);
+				IMPORT_FUNC(vkCmdDebugMarkerEndEXT);
+				IMPORT_FUNC(vkCmdDebugMarkerInsertEXT);
+
+				// Undefine the helper macro
+				#undef IMPORT_FUNC
+				PRAGMA_WARNING_POP
+			}
+
+			// Done
+			return vkResult;
 		}
 
-		VkDevice createVkDevice(VulkanRenderer::VulkanRenderer& vulkanRenderer, VkPhysicalDevice vkPhysicalDevice, bool enableValidation, uint32_t& graphicsQueueFamilyIndex, uint32_t& presentQueueFamilyIndex)
+		VkDevice createVkDevice(VulkanRenderer::VulkanRenderer& vulkanRenderer, VkPhysicalDevice vkPhysicalDevice, bool enableValidation, bool enableDebugMarker, uint32_t& graphicsQueueFamilyIndex, uint32_t& presentQueueFamilyIndex)
 		{
 			VkDevice vkDevice = VK_NULL_HANDLE;
 
@@ -288,12 +342,12 @@ namespace
 							1,											// queueCount (uint32_t)
 							queuePriorities.data()						// pQueuePriorities (const float*)
 						};
-						VkResult vkResult = createVkDevice(vkPhysicalDevice, vkDeviceQueueCreateInfo, enableValidation, vkDevice);
+						VkResult vkResult = createVkDevice(vulkanRenderer, vkPhysicalDevice, vkDeviceQueueCreateInfo, enableValidation, enableDebugMarker, vkDevice);
 						if (VK_ERROR_LAYER_NOT_PRESENT == vkResult && enableValidation)
 						{
 							// Error! Since the show must go on, try creating a Vulkan device instance without validation enabled...
 							RENDERER_LOG(vulkanRenderer.getContext(), WARNING, "Failed to create the Vulkan device instance with validation enabled, layer is not present")
-							vkResult = createVkDevice(vkPhysicalDevice, vkDeviceQueueCreateInfo, false, vkDevice);
+							vkResult = createVkDevice(vulkanRenderer, vkPhysicalDevice, vkDeviceQueueCreateInfo, false, enableDebugMarker, vkDevice);
 						}
 						// TODO(co) Error handling: Evaluate "vkResult"?
 						graphicsQueueFamilyIndex = graphicsQueueIndex;
@@ -392,47 +446,53 @@ namespace VulkanRenderer
 	{
 		const VulkanRuntimeLinking& vulkanRuntimeLinking = mVulkanRenderer.getVulkanRuntimeLinking();
 
-		{ // Get the physical Vulkan device this context should use
+		// Get the physical Vulkan device this context should use
+		bool enableDebugMarker = true;	// TODO(co) Make it possible to setup from the outside whether or not the "VK_EXT_debug_marker"-extension should be used (e.g. retail shipped games might not want to have this enabled)
+		{
 			detail::VkPhysicalDevices vkPhysicalDevices;
 			::detail::enumeratePhysicalDevices(mVulkanRenderer, vulkanRuntimeLinking.getVkInstance(), vkPhysicalDevices);
 			if (!vkPhysicalDevices.empty())
 			{
-				mVkPhysicalDevice = ::detail::selectPhysicalDevice(mVulkanRenderer, vkPhysicalDevices);
+				mVkPhysicalDevice = ::detail::selectPhysicalDevice(mVulkanRenderer, vkPhysicalDevices, enableDebugMarker);
 			}
 		}
 
 		// Create the logical Vulkan device instance
 		if (VK_NULL_HANDLE != mVkPhysicalDevice)
 		{
-			mVkDevice = ::detail::createVkDevice(mVulkanRenderer, mVkPhysicalDevice, vulkanRuntimeLinking.isValidationEnabled(), mGraphicsQueueFamilyIndex, mPresentQueueFamilyIndex);
+			mVkDevice = ::detail::createVkDevice(mVulkanRenderer, mVkPhysicalDevice, vulkanRuntimeLinking.isValidationEnabled(), enableDebugMarker, mGraphicsQueueFamilyIndex, mPresentQueueFamilyIndex);
 			if (VK_NULL_HANDLE != mVkDevice)
 			{
-				// Get the Vulkan device graphics queue that command buffers are submitted to
-				vkGetDeviceQueue(mVkDevice, mGraphicsQueueFamilyIndex, 0, &mGraphicsVkQueue);
-				if (VK_NULL_HANDLE != mGraphicsVkQueue)
+				// Load device based instance level Vulkan function pointers
+				if (mVulkanRenderer.getVulkanRuntimeLinking().loadDeviceLevelVulkanEntryPoints(mVkDevice))
 				{
-					// Get the Vulkan device present queue
-					vkGetDeviceQueue(mVkDevice, mPresentQueueFamilyIndex, 0, &mPresentVkQueue);
-					if (VK_NULL_HANDLE != mPresentVkQueue)
+					// Get the Vulkan device graphics queue that command buffers are submitted to
+					vkGetDeviceQueue(mVkDevice, mGraphicsQueueFamilyIndex, 0, &mGraphicsVkQueue);
+					if (VK_NULL_HANDLE != mGraphicsVkQueue)
 					{
-						// Create Vulkan command pool instance
-						mVkCommandPool = ::detail::createVkCommandPool(mVulkanRenderer, mVkDevice, mGraphicsQueueFamilyIndex);
-						if (VK_NULL_HANDLE != mVkCommandPool)
+						// Get the Vulkan device present queue
+						vkGetDeviceQueue(mVkDevice, mPresentQueueFamilyIndex, 0, &mPresentVkQueue);
+						if (VK_NULL_HANDLE != mPresentVkQueue)
 						{
-							// Create Vulkan command buffer instance
-							mVkCommandBuffer = ::detail::createVkCommandBuffer(mVulkanRenderer, mVkDevice, mVkCommandPool);
-						}
-						else
-						{
-							// Error!
-							RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create Vulkan command pool instance")
+							// Create Vulkan command pool instance
+							mVkCommandPool = ::detail::createVkCommandPool(mVulkanRenderer, mVkDevice, mGraphicsQueueFamilyIndex);
+							if (VK_NULL_HANDLE != mVkCommandPool)
+							{
+								// Create Vulkan command buffer instance
+								mVkCommandBuffer = ::detail::createVkCommandBuffer(mVulkanRenderer, mVkDevice, mVkCommandPool);
+							}
+							else
+							{
+								// Error!
+								RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create Vulkan command pool instance")
+							}
 						}
 					}
-				}
-				else
-				{
-					// Error!
-					RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to get the Vulkan device graphics queue that command buffers are submitted to")
+					else
+					{
+						// Error!
+						RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to get the Vulkan device graphics queue that command buffers are submitted to")
+					}
 				}
 			}
 		}

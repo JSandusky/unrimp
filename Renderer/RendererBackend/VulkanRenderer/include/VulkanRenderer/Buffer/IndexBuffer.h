@@ -32,6 +32,7 @@
 #include <Renderer/Buffer/BufferTypes.h>
 
 #include "VulkanRenderer/Vulkan.h"
+#include "VulkanRenderer/Helper.h"
 
 
 //[-------------------------------------------------------]
@@ -114,6 +115,13 @@ namespace VulkanRenderer
 		*    The Vulkan device memory
 		*/
 		inline VkDeviceMemory getVkDeviceMemory() const;
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	public:
+		DECLARE_SET_DEBUG_NAME	// virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]

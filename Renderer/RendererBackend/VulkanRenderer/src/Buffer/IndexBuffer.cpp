@@ -44,12 +44,19 @@ namespace VulkanRenderer
 		mVkDeviceMemory(VK_NULL_HANDLE)
 	{
 		Helper::createAndAllocateVkBuffer(vulkanRenderer, VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, numberOfBytes, data, mVkBuffer, mVkDeviceMemory);
+		SET_DEFAULT_DEBUG_NAME	// setDebugName("");
 	}
 
 	IndexBuffer::~IndexBuffer()
 	{
 		Helper::destroyAndFreeVkBuffer(static_cast<const VulkanRenderer&>(getRenderer()), mVkBuffer, mVkDeviceMemory);
 	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	DEFINE_SET_DEBUG_NAME_VKBUFFER_VKDEVICEMEMORY(IndexBuffer, "IBO", 6)	// void IndexBuffer::setDebugName(const char* name)
 
 
 //[-------------------------------------------------------]

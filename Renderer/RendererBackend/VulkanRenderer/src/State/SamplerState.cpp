@@ -75,6 +75,10 @@ namespace VulkanRenderer
 		{
 			RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create Vulkan sampler instance")
 		}
+		else
+		{
+			SET_DEFAULT_DEBUG_NAME	// setDebugName("");
+		}
 	}
 
 	SamplerState::~SamplerState()
@@ -84,6 +88,20 @@ namespace VulkanRenderer
 			vkDestroySampler(static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), mVkSampler, nullptr);
 		}
 	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifndef VULKANRENDERER_NO_DEBUG
+		void SamplerState::setDebugName(const char* name)
+		{
+			if (nullptr != vkDebugMarkerSetObjectNameEXT)
+			{
+				Helper::setDebugObjectName(static_cast<const VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_EXT, mVkSampler, name);
+			}
+		}
+	#endif
 
 
 //[-------------------------------------------------------]

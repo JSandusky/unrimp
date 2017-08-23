@@ -45,6 +45,7 @@ namespace VulkanRenderer
 		mVkImageView(VK_NULL_HANDLE)
 	{
 		mVrVulkanTextureData.m_nFormat = Helper::createAndFillVkImage(vulkanRenderer, VK_IMAGE_TYPE_2D, VK_IMAGE_VIEW_TYPE_2D, { width, height, 1 }, textureFormat, data, flags, mVrVulkanTextureData.m_nImage, mVkDeviceMemory, mVkImageView);
+		SET_DEFAULT_DEBUG_NAME	// setDebugName("");
 
 		// Fill the rest of the "VRVulkanTextureData_t"-structure
 		const VulkanContext& vulkanContext = vulkanRenderer.getVulkanContext();
@@ -65,6 +66,23 @@ namespace VulkanRenderer
 	{
 		Helper::destroyAndFreeVkImage(static_cast<VulkanRenderer&>(getRenderer()), mVrVulkanTextureData.m_nImage, mVkDeviceMemory, mVkImageView);
 	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifndef VULKANRENDERER_NO_DEBUG
+		void Texture2D::setDebugName(const char* name)
+		{
+			if (nullptr != vkDebugMarkerSetObjectNameEXT)
+			{
+				const VkDevice vkDevice = static_cast<const VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice();
+				Helper::setDebugObjectName(vkDevice, VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT, mVrVulkanTextureData.m_nImage, name);
+				Helper::setDebugObjectName(vkDevice, VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT, mVkDeviceMemory, name);
+				Helper::setDebugObjectName(vkDevice, VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT, mVkImageView, name);
+			}
+		}
+	#endif
 
 
 //[-------------------------------------------------------]

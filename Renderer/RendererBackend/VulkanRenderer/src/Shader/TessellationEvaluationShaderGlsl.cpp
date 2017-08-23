@@ -41,14 +41,14 @@ namespace VulkanRenderer
 		ITessellationEvaluationShader(vulkanRenderer),
 		mVkShaderModule(ShaderLanguageGlsl::createVkShaderModuleFromBytecode(vulkanRenderer, shaderBytecode))
 	{
-		// Nothing here
+		SET_DEFAULT_DEBUG_NAME	// setDebugName("");
 	}
 
 	TessellationEvaluationShaderGlsl::TessellationEvaluationShaderGlsl(VulkanRenderer& vulkanRenderer, const char* sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
 		ITessellationEvaluationShader(vulkanRenderer),
 		mVkShaderModule(ShaderLanguageGlsl::createVkShaderModuleFromSourceCode(vulkanRenderer, VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT, sourceCode, shaderBytecode))
 	{
-		// Nothing here
+		SET_DEFAULT_DEBUG_NAME	// setDebugName("");
 	}
 
 	TessellationEvaluationShaderGlsl::~TessellationEvaluationShaderGlsl()
@@ -58,6 +58,12 @@ namespace VulkanRenderer
 			vkDestroyShaderModule(static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), mVkShaderModule, nullptr);
 		}
 	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	DEFINE_SET_DEBUG_NAME_SHADER_MODULE(TessellationEvaluationShaderGlsl)	// void TessellationEvaluationShaderGlsl::setDebugName(const char* name)
 
 
 	//[-------------------------------------------------------]

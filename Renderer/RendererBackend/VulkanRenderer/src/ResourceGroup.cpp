@@ -253,6 +253,8 @@ namespace VulkanRenderer
 				}
 			}
 		}
+
+		SET_DEFAULT_DEBUG_NAME	// setDebugName("");
 	}
 
 	ResourceGroup::~ResourceGroup()
@@ -282,6 +284,20 @@ namespace VulkanRenderer
 			vkFreeDescriptorSets(static_cast<VulkanRenderer&>(mRootSignature.getRenderer()).getVulkanContext().getVkDevice(), mRootSignature.getVkDescriptorPool(), 1, &mVkDescriptorSet);
 		}
 	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifndef VULKANRENDERER_NO_DEBUG
+		void ResourceGroup::setDebugName(const char* name)
+		{
+			if (nullptr != vkDebugMarkerSetObjectNameEXT)
+			{
+				Helper::setDebugObjectName(static_cast<const VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT, mVkDescriptorSet, name);
+			}
+		}
+	#endif
 
 
 //[-------------------------------------------------------]
