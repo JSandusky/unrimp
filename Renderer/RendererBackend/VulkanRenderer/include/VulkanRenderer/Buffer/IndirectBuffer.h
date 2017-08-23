@@ -31,6 +31,7 @@
 #include <Renderer/Buffer/BufferTypes.h>
 
 #include "VulkanRenderer/Vulkan.h"
+#include "VulkanRenderer/Helper.h"
 
 
 //[-------------------------------------------------------]
@@ -119,6 +120,13 @@ namespace VulkanRenderer
 	public:
 		inline virtual const uint8_t* getEmulationData() const override;
 		virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) override;
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	public:
+		DECLARE_SET_DEBUG_NAME	// virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]

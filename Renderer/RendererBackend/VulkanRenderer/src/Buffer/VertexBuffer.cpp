@@ -23,7 +23,6 @@
 //[-------------------------------------------------------]
 #include "VulkanRenderer/Buffer/VertexBuffer.h"
 #include "VulkanRenderer/VulkanRenderer.h"
-#include "VulkanRenderer/Helper.h"
 
 
 //[-------------------------------------------------------]
@@ -42,12 +41,19 @@ namespace VulkanRenderer
 		mVkDeviceMemory(VK_NULL_HANDLE)
 	{
 		Helper::createAndAllocateVkBuffer(vulkanRenderer, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, numberOfBytes, data, mVkBuffer, mVkDeviceMemory);
+		SET_DEFAULT_DEBUG_NAME	// setDebugName("");
 	}
 
 	VertexBuffer::~VertexBuffer()
 	{
 		Helper::destroyAndFreeVkBuffer(static_cast<const VulkanRenderer&>(getRenderer()), mVkBuffer, mVkDeviceMemory);
 	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	DEFINE_SET_DEBUG_NAME_VKBUFFER_VKDEVICEMEMORY(VertexBuffer, "VBO", 6)	// void VertexBuffer::setDebugName(const char* name)
 
 
 //[-------------------------------------------------------]

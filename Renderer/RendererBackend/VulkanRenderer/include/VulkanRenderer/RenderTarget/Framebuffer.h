@@ -29,7 +29,7 @@
 //[-------------------------------------------------------]
 #include <Renderer/RenderTarget/IFramebuffer.h>
 
-#include "VulkanRenderer/VulkanRuntimeLinking.h"
+#include "VulkanRenderer/Helper.h"
 
 
 //[-------------------------------------------------------]
@@ -105,6 +105,13 @@ namespace VulkanRenderer
 		*    The Vulkan framebuffer to render into
 		*/
 		inline VkFramebuffer getVkFramebuffer() const;
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	public:
+		DECLARE_SET_DEBUG_NAME	// virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]

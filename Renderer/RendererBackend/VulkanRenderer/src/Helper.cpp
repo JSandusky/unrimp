@@ -494,6 +494,24 @@ namespace VulkanRenderer
 		}
 	}
 
+	#ifndef VULKANRENDERER_NO_DEBUG
+		void Helper::setDebugObjectName(VkDevice vkDevice, VkDebugReportObjectTypeEXT vkDebugReportObjectTypeEXT, uint64_t object, const char* objectName)
+		{
+			if (nullptr != vkDebugMarkerSetObjectNameEXT)
+			{
+				VkDebugMarkerObjectNameInfoEXT vkDebugMarkerObjectNameInfoEXT =
+				{
+					VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT,	// sType (VkStructureType)
+					nullptr,												// pNext (const void*)
+					vkDebugReportObjectTypeEXT,								// objectType (VkDebugReportObjectTypeEXT)
+					object,													// object (uint64_t)
+					objectName												// pObjectName (const char*)
+				};
+				vkDebugMarkerSetObjectNameEXT(vkDevice, &vkDebugMarkerObjectNameInfoEXT);
+			}
+		}
+	#endif
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

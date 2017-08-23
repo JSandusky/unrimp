@@ -45,13 +45,19 @@ namespace VulkanRenderer
 		mVkImageView(VK_NULL_HANDLE),
 		mVkFormat(Helper::createAndFillVkImage(vulkanRenderer, VK_IMAGE_TYPE_2D, VK_IMAGE_VIEW_TYPE_2D_ARRAY, { width, height, numberOfSlices }, textureFormat, data, flags, mVkImage, mVkDeviceMemory, mVkImageView))
 	{
-		// Nothing here
+		SET_DEFAULT_DEBUG_NAME	// setDebugName("");
 	}
 
 	Texture2DArray::~Texture2DArray()
 	{
 		Helper::destroyAndFreeVkImage(static_cast<VulkanRenderer&>(getRenderer()), mVkImage, mVkDeviceMemory, mVkImageView);
 	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	DEFINE_SET_DEBUG_NAME_TEXTURE(Texture2DArray)	// void Texture2DArray::setDebugName(const char* name)
 
 
 //[-------------------------------------------------------]

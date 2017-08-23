@@ -339,6 +339,10 @@ namespace VulkanRenderer
 		{
 			RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create the Vulkan graphics pipeline")
 		}
+		else
+		{
+			SET_DEFAULT_DEBUG_NAME	// setDebugName("");
+		}
 	}
 
 	PipelineState::~PipelineState()
@@ -355,6 +359,20 @@ namespace VulkanRenderer
 			mProgram->releaseReference();
 		}
 	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifndef VULKANRENDERER_NO_DEBUG
+		void PipelineState::setDebugName(const char* name)
+		{
+			if (nullptr != vkDebugMarkerSetObjectNameEXT)
+			{
+				Helper::setDebugObjectName(static_cast<const VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT, mVkPipeline, name);
+			}
+		}
+	#endif
 
 
 //[-------------------------------------------------------]

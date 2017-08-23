@@ -41,14 +41,14 @@ namespace VulkanRenderer
 		IVertexShader(vulkanRenderer),
 		mVkShaderModule(ShaderLanguageGlsl::createVkShaderModuleFromBytecode(vulkanRenderer, shaderBytecode))
 	{
-		// Nothing here
+		SET_DEFAULT_DEBUG_NAME	// setDebugName("");
 	}
 
 	VertexShaderGlsl::VertexShaderGlsl(VulkanRenderer& vulkanRenderer, const char* sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
 		IVertexShader(vulkanRenderer),
 		mVkShaderModule(ShaderLanguageGlsl::createVkShaderModuleFromSourceCode(vulkanRenderer, VK_SHADER_STAGE_VERTEX_BIT, sourceCode, shaderBytecode))
 	{
-		// Nothing here
+		SET_DEFAULT_DEBUG_NAME	// setDebugName("");
 	}
 
 	VertexShaderGlsl::~VertexShaderGlsl()
@@ -58,6 +58,12 @@ namespace VulkanRenderer
 			vkDestroyShaderModule(static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), mVkShaderModule, nullptr);
 		}
 	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	DEFINE_SET_DEBUG_NAME_SHADER_MODULE(VertexShaderGlsl)	// void VertexShaderGlsl::setDebugName(const char* name)
 
 
 	//[-------------------------------------------------------]

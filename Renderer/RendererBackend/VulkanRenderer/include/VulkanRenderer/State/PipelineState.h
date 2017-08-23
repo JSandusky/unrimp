@@ -30,6 +30,7 @@
 #include <Renderer/State/IPipelineState.h>
 
 #include "VulkanRenderer/Vulkan.h"
+#include "VulkanRenderer/Helper.h"
 
 
 //[-------------------------------------------------------]
@@ -93,6 +94,13 @@ namespace VulkanRenderer
 		*    The Vulkan graphics pipeline
 		*/
 		inline VkPipeline getVkPipeline() const;
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	public:
+		DECLARE_SET_DEBUG_NAME	// virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]

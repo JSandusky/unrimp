@@ -31,6 +31,7 @@
 #include <Renderer/RootSignatureTypes.h>
 
 #include "VulkanRenderer/Vulkan.h"
+#include "VulkanRenderer/Helper.h"
 
 #include <vector>
 
@@ -109,6 +110,13 @@ namespace VulkanRenderer
 		*    The Vulkan descriptor pool
 		*/
 		inline VkDescriptorPool getVkDescriptorPool() const;
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	public:
+		DECLARE_SET_DEBUG_NAME	// virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]

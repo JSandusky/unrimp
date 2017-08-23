@@ -45,6 +45,7 @@ namespace VulkanRenderer
 		mVkImageView(VK_NULL_HANDLE)
 	{
 		Helper::createAndFillVkImage(vulkanRenderer, VK_IMAGE_TYPE_3D, VK_IMAGE_VIEW_TYPE_3D, { width, height, depth }, textureFormat, data, flags, mVkImage, mVkDeviceMemory, mVkImageView);
+		SET_DEFAULT_DEBUG_NAME	// setDebugName("");
 	}
 
 	Texture3D::~Texture3D()
@@ -60,6 +61,12 @@ namespace VulkanRenderer
 	{
 		// TODO(co) Implement me
 	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	DEFINE_SET_DEBUG_NAME_TEXTURE(Texture3D)	// void Texture3D::setDebugName(const char* name)
 
 
 //[-------------------------------------------------------]

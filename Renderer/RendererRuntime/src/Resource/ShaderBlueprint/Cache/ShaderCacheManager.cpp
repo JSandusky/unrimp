@@ -30,6 +30,7 @@
 #include "RendererRuntime/Resource/VertexAttributes/VertexAttributesResourceManager.h"
 #include "RendererRuntime/Resource/VertexAttributes/VertexAttributesResource.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
+#include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/Core/File/MemoryFile.h"
 #include "RendererRuntime/Core/Math/Math.h"
 #include "RendererRuntime/IRendererRuntime.h"
@@ -163,7 +164,7 @@ namespace RendererRuntime
 							// Create the new shader cache instance
 							if (nullptr != shader)
 							{
-								RENDERER_SET_RESOURCE_DEBUG_NAME(shader, "Shader cache manager")
+								RENDERER_SET_RESOURCE_DEBUG_NAME(shader, mShaderBlueprintResourceManager.getRendererRuntime().getAssetManager().tryGetAssetByAssetId(shaderBlueprintResource->getAssetId())->assetFilename)
 								assert((!shaderLanguage.getRenderer().getCapabilities().shaderBytecode || 0 != shaderCache->mShaderBytecode.getNumberOfBytes()) && "Invalid shader bytecode received from renderer implementation");
 								shaderCache->mShaderPtr = shader;
 								mShaderCacheByShaderCacheId.emplace(shaderCacheId, shaderCache);

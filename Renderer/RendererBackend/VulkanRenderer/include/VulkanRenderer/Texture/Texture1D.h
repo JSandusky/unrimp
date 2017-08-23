@@ -31,6 +31,7 @@
 #include <Renderer/Texture/TextureTypes.h>
 
 #include "VulkanRenderer/Vulkan.h"
+#include "VulkanRenderer/Helper.h"
 
 
 //[-------------------------------------------------------]
@@ -104,6 +105,13 @@ namespace VulkanRenderer
 		*    The Vulkan image layout
 		*/
 		inline VkImageLayout getVkImageLayout() const;
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	public:
+		DECLARE_SET_DEBUG_NAME	// virtual void setDebugName(const char* name) override;
 
 
 	//[-------------------------------------------------------]
