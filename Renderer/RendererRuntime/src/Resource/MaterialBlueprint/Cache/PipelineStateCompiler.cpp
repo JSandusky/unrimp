@@ -426,6 +426,7 @@ namespace RendererRuntime
 		pipelineState.rootSignature	   = rootSignaturePtr;
 		pipelineState.program		   = &program;
 		pipelineState.vertexAttributes = rendererRuntime.getVertexAttributesResourceManager().getById(materialBlueprintResource.getVertexAttributesResourceId()).getVertexAttributes();
+		pipelineState.renderPass	   = &program.getRenderer().getMainSwapChain()->getRenderPass();
 
 		// Create the pipeline state object (PSO)
 		Renderer::IPipelineState* pipelineStateResource = rootSignaturePtr->getRenderer().createPipelineState(pipelineState);

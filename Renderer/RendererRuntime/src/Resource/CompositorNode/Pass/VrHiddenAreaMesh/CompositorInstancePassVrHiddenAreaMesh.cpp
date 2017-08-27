@@ -141,13 +141,10 @@
 						// Create the pipeline state object (PSO)
 						if (nullptr != program)
 						{
-							// TODO(co) Render pass update
-							/*
-							Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes);
+							Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes, renderer.getMainSwapChain()->getRenderPass());
 							pipelineState.rasterizerState.cullMode = Renderer::CullMode::NONE;
 							mPipelineState = renderer.createPipelineState(pipelineState);
 							RENDERER_SET_RESOURCE_DEBUG_NAME(mPipelineState, "Compositor instance pass VR hidden area mesh PSO")
-							*/
 						}
 					}
 				}

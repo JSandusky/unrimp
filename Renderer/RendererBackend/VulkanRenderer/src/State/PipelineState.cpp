@@ -97,7 +97,7 @@ namespace VulkanRenderer
 
 		// Sanity checks
 		assert(nullptr != pipelineState.rootSignature);
-		assert(nullptr != vulkanRenderer.getMainSwapChain());
+		assert(nullptr != pipelineState.renderPass);
 
 		// Our pipeline state needs to be independent of concrete render targets, so we're using dynamic viewport ("VK_DYNAMIC_STATE_VIEWPORT") and scissor ("VK_DYNAMIC_STATE_SCISSOR") states
 		const uint32_t width  = 42;

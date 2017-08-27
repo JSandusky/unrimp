@@ -354,8 +354,8 @@ void FirstMultipleSwapChains::onDrawRequest()
 		// -> In this example this behaviour makes it difficult to catch the desired frame of the desired native OS window
 
 		{ // Draw into the main swap chain
-			Renderer::ISwapChain* swapChain = renderer->getMainSwapChain();
-			if (nullptr != swapChain)
+			Renderer::IRenderTarget* mainRenderTarget = getMainRenderTarget();
+			if (nullptr != mainRenderTarget)
 			{
 				// Begin scene rendering
 				// -> Required for Direct3D 9 and Direct3D 12
@@ -367,13 +367,13 @@ void FirstMultipleSwapChains::onDrawRequest()
 						COMMAND_BEGIN_DEBUG_EVENT(mCommandBuffer, "Draw into the main swap chain")
 
 						// Set the render target to render into
-						Renderer::Command::SetRenderTarget::create(mCommandBuffer, swapChain);
+						Renderer::Command::SetRenderTarget::create(mCommandBuffer, mainRenderTarget);
 
 						{ // Set the viewport
 							// Get the render target with and height
 							uint32_t width  = 1;
 							uint32_t height = 1;
-							swapChain->getWidthAndHeight(width, height);
+							mainRenderTarget->getWidthAndHeight(width, height);
 
 							// Set the viewport and scissor rectangle
 							Renderer::Command::SetViewportAndScissorRectangle::create(mCommandBuffer, 0, 0, width, height);
@@ -395,7 +395,10 @@ void FirstMultipleSwapChains::onDrawRequest()
 					renderer->endScene();
 
 					// Present the content of the current back buffer
-					swapChain->present();
+					if (mainRenderTarget->getResourceType() == Renderer::ResourceType::SWAP_CHAIN)
+					{
+						static_cast<Renderer::ISwapChain*>(mainRenderTarget)->present();
+					}
 				}
 			}
 		}

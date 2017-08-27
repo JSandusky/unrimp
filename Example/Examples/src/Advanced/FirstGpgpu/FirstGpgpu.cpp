@@ -370,9 +370,6 @@ void FirstGpgpu::fillCommandBufferContentProcessing()
 	// Render the specified geometric primitive, based on indexing into an array of vertices
 	Renderer::Command::Draw::create(mCommandBufferContentProcessing, 4);
 
-	// Restore main swap chain as current render target
-	Renderer::Command::SetRenderTarget::create(mCommandBufferContentProcessing, mRenderer->getMainSwapChain());
-
 	// End debug event
 	COMMAND_END_DEBUG_EVENT(mCommandBufferContentProcessing)
 }
