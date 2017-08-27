@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Direct3D9Renderer/RenderTarget/Framebuffer.h"
+#include "Direct3D9Renderer/RenderTarget/RenderPass.h"
 #include "Direct3D9Renderer/Texture/Texture2D.h"
 #include "Direct3D9Renderer/d3d9.h"
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
@@ -39,10 +40,9 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Framebuffer::Framebuffer(Direct3D9Renderer& direct3D9Renderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment) :
-		IFramebuffer(direct3D9Renderer),
-		mRenderPass(direct3D9Renderer),
-		mNumberOfColorTextures(numberOfColorFramebufferAttachments),
+	Framebuffer::Framebuffer(Renderer::IRenderPass& renderPass, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment) :
+		IFramebuffer(renderPass),
+		mNumberOfColorTextures(static_cast<RenderPass&>(renderPass).getNumberOfColorAttachments()),
 		mColorTextures(nullptr),	// Set below
 		mDepthStencilTexture(nullptr),
 		mWidth(UINT_MAX),
@@ -55,6 +55,7 @@ namespace Direct3D9Renderer
 		// So, in here I use the smallest width and height as the size of the framebuffer.
 
 		// Add a reference to the used color textures
+		Direct3D9Renderer& direct3D9Renderer = static_cast<Direct3D9Renderer&>(renderPass.getRenderer());
 		if (mNumberOfColorTextures > 0)
 		{
 			mColorTextures = new Renderer::ITexture*[mNumberOfColorTextures];

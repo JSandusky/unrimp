@@ -121,11 +121,12 @@ namespace OpenGLES3Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		uint32_t			mOpenGLES3PrimitiveTopology;	///< OpenGL ES 3 primitive topology describing the type of primitive to render (type "GLenum" not used in here in order to keep the header slim)
-		Renderer::IProgram* mProgram;
-		RasterizerState*	mRasterizerState;
-		DepthStencilState*	mDepthStencilState;
-		BlendState*			mBlendState;
+		uint32_t			   mOpenGLES3PrimitiveTopology;	///< OpenGL ES 3 primitive topology describing the type of primitive to render (type "GLenum" not used in here in order to keep the header slim)
+		Renderer::IProgram*    mProgram;
+		Renderer::IRenderPass* mRenderPass;
+		RasterizerState*	   mRasterizerState;
+		DepthStencilState*	   mDepthStencilState;
+		BlendState*			   mBlendState;
 
 
 	};

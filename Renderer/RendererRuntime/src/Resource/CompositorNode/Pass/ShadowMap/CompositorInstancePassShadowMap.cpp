@@ -433,12 +433,13 @@ namespace RendererRuntime
 		TextureResource* textureResource = textureResourceManager.getTextureResourceByAssetId(assetId);
 		if (nullptr == textureResource)
 		{
+			Renderer::IRenderer& renderer = rendererRuntime.getRenderer();
 			const uint32_t shadowMapSize = compositorResourcePassShadowMap.getShadowMapSize();
 			const uint8_t numberOfShadowCascades = compositorResourcePassShadowMap.getNumberOfShadowCascades();
 			assert(numberOfShadowCascades <= CompositorResourcePassShadowMap::MAXIMUM_NUMBER_OF_SHADOW_CASCADES);
 			uint8_t numberOfShadowMultisamples = compositorResourcePassShadowMap.getNumberOfShadowMultisamples();
 			{ // Multisamples sanity check
-				const uint8_t maximumNumberOfMultisamples = rendererRuntime.getRenderer().getCapabilities().maximumNumberOfMultisamples;
+				const uint8_t maximumNumberOfMultisamples = renderer.getCapabilities().maximumNumberOfMultisamples;
 				if (numberOfShadowMultisamples > maximumNumberOfMultisamples)
 				{
 					assert(false && "Number of shadow multisamples not supported by the renderer backend");
@@ -447,12 +448,13 @@ namespace RendererRuntime
 			}
 
 			{ // Depth shadow map
-				Renderer::ITexture* texture = rendererRuntime.getTextureManager().createTexture2D(shadowMapSize, shadowMapSize, Renderer::TextureFormat::D32_FLOAT, nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT, numberOfShadowMultisamples);
+				const Renderer::TextureFormat::Enum textureFormat = Renderer::TextureFormat::D32_FLOAT;
+				Renderer::ITexture* texture = rendererRuntime.getTextureManager().createTexture2D(shadowMapSize, shadowMapSize, textureFormat, nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT, numberOfShadowMultisamples);
 				RENDERER_SET_RESOURCE_DEBUG_NAME(texture, "Compositor instance pass depth shadow map")
 
 				// Create the framebuffer object (FBO) instance
 				Renderer::FramebufferAttachment depthStencilFramebufferAttachment(texture);
-				mDepthFramebufferPtr = rendererRuntime.getRenderer().createFramebuffer(0, nullptr, &depthStencilFramebufferAttachment);
+				mDepthFramebufferPtr = renderer.createFramebuffer(*renderer.createRenderPass(0, nullptr, textureFormat), nullptr, &depthStencilFramebufferAttachment);
 				RENDERER_SET_RESOURCE_DEBUG_NAME(mDepthFramebufferPtr, "Compositor instance pass depth shadow map")
 
 				// Create texture resource
@@ -468,14 +470,16 @@ namespace RendererRuntime
 			}
 
 			{ // Variance shadow map
-				Renderer::ITexture* texture = rendererRuntime.getTextureManager().createTexture2DArray(shadowMapSize, shadowMapSize, numberOfShadowCascades, Renderer::TextureFormat::R32G32B32A32F, nullptr, Renderer::TextureFlag::RENDER_TARGET);
+				const Renderer::TextureFormat::Enum textureFormat = Renderer::TextureFormat::R32G32B32A32F;
+				Renderer::ITexture* texture = rendererRuntime.getTextureManager().createTexture2DArray(shadowMapSize, shadowMapSize, numberOfShadowCascades, textureFormat, nullptr, Renderer::TextureFlag::RENDER_TARGET);
 				RENDERER_SET_RESOURCE_DEBUG_NAME(texture, "Compositor instance pass variance shadow map")
 
 				// Create the framebuffer object (FBO) instances
+				Renderer::IRenderPass* renderPass = renderer.createRenderPass(1, &textureFormat);
 				for (uint8_t cascadeIndex = 0; cascadeIndex < numberOfShadowCascades; ++cascadeIndex)
 				{
 					Renderer::FramebufferAttachment colorFramebufferAttachment(texture, 0, cascadeIndex);
-					mVarianceFramebufferPtr[cascadeIndex] = rendererRuntime.getRenderer().createFramebuffer(1, &colorFramebufferAttachment);
+					mVarianceFramebufferPtr[cascadeIndex] = renderer.createFramebuffer(*renderPass, &colorFramebufferAttachment);
 					RENDERER_SET_RESOURCE_DEBUG_NAME(mVarianceFramebufferPtr[cascadeIndex], ("Compositor instance pass variance shadow map " + std::to_string(cascadeIndex)).c_str())
 				}
 				for (uint8_t cascadeIndex = numberOfShadowCascades; cascadeIndex < CompositorResourcePassShadowMap::MAXIMUM_NUMBER_OF_SHADOW_CASCADES; ++cascadeIndex)
@@ -488,12 +492,13 @@ namespace RendererRuntime
 			}
 
 			{ // Intermediate depth blur shadow map
-				Renderer::ITexture* texture = rendererRuntime.getTextureManager().createTexture2D(shadowMapSize, shadowMapSize, Renderer::TextureFormat::R32G32B32A32F, nullptr, Renderer::TextureFlag::RENDER_TARGET);
+				const Renderer::TextureFormat::Enum textureFormat = Renderer::TextureFormat::R32G32B32A32F;
+				Renderer::ITexture* texture = rendererRuntime.getTextureManager().createTexture2D(shadowMapSize, shadowMapSize, textureFormat, nullptr, Renderer::TextureFlag::RENDER_TARGET);
 				RENDERER_SET_RESOURCE_DEBUG_NAME(texture, "Compositor instance pass intermediate depth blur shadow map")
 
 				// Create the framebuffer object (FBO) instance
 				Renderer::FramebufferAttachment colorFramebufferAttachment(texture);
-				mIntermediateFramebufferPtr = rendererRuntime.getRenderer().createFramebuffer(1, &colorFramebufferAttachment);
+				mIntermediateFramebufferPtr = renderer.createFramebuffer(*renderer.createRenderPass(1, &textureFormat), &colorFramebufferAttachment);
 				RENDERER_SET_RESOURCE_DEBUG_NAME(mIntermediateFramebufferPtr, "Compositor instance pass intermediate depth blur shadow map")
 
 				// Create texture resource

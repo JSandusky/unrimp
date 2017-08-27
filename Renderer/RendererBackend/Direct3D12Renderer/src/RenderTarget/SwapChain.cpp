@@ -39,9 +39,8 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SwapChain::SwapChain(Direct3D12Renderer& direct3D12Renderer, handle nativeWindowHandle) :
-		ISwapChain(direct3D12Renderer),
-		mRenderPass(direct3D12Renderer),
+	SwapChain::SwapChain(Renderer::IRenderPass& renderPass, handle nativeWindowHandle) :
+		ISwapChain(renderPass),
 		mDxgiSwapChain3(nullptr),
 		mD3D12DescriptorHeapRenderTargetView(nullptr),
 		mD3D12DescriptorHeapDepthStencilView(nullptr),
@@ -52,6 +51,7 @@ namespace Direct3D12Renderer
 		mD3D12Fence(nullptr),
 		mFenceValue(0)
 	{
+		Direct3D12Renderer& direct3D12Renderer = static_cast<Direct3D12Renderer&>(renderPass.getRenderer());
 		memset(mD3D12ResourceRenderTargets, 0, sizeof(ID3D12Resource*) * NUMBER_OF_FRAMES);
 
 		// Get the native window handle

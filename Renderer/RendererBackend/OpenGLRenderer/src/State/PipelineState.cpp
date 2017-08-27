@@ -31,6 +31,8 @@
 #include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/Mapping.h"
 
+#include <Renderer/RenderTarget/IRenderPass.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -47,6 +49,7 @@ namespace OpenGLRenderer
 		mOpenGLPrimitiveTopology(0xFFFF),	// Unknown default setting
 		mNumberOfVerticesPerPatch(0),
 		mProgram(pipelineState.program),
+		mRenderPass(pipelineState.renderPass),
 		mRasterizerState(new RasterizerState(pipelineState.rasterizerState)),
 		mDepthStencilState(new DepthStencilState(pipelineState.depthStencilState)),
 		mBlendState(new BlendState(pipelineState.blendState))
@@ -81,8 +84,9 @@ namespace OpenGLRenderer
 			mOpenGLPrimitiveTopology = Mapping::getOpenGLType(pipelineState.primitiveTopology);
 		}
 
-		// Add a reference to the given program
+		// Add a reference to the given program and render pass
 		mProgram->addReference();
+		mRenderPass->addReference();
 	}
 
 	PipelineState::~PipelineState()
@@ -92,11 +96,9 @@ namespace OpenGLRenderer
 		delete mDepthStencilState;
 		delete mBlendState;
 
-		// Release the program reference
-		if (nullptr != mProgram)
-		{
-			mProgram->releaseReference();
-		}
+		// Release the program and render pass reference
+		mProgram->releaseReference();
+		mRenderPass->releaseReference();
 	}
 
 	void PipelineState::bindPipelineState() const

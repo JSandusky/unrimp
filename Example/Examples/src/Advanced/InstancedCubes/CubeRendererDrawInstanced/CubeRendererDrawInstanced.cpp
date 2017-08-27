@@ -96,7 +96,7 @@ namespace
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer& renderer, const Renderer::IRenderPass& renderPass, uint32_t numberOfTextures, uint32_t sceneRadius) :
+CubeRendererDrawInstanced::CubeRendererDrawInstanced(Renderer::IRenderer& renderer, Renderer::IRenderPass& renderPass, uint32_t numberOfTextures, uint32_t sceneRadius) :
 	mRenderer(&renderer),
 	mRenderPass(renderPass),
 	mNumberOfTextures(numberOfTextures),

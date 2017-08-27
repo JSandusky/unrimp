@@ -30,6 +30,8 @@
 #include "Direct3D9Renderer/State/RasterizerState.h"
 #include "Direct3D9Renderer/State/DepthStencilState.h"
 
+#include <Renderer/RenderTarget/IRenderPass.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -46,6 +48,7 @@ namespace Direct3D9Renderer
 		mDirect3DDevice9(direct3D9Renderer.getDirect3DDevice9()),
 		mPrimitiveTopology(pipelineState.primitiveTopology),
 		mProgram(pipelineState.program),
+		mRenderPass(pipelineState.renderPass),
 		mDirect3DVertexDeclaration9(nullptr),
 		mRasterizerState(new RasterizerState(pipelineState.rasterizerState)),
 		mDepthStencilState(new DepthStencilState(pipelineState.depthStencilState)),
@@ -54,8 +57,9 @@ namespace Direct3D9Renderer
 		// Acquire our Direct3D 9 device reference
 		mDirect3DDevice9->AddRef();
 
-		// Add a reference to the given program
+		// Add a reference to the given program and render pass
 		mProgram->addReference();
+		mRenderPass->addReference();
 
 		{ // Create Direct3D 9 vertex elements
 			const uint32_t numberOfAttributes = pipelineState.vertexAttributes.numberOfAttributes;
@@ -98,8 +102,9 @@ namespace Direct3D9Renderer
 		delete mDepthStencilState;
 		delete mBlendState;
 
-		// Release the program reference
+		// Release the program reference and render pass
 		mProgram->releaseReference();
+		mRenderPass->releaseReference();
 
 		// Release the Direct3D 9 vertex declaration
 		if (nullptr != mDirect3DVertexDeclaration9)

@@ -22,10 +22,11 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "NullRenderer/NullRenderer.h"
-#include "NullRenderer/NullDebug.h"	// For "NULLRENDERER_RENDERERMATCHCHECK_RETURN()"
+#include "NullRenderer/NullDebug.h"	// For "NULLRENDERER_RENDERERMATCHCHECK_ASSERT()"
 #include "NullRenderer/RootSignature.h"
 #include "NullRenderer/ResourceGroup.h"
 #include "NullRenderer/RenderTarget/SwapChain.h"
+#include "NullRenderer/RenderTarget/RenderPass.h"
 #include "NullRenderer/RenderTarget/Framebuffer.h"
 #include "NullRenderer/Buffer/BufferManager.h"
 #include "NullRenderer/Buffer/VertexArray.h"
@@ -295,32 +296,16 @@ namespace NullRenderer
 	NullRenderer::NullRenderer(const Renderer::Context& context) :
 		IRenderer(context),
 		mShaderLanguage(nullptr),
-		mMainSwapChain(nullptr),
 		mRenderTarget(nullptr),
 		mGraphicsRootSignature(nullptr)
 	{
 		// Initialize the capabilities
 		initializeCapabilities();
-
-		// Create a main swap chain instance?
-		const handle nativeWindowHandle = mContext.getNativeWindowHandle();
-		if (NULL_HANDLE != nativeWindowHandle)
-		{
-			// Create a main swap chain instance
-			mMainSwapChain = static_cast<SwapChain*>(createSwapChain(nativeWindowHandle));
-			RENDERER_SET_RESOURCE_DEBUG_NAME(mMainSwapChain, "Main swap chain")
-			mMainSwapChain->addReference();	// Internal renderer reference
-		}
 	}
 
 	NullRenderer::~NullRenderer()
 	{
 		// Release instances
-		if (nullptr != mMainSwapChain)
-		{
-			mMainSwapChain->releaseReference();
-			mMainSwapChain = nullptr;
-		}
 		if (nullptr != mRenderTarget)
 		{
 			mRenderTarget->releaseReference();
@@ -377,7 +362,7 @@ namespace NullRenderer
 			mGraphicsRootSignature->addReference();
 
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *rootSignature)
+			NULLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, *rootSignature)
 		}
 	}
 
@@ -414,7 +399,7 @@ namespace NullRenderer
 		if (nullptr != resourceGroup)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *resourceGroup)
+			NULLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, *resourceGroup)
 
 			// TODO(co) Some additional resource type root signature security checks in debug build?
 		}
@@ -429,7 +414,7 @@ namespace NullRenderer
 		if (nullptr != pipelineState)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *pipelineState)
+			NULLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, *pipelineState)
 		}
 		else
 		{
@@ -447,7 +432,7 @@ namespace NullRenderer
 		if (nullptr != vertexArray)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *vertexArray)
+			NULLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, *vertexArray)
 		}
 	}
 
@@ -484,7 +469,7 @@ namespace NullRenderer
 			if (nullptr != renderTarget)
 			{
 				// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-				NULLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *renderTarget)
+				NULLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, *renderTarget)
 
 				// Release the render target reference, in case we have one
 				if (nullptr != mRenderTarget)
@@ -594,11 +579,6 @@ namespace NullRenderer
 		return false;
 	}
 
-	Renderer::ISwapChain* NullRenderer::getMainSwapChain() const
-	{
-		return mMainSwapChain;
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Shader language                                       ]
@@ -655,22 +635,35 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Resource creation                                     ]
 	//[-------------------------------------------------------]
-	Renderer::ISwapChain* NullRenderer::createSwapChain(handle nativeWindowHandle, bool)
+	Renderer::IRenderPass* NullRenderer::createRenderPass(uint32_t numberOfColorAttachments, const Renderer::TextureFormat::Enum* colorAttachmentTextureFormats, Renderer::TextureFormat::Enum depthStencilAttachmentTextureFormat, uint8_t numberOfMultisamples)
 	{
-		// The provided native window handle must not be a null handle
-		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
+		return new RenderPass(*this, numberOfColorAttachments, colorAttachmentTextureFormats, depthStencilAttachmentTextureFormat, numberOfMultisamples);
 	}
 
-	Renderer::IFramebuffer* NullRenderer::createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment)
+	Renderer::ISwapChain* NullRenderer::createSwapChain(Renderer::IRenderPass& renderPass, handle nativeWindowHandle, bool)
 	{
+		// Sanity checks
+		NULLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
+		assert(NULL_HANDLE != nativeWindowHandle && "The provided native window handle must not be a null handle");
+
+		// Create the swap chain
+		return new SwapChain(renderPass, nativeWindowHandle);
+	}
+
+	Renderer::IFramebuffer* NullRenderer::createFramebuffer(Renderer::IRenderPass& renderPass, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment)
+	{
+		// Sanity check
+		NULLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
+
 		// We don't keep a reference to the provided textures in here
 		// -> Ensure a correct reference counter behaviour
 
 		// Are there any color textures?
-		if (numberOfColorFramebufferAttachments > 0)
+		const uint32_t numberOfColorAttachments = static_cast<RenderPass&>(renderPass).getNumberOfColorAttachments();
+		if (numberOfColorAttachments > 0)
 		{
 			// Loop through all color textures
-			const Renderer::FramebufferAttachment* colorFramebufferAttachmentsEnd = colorFramebufferAttachments + numberOfColorFramebufferAttachments;
+			const Renderer::FramebufferAttachment* colorFramebufferAttachmentsEnd = colorFramebufferAttachments + numberOfColorAttachments;
 			for (const Renderer::FramebufferAttachment* colorFramebufferAttachment = colorFramebufferAttachments; colorFramebufferAttachment < colorFramebufferAttachmentsEnd; ++colorFramebufferAttachment)
 			{
 				// Valid entry?
@@ -691,7 +684,7 @@ namespace NullRenderer
 		}
 
 		// Create the framebuffer instance
-		return new Framebuffer(*this);
+		return new Framebuffer(renderPass);
 	}
 
 	Renderer::IBufferManager* NullRenderer::createBufferManager()
@@ -792,6 +785,10 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	void NullRenderer::initializeCapabilities()
 	{
+		// Preferred swap chain texture format
+		mCapabilities.preferredSwapChainColorTextureFormat		  = Renderer::TextureFormat::Enum::R8G8B8A8;
+		mCapabilities.preferredSwapChainDepthStencilTextureFormat = Renderer::TextureFormat::Enum::D32_FLOAT;
+
 		// Maximum number of viewports (always at least 1)
 		mCapabilities.maximumNumberOfViewports = 1;
 

@@ -428,7 +428,10 @@ namespace RendererRuntime
 				// Create the pipeline state object (PSO)
 				if (nullptr != mProgram)
 				{
-					Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, mProgram, ::detail::VertexAttributes, renderer.getMainSwapChain()->getRenderPass());
+					// TODO(co) Render pass related update, the render pass in here is currently just a dummy so the debug compositor works
+					Renderer::IRenderPass* renderPass = renderer.createRenderPass(1, &renderer.getCapabilities().preferredSwapChainColorTextureFormat, renderer.getCapabilities().preferredSwapChainDepthStencilTextureFormat);
+
+					Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, mProgram, ::detail::VertexAttributes, *renderPass);
 					pipelineState.rasterizerState.cullMode				   = Renderer::CullMode::NONE;
 					pipelineState.rasterizerState.scissorEnable			   = 1;
 					pipelineState.depthStencilState.depthEnable			   = false;

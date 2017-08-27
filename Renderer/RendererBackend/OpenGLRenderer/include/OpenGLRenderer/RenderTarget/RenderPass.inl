@@ -28,15 +28,14 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline RenderPass::RenderPass(Renderer::IRenderer& renderer) :
-		IRenderPass(renderer)
+	inline RenderPass::~RenderPass()
 	{
 		// Nothing here
 	}
 
-	inline RenderPass::~RenderPass()
+	inline uint32_t RenderPass::getNumberOfColorAttachments() const
 	{
-		// Nothing here
+		return mNumberOfColorAttachments;
 	}
 
 

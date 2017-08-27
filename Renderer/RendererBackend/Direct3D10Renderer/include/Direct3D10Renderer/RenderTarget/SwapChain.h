@@ -29,8 +29,6 @@
 //[-------------------------------------------------------]
 #include <Renderer/RenderTarget/ISwapChain.h>
 
-#include "Direct3D10Renderer/RenderTarget/RenderPass.h"
-
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -38,10 +36,6 @@
 struct IDXGISwapChain;
 struct ID3D10RenderTargetView;
 struct ID3D10DepthStencilView;
-namespace Direct3D10Renderer
-{
-	class Direct3D10Renderer;
-}
 
 
 //[-------------------------------------------------------]
@@ -70,12 +64,12 @@ namespace Direct3D10Renderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] direct3D10Renderer
-		*    Owner Direct3D 10 renderer instance
+		*  @param[in] renderPass
+		*    Render pass to use, the swap chain keeps a reference to the render pass
 		*  @param[in] nativeWindowHandle
 		*    Native window handle, must be valid
 		*/
-		SwapChain(Direct3D10Renderer& direct3D10Renderer, handle nativeWindowHandle);
+		SwapChain(Renderer::IRenderPass& renderPass, handle nativeWindowHandle);
 
 		/**
 		*  @brief
@@ -128,7 +122,6 @@ namespace Direct3D10Renderer
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
-		inline virtual const Renderer::IRenderPass& getRenderPass() const override;
 		virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const override;
 
 
@@ -186,7 +179,6 @@ namespace Direct3D10Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		RenderPass				mRenderPass;			///< Render pass instance
 		IDXGISwapChain*			mDxgiSwapChain;			///< The DXGI swap chain instance, null pointer on error
 		ID3D10RenderTargetView*	mD3D10RenderTargetView;	///< The Direct3D 10 render target view instance, null pointer on error
 		ID3D10DepthStencilView*	mD3D10DepthStencilView;	///< The Direct3D 10 depth stencil view instance, null pointer on error

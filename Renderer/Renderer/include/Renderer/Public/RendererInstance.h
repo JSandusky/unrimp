@@ -136,7 +136,7 @@ namespace Renderer
 		*  @param[in] loadRendererApiSharedLibrary
 		*    Indicates if the renderer instance should load the renderer API shared library (true) or not (false, default)
 		*/
-		RendererInstance(const char* rendererName, Renderer::Context& context, bool loadRendererApiSharedLibrary = false) :
+		RendererInstance(const char* rendererName, Context& context, bool loadRendererApiSharedLibrary = false) :
 			mRendererSharedLibrary(nullptr),
 			mRendererApiSharedLibrary(nullptr)
 		{
@@ -353,7 +353,7 @@ namespace Renderer
 		*  @remarks
 		*    The renderer instance, can be a null pointer
 		*/
-		inline Renderer::IRenderer* getRenderer() const
+		inline IRenderer* getRenderer() const
 		{
 			return mRenderer;
 		}
@@ -394,9 +394,9 @@ namespace Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		void*				   mRendererSharedLibrary;		///< Shared renderer library, can be a null pointer
-		Renderer::IRendererPtr mRenderer;					///< Renderer instance, can be a null pointer
-		void*				   mRendererApiSharedLibrary;	///< Shared renderer API library, can be a null pointer
+		void*		 mRendererSharedLibrary;	///< Shared renderer library, can be a null pointer
+		IRendererPtr mRenderer;					///< Renderer instance, can be a null pointer
+		void*		 mRendererApiSharedLibrary;	///< Shared renderer API library, can be a null pointer
 
 
 	};

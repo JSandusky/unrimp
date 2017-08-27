@@ -44,7 +44,7 @@ namespace VulkanRenderer
 		mVkDeviceMemory(VK_NULL_HANDLE),
 		mVkImageView(VK_NULL_HANDLE)
 	{
-		Helper::createAndFillVkImage(vulkanRenderer, VK_IMAGE_TYPE_3D, VK_IMAGE_VIEW_TYPE_3D, { width, height, depth }, textureFormat, data, flags, mVkImage, mVkDeviceMemory, mVkImageView);
+		Helper::createAndFillVkImage(vulkanRenderer, VK_IMAGE_TYPE_3D, VK_IMAGE_VIEW_TYPE_3D, { width, height, depth }, textureFormat, data, flags, 1, mVkImage, mVkDeviceMemory, mVkImageView);
 		SET_DEFAULT_DEBUG_NAME	// setDebugName("");
 	}
 

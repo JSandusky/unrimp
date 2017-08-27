@@ -27,16 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Renderer/IResource.h"
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace Renderer
-{
-	class IRenderPass;
-}
+#include "Renderer/RenderTarget/IRenderPass.h"
 
 
 //[-------------------------------------------------------]
@@ -67,20 +58,20 @@ namespace Renderer
 		*/
 		inline virtual ~IRenderTarget();
 
-
-	//[-------------------------------------------------------]
-	//[ Public virtual IRenderTarget methods                  ]
-	//[-------------------------------------------------------]
-	public:
 		/**
 		*  @brief
 		*    Return the render pass
 		*
 		*  @return
-		*    Render pass
+		*    Render pass, don't release the reference unless you add an own reference
 		*/
-		virtual const IRenderPass& getRenderPass() const = 0;
+		inline IRenderPass& getRenderPass() const;
 
+
+	//[-------------------------------------------------------]
+	//[ Public virtual IRenderTarget methods                  ]
+	//[-------------------------------------------------------]
+	public:
 		/**
 		*  @brief
 		*    Return the width and height of the render target
@@ -103,13 +94,20 @@ namespace Renderer
 		*
 		*  @param[in] resourceType
 		*    The resource type
-		*  @param[in] renderer
-		*    Owner renderer instance
+		*  @param[in] renderPass
+		*    Render pass to use, the render target keeps a reference to the render pass
 		*/
-		inline IRenderTarget(ResourceType resourceType, IRenderer& renderer);
+		inline IRenderTarget(ResourceType resourceType, IRenderPass& renderPass);
 
 		explicit IRenderTarget(const IRenderTarget& source) = delete;
 		IRenderTarget& operator =(const IRenderTarget& source) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		IRenderPass& mRenderPass;	///< Render pass to use, the render target keeps a reference to the render pass
 
 
 	};

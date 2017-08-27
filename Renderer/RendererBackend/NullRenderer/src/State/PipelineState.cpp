@@ -25,6 +25,8 @@
 #include "NullRenderer/NullRenderer.h"
 #include "NullRenderer/Shader/Program.h"
 
+#include <Renderer/RenderTarget/IRenderPass.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -38,19 +40,19 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	PipelineState::PipelineState(NullRenderer& nullRenderer, const Renderer::PipelineState& pipelineState) :
 		IPipelineState(nullRenderer),
-		mProgram(pipelineState.program)
+		mProgram(pipelineState.program),
+		mRenderPass(pipelineState.renderPass)
 	{
-		// Add a reference to the given program
+		// Add a reference to the given program and render pass
 		mProgram->addReference();
+		mRenderPass->addReference();
 	}
 
 	PipelineState::~PipelineState()
 	{
-		// Release the program reference
-		if (nullptr != mProgram)
-		{
-			mProgram->releaseReference();
-		}
+		// Release the program reference and render pass
+		mProgram->releaseReference();
+		mRenderPass->releaseReference();
 	}
 
 

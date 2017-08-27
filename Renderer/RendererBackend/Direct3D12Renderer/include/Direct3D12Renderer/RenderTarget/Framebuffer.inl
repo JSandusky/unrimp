@@ -54,15 +54,6 @@ namespace Direct3D12Renderer
 	}
 
 
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IRenderTarget methods        ]
-	//[-------------------------------------------------------]
-	inline const Renderer::IRenderPass& Framebuffer::getRenderPass() const
-	{
-		return mRenderPass;
-	}
-
-
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

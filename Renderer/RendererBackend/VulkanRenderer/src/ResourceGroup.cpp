@@ -289,12 +289,12 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	#ifndef VULKANRENDERER_NO_DEBUG
+	#if !defined(VULKANRENDERER_NO_DEBUG) && !defined(RENDERER_NO_DEBUG)
 		void ResourceGroup::setDebugName(const char* name)
 		{
 			if (nullptr != vkDebugMarkerSetObjectNameEXT)
 			{
-				Helper::setDebugObjectName(static_cast<const VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT, mVkDescriptorSet, name);
+				Helper::setDebugObjectName(static_cast<const VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT, (uint64_t)mVkDescriptorSet, name);
 			}
 		}
 	#endif

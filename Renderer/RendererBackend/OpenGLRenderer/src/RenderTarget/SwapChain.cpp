@@ -44,14 +44,13 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SwapChain::SwapChain(OpenGLRenderer& openGLRenderer, handle nativeWindowHandle, bool useExternalContext) :
-		ISwapChain(openGLRenderer),
-		mRenderPass(openGLRenderer),
+	SwapChain::SwapChain(Renderer::IRenderPass& renderPass, handle nativeWindowHandle, bool useExternalContext) :
+		ISwapChain(renderPass),
 		mNativeWindowHandle(nativeWindowHandle),
 		#ifdef WIN32
-			mOpenGLContext(new OpenGLContextWindows(nativeWindowHandle, static_cast<const OpenGLContextWindows*>(&openGLRenderer.getOpenGLContext()))),
+			mOpenGLContext(new OpenGLContextWindows(nativeWindowHandle, static_cast<const OpenGLContextWindows*>(&static_cast<OpenGLRenderer&>(renderPass.getRenderer()).getOpenGLContext()))),
 		#elif defined LINUX
-			mOpenGLContext(new OpenGLContextLinux(openGLRenderer, nativeWindowHandle, useExternalContext, static_cast<const OpenGLContextLinux*>(&openGLRenderer.getOpenGLContext()))),
+			mOpenGLContext(new OpenGLContextLinux(static_cast<OpenGLRenderer&>(renderPass.getRenderer()), nativeWindowHandle, useExternalContext, static_cast<const OpenGLContextLinux*>(&static_cast<OpenGLRenderer&>(renderPass.getRenderer()).getOpenGLContext()))),
 		#else
 			#error "Unsupported platform"
 		#endif
@@ -61,17 +60,6 @@ namespace OpenGLRenderer
 		#ifdef WIN32
 			std::ignore = useExternalContext;
 		#endif
-	}
-
-	SwapChain::SwapChain(OpenGLRenderer& openGLRenderer, handle nativeWindowHandle, IOpenGLContext& openGLContext) :
-		ISwapChain(openGLRenderer),
-		mRenderPass(openGLRenderer),
-		mNativeWindowHandle(nativeWindowHandle),
-		mOpenGLContext(&openGLContext),
-		mOwnsOpenGLContext(false),
-		mRenderWindow(nullptr)
-	{
-		// Nothing here
 	}
 
 	SwapChain::~SwapChain()

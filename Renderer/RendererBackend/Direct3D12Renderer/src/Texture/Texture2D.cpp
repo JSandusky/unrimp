@@ -190,7 +190,7 @@ namespace Direct3D12Renderer
 					}
 	
 	//				direct3D12Renderer.endScene();
-//					direct3D12Renderer.mMainSwapChain->waitForPreviousFrame();
+					<Swap Chain>->waitForPreviousFrame();
 					d3d12ResourceTextureUploadHeap->Release();
 				}
 				*/

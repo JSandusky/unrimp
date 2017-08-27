@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/RenderTarget/Framebuffer.h"
+#include "OpenGLRenderer/RenderTarget/RenderPass.h"
 #include "OpenGLRenderer/Texture/Texture2DArray.h"
 #include "OpenGLRenderer/Texture/Texture2D.h"
 #include "OpenGLRenderer/Extensions.h"
@@ -71,17 +72,16 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	Framebuffer::Framebuffer(OpenGLRenderer& openGLRenderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment) :
-		IFramebuffer(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
+	Framebuffer::Framebuffer(Renderer::IRenderPass& renderPass, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment) :
+		IFramebuffer(renderPass),
 		mOpenGLFramebuffer(0),
-		mNumberOfColorTextures(numberOfColorFramebufferAttachments),
+		mNumberOfColorTextures(static_cast<RenderPass&>(renderPass).getNumberOfColorAttachments()),
 		mColorTextures(nullptr),	// Set below
 		mDepthStencilTexture(nullptr),
 		mWidth(UINT_MAX),
 		mHeight(UINT_MAX),
 		mMultisampleRenderTarget(false),
-		mGenerateMipmaps(false),
-		mRenderPass(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer))
+		mGenerateMipmaps(false)
 	{
 		// The "GL_ARB_framebuffer_object"-extension documentation says the following about the framebuffer width and height
 		//   "If the attachment sizes are not all identical, rendering will be limited to the largest area that can fit in

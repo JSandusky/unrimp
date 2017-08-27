@@ -41,10 +41,11 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	FramebufferDsa::FramebufferDsa(OpenGLRenderer& openGLRenderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment) :
-		Framebuffer(openGLRenderer, numberOfColorFramebufferAttachments, colorFramebufferAttachments, depthStencilFramebufferAttachment)
+	FramebufferDsa::FramebufferDsa(Renderer::IRenderPass& renderPass, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment) :
+		Framebuffer(renderPass, colorFramebufferAttachments, depthStencilFramebufferAttachment)
 	{
 		// Texture reference handling is done within the base class "Framebuffer"
+		OpenGLRenderer& openGLRenderer = static_cast<OpenGLRenderer&>(renderPass.getRenderer());
 		const bool isArbDsa = openGLRenderer.getExtensions().isGL_ARB_direct_state_access();
 
 		// Create the OpenGL framebuffer
@@ -59,7 +60,7 @@ namespace OpenGLRenderer
 
 		// Loop through all framebuffer color attachments
 		const Renderer::FramebufferAttachment* colorFramebufferAttachment    = colorFramebufferAttachments;
-		const Renderer::FramebufferAttachment* colorFramebufferAttachmentEnd = colorFramebufferAttachments + numberOfColorFramebufferAttachments;
+		const Renderer::FramebufferAttachment* colorFramebufferAttachmentEnd = colorFramebufferAttachments + mNumberOfColorTextures;
 		for (GLenum openGLAttachment = GL_COLOR_ATTACHMENT0; colorFramebufferAttachment < colorFramebufferAttachmentEnd; ++colorFramebufferAttachment, ++openGLAttachment)
 		{
 			Renderer::ITexture* texture = colorFramebufferAttachment->texture;

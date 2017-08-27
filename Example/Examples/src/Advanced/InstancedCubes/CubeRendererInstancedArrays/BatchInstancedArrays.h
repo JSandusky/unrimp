@@ -84,7 +84,7 @@ public:
 	*  @param[in] sceneRadius
 	*    Scene radius
 	*/
-	void initialize(Renderer::IBufferManager& bufferManager, Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IVertexBuffer& vertexBuffer, Renderer::IIndexBuffer& indexBuffer, Renderer::IProgram& program, const Renderer::IRenderPass& renderPass, uint32_t numberOfCubeInstances, bool alphaBlending, uint32_t numberOfTextures, uint32_t sceneRadius);
+	void initialize(Renderer::IBufferManager& bufferManager, Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IVertexBuffer& vertexBuffer, Renderer::IIndexBuffer& indexBuffer, Renderer::IProgram& program, Renderer::IRenderPass& renderPass, uint32_t numberOfCubeInstances, bool alphaBlending, uint32_t numberOfTextures, uint32_t sceneRadius);
 
 	/**
 	*  @brief

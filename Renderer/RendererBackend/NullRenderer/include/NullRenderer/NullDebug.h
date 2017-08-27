@@ -30,17 +30,10 @@
 /*
 *  @brief
 *    Check whether or not the given resource is owned by the given renderer
-*
-*  @note
-*    In case of no match, a debug output message will be made with a following immediate "return"
 */
 #ifdef NULLRENDERER_NO_RENDERERMATCHCHECK
-	#define NULLRENDERER_RENDERERMATCHCHECK_RETURN(rendererReference, resourceReference)
+	#define NULLRENDERER_RENDERERMATCHCHECK_ASSERT(rendererReference, resourceReference)
 #else
-	#define NULLRENDERER_RENDERERMATCHCHECK_RETURN(rendererReference, resourceReference) \
-		if (&rendererReference != &(resourceReference).getRenderer()) \
-		{ \
-			RENDERER_LOG((rendererReference).getContext(), CRITICAL, "Null error: The given resource is owned by another renderer instance") \
-			return; \
-		}
+	#define NULLRENDERER_RENDERERMATCHCHECK_ASSERT(rendererReference, resourceReference) \
+		assert((&rendererReference == &(resourceReference).getRenderer()) && "Null error: The given resource is owned by another renderer instance");
 #endif

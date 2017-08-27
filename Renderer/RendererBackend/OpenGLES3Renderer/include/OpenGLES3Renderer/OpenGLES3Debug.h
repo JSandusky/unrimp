@@ -30,24 +30,10 @@
 /*
 *  @brief
 *    Check whether or not the given resource is owned by the given renderer
-*
-*  @note
-*    In case of no match, a debug output message will be made with a following immediate "return"
 */
 #ifdef OPENGLES3RENDERER_NO_RENDERERMATCHCHECK
-	#define OPENGLES3RENDERER_RENDERERMATCHCHECK_RETURN(rendererReference, resourceReference)
-	#define OPENGLES3RENDERER_RENDERERMATCHCHECK_NOTNULL_RETURN(resourcePointer) resourcePointer = resourcePointer;	// Avoid "warning C4100: '<x>' : unreferenced formal parameter"-warning
+	#define OPENGLES3RENDERER_RENDERERMATCHCHECK_ASSERT(rendererReference, resourceReference)
 #else
-	#define OPENGLES3RENDERER_RENDERERMATCHCHECK_RETURN(rendererReference, resourceReference) \
-		if (&rendererReference != &(resourceReference).getRenderer()) \
-		{ \
-			RENDERER_LOG((rendererReference).getContext(), CRITICAL, "OpenGL ES 3 error: The given resource is owned by another renderer instance") \
-			return; \
-		}
-	#define OPENGLES3RENDERER_RENDERERMATCHCHECK_NOTNULL_RETURN(resourcePointer) \
-		if (nullptr != resourcePointer) \
-		{ \
-			RENDERER_LOG(rendererReference->getContext(), CRITICAL, "OpenGL ES 3 error: The given resource is owned by another renderer instance") \
-			return; \
-		}
+	#define OPENGLES3RENDERER_RENDERERMATCHCHECK_ASSERT(rendererReference, resourceReference) \
+		assert((&rendererReference == &(resourceReference).getRenderer()) && "OpenGL ES 3 error: The given resource is owned by another renderer instance");
 #endif

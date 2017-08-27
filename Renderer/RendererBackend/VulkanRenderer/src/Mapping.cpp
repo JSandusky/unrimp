@@ -363,6 +363,7 @@ namespace VulkanRenderer
 			VK_FORMAT_R8G8B8_UNORM,				// Renderer::TextureFormat::R8G8B8        - 24-bit pixel format, 8 bits for red, green and blue
 			VK_FORMAT_R8G8B8A8_UNORM,			// Renderer::TextureFormat::R8G8B8A8      - 32-bit pixel format, 8 bits for red, green, blue and alpha
 			VK_FORMAT_R8G8B8A8_SRGB,			// Renderer::TextureFormat::R8G8B8A8_SRGB - 32-bit pixel format, 8 bits for red, green, blue and alpha; sRGB = RGB hardware gamma correction, the alpha channel always remains linear
+			VK_FORMAT_B8G8R8A8_UNORM,			// Renderer::TextureFormat::B8G8R8A8      - 32-bit pixel format, 8 bits for red, green, blue and alpha
 			VK_FORMAT_B10G11R11_UFLOAT_PACK32,	// Renderer::TextureFormat::R11G11B10F    - 32-bit float format using 11 bits the red and green channel, 10 bits the blue channel; red and green channels have a 6 bits mantissa and a 5 bits exponent and blue has a 5 bits mantissa and 5 bits exponent
 			VK_FORMAT_R16G16B16A16_SFLOAT,		// Renderer::TextureFormat::R16G16B16A16F - 64-bit float format using 16 bits for the each channel (red, green, blue, alpha)
 			VK_FORMAT_R32G32B32A32_SFLOAT,		// Renderer::TextureFormat::R32G32B32A32F - 128-bit float format using 32 bits for the each channel (red, green, blue, alpha)
@@ -380,9 +381,22 @@ namespace VulkanRenderer
 			VK_FORMAT_D32_SFLOAT,				// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format
 			VK_FORMAT_R16G16_UNORM,				// Renderer::TextureFormat::R16G16_SNORM  - A two-component, 32-bit signed-normalized-integer format that supports 16 bits for the red channel and 16 bits for the green channel
 			VK_FORMAT_R16G16_SFLOAT,			// Renderer::TextureFormat::R16G16_FLOAT  - A two-component, 32-bit floating-point format that supports 16 bits for the red channel and 16 bits for the green channel
-			VK_FORMAT_R8_UNORM					// Renderer::TextureFormat::UNKNOWN       - Unknown
+			VK_FORMAT_UNDEFINED					// Renderer::TextureFormat::UNKNOWN       - Unknown
 		};
 		return MAPPING[textureFormat];
+	}
+
+	VkSampleCountFlagBits Mapping::getVulkanSampleCountFlagBits(uint8_t numberOfMultisamples)
+	{
+		assert(numberOfMultisamples <= 8);
+		static const VkSampleCountFlagBits MAPPING[] =
+		{
+			VK_SAMPLE_COUNT_1_BIT,
+			VK_SAMPLE_COUNT_2_BIT,
+			VK_SAMPLE_COUNT_4_BIT,
+			VK_SAMPLE_COUNT_8_BIT
+		};
+		return MAPPING[numberOfMultisamples - 1];	// Lookout! The "numberOfMultisamples"-values start with 1, not 0
 	}
 
 

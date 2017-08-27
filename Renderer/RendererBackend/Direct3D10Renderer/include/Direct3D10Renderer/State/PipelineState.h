@@ -135,6 +135,7 @@ namespace Direct3D10Renderer
 		ID3D10Device*			 mD3D10Device;				///< The Direct3D 10 device context instance (we keep a reference to it), null pointer on horrible error (so we don't check)
 		D3D10_PRIMITIVE_TOPOLOGY mD3D10PrimitiveTopology;
 		Renderer::IProgram*		 mProgram;
+		Renderer::IRenderPass*   mRenderPass;
 		ID3D10InputLayout*		 mD3D10InputLayout;			///< Direct3D 10 input layout, can be a null pointer
 		RasterizerState*		 mRasterizerState;
 		DepthStencilState*		 mDepthStencilState;

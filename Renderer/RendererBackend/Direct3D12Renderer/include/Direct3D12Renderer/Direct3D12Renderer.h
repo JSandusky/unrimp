@@ -185,7 +185,6 @@ namespace Direct3D12Renderer
 		inline virtual const char* getName() const override;
 		inline virtual bool isInitialized() const override;
 		virtual bool isDebugEnabled() override;
-		virtual Renderer::ISwapChain* getMainSwapChain() const override;
 		//[-------------------------------------------------------]
 		//[ Shader language                                       ]
 		//[-------------------------------------------------------]
@@ -195,8 +194,9 @@ namespace Direct3D12Renderer
 		//[-------------------------------------------------------]
 		//[ Resource creation                                     ]
 		//[-------------------------------------------------------]
-		virtual Renderer::ISwapChain* createSwapChain(handle nativeWindowHandle, bool useExternalContext = false) override;
-		virtual Renderer::IFramebuffer* createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment = nullptr) override;
+		virtual Renderer::IRenderPass* createRenderPass(uint32_t numberOfColorAttachments, const Renderer::TextureFormat::Enum* colorAttachmentTextureFormats, Renderer::TextureFormat::Enum depthStencilAttachmentTextureFormat = Renderer::TextureFormat::UNKNOWN, uint8_t numberOfMultisamples = 1) override;
+		virtual Renderer::ISwapChain* createSwapChain(Renderer::IRenderPass& renderPass, handle nativeWindowHandle, bool useExternalContext = false) override;
+		virtual Renderer::IFramebuffer* createFramebuffer(Renderer::IRenderPass& renderPass, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment = nullptr) override;
 		virtual Renderer::IBufferManager* createBufferManager() override;
 		virtual Renderer::ITextureManager* createTextureManager() override;
 		virtual Renderer::IRootSignature* createRootSignature(const Renderer::RootSignature& rootSignature) override;
@@ -257,7 +257,6 @@ namespace Direct3D12Renderer
 		//[-------------------------------------------------------]
 		//[ Output-merger (OM) stage                              ]
 		//[-------------------------------------------------------]
-		SwapChain*				 mMainSwapChain;	///< In case the optional native main window handle within the "Direct3D12Renderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
 		Renderer::IRenderTarget* mRenderTarget;		///< Currently set render target (we keep a reference to it), can be a null pointer
 		// State cache to avoid making redundant Direct3D 11 calls
 		D3D12_PRIMITIVE_TOPOLOGY mD3D12PrimitiveTopology;

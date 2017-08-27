@@ -28,5 +28,5 @@ inline Renderer::IRenderer* IApplicationRenderer::getRenderer() const
 
 inline Renderer::IRenderTarget* IApplicationRenderer::getMainRenderTarget() const
 {
-	return (nullptr != mRenderer) ? mRenderer->getMainSwapChain() : nullptr;
+	return mMainSwapChain;
 }

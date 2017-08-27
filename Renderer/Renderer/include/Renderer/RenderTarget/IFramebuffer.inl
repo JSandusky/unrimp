@@ -48,8 +48,8 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IFramebuffer::IFramebuffer(IRenderer& renderer) :
-		IRenderTarget(ResourceType::FRAMEBUFFER, renderer)
+	inline IFramebuffer::IFramebuffer(IRenderPass& renderPass) :
+		IRenderTarget(ResourceType::FRAMEBUFFER, renderPass)
 	{
 		#ifndef RENDERER_NO_STATISTICS
 			// Update the statistics

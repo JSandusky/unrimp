@@ -465,7 +465,8 @@ namespace RendererRuntime
 				uint32_t width = 0;
 				uint32_t height = 0;
 				mVrSystem->GetRecommendedRenderTargetSize(&width, &height);
-				Renderer::ITexture* colorTexture2D = mColorTexture2D = mRendererRuntime.getTextureManager().createTexture2D(width, height, Renderer::TextureFormat::R8G8B8A8, nullptr, Renderer::TextureFlag::RENDER_TARGET);
+				const Renderer::TextureFormat::Enum textureFormat = Renderer::TextureFormat::Enum::R8G8B8A8;
+				Renderer::ITexture* colorTexture2D = mColorTexture2D = mRendererRuntime.getTextureManager().createTexture2D(width, height, textureFormat, nullptr, Renderer::TextureFlag::RENDER_TARGET);
 				RENDERER_SET_RESOURCE_DEBUG_NAME(colorTexture2D, "OpenVR color render target texture")
 				Renderer::ITexture* depthStencilTexture2D = mRendererRuntime.getTextureManager().createTexture2D(width, height, Renderer::TextureFormat::D32_FLOAT, nullptr, Renderer::TextureFlag::RENDER_TARGET);
 				RENDERER_SET_RESOURCE_DEBUG_NAME(depthStencilTexture2D, "OpenVR depth stencil render target texture")
@@ -473,7 +474,7 @@ namespace RendererRuntime
 				// Create the framebuffer object (FBO) instance
 				Renderer::FramebufferAttachment colorFramebufferAttachment(colorTexture2D);
 				Renderer::FramebufferAttachment depthStencilFramebufferAttachment(depthStencilTexture2D);
-				mFramebuffer = renderer.createFramebuffer(1, &colorFramebufferAttachment, &depthStencilFramebufferAttachment);
+				mFramebuffer = renderer.createFramebuffer(*renderer.createRenderPass(1, &textureFormat), &colorFramebufferAttachment, &depthStencilFramebufferAttachment);
 				RENDERER_SET_RESOURCE_DEBUG_NAME(mFramebuffer, "OpenVR framebuffer")
 			}
 

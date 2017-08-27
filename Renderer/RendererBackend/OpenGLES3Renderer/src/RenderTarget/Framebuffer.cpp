@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLES3Renderer/RenderTarget/Framebuffer.h"
+#include "OpenGLES3Renderer/RenderTarget/RenderPass.h"
 #include "OpenGLES3Renderer/Texture/Texture2DArray.h"
 #include "OpenGLES3Renderer/Texture/Texture2D.h"
 #include "OpenGLES3Renderer/IOpenGLES3Context.h"	// We need to include this header, else the linker won't find our defined OpenGL ES 3 functions
@@ -42,12 +43,11 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Framebuffer::Framebuffer(OpenGLES3Renderer& openGLES3Renderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment) :
-		IFramebuffer(openGLES3Renderer),
-		mRenderPass(openGLES3Renderer),
+	Framebuffer::Framebuffer(Renderer::IRenderPass& renderPass, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment) :
+		IFramebuffer(renderPass),
 		mOpenGLES3Framebuffer(0),
 		mDepthRenderbuffer(0),
-		mNumberOfColorTextures(numberOfColorFramebufferAttachments),
+		mNumberOfColorTextures(static_cast<RenderPass&>(renderPass).getNumberOfColorAttachments()),
 		mColorTextures(nullptr),	// Set below
 		mDepthStencilTexture(nullptr),
 		mWidth(1),
@@ -70,6 +70,7 @@ namespace OpenGLES3Renderer
 		glBindFramebuffer(GL_FRAMEBUFFER, mOpenGLES3Framebuffer);
 
 		// Are there any color textures? (usually there are, so we just keep the "glBindFramebuffer()" above without trying to make this method implementation more complex)
+		OpenGLES3Renderer& openGLES3Renderer = static_cast<OpenGLES3Renderer&>(renderPass.getRenderer());
 		if (mNumberOfColorTextures > 0)
 		{
 			mColorTextures = new Renderer::ITexture*[mNumberOfColorTextures];
@@ -78,7 +79,7 @@ namespace OpenGLES3Renderer
 			// -> "GL_COLOR_ATTACHMENT0" and "GL_COLOR_ATTACHMENT0_NV" have the same value
 			Renderer::ITexture** colorTexture = mColorTextures;
 			const Renderer::FramebufferAttachment* colorFramebufferAttachment	 = colorFramebufferAttachments;
-			const Renderer::FramebufferAttachment* colorFramebufferAttachmentEnd = colorFramebufferAttachments + numberOfColorFramebufferAttachments;
+			const Renderer::FramebufferAttachment* colorFramebufferAttachmentEnd = colorFramebufferAttachments + mNumberOfColorTextures;
 			for (GLenum openGLES3Attachment = GL_COLOR_ATTACHMENT0; colorFramebufferAttachment < colorFramebufferAttachmentEnd; ++colorFramebufferAttachment, ++openGLES3Attachment, ++colorTexture)
 			{
 				// Sanity check

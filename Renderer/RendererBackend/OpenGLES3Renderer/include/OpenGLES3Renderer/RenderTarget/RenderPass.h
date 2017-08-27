@@ -27,6 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include <Renderer/Texture/TextureTypes.h>
 #include <Renderer/RenderTarget/IRenderPass.h>
 
 
@@ -58,14 +59,32 @@ namespace OpenGLES3Renderer
 		*
 		*  @param[in] renderer
 		*    Owner renderer instance
+		*  @param[in] numberOfColorAttachments
+		*    Number of color render target textures, must be <="Renderer::Capabilities::maximumNumberOfSimultaneousRenderTargets"
+		*  @param[in] colorAttachmentTextureFormats
+		*    The color render target texture formats, can be a null pointer or can contain null pointers, if not a null pointer there must be at
+		*    least "numberOfColorAttachments" textures in the provided C-array of pointers
+		*  @param[in] depthStencilAttachmentTextureFormat
+		*    The optional depth stencil render target texture format, can be a "Renderer::TextureFormat::UNKNOWN" if there should be no depth buffer
+		*  @param[in] numberOfMultisamples
+		*    The number of multisamples per pixel (valid values: 1, 2, 4, 8)
 		*/
-		inline explicit RenderPass(Renderer::IRenderer& renderer);
+		RenderPass(Renderer::IRenderer& renderer, uint32_t numberOfColorAttachments, const Renderer::TextureFormat::Enum* colorAttachmentTextureFormats, Renderer::TextureFormat::Enum depthStencilAttachmentTextureFormat, uint8_t numberOfMultisamples);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
 		inline virtual ~RenderPass();
+
+		/**
+		*  @brief
+		*    Return the number of color render target textures
+		*
+		*  @return
+		*    The number of color render target textures
+		*/
+		inline uint32_t getNumberOfColorAttachments() const;
 
 
 	//[-------------------------------------------------------]
@@ -74,6 +93,16 @@ namespace OpenGLES3Renderer
 	private:
 		explicit RenderPass(const RenderPass& source) = delete;
 		RenderPass& operator =(const RenderPass& source) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		uint32_t					  mNumberOfColorAttachments;
+		Renderer::TextureFormat::Enum mColorAttachmentTextureFormats[8];
+		Renderer::TextureFormat::Enum mDepthStencilAttachmentTextureFormat;
+		uint8_t						  mNumberOfMultisamples;
 
 
 	};

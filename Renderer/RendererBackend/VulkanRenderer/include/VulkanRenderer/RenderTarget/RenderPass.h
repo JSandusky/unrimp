@@ -27,9 +27,19 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include <Renderer/Texture/TextureTypes.h>
 #include <Renderer/RenderTarget/IRenderPass.h>
 
 #include "VulkanRenderer/VulkanRuntimeLinking.h"
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace VulkanRenderer
+{
+	class VulkanRenderer;
+}
 
 
 //[-------------------------------------------------------]
@@ -58,22 +68,25 @@ namespace VulkanRenderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] renderer
-		*    Owner renderer instance
-		*  @param[in] vkRenderPass
-		*    Vulkan render pass
+		*  @param[in] vulkanRenderer
+		*    Owner Vulkan renderer instance
 		*  @param[in] numberOfColorAttachments
-		*    Number of color render target textures
-		*  @param[in] hasDepthStencilAttachment
-		*    Is there a depth stencil attachment?
+		*    Number of color render target textures, must be <="Renderer::Capabilities::maximumNumberOfSimultaneousRenderTargets"
+		*  @param[in] colorAttachmentTextureFormats
+		*    The color render target texture formats, can be a null pointer or can contain null pointers, if not a null pointer there must be at
+		*    least "numberOfColorAttachments" textures in the provided C-array of pointers
+		*  @param[in] depthStencilAttachmentTextureFormat
+		*    The optional depth stencil render target texture format, can be a "Renderer::TextureFormat::UNKNOWN" if there should be no depth buffer
+		*  @param[in] numberOfMultisamples
+		*    The number of multisamples per pixel (valid values: 1, 2, 4, 8)
 		*/
-		inline RenderPass(Renderer::IRenderer& renderer, const VkRenderPass& vkRenderPass, uint32_t numberOfColorAttachments, bool hasDepthStencilAttachment);
+		RenderPass(VulkanRenderer& vulkanRenderer, uint32_t numberOfColorAttachments, const Renderer::TextureFormat::Enum* colorAttachmentTextureFormats, Renderer::TextureFormat::Enum depthStencilAttachmentTextureFormat, uint8_t numberOfMultisamples);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~RenderPass();
+		virtual ~RenderPass();
 
 		/**
 		*  @brief
@@ -102,6 +115,24 @@ namespace VulkanRenderer
 		*/
 		inline uint32_t getNumberOfAttachments() const;
 
+		/**
+		*  @brief
+		*    Return the depth stencil attachment texture format
+		*
+		*  @return
+		*    The depth stencil attachment texture format
+		*/
+		inline Renderer::TextureFormat::Enum getDepthStencilAttachmentTextureFormat() const;
+
+		/**
+		*  @brief
+		*    Return the Vulkan sample count flag bits
+		*
+		*  @return
+		*    The Vulkan sample count flag bits
+		*/
+		inline VkSampleCountFlagBits getVkSampleCountFlagBits() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
@@ -115,9 +146,10 @@ namespace VulkanRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		const VkRenderPass& mVkRenderPass;				///< Vulkan render pass instance, can be a null handle
-		uint32_t			mNumberOfColorAttachments;	///< Number of color render target textures
-		bool				mHasDepthStencilAttachment;	///< Is there a depth stencil attachment?
+		VkRenderPass				  mVkRenderPass;						///< Vulkan render pass instance, can be a null handle
+		uint32_t					  mNumberOfColorAttachments;			///< Number of color render target textures
+		Renderer::TextureFormat::Enum mDepthStencilAttachmentTextureFormat;	///< The depth stencil attachment texture format
+		VkSampleCountFlagBits		  mVkSampleCountFlagBits;				///< Vulkan sample count flag bits
 
 
 	};

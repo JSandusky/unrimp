@@ -87,6 +87,7 @@
     <ClCompile Include="src\Buffer\VertexBuffer.cpp" />
     <ClCompile Include="src\NullRenderer.cpp" />
     <ClCompile Include="src\RenderTarget\Framebuffer.cpp" />
+    <ClCompile Include="src\RenderTarget\RenderPass.cpp" />
     <ClCompile Include="src\RenderTarget\SwapChain.cpp" />
     <ClCompile Include="src\ResourceGroup.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />

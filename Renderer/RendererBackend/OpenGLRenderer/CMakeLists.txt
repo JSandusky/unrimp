@@ -87,6 +87,7 @@ set(SOURCE_CODES
 	src/Buffer/VertexBuffer.cpp
 	src/Buffer/VertexBufferBind.cpp
 	src/Buffer/VertexBufferDsa.cpp
+	src/RenderTarget/RenderPass.cpp
 	src/RenderTarget/Framebuffer.cpp
 	src/RenderTarget/FramebufferBind.cpp
 	src/RenderTarget/FramebufferDsa.cpp

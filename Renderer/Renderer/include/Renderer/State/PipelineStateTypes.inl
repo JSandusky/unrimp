@@ -55,7 +55,7 @@ namespace Renderer
 		depthStencilViewFormat				= TextureFormat::D32_FLOAT;
 	}
 
-	inline PipelineStateBuilder::PipelineStateBuilder(IRootSignature* _rootSignature, IProgram* _program, const VertexAttributes& _vertexAttributes, const IRenderPass& _renderPass)
+	inline PipelineStateBuilder::PipelineStateBuilder(IRootSignature* _rootSignature, IProgram* _program, const VertexAttributes& _vertexAttributes, IRenderPass& _renderPass)
 	{
 		// "PipelineState"-part
 		rootSignature				= _rootSignature;

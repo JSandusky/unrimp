@@ -108,15 +108,15 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	#ifndef VULKANRENDERER_NO_DEBUG
+	#if !defined(VULKANRENDERER_NO_DEBUG) && !defined(RENDERER_NO_DEBUG)
 		void TextureBuffer::setDebugName(const char* name)
 		{
 			if (nullptr != vkDebugMarkerSetObjectNameEXT)
 			{
 				const VkDevice vkDevice = static_cast<const VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice();
-				Helper::setDebugObjectName(vkDevice, VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT, mVkBuffer, name);
-				Helper::setDebugObjectName(vkDevice, VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT, mVkDeviceMemory, name);
-				Helper::setDebugObjectName(vkDevice, VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_VIEW_EXT, mVkBufferView, name);
+				Helper::setDebugObjectName(vkDevice, VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT, (uint64_t)mVkBuffer, name);
+				Helper::setDebugObjectName(vkDevice, VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT, (uint64_t)mVkDeviceMemory, name);
+				Helper::setDebugObjectName(vkDevice, VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_VIEW_EXT, (uint64_t)mVkBufferView, name);
 			}
 		}
 	#endif

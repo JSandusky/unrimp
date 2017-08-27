@@ -29,8 +29,6 @@
 //[-------------------------------------------------------]
 #include <Renderer/RenderTarget/ISwapChain.h>
 
-#include "OpenGLRenderer/RenderTarget/RenderPass.h"
-
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -42,7 +40,6 @@ namespace Renderer
 namespace OpenGLRenderer
 {
 	class IOpenGLContext;
-	class OpenGLRenderer;
 }
 
 
@@ -72,27 +69,14 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] openGLRenderer
-		*    Owner OpenGL renderer instance
+		*  @param[in] renderPass
+		*    Render pass to use, the swap chain keeps a reference to the render pass
 		*  @param[in] nativeWindowHandle
 		*    Native window handle, must be valid
 		*  @param[in] useExternalContext
 		*    Indicates if an external renderer context is used; in this case the renderer itself has nothing to do with the creation/managing of an renderer context
 		*/
-		SwapChain(OpenGLRenderer& openGLRenderer, handle nativeWindowHandle, bool useExternalContext);
-
-		/**
-		*  @brief
-		*    Constructor
-		*
-		*  @param[in] openGLRenderer
-		*    Owner OpenGL renderer instance
-		*  @param[in] nativeWindowHandle
-		*    Native window handle, must be valid
-		*  @param[in] openGLContext
-		*    OpenGL context to use
-		*/
-		SwapChain(OpenGLRenderer& openGLRenderer, handle nativeWindowHandle, IOpenGLContext& openGLContext);
+		SwapChain(Renderer::IRenderPass& renderPass, handle nativeWindowHandle, bool useExternalContext);
 
 		/**
 		*  @brief
@@ -114,7 +98,6 @@ namespace OpenGLRenderer
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
-		inline virtual const Renderer::IRenderPass& getRenderPass() const override;
 		virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const override;
 
 
@@ -142,7 +125,6 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		RenderPass				 mRenderPass;			///< Render pass instance
 		handle					 mNativeWindowHandle;	///< Native window handle window, can be a null handle
 		IOpenGLContext*			 mOpenGLContext;		///< OpenGL context, must be valid
 		bool					 mOwnsOpenGLContext;	///< Does this swap chain own the OpenGL context?

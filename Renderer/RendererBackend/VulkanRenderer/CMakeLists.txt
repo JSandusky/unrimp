@@ -61,6 +61,7 @@ set(SOURCE_CODES
 	src/Buffer/UniformBuffer.cpp
 	src/Buffer/VertexArray.cpp
 	src/Buffer/VertexBuffer.cpp
+	src/RenderTarget/RenderPass.cpp
 	src/RenderTarget/Framebuffer.cpp
 	src/RenderTarget/SwapChain.cpp
 	src/Shader/FragmentShaderGlsl.cpp

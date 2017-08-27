@@ -30,17 +30,10 @@
 /*
 *  @brief
 *    Check whether or not the given resource is owned by the given renderer
-*
-*  @note
-*    In case of no match, a debug output message will be made with a following immediate "return"
 */
 #ifdef OPENGLRENDERER_NO_RENDERERMATCHCHECK
-	#define OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(rendererReference, resourceReference)
+	#define OPENGLRENDERER_RENDERERMATCHCHECK_ASSERT(rendererReference, resourceReference)
 #else
-	#define OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(rendererReference, resourceReference) \
-		if (&rendererReference != &(resourceReference).getRenderer()) \
-		{ \
-			RENDERER_LOG((rendererReference).getContext(), CRITICAL, "OpenGL error: The given resource is owned by another renderer instance") \
-			return; \
-		}
+	#define OPENGLRENDERER_RENDERERMATCHCHECK_ASSERT(rendererReference, resourceReference) \
+		assert((&rendererReference == &(resourceReference).getRenderer()) && "OpenGL error: The given resource is owned by another renderer instance");
 #endif

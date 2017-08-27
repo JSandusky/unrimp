@@ -30,15 +30,21 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	inline IRenderTarget::~IRenderTarget()
 	{
-		// Nothing here
+		mRenderPass.releaseReference();
+	}
+
+	inline IRenderPass& IRenderTarget::getRenderPass() const
+	{
+		return mRenderPass;
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IRenderTarget::IRenderTarget(ResourceType resourceType, IRenderer& renderer) :
-		IResource(resourceType, renderer)
+	inline IRenderTarget::IRenderTarget(ResourceType resourceType, IRenderPass& renderPass) :
+		IResource(resourceType, renderPass.getRenderer()),
+		mRenderPass(renderPass)
 	{
 		// Nothing here
 	}

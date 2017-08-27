@@ -29,7 +29,7 @@
 //[-------------------------------------------------------]
 #include <Renderer/RenderTarget/ISwapChain.h>
 
-#include "VulkanRenderer/RenderTarget/RenderPass.h"
+#include "VulkanRenderer/VulkanRuntimeLinking.h"
 
 #include <vector>
 
@@ -37,9 +37,13 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace Renderer
+{
+	class Context;
+}
 namespace VulkanRenderer
 {
-	class VulkanRenderer;
+	class VulkanContext;
 }
 
 
@@ -65,6 +69,14 @@ namespace VulkanRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public static methods                                 ]
+	//[-------------------------------------------------------]
+	public:
+		static VkFormat findColorVkFormat(const Renderer::Context& context, VkInstance vkInstance, const VulkanContext& vulkanContext);
+		static VkFormat findDepthVkFormat(VkPhysicalDevice vkPhysicalDevice);
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
@@ -72,12 +84,12 @@ namespace VulkanRenderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] vulkanRenderer
-		*    Owner Vulkan renderer instance
+		*  @param[in] renderPass
+		*    Render pass to use, the swap chain keeps a reference to the render pass
 		*  @param[in] nativeWindowHandle
 		*    Native window handle, must be valid
 		*/
-		SwapChain(VulkanRenderer& vulkanRenderer, handle nativeWindowHandle);
+		SwapChain(Renderer::IRenderPass& renderPass, handle nativeWindowHandle);
 
 		/**
 		*  @brief
@@ -126,7 +138,6 @@ namespace VulkanRenderer
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
-		inline virtual const Renderer::IRenderPass& getRenderPass() const override;
 		virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const override;
 
 
@@ -179,14 +190,13 @@ namespace VulkanRenderer
 		VkSurfaceKHR mVkSurfaceKHR;	///< Vulkan presentation surface, destroy if no longer needed
 		// Vulkan swap chain and color render target related
 		VkSwapchainKHR	 mVkSwapchainKHR;				///< Vulkan swap chain, destroy if no longer needed
-		RenderPass		 mRenderPass;					///< Render pass instance
-		VkRenderPass	 mVkRenderPass;					///< Vulkan render pass, destroy if no longer needed
+		VkRenderPass	 mVkRenderPass;					///< Vulkan render pass, destroy if no longer needed (due to "VK_IMAGE_LAYOUT_PRESENT_SRC_KHR" we need an own Vulkan render pass instance)
 		SwapChainBuffers mSwapChainBuffer;				///< Swap chain buffer for managing the color render targets
 		VkSemaphore		 mImageAvailableVkSemaphore;	///< Vulkan semaphore, destroy if no longer needed
 		VkSemaphore		 mRenderingFinishedVkSemaphore;	///< Vulkan semaphore, destroy if no longer needed
 		uint32_t		 mCurrentImageIndex;			///< The index of the current Vulkan swap chain image to render into, ~0 if uninitialized
 		// Depth render target related
-		VkFormat		mDepthVkFormat;
+		VkFormat		mDepthVkFormat;	///< Can be "VK_FORMAT_UNDEFINED" if no depth stencil buffer is needed
 		VkImage			mDepthVkImage;
 		VkDeviceMemory  mDepthVkDeviceMemory;
 		VkImageView		mDepthVkImageView;

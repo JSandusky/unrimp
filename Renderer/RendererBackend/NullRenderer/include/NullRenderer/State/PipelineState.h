@@ -96,7 +96,8 @@ namespace NullRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Renderer::IProgram* mProgram;
+		Renderer::IProgram*	   mProgram;
+		Renderer::IRenderPass* mRenderPass;
 
 
 	};

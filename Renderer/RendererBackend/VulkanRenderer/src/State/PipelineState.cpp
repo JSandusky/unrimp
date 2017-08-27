@@ -90,10 +90,12 @@ namespace VulkanRenderer
 	PipelineState::PipelineState(VulkanRenderer& vulkanRenderer, const Renderer::PipelineState& pipelineState) :
 		IPipelineState(vulkanRenderer),
 		mProgram(pipelineState.program),
+		mRenderPass(pipelineState.renderPass),
 		mVkPipeline(VK_NULL_HANDLE)
 	{
-		// Add a reference to the given program
+		// Add a reference to the given program and render pass
 		mProgram->addReference();
+		mRenderPass->addReference();
 
 		// Sanity checks
 		assert(nullptr != pipelineState.rootSignature);
@@ -232,12 +234,13 @@ namespace VulkanRenderer
 			slopeScaledDepthBias,																										// depthBiasSlopeFactor (float)
 			1.0f																														// lineWidth (float)
 		};
+		const RenderPass* renderPass = static_cast<const RenderPass*>(pipelineState.renderPass);
 		const VkPipelineMultisampleStateCreateInfo vkPipelineMultisampleStateCreateInfo =
 		{
 			VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO,	// sType (VkStructureType)
 			nullptr,													// pNext (const void*)
 			0,															// flags (VkPipelineMultisampleStateCreateFlags)
-			VK_SAMPLE_COUNT_1_BIT,										// rasterizationSamples (VkSampleCountFlagBits)
+			renderPass->getVkSampleCountFlagBits(),						// rasterizationSamples (VkSampleCountFlagBits)
 			VK_FALSE,													// sampleShadingEnable (VkBool32)
 			0.0f,														// minSampleShading (float)
 			nullptr,													// pSampleMask (const VkSampleMask*)
@@ -275,7 +278,6 @@ namespace VulkanRenderer
 			0.0f,																									// minDepthBounds (float)
 			1.0f																									// maxDepthBounds (float)
 		};
-		const RenderPass* renderPass = static_cast<const RenderPass*>(pipelineState.renderPass);
 		const uint32_t numberOfColorAttachments = renderPass->getNumberOfColorAttachments();
 		assert(numberOfColorAttachments < 8);
 		assert(numberOfColorAttachments == pipelineState.numberOfRenderTargets);
@@ -357,23 +359,21 @@ namespace VulkanRenderer
 			vkDestroyPipeline(static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), mVkPipeline, nullptr);
 		}
 
-		// Release the program reference
-		if (nullptr != mProgram)
-		{
-			mProgram->releaseReference();
-		}
+		// Release the program and render pass reference
+		mProgram->releaseReference();
+		mRenderPass->releaseReference();
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	#ifndef VULKANRENDERER_NO_DEBUG
+	#if !defined(VULKANRENDERER_NO_DEBUG) && !defined(RENDERER_NO_DEBUG)
 		void PipelineState::setDebugName(const char* name)
 		{
 			if (nullptr != vkDebugMarkerSetObjectNameEXT)
 			{
-				Helper::setDebugObjectName(static_cast<const VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT, mVkPipeline, name);
+				Helper::setDebugObjectName(static_cast<const VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT, (uint64_t)mVkPipeline, name);
 			}
 		}
 	#endif

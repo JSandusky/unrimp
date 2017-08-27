@@ -133,12 +133,13 @@ namespace OpenGLRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		uint32_t			mOpenGLPrimitiveTopology;	///< OpenGL primitive topology describing the type of primitive to render (type "GLenum" not used in here in order to keep the header slim)
-		int					mNumberOfVerticesPerPatch;	///< Number of vertices per patch (type "GLint" not used in here in order to keep the header slim)
-		Renderer::IProgram*	mProgram;
-		RasterizerState*	mRasterizerState;
-		DepthStencilState*	mDepthStencilState;
-		BlendState*			mBlendState;
+		uint32_t			   mOpenGLPrimitiveTopology;	///< OpenGL primitive topology describing the type of primitive to render (type "GLenum" not used in here in order to keep the header slim)
+		int					   mNumberOfVerticesPerPatch;	///< Number of vertices per patch (type "GLint" not used in here in order to keep the header slim)
+		Renderer::IProgram*	   mProgram;
+		Renderer::IRenderPass* mRenderPass;
+		RasterizerState*	   mRasterizerState;
+		DepthStencilState*	   mDepthStencilState;
+		BlendState*			   mBlendState;
 
 
 	};

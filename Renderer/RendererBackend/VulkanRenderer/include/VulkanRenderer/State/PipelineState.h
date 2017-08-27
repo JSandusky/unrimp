@@ -115,8 +115,9 @@ namespace VulkanRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Renderer::IProgram* mProgram;
-		VkPipeline			mVkPipeline;	///< The Vulkan graphics pipeline
+		Renderer::IProgram*    mProgram;
+		Renderer::IRenderPass* mRenderPass;
+		VkPipeline			   mVkPipeline;	///< The Vulkan graphics pipeline
 
 
 	};

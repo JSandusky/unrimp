@@ -29,17 +29,6 @@
 //[-------------------------------------------------------]
 #include <Renderer/RenderTarget/IFramebuffer.h>
 
-#include "OpenGLRenderer/RenderTarget/RenderPass.h"
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace OpenGLRenderer
-{
-	class OpenGLRenderer;
-}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -128,7 +117,6 @@ namespace OpenGLRenderer
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
-		inline virtual const Renderer::IRenderPass& getRenderPass() const override;
 		virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const override;
 
 
@@ -140,20 +128,18 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] openGLRenderer
-		*    Owner OpenGL renderer instance
-		*  @param[in] numberOfColorFramebufferAttachments
-		*    Number of color render target textures
+		*  @param[in] renderPass
+		*    Render pass to use, the swap chain keeps a reference to the render pass
 		*  @param[in] colorFramebufferAttachments
 		*    The color render target textures, can be a null pointer or can contain null pointers, if not a null pointer there must be at
-		*    least "numberOfColorTextures" textures in the provided C-array of pointers
+		*    least "Renderer::IRenderPass::getNumberOfColorAttachments()" textures in the provided C-array of pointers
 		*  @param[in] depthStencilFramebufferAttachment
 		*    The depth stencil render target texture, can be a null pointer
 		*
 		*  @note
 		*    - The framebuffer keeps a reference to the provided texture instances
 		*/
-		Framebuffer(OpenGLRenderer& openGLRenderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment);
+		Framebuffer(Renderer::IRenderPass& renderPass, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment);
 
 
 	//[-------------------------------------------------------]
@@ -176,13 +162,6 @@ namespace OpenGLRenderer
 	private:
 		explicit Framebuffer(const Framebuffer& source) = delete;
 		Framebuffer& operator =(const Framebuffer& source) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-		RenderPass mRenderPass;	///< Render pass instance
 
 
 	};

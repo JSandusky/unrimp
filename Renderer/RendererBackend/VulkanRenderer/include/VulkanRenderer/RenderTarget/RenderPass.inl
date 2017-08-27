@@ -28,20 +28,6 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline RenderPass::RenderPass(Renderer::IRenderer& renderer, const VkRenderPass& vkRenderPass, uint32_t numberOfColorAttachments, bool hasDepthStencilAttachment) :
-		IRenderPass(renderer),
-		mVkRenderPass(vkRenderPass),
-		mNumberOfColorAttachments(numberOfColorAttachments),
-		mHasDepthStencilAttachment(hasDepthStencilAttachment)
-	{
-		// Nothing here
-	}
-
-	inline RenderPass::~RenderPass()
-	{
-		// Nothing here
-	}
-
 	inline VkRenderPass RenderPass::getVkRenderPass() const
 	{
 		return mVkRenderPass;
@@ -54,7 +40,17 @@ namespace VulkanRenderer
 
 	inline uint32_t RenderPass::getNumberOfAttachments() const
 	{
-		return mHasDepthStencilAttachment ? (mNumberOfColorAttachments + 1) : mNumberOfColorAttachments;
+		return (mDepthStencilAttachmentTextureFormat != Renderer::TextureFormat::Enum::UNKNOWN) ? (mNumberOfColorAttachments + 1) : mNumberOfColorAttachments;
+	}
+
+	inline Renderer::TextureFormat::Enum RenderPass::getDepthStencilAttachmentTextureFormat() const
+	{
+		return mDepthStencilAttachmentTextureFormat;
+	}
+
+	inline VkSampleCountFlagBits RenderPass::getVkSampleCountFlagBits() const
+	{
+		return mVkSampleCountFlagBits;
 	}
 
 

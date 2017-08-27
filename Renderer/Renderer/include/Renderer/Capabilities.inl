@@ -29,6 +29,8 @@ namespace Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	inline Capabilities::Capabilities() :
+		preferredSwapChainColorTextureFormat(TextureFormat::Enum::UNKNOWN),
+		preferredSwapChainDepthStencilTextureFormat(TextureFormat::Enum::UNKNOWN),
 		maximumNumberOfViewports(0),
 		maximumNumberOfSimultaneousRenderTargets(0),
 		maximumTextureDimension(0),

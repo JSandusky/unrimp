@@ -33,6 +33,7 @@
 #include "Direct3D10Renderer/State/DepthStencilState.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/RenderTarget/IRenderPass.h>
 
 
 //[-------------------------------------------------------]
@@ -50,6 +51,7 @@ namespace Direct3D10Renderer
 		mD3D10Device(direct3D10Renderer.getD3D10Device()),
 		mD3D10PrimitiveTopology(static_cast<D3D10_PRIMITIVE_TOPOLOGY>(pipelineState.primitiveTopology)),
 		mProgram(pipelineState.program),
+		mRenderPass(pipelineState.renderPass),
 		mD3D10InputLayout(nullptr),
 		mRasterizerState(new RasterizerState(direct3D10Renderer, pipelineState.rasterizerState)),
 		mDepthStencilState(new DepthStencilState(direct3D10Renderer, pipelineState.depthStencilState)),
@@ -58,8 +60,9 @@ namespace Direct3D10Renderer
 		// Acquire our Direct3D 10 device reference
 		mD3D10Device->AddRef();
 
-		// Add a reference to the given program
+		// Add a reference to the given program and render pass
 		mProgram->addReference();
+		mRenderPass->addReference();
 
 		// Create Direct3D 10 input element descriptions
 		const VertexShaderHlsl* vertexShaderHlsl = static_cast<ProgramHlsl*>(mProgram)->getVertexShaderHlsl();
@@ -121,11 +124,9 @@ namespace Direct3D10Renderer
 		delete mDepthStencilState;
 		delete mBlendState;
 
-		// Release the program reference
-		if (nullptr != mProgram)
-		{
-			mProgram->releaseReference();
-		}
+		// Release the program and render pass reference
+		mProgram->releaseReference();
+		mRenderPass->releaseReference();
 
 		// Release the Direct3D 10 input layout
 		if (nullptr != mD3D10InputLayout)

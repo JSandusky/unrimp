@@ -22,7 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "VulkanRenderer/VulkanRenderer.h"
-#include "VulkanRenderer/VulkanDebug.h"	// For "VULKANRENDERER_RENDERERMATCHCHECK_RETURN()"
+#include "VulkanRenderer/VulkanDebug.h"	// For "VULKANRENDERER_RENDERERMATCHCHECK_ASSERT()"
 #include "VulkanRenderer/Mapping.h"
 #include "VulkanRenderer/Extensions.h"
 #include "VulkanRenderer/RootSignature.h"
@@ -30,6 +30,7 @@
 #include "VulkanRenderer/VulkanContext.h"
 #include "VulkanRenderer/VulkanRuntimeLinking.h"
 #include "VulkanRenderer/RenderTarget/SwapChain.h"
+#include "VulkanRenderer/RenderTarget/RenderPass.h"
 #include "VulkanRenderer/RenderTarget/Framebuffer.h"
 #include "VulkanRenderer/Buffer/BufferManager.h"
 #include "VulkanRenderer/Buffer/VertexArray.h"
@@ -332,7 +333,6 @@ namespace VulkanRenderer
 		mInsideVulkanRenderPass(false),
 		mVkClearValues{},
 		mVertexArray(nullptr),
-		mMainSwapChain(nullptr),
 		mRenderTarget(nullptr)
 	{
 		// TODO(co) Make it possible to enable/disable validation from the outside?
@@ -368,16 +368,6 @@ namespace VulkanRenderer
 					mDefaultSamplerState->addReference();
 					// TODO(co) Set default sampler states
 				}
-
-				// Create a main swap chain instance?
-				const handle nativeWindowHandle = mContext.getNativeWindowHandle();
-				if (NULL_HANDLE != nativeWindowHandle)
-				{
-					// Create a main swap chain instance
-					mMainSwapChain = new SwapChain(*this, nativeWindowHandle);
-					RENDERER_SET_RESOURCE_DEBUG_NAME(mMainSwapChain, "Main swap chain")
-					mMainSwapChain->addReference();	// Internal renderer reference
-				}
 			}
 		}
 	}
@@ -391,11 +381,6 @@ namespace VulkanRenderer
 		}
 
 		// Release instances
-		if (nullptr != mMainSwapChain)
-		{
-			mMainSwapChain->releaseReference();
-			mMainSwapChain = nullptr;
-		}
 		if (nullptr != mRenderTarget)
 		{
 			mRenderTarget->releaseReference();
@@ -467,14 +452,14 @@ namespace VulkanRenderer
 			mGraphicsRootSignature->addReference();
 
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			VULKANRENDERER_RENDERERMATCHCHECK_RETURN(*this, *rootSignature)
+			VULKANRENDERER_RENDERERMATCHCHECK_ASSERT(*this, *rootSignature)
 		}
 	}
 
 	void VulkanRenderer::setGraphicsResourceGroup(uint32_t rootParameterIndex, Renderer::IResourceGroup* resourceGroup)
 	{
 		// Security checks
-		#ifndef VULKANRENDERER_NO_DEBUG
+		#if !defined(VULKANRENDERER_NO_DEBUG) && !defined(RENDERER_NO_DEBUG)
 		{
 			if (nullptr == mGraphicsRootSignature)
 			{
@@ -504,7 +489,7 @@ namespace VulkanRenderer
 		if (nullptr != resourceGroup)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			VULKANRENDERER_RENDERERMATCHCHECK_RETURN(*this, *resourceGroup)
+			VULKANRENDERER_RENDERERMATCHCHECK_ASSERT(*this, *resourceGroup)
 
 			// Bind Vulkan descriptor set
 			const VkDescriptorSet vkDescriptorSet = static_cast<ResourceGroup*>(resourceGroup)->getVkDescriptorSet();
@@ -524,7 +509,7 @@ namespace VulkanRenderer
 		if (nullptr != pipelineState)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			VULKANRENDERER_RENDERERMATCHCHECK_RETURN(*this, *pipelineState)
+			VULKANRENDERER_RENDERERMATCHCHECK_ASSERT(*this, *pipelineState)
 
 			// Bind Vulkan pipeline
 			vkCmdBindPipeline(getVulkanContext().getVkCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, static_cast<PipelineState*>(pipelineState)->getVkPipeline());
@@ -548,7 +533,7 @@ namespace VulkanRenderer
 			if (nullptr != vertexArray)
 			{
 				// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-				VULKANRENDERER_RENDERERMATCHCHECK_RETURN(*this, *vertexArray)
+				VULKANRENDERER_RENDERERMATCHCHECK_ASSERT(*this, *vertexArray)
 
 				// Unset the currently used vertex array
 				iaUnsetVertexArray();
@@ -576,6 +561,7 @@ namespace VulkanRenderer
 	{
 		// Sanity check
 		assert((numberOfViewports > 0 && nullptr != viewports) && "Invalid rasterizer state viewports");
+		std::ignore = numberOfViewports;
 
 		// Set Vulkan viewport
 		// -> We're using the "VK_KHR_maintenance1"-extension ("VK_KHR_MAINTENANCE1_EXTENSION_NAME"-definition) to be able to specify a negative viewport height,
@@ -637,7 +623,7 @@ namespace VulkanRenderer
 			if (nullptr != renderTarget)
 			{
 				// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-				VULKANRENDERER_RENDERERMATCHCHECK_RETURN(*this, *renderTarget)
+				VULKANRENDERER_RENDERERMATCHCHECK_ASSERT(*this, *renderTarget)
 
 				// Set new render target and add a reference to it
 				mRenderTarget = renderTarget;
@@ -713,7 +699,7 @@ namespace VulkanRenderer
 		else
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			VULKANRENDERER_RENDERERMATCHCHECK_RETURN(*this, indirectBuffer)
+			VULKANRENDERER_RENDERERMATCHCHECK_ASSERT(*this, indirectBuffer)
 
 			// Start Vulkan render pass, if necessary
 			if (!mInsideVulkanRenderPass)
@@ -769,7 +755,7 @@ namespace VulkanRenderer
 		else
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			VULKANRENDERER_RENDERERMATCHCHECK_RETURN(*this, indirectBuffer)
+			VULKANRENDERER_RENDERERMATCHCHECK_ASSERT(*this, indirectBuffer)
 
 			// Start Vulkan render pass, if necessary
 			if (!mInsideVulkanRenderPass)
@@ -883,11 +869,6 @@ namespace VulkanRenderer
 		return (nullptr != vkDebugMarkerSetObjectTagEXT || nullptr != vkDebugMarkerSetObjectNameEXT || nullptr != vkCmdDebugMarkerBeginEXT || nullptr != vkCmdDebugMarkerEndEXT || nullptr != vkCmdDebugMarkerInsertEXT);
 	}
 
-	Renderer::ISwapChain* VulkanRenderer::getMainSwapChain() const
-	{
-		return mMainSwapChain;
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Shader language                                       ]
@@ -935,15 +916,28 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Resource creation                                     ]
 	//[-------------------------------------------------------]
-	Renderer::ISwapChain* VulkanRenderer::createSwapChain(handle nativeWindowHandle, bool)
+	Renderer::IRenderPass* VulkanRenderer::createRenderPass(uint32_t numberOfColorAttachments, const Renderer::TextureFormat::Enum* colorAttachmentTextureFormats, Renderer::TextureFormat::Enum depthStencilAttachmentTextureFormat, uint8_t numberOfMultisamples)
 	{
-		// The provided native window handle must not be a null handle
-		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
+		return new RenderPass(*this, numberOfColorAttachments, colorAttachmentTextureFormats, depthStencilAttachmentTextureFormat, numberOfMultisamples);
 	}
 
-	Renderer::IFramebuffer* VulkanRenderer::createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment)
+	Renderer::ISwapChain* VulkanRenderer::createSwapChain(Renderer::IRenderPass& renderPass, handle nativeWindowHandle, bool)
 	{
-		return new Framebuffer(*this, numberOfColorFramebufferAttachments, colorFramebufferAttachments, depthStencilFramebufferAttachment);
+		// Sanity checks
+		VULKANRENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
+		assert(NULL_HANDLE != nativeWindowHandle && "The provided native window handle must not be a null handle");
+
+		// Create the swap chain
+		return new SwapChain(renderPass, nativeWindowHandle);
+	}
+
+	Renderer::IFramebuffer* VulkanRenderer::createFramebuffer(Renderer::IRenderPass& renderPass, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment)
+	{
+		// Sanity check
+		VULKANRENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
+
+		// Create the framebuffer
+		return new Framebuffer(renderPass, colorFramebufferAttachments, depthStencilFramebufferAttachment);
 	}
 
 	Renderer::IBufferManager* VulkanRenderer::createBufferManager()
@@ -1284,6 +1278,22 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	void VulkanRenderer::initializeCapabilities()
 	{
+		// Preferred swap chain texture format
+		mCapabilities.preferredSwapChainColorTextureFormat = (SwapChain::findColorVkFormat(getContext(), mVulkanRuntimeLinking->getVkInstance(), *mVulkanContext) == VK_FORMAT_R8G8B8A8_UNORM) ? Renderer::TextureFormat::Enum::R8G8B8A8 : Renderer::TextureFormat::Enum::B8G8R8A8;
+
+		{ // Preferred swap chain depth stencil texture format
+			const VkFormat depthVkFormat = SwapChain::findDepthVkFormat(mVulkanContext->getVkPhysicalDevice());
+			if (VK_FORMAT_D32_SFLOAT == depthVkFormat)
+			{
+				mCapabilities.preferredSwapChainDepthStencilTextureFormat = Renderer::TextureFormat::Enum::D32_FLOAT;
+			}
+			else
+			{
+				// TODO(co) Add support for "VK_FORMAT_D32_SFLOAT_S8_UINT" and "VK_FORMAT_D24_UNORM_S8_UINT"
+				mCapabilities.preferredSwapChainDepthStencilTextureFormat = Renderer::TextureFormat::Enum::D32_FLOAT;
+			}
+		}
+
 		// TODO(co) Implement me, this in here is just a placeholder implementation
 
 		{ // "D3D_FEATURE_LEVEL_11_0"

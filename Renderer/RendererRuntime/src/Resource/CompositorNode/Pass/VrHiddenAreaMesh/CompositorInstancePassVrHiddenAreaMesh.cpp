@@ -141,7 +141,10 @@
 						// Create the pipeline state object (PSO)
 						if (nullptr != program)
 						{
-							Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes, renderer.getMainSwapChain()->getRenderPass());
+							// TODO(co) Render pass related update, the render pass in here is currently just a dummy so the debug compositor works
+							Renderer::IRenderPass* renderPass = renderer.createRenderPass(1, &renderer.getCapabilities().preferredSwapChainColorTextureFormat, renderer.getCapabilities().preferredSwapChainDepthStencilTextureFormat);
+
+							Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder(mRootSignature, program, vertexAttributes, *renderPass);
 							pipelineState.rasterizerState.cullMode = Renderer::CullMode::NONE;
 							mPipelineState = renderer.createPipelineState(pipelineState);
 							RENDERER_SET_RESOURCE_DEBUG_NAME(mPipelineState, "Compositor instance pass VR hidden area mesh PSO")

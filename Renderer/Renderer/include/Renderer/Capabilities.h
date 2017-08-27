@@ -27,6 +27,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "Renderer/Texture/TextureTypes.h"
+
 #include <inttypes.h>	// For uint32_t, uint64_t etc.
 
 
@@ -56,29 +58,31 @@ namespace Renderer
 	//[ Public data                                           ]
 	//[-------------------------------------------------------]
 	public:
-		uint32_t maximumNumberOfViewports;					///< Maximum number of viewports (always at least 1)
-		uint32_t maximumNumberOfSimultaneousRenderTargets;	///< Maximum number of simultaneous render targets (if <1 render to texture is not supported)
-		uint32_t maximumTextureDimension;					///< Maximum texture dimension (usually 2048, 4096, 8192 or 16384)
-		uint32_t maximumNumberOf2DTextureArraySlices;		///< Maximum number of 2D texture array slices (usually 512 up to 8192, in case there's no support for 2D texture arrays it's 0)
-		uint32_t maximumUniformBufferSize;					///< Maximum uniform buffer (UBO) size in bytes (usually at least 4096 *16 bytes, in case there's no support for uniform buffer it's 0)
-		uint32_t maximumTextureBufferSize;					///< Maximum texture buffer (TBO) size in texel (>65536, typically much larger than that of one-dimensional texture, in case there's no support for texture buffer it's 0)
-		uint32_t maximumIndirectBufferSize;					///< Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
-		uint8_t  maximumNumberOfMultisamples;				///< Maximum number of multisamples (always at least 1, usually 8)
-		uint8_t  maximumAnisotropy;							///< Maximum anisotropy (always at least 1, usually 16)
-		bool	 individualUniforms;						///< Individual uniforms ("constants" in Direct3D terminology) supported? If not, only uniform buffer objects are supported.
-		bool	 instancedArrays;							///< Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
-		bool	 drawInstanced;								///< Draw instanced supported? (shader model 4 feature, build in shader variable holding the current instance ID)
-		bool	 baseVertex;								///< Base vertex supported for draw calls?
-		bool	 nativeMultiThreading;						///< Does the renderer support native multi-threading? For example Direct3D 11 does meaning we can also create renderer resources asynchronous while for OpenGL we have to create an separate OpenGL context (less efficient, more complex to implement).
-		bool	 shaderBytecode;							///< Shader bytecode supported?
+		TextureFormat::Enum preferredSwapChainColorTextureFormat;			///< Preferred swap chain color texture format
+		TextureFormat::Enum preferredSwapChainDepthStencilTextureFormat;	///< Preferred swap chain depth stencil texture format
+		uint32_t			maximumNumberOfViewports;						///< Maximum number of viewports (always at least 1)
+		uint32_t			maximumNumberOfSimultaneousRenderTargets;		///< Maximum number of simultaneous render targets (if <1 render to texture is not supported)
+		uint32_t			maximumTextureDimension;						///< Maximum texture dimension (usually 2048, 4096, 8192 or 16384)
+		uint32_t			maximumNumberOf2DTextureArraySlices;			///< Maximum number of 2D texture array slices (usually 512 up to 8192, in case there's no support for 2D texture arrays it's 0)
+		uint32_t			maximumUniformBufferSize;						///< Maximum uniform buffer (UBO) size in bytes (usually at least 4096 *16 bytes, in case there's no support for uniform buffer it's 0)
+		uint32_t			maximumTextureBufferSize;						///< Maximum texture buffer (TBO) size in texel (>65536, typically much larger than that of one-dimensional texture, in case there's no support for texture buffer it's 0)
+		uint32_t			maximumIndirectBufferSize;						///< Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
+		uint8_t				maximumNumberOfMultisamples;					///< Maximum number of multisamples (always at least 1, usually 8)
+		uint8_t				maximumAnisotropy;								///< Maximum anisotropy (always at least 1, usually 16)
+		bool				individualUniforms;								///< Individual uniforms ("constants" in Direct3D terminology) supported? If not, only uniform buffer objects are supported.
+		bool				instancedArrays;								///< Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
+		bool				drawInstanced;									///< Draw instanced supported? (shader model 4 feature, build in shader variable holding the current instance ID)
+		bool				baseVertex;										///< Base vertex supported for draw calls?
+		bool				nativeMultiThreading;							///< Does the renderer support native multi-threading? For example Direct3D 11 does meaning we can also create renderer resources asynchronous while for OpenGL we have to create an separate OpenGL context (less efficient, more complex to implement).
+		bool				shaderBytecode;									///< Shader bytecode supported?
 		// Vertex-shader (VS) stage
-		bool	 vertexShader;								///< Is there support for vertex shaders (VS)?
+		bool				vertexShader;									///< Is there support for vertex shaders (VS)?
 		// Tessellation-control-shader (TCS) stage and tessellation-evaluation-shader (TES) stage
-		uint32_t maximumNumberOfPatchVertices;				///< Maximum number of vertices per patch (usually 0 for no tessellation support or 32 which is the maximum number of supported vertices per patch)
+		uint32_t			maximumNumberOfPatchVertices;					///< Maximum number of vertices per patch (usually 0 for no tessellation support or 32 which is the maximum number of supported vertices per patch)
 		// Geometry-shader (GS) stage
-		uint32_t maximumNumberOfGsOutputVertices;			///< Maximum number of vertices a geometry shader (GS) can emit (usually 0 for no geometry shader support or 1024)
+		uint32_t			maximumNumberOfGsOutputVertices;				///< Maximum number of vertices a geometry shader (GS) can emit (usually 0 for no geometry shader support or 1024)
 		// Fragment-shader (FS) stage
-		bool	 fragmentShader;							///< Is there support for fragment shaders (FS)?
+		bool				fragmentShader;									///< Is there support for fragment shaders (FS)?
 
 
 	//[-------------------------------------------------------]

@@ -43,7 +43,7 @@ BatchInstancedArrays::~BatchInstancedArrays()
 	// The renderer resource pointers are released automatically
 }
 
-void BatchInstancedArrays::initialize(Renderer::IBufferManager& bufferManager, Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IVertexBuffer& vertexBuffer, Renderer::IIndexBuffer& indexBuffer, Renderer::IProgram& program, const Renderer::IRenderPass& renderPass, uint32_t numberOfCubeInstances, bool alphaBlending, uint32_t numberOfTextures, uint32_t sceneRadius)
+void BatchInstancedArrays::initialize(Renderer::IBufferManager& bufferManager, Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IVertexBuffer& vertexBuffer, Renderer::IIndexBuffer& indexBuffer, Renderer::IProgram& program, Renderer::IRenderPass& renderPass, uint32_t numberOfCubeInstances, bool alphaBlending, uint32_t numberOfTextures, uint32_t sceneRadius)
 {
 	// Set owner renderer instance
 	mRenderer = &program.getRenderer();

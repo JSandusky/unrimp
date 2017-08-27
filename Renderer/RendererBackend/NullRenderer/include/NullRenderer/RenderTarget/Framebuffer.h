@@ -29,17 +29,6 @@
 //[-------------------------------------------------------]
 #include <Renderer/RenderTarget/IFramebuffer.h>
 
-#include "NullRenderer/RenderTarget/RenderPass.h"
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace NullRenderer
-{
-	class NullRenderer;
-}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -67,23 +56,22 @@ namespace NullRenderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] nullRenderer
-		*    Owner null renderer instance
+		*  @param[in] renderPass
+		*    Render pass to use, the swap chain keeps a reference to the render pass
 		*/
-		explicit Framebuffer(NullRenderer& nullRenderer);
+		explicit Framebuffer(Renderer::IRenderPass& renderPass);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~Framebuffer();
+		inline virtual ~Framebuffer();
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
-		inline virtual const Renderer::IRenderPass& getRenderPass() const override;
 		virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const override;
 
 
@@ -93,13 +81,6 @@ namespace NullRenderer
 	private:
 		explicit Framebuffer(const Framebuffer& source) = delete;
 		Framebuffer& operator =(const Framebuffer& source) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-		RenderPass mRenderPass;	///< Render pass instance
 
 
 	};

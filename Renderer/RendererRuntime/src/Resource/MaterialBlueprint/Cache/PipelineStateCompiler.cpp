@@ -426,7 +426,11 @@ namespace RendererRuntime
 		pipelineState.rootSignature	   = rootSignaturePtr;
 		pipelineState.program		   = &program;
 		pipelineState.vertexAttributes = rendererRuntime.getVertexAttributesResourceManager().getById(materialBlueprintResource.getVertexAttributesResourceId()).getVertexAttributes();
-		pipelineState.renderPass	   = &program.getRenderer().getMainSwapChain()->getRenderPass();
+
+		{ // TODO(co) Render pass related update, the render pass in here is currently just a dummy so the debug compositor works
+			Renderer::IRenderer& renderer = rootSignaturePtr->getRenderer();
+			pipelineState.renderPass = renderer.createRenderPass(1, &renderer.getCapabilities().preferredSwapChainColorTextureFormat, renderer.getCapabilities().preferredSwapChainDepthStencilTextureFormat);
+		}
 
 		// Create the pipeline state object (PSO)
 		Renderer::IPipelineState* pipelineStateResource = rootSignaturePtr->getRenderer().createPipelineState(pipelineState);

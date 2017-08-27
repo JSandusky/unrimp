@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Direct3D11Renderer/RenderTarget/Framebuffer.h"
+#include "Direct3D11Renderer/RenderTarget/RenderPass.h"
 #include "Direct3D11Renderer/Texture/Texture2D.h"
 #include "Direct3D11Renderer/Texture/Texture2DArray.h"
 #include "Direct3D11Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
@@ -42,10 +43,9 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Framebuffer::Framebuffer(Direct3D11Renderer& direct3D11Renderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment) :
-		IFramebuffer(direct3D11Renderer),
-		mRenderPass(direct3D11Renderer),
-		mNumberOfColorTextures(numberOfColorFramebufferAttachments),
+	Framebuffer::Framebuffer(Renderer::IRenderPass& renderPass, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment) :
+		IFramebuffer(renderPass),
+		mNumberOfColorTextures(static_cast<RenderPass&>(renderPass).getNumberOfColorAttachments()),
 		mColorTextures(nullptr),	// Set below
 		mDepthStencilTexture(nullptr),
 		mWidth(UINT_MAX),
@@ -60,6 +60,7 @@ namespace Direct3D11Renderer
 		// So, in here I use the smallest width and height as the size of the framebuffer and let Direct3D 11 handle the rest regarding errors.
 
 		// Add a reference to the used color textures
+		Direct3D11Renderer& direct3D11Renderer = static_cast<Direct3D11Renderer&>(renderPass.getRenderer());
 		if (mNumberOfColorTextures > 0)
 		{
 			mColorTextures = new Renderer::ITexture*[mNumberOfColorTextures];

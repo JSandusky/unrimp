@@ -41,15 +41,9 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SwapChain::SwapChain(NullRenderer& nullRenderer, handle nativeWindowHandle) :
-		ISwapChain(nullRenderer),
-		mRenderPass(nullRenderer),
+	SwapChain::SwapChain(Renderer::IRenderPass& renderPass, handle nativeWindowHandle) :
+		ISwapChain(renderPass),
 		mNativeWindowHandle(nativeWindowHandle)
-	{
-		// Nothing here
-	}
-
-	SwapChain::~SwapChain()
 	{
 		// Nothing here
 	}

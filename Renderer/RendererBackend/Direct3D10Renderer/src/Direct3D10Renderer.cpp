@@ -23,13 +23,14 @@
 //[-------------------------------------------------------]
 #include "Direct3D10Renderer/Direct3D10Renderer.h"
 #include "Direct3D10Renderer/Guid.h"					// For "WKPDID_D3DDebugObjectName"
-#include "Direct3D10Renderer/Direct3D10Debug.h"			// For "DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN()"
+#include "Direct3D10Renderer/Direct3D10Debug.h"			// For "DIRECT3D10RENDERER_RENDERERMATCHCHECK_ASSERT()"
 #include "Direct3D10Renderer/Direct3D9RuntimeLinking.h"	// For the Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box) used for debugging, also works directly within VisualStudio 2012 out-of-the-box
 #include "Direct3D10Renderer/Direct3D10RuntimeLinking.h"
 #include "Direct3D10Renderer/RootSignature.h"
 #include "Direct3D10Renderer/ResourceGroup.h"
 #include "Direct3D10Renderer/Mapping.h"
 #include "Direct3D10Renderer/RenderTarget/SwapChain.h"
+#include "Direct3D10Renderer/RenderTarget/RenderPass.h"
 #include "Direct3D10Renderer/RenderTarget/Framebuffer.h"
 #include "Direct3D10Renderer/Buffer/BufferManager.h"
 #include "Direct3D10Renderer/Buffer/VertexArray.h"
@@ -334,7 +335,6 @@ namespace Direct3D10Renderer
 		mDirect3D9RuntimeLinking(nullptr),
 		mShaderLanguageHlsl(nullptr),
 		mD3D10QueryFlush(nullptr),
-		mMainSwapChain(nullptr),
 		mRenderTarget(nullptr),
 		mGraphicsRootSignature(nullptr),
 		mD3D10PrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_UNDEFINED),
@@ -426,16 +426,6 @@ namespace Direct3D10Renderer
 
 				// Initialize the capabilities
 				initializeCapabilities();
-
-				// Create a main swap chain instance?
-				const handle nativeWindowHandle = mContext.getNativeWindowHandle();
-				if (NULL_HANDLE != nativeWindowHandle)
-				{
-					// Create a main swap chain instance
-					mMainSwapChain = new SwapChain(*this, nativeWindowHandle);
-					RENDERER_SET_RESOURCE_DEBUG_NAME(mMainSwapChain, "Main swap chain")
-					mMainSwapChain->addReference();	// Internal renderer reference
-				}
 			}
 			else
 			{
@@ -453,11 +443,6 @@ namespace Direct3D10Renderer
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
 
 		// Release instances
-		if (nullptr != mMainSwapChain)
-		{
-			mMainSwapChain->releaseReference();
-			mMainSwapChain = nullptr;
-		}
 		if (nullptr != mRenderTarget)
 		{
 			mRenderTarget->releaseReference();
@@ -536,7 +521,7 @@ namespace Direct3D10Renderer
 			mGraphicsRootSignature->addReference();
 
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *rootSignature)
+			DIRECT3D10RENDERER_RENDERERMATCHCHECK_ASSERT(*this, *rootSignature)
 		}
 	}
 
@@ -573,7 +558,7 @@ namespace Direct3D10Renderer
 		if (nullptr != resourceGroup)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *resourceGroup)
+			DIRECT3D10RENDERER_RENDERERMATCHCHECK_ASSERT(*this, *resourceGroup)
 
 			// Set graphics resource group
 			const ResourceGroup* d3d10ResourceGroup = static_cast<ResourceGroup*>(resourceGroup);
@@ -783,7 +768,7 @@ namespace Direct3D10Renderer
 		if (nullptr != pipelineState)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *pipelineState)
+			DIRECT3D10RENDERER_RENDERERMATCHCHECK_ASSERT(*this, *pipelineState)
 
 			// Set primitive topology
 			// -> The "Renderer::PrimitiveTopology" values directly map to Direct3D 9 & 10 & 11 constants, do not change them
@@ -812,7 +797,7 @@ namespace Direct3D10Renderer
 		if (nullptr != vertexArray)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *vertexArray)
+			DIRECT3D10RENDERER_RENDERERMATCHCHECK_ASSERT(*this, *vertexArray)
 
 			// Begin debug event
 			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
@@ -885,7 +870,7 @@ namespace Direct3D10Renderer
 			if (nullptr != renderTarget)
 			{
 				// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-				DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *renderTarget)
+				DIRECT3D10RENDERER_RENDERERMATCHCHECK_ASSERT(*this, *renderTarget)
 
 				// Release the render target reference, in case we have one
 				Framebuffer* framebufferToGenerateMipmapsFor = nullptr;
@@ -1103,8 +1088,8 @@ namespace Direct3D10Renderer
 	void Direct3D10Renderer::resolveMultisampleFramebuffer(Renderer::IRenderTarget& destinationRenderTarget, Renderer::IFramebuffer& sourceMultisampleFramebuffer)
 	{
 		// Security check: Are the given resources owned by this renderer? (calls "return" in case of a mismatch)
-		DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, destinationRenderTarget)
-		DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, sourceMultisampleFramebuffer)
+		DIRECT3D10RENDERER_RENDERERMATCHCHECK_ASSERT(*this, destinationRenderTarget)
+		DIRECT3D10RENDERER_RENDERERMATCHCHECK_ASSERT(*this, sourceMultisampleFramebuffer)
 
 		// Evaluate the render target type
 		switch (destinationRenderTarget.getResourceType())
@@ -1183,8 +1168,8 @@ namespace Direct3D10Renderer
 	void Direct3D10Renderer::copyResource(Renderer::IResource& destinationResource, Renderer::IResource& sourceResource)
 	{
 		// Security check: Are the given resources owned by this renderer? (calls "return" in case of a mismatch)
-		DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, destinationResource)
-		DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, sourceResource)
+		DIRECT3D10RENDERER_RENDERERMATCHCHECK_ASSERT(*this, destinationResource)
+		DIRECT3D10RENDERER_RENDERERMATCHCHECK_ASSERT(*this, sourceResource)
 
 		// Evaluate the render target type
 		switch (destinationResource.getResourceType())
@@ -1394,11 +1379,6 @@ namespace Direct3D10Renderer
 		return (nullptr != D3DPERF_GetStatus && D3DPERF_GetStatus() != 0);
 	}
 
-	Renderer::ISwapChain* Direct3D10Renderer::getMainSwapChain() const
-	{
-		return mMainSwapChain;
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Shader language                                       ]
@@ -1454,16 +1434,28 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Resource creation                                     ]
 	//[-------------------------------------------------------]
-	Renderer::ISwapChain* Direct3D10Renderer::createSwapChain(handle nativeWindowHandle, bool)
+	Renderer::IRenderPass* Direct3D10Renderer::createRenderPass(uint32_t numberOfColorAttachments, const Renderer::TextureFormat::Enum* colorAttachmentTextureFormats, Renderer::TextureFormat::Enum depthStencilAttachmentTextureFormat, uint8_t numberOfMultisamples)
 	{
-		// The provided native window handle must not be a null handle
-		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
+		return new RenderPass(*this, numberOfColorAttachments, colorAttachmentTextureFormats, depthStencilAttachmentTextureFormat, numberOfMultisamples);
 	}
 
-	Renderer::IFramebuffer* Direct3D10Renderer::createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment)
+	Renderer::ISwapChain* Direct3D10Renderer::createSwapChain(Renderer::IRenderPass& renderPass, handle nativeWindowHandle, bool)
 	{
-		// Validation is done inside the framebuffer implementation
-		return new Framebuffer(*this, numberOfColorFramebufferAttachments, colorFramebufferAttachments, depthStencilFramebufferAttachment);
+		// Sanity checks
+		DIRECT3D10RENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
+		assert(NULL_HANDLE != nativeWindowHandle && "The provided native window handle must not be a null handle");
+
+		// Create the swap chain
+		return new SwapChain(renderPass, nativeWindowHandle);
+	}
+
+	Renderer::IFramebuffer* Direct3D10Renderer::createFramebuffer(Renderer::IRenderPass& renderPass, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment)
+	{
+		// Sanity check
+		DIRECT3D10RENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
+
+		// Create the framebuffer
+		return new Framebuffer(renderPass, colorFramebufferAttachments, depthStencilFramebufferAttachment);
 	}
 
 	Renderer::IBufferManager* Direct3D10Renderer::createBufferManager()
@@ -1769,6 +1761,10 @@ namespace Direct3D10Renderer
 		// -> Have a look at "Resource Limits (Direct3D 10)" at MSDN http://msdn.microsoft.com/en-us/library/cc308052%28VS.85%29.aspx
 		//    for a table with a list of the minimum resources supported by Direct3D 10
 
+		// Preferred swap chain texture format
+		mCapabilities.preferredSwapChainColorTextureFormat		  = Renderer::TextureFormat::Enum::R8G8B8A8;
+		mCapabilities.preferredSwapChainDepthStencilTextureFormat = Renderer::TextureFormat::Enum::D32_FLOAT;
+
 		// Maximum number of viewports (always at least 1)
 		mCapabilities.maximumNumberOfViewports = D3D10_VIEWPORT_AND_SCISSORRECT_MAX_INDEX + 1;
 
@@ -1843,7 +1839,7 @@ namespace Direct3D10Renderer
 		if (nullptr != program)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D10RENDERER_RENDERERMATCHCHECK_RETURN(*this, *program)
+			DIRECT3D10RENDERER_RENDERERMATCHCHECK_ASSERT(*this, *program)
 
 			// Get shaders
 			const ProgramHlsl*		  programHlsl		  = static_cast<ProgramHlsl*>(program);

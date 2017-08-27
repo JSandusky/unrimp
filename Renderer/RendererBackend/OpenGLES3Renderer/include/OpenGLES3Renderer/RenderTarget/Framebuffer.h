@@ -29,17 +29,6 @@
 //[-------------------------------------------------------]
 #include <Renderer/RenderTarget/IFramebuffer.h>
 
-#include "OpenGLES3Renderer/RenderTarget/RenderPass.h"
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace OpenGLES3Renderer
-{
-	class OpenGLES3Renderer;
-}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -67,20 +56,18 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] openGLES3Renderer
-		*    Owner OpenGL ES 3 renderer instance
-		*  @param[in] numberOfColorFramebufferAttachments
-		*    Number of color render target textures
+		*  @param[in] renderPass
+		*    Render pass to use, the swap chain keeps a reference to the render pass
 		*  @param[in] colorFramebufferAttachments
 		*    The color render target textures, can be a null pointer or can contain null pointers, if not a null pointer there must be at
-		*    least "numberOfColorTextures" textures in the provided C-array of pointers
+		*    least "Renderer::IRenderPass::getNumberOfColorAttachments()" textures in the provided C-array of pointers
 		*  @param[in] depthStencilFramebufferAttachment
 		*    The depth stencil render target texture, can be a null pointer
 		*
 		*  @note
 		*    - The framebuffer keeps a reference to the provided texture instances
 		*/
-		Framebuffer(OpenGLES3Renderer& openGLES3Renderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment);
+		Framebuffer(Renderer::IRenderPass& renderPass, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment);
 
 		/**
 		*  @brief
@@ -133,7 +120,6 @@ namespace OpenGLES3Renderer
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
-		inline virtual const Renderer::IRenderPass& getRenderPass() const override;
 		virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const override;
 
 
@@ -149,7 +135,6 @@ namespace OpenGLES3Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		RenderPass			 mRenderPass;				///< Render pass instance
 		uint32_t			 mOpenGLES3Framebuffer;		///< OpenGL ES 3 framebuffer, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 		uint32_t			 mDepthRenderbuffer;		///< OpenGL ES render buffer for the depth component, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 		uint32_t			 mNumberOfColorTextures;	///< Number of color render target textures

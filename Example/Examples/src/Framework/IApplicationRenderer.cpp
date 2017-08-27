@@ -100,6 +100,11 @@ void IApplicationRenderer::onDeinitialization()
 	deinitializeExample();
 
 	// Delete the renderer instance
+	if (nullptr != mMainSwapChain)
+	{
+		mMainSwapChain->releaseReference();
+		mMainSwapChain = nullptr;
+	}
 	mRenderer = nullptr;
 	if (nullptr != mRendererInstance)
 	{
@@ -126,33 +131,23 @@ void IApplicationRenderer::onUpdate()
 
 void IApplicationRenderer::onResize()
 {
-	// Is there a renderer instance?
-	if (nullptr != mRenderer)
+	// Is there a renderer and main swap chain instance?
+	if (nullptr != mRenderer && nullptr != mMainSwapChain)
 	{
-		// Get the main swap chain
-		Renderer::ISwapChain* swapChain = mRenderer->getMainSwapChain();
-		if (nullptr != swapChain)
-		{
-			// Inform the swap chain that the size of the native window was changed
-			// -> Required for Direct3D 9, Direct3D 10, Direct3D 11
-			// -> Not required for OpenGL and OpenGL ES 2
-			swapChain->resizeBuffers();
-		}
+		// Inform the swap chain that the size of the native window was changed
+		// -> Required for Direct3D 9, Direct3D 10, Direct3D 11
+		// -> Not required for OpenGL and OpenGL ES 2
+		mMainSwapChain->resizeBuffers();
 	}
 }
 
 void IApplicationRenderer::onToggleFullscreenState()
 {
-	// Is there a renderer instance?
-	if (nullptr != mRenderer)
+	// Is there a renderer and main swap chain instance?
+	if (nullptr != mRenderer && nullptr != mMainSwapChain)
 	{
-		// Get the main swap chain
-		Renderer::ISwapChain* swapChain = mRenderer->getMainSwapChain();
-		if (nullptr != swapChain)
-		{
-			// Toggle the fullscreen state
-			swapChain->setFullscreenState(!swapChain->getFullscreenState());
-		}
+		// Toggle the fullscreen state
+		mMainSwapChain->setFullscreenState(!mMainSwapChain->getFullscreenState());
 	}
 }
 
@@ -204,59 +199,54 @@ void IApplicationRenderer::onDrawRequest()
 		mExampleBase->draw();
 	}
 
-	// Is there a renderer instance?
-	else if (nullptr != mRenderer)
+	// Is there a renderer and main swap chain instance?
+	else if (nullptr != mRenderer && nullptr != mMainSwapChain)
 	{
-		// Get the main swap chain and ensure there's one
-		Renderer::ISwapChain* swapChain = mRenderer->getMainSwapChain();
-		if (nullptr != swapChain)
+		// Begin scene rendering
+		// -> Required for Direct3D 9 and Direct3D 12
+		// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
+		if (mRenderer->beginScene())
 		{
-			// Begin scene rendering
-			// -> Required for Direct3D 9 and Direct3D 12
-			// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
-			if (mRenderer->beginScene())
-			{
-				// Begin debug event
-				COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(mCommandBuffer)
+			// Begin debug event
+			COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(mCommandBuffer)
 
-				// Make the main swap chain to the current render target
-				Renderer::Command::SetRenderTarget::create(mCommandBuffer, swapChain);
+			// Make the main swap chain to the current render target
+			Renderer::Command::SetRenderTarget::create(mCommandBuffer, mMainSwapChain);
 
-				{ // Since Direct3D 12 is command list based, the viewport and scissor rectangle
-				  // must be set in every draw call to work with all supported renderer APIs
-					// Get the window size
-					uint32_t width  = 1;
-					uint32_t height = 1;
-					swapChain->getWidthAndHeight(width, height);
+			{ // Since Direct3D 12 is command list based, the viewport and scissor rectangle
+				// must be set in every draw call to work with all supported renderer APIs
+				// Get the window size
+				uint32_t width  = 1;
+				uint32_t height = 1;
+				mMainSwapChain->getWidthAndHeight(width, height);
 
-					// Set the viewport and scissor rectangle
-					Renderer::Command::SetViewportAndScissorRectangle::create(mCommandBuffer, 0, 0, width, height);
-				}
-
-				// Submit command buffer to the renderer backend
-				mCommandBuffer.submitAndClear(*mRenderer);
-
-				// Call the draw method
-				if (nullptr != mExampleBase)
-				{
-					mExampleBase->draw();
-				}
-
-				// End debug event
-				COMMAND_END_DEBUG_EVENT(mCommandBuffer)
-
-				// Submit command buffer to the renderer backend
-				mCommandBuffer.submitAndClear(*mRenderer);
-
-				// End scene rendering
-				// -> Required for Direct3D 9 and Direct3D 12
-				// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
-				mRenderer->endScene();
+				// Set the viewport and scissor rectangle
+				Renderer::Command::SetViewportAndScissorRectangle::create(mCommandBuffer, 0, 0, width, height);
 			}
 
-			// Present the content of the current back buffer
-			swapChain->present();
+			// Submit command buffer to the renderer backend
+			mCommandBuffer.submitAndClear(*mRenderer);
+
+			// Call the draw method
+			if (nullptr != mExampleBase)
+			{
+				mExampleBase->draw();
+			}
+
+			// End debug event
+			COMMAND_END_DEBUG_EVENT(mCommandBuffer)
+
+			// Submit command buffer to the renderer backend
+			mCommandBuffer.submitAndClear(*mRenderer);
+
+			// End scene rendering
+			// -> Required for Direct3D 9 and Direct3D 12
+			// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
+			mRenderer->endScene();
 		}
+
+		// Present the content of the current back buffer
+		mMainSwapChain->present();
 	}
 }
 
@@ -276,6 +266,17 @@ void IApplicationRenderer::createRenderer()
 	{
 		// Create the renderer instance
 		mRenderer = createRendererInstance(mRendererName);
+		if (nullptr != mRenderer)
+		{
+			// Create render pass using the preferred swap chain texture format
+			const Renderer::Capabilities& capabilities = mRenderer->getCapabilities();
+			Renderer::IRenderPass* renderPass = mRenderer->createRenderPass(1, &capabilities.preferredSwapChainColorTextureFormat, capabilities.preferredSwapChainDepthStencilTextureFormat);
+
+			// Create a main swap chain instance
+			mMainSwapChain = mRenderer->createSwapChain(*renderPass, getNativeWindowHandle(), mRenderer->getContext().isUsingExternalContext());
+			RENDERER_SET_RESOURCE_DEBUG_NAME(mMainSwapChain, "Main swap chain")
+			mMainSwapChain->addReference();	// Internal renderer reference
+		}
 	}
 }
 

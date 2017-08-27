@@ -43,7 +43,7 @@ BatchDrawInstanced::~BatchDrawInstanced()
 	// The renderer resource pointers are released automatically
 }
 
-void BatchDrawInstanced::initialize(Renderer::IBufferManager& bufferManager, Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IProgram& program, const Renderer::IRenderPass& renderPass, uint32_t numberOfCubeInstances, bool alphaBlending, uint32_t numberOfTextures, uint32_t sceneRadius)
+void BatchDrawInstanced::initialize(Renderer::IBufferManager& bufferManager, Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IProgram& program, Renderer::IRenderPass& renderPass, uint32_t numberOfCubeInstances, bool alphaBlending, uint32_t numberOfTextures, uint32_t sceneRadius)
 {
 	// Set owner renderer instance
 	mRenderer = &program.getRenderer();

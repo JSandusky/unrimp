@@ -774,6 +774,9 @@
     <ClCompile Include="src\ResourceGroup.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\RenderTarget\RenderPass.cpp">
+      <Filter>Source Files\RenderTarget</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />

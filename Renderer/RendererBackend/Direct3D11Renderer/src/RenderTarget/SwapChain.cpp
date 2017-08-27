@@ -37,15 +37,14 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SwapChain::SwapChain(Direct3D11Renderer& direct3D11Renderer, handle nativeWindowHandle) :
-		ISwapChain(direct3D11Renderer),
-		mRenderPass(direct3D11Renderer),
+	SwapChain::SwapChain(Renderer::IRenderPass& renderPass, handle nativeWindowHandle) :
+		ISwapChain(renderPass),
 		mDxgiSwapChain(nullptr),
 		mD3D11RenderTargetView(nullptr),
 		mD3D11DepthStencilView(nullptr)
 	{
 		// Get the Direct3D 11 device instance
-		ID3D11Device* d3d11Device = direct3D11Renderer.getD3D11Device();
+		ID3D11Device* d3d11Device = static_cast<Direct3D11Renderer&>(renderPass.getRenderer()).getD3D11Device();
 
 		// Get the native window handle
 		const HWND hWnd = reinterpret_cast<HWND>(nativeWindowHandle);

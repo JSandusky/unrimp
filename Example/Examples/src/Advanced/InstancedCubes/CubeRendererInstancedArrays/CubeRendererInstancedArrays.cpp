@@ -123,7 +123,7 @@ namespace
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-CubeRendererInstancedArrays::CubeRendererInstancedArrays(Renderer::IRenderer& renderer, const Renderer::IRenderPass& renderPass, uint32_t numberOfTextures, uint32_t sceneRadius) :
+CubeRendererInstancedArrays::CubeRendererInstancedArrays(Renderer::IRenderer& renderer, Renderer::IRenderPass& renderPass, uint32_t numberOfTextures, uint32_t sceneRadius) :
 	mRenderer(&renderer),
 	mRenderPass(renderPass),
 	mNumberOfTextures(numberOfTextures),

@@ -119,6 +119,7 @@
     <ClCompile Include="src\Guid.cpp" />
     <ClCompile Include="src\Mapping.cpp" />
     <ClCompile Include="src\RenderTarget\Framebuffer.cpp" />
+    <ClCompile Include="src\RenderTarget\RenderPass.cpp" />
     <ClCompile Include="src\RenderTarget\SwapChain.cpp" />
     <ClCompile Include="src\ResourceGroup.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />

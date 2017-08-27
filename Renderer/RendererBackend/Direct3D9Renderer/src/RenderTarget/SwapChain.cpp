@@ -37,15 +37,14 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SwapChain::SwapChain(Direct3D9Renderer& direct3D9Renderer, handle nativeWindowHandle) :
-		ISwapChain(direct3D9Renderer),
-		mRenderPass(direct3D9Renderer),
+	SwapChain::SwapChain(Renderer::IRenderPass& renderPass, handle nativeWindowHandle) :
+		ISwapChain(renderPass),
 		mDirect3DSwapChain9(nullptr),
 		mDirect3DSurface9RenderTarget(nullptr),
 		mDirect3DSurface9DepthStencil(nullptr)
 	{
 		// Get the Direct3D 9 device instance
-		IDirect3DDevice9* direct3DDevice9 = direct3D9Renderer.getDirect3DDevice9();
+		IDirect3DDevice9* direct3DDevice9 = static_cast<Direct3D9Renderer&>(renderPass.getRenderer()).getDirect3DDevice9();
 
 		// Get the native window handle
 		const HWND hWnd = reinterpret_cast<HWND>(nativeWindowHandle);

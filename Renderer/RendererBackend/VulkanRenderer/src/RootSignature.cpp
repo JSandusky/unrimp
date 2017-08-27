@@ -320,7 +320,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	#ifndef VULKANRENDERER_NO_DEBUG
+	#if !defined(VULKANRENDERER_NO_DEBUG) && !defined(RENDERER_NO_DEBUG)
 		void RootSignature::setDebugName(const char* name)
 		{
 			if (nullptr != vkDebugMarkerSetObjectNameEXT)
@@ -328,10 +328,10 @@ namespace VulkanRenderer
 				const VkDevice vkDevice = static_cast<const VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice();
 				for (VkDescriptorSetLayout vkDescriptorSetLayout : mVkDescriptorSetLayouts)
 				{
-					Helper::setDebugObjectName(vkDevice, VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT_EXT, vkDescriptorSetLayout, name);
+					Helper::setDebugObjectName(vkDevice, VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT_EXT, (uint64_t)vkDescriptorSetLayout, name);
 				}
-				Helper::setDebugObjectName(vkDevice, VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_LAYOUT_EXT, mVkPipelineLayout, name);
-				Helper::setDebugObjectName(vkDevice, VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT, mVkDescriptorPool, name);
+				Helper::setDebugObjectName(vkDevice, VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_LAYOUT_EXT, (uint64_t)mVkPipelineLayout, name);
+				Helper::setDebugObjectName(vkDevice, VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT, (uint64_t)mVkDescriptorPool, name);
 			}
 		}
 	#endif

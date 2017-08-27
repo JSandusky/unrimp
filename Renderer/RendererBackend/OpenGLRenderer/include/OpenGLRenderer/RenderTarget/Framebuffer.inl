@@ -58,15 +58,6 @@ namespace OpenGLRenderer
 	}
 
 
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IRenderTarget methods        ]
-	//[-------------------------------------------------------]
-	inline const Renderer::IRenderPass& Framebuffer::getRenderPass() const
-	{
-		return mRenderPass;
-	}
-
-
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

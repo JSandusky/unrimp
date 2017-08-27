@@ -123,6 +123,7 @@
     <ClCompile Include="src\OpenGLES3ContextRuntimeLinking.cpp" />
     <ClCompile Include="src\OpenGLES3Renderer.cpp" />
     <ClCompile Include="src\RenderTarget\Framebuffer.cpp" />
+    <ClCompile Include="src\RenderTarget\RenderPass.cpp" />
     <ClCompile Include="src\RenderTarget\SwapChain.cpp" />
     <ClCompile Include="src\ResourceGroup.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />

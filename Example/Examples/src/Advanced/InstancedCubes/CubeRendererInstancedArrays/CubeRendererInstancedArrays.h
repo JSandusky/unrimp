@@ -68,7 +68,7 @@ public:
 	*  @param[in] sceneRadius
 	*    Scene radius
 	*/
-	CubeRendererInstancedArrays(Renderer::IRenderer& renderer, const Renderer::IRenderPass& renderPass, uint32_t numberOfTextures, uint32_t sceneRadius);
+	CubeRendererInstancedArrays(Renderer::IRenderer& renderer, Renderer::IRenderPass& renderPass, uint32_t numberOfTextures, uint32_t sceneRadius);
 
 	/**
 	*  @brief
@@ -99,7 +99,7 @@ private:
 //[-------------------------------------------------------]
 private:
 	Renderer::IRendererPtr		 mRenderer;							///< Renderer instance to use, always valid
-	const Renderer::IRenderPass& mRenderPass;						///< Render pass to use, always valid
+	Renderer::IRenderPass&		 mRenderPass;						///< Render pass to use, always valid
 	Renderer::IBufferManagerPtr	 mBufferManager;					///< Buffer manager, can be a null pointer
 	Renderer::ITextureManagerPtr mTextureManager;					///< Texture manager, can be a null pointer
 	Renderer::CommandBuffer		 mCommandBuffer;					///< Command buffer which is recorded once and then used multiple times

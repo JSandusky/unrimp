@@ -33,6 +33,7 @@
 #include "Direct3D11Renderer/Shader/VertexShaderHlsl.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/RenderTarget/IRenderPass.h>
 
 
 //[-------------------------------------------------------]
@@ -48,6 +49,7 @@ namespace Direct3D11Renderer
 	PipelineState::PipelineState(Direct3D11Renderer& direct3D11Renderer, const Renderer::PipelineState& pipelineState) :
 		IPipelineState(direct3D11Renderer),
 		mProgram(pipelineState.program),
+		mRenderPass(pipelineState.renderPass),
 		mD3D11DeviceContext(direct3D11Renderer.getD3D11DeviceContext()),
 		mD3D11PrimitiveTopology(static_cast<D3D11_PRIMITIVE_TOPOLOGY>(pipelineState.primitiveTopology)),
 		mD3D11InputLayout(nullptr),
@@ -58,8 +60,9 @@ namespace Direct3D11Renderer
 		// Acquire our Direct3D 11 device context reference
 		mD3D11DeviceContext->AddRef();
 
-		// Add a reference to the given program
+		// Add a reference to the given program and render pass
 		mProgram->addReference();
+		mRenderPass->addReference();
 
 		// Create Direct3D 11 input element descriptions
 		const VertexShaderHlsl* vertexShaderHlsl = static_cast<ProgramHlsl*>(mProgram)->getVertexShaderHlsl();
@@ -122,11 +125,9 @@ namespace Direct3D11Renderer
 		delete mDepthStencilState;
 		delete mBlendState;
 
-		// Release the program reference
-		if (nullptr != mProgram)
-		{
-			mProgram->releaseReference();
-		}
+		// Release the program and render pass reference
+		mProgram->releaseReference();
+		mRenderPass->releaseReference();
 
 		// Release the Direct3D 11 input layout
 		if (nullptr != mD3D11InputLayout)

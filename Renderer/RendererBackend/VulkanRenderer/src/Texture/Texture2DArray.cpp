@@ -43,7 +43,7 @@ namespace VulkanRenderer
 		mVkImageLayout((flags & Renderer::TextureFlag::RENDER_TARGET) ? VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_PREINITIALIZED),
 		mVkDeviceMemory(VK_NULL_HANDLE),
 		mVkImageView(VK_NULL_HANDLE),
-		mVkFormat(Helper::createAndFillVkImage(vulkanRenderer, VK_IMAGE_TYPE_2D, VK_IMAGE_VIEW_TYPE_2D_ARRAY, { width, height, numberOfSlices }, textureFormat, data, flags, mVkImage, mVkDeviceMemory, mVkImageView))
+		mVkFormat(Helper::createAndFillVkImage(vulkanRenderer, VK_IMAGE_TYPE_2D, VK_IMAGE_VIEW_TYPE_2D_ARRAY, { width, height, numberOfSlices }, textureFormat, data, flags, 1, mVkImage, mVkDeviceMemory, mVkImageView))
 	{
 		SET_DEFAULT_DEBUG_NAME	// setDebugName("");
 	}

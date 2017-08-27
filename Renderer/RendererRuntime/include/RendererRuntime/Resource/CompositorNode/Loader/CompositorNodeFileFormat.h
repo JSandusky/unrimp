@@ -60,7 +60,7 @@ namespace RendererRuntime
 		//[ Definitions                                           ]
 		//[-------------------------------------------------------]
 		static const uint32_t FORMAT_TYPE	 = StringId("CompositorNode");
-		static const uint32_t FORMAT_VERSION = 6;
+		static const uint32_t FORMAT_VERSION = 7;
 
 		#pragma pack(push)
 		#pragma pack(1)

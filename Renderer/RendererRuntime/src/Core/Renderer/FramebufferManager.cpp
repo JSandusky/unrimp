@@ -162,9 +162,14 @@ namespace RendererRuntime
 						}
 						Renderer::FramebufferAttachment depthStencilFramebufferAttachment(isInitialized(framebufferSignature.getDepthStencilTextureAssetId()) ? mRenderTargetTextureManager.getTextureByAssetId(framebufferSignature.getDepthStencilTextureAssetId(), renderTarget, numberOfMultisamples, resolutionScale) : nullptr);
 
+						// TODO(co) Render pass related update, the render pass in here is currently just a dummy so the debug compositor works
+						const Renderer::TextureFormat::Enum textureFormat[8] = { Renderer::TextureFormat::Enum::R8G8B8A8, Renderer::TextureFormat::Enum::R8G8B8A8, Renderer::TextureFormat::Enum::R8G8B8A8, Renderer::TextureFormat::Enum::R8G8B8A8, Renderer::TextureFormat::Enum::R8G8B8A8, Renderer::TextureFormat::Enum::R8G8B8A8, Renderer::TextureFormat::Enum::R8G8B8A8, Renderer::TextureFormat::Enum::R8G8B8A8 };
+						Renderer::IRenderer& renderer = mRenderTargetTextureManager.getRendererRuntime().getRenderer();
+						Renderer::IRenderPass* renderPass = renderer.createRenderPass(numberOfColorTextures, textureFormat, renderer.getCapabilities().preferredSwapChainDepthStencilTextureFormat);
+
 						// Create the framebuffer object (FBO) instance
 						// -> The framebuffer automatically adds a reference to the provided textures
-						framebufferElement.framebuffer = mRenderTargetTextureManager.getRendererRuntime().getRenderer().createFramebuffer(numberOfColorTextures, colorFramebufferAttachments, (nullptr != depthStencilFramebufferAttachment.texture) ? &depthStencilFramebufferAttachment : nullptr);
+						framebufferElement.framebuffer = mRenderTargetTextureManager.getRendererRuntime().getRenderer().createFramebuffer(*renderPass, colorFramebufferAttachments, (nullptr != depthStencilFramebufferAttachment.texture) ? &depthStencilFramebufferAttachment : nullptr);
 						RENDERER_SET_RESOURCE_DEBUG_NAME(framebufferElement.framebuffer, "Framebuffer manager")
 						framebufferElement.framebuffer->addReference();
 					}

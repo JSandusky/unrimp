@@ -23,12 +23,13 @@
 //[-------------------------------------------------------]
 #include "Direct3D11Renderer/Direct3D11Renderer.h"
 #include "Direct3D11Renderer/Guid.h"			// For "WKPDID_D3DDebugObjectName"
-#include "Direct3D11Renderer/Direct3D11Debug.h"	// For "DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN()"
+#include "Direct3D11Renderer/Direct3D11Debug.h"	// For "DIRECT3D11RENDERER_RENDERERMATCHCHECK_ASSERT()"
 #include "Direct3D11Renderer/Direct3D11RuntimeLinking.h"
 #include "Direct3D11Renderer/RootSignature.h"
 #include "Direct3D11Renderer/ResourceGroup.h"
 #include "Direct3D11Renderer/Mapping.h"
 #include "Direct3D11Renderer/RenderTarget/SwapChain.h"
+#include "Direct3D11Renderer/RenderTarget/RenderPass.h"
 #include "Direct3D11Renderer/RenderTarget/Framebuffer.h"
 #include "Direct3D11Renderer/Buffer/BufferManager.h"
 #include "Direct3D11Renderer/Buffer/VertexArray.h"
@@ -348,7 +349,6 @@ namespace Direct3D11Renderer
 		mD3DUserDefinedAnnotation(nullptr),
 		mShaderLanguageHlsl(nullptr),
 		mD3D11QueryFlush(nullptr),
-		mMainSwapChain(nullptr),
 		mRenderTarget(nullptr),
 		mGraphicsRootSignature(nullptr),
 		mD3D11PrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_UNDEFINED),
@@ -439,16 +439,6 @@ namespace Direct3D11Renderer
 
 				// Initialize the capabilities
 				initializeCapabilities();
-
-				// Create a main swap chain instance?
-				const handle nativeWindowHandle = mContext.getNativeWindowHandle();
-				if (NULL_HANDLE != nativeWindowHandle)
-				{
-					// Create a main swap chain instance
-					mMainSwapChain = new SwapChain(*this, nativeWindowHandle);
-					RENDERER_SET_RESOURCE_DEBUG_NAME(mMainSwapChain, "Main swap chain")
-					mMainSwapChain->addReference();	// Internal renderer reference
-				}
 			}
 			else
 			{
@@ -466,11 +456,6 @@ namespace Direct3D11Renderer
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
 
 		// Release instances
-		if (nullptr != mMainSwapChain)
-		{
-			mMainSwapChain->releaseReference();
-			mMainSwapChain = nullptr;
-		}
 		if (nullptr != mRenderTarget)
 		{
 			mRenderTarget->releaseReference();
@@ -556,7 +541,7 @@ namespace Direct3D11Renderer
 			mGraphicsRootSignature->addReference();
 
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *rootSignature)
+			DIRECT3D11RENDERER_RENDERERMATCHCHECK_ASSERT(*this, *rootSignature)
 		}
 	}
 
@@ -593,7 +578,7 @@ namespace Direct3D11Renderer
 		if (nullptr != resourceGroup)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *resourceGroup)
+			DIRECT3D11RENDERER_RENDERERMATCHCHECK_ASSERT(*this, *resourceGroup)
 
 			// Set graphics resource group
 			const ResourceGroup* d3d11ResourceGroup = static_cast<ResourceGroup*>(resourceGroup);
@@ -815,7 +800,7 @@ namespace Direct3D11Renderer
 		if (nullptr != pipelineState)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *pipelineState)
+			DIRECT3D11RENDERER_RENDERERMATCHCHECK_ASSERT(*this, *pipelineState)
 
 			// Set primitive topology
 			// -> The "Renderer::PrimitiveTopology" values directly map to Direct3D 9 & 10 & 11 constants, do not change them
@@ -844,7 +829,7 @@ namespace Direct3D11Renderer
 		if (nullptr != vertexArray)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *vertexArray)
+			DIRECT3D11RENDERER_RENDERERMATCHCHECK_ASSERT(*this, *vertexArray)
 
 			// Begin debug event
 			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
@@ -900,7 +885,7 @@ namespace Direct3D11Renderer
 			if (nullptr != renderTarget)
 			{
 				// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-				DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *renderTarget)
+				DIRECT3D11RENDERER_RENDERERMATCHCHECK_ASSERT(*this, *renderTarget)
 
 				// Release the render target reference, in case we have one
 				Framebuffer* framebufferToGenerateMipmapsFor = nullptr;
@@ -1118,8 +1103,8 @@ namespace Direct3D11Renderer
 	void Direct3D11Renderer::resolveMultisampleFramebuffer(Renderer::IRenderTarget& destinationRenderTarget, Renderer::IFramebuffer& sourceMultisampleFramebuffer)
 	{
 		// Security check: Are the given resources owned by this renderer? (calls "return" in case of a mismatch)
-		DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, destinationRenderTarget)
-		DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, sourceMultisampleFramebuffer)
+		DIRECT3D11RENDERER_RENDERERMATCHCHECK_ASSERT(*this, destinationRenderTarget)
+		DIRECT3D11RENDERER_RENDERERMATCHCHECK_ASSERT(*this, sourceMultisampleFramebuffer)
 
 		// Evaluate the render target type
 		switch (destinationRenderTarget.getResourceType())
@@ -1198,8 +1183,8 @@ namespace Direct3D11Renderer
 	void Direct3D11Renderer::copyResource(Renderer::IResource& destinationResource, Renderer::IResource& sourceResource)
 	{
 		// Security check: Are the given resources owned by this renderer? (calls "return" in case of a mismatch)
-		DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, destinationResource)
-		DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, sourceResource)
+		DIRECT3D11RENDERER_RENDERERMATCHCHECK_ASSERT(*this, destinationResource)
+		DIRECT3D11RENDERER_RENDERERMATCHCHECK_ASSERT(*this, sourceResource)
 
 		// Evaluate the render target type
 		switch (destinationResource.getResourceType())
@@ -1388,11 +1373,6 @@ namespace Direct3D11Renderer
 		return (nullptr != mD3DUserDefinedAnnotation && mD3DUserDefinedAnnotation->GetStatus() != 0);
 	}
 
-	Renderer::ISwapChain* Direct3D11Renderer::getMainSwapChain() const
-	{
-		return static_cast<Renderer::ISwapChain*>(mMainSwapChain);
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Shader language                                       ]
@@ -1448,16 +1428,28 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Resource creation                                     ]
 	//[-------------------------------------------------------]
-	Renderer::ISwapChain* Direct3D11Renderer::createSwapChain(handle nativeWindowHandle, bool)
+	Renderer::IRenderPass* Direct3D11Renderer::createRenderPass(uint32_t numberOfColorAttachments, const Renderer::TextureFormat::Enum* colorAttachmentTextureFormats, Renderer::TextureFormat::Enum depthStencilAttachmentTextureFormat, uint8_t numberOfMultisamples)
 	{
-		// The provided native window handle must not be a null handle
-		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
+		return new RenderPass(*this, numberOfColorAttachments, colorAttachmentTextureFormats, depthStencilAttachmentTextureFormat, numberOfMultisamples);
 	}
 
-	Renderer::IFramebuffer* Direct3D11Renderer::createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment)
+	Renderer::ISwapChain* Direct3D11Renderer::createSwapChain(Renderer::IRenderPass& renderPass, handle nativeWindowHandle, bool)
 	{
-		// Validation is done inside the framebuffer implementation
-		return new Framebuffer(*this, numberOfColorFramebufferAttachments, colorFramebufferAttachments, depthStencilFramebufferAttachment);
+		// Sanity checks
+		DIRECT3D11RENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
+		assert(NULL_HANDLE != nativeWindowHandle && "The provided native window handle must not be a null handle");
+
+		// Create the swap chain
+		return new SwapChain(renderPass, nativeWindowHandle);
+	}
+
+	Renderer::IFramebuffer* Direct3D11Renderer::createFramebuffer(Renderer::IRenderPass& renderPass, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment)
+	{
+		// Sanity check
+		DIRECT3D11RENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
+
+		// Create the framebuffer
+		return new Framebuffer(renderPass, colorFramebufferAttachments, depthStencilFramebufferAttachment);
 	}
 
 	Renderer::IBufferManager* Direct3D11Renderer::createBufferManager()
@@ -1726,6 +1718,10 @@ namespace Direct3D11Renderer
 		// There are no Direct3D 11 device capabilities we could query on runtime, they depend on the chosen feature level
 		// -> Have a look at "Devices -> Direct3D 11 on Downlevel Hardware -> Introduction" at MSDN http://msdn.microsoft.com/en-us/library/ff476876%28v=vs.85%29.aspx
 		//    for a table with a list of the minimum resources supported by Direct3D 11 at the different feature levels
+
+		// Preferred swap chain texture format
+		mCapabilities.preferredSwapChainColorTextureFormat		  = Renderer::TextureFormat::Enum::R8G8B8A8;
+		mCapabilities.preferredSwapChainDepthStencilTextureFormat = Renderer::TextureFormat::Enum::D32_FLOAT;
 
 		// Evaluate the chosen feature level
 		switch (mD3D11Device->GetFeatureLevel())
@@ -2005,7 +2001,7 @@ namespace Direct3D11Renderer
 		if (nullptr != program)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D11RENDERER_RENDERERMATCHCHECK_RETURN(*this, *program)
+			DIRECT3D11RENDERER_RENDERERMATCHCHECK_ASSERT(*this, *program)
 
 			// Get shaders
 			const ProgramHlsl*					    programHlsl						 = static_cast<ProgramHlsl*>(program);

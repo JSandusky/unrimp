@@ -132,7 +132,6 @@ namespace NullRenderer
 		virtual const char* getName() const override;
 		virtual bool isInitialized() const override;
 		virtual bool isDebugEnabled() override;
-		virtual Renderer::ISwapChain* getMainSwapChain() const override;
 		//[-------------------------------------------------------]
 		//[ Shader language                                       ]
 		//[-------------------------------------------------------]
@@ -142,8 +141,9 @@ namespace NullRenderer
 		//[-------------------------------------------------------]
 		//[ Resource creation                                     ]
 		//[-------------------------------------------------------]
-		virtual Renderer::ISwapChain* createSwapChain(handle nativeWindowHandle, bool useExternalContext = false) override;
-		virtual Renderer::IFramebuffer* createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment = nullptr) override;
+		virtual Renderer::IRenderPass* createRenderPass(uint32_t numberOfColorAttachments, const Renderer::TextureFormat::Enum* colorAttachmentTextureFormats, Renderer::TextureFormat::Enum depthStencilAttachmentTextureFormat = Renderer::TextureFormat::UNKNOWN, uint8_t numberOfMultisamples = 1) override;
+		virtual Renderer::ISwapChain* createSwapChain(Renderer::IRenderPass& renderPass, handle nativeWindowHandle, bool useExternalContext = false) override;
+		virtual Renderer::IFramebuffer* createFramebuffer(Renderer::IRenderPass& renderPass, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment = nullptr) override;
 		virtual Renderer::IBufferManager* createBufferManager() override;
 		virtual Renderer::ITextureManager* createTextureManager() override;
 		virtual Renderer::IRootSignature* createRootSignature(const Renderer::RootSignature& rootSignature) override;
@@ -186,7 +186,6 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	private:
 		Renderer::IShaderLanguage* mShaderLanguage;			///< Null shader language instance (we keep a reference to it), can be a null pointer
-		SwapChain*				   mMainSwapChain;			///< In case the optional native main window handle within the "NullRenderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
 		Renderer::IRenderTarget*   mRenderTarget;			///< Currently set render target (we keep a reference to it), can be a null pointer
 		RootSignature*			   mGraphicsRootSignature;	///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
 

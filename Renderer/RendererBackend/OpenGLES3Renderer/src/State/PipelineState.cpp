@@ -29,6 +29,8 @@
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 #include "OpenGLES3Renderer/Mapping.h"
 
+#include <Renderer/RenderTarget/IRenderPass.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -44,12 +46,14 @@ namespace OpenGLES3Renderer
 		IPipelineState(openGLES3Renderer),
 		mOpenGLES3PrimitiveTopology(Mapping::getOpenGLES3Type(pipelineState.primitiveTopology)),
 		mProgram(pipelineState.program),
+		mRenderPass(pipelineState.renderPass),
 		mRasterizerState(new RasterizerState(pipelineState.rasterizerState)),
 		mDepthStencilState(new DepthStencilState(pipelineState.depthStencilState)),
 		mBlendState(new BlendState(pipelineState.blendState))
 	{
-		// Add a reference to the given program
+		// Add a reference to the given program and render pass
 		mProgram->addReference();
+		mRenderPass->addReference();
 	}
 
 	PipelineState::~PipelineState()
@@ -59,11 +63,9 @@ namespace OpenGLES3Renderer
 		delete mDepthStencilState;
 		delete mBlendState;
 
-		// Release the program reference
-		if (nullptr != mProgram)
-		{
-			mProgram->releaseReference();
-		}
+		// Release the program and render pass reference
+		mProgram->releaseReference();
+		mRenderPass->releaseReference();
 	}
 
 	void PipelineState::bindPipelineState() const

@@ -29,17 +29,6 @@
 //[-------------------------------------------------------]
 #include <Renderer/RenderTarget/ISwapChain.h>
 
-#include "NullRenderer/RenderTarget/RenderPass.h"
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace NullRenderer
-{
-	class NullRenderer;
-}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -67,25 +56,24 @@ namespace NullRenderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] nullRenderer
-		*    Owner null renderer instance
+		*  @param[in] renderPass
+		*    Render pass to use, the swap chain keeps a reference to the render pass
 		*  @param[in] nativeWindowHandle
 		*    Native window handle, must be valid
 		*/
-		SwapChain(NullRenderer& nullRenderer, handle nativeWindowHandle);
+		SwapChain(Renderer::IRenderPass& renderPass, handle nativeWindowHandle);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~SwapChain();
+		inline virtual ~SwapChain();
 
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
-		inline virtual const Renderer::IRenderPass& getRenderPass() const override;
 		virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const override;
 
 
@@ -113,8 +101,7 @@ namespace NullRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		RenderPass mRenderPass;			///< Render pass instance
-		handle	   mNativeWindowHandle;	///< Native window handle window, can be a null handle
+		handle mNativeWindowHandle;	///< Native window handle window, can be a null handle
 
 
 	};

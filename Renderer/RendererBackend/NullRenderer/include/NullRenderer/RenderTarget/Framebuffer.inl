@@ -28,9 +28,9 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
-	inline const Renderer::IRenderPass& Framebuffer::getRenderPass() const
+	inline Framebuffer::~Framebuffer()
 	{
-		return mRenderPass;
+		// Nothing here
 	}
 
 

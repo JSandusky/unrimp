@@ -99,12 +99,14 @@ void FirstMultipleRenderTargets::onInitialization()
 				// -> Required for Vulkan, Direct3D 9, Direct3D 10, Direct3D 11 and Direct3D 12
 				// -> Not required for OpenGL and OpenGL ES 2
 				// -> The optimized texture clear value is a Direct3D 12 related option
+				Renderer::TextureFormat::Enum textureFormats[NUMBER_OF_TEXTURES];
 				Renderer::IResource* textureResource[NUMBER_OF_TEXTURES] = {};
 				Renderer::ISamplerState* samplerStates[NUMBER_OF_TEXTURES] = {};
 				Renderer::FramebufferAttachment colorFramebufferAttachments[NUMBER_OF_TEXTURES];
 				for (uint32_t i = 0; i < NUMBER_OF_TEXTURES; ++i)
 				{
-					textureResource[i] = colorFramebufferAttachments[i].texture = mTextureManager->createTexture2D(TEXTURE_SIZE, TEXTURE_SIZE, Renderer::TextureFormat::R8G8B8A8, nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT, 1, reinterpret_cast<const Renderer::OptimizedTextureClearValue*>(&Color4::BLACK));
+					textureFormats[i] = Renderer::TextureFormat::R8G8B8A8;
+					textureResource[i] = colorFramebufferAttachments[i].texture = mTextureManager->createTexture2D(TEXTURE_SIZE, TEXTURE_SIZE, textureFormats[i], nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT, 1, reinterpret_cast<const Renderer::OptimizedTextureClearValue*>(&Color4::BLACK));
 					samplerStates[i] = static_cast<Renderer::ISamplerState*>(samplerStateResource);
 				}
 
@@ -112,7 +114,7 @@ void FirstMultipleRenderTargets::onInitialization()
 				mTextureGroup = mRootSignature->createResourceGroup(0, NUMBER_OF_TEXTURES, textureResource, samplerStates);
 
 				// Create the framebuffer object (FBO) instance
-				mFramebuffer = renderer->createFramebuffer(NUMBER_OF_TEXTURES, colorFramebufferAttachments);
+				mFramebuffer = renderer->createFramebuffer(*renderer->createRenderPass(NUMBER_OF_TEXTURES, textureFormats), colorFramebufferAttachments);
 			}
 
 			// Vertex input layout

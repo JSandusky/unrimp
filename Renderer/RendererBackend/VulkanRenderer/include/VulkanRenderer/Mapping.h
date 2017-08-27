@@ -213,6 +213,18 @@ namespace VulkanRenderer
 		*/
 		static VkFormat getVulkanFormat(Renderer::TextureFormat::Enum textureFormat);
 
+		/**
+		*  @brief
+		*    Number of multisamples to Vulkan sample count flag bits
+		*
+		*  @param[in] numberOfMultisamples
+		*    The number of multisamples per pixel (valid values: 1, 2, 4, 8)
+		*
+		*  @return
+		*    Vulkan sample count flag bits
+		*/
+		static VkSampleCountFlagBits getVulkanSampleCountFlagBits(uint8_t numberOfMultisamples);
+
 
 	};
 

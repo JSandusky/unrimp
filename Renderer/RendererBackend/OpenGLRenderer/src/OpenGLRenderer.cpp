@@ -22,13 +22,14 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/OpenGLRenderer.h"
-#include "OpenGLRenderer/OpenGLDebug.h"	// For "OPENGLRENDERER_RENDERERMATCHCHECK_RETURN()"
+#include "OpenGLRenderer/OpenGLDebug.h"	// For "OPENGLRENDERER_RENDERERMATCHCHECK_ASSERT()"
 #include "OpenGLRenderer/Mapping.h"
 #include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/RootSignature.h"
 #include "OpenGLRenderer/ResourceGroup.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 #include "OpenGLRenderer/RenderTarget/SwapChain.h"
+#include "OpenGLRenderer/RenderTarget/RenderPass.h"
 #include "OpenGLRenderer/RenderTarget/FramebufferDsa.h"
 #include "OpenGLRenderer/RenderTarget/FramebufferBind.h"
 #include "OpenGLRenderer/Buffer/BufferManager.h"
@@ -420,7 +421,6 @@ namespace OpenGLRenderer
 		mOpenGLPrimitiveTopology(0xFFFF),	// Unknown default setting
 		mNumberOfVerticesPerPatch(0),
 		// Output-merger (OM) stage
-		mMainSwapChain(nullptr),
 		mRenderTarget(nullptr),
 		// State cache to avoid making redundant OpenGL calls
 		mOpenGLProgramPipeline(0),
@@ -485,15 +485,6 @@ namespace OpenGLRenderer
 					mDefaultSamplerState->addReference();
 					// TODO(co) Set default sampler states
 				}
-
-				// Create a main swap chain instance?
-				if (NULL_HANDLE != nativeWindowHandle)
-				{
-					// Create a main swap chain instance
-					mMainSwapChain = new SwapChain(*this, nativeWindowHandle, *mOpenGLContext);
-					RENDERER_SET_RESOURCE_DEBUG_NAME(mMainSwapChain, "Main swap chain")
-					mMainSwapChain->addReference();	// Internal renderer reference
-				}
 			}
 		}
 	}
@@ -513,11 +504,6 @@ namespace OpenGLRenderer
 		}
 
 		// Release instances
-		if (nullptr != mMainSwapChain)
-		{
-			mMainSwapChain->releaseReference();
-			mMainSwapChain = nullptr;
-		}
 		if (nullptr != mRenderTarget)
 		{
 			mRenderTarget->releaseReference();
@@ -593,7 +579,7 @@ namespace OpenGLRenderer
 			mGraphicsRootSignature->addReference();
 
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *rootSignature)
+			OPENGLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, *rootSignature)
 		}
 	}
 
@@ -630,7 +616,7 @@ namespace OpenGLRenderer
 		if (nullptr != resourceGroup)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *resourceGroup)
+			OPENGLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, *resourceGroup)
 
 			// Set graphics resource group
 			const ResourceGroup* openGLResourceGroup = static_cast<ResourceGroup*>(resourceGroup);
@@ -972,7 +958,7 @@ namespace OpenGLRenderer
 			if (nullptr != pipelineState)
 			{
 				// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-				OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *pipelineState)
+				OPENGLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, *pipelineState)
 
 				// Set new pipeline state and add a reference to it
 				if (nullptr != mPipelineState)
@@ -1015,7 +1001,7 @@ namespace OpenGLRenderer
 			if (nullptr != vertexArray)
 			{
 				// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-				OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *vertexArray)
+				OPENGLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, *vertexArray)
 
 				// Unset the currently used vertex array
 				iaUnsetVertexArray();
@@ -1124,7 +1110,7 @@ namespace OpenGLRenderer
 			if (nullptr != renderTarget)
 			{
 				// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-				OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *renderTarget)
+				OPENGLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, *renderTarget)
 
 				// Release the render target reference, in case we have one
 				Framebuffer* framebufferToGenerateMipmapsFor = nullptr;
@@ -1320,8 +1306,8 @@ namespace OpenGLRenderer
 	void OpenGLRenderer::resolveMultisampleFramebuffer(Renderer::IRenderTarget& destinationRenderTarget, Renderer::IFramebuffer& sourceMultisampleFramebuffer)
 	{
 		// Security check: Are the given resources owned by this renderer? (calls "return" in case of a mismatch)
-		OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, destinationRenderTarget)
-		OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, sourceMultisampleFramebuffer)
+		OPENGLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, destinationRenderTarget)
+		OPENGLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, sourceMultisampleFramebuffer)
 
 		// Evaluate the render target type
 		switch (destinationRenderTarget.getResourceType())
@@ -1389,8 +1375,8 @@ namespace OpenGLRenderer
 	void OpenGLRenderer::copyResource(Renderer::IResource& destinationResource, Renderer::IResource& sourceResource)
 	{
 		// Security check: Are the given resources owned by this renderer? (calls "return" in case of a mismatch)
-		OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, destinationResource)
-		OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, sourceResource)
+		OPENGLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, destinationResource)
+		OPENGLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, sourceResource)
 
 		// Evaluate the render target type
 		switch (destinationResource.getResourceType())
@@ -1502,7 +1488,7 @@ namespace OpenGLRenderer
 			assert(mExtensions->isGL_ARB_draw_indirect());
 
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, indirectBuffer)
+			OPENGLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, indirectBuffer)
 
 			{ // Bind indirect buffer
 				const GLuint openGLIndirectBuffer = static_cast<const IndirectBuffer&>(indirectBuffer).getOpenGLIndirectBuffer();
@@ -1592,7 +1578,7 @@ namespace OpenGLRenderer
 			assert(mExtensions->isGL_ARB_draw_indirect());
 
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, indirectBuffer)
+			OPENGLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, indirectBuffer)
 
 			{ // Bind indirect buffer
 				const GLuint openGLIndirectBuffer = static_cast<const IndirectBuffer&>(indirectBuffer).getOpenGLIndirectBuffer();
@@ -1757,11 +1743,6 @@ namespace OpenGLRenderer
 		return false;
 	}
 
-	Renderer::ISwapChain* OpenGLRenderer::getMainSwapChain() const
-	{
-		return mMainSwapChain;
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Shader language                                       ]
@@ -1851,14 +1832,26 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Resource creation                                     ]
 	//[-------------------------------------------------------]
-	Renderer::ISwapChain* OpenGLRenderer::createSwapChain(handle nativeWindowHandle, bool useExternalContext)
+	Renderer::IRenderPass* OpenGLRenderer::createRenderPass(uint32_t numberOfColorAttachments, const Renderer::TextureFormat::Enum* colorAttachmentTextureFormats, Renderer::TextureFormat::Enum depthStencilAttachmentTextureFormat, uint8_t numberOfMultisamples)
 	{
-		// The provided native window handle must not be a null handle
-		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle, useExternalContext) : nullptr;
+		return new RenderPass(*this, numberOfColorAttachments, colorAttachmentTextureFormats, depthStencilAttachmentTextureFormat, numberOfMultisamples);
 	}
 
-	Renderer::IFramebuffer* OpenGLRenderer::createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment)
+	Renderer::ISwapChain* OpenGLRenderer::createSwapChain(Renderer::IRenderPass& renderPass, handle nativeWindowHandle, bool useExternalContext)
 	{
+		// Sanity checks
+		OPENGLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
+		assert(NULL_HANDLE != nativeWindowHandle && "The provided native window handle must not be a null handle");
+
+		// Create the swap chain
+		return new SwapChain(renderPass, nativeWindowHandle, useExternalContext);
+	}
+
+	Renderer::IFramebuffer* OpenGLRenderer::createFramebuffer(Renderer::IRenderPass& renderPass, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment)
+	{
+		// Sanity check
+		OPENGLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
+
 		// "GL_ARB_framebuffer_object" required
 		if (mExtensions->isGL_ARB_framebuffer_object())
 		{
@@ -1867,13 +1860,13 @@ namespace OpenGLRenderer
 			{
 				// Effective direct state access (DSA)
 				// -> Validation is done inside the framebuffer implementation
-				return new FramebufferDsa(*this, numberOfColorFramebufferAttachments, colorFramebufferAttachments, depthStencilFramebufferAttachment);
+				return new FramebufferDsa(renderPass, colorFramebufferAttachments, depthStencilFramebufferAttachment);
 			}
 			else
 			{
 				// Traditional bind version
 				// -> Validation is done inside the framebuffer implementation
-				return new FramebufferBind(*this, numberOfColorFramebufferAttachments, colorFramebufferAttachments, depthStencilFramebufferAttachment);
+				return new FramebufferBind(renderPass, colorFramebufferAttachments, depthStencilFramebufferAttachment);
 			}
 		}
 		else
@@ -2348,6 +2341,10 @@ namespace OpenGLRenderer
 	{
 		GLint openGLValue = 0;
 
+		// Preferred swap chain texture format
+		mCapabilities.preferredSwapChainColorTextureFormat		  = Renderer::TextureFormat::Enum::R8G8B8A8;
+		mCapabilities.preferredSwapChainDepthStencilTextureFormat = Renderer::TextureFormat::Enum::D32_FLOAT;
+
 		// Maximum number of viewports (always at least 1)
 		// TODO(co) "GL_ARB_viewport_array" support ("OpenGLRenderer::rsSetViewports()")
 		mCapabilities.maximumNumberOfViewports = 1;	// TODO(co) GL_ARB_viewport_array
@@ -2511,7 +2508,7 @@ namespace OpenGLRenderer
 		if (nullptr != program)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLRENDERER_RENDERERMATCHCHECK_RETURN(*this, *program)
+			OPENGLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, *program)
 
 			// Prefer "GL_ARB_separate_shader_objects" over "GL_ARB_shader_objects"
 			if (mExtensions->isGL_ARB_separate_shader_objects())

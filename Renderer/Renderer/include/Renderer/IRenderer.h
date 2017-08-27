@@ -47,6 +47,7 @@ namespace Renderer
 	class ITexture;
 	class IResource;
 	class ISwapChain;
+	class IRenderPass;
 	class IFramebuffer;
 	class CommandBuffer;
 	class ISamplerState;
@@ -211,19 +212,6 @@ namespace Renderer
 		*/
 		virtual bool isDebugEnabled() = 0;
 
-		/**
-		*  @brief
-		*    Return the main swap chain
-		*
-		*  @return
-		*    The main swap chain, can be a null pointer, do not release the returned instance unless you added an own reference to it
-		*
-		*  @remarks
-		*    In case the optional native main window handle within the renderer constructor was
-		*    not a null handle, this methods returns the instance of the main swap chain.
-		*/
-		virtual ISwapChain* getMainSwapChain() const = 0;
-
 		//[-------------------------------------------------------]
 		//[ Shader language                                       ]
 		//[-------------------------------------------------------]
@@ -270,8 +258,29 @@ namespace Renderer
 		//[-------------------------------------------------------]
 		/**
 		*  @brief
+		*    Create a render pass instance
+		*
+		*  @param[in] numberOfColorAttachments
+		*    Number of color render target textures, must be <="Renderer::Capabilities::maximumNumberOfSimultaneousRenderTargets"
+		*  @param[in] colorAttachmentTextureFormats
+		*    The color render target texture formats, can be a null pointer or can contain null pointers, if not a null pointer there must be at
+		*    least "numberOfColorAttachments" textures in the provided C-array of pointers
+		*  @param[in] depthStencilAttachmentTextureFormat
+		*    The optional depth stencil render target texture format, can be a "Renderer::TextureFormat::UNKNOWN" if there should be no depth buffer
+		*  @param[in] numberOfMultisamples
+		*    The number of multisamples per pixel (valid values: 1, 2, 4, 8)
+		*
+		*  @return
+		*    The created render pass instance, null pointer on error. Release the returned instance if you no longer need it.
+		*/
+		virtual IRenderPass* createRenderPass(uint32_t numberOfColorAttachments, const TextureFormat::Enum* colorAttachmentTextureFormats, TextureFormat::Enum depthStencilAttachmentTextureFormat = TextureFormat::UNKNOWN, uint8_t numberOfMultisamples = 1) = 0;
+
+		/**
+		*  @brief
 		*    Create a swap chain instance
 		*
+		*  @param[in] renderPass
+		*    Render pass to use, the swap chain keeps a reference to the render pass
 		*  @param[in] nativeWindowHandle
 		*    Native window handle, must be valid
 		*  @param[in] useExternalContext
@@ -280,17 +289,17 @@ namespace Renderer
 		*  @return
 		*    The created swap chain instance, null pointer on error. Release the returned instance if you no longer need it.
 		*/
-		virtual ISwapChain* createSwapChain(handle nativeWindowHandle, bool useExternalContext = false) = 0;
+		virtual ISwapChain* createSwapChain(IRenderPass& renderPass, handle nativeWindowHandle, bool useExternalContext = false) = 0;
 
 		/**
 		*  @brief
 		*    Create a framebuffer object (FBO) instance
 		*
-		*  @param[in] numberOfColorFramebufferAttachments
-		*    Number of color render target textures, must be <="Renderer::Capabilities::maximumNumberOfSimultaneousRenderTargets"
+		*  @param[in] renderPass
+		*    Render pass to use, the framebuffer keeps a reference to the render pass
 		*  @param[in] colorFramebufferAttachments
 		*    The color render target textures, can be a null pointer or can contain null pointers, if not a null pointer there must be at
-		*    least "numberOfColorFramebufferAttachment" textures in the provided C-array of pointers
+		*    least "Renderer::IRenderPass::getNumberOfColorAttachments()" textures in the provided C-array of pointers
 		*  @param[in] depthStencilFramebufferAttachment
 		*    The optional depth stencil render target texture, can be a null pointer
 		*
@@ -304,7 +313,7 @@ namespace Renderer
 		*    - Depending on the used graphics API and feature set, there might be the requirement that all provided textures have the same size
 		*      (in order to be on the save side, ensure that all provided textures have the same size and same MSAA sample count)
 		*/
-		virtual IFramebuffer* createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const FramebufferAttachment* colorFramebufferAttachments, const FramebufferAttachment* depthStencilFramebufferAttachment = nullptr) = 0;
+		virtual IFramebuffer* createFramebuffer(IRenderPass& renderPass, const FramebufferAttachment* colorFramebufferAttachments, const FramebufferAttachment* depthStencilFramebufferAttachment = nullptr) = 0;
 
 		/**
 		*  @brief

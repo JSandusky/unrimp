@@ -22,13 +22,14 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
-#include "OpenGLES3Renderer/OpenGLES3Debug.h"	// For "OPENGLES3RENDERER_RENDERERMATCHCHECK_RETURN()"
+#include "OpenGLES3Renderer/OpenGLES3Debug.h"	// For "OPENGLES3RENDERER_RENDERERMATCHCHECK_ASSERT()"
 #include "OpenGLES3Renderer/Mapping.h"
 #include "OpenGLES3Renderer/IExtensions.h"
 #include "OpenGLES3Renderer/RootSignature.h"
 #include "OpenGLES3Renderer/ResourceGroup.h"
 #include "OpenGLES3Renderer/OpenGLES3ContextRuntimeLinking.h"
 #include "OpenGLES3Renderer/RenderTarget/SwapChain.h"
+#include "OpenGLES3Renderer/RenderTarget/RenderPass.h"
 #include "OpenGLES3Renderer/RenderTarget/Framebuffer.h"
 #include "OpenGLES3Renderer/Buffer/BufferManager.h"
 #include "OpenGLES3Renderer/Buffer/IndexBuffer.h"
@@ -363,7 +364,6 @@ namespace OpenGLES3Renderer
 		mVertexArray(nullptr),
 		mOpenGLES3PrimitiveTopology(0xFFFF),	// Unknown default setting
 		// Output-merger (OM) stage
-		mMainSwapChain(nullptr),
 		mRenderTarget(nullptr),
 		// State cache to avoid making redundant OpenGL ES 3 calls
 		mOpenGLES3Program(0),
@@ -403,16 +403,6 @@ namespace OpenGLES3Renderer
 				mDefaultSamplerState->addReference();
 				// TODO(co) Set default sampler states
 			}
-
-			// Create a main swap chain instance?
-			const handle nativeWindowHandle = mContext.getNativeWindowHandle();
-			if (NULL_HANDLE != nativeWindowHandle)
-			{
-				// Create a main swap chain instance
-				mMainSwapChain = new SwapChain(*this, nativeWindowHandle);
-				RENDERER_SET_RESOURCE_DEBUG_NAME(mMainSwapChain, "Main swap chain")
-				mMainSwapChain->addReference();	// Internal renderer reference
-			}
 		}
 	}
 
@@ -425,11 +415,6 @@ namespace OpenGLES3Renderer
 		}
 
 		// Release instances
-		if (nullptr != mMainSwapChain)
-		{
-			mMainSwapChain->releaseReference();
-			mMainSwapChain = nullptr;
-		}
 		if (nullptr != mRenderTarget)
 		{
 			mRenderTarget->releaseReference();
@@ -509,7 +494,7 @@ namespace OpenGLES3Renderer
 			mGraphicsRootSignature->addReference();
 
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLES3RENDERER_RENDERERMATCHCHECK_RETURN(*this, *rootSignature)
+			OPENGLES3RENDERER_RENDERERMATCHCHECK_ASSERT(*this, *rootSignature)
 		}
 	}
 
@@ -546,7 +531,7 @@ namespace OpenGLES3Renderer
 		if (nullptr != resourceGroup)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLES3RENDERER_RENDERERMATCHCHECK_RETURN(*this, *resourceGroup)
+			OPENGLES3RENDERER_RENDERERMATCHCHECK_ASSERT(*this, *resourceGroup)
 
 			// Set graphics resource group
 			const ResourceGroup* openGLES3ResourceGroup = static_cast<ResourceGroup*>(resourceGroup);
@@ -713,7 +698,7 @@ namespace OpenGLES3Renderer
 			if (nullptr != pipelineState)
 			{
 				// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-				OPENGLES3RENDERER_RENDERERMATCHCHECK_RETURN(*this, *pipelineState)
+				OPENGLES3RENDERER_RENDERERMATCHCHECK_ASSERT(*this, *pipelineState)
 
 				// Set new pipeline state and add a reference to it
 				if (nullptr != mPipelineState)
@@ -749,7 +734,7 @@ namespace OpenGLES3Renderer
 			if (nullptr != vertexArray)
 			{
 				// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-				OPENGLES3RENDERER_RENDERERMATCHCHECK_RETURN(*this, *vertexArray)
+				OPENGLES3RENDERER_RENDERERMATCHCHECK_ASSERT(*this, *vertexArray)
 
 				// Release the vertex array reference, in case we have one
 				if (nullptr != mVertexArray)
@@ -856,7 +841,7 @@ namespace OpenGLES3Renderer
 			if (nullptr != renderTarget)
 			{
 				// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-				OPENGLES3RENDERER_RENDERERMATCHCHECK_RETURN(*this, *renderTarget)
+				OPENGLES3RENDERER_RENDERERMATCHCHECK_ASSERT(*this, *renderTarget)
 
 				// Release the render target reference, in case we have one
 				Framebuffer* framebufferToGenerateMipmapsFor = nullptr;
@@ -1046,8 +1031,8 @@ namespace OpenGLES3Renderer
 	void OpenGLES3Renderer::copyResource(Renderer::IResource& destinationResource, Renderer::IResource& sourceResource)
 	{
 		// Security check: Are the given resources owned by this renderer? (calls "return" in case of a mismatch)
-		OPENGLES3RENDERER_RENDERERMATCHCHECK_RETURN(*this, destinationResource)
-		OPENGLES3RENDERER_RENDERERMATCHCHECK_RETURN(*this, sourceResource)
+		OPENGLES3RENDERER_RENDERERMATCHCHECK_ASSERT(*this, destinationResource)
+		OPENGLES3RENDERER_RENDERERMATCHCHECK_ASSERT(*this, sourceResource)
 
 		// Evaluate the render target type
 		switch (destinationResource.getResourceType())
@@ -1302,11 +1287,6 @@ namespace OpenGLES3Renderer
 		return false;
 	}
 
-	Renderer::ISwapChain* OpenGLES3Renderer::getMainSwapChain() const
-	{
-		return mMainSwapChain;
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Shader language                                       ]
@@ -1360,16 +1340,28 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Resource creation                                     ]
 	//[-------------------------------------------------------]
-	Renderer::ISwapChain* OpenGLES3Renderer::createSwapChain(handle nativeWindowHandle, bool)
+	Renderer::IRenderPass* OpenGLES3Renderer::createRenderPass(uint32_t numberOfColorAttachments, const Renderer::TextureFormat::Enum* colorAttachmentTextureFormats, Renderer::TextureFormat::Enum depthStencilAttachmentTextureFormat, uint8_t numberOfMultisamples)
 	{
-		// The provided native window handle must not be a null handle
-		return (NULL_HANDLE != nativeWindowHandle) ? new SwapChain(*this, nativeWindowHandle) : nullptr;
+		return new RenderPass(*this, numberOfColorAttachments, colorAttachmentTextureFormats, depthStencilAttachmentTextureFormat, numberOfMultisamples);
 	}
 
-	Renderer::IFramebuffer* OpenGLES3Renderer::createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment)
+	Renderer::ISwapChain* OpenGLES3Renderer::createSwapChain(Renderer::IRenderPass& renderPass, handle nativeWindowHandle, bool)
 	{
-		// Validation is done inside the framebuffer implementation
-		return new Framebuffer(*this, numberOfColorFramebufferAttachments, colorFramebufferAttachments, depthStencilFramebufferAttachment);
+		// Sanity checks
+		OPENGLES3RENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
+		assert(NULL_HANDLE != nativeWindowHandle && "The provided native window handle must not be a null handle");
+
+		// Create the swap chain
+		return new SwapChain( renderPass, nativeWindowHandle);
+	}
+
+	Renderer::IFramebuffer* OpenGLES3Renderer::createFramebuffer(Renderer::IRenderPass& renderPass, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment)
+	{
+		// Sanity check
+		OPENGLES3RENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
+
+		// Create the framebuffer
+		return new Framebuffer(renderPass, colorFramebufferAttachments, depthStencilFramebufferAttachment);
 	}
 
 	Renderer::IBufferManager* OpenGLES3Renderer::createBufferManager()
@@ -1812,6 +1804,10 @@ namespace OpenGLES3Renderer
 	{
 		GLint openGLValue = 0;
 
+		// Preferred swap chain texture format
+		mCapabilities.preferredSwapChainColorTextureFormat		  = Renderer::TextureFormat::Enum::R8G8B8A8;
+		mCapabilities.preferredSwapChainDepthStencilTextureFormat = Renderer::TextureFormat::Enum::D32_FLOAT;
+
 		// Maximum number of viewports (always at least 1)
 		mCapabilities.maximumNumberOfViewports = 1;	// OpenGL ES 3 only supports a single viewport
 
@@ -1901,7 +1897,7 @@ namespace OpenGLES3Renderer
 		if (nullptr != program)
 		{
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLES3RENDERER_RENDERERMATCHCHECK_RETURN(*this, *program)
+			OPENGLES3RENDERER_RENDERERMATCHCHECK_ASSERT(*this, *program)
 
 			// Bind the program, if required
 			const ProgramGlsl* programGlsl = static_cast<ProgramGlsl*>(program);

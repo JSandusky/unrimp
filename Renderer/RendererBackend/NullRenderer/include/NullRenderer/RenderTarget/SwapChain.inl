@@ -28,9 +28,9 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
-	inline const Renderer::IRenderPass& SwapChain::getRenderPass() const
+	inline SwapChain::~SwapChain()
 	{
-		return mRenderPass;
+		// Nothing here
 	}
 
 

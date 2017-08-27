@@ -128,6 +128,7 @@ namespace Direct3D12Renderer
 		ID3D12PipelineState*	  mD3D12PipelineState;	///< Direct3D 12 pipeline state, can be a null pointer
 		Renderer::IRootSignature* mRootSignature;
 		Renderer::IProgram*		  mProgram;
+		Renderer::IRenderPass*	  mRenderPass;
 
 
 	};

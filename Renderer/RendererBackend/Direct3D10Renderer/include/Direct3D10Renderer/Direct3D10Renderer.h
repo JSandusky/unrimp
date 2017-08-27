@@ -157,7 +157,6 @@ namespace Direct3D10Renderer
 		inline virtual const char* getName() const override;
 		inline virtual bool isInitialized() const override;
 		virtual bool isDebugEnabled() override;
-		virtual Renderer::ISwapChain* getMainSwapChain() const override;
 		//[-------------------------------------------------------]
 		//[ Shader language                                       ]
 		//[-------------------------------------------------------]
@@ -167,8 +166,9 @@ namespace Direct3D10Renderer
 		//[-------------------------------------------------------]
 		//[ Resource creation                                     ]
 		//[-------------------------------------------------------]
-		virtual Renderer::ISwapChain* createSwapChain(handle nativeWindowHandle, bool useExternalContext = false) override;
-		virtual Renderer::IFramebuffer* createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment = nullptr) override;
+		virtual Renderer::IRenderPass* createRenderPass(uint32_t numberOfColorAttachments, const Renderer::TextureFormat::Enum* colorAttachmentTextureFormats, Renderer::TextureFormat::Enum depthStencilAttachmentTextureFormat = Renderer::TextureFormat::UNKNOWN, uint8_t numberOfMultisamples = 1) override;
+		virtual Renderer::ISwapChain* createSwapChain(Renderer::IRenderPass& renderPass, handle nativeWindowHandle, bool useExternalContext = false) override;
+		virtual Renderer::IFramebuffer* createFramebuffer(Renderer::IRenderPass& renderPass, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment = nullptr) override;
 		virtual Renderer::IBufferManager* createBufferManager() override;
 		virtual Renderer::ITextureManager* createTextureManager() override;
 		virtual Renderer::IRootSignature* createRootSignature(const Renderer::RootSignature& rootSignature) override;
@@ -224,7 +224,6 @@ namespace Direct3D10Renderer
 		Direct3D9RuntimeLinking*   mDirect3D9RuntimeLinking;	///< Direct3D 9 runtime linking instance, can be a null pointer
 		Renderer::IShaderLanguage* mShaderLanguageHlsl;			///< HLSL shader language instance (we keep a reference to it), can be a null pointer
 		ID3D10Query*			   mD3D10QueryFlush;			///< Direct3D 10 query used for flush, can be a null pointer
-		SwapChain*				   mMainSwapChain;				///< In case the optional native main window handle within the "Direct3D10Renderer"-constructor was not a null handle, this holds the instance of the main swap chain (we keep a reference to it), can be a null pointer
 		Renderer::IRenderTarget*   mRenderTarget;				///< Currently set render target (we keep a reference to it), can be a null pointer
 		RootSignature*			   mGraphicsRootSignature;		///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
 		// State cache to avoid making redundant Direct3D 10 calls

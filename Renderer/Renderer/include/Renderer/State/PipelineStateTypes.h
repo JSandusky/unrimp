@@ -140,10 +140,10 @@ namespace Renderer
 	};
 	struct PipelineState : public SerializedPipelineState
 	{
-		IRootSignature*    rootSignature;		///< Root signature (pipeline state instances keep a reference to the root signature), must be valid
-		IProgram*		   program;				///< Program used by the pipeline state (pipeline state instances keep a reference to the program), must be valid
-		VertexAttributes   vertexAttributes;	///< Vertex attributes
-		const IRenderPass* renderPass;			///< Render pass, must be valid
+		IRootSignature*  rootSignature;		///< Root signature (pipeline state instances keep a reference to the root signature), must be valid
+		IProgram*		 program;			///< Program used by the pipeline state (pipeline state instances keep a reference to the program), must be valid
+		VertexAttributes vertexAttributes;	///< Vertex attributes
+		IRenderPass*	 renderPass;		///< Render pass, the pipeline state keeps a reference
 	};
 	struct PipelineStateBuilder : public PipelineState
 	{
@@ -154,7 +154,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	public:
 		inline PipelineStateBuilder();
-		inline PipelineStateBuilder(IRootSignature* _rootSignature, IProgram* _program, const VertexAttributes& _vertexAttributes, const IRenderPass& _renderPass);
+		inline PipelineStateBuilder(IRootSignature* _rootSignature, IProgram* _program, const VertexAttributes& _vertexAttributes, IRenderPass& _renderPass);
 
 
 	};

@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Direct3D12Renderer/RenderTarget/Framebuffer.h"
+#include "Direct3D12Renderer/RenderTarget/RenderPass.h"
 #include "Direct3D12Renderer/Texture/Texture2DArray.h"
 #include "Direct3D12Renderer/Texture/Texture2D.h"
 #include "Direct3D12Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
@@ -41,10 +42,9 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Framebuffer::Framebuffer(Direct3D12Renderer& direct3D12Renderer, uint32_t numberOfColorFramebufferAttachments, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment) :
-		IFramebuffer(direct3D12Renderer),
-		mRenderPass(direct3D12Renderer),
-		mNumberOfColorTextures(numberOfColorFramebufferAttachments),
+	Framebuffer::Framebuffer(Renderer::IRenderPass& renderPass, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment) :
+		IFramebuffer(renderPass),
+		mNumberOfColorTextures(static_cast<RenderPass&>(renderPass).getNumberOfColorAttachments()),
 		mColorTextures(nullptr),	// Set below
 		mDepthStencilTexture(nullptr),
 		mWidth(UINT_MAX),
@@ -53,6 +53,7 @@ namespace Direct3D12Renderer
 		mD3D12DescriptorHeapDepthStencilView(nullptr)
 	{
 		// Get the Direct3D 12 device instance
+		Direct3D12Renderer& direct3D12Renderer = static_cast<Direct3D12Renderer&>(renderPass.getRenderer());
 		ID3D12Device* d3d12Device = direct3D12Renderer.getD3D12Device();
 
 		// Add a reference to the used color textures

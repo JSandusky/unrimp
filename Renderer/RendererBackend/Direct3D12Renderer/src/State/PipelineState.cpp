@@ -36,6 +36,7 @@
 
 #include <Renderer/ILog.h>
 #include <Renderer/State/PipelineStateTypes.h>
+#include <Renderer/RenderTarget/IRenderPass.h>
 
 
 //[-------------------------------------------------------]
@@ -53,11 +54,13 @@ namespace Direct3D12Renderer
 		mD3D12PipelineState(nullptr),
 		mD3D12PrimitiveTopology(static_cast<D3D12_PRIMITIVE_TOPOLOGY>(pipelineState.primitiveTopology)),
 		mRootSignature(pipelineState.rootSignature),
-		mProgram(pipelineState.program)
+		mProgram(pipelineState.program),
+		mRenderPass(pipelineState.renderPass)
 	{
-		// Add a reference to the given root signature and program
+		// Add a reference to the given root signature, program and render pass
 		mRootSignature->addReference();
 		mProgram->addReference();
+		mRenderPass->addReference();
 
 		// Define the vertex input layout
 		// -> No dynamic allocations/deallocations in here, a fixed maximum number of supported attributes must be sufficient
@@ -171,9 +174,10 @@ namespace Direct3D12Renderer
 			mD3D12PipelineState->Release();
 		}
 
-		// Release the root signature and program reference
+		// Release the root signature, program and render pass reference
 		mRootSignature->releaseReference();
 		mProgram->releaseReference();
+		mRenderPass->releaseReference();
 	}
 
 

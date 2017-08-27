@@ -189,10 +189,10 @@ namespace Renderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] renderer
-		*    Owner renderer instance
+		*  @param[in] renderPass
+		*    Render pass to use, the swap chain keeps a reference to the render pass
 		*/
-		inline explicit ISwapChain(IRenderer& renderer);
+		inline explicit ISwapChain(IRenderPass& renderPass);
 
 		explicit ISwapChain(const ISwapChain& source) = delete;
 		ISwapChain& operator =(const ISwapChain& source) = delete;

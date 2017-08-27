@@ -91,7 +91,8 @@ void FirstRenderToTexture::onInitialization()
 			// -> Required for Vulkan, Direct3D 9, Direct3D 10, Direct3D 11 and Direct3D 12
 			// -> Not required for OpenGL and OpenGL ES 2
 			// -> The optimized texture clear value is a Direct3D 12 related option
-			Renderer::ITexture* texture2D = mTextureManager->createTexture2D(16, 16, Renderer::TextureFormat::R8G8B8A8, nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT, 1, reinterpret_cast<const Renderer::OptimizedTextureClearValue*>(&Color4::GREEN));
+			const Renderer::TextureFormat::Enum textureFormat = Renderer::TextureFormat::Enum::R8G8B8A8;
+			Renderer::ITexture* texture2D = mTextureManager->createTexture2D(16, 16, textureFormat, nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT, 1, reinterpret_cast<const Renderer::OptimizedTextureClearValue*>(&Color4::GREEN));
 
 			{ // Create texture group
 				Renderer::IResource* resource = texture2D;
@@ -101,7 +102,7 @@ void FirstRenderToTexture::onInitialization()
 
 			{ // Create the framebuffer object (FBO) instance
 				Renderer::FramebufferAttachment colorFramebufferAttachment(texture2D);
-				mFramebuffer = renderer->createFramebuffer(1, &colorFramebufferAttachment);
+				mFramebuffer = renderer->createFramebuffer(*renderer->createRenderPass(1, &textureFormat), &colorFramebufferAttachment);
 			}
 		}
 

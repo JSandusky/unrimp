@@ -266,7 +266,7 @@ namespace VulkanRenderer
 		}
 	}
 
-	VkFormat Helper::createAndFillVkImage(const VulkanRenderer& vulkanRenderer, VkImageType vkImageType, VkImageViewType vkImageViewType, const VkExtent3D& vkExtent3D, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, VkImage& vkImage, VkDeviceMemory& vkDeviceMemory, VkImageView& vkImageView)
+	VkFormat Helper::createAndFillVkImage(const VulkanRenderer& vulkanRenderer, VkImageType vkImageType, VkImageViewType vkImageViewType, const VkExtent3D& vkExtent3D, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, uint8_t numberOfMultisamples, VkImage& vkImage, VkDeviceMemory& vkDeviceMemory, VkImageView& vkImageView)
 	{
 		// Calculate the number of mipmaps
 		const bool dataContainsMipmaps = (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);
@@ -294,6 +294,7 @@ namespace VulkanRenderer
 		const bool     layered    = (VK_IMAGE_VIEW_TYPE_2D_ARRAY == vkImageViewType || VK_IMAGE_VIEW_TYPE_CUBE == vkImageViewType);
 		const uint32_t layerCount = layered ? vkExtent3D.depth : 1;
 		const uint32_t depth	  = layered ? 1 : vkExtent3D.depth;
+		const VkSampleCountFlagBits vkSampleCountFlagBits = Mapping::getVulkanSampleCountFlagBits(numberOfMultisamples);
 
 		// Calculate the number of bytes
 		uint32_t numberOfBytes = 0;
@@ -321,7 +322,7 @@ namespace VulkanRenderer
 
 		{ // Create and fill Vulkan image
 			const VkImageCreateFlags vkImageCreateFlags = (VK_IMAGE_VIEW_TYPE_CUBE == vkImageViewType) ? VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT : 0u;
-			createAndAllocateVkImage(vulkanRenderer, vkImageCreateFlags, vkImageType, VkExtent3D{vkExtent3D.width, vkExtent3D.height, depth}, numberOfMipmaps, layerCount, vkFormat, VK_IMAGE_TILING_OPTIMAL, vkImageUsageFlags, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vkImage, vkDeviceMemory);
+			createAndAllocateVkImage(vulkanRenderer, vkImageCreateFlags, vkImageType, VkExtent3D{vkExtent3D.width, vkExtent3D.height, depth}, numberOfMipmaps, layerCount, vkFormat, vkSampleCountFlagBits, VK_IMAGE_TILING_OPTIMAL, vkImageUsageFlags, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vkImage, vkDeviceMemory);
 		}
 
 		// Create the Vulkan image view
@@ -388,7 +389,7 @@ namespace VulkanRenderer
 		return vkFormat;
 	}
 
-	void Helper::createAndAllocateVkImage(const VulkanRenderer& vulkanRenderer, VkImageCreateFlags vkImageCreateFlags, VkImageType vkImageType, const VkExtent3D& vkExtent3D, uint32_t mipLevels, uint32_t arrayLayers, VkFormat vkFormat, VkImageTiling vkImageTiling, VkImageUsageFlags vkImageUsageFlags, VkMemoryPropertyFlags vkMemoryPropertyFlags, VkImage& vkImage, VkDeviceMemory& vkDeviceMemory)
+	void Helper::createAndAllocateVkImage(const VulkanRenderer& vulkanRenderer, VkImageCreateFlags vkImageCreateFlags, VkImageType vkImageType, const VkExtent3D& vkExtent3D, uint32_t mipLevels, uint32_t arrayLayers, VkFormat vkFormat, VkSampleCountFlagBits vkSampleCountFlagBits, VkImageTiling vkImageTiling, VkImageUsageFlags vkImageUsageFlags, VkMemoryPropertyFlags vkMemoryPropertyFlags, VkImage& vkImage, VkDeviceMemory& vkDeviceMemory)
 	{
 		const VulkanContext& vulkanContext = vulkanRenderer.getVulkanContext();
 		const VkDevice vkDevice = vulkanContext.getVkDevice();
@@ -404,7 +405,7 @@ namespace VulkanRenderer
 				vkExtent3D,								// extent (VkExtent3D)
 				mipLevels,								// mipLevels (uint32_t)
 				arrayLayers,							// arrayLayers (uint32_t)
-				VK_SAMPLE_COUNT_1_BIT,					// samples (VkSampleCountFlagBits)
+				vkSampleCountFlagBits,					// samples (VkSampleCountFlagBits)
 				vkImageTiling,							// tiling (VkImageTiling)
 				vkImageUsageFlags,						// usage (VkImageUsageFlags)
 				VK_SHARING_MODE_EXCLUSIVE,				// sharingMode (VkSharingMode)
@@ -494,7 +495,7 @@ namespace VulkanRenderer
 		}
 	}
 
-	#ifndef VULKANRENDERER_NO_DEBUG
+	#if !defined(VULKANRENDERER_NO_DEBUG) && !defined(RENDERER_NO_DEBUG)
 		void Helper::setDebugObjectName(VkDevice vkDevice, VkDebugReportObjectTypeEXT vkDebugReportObjectTypeEXT, uint64_t object, const char* objectName)
 		{
 			if (nullptr != vkDebugMarkerSetObjectNameEXT)

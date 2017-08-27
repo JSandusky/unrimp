@@ -97,10 +97,10 @@ namespace Renderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] renderer
-		*    Owner renderer instance
+		*  @param[in] renderPass
+		*    Render pass to use, the framebuffer a reference to the render pass
 		*/
-		inline explicit IFramebuffer(IRenderer& renderer);
+		inline explicit IFramebuffer(IRenderPass& renderPass);
 
 		explicit IFramebuffer(const IFramebuffer& source) = delete;
 		IFramebuffer& operator =(const IFramebuffer& source) = delete;

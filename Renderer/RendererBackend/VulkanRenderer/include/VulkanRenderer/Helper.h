@@ -35,13 +35,7 @@
 //[-------------------------------------------------------]
 //[ Global helper macros                                  ]
 //[-------------------------------------------------------]
-#ifdef VULKANRENDERER_NO_DEBUG
-	#define DECLARE_SET_DEBUG_NAME
-	#define SET_DEFAULT_DEBUG_NAME
-	#define DEFINE_SET_DEBUG_NAME_VKBUFFER_VKDEVICEMEMORY
-	#define DEFINE_SET_DEBUG_NAME_TEXTURE
-	#define DEFINE_SET_DEBUG_NAME_SHADER_MODULE
-#else
+#if !defined(VULKANRENDERER_NO_DEBUG) && !defined(RENDERER_NO_DEBUG)
 	#define DECLARE_SET_DEBUG_NAME virtual void setDebugName(const char* name) override;
 	#define SET_DEFAULT_DEBUG_NAME setDebugName("");	// Assign a default name to the resource for debugging purposes
 	#define DEFINE_SET_DEBUG_NAME_VKBUFFER_VKDEVICEMEMORY(className, decoration, numberOfDecorationCharacters) \
@@ -51,8 +45,8 @@
 			{ \
 				RENDERER_DECORATED_DEBUG_NAME(name, detailedName, decoration, numberOfDecorationCharacters); \
 				const VkDevice vkDevice = static_cast<const VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(); \
-				Helper::setDebugObjectName(vkDevice, VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT, mVkBuffer, detailedName); \
-				Helper::setDebugObjectName(vkDevice, VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT, mVkDeviceMemory, detailedName); \
+				Helper::setDebugObjectName(vkDevice, VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT, (uint64_t)mVkBuffer, detailedName); \
+				Helper::setDebugObjectName(vkDevice, VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT, (uint64_t)mVkDeviceMemory, detailedName); \
 			} \
 		}
 	#define DEFINE_SET_DEBUG_NAME_TEXTURE(className) \
@@ -61,9 +55,9 @@
 			if (nullptr != vkDebugMarkerSetObjectNameEXT) \
 			{ \
 				const VkDevice vkDevice = static_cast<const VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(); \
-				Helper::setDebugObjectName(vkDevice, VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT, mVkImage, name); \
-				Helper::setDebugObjectName(vkDevice, VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT, mVkDeviceMemory, name); \
-				Helper::setDebugObjectName(vkDevice, VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT, mVkImageView, name); \
+				Helper::setDebugObjectName(vkDevice, VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT, (uint64_t)mVkImage, name); \
+				Helper::setDebugObjectName(vkDevice, VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT, (uint64_t)mVkDeviceMemory, name); \
+				Helper::setDebugObjectName(vkDevice, VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT, (uint64_t)mVkImageView, name); \
 			} \
 		}
 	#define DEFINE_SET_DEBUG_NAME_SHADER_MODULE(className) \
@@ -71,9 +65,15 @@
 		{ \
 			if (nullptr != vkDebugMarkerSetObjectNameEXT) \
 			{ \
-				Helper::setDebugObjectName(static_cast<const VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), VK_DEBUG_REPORT_OBJECT_TYPE_SHADER_MODULE_EXT, mVkShaderModule, name); \
+				Helper::setDebugObjectName(static_cast<const VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), VK_DEBUG_REPORT_OBJECT_TYPE_SHADER_MODULE_EXT, (uint64_t)mVkShaderModule, name); \
 			} \
 		}
+#else
+	#define DECLARE_SET_DEBUG_NAME
+	#define SET_DEFAULT_DEBUG_NAME
+	#define DEFINE_SET_DEBUG_NAME_VKBUFFER_VKDEVICEMEMORY(className, decoration, numberOfDecorationCharacters)
+	#define DEFINE_SET_DEBUG_NAME_TEXTURE(className)
+	#define DEFINE_SET_DEBUG_NAME_SHADER_MODULE(className)
 #endif
 
 
@@ -122,8 +122,8 @@ namespace VulkanRenderer
 		//[ Image                                                 ]
 		//[-------------------------------------------------------]
 		// TODO(co) Trivial implementation to have something to start with. Need to use more clever memory management and stating buffers later on.
-		static VkFormat createAndFillVkImage(const VulkanRenderer& vulkanRenderer, VkImageType vkImageType, VkImageViewType vkImageViewType, const VkExtent3D& vkExtent3D, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, VkImage& vkImage, VkDeviceMemory& vkDeviceMemory, VkImageView& vkImageView);
-		static void createAndAllocateVkImage(const VulkanRenderer& vulkanRenderer, VkImageCreateFlags vkImageCreateFlags, VkImageType vkImageType, const VkExtent3D& vkExtent3D, uint32_t mipLevels, uint32_t arrayLayers, VkFormat vkFormat, VkImageTiling vkImageTiling, VkImageUsageFlags vkImageUsageFlags, VkMemoryPropertyFlags vkMemoryPropertyFlags, VkImage& vkImage, VkDeviceMemory& vkDeviceMemory);
+		static VkFormat createAndFillVkImage(const VulkanRenderer& vulkanRenderer, VkImageType vkImageType, VkImageViewType vkImageViewType, const VkExtent3D& vkExtent3D, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, uint8_t numberOfMultisamples, VkImage& vkImage, VkDeviceMemory& vkDeviceMemory, VkImageView& vkImageView);
+		static void createAndAllocateVkImage(const VulkanRenderer& vulkanRenderer, VkImageCreateFlags vkImageCreateFlags, VkImageType vkImageType, const VkExtent3D& vkExtent3D, uint32_t mipLevels, uint32_t arrayLayers, VkFormat vkFormat, VkSampleCountFlagBits vkSampleCountFlagBits, VkImageTiling vkImageTiling, VkImageUsageFlags vkImageUsageFlags, VkMemoryPropertyFlags vkMemoryPropertyFlags, VkImage& vkImage, VkDeviceMemory& vkDeviceMemory);
 		static void destroyAndFreeVkImage(const VulkanRenderer& vulkanRenderer, VkImage& vkImage, VkDeviceMemory& vkDeviceMemory);
 		static void destroyAndFreeVkImage(const VulkanRenderer& vulkanRenderer, VkImage& vkImage, VkDeviceMemory& vkDeviceMemory, VkImageView& vkImageView);
 		static void createVkImageView(const VulkanRenderer& vulkanRenderer, VkImage vkImage, VkImageViewType vkImageViewType, uint32_t levelCount, uint32_t layerCount, VkFormat vkFormat, VkImageAspectFlags vkImageAspectFlags, VkImageView& vkImageView);

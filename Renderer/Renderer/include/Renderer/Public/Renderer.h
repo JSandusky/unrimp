@@ -823,30 +823,32 @@ namespace Renderer
 				R8G8B8			  = 1,
 				R8G8B8A8		  = 2,
 				R8G8B8A8_SRGB	  = 3,
-				R11G11B10F		  = 4,
-				R16G16B16A16F	  = 5,
-				R32G32B32A32F	  = 6,
-				BC1				  = 7,
-				BC1_SRGB		  = 8,
-				BC2				  = 9,
-				BC2_SRGB		  = 10,
-				BC3				  = 11,
-				BC3_SRGB		  = 12,
-				BC4				  = 13,
-				BC5				  = 14,
-				ETC1			  = 15,
-				R32_UINT		  = 16,
-				R32_FLOAT		  = 17,
-				D32_FLOAT		  = 18,
-				R16G16_SNORM	  = 19,
-				R16G16_FLOAT	  = 20,
-				UNKNOWN			  = 21,
-				NUMBER_OF_FORMATS = 22
+				B8G8R8A8		  = 4,
+				R11G11B10F		  = 5,
+				R16G16B16A16F	  = 6,
+				R32G32B32A32F	  = 7,
+				BC1				  = 8,
+				BC1_SRGB		  = 9,
+				BC2				  = 10,
+				BC2_SRGB		  = 11,
+				BC3				  = 12,
+				BC3_SRGB		  = 13,
+				BC4				  = 14,
+				BC5				  = 15,
+				ETC1			  = 16,
+				R32_UINT		  = 17,
+				R32_FLOAT		  = 18,
+				D32_FLOAT		  = 19,
+				R16G16_SNORM	  = 20,
+				R16G16_FLOAT	  = 21,
+				UNKNOWN			  = 22,
+				NUMBER_OF_FORMATS = 23
 			};
 			inline static bool isCompressed(Enum textureFormat)
 			{
 				static bool MAPPING[] =
 				{
+					false,
 					false,
 					false,
 					false,
@@ -894,6 +896,7 @@ namespace Renderer
 					false,
 					false,
 					false,
+					false,
 					true,
 					false,
 					false,
@@ -907,6 +910,7 @@ namespace Renderer
 				{
 					sizeof(uint8_t),
 					sizeof(uint8_t) * 3,
+					sizeof(uint8_t) * 4,
 					sizeof(uint8_t) * 4,
 					sizeof(uint8_t) * 4,
 					sizeof(float),
@@ -940,6 +944,7 @@ namespace Renderer
 						return 3 * width;
 					case R8G8B8A8:
 					case R8G8B8A8_SRGB:
+					case B8G8R8A8:
 						return 4 * width;
 					case R11G11B10F:
 						return 4 * width;
@@ -988,6 +993,7 @@ namespace Renderer
 						return 3 * width * height;
 					case R8G8B8A8:
 					case R8G8B8A8_SRGB:
+					case B8G8R8A8:
 						return 4 * width * height;
 					case R11G11B10F:
 						return 4 * width * height;
@@ -1516,10 +1522,10 @@ namespace Renderer
 		};
 		struct PipelineState : public SerializedPipelineState
 		{
-			IRootSignature*    rootSignature;
-			IProgram*		   program;
-			VertexAttributes   vertexAttributes;
-			const IRenderPass* renderPass;
+			IRootSignature*  rootSignature;
+			IProgram*		 program;
+			VertexAttributes vertexAttributes;
+			IRenderPass*	 renderPass;
 		};
 		struct PipelineStateBuilder : public PipelineState
 		{
@@ -1546,7 +1552,7 @@ namespace Renderer
 				renderTargetViewFormats[7]			= TextureFormat::R8G8B8A8;
 				depthStencilViewFormat				= TextureFormat::D32_FLOAT;
 			}
-			PipelineStateBuilder(IRootSignature* _rootSignature, IProgram* _program, const VertexAttributes& _vertexAttributes, const IRenderPass& _renderPass)
+			PipelineStateBuilder(IRootSignature* _rootSignature, IProgram* _program, const VertexAttributes& _vertexAttributes, IRenderPass& _renderPass)
 			{
 				rootSignature				= _rootSignature;
 				program						= _program;
@@ -1781,27 +1787,31 @@ namespace Renderer
 		class Capabilities
 		{
 		public:
-			uint32_t maximumNumberOfViewports;
-			uint32_t maximumNumberOfSimultaneousRenderTargets;
-			uint32_t maximumTextureDimension;
-			uint32_t maximumNumberOf2DTextureArraySlices;
-			uint32_t maximumUniformBufferSize;
-			uint32_t maximumTextureBufferSize;
-			uint32_t maximumIndirectBufferSize;
-			uint8_t  maximumNumberOfMultisamples;
-			uint8_t  maximumAnisotropy;
-			bool	 individualUniforms;
-			bool	 instancedArrays;
-			bool	 drawInstanced;
-			bool	 baseVertex;
-			bool	 nativeMultiThreading;
-			bool	 shaderBytecode;
-			bool	 vertexShader;
-			uint32_t maximumNumberOfPatchVertices;
-			uint32_t maximumNumberOfGsOutputVertices;
-			bool	 fragmentShader;
+			TextureFormat::Enum preferredSwapChainColorTextureFormat;
+			TextureFormat::Enum preferredSwapChainDepthStencilTextureFormat;
+			uint32_t			maximumNumberOfViewports;
+			uint32_t			maximumNumberOfSimultaneousRenderTargets;
+			uint32_t			maximumTextureDimension;
+			uint32_t			maximumNumberOf2DTextureArraySlices;
+			uint32_t			maximumUniformBufferSize;
+			uint32_t			maximumTextureBufferSize;
+			uint32_t			maximumIndirectBufferSize;
+			uint8_t				maximumNumberOfMultisamples;
+			uint8_t				maximumAnisotropy;
+			bool				individualUniforms;
+			bool				instancedArrays;
+			bool				drawInstanced;
+			bool				baseVertex;
+			bool				nativeMultiThreading;
+			bool				shaderBytecode;
+			bool				vertexShader;
+			uint32_t			maximumNumberOfPatchVertices;
+			uint32_t			maximumNumberOfGsOutputVertices;
+			bool				fragmentShader;
 		public:
 			inline Capabilities() :
+				preferredSwapChainColorTextureFormat(TextureFormat::Enum::UNKNOWN),
+				preferredSwapChainDepthStencilTextureFormat(TextureFormat::Enum::UNKNOWN),
 				maximumNumberOfViewports(0),
 				maximumNumberOfSimultaneousRenderTargets(0),
 				maximumTextureDimension(0),
@@ -1974,12 +1984,12 @@ namespace Renderer
 			virtual const char* getName() const = 0;
 			virtual bool isInitialized() const = 0;
 			virtual bool isDebugEnabled() = 0;
-			virtual ISwapChain* getMainSwapChain() const = 0;
 			virtual uint32_t getNumberOfShaderLanguages() const = 0;
 			virtual const char* getShaderLanguageName(uint32_t index) const = 0;
 			virtual IShaderLanguage* getShaderLanguage(const char* shaderLanguageName = nullptr) = 0;
-			virtual ISwapChain* createSwapChain(handle nativeWindowHandle, bool useExternalContext = false) = 0;
-			virtual IFramebuffer* createFramebuffer(uint32_t numberOfColorFramebufferAttachments, const FramebufferAttachment* colorFramebufferAttachments, const FramebufferAttachment* depthStencilFramebufferAttachment = nullptr) = 0;
+			virtual IRenderPass* createRenderPass(uint32_t numberOfColorAttachments, const TextureFormat::Enum* colorAttachmentTextureFormats, TextureFormat::Enum depthStencilAttachmentTextureFormat = TextureFormat::UNKNOWN, uint8_t numberOfMultisamples = 1) = 0;
+			virtual ISwapChain* createSwapChain(IRenderPass& renderPass, handle nativeWindowHandle, bool useExternalContext = false) = 0;
+			virtual IFramebuffer* createFramebuffer(IRenderPass& renderPass, const FramebufferAttachment* colorFramebufferAttachments, const FramebufferAttachment* depthStencilFramebufferAttachment = nullptr) = 0;
 			virtual IBufferManager *createBufferManager() = 0;
 			virtual ITextureManager *createTextureManager() = 0;
 			virtual IRootSignature* createRootSignature(const RootSignature& rootSignature) = 0;
@@ -2193,13 +2203,18 @@ namespace Renderer
 		{
 		public:
 			virtual ~IRenderTarget();
+			inline IRenderPass& getRenderPass() const
+			{
+				return mRenderPass;
+			}
 		public:
-			virtual const IRenderPass& getRenderPass() const = 0;
 			virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const = 0;
 		protected:
-			IRenderTarget(ResourceType resourceType, IRenderer& renderer);
+			IRenderTarget(ResourceType resourceType, IRenderPass& renderPass);
 			explicit IRenderTarget(const IRenderTarget& source) = delete;
 			IRenderTarget& operator =(const IRenderTarget& source) = delete;
+		private:
+			IRenderPass& mRenderPass;
 		};
 		typedef SmartRefCount<IRenderTarget> IRenderTargetPtr;
 	#endif
@@ -2234,7 +2249,7 @@ namespace Renderer
 			virtual void setFullscreenState(bool fullscreen) = 0;
 			virtual void setRenderWindow(IRenderWindow* renderWindow) = 0;
 		protected:
-			explicit ISwapChain(IRenderer& renderer);
+			explicit ISwapChain(IRenderPass& renderPass);
 			explicit ISwapChain(const ISwapChain& source) = delete;
 			ISwapChain& operator =(const ISwapChain& source) = delete;
 		};
@@ -2265,7 +2280,7 @@ namespace Renderer
 		public:
 			virtual ~IFramebuffer();
 		protected:
-			explicit IFramebuffer(IRenderer& renderer);
+			explicit IFramebuffer(IRenderPass& renderPass);
 			explicit IFramebuffer(const IFramebuffer& source) = delete;
 			IFramebuffer& operator =(const IFramebuffer& source) = delete;
 		};

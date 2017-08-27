@@ -135,6 +135,7 @@ namespace Direct3D9Renderer
 		IDirect3DDevice9*			 mDirect3DDevice9;				///< The Direct3D 9 device instance (we keep a reference to it), null pointer on horrible error (so we don't check)
 		Renderer::PrimitiveTopology  mPrimitiveTopology;
 		Renderer::IProgram*			 mProgram;
+		Renderer::IRenderPass*		 mRenderPass;
 		IDirect3DVertexDeclaration9* mDirect3DVertexDeclaration9;	///< Direct3D 9 vertex declaration instance, can be a null pointer
 		RasterizerState*			 mRasterizerState;
 		DepthStencilState*			 mDepthStencilState;

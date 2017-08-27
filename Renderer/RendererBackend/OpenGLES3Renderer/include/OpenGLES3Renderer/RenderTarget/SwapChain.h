@@ -29,17 +29,6 @@
 //[-------------------------------------------------------]
 #include <Renderer/RenderTarget/ISwapChain.h>
 
-#include "OpenGLES3Renderer/RenderTarget/RenderPass.h"
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace OpenGLES3Renderer
-{
-	class OpenGLES3Renderer;
-}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -67,12 +56,12 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] openGLES3Renderer
-		*    Owner OpenGL ES 3 renderer instance
+		*  @param[in] renderPass
+		*    Render pass to use, the swap chain keeps a reference to the render pass
 		*  @param[in] nativeWindowHandle
 		*    Native window handle, must be valid
 		*/
-		SwapChain(OpenGLES3Renderer& openGLES3Renderer, handle nativeWindowHandle);
+		SwapChain(Renderer::IRenderPass& renderPass, handle nativeWindowHandle);
 
 		/**
 		*  @brief
@@ -85,7 +74,6 @@ namespace OpenGLES3Renderer
 	//[ Public virtual Renderer::IRenderTarget methods        ]
 	//[-------------------------------------------------------]
 	public:
-		inline virtual const Renderer::IRenderPass& getRenderPass() const override;
 		virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const override;
 
 
@@ -113,7 +101,6 @@ namespace OpenGLES3Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		RenderPass				 mRenderPass;			///< Render pass instance
 		handle					 mNativeWindowHandle;	///< Native window handle window, can be a null handle
 		Renderer::IRenderWindow* mRenderWindow;			///< Render window instance, can be a null pointer, don't destroy the instance since we don't own it
 
