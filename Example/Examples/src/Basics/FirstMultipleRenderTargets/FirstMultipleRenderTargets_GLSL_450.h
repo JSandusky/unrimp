@@ -48,10 +48,11 @@ void main()
 	gl_Position = vec4(Position, 0.0, 1.0);
 
 	// Calculate the texture coordinate by mapping the clip space coordinate to a texture space coordinate
-	// -> In OpenGL, the texture origin is left/bottom which maps well to clip space coordinates
-	// -> (-1,-1) -> (0,0)
-	// -> (1,1) -> (1,1)
-	TexCoord = Position.xy * 0.5 + 0.5;
+	// -> Unlike OpenGL or OpenGL ES 2, in Vulkan the texture origin is left/top which does not map well to clip space coordinates
+	// -> We have to flip the y-axis to map the coordinate system to the Vulkan texture coordinate system
+	// -> (-1,-1) -> (0,1)
+	// -> (1,1) -> (1,0)
+	TexCoord = vec2(Position.x * 0.5f + 0.5f, 1.0f - (Position.y * 0.5f + 0.5f));
 }
 )";
 
