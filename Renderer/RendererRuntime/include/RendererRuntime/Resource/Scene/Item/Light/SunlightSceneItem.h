@@ -107,7 +107,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	protected:
 		inline explicit SunlightSceneItem(SceneResource& sceneResource);
-		inline virtual ~SunlightSceneItem();
+		inline virtual ~SunlightSceneItem() override;
 		explicit SunlightSceneItem(const SunlightSceneItem&) = delete;
 		SunlightSceneItem& operator=(const SunlightSceneItem&) = delete;
 		RENDERERRUNTIME_API_EXPORT void calculatedDerivedSunlightProperties();

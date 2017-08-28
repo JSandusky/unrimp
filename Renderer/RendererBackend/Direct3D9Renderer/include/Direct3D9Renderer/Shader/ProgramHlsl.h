@@ -85,7 +85,7 @@ namespace Direct3D9Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~ProgramHlsl();
+		virtual ~ProgramHlsl() override;
 
 		/**
 		*  @brief

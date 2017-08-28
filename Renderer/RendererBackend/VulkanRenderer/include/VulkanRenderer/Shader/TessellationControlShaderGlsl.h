@@ -94,7 +94,7 @@ namespace VulkanRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~TessellationControlShaderGlsl();
+		virtual ~TessellationControlShaderGlsl() override;
 
 		/**
 		*  @brief

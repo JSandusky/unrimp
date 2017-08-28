@@ -66,7 +66,7 @@ namespace RendererToolkit
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~IRendererToolkit();
+		inline virtual ~IRendererToolkit() override;
 
 		/**
 		*  @brief

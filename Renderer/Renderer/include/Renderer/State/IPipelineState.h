@@ -65,7 +65,7 @@ namespace Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~IPipelineState();
+		inline virtual ~IPipelineState() override;
 
 
 	//[-------------------------------------------------------]

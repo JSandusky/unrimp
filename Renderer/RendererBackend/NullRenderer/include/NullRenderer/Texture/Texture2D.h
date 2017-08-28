@@ -78,7 +78,7 @@ namespace NullRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~Texture2D();
+		virtual ~Texture2D() override;
 
 
 	//[-------------------------------------------------------]

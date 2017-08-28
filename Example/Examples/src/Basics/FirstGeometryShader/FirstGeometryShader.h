@@ -64,7 +64,7 @@ public:
 	*  @brief
 	*    Destructor
 	*/
-	virtual ~FirstGeometryShader();
+	virtual ~FirstGeometryShader() override;
 
 
 //[-------------------------------------------------------]

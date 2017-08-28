@@ -74,7 +74,7 @@ namespace NullRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~FragmentShader();
+		virtual ~FragmentShader() override;
 
 
 	//[-------------------------------------------------------]

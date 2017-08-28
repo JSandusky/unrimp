@@ -108,7 +108,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		RENDERERRUNTIME_API_EXPORT CompositorWorkspaceInstance(IRendererRuntime& rendererRuntime, AssetId compositorWorkspaceAssetId);
-		RENDERERRUNTIME_API_EXPORT virtual ~CompositorWorkspaceInstance();
+		RENDERERRUNTIME_API_EXPORT virtual ~CompositorWorkspaceInstance() override;
 		inline const IRendererRuntime& getRendererRuntime() const;
 		inline uint8_t getNumberOfMultisamples() const;
 		RENDERERRUNTIME_API_EXPORT void setNumberOfMultisamples(uint8_t numberOfMultisamples);	// The number of multisamples per pixel (valid values: 1, 2, 4, 8); Changes are considered to be expensive since internal renderer resources might need to be updated when rendering the next time

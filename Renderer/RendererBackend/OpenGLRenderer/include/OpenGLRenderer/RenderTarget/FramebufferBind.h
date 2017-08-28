@@ -73,7 +73,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~FramebufferBind();
+		virtual ~FramebufferBind() override;
 
 
 	//[-------------------------------------------------------]

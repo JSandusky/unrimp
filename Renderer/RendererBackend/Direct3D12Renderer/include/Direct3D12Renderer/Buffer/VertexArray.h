@@ -91,7 +91,7 @@ namespace Direct3D12Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~VertexArray();
+		virtual ~VertexArray() override;
 
 		/**
 		*  @brief

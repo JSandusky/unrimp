@@ -71,7 +71,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	protected:
 		CompositorInstancePassVrHiddenAreaMesh(const CompositorResourcePassVrHiddenAreaMesh& compositorResourcePassVrHiddenAreaMesh, const CompositorNodeInstance& compositorNodeInstance);
-		virtual ~CompositorInstancePassVrHiddenAreaMesh();
+		virtual ~CompositorInstancePassVrHiddenAreaMesh() override;
 		explicit CompositorInstancePassVrHiddenAreaMesh(const CompositorInstancePassVrHiddenAreaMesh&) = delete;
 		CompositorInstancePassVrHiddenAreaMesh& operator=(const CompositorInstancePassVrHiddenAreaMesh&) = delete;
 

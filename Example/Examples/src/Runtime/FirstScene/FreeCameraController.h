@@ -58,7 +58,7 @@ public:
 	*  @brief
 	*    Destructor
 	*/
-	virtual ~FreeCameraController();
+	virtual ~FreeCameraController() override;
 
 
 //[-------------------------------------------------------]

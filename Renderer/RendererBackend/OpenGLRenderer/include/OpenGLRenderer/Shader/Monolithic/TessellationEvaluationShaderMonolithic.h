@@ -76,7 +76,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~TessellationEvaluationShaderMonolithic();
+		virtual ~TessellationEvaluationShaderMonolithic() override;
 
 		/**
 		*  @brief

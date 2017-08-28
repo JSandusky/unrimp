@@ -77,7 +77,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~Texture3DDsa();
+		virtual ~Texture3DDsa() override;
 
 
 	//[-------------------------------------------------------]

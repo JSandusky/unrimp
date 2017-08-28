@@ -81,7 +81,7 @@ namespace NullRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~ShaderLanguage();
+		virtual ~ShaderLanguage() override;
 
 
 	//[-------------------------------------------------------]

@@ -75,7 +75,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline explicit StdFileManager(Renderer::ILog& log);
-		inline virtual ~StdFileManager();
+		inline virtual ~StdFileManager() override;
 
 
 	//[-------------------------------------------------------]

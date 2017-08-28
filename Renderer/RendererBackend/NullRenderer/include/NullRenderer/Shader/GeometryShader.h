@@ -74,7 +74,7 @@ namespace NullRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~GeometryShader();
+		virtual ~GeometryShader() override;
 
 
 	//[-------------------------------------------------------]

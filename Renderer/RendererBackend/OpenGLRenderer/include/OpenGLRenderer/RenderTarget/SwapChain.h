@@ -82,7 +82,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~SwapChain();
+		virtual ~SwapChain() override;
 
 		/**
 		*  @brief

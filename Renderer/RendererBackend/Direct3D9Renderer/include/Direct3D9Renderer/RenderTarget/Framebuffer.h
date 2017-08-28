@@ -79,7 +79,7 @@ namespace Direct3D9Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~Framebuffer();
+		virtual ~Framebuffer() override;
 
 		/**
 		*  @brief

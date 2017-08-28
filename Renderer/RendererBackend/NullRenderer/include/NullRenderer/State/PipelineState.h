@@ -81,7 +81,7 @@ namespace NullRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~PipelineState();
+		virtual ~PipelineState() override;
 
 
 	//[-------------------------------------------------------]

@@ -101,7 +101,7 @@ namespace VulkanRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~ProgramGlsl();
+		virtual ~ProgramGlsl() override;
 
 		/**
 		*  @brief

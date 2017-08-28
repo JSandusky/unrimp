@@ -74,7 +74,7 @@ namespace NullRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~TessellationEvaluationShader();
+		virtual ~TessellationEvaluationShader() override;
 
 
 	//[-------------------------------------------------------]

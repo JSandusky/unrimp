@@ -56,7 +56,7 @@ namespace Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~IFragmentShader();
+		inline virtual ~IFragmentShader() override;
 
 
 	//[-------------------------------------------------------]

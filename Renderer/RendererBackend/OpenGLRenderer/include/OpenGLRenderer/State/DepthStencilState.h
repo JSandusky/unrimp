@@ -76,7 +76,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~DepthStencilState();
+		inline virtual ~DepthStencilState() override;
 
 		/**
 		*  @brief

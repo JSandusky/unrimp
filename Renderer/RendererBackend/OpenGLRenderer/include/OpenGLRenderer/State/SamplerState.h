@@ -65,7 +65,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~SamplerState();
+		virtual ~SamplerState() override;
 
 
 	//[-------------------------------------------------------]

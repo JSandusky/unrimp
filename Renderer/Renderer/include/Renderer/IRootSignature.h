@@ -69,7 +69,7 @@ namespace Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~IRootSignature();
+		inline virtual ~IRootSignature() override;
 
 
 	//[-------------------------------------------------------]

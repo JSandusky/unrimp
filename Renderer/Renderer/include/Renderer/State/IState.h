@@ -56,7 +56,7 @@ namespace Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~IState();
+		inline virtual ~IState() override;
 
 
 	//[-------------------------------------------------------]

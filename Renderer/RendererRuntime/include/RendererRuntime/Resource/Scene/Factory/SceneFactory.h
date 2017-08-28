@@ -50,7 +50,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline SceneFactory();
-		inline virtual ~SceneFactory();
+		inline virtual ~SceneFactory() override;
 
 
 	//[-------------------------------------------------------]

@@ -93,7 +93,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~OpenGLContextLinux();
+		virtual ~OpenGLContextLinux() override;
 
 		/**
 		*  @brief

@@ -84,7 +84,7 @@ namespace Direct3D12Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~PipelineState();
+		virtual ~PipelineState() override;
 
 		/**
 		*  @brief

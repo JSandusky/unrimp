@@ -89,7 +89,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~VertexArrayNoVao();
+		virtual ~VertexArrayNoVao() override;
 
 		/**
 		*  @brief

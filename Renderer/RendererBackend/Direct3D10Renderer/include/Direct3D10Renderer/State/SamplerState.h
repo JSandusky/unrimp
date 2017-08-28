@@ -81,7 +81,7 @@ namespace Direct3D10Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~SamplerState();
+		virtual ~SamplerState() override;
 
 		/**
 		*  @brief

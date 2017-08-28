@@ -67,7 +67,7 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~SwapChain();
+		virtual ~SwapChain() override;
 
 
 	//[-------------------------------------------------------]

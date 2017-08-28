@@ -87,7 +87,7 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~Texture2DArray();
+		virtual ~Texture2DArray() override;
 
 		/**
 		*  @brief

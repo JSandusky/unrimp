@@ -67,7 +67,7 @@ namespace NullRenderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~SwapChain();
+		inline virtual ~SwapChain() override;
 
 
 	//[-------------------------------------------------------]

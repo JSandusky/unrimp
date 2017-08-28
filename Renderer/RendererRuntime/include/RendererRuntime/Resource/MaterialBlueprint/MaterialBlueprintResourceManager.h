@@ -160,7 +160,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		explicit MaterialBlueprintResourceManager(IRendererRuntime& rendererRuntime);
-		virtual ~MaterialBlueprintResourceManager();
+		virtual ~MaterialBlueprintResourceManager() override;
 		explicit MaterialBlueprintResourceManager(const MaterialBlueprintResourceManager&) = delete;
 		MaterialBlueprintResourceManager& operator=(const MaterialBlueprintResourceManager&) = delete;
 

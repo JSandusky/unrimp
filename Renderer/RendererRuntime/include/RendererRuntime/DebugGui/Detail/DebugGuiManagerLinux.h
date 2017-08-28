@@ -75,7 +75,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		explicit DebugGuiManagerLinux(IRendererRuntime& rendererRuntime);
-		virtual ~DebugGuiManagerLinux();
+		virtual ~DebugGuiManagerLinux() override;
 		explicit DebugGuiManagerLinux(const DebugGuiManagerLinux&) = delete;
 		DebugGuiManagerLinux& operator=(const DebugGuiManagerLinux&) = delete;
 		void updateMousePosition(int x, int y);
@@ -87,7 +87,7 @@ namespace RendererRuntime
 	private:
 		uint32_t mWindowWidth;
 		uint32_t mWindowHeigth;
-		uint64_t mTime; //< Holds the time in microseconds
+		uint64_t mTime;	//< Holds the time in microseconds
 
 
 	};

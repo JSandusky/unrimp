@@ -56,7 +56,7 @@ namespace Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~IGeometryShader();
+		inline virtual ~IGeometryShader() override;
 
 
 	//[-------------------------------------------------------]

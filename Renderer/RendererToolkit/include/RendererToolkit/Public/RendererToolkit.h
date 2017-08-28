@@ -61,7 +61,7 @@ namespace RendererToolkit
 	class IRendererToolkit : public Renderer::RefCount<IRendererToolkit>
 	{
 	public:
-		virtual ~IRendererToolkit();
+		virtual ~IRendererToolkit() override;
 	public:
 		virtual IProject* createProject() = 0;
 	protected:
@@ -75,7 +75,7 @@ namespace RendererToolkit
 	class IProject : public Renderer::RefCount<IProject>
 	{
 	public:
-		virtual ~IProject();
+		virtual ~IProject() override;
 	public:
 		virtual void loadByFilename(const char* filename) = 0;
 		virtual void compileAllAssets(const char* rendererTarget) = 0;

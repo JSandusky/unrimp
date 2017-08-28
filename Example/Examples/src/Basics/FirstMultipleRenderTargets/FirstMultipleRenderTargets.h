@@ -67,7 +67,7 @@ public:
 	*  @brief
 	*    Destructor
 	*/
-	virtual ~FirstMultipleRenderTargets();
+	virtual ~FirstMultipleRenderTargets() override;
 
 
 //[-------------------------------------------------------]

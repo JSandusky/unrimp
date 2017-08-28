@@ -79,7 +79,7 @@ namespace Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~ISamplerState();
+		inline virtual ~ISamplerState() override;
 
 
 	//[-------------------------------------------------------]

@@ -87,7 +87,7 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~ResourceGroup();
+		virtual ~ResourceGroup() override;
 
 		/**
 		*  @brief

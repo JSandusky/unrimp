@@ -75,7 +75,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~Texture1DBind();
+		virtual ~Texture1DBind() override;
 
 
 	//[-------------------------------------------------------]

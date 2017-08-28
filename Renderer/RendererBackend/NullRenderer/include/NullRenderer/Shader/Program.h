@@ -92,7 +92,7 @@ namespace NullRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~Program();
+		virtual ~Program() override;
 
 
 	//[-------------------------------------------------------]

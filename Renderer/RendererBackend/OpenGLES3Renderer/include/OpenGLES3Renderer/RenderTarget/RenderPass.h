@@ -75,7 +75,7 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~RenderPass();
+		inline virtual ~RenderPass() override;
 
 		/**
 		*  @brief

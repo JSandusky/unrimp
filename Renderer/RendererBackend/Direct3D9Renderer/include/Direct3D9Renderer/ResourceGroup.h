@@ -83,7 +83,7 @@ namespace Direct3D9Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~ResourceGroup();
+		virtual ~ResourceGroup() override;
 
 		/**
 		*  @brief

@@ -85,7 +85,7 @@ namespace Direct3D11Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~IndexBuffer();
+		virtual ~IndexBuffer() override;
 
 		/**
 		*  @brief

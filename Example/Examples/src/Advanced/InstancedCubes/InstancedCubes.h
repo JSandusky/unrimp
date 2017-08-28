@@ -79,7 +79,7 @@ public:
 	*  @brief
 	*    Destructor
 	*/
-	virtual ~InstancedCubes();
+	virtual ~InstancedCubes() override;
 
 
 //[-------------------------------------------------------]

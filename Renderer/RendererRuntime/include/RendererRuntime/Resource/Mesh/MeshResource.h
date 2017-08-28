@@ -109,7 +109,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		inline MeshResource();
-		inline virtual ~MeshResource();
+		inline virtual ~MeshResource() override;
 		explicit MeshResource(const MeshResource&) = delete;
 		MeshResource& operator=(const MeshResource&) = delete;
 

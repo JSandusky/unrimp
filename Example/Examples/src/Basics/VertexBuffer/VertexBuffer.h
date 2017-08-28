@@ -65,7 +65,7 @@ public:
 	*  @brief
 	*    Destructor
 	*/
-	virtual ~VertexBuffer();
+	virtual ~VertexBuffer() override;
 
 
 //[-------------------------------------------------------]

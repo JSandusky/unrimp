@@ -96,7 +96,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	protected:
 		inline explicit CompositorResourcePassShadowMap(const CompositorTarget& compositorTarget);
-		inline virtual ~CompositorResourcePassShadowMap();
+		inline virtual ~CompositorResourcePassShadowMap() override;
 		explicit CompositorResourcePassShadowMap(const CompositorResourcePassShadowMap&) = delete;
 		CompositorResourcePassShadowMap& operator=(const CompositorResourcePassShadowMap&) = delete;
 

@@ -120,7 +120,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		inline ShaderBlueprintResource();
-		inline virtual ~ShaderBlueprintResource();
+		inline virtual ~ShaderBlueprintResource() override;
 		explicit ShaderBlueprintResource(const ShaderBlueprintResource&) = delete;
 		ShaderBlueprintResource& operator=(const ShaderBlueprintResource&) = delete;
 

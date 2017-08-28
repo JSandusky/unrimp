@@ -82,7 +82,7 @@ public:
 	*  @brief
 	*    Destructor
 	*/
-	virtual ~IApplicationRendererRuntime();
+	virtual ~IApplicationRendererRuntime() override;
 
 
 //[-------------------------------------------------------]

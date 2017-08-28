@@ -80,7 +80,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	protected:
 		inline explicit ITextureResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
-		inline virtual ~ITextureResourceLoader();
+		inline virtual ~ITextureResourceLoader() override;
 		explicit ITextureResourceLoader(const ITextureResourceLoader&) = delete;
 		ITextureResourceLoader& operator=(const ITextureResourceLoader&) = delete;
 

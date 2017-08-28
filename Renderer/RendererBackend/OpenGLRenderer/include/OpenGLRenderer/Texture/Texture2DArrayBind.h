@@ -79,7 +79,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~Texture2DArrayBind();
+		virtual ~Texture2DArrayBind() override;
 
 
 	//[-------------------------------------------------------]

@@ -92,7 +92,7 @@ namespace Direct3D12Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~ProgramHlsl();
+		virtual ~ProgramHlsl() override;
 
 		/**
 		*  @brief

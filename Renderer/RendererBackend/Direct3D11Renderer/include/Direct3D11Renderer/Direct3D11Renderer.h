@@ -91,7 +91,7 @@ namespace Direct3D11Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~Direct3D11Renderer();
+		virtual ~Direct3D11Renderer() override;
 
 		/**
 		*  @brief

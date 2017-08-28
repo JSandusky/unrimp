@@ -76,7 +76,7 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~BlendState();
+		inline virtual ~BlendState() override;
 
 		/**
 		*  @brief

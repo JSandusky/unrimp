@@ -86,7 +86,7 @@ namespace Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~IFramebuffer();
+		inline virtual ~IFramebuffer() override;
 
 
 	//[-------------------------------------------------------]

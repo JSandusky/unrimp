@@ -92,7 +92,7 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~ProgramGlsl();
+		virtual ~ProgramGlsl() override;
 
 		/**
 		*  @brief

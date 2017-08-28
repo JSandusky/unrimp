@@ -104,7 +104,7 @@ namespace RendererRuntime
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~IRendererRuntime();
+		inline virtual ~IRendererRuntime() override;
 
 		//[-------------------------------------------------------]
 		//[ Core                                                  ]

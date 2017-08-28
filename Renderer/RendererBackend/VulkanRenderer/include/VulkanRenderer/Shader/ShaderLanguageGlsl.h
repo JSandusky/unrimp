@@ -120,7 +120,7 @@ namespace VulkanRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~ShaderLanguageGlsl();
+		virtual ~ShaderLanguageGlsl() override;
 
 
 	//[-------------------------------------------------------]

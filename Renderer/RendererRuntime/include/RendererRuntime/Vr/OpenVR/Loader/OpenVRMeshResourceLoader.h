@@ -107,7 +107,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		inline OpenVRMeshResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
-		inline virtual ~OpenVRMeshResourceLoader();
+		inline virtual ~OpenVRMeshResourceLoader() override;
 		explicit OpenVRMeshResourceLoader(const OpenVRMeshResourceLoader&) = delete;
 		OpenVRMeshResourceLoader& operator=(const OpenVRMeshResourceLoader&) = delete;
 		Renderer::IVertexArray* createVertexArray() const;

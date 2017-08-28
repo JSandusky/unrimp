@@ -74,7 +74,7 @@ namespace NullRenderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~BufferManager();
+		inline virtual ~BufferManager() override;
 
 
 	//[-------------------------------------------------------]

@@ -65,7 +65,7 @@ public:
 	*  @brief
 	*    Destructor
 	*/
-	virtual ~FirstTriangle();
+	virtual ~FirstTriangle() override;
 
 
 //[-------------------------------------------------------]

@@ -75,7 +75,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~IndexBufferDsa();
+		virtual ~IndexBufferDsa() override;
 
 
 	//[-------------------------------------------------------]

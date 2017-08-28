@@ -56,7 +56,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	public:
 		SkeletonAssetCompiler();
-		virtual ~SkeletonAssetCompiler();
+		virtual ~SkeletonAssetCompiler() override;
 
 
 	//[-------------------------------------------------------]

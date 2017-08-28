@@ -61,7 +61,7 @@ namespace Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~IIndirectBuffer();
+		inline virtual ~IIndirectBuffer() override;
 
 
 	//[-------------------------------------------------------]

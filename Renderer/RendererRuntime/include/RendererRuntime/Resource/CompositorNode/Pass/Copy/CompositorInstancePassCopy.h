@@ -71,7 +71,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	protected:
 		CompositorInstancePassCopy(const CompositorResourcePassCopy& compositorResourcePassCopy, const CompositorNodeInstance& compositorNodeInstance);
-		inline virtual ~CompositorInstancePassCopy();
+		inline virtual ~CompositorInstancePassCopy() override;
 		explicit CompositorInstancePassCopy(const CompositorInstancePassCopy&) = delete;
 		CompositorInstancePassCopy& operator=(const CompositorInstancePassCopy&) = delete;
 

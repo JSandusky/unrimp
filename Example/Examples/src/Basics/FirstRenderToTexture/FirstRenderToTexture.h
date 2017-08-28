@@ -66,7 +66,7 @@ public:
 	*  @brief
 	*    Destructor
 	*/
-	virtual ~FirstRenderToTexture();
+	virtual ~FirstRenderToTexture() override;
 
 
 //[-------------------------------------------------------]

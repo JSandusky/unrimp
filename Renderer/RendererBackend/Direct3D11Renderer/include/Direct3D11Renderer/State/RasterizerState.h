@@ -81,7 +81,7 @@ namespace Direct3D11Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~RasterizerState();
+		virtual ~RasterizerState() override;
 
 		/**
 		*  @brief

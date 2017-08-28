@@ -56,7 +56,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	public:
 		ShaderBlueprintAssetCompiler();
-		virtual ~ShaderBlueprintAssetCompiler();
+		virtual ~ShaderBlueprintAssetCompiler() override;
 
 
 	//[-------------------------------------------------------]

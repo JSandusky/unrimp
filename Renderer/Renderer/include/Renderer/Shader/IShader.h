@@ -56,7 +56,7 @@ namespace Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~IShader();
+		inline virtual ~IShader() override;
 
 
 	//[-------------------------------------------------------]

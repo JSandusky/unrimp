@@ -81,7 +81,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		CompositorResourcePassQuad(const CompositorTarget& compositorTarget, AssetId materialBlueprintAssetId, const MaterialProperties& materialProperties);
-		inline virtual ~CompositorResourcePassQuad();
+		inline virtual ~CompositorResourcePassQuad() override;
 		inline bool isMaterialDefinitionMandatory() const;
 		inline AssetId getMaterialAssetId() const;
 		inline MaterialTechniqueId getMaterialTechniqueId() const;

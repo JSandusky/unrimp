@@ -74,7 +74,7 @@ namespace NullRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~SamplerState();
+		virtual ~SamplerState() override;
 
 
 	//[-------------------------------------------------------]

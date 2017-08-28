@@ -88,7 +88,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	protected:
 		inline explicit CompositorResourcePassScene(const CompositorTarget& compositorTarget);
-		inline virtual ~CompositorResourcePassScene();
+		inline virtual ~CompositorResourcePassScene() override;
 		explicit CompositorResourcePassScene(const CompositorResourcePassScene&) = delete;
 		CompositorResourcePassScene& operator=(const CompositorResourcePassScene&) = delete;
 

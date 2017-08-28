@@ -136,7 +136,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		explicit VrManagerOpenVR(IRendererRuntime& rendererRuntime);
-		virtual ~VrManagerOpenVR();
+		virtual ~VrManagerOpenVR() override;
 		explicit VrManagerOpenVR(const VrManagerOpenVR&) = delete;
 		VrManagerOpenVR& operator=(const VrManagerOpenVR&) = delete;
 		void setupRenderModelForTrackedDevice(vr::TrackedDeviceIndex_t unTrackedDeviceIndex);

@@ -98,7 +98,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		MeshResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
-		virtual ~MeshResourceLoader();
+		virtual ~MeshResourceLoader() override;
 		explicit MeshResourceLoader(const MeshResourceLoader&) = delete;
 		MeshResourceLoader& operator=(const MeshResourceLoader&) = delete;
 		Renderer::IVertexArray* createVertexArray() const;

@@ -89,7 +89,7 @@ public:
 	*  @brief
 	*    Destructor
 	*/
-	virtual ~FirstScene();
+	virtual ~FirstScene() override;
 
 
 //[-------------------------------------------------------]

@@ -60,7 +60,7 @@ public:
 	*  @brief
 	*    Destructor
 	*/
-	virtual ~FirstIndirectBuffer();
+	virtual ~FirstIndirectBuffer() override;
 
 
 //[-------------------------------------------------------]

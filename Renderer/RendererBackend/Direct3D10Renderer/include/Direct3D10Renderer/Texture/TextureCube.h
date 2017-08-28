@@ -89,7 +89,7 @@ namespace Direct3D10Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~TextureCube();
+		virtual ~TextureCube() override;
 
 		/**
 		*  @brief

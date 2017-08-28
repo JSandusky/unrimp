@@ -87,7 +87,7 @@ namespace Direct3D12Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~TextureBuffer();
+		virtual ~TextureBuffer() override;
 
 		/**
 		*  @brief

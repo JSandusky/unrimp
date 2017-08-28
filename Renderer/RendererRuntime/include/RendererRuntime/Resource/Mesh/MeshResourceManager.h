@@ -104,7 +104,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		explicit MeshResourceManager(IRendererRuntime& rendererRuntime);
-		virtual ~MeshResourceManager();
+		virtual ~MeshResourceManager() override;
 		explicit MeshResourceManager(const MeshResourceManager&) = delete;
 		MeshResourceManager& operator=(const MeshResourceManager&) = delete;
 

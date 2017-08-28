@@ -73,7 +73,7 @@ namespace RendererToolkit
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~IProject();
+		inline virtual ~IProject() override;
 
 
 	//[-------------------------------------------------------]

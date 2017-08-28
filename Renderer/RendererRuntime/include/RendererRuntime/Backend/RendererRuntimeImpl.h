@@ -84,7 +84,7 @@ namespace RendererRuntime
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~RendererRuntimeImpl();
+		virtual ~RendererRuntimeImpl() override;
 
 
 	//[-------------------------------------------------------]

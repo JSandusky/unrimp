@@ -93,7 +93,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		inline ShaderPieceResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
-		inline virtual ~ShaderPieceResourceLoader();
+		inline virtual ~ShaderPieceResourceLoader() override;
 		explicit ShaderPieceResourceLoader(const ShaderPieceResourceLoader&) = delete;
 		ShaderPieceResourceLoader& operator=(const ShaderPieceResourceLoader&) = delete;
 

@@ -81,7 +81,7 @@ namespace
 				// Nothing here
 			}
 
-			virtual ~StdFile()
+			virtual ~StdFile() override
 			{
 				// Nothing here
 			}
@@ -118,7 +118,7 @@ namespace
 				// Nothing here
 			}
 
-			virtual ~StdReadFile()
+			virtual ~StdReadFile() override
 			{
 				// Nothing here
 			}
@@ -194,7 +194,7 @@ namespace
 				// Nothing here
 			}
 
-			virtual ~StdWriteFile()
+			virtual ~StdWriteFile() override
 			{
 				// Nothing here
 			}

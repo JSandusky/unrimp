@@ -86,7 +86,7 @@ namespace VulkanRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~RenderPass();
+		virtual ~RenderPass() override;
 
 		/**
 		*  @brief

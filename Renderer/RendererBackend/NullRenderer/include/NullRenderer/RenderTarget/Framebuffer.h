@@ -65,7 +65,7 @@ namespace NullRenderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~Framebuffer();
+		inline virtual ~Framebuffer() override;
 
 
 	//[-------------------------------------------------------]

@@ -177,7 +177,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	protected:
 		inline IAssetCompiler() {}
-		inline virtual ~IAssetCompiler() {}
+		inline virtual ~IAssetCompiler() override {}
 
 
 	};

@@ -74,7 +74,7 @@ namespace Direct3D11Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~TextureManager();
+		inline virtual ~TextureManager() override;
 
 
 	//[-------------------------------------------------------]

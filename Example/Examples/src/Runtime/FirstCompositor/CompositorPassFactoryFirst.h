@@ -42,7 +42,7 @@ class CompositorPassFactoryFirst : public RendererRuntime::CompositorPassFactory
 //[-------------------------------------------------------]
 public:
 	CompositorPassFactoryFirst();
-	virtual ~CompositorPassFactoryFirst();
+	virtual ~CompositorPassFactoryFirst() override;
 
 
 //[-------------------------------------------------------]

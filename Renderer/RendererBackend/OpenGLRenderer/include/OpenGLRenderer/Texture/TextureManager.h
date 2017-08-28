@@ -75,7 +75,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~TextureManager();
+		inline virtual ~TextureManager() override;
 
 
 	//[-------------------------------------------------------]

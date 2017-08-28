@@ -98,7 +98,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~ProgramSeparate();
+		virtual ~ProgramSeparate() override;
 
 		/**
 		*  @brief

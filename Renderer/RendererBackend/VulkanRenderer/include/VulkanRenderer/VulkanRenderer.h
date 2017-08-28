@@ -120,7 +120,7 @@ namespace VulkanRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~VulkanRenderer();
+		virtual ~VulkanRenderer() override;
 
 		/**
 		*  @brief

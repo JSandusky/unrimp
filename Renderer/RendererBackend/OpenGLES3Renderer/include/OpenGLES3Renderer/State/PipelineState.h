@@ -84,7 +84,7 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~PipelineState();
+		virtual ~PipelineState() override;
 
 		/**
 		*  @brief

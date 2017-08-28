@@ -98,7 +98,7 @@ namespace
 				}
 			}
 
-			virtual ~VrManagerOpenVRListener()
+			virtual ~VrManagerOpenVRListener() override
 			{
 				// Nothing here
 			}
@@ -209,7 +209,7 @@ namespace
 				// Nothing here
 			}
 
-			virtual ~MaterialBlueprintResourceListener()
+			virtual ~MaterialBlueprintResourceListener() override
 			{
 				// Nothing here
 			}

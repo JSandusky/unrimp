@@ -70,7 +70,7 @@ namespace Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~ITextureBuffer();
+		inline virtual ~ITextureBuffer() override;
 
 
 	//[-------------------------------------------------------]

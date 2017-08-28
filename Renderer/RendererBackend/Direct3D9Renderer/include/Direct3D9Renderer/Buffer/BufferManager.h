@@ -74,7 +74,7 @@ namespace Direct3D9Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~BufferManager();
+		inline virtual ~BufferManager() override;
 
 
 	//[-------------------------------------------------------]

@@ -74,7 +74,7 @@ namespace Direct3D12Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~BufferManager();
+		inline virtual ~BufferManager() override;
 
 
 	//[-------------------------------------------------------]

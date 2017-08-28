@@ -76,7 +76,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~BlendState();
+		inline virtual ~BlendState() override;
 
 		/**
 		*  @brief

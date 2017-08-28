@@ -96,7 +96,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	public:
 		explicit TextureAssetCompiler(const Context& context);
-		virtual ~TextureAssetCompiler();
+		virtual ~TextureAssetCompiler() override;
 
 
 	//[-------------------------------------------------------]

@@ -92,7 +92,7 @@ namespace Direct3D10Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~Direct3D10Renderer();
+		virtual ~Direct3D10Renderer() override;
 
 		/**
 		*  @brief

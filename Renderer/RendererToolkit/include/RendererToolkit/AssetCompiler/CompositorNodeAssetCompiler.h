@@ -56,7 +56,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	public:
 		CompositorNodeAssetCompiler();
-		virtual ~CompositorNodeAssetCompiler();
+		virtual ~CompositorNodeAssetCompiler() override;
 
 
 	//[-------------------------------------------------------]

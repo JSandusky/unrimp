@@ -79,7 +79,7 @@ namespace VulkanRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~SamplerState();
+		virtual ~SamplerState() override;
 
 		/**
 		*  @brief

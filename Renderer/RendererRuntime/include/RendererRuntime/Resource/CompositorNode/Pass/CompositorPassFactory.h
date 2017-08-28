@@ -54,7 +54,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline CompositorPassFactory();
-		inline virtual ~CompositorPassFactory();
+		inline virtual ~CompositorPassFactory() override;
 
 
 	//[-------------------------------------------------------]

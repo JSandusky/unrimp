@@ -65,7 +65,7 @@ public:
 	*  @brief
 	*    Destructor
 	*/
-	virtual ~IcosahedronTessellation();
+	virtual ~IcosahedronTessellation() override;
 
 
 //[-------------------------------------------------------]

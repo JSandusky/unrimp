@@ -76,7 +76,7 @@ public:
 	*  @brief
 	*    Destructor
 	*/
-	virtual ~CubeRendererDrawInstanced();
+	virtual ~CubeRendererDrawInstanced() override;
 
 
 //[-------------------------------------------------------]

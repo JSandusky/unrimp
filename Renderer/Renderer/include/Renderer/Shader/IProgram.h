@@ -56,7 +56,7 @@ namespace Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~IProgram();
+		inline virtual ~IProgram() override;
 
 
 	//[-------------------------------------------------------]

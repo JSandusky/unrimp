@@ -56,7 +56,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	public:
 		SceneAssetCompiler();
-		virtual ~SceneAssetCompiler();
+		virtual ~SceneAssetCompiler() override;
 
 
 	//[-------------------------------------------------------]

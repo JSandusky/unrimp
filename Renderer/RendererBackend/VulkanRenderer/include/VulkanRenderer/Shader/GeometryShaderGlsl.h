@@ -107,7 +107,7 @@ namespace VulkanRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~GeometryShaderGlsl();
+		virtual ~GeometryShaderGlsl() override;
 
 		/**
 		*  @brief

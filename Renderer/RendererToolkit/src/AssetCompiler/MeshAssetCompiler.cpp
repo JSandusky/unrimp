@@ -173,7 +173,7 @@ namespace
 				// Nothing here
 			}
 
-			virtual ~AssimpLogStream()
+			virtual ~AssimpLogStream() override
 			{
 				// Nothing here
 			}

@@ -107,7 +107,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		explicit CompositorNodeResourceManager(IRendererRuntime& rendererRuntime);
-		virtual ~CompositorNodeResourceManager();
+		virtual ~CompositorNodeResourceManager() override;
 		explicit CompositorNodeResourceManager(const CompositorNodeResourceManager&) = delete;
 		CompositorNodeResourceManager& operator=(const CompositorNodeResourceManager&) = delete;
 

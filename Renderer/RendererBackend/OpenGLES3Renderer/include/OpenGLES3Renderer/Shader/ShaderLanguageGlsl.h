@@ -102,7 +102,7 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~ShaderLanguageGlsl();
+		virtual ~ShaderLanguageGlsl() override;
 
 
 	//[-------------------------------------------------------]

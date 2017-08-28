@@ -106,7 +106,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		inline SkeletonResource();
-		inline virtual ~SkeletonResource();
+		inline virtual ~SkeletonResource() override;
 		explicit SkeletonResource(const SkeletonResource&) = delete;
 		SkeletonResource& operator=(const SkeletonResource&) = delete;
 		inline void clearSkeletonData();

@@ -74,7 +74,7 @@ namespace NullRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~IndirectBuffer();
+		virtual ~IndirectBuffer() override;
 
 
 	//[-------------------------------------------------------]

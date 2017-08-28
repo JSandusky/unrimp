@@ -74,7 +74,7 @@ namespace VulkanRenderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~TextureManager();
+		inline virtual ~TextureManager() override;
 
 
 	//[-------------------------------------------------------]

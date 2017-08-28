@@ -87,7 +87,7 @@ namespace VulkanRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~IndexBuffer();
+		virtual ~IndexBuffer() override;
 
 		/**
 		*  @brief

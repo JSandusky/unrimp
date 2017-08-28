@@ -82,7 +82,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		inline OpenVRTextureResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
-		inline virtual ~OpenVRTextureResourceLoader();
+		inline virtual ~OpenVRTextureResourceLoader() override;
 		explicit OpenVRTextureResourceLoader(const OpenVRTextureResourceLoader&) = delete;
 		OpenVRTextureResourceLoader& operator=(const OpenVRTextureResourceLoader&) = delete;
 		Renderer::ITexture* createRendererTexture();

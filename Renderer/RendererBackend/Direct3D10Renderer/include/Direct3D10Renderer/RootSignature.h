@@ -77,7 +77,7 @@ namespace Direct3D10Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~RootSignature();
+		virtual ~RootSignature() override;
 
 		/**
 		*  @brief

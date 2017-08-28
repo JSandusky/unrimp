@@ -74,7 +74,7 @@ namespace NullRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~TextureBuffer();
+		virtual ~TextureBuffer() override;
 
 
 	//[-------------------------------------------------------]

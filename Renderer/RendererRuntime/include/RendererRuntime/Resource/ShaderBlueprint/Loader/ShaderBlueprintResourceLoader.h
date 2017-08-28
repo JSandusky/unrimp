@@ -93,7 +93,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		inline ShaderBlueprintResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
-		inline virtual ~ShaderBlueprintResourceLoader();
+		inline virtual ~ShaderBlueprintResourceLoader() override;
 		explicit ShaderBlueprintResourceLoader(const ShaderBlueprintResourceLoader&) = delete;
 		ShaderBlueprintResourceLoader& operator=(const ShaderBlueprintResourceLoader&) = delete;
 

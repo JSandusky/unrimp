@@ -56,7 +56,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	public:
 		VertexAttributesAssetCompiler();
-		virtual ~VertexAttributesAssetCompiler();
+		virtual ~VertexAttributesAssetCompiler() override;
 
 
 	//[-------------------------------------------------------]

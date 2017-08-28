@@ -80,7 +80,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~ProgramSeparateDsa();
+		virtual ~ProgramSeparateDsa() override;
 
 
 	//[-------------------------------------------------------]

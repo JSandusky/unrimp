@@ -102,7 +102,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~ShaderLanguageMonolithic();
+		virtual ~ShaderLanguageMonolithic() override;
 
 
 	//[-------------------------------------------------------]

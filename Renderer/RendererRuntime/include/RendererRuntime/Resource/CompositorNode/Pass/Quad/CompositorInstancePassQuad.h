@@ -86,7 +86,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		CompositorInstancePassQuad(const CompositorResourcePassQuad& compositorResourcePassQuad, const CompositorNodeInstance& compositorNodeInstance);
-		virtual ~CompositorInstancePassQuad();
+		virtual ~CompositorInstancePassQuad() override;
 		inline MaterialResourceId getMaterialResourceId() const;
 
 

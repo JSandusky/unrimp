@@ -85,7 +85,7 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~TextureCube();
+		virtual ~TextureCube() override;
 
 		/**
 		*  @brief

@@ -76,7 +76,7 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~TextureBufferBindEmulation();
+		virtual ~TextureBufferBindEmulation() override;
 
 
 	//[-------------------------------------------------------]

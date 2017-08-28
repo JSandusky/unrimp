@@ -103,7 +103,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		explicit CompositorWorkspaceResourceManager(IRendererRuntime& rendererRuntime);
-		virtual ~CompositorWorkspaceResourceManager();
+		virtual ~CompositorWorkspaceResourceManager() override;
 		explicit CompositorWorkspaceResourceManager(const CompositorWorkspaceResourceManager&) = delete;
 		CompositorWorkspaceResourceManager& operator=(const CompositorWorkspaceResourceManager&) = delete;
 

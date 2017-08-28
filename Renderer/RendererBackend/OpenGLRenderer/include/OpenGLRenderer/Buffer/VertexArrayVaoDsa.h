@@ -86,7 +86,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~VertexArrayVaoDsa();
+		virtual ~VertexArrayVaoDsa() override;
 
 
 	//[-------------------------------------------------------]

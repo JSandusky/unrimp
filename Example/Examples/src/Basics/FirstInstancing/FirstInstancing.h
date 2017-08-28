@@ -66,7 +66,7 @@ public:
 	*  @brief
 	*    Destructor
 	*/
-	virtual ~FirstInstancing();
+	virtual ~FirstInstancing() override;
 
 
 //[-------------------------------------------------------]

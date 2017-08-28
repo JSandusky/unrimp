@@ -112,7 +112,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	protected:
 		inline explicit LightSceneItem(SceneResource& sceneResource);
-		inline virtual ~LightSceneItem();
+		inline virtual ~LightSceneItem() override;
 		explicit LightSceneItem(const LightSceneItem&) = delete;
 		LightSceneItem& operator=(const LightSceneItem&) = delete;
 

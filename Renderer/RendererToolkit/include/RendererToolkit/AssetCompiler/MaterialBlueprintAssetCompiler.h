@@ -56,7 +56,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	public:
 		MaterialBlueprintAssetCompiler();
-		virtual ~MaterialBlueprintAssetCompiler();
+		virtual ~MaterialBlueprintAssetCompiler() override;
 
 
 	//[-------------------------------------------------------]

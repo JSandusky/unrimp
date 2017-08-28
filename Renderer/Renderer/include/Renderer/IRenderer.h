@@ -119,7 +119,7 @@ namespace Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~IRenderer();
+		inline virtual ~IRenderer() override;
 
 		/**
 		*  @brief

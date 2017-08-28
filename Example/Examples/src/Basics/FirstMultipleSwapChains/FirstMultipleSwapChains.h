@@ -76,7 +76,7 @@ public:
 	*  @brief
 	*    Destructor
 	*/
-	virtual ~FirstMultipleSwapChains();
+	virtual ~FirstMultipleSwapChains() override;
 
 
 //[-------------------------------------------------------]

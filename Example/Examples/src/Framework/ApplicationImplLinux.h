@@ -69,7 +69,7 @@ public:
 	*  @brief
 	*    Destructor
 	*/
-	virtual ~ApplicationImplLinux();
+	virtual ~ApplicationImplLinux() override;
 
 
 //[-------------------------------------------------------]

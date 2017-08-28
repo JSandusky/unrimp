@@ -92,7 +92,7 @@ namespace RendererRuntime
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~MaterialBlueprintResourceListener();
+		inline virtual ~MaterialBlueprintResourceListener() override;
 
 		/**
 		*  @brief

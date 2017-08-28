@@ -84,7 +84,7 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~IndexBuffer();
+		virtual ~IndexBuffer() override;
 
 		/**
 		*  @brief

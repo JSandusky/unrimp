@@ -96,7 +96,7 @@ namespace Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~IShaderLanguage();
+		inline virtual ~IShaderLanguage() override;
 
 		/**
 		*  @brief

@@ -89,7 +89,7 @@ namespace RendererToolkit
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~ProjectAssetMonitor();
+		~ProjectAssetMonitor();
 
 		/**
 		*  @brief

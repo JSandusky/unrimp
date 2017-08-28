@@ -91,7 +91,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~TessellationEvaluationShaderSeparate();
+		virtual ~TessellationEvaluationShaderSeparate() override;
 
 		/**
 		*  @brief

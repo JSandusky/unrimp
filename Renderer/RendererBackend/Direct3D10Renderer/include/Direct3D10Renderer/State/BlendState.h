@@ -81,7 +81,7 @@ namespace Direct3D10Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~BlendState();
+		virtual ~BlendState() override;
 
 		/**
 		*  @brief

@@ -94,7 +94,7 @@ namespace RendererToolkit
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~ProjectImpl();
+		virtual ~ProjectImpl() override;
 
 		inline const std::string& getProjectName() const;
 		inline const std::string& getProjectDirectory() const;

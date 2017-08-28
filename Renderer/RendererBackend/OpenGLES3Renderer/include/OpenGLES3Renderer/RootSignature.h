@@ -77,7 +77,7 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~RootSignature();
+		virtual ~RootSignature() override;
 
 		/**
 		*  @brief

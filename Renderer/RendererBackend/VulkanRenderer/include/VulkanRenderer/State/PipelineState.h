@@ -84,7 +84,7 @@ namespace VulkanRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~PipelineState();
+		virtual ~PipelineState() override;
 
 		/**
 		*  @brief

@@ -125,7 +125,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	protected:
 		inline explicit CameraSceneItem(SceneResource& sceneResource);
-		inline virtual ~CameraSceneItem();
+		inline virtual ~CameraSceneItem() override;
 		explicit CameraSceneItem(const CameraSceneItem&) = delete;
 		CameraSceneItem& operator=(const CameraSceneItem&) = delete;
 

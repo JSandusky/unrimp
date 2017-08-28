@@ -77,7 +77,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~RootSignature();
+		virtual ~RootSignature() override;
 
 		/**
 		*  @brief

@@ -105,7 +105,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		explicit SkeletonResourceManager(IRendererRuntime& rendererRuntime);
-		virtual ~SkeletonResourceManager();
+		virtual ~SkeletonResourceManager() override;
 		explicit SkeletonResourceManager(const SkeletonResourceManager&) = delete;
 		SkeletonResourceManager& operator=(const SkeletonResourceManager&) = delete;
 

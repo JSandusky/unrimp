@@ -60,7 +60,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	public:
 		inline StdLog();
-		inline virtual ~StdLog();
+		inline virtual ~StdLog() override;
 
 
 	//[-------------------------------------------------------]

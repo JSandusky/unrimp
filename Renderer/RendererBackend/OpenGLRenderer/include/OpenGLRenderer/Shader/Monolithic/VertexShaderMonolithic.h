@@ -76,7 +76,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~VertexShaderMonolithic();
+		virtual ~VertexShaderMonolithic() override;
 
 		/**
 		*  @brief

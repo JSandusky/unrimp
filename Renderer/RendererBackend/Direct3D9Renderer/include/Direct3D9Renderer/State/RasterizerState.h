@@ -79,7 +79,7 @@ namespace Direct3D9Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~RasterizerState();
+		virtual ~RasterizerState() override;
 
 		/**
 		*  @brief

@@ -1965,7 +1965,7 @@ namespace Renderer
 		class IRenderer : public RefCount<IRenderer>
 		{
 		public:
-			virtual ~IRenderer();
+			virtual ~IRenderer() override;
 			inline const Context& getContext() const
 			{
 				return mContext;
@@ -2035,7 +2035,7 @@ namespace Renderer
 				Ultra
 			};
 		public:
-			virtual ~IShaderLanguage();
+			virtual ~IShaderLanguage() override;
 			inline IRenderer& getRenderer() const
 			{
 				return *mRenderer;
@@ -2090,7 +2090,7 @@ namespace Renderer
 		class IResource : public RefCount<IResource>
 		{
 		public:
-			inline virtual ~IResource()
+			inline virtual ~IResource() override
 			{}
 			inline ResourceType getResourceType() const
 			{
@@ -2131,7 +2131,7 @@ namespace Renderer
 		class IRootSignature : public IResource
 		{
 		public:
-			virtual ~IRootSignature();
+			virtual ~IRootSignature() override;
 		public:
 			virtual IResourceGroup* createResourceGroup(uint32_t rootParameterIndex, uint32_t numberOfResources, IResource** resources, Renderer::ISamplerState** samplerStates = nullptr) = 0;
 		protected:
@@ -2148,7 +2148,7 @@ namespace Renderer
 		class IResourceGroup : public IResource
 		{
 		public:
-			virtual ~IResourceGroup();
+			virtual ~IResourceGroup() override;
 		protected:
 			explicit IResourceGroup(IRenderer& renderer);
 			explicit IResourceGroup(const IResourceGroup& source) = delete;
@@ -2163,7 +2163,7 @@ namespace Renderer
 		class IProgram : public IResource
 		{
 		public:
-			virtual ~IProgram();
+			virtual ~IProgram() override;
 		public:
 			virtual handle getUniformHandle(const char* uniformName) = 0;
 			virtual void setUniform1i(handle uniformHandle, int value) = 0;
@@ -2187,7 +2187,7 @@ namespace Renderer
 		class IRenderPass : public IResource
 		{
 		public:
-			virtual ~IRenderPass();
+			virtual ~IRenderPass() override;
 		protected:
 			explicit IRenderPass(IRenderer& renderer);
 			explicit IRenderPass(const IRenderPass& source) = delete;
@@ -2202,7 +2202,7 @@ namespace Renderer
 		class IRenderTarget : public IResource
 		{
 		public:
-			virtual ~IRenderTarget();
+			virtual ~IRenderTarget() override;
 			inline IRenderPass& getRenderPass() const
 			{
 				return mRenderPass;
@@ -2240,7 +2240,7 @@ namespace Renderer
 		class ISwapChain : public IRenderTarget
 		{
 		public:
-			virtual ~ISwapChain();
+			virtual ~ISwapChain() override;
 		public:
 			virtual handle getNativeWindowHandle() const = 0;
 			virtual void present() = 0;
@@ -2278,7 +2278,7 @@ namespace Renderer
 		class IFramebuffer : public IRenderTarget
 		{
 		public:
-			virtual ~IFramebuffer();
+			virtual ~IFramebuffer() override;
 		protected:
 			explicit IFramebuffer(IRenderPass& renderPass);
 			explicit IFramebuffer(const IFramebuffer& source) = delete;
@@ -2293,7 +2293,7 @@ namespace Renderer
 		class IBufferManager : public RefCount<IBufferManager>
 		{
 		public:
-			inline virtual ~IBufferManager();
+			inline virtual ~IBufferManager() override;
 			inline IRenderer& getRenderer() const
 			{
 				return mRenderer;
@@ -2321,7 +2321,7 @@ namespace Renderer
 		class IVertexArray : public IResource
 		{
 		public:
-			virtual ~IVertexArray();
+			virtual ~IVertexArray() override;
 		protected:
 			explicit IVertexArray(IRenderer& renderer);
 			explicit IVertexArray(const IVertexArray& source) = delete;
@@ -2336,7 +2336,7 @@ namespace Renderer
 		class IBuffer : public IResource
 		{
 		public:
-			inline virtual ~IBuffer()
+			inline virtual ~IBuffer() override
 			{}
 		protected:
 			inline explicit IBuffer(ResourceType resourceType) :
@@ -2357,7 +2357,7 @@ namespace Renderer
 		class IIndexBuffer : public IBuffer
 		{
 		public:
-			virtual ~IIndexBuffer();
+			virtual ~IIndexBuffer() override;
 		protected:
 			explicit IIndexBuffer(IRenderer& renderer);
 			explicit IIndexBuffer(const IIndexBuffer& source) = delete;
@@ -2372,7 +2372,7 @@ namespace Renderer
 		class IVertexBuffer : public IBuffer
 		{
 		public:
-			virtual ~IVertexBuffer();
+			virtual ~IVertexBuffer() override;
 		protected:
 			explicit IVertexBuffer(IRenderer& renderer);
 			explicit IVertexBuffer(const IVertexBuffer& source) = delete;
@@ -2387,7 +2387,7 @@ namespace Renderer
 		class IUniformBuffer : public IBuffer
 		{
 		public:
-			virtual ~IUniformBuffer();
+			virtual ~IUniformBuffer() override;
 		public:
 			virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) = 0;
 		protected:
@@ -2404,7 +2404,7 @@ namespace Renderer
 		class ITextureBuffer : public IBuffer
 		{
 		public:
-			virtual ~ITextureBuffer();
+			virtual ~ITextureBuffer() override;
 		public:
 			virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) = 0;
 		protected:
@@ -2421,7 +2421,7 @@ namespace Renderer
 		class IIndirectBuffer : public IBuffer
 		{
 		public:
-			inline virtual ~IIndirectBuffer()
+			inline virtual ~IIndirectBuffer() override
 			{}
 		public:
 			virtual const uint8_t* getEmulationData() const = 0;
@@ -2445,7 +2445,7 @@ namespace Renderer
 		class ITextureManager : public RefCount<ITextureManager>
 		{
 		public:
-			inline virtual ~ITextureManager();
+			inline virtual ~ITextureManager() override;
 			inline IRenderer& getRenderer() const
 			{
 				return mRenderer;
@@ -2472,7 +2472,7 @@ namespace Renderer
 		class ITexture : public IResource
 		{
 		public:
-			virtual ~ITexture();
+			virtual ~ITexture() override;
 		protected:
 			ITexture(ResourceType resourceType, IRenderer& renderer);
 			explicit ITexture(const ITexture& source) = delete;
@@ -2487,7 +2487,7 @@ namespace Renderer
 		class ITexture1D : public ITexture
 		{
 		public:
-			virtual ~ITexture1D();
+			virtual ~ITexture1D() override;
 			inline uint32_t getWidth() const
 			{
 				return mWidth;
@@ -2508,7 +2508,7 @@ namespace Renderer
 		class ITexture2D : public ITexture
 		{
 		public:
-			virtual ~ITexture2D();
+			virtual ~ITexture2D() override;
 			inline uint32_t getWidth() const
 			{
 				return mWidth;
@@ -2534,7 +2534,7 @@ namespace Renderer
 		class ITexture2DArray : public ITexture
 		{
 		public:
-			virtual ~ITexture2DArray();
+			virtual ~ITexture2DArray() override;
 			inline uint32_t getWidth() const
 			{
 				return mWidth;
@@ -2565,7 +2565,7 @@ namespace Renderer
 		class ITexture3D : public ITexture
 		{
 		public:
-			virtual ~ITexture3D();
+			virtual ~ITexture3D() override;
 			inline uint32_t getWidth() const
 			{
 				return mWidth;
@@ -2598,7 +2598,7 @@ namespace Renderer
 		class ITextureCube : public ITexture
 		{
 		public:
-			virtual ~ITextureCube();
+			virtual ~ITextureCube() override;
 			inline uint32_t getWidth() const
 			{
 				return mWidth;
@@ -2624,7 +2624,7 @@ namespace Renderer
 		class IState : public IResource
 		{
 		public:
-			virtual ~IState();
+			virtual ~IState() override;
 		protected:
 			IState(ResourceType resourceType, IRenderer& renderer);
 			explicit IState(const IState& source) = delete;
@@ -2639,7 +2639,7 @@ namespace Renderer
 		class IPipelineState : public IState
 		{
 		public:
-			virtual ~IPipelineState();
+			virtual ~IPipelineState() override;
 		protected:
 			explicit IPipelineState(IRenderer& renderer);
 			explicit IPipelineState(const IPipelineState& source) = delete;
@@ -2677,7 +2677,7 @@ namespace Renderer
 				return SAMPLER_STATE;
 			}
 		public:
-			virtual ~ISamplerState();
+			virtual ~ISamplerState() override;
 		protected:
 			explicit ISamplerState(IRenderer& renderer);
 			explicit ISamplerState(const ISamplerState& source) = delete;
@@ -2692,7 +2692,7 @@ namespace Renderer
 		class IShader : public IResource
 		{
 		public:
-			virtual ~IShader();
+			virtual ~IShader() override;
 		public:
 			virtual const char* getShaderLanguageName() const = 0;
 		protected:
@@ -2709,7 +2709,7 @@ namespace Renderer
 		class IVertexShader : public IShader
 		{
 		public:
-			virtual ~IVertexShader();
+			virtual ~IVertexShader() override;
 		protected:
 			explicit IVertexShader(IRenderer& renderer);
 			explicit IVertexShader(const IVertexShader& source) = delete;
@@ -2724,7 +2724,7 @@ namespace Renderer
 		class ITessellationControlShader : public IShader
 		{
 		public:
-			virtual ~ITessellationControlShader();
+			virtual ~ITessellationControlShader() override;
 		protected:
 			explicit ITessellationControlShader(IRenderer& renderer);
 			explicit ITessellationControlShader(const ITessellationControlShader& source) = delete;
@@ -2739,7 +2739,7 @@ namespace Renderer
 		class ITessellationEvaluationShader : public IShader
 		{
 		public:
-			virtual ~ITessellationEvaluationShader();
+			virtual ~ITessellationEvaluationShader() override;
 		protected:
 			explicit ITessellationEvaluationShader(IRenderer& renderer);
 			explicit ITessellationEvaluationShader(const ITessellationEvaluationShader& source) = delete;
@@ -2754,7 +2754,7 @@ namespace Renderer
 		class IGeometryShader : public IShader
 		{
 		public:
-			virtual ~IGeometryShader();
+			virtual ~IGeometryShader() override;
 		protected:
 			explicit IGeometryShader(IRenderer& renderer);
 			explicit IGeometryShader(const IGeometryShader& source) = delete;
@@ -2769,7 +2769,7 @@ namespace Renderer
 		class IFragmentShader : public IShader
 		{
 		public:
-			virtual ~IFragmentShader();
+			virtual ~IFragmentShader() override;
 		protected:
 			explicit IFragmentShader(IRenderer& renderer);
 			explicit IFragmentShader(const IFragmentShader& source) = delete;

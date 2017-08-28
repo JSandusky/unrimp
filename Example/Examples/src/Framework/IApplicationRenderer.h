@@ -146,7 +146,7 @@ public:
 	*  @brief
 	*    Destructor
 	*/
-	virtual ~IApplicationRenderer();
+	virtual ~IApplicationRenderer() override;
 
 
 //[-------------------------------------------------------]

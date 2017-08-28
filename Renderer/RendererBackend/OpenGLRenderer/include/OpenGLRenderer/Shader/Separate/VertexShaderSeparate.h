@@ -97,7 +97,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~VertexShaderSeparate();
+		virtual ~VertexShaderSeparate() override;
 
 		/**
 		*  @brief

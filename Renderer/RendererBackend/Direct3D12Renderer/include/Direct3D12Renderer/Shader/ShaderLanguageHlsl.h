@@ -83,7 +83,7 @@ namespace Direct3D12Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~ShaderLanguageHlsl();
+		virtual ~ShaderLanguageHlsl() override;
 
 		/**
 		*  @brief

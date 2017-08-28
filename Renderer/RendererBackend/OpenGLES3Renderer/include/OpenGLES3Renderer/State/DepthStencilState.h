@@ -76,7 +76,7 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~DepthStencilState();
+		inline virtual ~DepthStencilState() override;
 
 		/**
 		*  @brief

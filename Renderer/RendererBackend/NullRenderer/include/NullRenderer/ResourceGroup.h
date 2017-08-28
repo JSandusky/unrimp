@@ -83,7 +83,7 @@ namespace NullRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~ResourceGroup();
+		virtual ~ResourceGroup() override;
 
 		/**
 		*  @brief

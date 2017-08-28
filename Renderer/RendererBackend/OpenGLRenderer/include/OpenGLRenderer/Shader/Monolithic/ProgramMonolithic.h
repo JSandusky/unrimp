@@ -101,7 +101,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~ProgramMonolithic();
+		virtual ~ProgramMonolithic() override;
 
 		/**
 		*  @brief

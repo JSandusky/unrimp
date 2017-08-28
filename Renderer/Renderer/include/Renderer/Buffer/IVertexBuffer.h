@@ -56,7 +56,7 @@ namespace Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~IVertexBuffer();
+		inline virtual ~IVertexBuffer() override;
 
 
 	//[-------------------------------------------------------]

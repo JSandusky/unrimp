@@ -90,7 +90,7 @@ namespace Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~IBufferManager();
+		inline virtual ~IBufferManager() override;
 
 		/**
 		*  @brief

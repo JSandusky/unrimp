@@ -61,7 +61,7 @@ protected:
 //[-------------------------------------------------------]
 protected:
 	CompositorInstancePassFirst(const CompositorResourcePassFirst& compositorResourcePassFirst, const RendererRuntime::CompositorNodeInstance& compositorNodeInstance);
-	virtual ~CompositorInstancePassFirst();
+	virtual ~CompositorInstancePassFirst() override;
 	explicit CompositorInstancePassFirst(const CompositorInstancePassFirst&) = delete;
 	CompositorInstancePassFirst& operator=(const CompositorInstancePassFirst&) = delete;
 

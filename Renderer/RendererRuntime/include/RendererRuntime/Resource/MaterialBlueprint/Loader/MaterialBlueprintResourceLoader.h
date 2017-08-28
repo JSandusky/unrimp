@@ -101,7 +101,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		inline MaterialBlueprintResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
-		virtual ~MaterialBlueprintResourceLoader();
+		virtual ~MaterialBlueprintResourceLoader() override;
 		explicit MaterialBlueprintResourceLoader(const MaterialBlueprintResourceLoader&) = delete;
 		MaterialBlueprintResourceLoader& operator=(const MaterialBlueprintResourceLoader&) = delete;
 

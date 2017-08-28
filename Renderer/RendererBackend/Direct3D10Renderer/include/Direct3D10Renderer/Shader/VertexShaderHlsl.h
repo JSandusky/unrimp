@@ -94,7 +94,7 @@ namespace Direct3D10Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~VertexShaderHlsl();
+		virtual ~VertexShaderHlsl() override;
 
 		/**
 		*  @brief

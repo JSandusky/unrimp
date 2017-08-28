@@ -56,7 +56,7 @@ namespace Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~ITexture3D();
+		inline virtual ~ITexture3D() override;
 
 		/**
 		*  @brief

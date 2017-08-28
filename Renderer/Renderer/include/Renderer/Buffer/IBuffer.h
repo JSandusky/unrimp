@@ -56,7 +56,7 @@ namespace Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~IBuffer();
+		inline virtual ~IBuffer() override;
 
 
 	//[-------------------------------------------------------]

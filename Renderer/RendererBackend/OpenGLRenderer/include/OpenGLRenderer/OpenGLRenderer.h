@@ -111,7 +111,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~OpenGLRenderer();
+		virtual ~OpenGLRenderer() override;
 
 		/**
 		*  @brief

@@ -93,7 +93,7 @@ namespace Direct3D12Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~TessellationEvaluationShaderHlsl();
+		virtual ~TessellationEvaluationShaderHlsl() override;
 
 		/**
 		*  @brief

@@ -74,7 +74,7 @@ namespace Direct3D9Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~SwapChain();
+		virtual ~SwapChain() override;
 
 		/**
 		*  @brief

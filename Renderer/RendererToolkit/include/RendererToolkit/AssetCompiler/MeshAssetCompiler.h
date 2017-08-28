@@ -56,7 +56,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	public:
 		MeshAssetCompiler();
-		virtual ~MeshAssetCompiler();
+		virtual ~MeshAssetCompiler() override;
 
 
 	//[-------------------------------------------------------]

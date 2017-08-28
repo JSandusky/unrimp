@@ -75,7 +75,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~BufferManager();
+		inline virtual ~BufferManager() override;
 
 
 	//[-------------------------------------------------------]

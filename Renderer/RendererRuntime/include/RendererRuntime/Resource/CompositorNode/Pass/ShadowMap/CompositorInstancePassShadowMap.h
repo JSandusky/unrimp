@@ -118,7 +118,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	protected:
 		CompositorInstancePassShadowMap(const CompositorResourcePassShadowMap& compositorResourcePassShadowMap, const CompositorNodeInstance& compositorNodeInstance);
-		inline virtual ~CompositorInstancePassShadowMap();
+		inline virtual ~CompositorInstancePassShadowMap() override;
 		explicit CompositorInstancePassShadowMap(const CompositorInstancePassShadowMap&) = delete;
 		CompositorInstancePassShadowMap& operator=(const CompositorInstancePassShadowMap&) = delete;
 		void createShadowMapRenderTarget();

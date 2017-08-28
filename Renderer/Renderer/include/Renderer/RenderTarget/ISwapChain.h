@@ -116,7 +116,7 @@ namespace Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~ISwapChain();
+		inline virtual ~ISwapChain() override;
 
 
 	//[-------------------------------------------------------]

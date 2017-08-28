@@ -71,7 +71,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	protected:
 		CompositorInstancePassResolveMultisample(const CompositorResourcePassResolveMultisample& compositorResourcePassResolveMultisample, const CompositorNodeInstance& compositorNodeInstance);
-		inline virtual ~CompositorInstancePassResolveMultisample();
+		inline virtual ~CompositorInstancePassResolveMultisample() override;
 		explicit CompositorInstancePassResolveMultisample(const CompositorInstancePassResolveMultisample&) = delete;
 		CompositorInstancePassResolveMultisample& operator=(const CompositorInstancePassResolveMultisample&) = delete;
 

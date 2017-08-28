@@ -96,7 +96,7 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~OpenGLES3ContextRuntimeLinking();
+		virtual ~OpenGLES3ContextRuntimeLinking() override;
 
 
 	//[-------------------------------------------------------]

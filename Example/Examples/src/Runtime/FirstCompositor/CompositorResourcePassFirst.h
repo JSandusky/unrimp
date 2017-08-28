@@ -62,7 +62,7 @@ public:
 //[-------------------------------------------------------]
 protected:
 	explicit CompositorResourcePassFirst(const RendererRuntime::CompositorTarget& compositorTarget);
-	virtual ~CompositorResourcePassFirst();
+	virtual ~CompositorResourcePassFirst() override;
 	explicit CompositorResourcePassFirst(const CompositorResourcePassFirst&) = delete;
 	CompositorResourcePassFirst& operator=(const CompositorResourcePassFirst&) = delete;
 

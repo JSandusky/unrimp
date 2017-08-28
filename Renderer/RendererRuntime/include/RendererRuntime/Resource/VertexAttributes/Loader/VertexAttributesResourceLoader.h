@@ -93,7 +93,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		inline VertexAttributesResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
-		inline virtual ~VertexAttributesResourceLoader();
+		inline virtual ~VertexAttributesResourceLoader() override;
 		explicit VertexAttributesResourceLoader(const VertexAttributesResourceLoader&) = delete;
 		VertexAttributesResourceLoader& operator=(const VertexAttributesResourceLoader&) = delete;
 

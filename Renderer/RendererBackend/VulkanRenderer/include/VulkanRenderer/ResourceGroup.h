@@ -89,7 +89,7 @@ namespace VulkanRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~ResourceGroup();
+		virtual ~ResourceGroup() override;
 
 		/**
 		*  @brief

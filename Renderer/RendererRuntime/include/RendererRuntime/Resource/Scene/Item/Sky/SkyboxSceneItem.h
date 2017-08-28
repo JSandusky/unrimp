@@ -107,7 +107,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	protected:
 		inline explicit SkyboxSceneItem(SceneResource& sceneResource);
-		virtual ~SkyboxSceneItem();
+		virtual ~SkyboxSceneItem() override;
 		explicit SkyboxSceneItem(const SkyboxSceneItem&) = delete;
 		SkyboxSceneItem& operator=(const SkyboxSceneItem&) = delete;
 		void initialize();

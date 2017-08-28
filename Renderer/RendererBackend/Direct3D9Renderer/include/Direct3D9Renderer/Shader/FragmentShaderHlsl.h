@@ -93,7 +93,7 @@ namespace Direct3D9Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~FragmentShaderHlsl();
+		virtual ~FragmentShaderHlsl() override;
 
 		/**
 		*  @brief

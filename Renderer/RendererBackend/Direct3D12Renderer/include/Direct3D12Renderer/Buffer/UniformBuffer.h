@@ -83,7 +83,7 @@ namespace Direct3D12Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~UniformBuffer();
+		virtual ~UniformBuffer() override;
 
 		/**
 		*  @brief

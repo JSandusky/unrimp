@@ -67,7 +67,7 @@ namespace Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~IResourceGroup();
+		inline virtual ~IResourceGroup() override;
 
 
 	//[-------------------------------------------------------]

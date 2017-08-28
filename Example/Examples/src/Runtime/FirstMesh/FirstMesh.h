@@ -84,7 +84,7 @@ public:
 	*  @brief
 	*    Destructor
 	*/
-	virtual ~FirstMesh();
+	virtual ~FirstMesh() override;
 
 
 //[-------------------------------------------------------]

@@ -145,7 +145,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~ShaderLanguageSeparate();
+		virtual ~ShaderLanguageSeparate() override;
 
 
 	//[-------------------------------------------------------]

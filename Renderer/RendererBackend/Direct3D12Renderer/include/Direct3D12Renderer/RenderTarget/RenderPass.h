@@ -75,7 +75,7 @@ namespace Direct3D12Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~RenderPass();
+		inline virtual ~RenderPass() override;
 
 		/**
 		*  @brief

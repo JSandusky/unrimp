@@ -56,7 +56,7 @@ namespace Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~ITessellationControlShader();
+		inline virtual ~ITessellationControlShader() override;
 
 
 	//[-------------------------------------------------------]

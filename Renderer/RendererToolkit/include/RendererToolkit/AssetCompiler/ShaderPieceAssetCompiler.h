@@ -56,7 +56,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	public:
 		ShaderPieceAssetCompiler();
-		virtual ~ShaderPieceAssetCompiler();
+		virtual ~ShaderPieceAssetCompiler() override;
 
 
 	//[-------------------------------------------------------]

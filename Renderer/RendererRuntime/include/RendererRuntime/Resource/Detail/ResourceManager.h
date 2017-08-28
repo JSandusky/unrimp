@@ -66,7 +66,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	protected:
 		inline ResourceManager();
-		inline virtual ~ResourceManager();
+		inline virtual ~ResourceManager() override;
 		explicit ResourceManager(const ResourceManager&) = delete;
 		ResourceManager& operator=(const ResourceManager&) = delete;
 

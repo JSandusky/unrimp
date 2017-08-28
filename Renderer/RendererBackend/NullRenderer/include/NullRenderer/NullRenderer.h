@@ -85,7 +85,7 @@ namespace NullRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~NullRenderer();
+		virtual ~NullRenderer() override;
 
 		//[-------------------------------------------------------]
 		//[ States                                                ]

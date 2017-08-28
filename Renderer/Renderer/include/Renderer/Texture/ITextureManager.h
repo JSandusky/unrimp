@@ -79,7 +79,7 @@ namespace Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~ITextureManager();
+		inline virtual ~ITextureManager() override;
 
 		/**
 		*  @brief

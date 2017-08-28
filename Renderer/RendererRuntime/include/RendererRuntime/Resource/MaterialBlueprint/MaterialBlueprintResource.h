@@ -452,7 +452,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		MaterialBlueprintResource();
-		virtual ~MaterialBlueprintResource();
+		virtual ~MaterialBlueprintResource() override;
 		explicit MaterialBlueprintResource(const MaterialBlueprintResource&) = delete;
 		MaterialBlueprintResource& operator=(const MaterialBlueprintResource&) = delete;
 		void onDefaultTextureFilteringChanged(Renderer::FilterMode defaultFilterMode, uint8_t maximumDefaultAnisotropy);

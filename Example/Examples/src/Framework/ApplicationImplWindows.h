@@ -67,7 +67,7 @@ public:
 	*  @brief
 	*    Destructor
 	*/
-	virtual ~ApplicationImplWindows();
+	virtual ~ApplicationImplWindows() override;
 
 
 //[-------------------------------------------------------]

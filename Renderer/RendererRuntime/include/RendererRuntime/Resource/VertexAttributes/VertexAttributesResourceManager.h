@@ -105,7 +105,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		explicit VertexAttributesResourceManager(IRendererRuntime& rendererRuntime);
-		virtual ~VertexAttributesResourceManager();
+		virtual ~VertexAttributesResourceManager() override;
 		explicit VertexAttributesResourceManager(const VertexAttributesResourceManager&) = delete;
 		VertexAttributesResourceManager& operator=(const VertexAttributesResourceManager&) = delete;
 

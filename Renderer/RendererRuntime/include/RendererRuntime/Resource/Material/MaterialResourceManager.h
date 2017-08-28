@@ -113,7 +113,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		explicit MaterialResourceManager(IRendererRuntime& rendererRuntime);
-		virtual ~MaterialResourceManager();
+		virtual ~MaterialResourceManager() override;
 		explicit MaterialResourceManager(const MaterialResourceManager&) = delete;
 		MaterialResourceManager& operator=(const MaterialResourceManager&) = delete;
 

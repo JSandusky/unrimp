@@ -75,7 +75,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~RenderPass();
+		inline virtual ~RenderPass() override;
 
 		/**
 		*  @brief

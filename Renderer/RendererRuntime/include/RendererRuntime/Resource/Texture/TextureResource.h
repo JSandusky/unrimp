@@ -87,7 +87,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		inline TextureResource();
-		inline virtual ~TextureResource();
+		inline virtual ~TextureResource() override;
 		explicit TextureResource(const TextureResource&) = delete;
 		TextureResource& operator=(const TextureResource&) = delete;
 		inline TextureResource& operator=(TextureResource&& textureResource);

@@ -91,7 +91,7 @@ namespace Direct3D11Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~Texture2DArray();
+		virtual ~Texture2DArray() override;
 
 		/**
 		*  @brief

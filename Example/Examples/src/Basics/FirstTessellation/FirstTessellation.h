@@ -63,7 +63,7 @@ public:
 	*  @brief
 	*    Destructor
 	*/
-	virtual ~FirstTessellation();
+	virtual ~FirstTessellation() override;
 
 
 //[-------------------------------------------------------]

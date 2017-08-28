@@ -69,7 +69,7 @@ namespace Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~IUniformBuffer();
+		inline virtual ~IUniformBuffer() override;
 
 
 	//[-------------------------------------------------------]

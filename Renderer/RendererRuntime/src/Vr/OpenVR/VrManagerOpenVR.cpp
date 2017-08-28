@@ -76,7 +76,7 @@ namespace
 				// Nothing here
 			}
 
-			virtual ~VrManagerOpenVRListener()
+			virtual ~VrManagerOpenVRListener() override
 			{
 				// Nothing here
 			}

@@ -75,7 +75,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	protected:
 		CompositorInstancePassScene(const CompositorResourcePassScene& compositorResourcePassScene, const CompositorNodeInstance& compositorNodeInstance);
-		inline virtual ~CompositorInstancePassScene();
+		inline virtual ~CompositorInstancePassScene() override;
 		explicit CompositorInstancePassScene(const CompositorInstancePassScene&) = delete;
 		CompositorInstancePassScene& operator=(const CompositorInstancePassScene&) = delete;
 

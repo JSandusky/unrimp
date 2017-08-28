@@ -84,7 +84,7 @@ namespace Direct3D12Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~Direct3D12Renderer();
+		virtual ~Direct3D12Renderer() override;
 
 		/**
 		*  @brief

@@ -81,7 +81,7 @@ namespace Direct3D11Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~DepthStencilState();
+		virtual ~DepthStencilState() override;
 
 		/**
 		*  @brief

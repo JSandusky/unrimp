@@ -87,7 +87,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~ResourceGroup();
+		virtual ~ResourceGroup() override;
 
 		/**
 		*  @brief

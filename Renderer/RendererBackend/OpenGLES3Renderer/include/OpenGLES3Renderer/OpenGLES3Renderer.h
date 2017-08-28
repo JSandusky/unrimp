@@ -109,7 +109,7 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~OpenGLES3Renderer();
+		virtual ~OpenGLES3Renderer() override;
 
 		/**
 		*  @brief

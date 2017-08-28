@@ -82,7 +82,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~ProgramMonolithicDsa();
+		virtual ~ProgramMonolithicDsa() override;
 
 
 	//[-------------------------------------------------------]

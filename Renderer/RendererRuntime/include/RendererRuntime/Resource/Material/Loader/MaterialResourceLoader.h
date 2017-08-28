@@ -105,7 +105,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		inline MaterialResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
-		virtual ~MaterialResourceLoader();
+		virtual ~MaterialResourceLoader() override;
 		explicit MaterialResourceLoader(const MaterialResourceLoader&) = delete;
 		MaterialResourceLoader& operator=(const MaterialResourceLoader&) = delete;
 

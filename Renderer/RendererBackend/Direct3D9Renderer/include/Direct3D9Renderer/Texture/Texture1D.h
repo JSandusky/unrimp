@@ -86,7 +86,7 @@ namespace Direct3D9Renderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~Texture1D();
+		virtual ~Texture1D() override;
 
 		/**
 		*  @brief

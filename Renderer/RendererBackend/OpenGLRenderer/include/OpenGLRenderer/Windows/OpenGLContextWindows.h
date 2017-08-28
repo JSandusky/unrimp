@@ -76,7 +76,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		virtual ~OpenGLContextWindows();
+		virtual ~OpenGLContextWindows() override;
 
 		/**
 		*  @brief

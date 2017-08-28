@@ -73,7 +73,7 @@ public:
 	*  @brief
 	*    Destructor
 	*/
-	virtual ~VrController();
+	virtual ~VrController() override;
 
 	const RendererRuntime::LightSceneItem& getTeleportIndicationLightSceneItemSafe() const;
 

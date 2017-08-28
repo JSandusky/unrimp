@@ -64,7 +64,7 @@ public:
 	*  @brief
 	*    Destructor
 	*/
-	virtual ~RefCountPtr();
+	virtual ~RefCountPtr() override;
 
 	/**
 	*  @brief

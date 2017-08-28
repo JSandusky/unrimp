@@ -68,7 +68,7 @@ public:
 	*  @brief
 	*    Destructor
 	*/
-	virtual ~FirstCompositor();
+	virtual ~FirstCompositor() override;
 
 
 //[-------------------------------------------------------]
