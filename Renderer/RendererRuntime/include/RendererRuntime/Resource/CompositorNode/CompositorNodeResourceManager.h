@@ -36,6 +36,7 @@
 namespace RendererRuntime
 {
 	class IRendererRuntime;
+	class RenderPassManager;
 	class FramebufferManager;
 	class ICompositorPassFactory;
 	class CompositorNodeResource;
@@ -80,6 +81,7 @@ namespace RendererRuntime
 		inline const ICompositorPassFactory& getCompositorPassFactory() const;
 		RENDERERRUNTIME_API_EXPORT void setCompositorPassFactory(const ICompositorPassFactory* compositorPassFactory);
 		inline RenderTargetTextureManager& getRenderTargetTextureManager();
+		inline RenderPassManager& getRenderPassManager();
 		inline FramebufferManager& getFramebufferManager();
 
 
@@ -119,6 +121,7 @@ namespace RendererRuntime
 		IRendererRuntime&			  mRendererRuntime;				///< Renderer runtime instance, do not destroy the instance
 		const ICompositorPassFactory* mCompositorPassFactory;		///< Compositor pass factory, always valid, do not destroy the instance
 		RenderTargetTextureManager*	  mRenderTargetTextureManager;	///< Render target texture manager, always valid, we're responsible for destroying it if we no longer need it
+		RenderPassManager*			  mRenderPassManager;			///< Render pass manager, always valid, we're responsible for destroying it if we no longer need it
 		FramebufferManager*			  mFramebufferManager;			///< Framebuffer manager, always valid, we're responsible for destroying it if we no longer need it
 
 		// Internal resource manager implementation

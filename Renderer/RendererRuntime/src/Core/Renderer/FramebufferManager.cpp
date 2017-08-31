@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Core/Renderer/FramebufferManager.h"
+#include "RendererRuntime/Core/Renderer/RenderPassManager.h"
 #include "RendererRuntime/Core/Renderer/RenderTargetTextureManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
@@ -152,20 +153,49 @@ namespace RendererRuntime
 					// Do we need to create the renderer framebuffer instance right now?
 					if (nullptr == framebufferElement.framebuffer)
 					{
-						// Get the texture instances
+						// Get the color texture instances
+						Renderer::TextureFormat::Enum colorTextureFormats[8] = { Renderer::TextureFormat::Enum::UNKNOWN, Renderer::TextureFormat::Enum::UNKNOWN, Renderer::TextureFormat::Enum::UNKNOWN, Renderer::TextureFormat::Enum::UNKNOWN, Renderer::TextureFormat::Enum::UNKNOWN, Renderer::TextureFormat::Enum::UNKNOWN, Renderer::TextureFormat::Enum::UNKNOWN, Renderer::TextureFormat::Enum::UNKNOWN };
 						const uint8_t numberOfColorTextures = framebufferSignature.getNumberOfColorTextures();
+						assert(numberOfColorTextures < 8);
 						Renderer::FramebufferAttachment colorFramebufferAttachments[8];
+						uint8_t usedNumberOfMultisamples = 0;
 						for (uint8_t i = 0; i < numberOfColorTextures; ++i)
 						{
 							const AssetId colorTextureAssetId = framebufferSignature.getColorTextureAssetId(i);
-							colorFramebufferAttachments[i].texture = isInitialized(colorTextureAssetId) ? mRenderTargetTextureManager.getTextureByAssetId(colorTextureAssetId, renderTarget, numberOfMultisamples, resolutionScale) : nullptr;
+							const RenderTargetTextureSignature* colorRenderTargetTextureSignature = nullptr;
+							colorFramebufferAttachments[i].texture = isInitialized(colorTextureAssetId) ? mRenderTargetTextureManager.getTextureByAssetId(colorTextureAssetId, renderTarget, numberOfMultisamples, resolutionScale, &colorRenderTargetTextureSignature) : nullptr;
+							assert(nullptr != colorFramebufferAttachments[i].texture);
+							assert(nullptr != colorRenderTargetTextureSignature);
+							if (0 == usedNumberOfMultisamples)
+							{
+								usedNumberOfMultisamples = colorRenderTargetTextureSignature->getAllowMultisample() ? numberOfMultisamples : 1u;
+							}
+							else
+							{
+								assert(1 == usedNumberOfMultisamples || colorRenderTargetTextureSignature->getAllowMultisample());
+							}
+							colorTextureFormats[i] = colorRenderTargetTextureSignature->getTextureFormat();
 						}
-						Renderer::FramebufferAttachment depthStencilFramebufferAttachment(isInitialized(framebufferSignature.getDepthStencilTextureAssetId()) ? mRenderTargetTextureManager.getTextureByAssetId(framebufferSignature.getDepthStencilTextureAssetId(), renderTarget, numberOfMultisamples, resolutionScale) : nullptr);
 
-						// TODO(co) Render pass related update, the render pass in here is currently just a dummy so the debug compositor works
-						const Renderer::TextureFormat::Enum textureFormat[8] = { Renderer::TextureFormat::Enum::R8G8B8A8, Renderer::TextureFormat::Enum::R8G8B8A8, Renderer::TextureFormat::Enum::R8G8B8A8, Renderer::TextureFormat::Enum::R8G8B8A8, Renderer::TextureFormat::Enum::R8G8B8A8, Renderer::TextureFormat::Enum::R8G8B8A8, Renderer::TextureFormat::Enum::R8G8B8A8, Renderer::TextureFormat::Enum::R8G8B8A8 };
-						Renderer::IRenderer& renderer = mRenderTargetTextureManager.getRendererRuntime().getRenderer();
-						Renderer::IRenderPass* renderPass = renderer.createRenderPass(numberOfColorTextures, textureFormat, renderer.getCapabilities().preferredSwapChainDepthStencilTextureFormat);
+						// Get the depth stencil texture instances
+						const RenderTargetTextureSignature* depthStencilRenderTargetTextureSignature = nullptr;
+						Renderer::FramebufferAttachment depthStencilFramebufferAttachment(isInitialized(framebufferSignature.getDepthStencilTextureAssetId()) ? mRenderTargetTextureManager.getTextureByAssetId(framebufferSignature.getDepthStencilTextureAssetId(), renderTarget, numberOfMultisamples, resolutionScale, &depthStencilRenderTargetTextureSignature) : nullptr);
+						if (nullptr != depthStencilRenderTargetTextureSignature)
+						{
+							if (0 == usedNumberOfMultisamples)
+							{
+								usedNumberOfMultisamples = depthStencilRenderTargetTextureSignature->getAllowMultisample() ? numberOfMultisamples : 1u;
+							}
+							else
+							{
+								assert(1 == usedNumberOfMultisamples || depthStencilRenderTargetTextureSignature->getAllowMultisample());
+							}
+						}
+						const Renderer::TextureFormat::Enum depthStencilTextureFormat = (nullptr != depthStencilRenderTargetTextureSignature) ? depthStencilRenderTargetTextureSignature->getTextureFormat() : Renderer::TextureFormat::Enum::UNKNOWN;
+
+						// Get or create the managed render pass
+						Renderer::IRenderPass* renderPass = mRenderPassManager.getOrCreateRenderPass(numberOfColorTextures, colorTextureFormats, depthStencilTextureFormat, usedNumberOfMultisamples);
+						assert(nullptr != renderPass);
 
 						// Create the framebuffer object (FBO) instance
 						// -> The framebuffer automatically adds a reference to the provided textures

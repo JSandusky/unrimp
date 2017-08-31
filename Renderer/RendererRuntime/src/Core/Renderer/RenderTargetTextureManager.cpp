@@ -115,7 +115,7 @@ namespace RendererRuntime
 		*/
 	}
 
-	Renderer::ITexture* RenderTargetTextureManager::getTextureByAssetId(AssetId assetId, const Renderer::IRenderTarget& renderTarget, uint8_t numberOfMultisamples, float resolutionScale)
+	Renderer::ITexture* RenderTargetTextureManager::getTextureByAssetId(AssetId assetId, const Renderer::IRenderTarget& renderTarget, uint8_t numberOfMultisamples, float resolutionScale, const RenderTargetTextureSignature** outRenderTargetTextureSignature)
 	{
 		Renderer::ITexture* texture = nullptr;
 
@@ -133,77 +133,79 @@ namespace RendererRuntime
 		if (mAssetIdToIndex.cend() != iterator)
 		{
 			RenderTargetTextureElement& renderTargetTextureElement = mSortedRenderTargetTextureVector[iterator->second];
+			const RenderTargetTextureSignature& renderTargetTextureSignature = renderTargetTextureElement.renderTargetTextureSignature;
+			if (nullptr != outRenderTargetTextureSignature)
 			{
-				const RenderTargetTextureSignature& renderTargetTextureSignature = renderTargetTextureElement.renderTargetTextureSignature;
-				// if (renderTargetTextureSignature.getRenderTargetTextureSignatureId() == renderTargetTextureSignatureId)	// TODO(co) The render target texture and framebuffer handling is still under construction regarding recycling renderer resources etc. - so for now, just add render target textures to have something to start with
+				*outRenderTargetTextureSignature = &renderTargetTextureSignature;
+			}
+			// if (renderTargetTextureSignature.getRenderTargetTextureSignatureId() == renderTargetTextureSignatureId)	// TODO(co) The render target texture and framebuffer handling is still under construction regarding recycling renderer resources etc. - so for now, just add render target textures to have something to start with
+			{
+				// Do we need to create the renderer texture instance right now?
+				if (nullptr == renderTargetTextureElement.texture)
 				{
-					// Do we need to create the renderer texture instance right now?
-					if (nullptr == renderTargetTextureElement.texture)
+					// Get the texture width and height and apply resolution scale in case the main compositor workspace render target is used
+					uint32_t width = renderTargetTextureSignature.getWidth();
+					uint32_t height = renderTargetTextureSignature.getHeight();
+					if (isUninitialized(width) || isUninitialized(height))
 					{
-						// Get the texture width and height and apply resolution scale in case the main compositor workspace render target is used
-						uint32_t width = renderTargetTextureSignature.getWidth();
-						uint32_t height = renderTargetTextureSignature.getHeight();
-						if (isUninitialized(width) || isUninitialized(height))
+						uint32_t renderTargetWidth = 1;
+						uint32_t renderTargetHeight = 1;
+						renderTarget.getWidthAndHeight(renderTargetWidth, renderTargetHeight);
+						if (!renderTargetTextureSignature.getAllowResolutionScale())
 						{
-							uint32_t renderTargetWidth = 1;
-							uint32_t renderTargetHeight = 1;
-							renderTarget.getWidthAndHeight(renderTargetWidth, renderTargetHeight);
-							if (!renderTargetTextureSignature.getAllowResolutionScale())
+							resolutionScale = 1.0f;
+						}
+						if (isUninitialized(width))
+						{
+							width = static_cast<uint32_t>(static_cast<float>(renderTargetWidth) * resolutionScale * renderTargetTextureSignature.getWidthScale());
+							if (width < 1)
 							{
-								resolutionScale = 1.0f;
-							}
-							if (isUninitialized(width))
-							{
-								width = static_cast<uint32_t>(static_cast<float>(renderTargetWidth) * resolutionScale * renderTargetTextureSignature.getWidthScale());
-								if (width < 1)
-								{
-									width = 1;
-								}
-							}
-							if (isUninitialized(height))
-							{
-								height = static_cast<uint32_t>(static_cast<float>(renderTargetHeight) * resolutionScale * renderTargetTextureSignature.getHeightScale());
-								if (height < 1)
-								{
-									height = 1;
-								}
+								width = 1;
 							}
 						}
-
-						// Get texture flags
-						uint32_t textureFlags = Renderer::TextureFlag::RENDER_TARGET;
-						if (renderTargetTextureSignature.getGenerateMipmaps())
+						if (isUninitialized(height))
 						{
-							textureFlags |= Renderer::TextureFlag::GENERATE_MIPMAPS;
-						}
-
-						// Create the texture instance, but without providing texture data (we use the texture as render target)
-						// -> Use the "Renderer::TextureFlag::RENDER_TARGET"-flag to mark this texture as a render target
-						// -> Required for Vulkan, Direct3D 9, Direct3D 10, Direct3D 11 and Direct3D 12
-						// -> Not required for OpenGL and OpenGL ES 2
-						// -> The optimized texture clear value is a Direct3D 12 related option
-						renderTargetTextureElement.texture = mRendererRuntime.getTextureManager().createTexture2D(width, height, renderTargetTextureSignature.getTextureFormat(), nullptr, textureFlags, Renderer::TextureUsage::DEFAULT, renderTargetTextureSignature.getAllowMultisample() ? numberOfMultisamples : 1u);
-						RENDERER_SET_RESOURCE_DEBUG_NAME(renderTargetTextureElement.texture, "Render target texture manager")
-						renderTargetTextureElement.texture->addReference();
-
-						{ // Tell the texture resource manager about our render target texture so it can be referenced inside e.g. compositor nodes
-							TextureResourceManager& textureResourceManager = mRendererRuntime.getTextureResourceManager();
-							TextureResource* textureResource = textureResourceManager.getTextureResourceByAssetId(assetId);
-							if (nullptr == textureResource)
+							height = static_cast<uint32_t>(static_cast<float>(renderTargetHeight) * resolutionScale * renderTargetTextureSignature.getHeightScale());
+							if (height < 1)
 							{
-								// Create texture resource
-								textureResourceManager.createTextureResourceByAssetId(assetId, *renderTargetTextureElement.texture);
-							}
-							else
-							{
-								// Update texture resource
-								textureResource->setTexture(*renderTargetTextureElement.texture);
+								height = 1;
 							}
 						}
 					}
-					texture = renderTargetTextureElement.texture;
-					// break;	// TODO(co) The render target texture and framebuffer handling is still under construction regarding recycling renderer resources etc. - so for now, just add render target textures to have something to start with
+
+					// Get texture flags
+					uint32_t textureFlags = Renderer::TextureFlag::RENDER_TARGET;
+					if (renderTargetTextureSignature.getGenerateMipmaps())
+					{
+						textureFlags |= Renderer::TextureFlag::GENERATE_MIPMAPS;
+					}
+
+					// Create the texture instance, but without providing texture data (we use the texture as render target)
+					// -> Use the "Renderer::TextureFlag::RENDER_TARGET"-flag to mark this texture as a render target
+					// -> Required for Vulkan, Direct3D 9, Direct3D 10, Direct3D 11 and Direct3D 12
+					// -> Not required for OpenGL and OpenGL ES 2
+					// -> The optimized texture clear value is a Direct3D 12 related option
+					renderTargetTextureElement.texture = mRendererRuntime.getTextureManager().createTexture2D(width, height, renderTargetTextureSignature.getTextureFormat(), nullptr, textureFlags, Renderer::TextureUsage::DEFAULT, renderTargetTextureSignature.getAllowMultisample() ? numberOfMultisamples : 1u);
+					RENDERER_SET_RESOURCE_DEBUG_NAME(renderTargetTextureElement.texture, "Render target texture manager")
+					renderTargetTextureElement.texture->addReference();
+
+					{ // Tell the texture resource manager about our render target texture so it can be referenced inside e.g. compositor nodes
+						TextureResourceManager& textureResourceManager = mRendererRuntime.getTextureResourceManager();
+						TextureResource* textureResource = textureResourceManager.getTextureResourceByAssetId(assetId);
+						if (nullptr == textureResource)
+						{
+							// Create texture resource
+							textureResourceManager.createTextureResourceByAssetId(assetId, *renderTargetTextureElement.texture);
+						}
+						else
+						{
+							// Update texture resource
+							textureResource->setTexture(*renderTargetTextureElement.texture);
+						}
+					}
 				}
+				texture = renderTargetTextureElement.texture;
+				// break;	// TODO(co) The render target texture and framebuffer handling is still under construction regarding recycling renderer resources etc. - so for now, just add render target textures to have something to start with
 			}
 			assert(nullptr != texture);
 		}
@@ -211,6 +213,10 @@ namespace RendererRuntime
 		{
 			// Error! Unknown asset ID, this shouldn't have happened.
 			assert(false);
+			if (nullptr != outRenderTargetTextureSignature)
+			{
+				*outRenderTargetTextureSignature = nullptr;
+			}
 		}
 
 		// Done

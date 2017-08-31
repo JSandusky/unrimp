@@ -51,6 +51,12 @@ namespace RendererRuntime
 		return *mRenderTargetTextureManager;
 	}
 
+	inline RenderPassManager& CompositorNodeResourceManager::getRenderPassManager()
+	{
+		assert(nullptr != mRenderPassManager);
+		return *mRenderPassManager;
+	}
+
 	inline FramebufferManager& CompositorNodeResourceManager::getFramebufferManager()
 	{
 		assert(nullptr != mFramebufferManager);

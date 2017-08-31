@@ -46,7 +46,7 @@ namespace Renderer
 		IResource(resourceType, renderPass.getRenderer()),
 		mRenderPass(renderPass)
 	{
-		// Nothing here
+		mRenderPass.addReference();
 	}
 
 

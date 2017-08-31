@@ -73,6 +73,7 @@ set(SOURCE_CODES
 	src/Core/File/MemoryFile.cpp
 	src/Core/Time/TimeManager.cpp
 	src/Core/Time/Stopwatch.cpp
+	src/Core/Renderer/RenderPassManager.cpp
 	src/Core/Renderer/FramebufferManager.cpp
 	src/Core/Renderer/FramebufferSignature.cpp
 	src/Core/Renderer/RenderTargetTextureManager.cpp

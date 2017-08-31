@@ -28,8 +28,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline FramebufferManager::FramebufferManager(RenderTargetTextureManager& renderTargetTextureManager) :
-		mRenderTargetTextureManager(renderTargetTextureManager)
+	inline FramebufferManager::FramebufferManager(RenderTargetTextureManager& renderTargetTextureManager, RenderPassManager& renderPassManager) :
+		mRenderTargetTextureManager(renderTargetTextureManager),
+		mRenderPassManager(renderPassManager)
 	{
 		// Nothing here
 	}

@@ -25,6 +25,7 @@
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceResourceManager.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceResource.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/Loader/CompositorWorkspaceResourceLoader.h"
+#include "RendererRuntime/Core/Renderer/RenderPassManager.h"
 #include "RendererRuntime/Core/Renderer/FramebufferManager.h"
 #include "RendererRuntime/Core/Renderer/RenderTargetTextureManager.h"
 #include "RendererRuntime/Resource/Detail/ResourceManagerTemplate.h"
@@ -89,7 +90,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	CompositorWorkspaceResourceManager::CompositorWorkspaceResourceManager(IRendererRuntime& rendererRuntime) :
 		mRenderTargetTextureManager(new RenderTargetTextureManager(rendererRuntime)),
-		mFramebufferManager(new FramebufferManager(*mRenderTargetTextureManager))
+		mRenderPassManager(new RenderPassManager(rendererRuntime.getRenderer())),
+		mFramebufferManager(new FramebufferManager(*mRenderTargetTextureManager, *mRenderPassManager))
 	{
 		mInternalResourceManager = new ResourceManagerTemplate<CompositorWorkspaceResource, CompositorWorkspaceResourceLoader, CompositorWorkspaceResourceId, 32>(rendererRuntime, *this);
 	}
@@ -97,6 +99,7 @@ namespace RendererRuntime
 	CompositorWorkspaceResourceManager::~CompositorWorkspaceResourceManager()
 	{
 		delete mFramebufferManager;
+		delete mRenderPassManager;
 		delete mRenderTargetTextureManager;
 		delete mInternalResourceManager;
 	}

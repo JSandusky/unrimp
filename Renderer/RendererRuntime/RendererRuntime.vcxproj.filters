@@ -621,6 +621,9 @@
     <None Include="include\RendererRuntime\Resource\ShaderPiece\ShaderPieceResourceManager.inl">
       <Filter>Source Files\Resource\ShaderPiece</Filter>
     </None>
+    <None Include="include\RendererRuntime\Core\Renderer\RenderPassManager.inl">
+      <Filter>Source Files\Core\Renderer</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -1233,6 +1236,9 @@
     <ClInclude Include="src\DebugGui\Detail\Shader\DebugGui_GLSL_450.h">
       <Filter>Source Files\DebugGui\Detail\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\Renderer\RenderPassManager.h">
+      <Filter>Source Files\Core\Renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
@@ -1612,6 +1618,9 @@
     </ClCompile>
     <ClCompile Include="src\Context.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Renderer\RenderPassManager.cpp">
+      <Filter>Source Files\Core\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

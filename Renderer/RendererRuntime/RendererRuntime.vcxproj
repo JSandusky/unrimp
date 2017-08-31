@@ -49,6 +49,7 @@
     <None Include="include\RendererRuntime\Core\PackedElementManager.inl" />
     <None Include="include\RendererRuntime\Core\Renderer\FramebufferManager.inl" />
     <None Include="include\RendererRuntime\Core\Renderer\FramebufferSignature.inl" />
+    <None Include="include\RendererRuntime\Core\Renderer\RenderPassManager.inl" />
     <None Include="include\RendererRuntime\Core\Renderer\RenderTargetTextureManager.inl" />
     <None Include="include\RendererRuntime\Core\Renderer\RenderTargetTextureSignature.inl" />
     <None Include="include\RendererRuntime\Core\StringId.inl" />
@@ -208,6 +209,7 @@
     <ClInclude Include="include\RendererRuntime\Core\Platform\WindowsHeader.h" />
     <ClInclude Include="include\RendererRuntime\Core\Renderer\FramebufferManager.h" />
     <ClInclude Include="include\RendererRuntime\Core\Renderer\FramebufferSignature.h" />
+    <ClInclude Include="include\RendererRuntime\Core\Renderer\RenderPassManager.h" />
     <ClInclude Include="include\RendererRuntime\Core\Renderer\RenderTargetTextureManager.h" />
     <ClInclude Include="include\RendererRuntime\Core\Renderer\RenderTargetTextureSignature.h" />
     <ClInclude Include="include\RendererRuntime\Core\Serializer.h" />
@@ -541,6 +543,7 @@
     <ClCompile Include="src\Core\Platform\PlatformManager.cpp" />
     <ClCompile Include="src\Core\Renderer\FramebufferManager.cpp" />
     <ClCompile Include="src\Core\Renderer\FramebufferSignature.cpp" />
+    <ClCompile Include="src\Core\Renderer\RenderPassManager.cpp" />
     <ClCompile Include="src\Core\Renderer\RenderTargetTextureManager.cpp" />
     <ClCompile Include="src\Core\Renderer\RenderTargetTextureSignature.cpp" />
     <ClCompile Include="src\Core\String.cpp" />

@@ -19,12 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include <cassert>
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -34,29 +28,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline RenderTargetTextureManager& CompositorWorkspaceResourceManager::getRenderTargetTextureManager()
-	{
-		assert(nullptr != mRenderTargetTextureManager);
-		return *mRenderTargetTextureManager;
-	}
-
-	inline RenderPassManager& CompositorWorkspaceResourceManager::getRenderPassManager()
-	{
-		assert(nullptr != mRenderPassManager);
-		return *mRenderPassManager;
-	}
-
-	inline FramebufferManager& CompositorWorkspaceResourceManager::getFramebufferManager()
-	{
-		assert(nullptr != mFramebufferManager);
-		return *mFramebufferManager;
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceManager methods ]
-	//[-------------------------------------------------------]
-	inline void CompositorWorkspaceResourceManager::update()
+	inline RenderPassManager::RenderPassManager(Renderer::IRenderer& renderer) :
+		mRenderer(renderer)
 	{
 		// Nothing here
 	}

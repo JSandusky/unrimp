@@ -31,6 +31,7 @@
 #include "RendererRuntime/Resource/Detail/ResourceManagerTemplate.h"
 #include "RendererRuntime/Core/Renderer/RenderTargetTextureManager.h"
 #include "RendererRuntime/Core/Renderer/FramebufferManager.h"
+#include "RendererRuntime/Core/Renderer/RenderPassManager.h"
 
 
 //[-------------------------------------------------------]
@@ -151,7 +152,8 @@ namespace RendererRuntime
 		mRendererRuntime(rendererRuntime),
 		mCompositorPassFactory(&::detail::defaultCompositorPassFactory),
 		mRenderTargetTextureManager(new RenderTargetTextureManager(mRendererRuntime)),
-		mFramebufferManager(new FramebufferManager(*mRenderTargetTextureManager))
+		mRenderPassManager(new RenderPassManager(mRendererRuntime.getRenderer())),
+		mFramebufferManager(new FramebufferManager(*mRenderTargetTextureManager, *mRenderPassManager))
 	{
 		mInternalResourceManager = new ResourceManagerTemplate<CompositorNodeResource, CompositorNodeResourceLoader, CompositorNodeResourceId, 32>(rendererRuntime, *this);
 	}
@@ -159,6 +161,7 @@ namespace RendererRuntime
 	CompositorNodeResourceManager::~CompositorNodeResourceManager()
 	{
 		delete mFramebufferManager;
+		delete mRenderPassManager;
 		delete mRenderTargetTextureManager;
 		delete mInternalResourceManager;
 	}

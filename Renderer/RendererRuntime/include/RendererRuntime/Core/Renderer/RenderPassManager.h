@@ -19,9 +19,28 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <cassert>
+#include "RendererRuntime/Core/Manager.h"
+
+#include <Renderer/Public/Renderer.h>
+
+#include <unordered_map>
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace Renderer
+{
+	class IRenderPass;
+}
 
 
 //[-------------------------------------------------------]
@@ -32,37 +51,48 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Classes                                               ]
+	//[-------------------------------------------------------]
+	class RenderPassManager : private Manager
+	{
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline RenderTargetTextureManager& CompositorWorkspaceResourceManager::getRenderTargetTextureManager()
-	{
-		assert(nullptr != mRenderTargetTextureManager);
-		return *mRenderTargetTextureManager;
-	}
-
-	inline RenderPassManager& CompositorWorkspaceResourceManager::getRenderPassManager()
-	{
-		assert(nullptr != mRenderPassManager);
-		return *mRenderPassManager;
-	}
-
-	inline FramebufferManager& CompositorWorkspaceResourceManager::getFramebufferManager()
-	{
-		assert(nullptr != mFramebufferManager);
-		return *mFramebufferManager;
-	}
+	public:
+		inline explicit RenderPassManager(Renderer::IRenderer& renderer);
+		~RenderPassManager();
+		explicit RenderPassManager(const RenderPassManager&) = delete;
+		RenderPassManager& operator=(const RenderPassManager&) = delete;
+		Renderer::IRenderPass* getOrCreateRenderPass(uint32_t numberOfColorAttachments, const Renderer::TextureFormat::Enum* colorAttachmentTextureFormats, Renderer::TextureFormat::Enum depthStencilAttachmentTextureFormat = Renderer::TextureFormat::UNKNOWN, uint8_t numberOfMultisamples = 1);
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual RendererRuntime::IResourceManager methods ]
+	//[ Private definitions                                   ]
 	//[-------------------------------------------------------]
-	inline void CompositorWorkspaceResourceManager::update()
-	{
-		// Nothing here
-	}
+	private:
+		typedef std::unordered_map<uint32_t, Renderer::IRenderPass*> RenderPasses;
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		Renderer::IRenderer& mRenderer;
+		RenderPasses		 mRenderPasses;
+
+
+	};
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Core/Renderer/RenderPassManager.inl"

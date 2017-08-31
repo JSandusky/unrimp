@@ -44,6 +44,7 @@ namespace Renderer
 }
 namespace RendererRuntime
 {
+	class RenderPassManager;
 	class RenderTargetTextureManager;
 }
 
@@ -107,7 +108,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline explicit FramebufferManager(RenderTargetTextureManager& renderTargetTextureManager);
+		inline FramebufferManager(RenderTargetTextureManager& renderTargetTextureManager, RenderPassManager& renderPassManager);
 		inline ~FramebufferManager();
 		explicit FramebufferManager(const FramebufferManager&) = delete;
 		FramebufferManager& operator=(const FramebufferManager&) = delete;
@@ -132,6 +133,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		RenderTargetTextureManager&						mRenderTargetTextureManager;	///< Render target texture manager, just shared so don't destroy the instance
+		RenderPassManager&								mRenderPassManager;				///< Render pass manager, just shared so don't destroy the instance
 		SortedFramebufferVector							mSortedFramebufferVector;
 		CompositorFramebufferIdToFramebufferSignatureId	mCompositorFramebufferIdToFramebufferSignatureId;
 
