@@ -158,7 +158,7 @@ namespace OpenGLES3Renderer
 		do
 		{
 			// Get the current multisample antialiasing settings
-			const bool multisampleAntialiasing = (multisampleAntialiasingSamplesCurrent > 1);	// Multisample antialiasing with just one sample per per pixel isn't real multisample, is it? :D
+			const bool multisampleAntialiasing = (multisampleAntialiasingSamplesCurrent > 1);	// Multisample antialiasing with just one sample per pixel isn't real multisample, is it? :D
 			// const EGLint multisampleAntialiasingSampleBuffers = multisampleAntialiasing ? 1 : 0;
 
 			// Set desired configuration

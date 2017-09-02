@@ -38,6 +38,22 @@ namespace Direct3D9Renderer
 		return mNumberOfColorAttachments;
 	}
 
+	inline uint32_t RenderPass::getNumberOfAttachments() const
+	{
+		return (mDepthStencilAttachmentTextureFormat != Renderer::TextureFormat::Enum::UNKNOWN) ? (mNumberOfColorAttachments + 1) : mNumberOfColorAttachments;
+	}
+
+	inline Renderer::TextureFormat::Enum RenderPass::getColorAttachmentTextureFormat(uint32_t colorAttachmentIndex) const
+	{
+		assert(colorAttachmentIndex < mNumberOfColorAttachments);
+		return mColorAttachmentTextureFormats[colorAttachmentIndex];
+	}
+
+	inline Renderer::TextureFormat::Enum RenderPass::getDepthStencilAttachmentTextureFormat() const
+	{
+		return mDepthStencilAttachmentTextureFormat;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

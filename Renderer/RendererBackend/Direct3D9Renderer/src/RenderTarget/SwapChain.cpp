@@ -22,8 +22,10 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Direct3D9Renderer/RenderTarget/SwapChain.h"
+#include "Direct3D9Renderer/RenderTarget/RenderPass.h"
 #include "Direct3D9Renderer/d3d9.h"
 #include "Direct3D9Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
+#include "Direct3D9Renderer/Mapping.h"
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
 
 
@@ -43,6 +45,11 @@ namespace Direct3D9Renderer
 		mDirect3DSurface9RenderTarget(nullptr),
 		mDirect3DSurface9DepthStencil(nullptr)
 	{
+		const RenderPass& d3d9RenderPass = static_cast<RenderPass&>(renderPass);
+
+		// Sanity checks
+		assert(1 == d3d9RenderPass.getNumberOfColorAttachments());
+
 		// Get the Direct3D 9 device instance
 		IDirect3DDevice9* direct3DDevice9 = static_cast<Direct3D9Renderer&>(renderPass.getRenderer()).getDirect3DDevice9();
 
@@ -78,6 +85,7 @@ namespace Direct3D9Renderer
 		D3DPRESENT_PARAMETERS d3dPresentParameters = {};
 		d3dPresentParameters.BackBufferWidth		= static_cast<UINT>(width);
 		d3dPresentParameters.BackBufferHeight		= static_cast<UINT>(height);
+		d3dPresentParameters.BackBufferFormat		= static_cast<D3DFORMAT>(Mapping::getDirect3D9Format(d3d9RenderPass.getColorAttachmentTextureFormat(0)));
 		d3dPresentParameters.BackBufferCount		= 1;
 		d3dPresentParameters.SwapEffect				= D3DSWAPEFFECT_DISCARD;
 		d3dPresentParameters.hDeviceWindow			= hWnd;
@@ -92,9 +100,13 @@ namespace Direct3D9Renderer
 			mDirect3DSwapChain9->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &mDirect3DSurface9RenderTarget);
 
 			// Create the Direct3D 9 depth stencil surface
-			direct3DDevice9->CreateDepthStencilSurface(d3dPresentParameters.BackBufferWidth, d3dPresentParameters.BackBufferHeight,
-				D3DFMT_D24S8, d3dPresentParameters.MultiSampleType, d3dPresentParameters.MultiSampleQuality, FALSE,
-				&mDirect3DSurface9DepthStencil, nullptr);
+			const Renderer::TextureFormat::Enum depthStencilAttachmentTextureFormat = static_cast<RenderPass&>(getRenderPass()).getDepthStencilAttachmentTextureFormat();
+			if (Renderer::TextureFormat::Enum::UNKNOWN != depthStencilAttachmentTextureFormat)
+			{
+				direct3DDevice9->CreateDepthStencilSurface(d3dPresentParameters.BackBufferWidth, d3dPresentParameters.BackBufferHeight,
+					D3DFMT_D24S8, d3dPresentParameters.MultiSampleType, d3dPresentParameters.MultiSampleQuality, FALSE,
+					&mDirect3DSurface9DepthStencil, nullptr);
+			}
 		}
 
 		// Assign a default name to the resource for debugging purposes

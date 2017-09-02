@@ -160,8 +160,8 @@ namespace OpenGLES3Renderer
 		else
 		{
 			// TODO(co) Correct implementation
-			IOpenGLES3Context& openGLES3Context = static_cast<OpenGLES3Renderer&>(getRenderer()).getOpenGLES3Context();
 			// Swap buffers
+			const IOpenGLES3Context& openGLES3Context = static_cast<OpenGLES3Renderer&>(getRenderer()).getOpenGLES3Context();
 			eglSwapBuffers(openGLES3Context.getEGLDisplay(), openGLES3Context.getEGLDummySurface());
 		}
 	}

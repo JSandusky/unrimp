@@ -86,6 +86,36 @@ namespace Direct3D11Renderer
 		*/
 		inline uint32_t getNumberOfColorAttachments() const;
 
+		/**
+		*  @brief
+		*    Return the number of render target textures (color and depth stencil)
+		*
+		*  @return
+		*    The number of render target textures (color and depth stencil)
+		*/
+		inline uint32_t getNumberOfAttachments() const;
+
+		/**
+		*  @brief
+		*    Return the color attachment texture format
+		*
+		*  @param[in] colorAttachmentIndex
+		*    Color attachment index
+		*
+		*  @return
+		*    The color attachment texture format
+		*/
+		inline Renderer::TextureFormat::Enum getColorAttachmentTextureFormat(uint32_t colorAttachmentIndex) const;
+
+		/**
+		*  @brief
+		*    Return the depth stencil attachment texture format
+		*
+		*  @return
+		*    The depth stencil attachment texture format
+		*/
+		inline Renderer::TextureFormat::Enum getDepthStencilAttachmentTextureFormat() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]

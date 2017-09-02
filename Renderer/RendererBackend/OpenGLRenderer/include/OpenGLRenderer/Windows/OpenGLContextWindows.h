@@ -34,6 +34,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace OpenGLRenderer
+{
+	class RenderPass;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace OpenGLRenderer
@@ -65,12 +74,14 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Constructor
 		*
+		*  @param[in] renderPass
+		*    Render pass
 		*  @param[in] nativeWindowHandle
 		*    Optional native main window handle, can be a null handle
 		*  @param[in] shareContextWindows
 		*    Optional share context, can be a null pointer
 		*/
-		OpenGLContextWindows(handle nativeWindowHandle, const OpenGLContextWindows* shareContextWindows = nullptr);
+		OpenGLContextWindows(const RenderPass& renderPass, handle nativeWindowHandle, const OpenGLContextWindows* shareContextWindows = nullptr);
 
 		/**
 		*  @brief
@@ -118,12 +129,14 @@ namespace OpenGLRenderer
 		*
 		*  @param[in] openGLRuntimeLinking
 		*    OpenGL runtime linking instance, if null pointer this isn't a primary context
+		*  @param[in] renderPass
+		*    Render pass
 		*  @param[in] nativeWindowHandle
 		*    Optional native main window handle, can be a null handle
 		*  @param[in] shareContextWindows
 		*    Optional share context, can be a null pointer
 		*/
-		OpenGLContextWindows(OpenGLRuntimeLinking* openGLRuntimeLinking, handle nativeWindowHandle, const OpenGLContextWindows* shareContextWindows = nullptr);
+		OpenGLContextWindows(OpenGLRuntimeLinking* openGLRuntimeLinking, const RenderPass& renderPass, handle nativeWindowHandle, const OpenGLContextWindows* shareContextWindows = nullptr);
 
 		/**
 		*  @brief

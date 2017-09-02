@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/RenderTarget/SwapChain.h"
+#include "OpenGLRenderer/RenderTarget/RenderPass.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
 #ifdef WIN32
 	#include "OpenGLRenderer/Windows/OpenGLContextWindows.h"
@@ -48,8 +49,9 @@ namespace OpenGLRenderer
 		ISwapChain(renderPass),
 		mNativeWindowHandle(nativeWindowHandle),
 		#ifdef WIN32
-			mOpenGLContext(new OpenGLContextWindows(nativeWindowHandle, static_cast<const OpenGLContextWindows*>(&static_cast<OpenGLRenderer&>(renderPass.getRenderer()).getOpenGLContext()))),
+			mOpenGLContext(new OpenGLContextWindows(static_cast<const RenderPass&>(renderPass), nativeWindowHandle, static_cast<const OpenGLContextWindows*>(&static_cast<OpenGLRenderer&>(renderPass.getRenderer()).getOpenGLContext()))),
 		#elif defined LINUX
+			// TODO(co) Render pass support to be able to setup e.g. the depth buffer from the outside
 			mOpenGLContext(new OpenGLContextLinux(static_cast<OpenGLRenderer&>(renderPass.getRenderer()), nativeWindowHandle, useExternalContext, static_cast<const OpenGLContextLinux*>(&static_cast<OpenGLRenderer&>(renderPass.getRenderer()).getOpenGLContext()))),
 		#else
 			#error "Unsupported platform"

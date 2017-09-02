@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Windows/OpenGLContextWindows.h"
+#include "OpenGLRenderer/RenderTarget/RenderPass.h"
 #include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 
@@ -36,8 +37,8 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	OpenGLContextWindows::OpenGLContextWindows(handle nativeWindowHandle, const OpenGLContextWindows* shareContextWindows) :
-		OpenGLContextWindows(nullptr, nativeWindowHandle, shareContextWindows)
+	OpenGLContextWindows::OpenGLContextWindows(const RenderPass& renderPass, handle nativeWindowHandle, const OpenGLContextWindows* shareContextWindows) :
+		OpenGLContextWindows(nullptr, renderPass, nativeWindowHandle, shareContextWindows)
 	{
 		// Nothing here
 	}
@@ -90,7 +91,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	OpenGLContextWindows::OpenGLContextWindows(OpenGLRuntimeLinking* openGLRuntimeLinking, handle nativeWindowHandle, const OpenGLContextWindows* shareContextWindows) :
+	OpenGLContextWindows::OpenGLContextWindows(OpenGLRuntimeLinking* openGLRuntimeLinking, const RenderPass& renderPass, handle nativeWindowHandle, const OpenGLContextWindows* shareContextWindows) :
 		IOpenGLContext(openGLRuntimeLinking),
 		mNativeWindowHandle(nativeWindowHandle),
 		mDummyWindow(NULL_HANDLE),
@@ -136,6 +137,8 @@ namespace OpenGLRenderer
 				}
 
 				// Get the first best pixel format
+				// TODO(co) Use more detailed color and depth/stencil information from render pass
+				const BYTE depthBufferBits = (renderPass.getDepthStencilAttachmentTextureFormat() == Renderer::TextureFormat::Enum::UNKNOWN) ? 0u : 24u;
 				const PIXELFORMATDESCRIPTOR pixelFormatDescriptor =
 				{
 					sizeof(PIXELFORMATDESCRIPTOR),	// Size of this pixel format descriptor
@@ -150,7 +153,7 @@ namespace OpenGLRenderer
 					0,								// Shift bit ignored
 					0,								// No accumulation buffer
 					0, 0, 0, 0,						// Accumulation bits ignored
-					static_cast<BYTE>(24),			// Z-buffer (depth buffer)
+					depthBufferBits,				// Z-buffer (depth buffer)
 					0,								// No stencil buffer
 					0,								// No auxiliary buffer
 					PFD_MAIN_PLANE,					// Main drawing layer

@@ -22,8 +22,10 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Direct3D12Renderer/RenderTarget/SwapChain.h"
+#include "Direct3D12Renderer/RenderTarget/RenderPass.h"
 #include "Direct3D12Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
 #include "Direct3D12Renderer/D3D12X.h"
+#include "Direct3D12Renderer/Mapping.h"
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
 
 #include <Renderer/ILog.h>
@@ -53,6 +55,10 @@ namespace Direct3D12Renderer
 	{
 		Direct3D12Renderer& direct3D12Renderer = static_cast<Direct3D12Renderer&>(renderPass.getRenderer());
 		memset(mD3D12ResourceRenderTargets, 0, sizeof(ID3D12Resource*) * NUMBER_OF_FRAMES);
+		const RenderPass& d3d12RenderPass = static_cast<RenderPass&>(renderPass);
+
+		// Sanity checks
+		assert(1 == d3d12RenderPass.getNumberOfColorAttachments());
 
 		// Get the native window handle
 		const HWND hWnd = reinterpret_cast<HWND>(nativeWindowHandle);
@@ -89,7 +95,7 @@ namespace Direct3D12Renderer
 		dxgiSwapChainDesc.BufferCount							= NUMBER_OF_FRAMES;
 		dxgiSwapChainDesc.BufferDesc.Width						= static_cast<UINT>(width);
 		dxgiSwapChainDesc.BufferDesc.Height						= static_cast<UINT>(height);
-		dxgiSwapChainDesc.BufferDesc.Format						= DXGI_FORMAT_R8G8B8A8_UNORM;
+		dxgiSwapChainDesc.BufferDesc.Format						= static_cast<DXGI_FORMAT>(Mapping::getDirect3D12Format(d3d12RenderPass.getColorAttachmentTextureFormat(0)));
 		dxgiSwapChainDesc.BufferDesc.RefreshRate.Numerator		= 60;
 		dxgiSwapChainDesc.BufferDesc.RefreshRate.Denominator	= 1;
 		dxgiSwapChainDesc.BufferUsage							= DXGI_USAGE_RENDER_TARGET_OUTPUT;
@@ -347,7 +353,7 @@ namespace Direct3D12Renderer
 
 			// Resize the Direct3D 12 swap chain
 			// -> Preserve the existing buffer count and format
-			if (SUCCEEDED(mDxgiSwapChain3->ResizeBuffers(NUMBER_OF_FRAMES, width, height, DXGI_FORMAT_R8G8B8A8_UNORM, 0)))
+			if (SUCCEEDED(mDxgiSwapChain3->ResizeBuffers(NUMBER_OF_FRAMES, width, height, static_cast<DXGI_FORMAT>(Mapping::getDirect3D12Format(static_cast<RenderPass&>(getRenderPass()).getColorAttachmentTextureFormat(0))), 0)))
 			{
 				// Create the Direct3D 12 views
 				createDirect3D12Views();
@@ -474,7 +480,10 @@ namespace Direct3D12Renderer
 				}
 			}
 
-			{ // Describe and create a depth stencil view (DSV) descriptor heap
+			// Describe and create a depth stencil view (DSV) descriptor heap
+			const Renderer::TextureFormat::Enum depthStencilAttachmentTextureFormat = static_cast<RenderPass&>(getRenderPass()).getDepthStencilAttachmentTextureFormat();
+			if (Renderer::TextureFormat::Enum::UNKNOWN != depthStencilAttachmentTextureFormat)
+			{
 				D3D12_DESCRIPTOR_HEAP_DESC d3d12DescriptorHeapDesc = {};
 				d3d12DescriptorHeapDesc.NumDescriptors	= 1;
 				d3d12DescriptorHeapDesc.Type			= D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
@@ -482,12 +491,12 @@ namespace Direct3D12Renderer
 				if (SUCCEEDED(d3d12Device->CreateDescriptorHeap(&d3d12DescriptorHeapDesc, IID_PPV_ARGS(&mD3D12DescriptorHeapDepthStencilView))))
 				{
 					D3D12_DEPTH_STENCIL_VIEW_DESC depthStencilDesc = {};
-					depthStencilDesc.Format = DXGI_FORMAT_D32_FLOAT;
+					depthStencilDesc.Format = static_cast<DXGI_FORMAT>(Mapping::getDirect3D12Format(depthStencilAttachmentTextureFormat));
 					depthStencilDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
 					depthStencilDesc.Flags = D3D12_DSV_FLAG_NONE;
 
 					D3D12_CLEAR_VALUE depthOptimizedClearValue = {};
-					depthOptimizedClearValue.Format = DXGI_FORMAT_D32_FLOAT;
+					depthOptimizedClearValue.Format = depthStencilDesc.Format;
 					depthOptimizedClearValue.DepthStencil.Depth = 1.0f;
 					depthOptimizedClearValue.DepthStencil.Stencil = 0;
 
@@ -497,7 +506,7 @@ namespace Direct3D12Renderer
 					getSafeWidthAndHeight(width, height);
 
 					const CD3DX12_HEAP_PROPERTIES d3d12XHeapProperties(D3D12_HEAP_TYPE_DEFAULT);
-					const CD3DX12_RESOURCE_DESC d3d12XResourceDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_D32_FLOAT, width, height, 1, 0, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
+					const CD3DX12_RESOURCE_DESC d3d12XResourceDesc = CD3DX12_RESOURCE_DESC::Tex2D(depthStencilDesc.Format, width, height, 1, 0, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
 					if (SUCCEEDED(d3d12Device->CreateCommittedResource(
 						&d3d12XHeapProperties,
 						D3D12_HEAP_FLAG_NONE,

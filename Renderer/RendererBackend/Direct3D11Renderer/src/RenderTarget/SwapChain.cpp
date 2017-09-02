@@ -22,8 +22,10 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Direct3D11Renderer/RenderTarget/SwapChain.h"
+#include "Direct3D11Renderer/RenderTarget/RenderPass.h"
 #include "Direct3D11Renderer/Guid.h"	// For "WKPDID_D3DDebugObjectName"
 #include "Direct3D11Renderer/D3D11.h"
+#include "Direct3D11Renderer/Mapping.h"
 #include "Direct3D11Renderer/Direct3D11Renderer.h"
 
 
@@ -43,6 +45,11 @@ namespace Direct3D11Renderer
 		mD3D11RenderTargetView(nullptr),
 		mD3D11DepthStencilView(nullptr)
 	{
+		const RenderPass& d3d11RenderPass = static_cast<RenderPass&>(renderPass);
+
+		// Sanity checks
+		assert(1 == d3d11RenderPass.getNumberOfColorAttachments());
+
 		// Get the Direct3D 11 device instance
 		ID3D11Device* d3d11Device = static_cast<Direct3D11Renderer&>(renderPass.getRenderer()).getD3D11Device();
 
@@ -90,7 +97,7 @@ namespace Direct3D11Renderer
 		dxgiSwapChainDesc.BufferCount						 = 1;
 		dxgiSwapChainDesc.BufferDesc.Width					 = static_cast<UINT>(width);
 		dxgiSwapChainDesc.BufferDesc.Height					 = static_cast<UINT>(height);
-		dxgiSwapChainDesc.BufferDesc.Format					 = DXGI_FORMAT_R8G8B8A8_UNORM;
+		dxgiSwapChainDesc.BufferDesc.Format					 = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(d3d11RenderPass.getColorAttachmentTextureFormat(0)));
 		dxgiSwapChainDesc.BufferDesc.RefreshRate.Numerator	 = 60;
 		dxgiSwapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
 		dxgiSwapChainDesc.BufferUsage						 = DXGI_USAGE_RENDER_TARGET_OUTPUT;
@@ -394,35 +401,40 @@ namespace Direct3D11Renderer
 			d3d11Texture2DBackBuffer->Release();
 			if (SUCCEEDED(hResult))
 			{
-				// Get the swap chain width and height, ensures they are never ever zero
-				UINT width  = 1;
-				UINT height = 1;
-				getSafeWidthAndHeight(width, height);
-
 				// Create depth stencil texture
-				ID3D11Texture2D* d3d11Texture2DDepthStencil = nullptr;
-				D3D11_TEXTURE2D_DESC d3d11Texture2DDesc = {};
-				d3d11Texture2DDesc.Width			  = width;
-				d3d11Texture2DDesc.Height			  = height;
-				d3d11Texture2DDesc.MipLevels		  = 1;
-				d3d11Texture2DDesc.ArraySize		  = 1;
-				d3d11Texture2DDesc.Format			  = DXGI_FORMAT_D24_UNORM_S8_UINT;
-				d3d11Texture2DDesc.SampleDesc.Count   = 1;
-				d3d11Texture2DDesc.SampleDesc.Quality = 0;
-				d3d11Texture2DDesc.Usage			  = D3D11_USAGE_DEFAULT;
-				d3d11Texture2DDesc.BindFlags		  = D3D11_BIND_DEPTH_STENCIL;
-				d3d11Texture2DDesc.CPUAccessFlags	  = 0;
-				d3d11Texture2DDesc.MiscFlags		  = 0;
-				hResult = d3d11Device->CreateTexture2D(&d3d11Texture2DDesc, nullptr, &d3d11Texture2DDepthStencil);
-				if (SUCCEEDED(hResult))
+				const Renderer::TextureFormat::Enum depthStencilAttachmentTextureFormat = static_cast<RenderPass&>(getRenderPass()).getDepthStencilAttachmentTextureFormat();
+				if (Renderer::TextureFormat::Enum::UNKNOWN != depthStencilAttachmentTextureFormat)
 				{
-					// Create the depth stencil view
-					D3D11_DEPTH_STENCIL_VIEW_DESC d3d11DepthStencilViewDesc = {};
-					d3d11DepthStencilViewDesc.Format			 = d3d11Texture2DDesc.Format;
-					d3d11DepthStencilViewDesc.ViewDimension		 = D3D11_DSV_DIMENSION_TEXTURE2D;
-					d3d11DepthStencilViewDesc.Texture2D.MipSlice = 0;
-					d3d11Device->CreateDepthStencilView(d3d11Texture2DDepthStencil, &d3d11DepthStencilViewDesc, &mD3D11DepthStencilView);
-					d3d11Texture2DDepthStencil->Release();
+					// Get the swap chain width and height, ensures they are never ever zero
+					UINT width  = 1;
+					UINT height = 1;
+					getSafeWidthAndHeight(width, height);
+
+					// Create depth stencil texture
+					ID3D11Texture2D* d3d11Texture2DDepthStencil = nullptr;
+					D3D11_TEXTURE2D_DESC d3d11Texture2DDesc = {};
+					d3d11Texture2DDesc.Width			  = width;
+					d3d11Texture2DDesc.Height			  = height;
+					d3d11Texture2DDesc.MipLevels		  = 1;
+					d3d11Texture2DDesc.ArraySize		  = 1;
+					d3d11Texture2DDesc.Format			  = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(depthStencilAttachmentTextureFormat));
+					d3d11Texture2DDesc.SampleDesc.Count   = 1;
+					d3d11Texture2DDesc.SampleDesc.Quality = 0;
+					d3d11Texture2DDesc.Usage			  = D3D11_USAGE_DEFAULT;
+					d3d11Texture2DDesc.BindFlags		  = D3D11_BIND_DEPTH_STENCIL;
+					d3d11Texture2DDesc.CPUAccessFlags	  = 0;
+					d3d11Texture2DDesc.MiscFlags		  = 0;
+					hResult = d3d11Device->CreateTexture2D(&d3d11Texture2DDesc, nullptr, &d3d11Texture2DDepthStencil);
+					if (SUCCEEDED(hResult))
+					{
+						// Create the depth stencil view
+						D3D11_DEPTH_STENCIL_VIEW_DESC d3d11DepthStencilViewDesc = {};
+						d3d11DepthStencilViewDesc.Format			 = d3d11Texture2DDesc.Format;
+						d3d11DepthStencilViewDesc.ViewDimension		 = D3D11_DSV_DIMENSION_TEXTURE2D;
+						d3d11DepthStencilViewDesc.Texture2D.MipSlice = 0;
+						d3d11Device->CreateDepthStencilView(d3d11Texture2DDepthStencil, &d3d11DepthStencilViewDesc, &mD3D11DepthStencilView);
+						d3d11Texture2DDepthStencil->Release();
+					}
 				}
 			}
 		}
