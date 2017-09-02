@@ -79,7 +79,6 @@ set(SOURCE_CODES
 	src/Texture/Texture3D.cpp
 	src/Texture/TextureCube.cpp
 	src/Texture/TextureManager.cpp
-	src/Extensions.cpp
 	src/Helper.cpp
 	src/Mapping.cpp
 	src/RootSignature.cpp
@@ -88,20 +87,6 @@ set(SOURCE_CODES
 	src/VulkanRenderer.cpp
 	src/VulkanRuntimeLinking.cpp
 )
-if(WIN32)
-	# Windows source codes
-	set(SOURCE_CODES
-		${SOURCE_CODES}
-		src/Windows/ExtensionsWindows.cpp
-	)
-endif()
-if(UNIX)
-	# Linux source codes
-	set(SOURCE_CODES
-		${SOURCE_CODES}
-		src/Linux/ExtensionsLinux.cpp
-	)
-endif()
 if(RENDERER_VULKAN_GLSLTOSPIRV)
 	set(GLSLANG_SOURCE_CODES
 		${GLSLANG_DIR}/glslang/GenericCodeGen/CodeGen.cpp

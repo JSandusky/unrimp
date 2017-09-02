@@ -86,7 +86,6 @@
     <ClInclude Include="include\VulkanRenderer\Buffer\UniformBuffer.h" />
     <ClInclude Include="include\VulkanRenderer\Buffer\VertexArray.h" />
     <ClInclude Include="include\VulkanRenderer\Buffer\VertexBuffer.h" />
-    <ClInclude Include="include\VulkanRenderer\Extensions.h" />
     <ClInclude Include="include\VulkanRenderer\Helper.h" />
     <ClInclude Include="include\VulkanRenderer\Mapping.h" />
     <ClInclude Include="include\VulkanRenderer\RenderTarget\Framebuffer.h" />
@@ -483,18 +482,7 @@
     <ClCompile Include="src\Buffer\UniformBuffer.cpp" />
     <ClCompile Include="src\Buffer\VertexArray.cpp" />
     <ClCompile Include="src\Buffer\VertexBuffer.cpp" />
-    <ClCompile Include="src\Extensions.cpp" />
     <ClCompile Include="src\Helper.cpp" />
-    <ClCompile Include="src\Linux\ExtensionsLinux.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="src\Mapping.cpp" />
     <ClCompile Include="src\RenderTarget\Framebuffer.cpp" />
     <ClCompile Include="src\RenderTarget\RenderPass.cpp" />
@@ -519,7 +507,6 @@
     <ClCompile Include="src\Shader\TessellationControlShaderGlsl.cpp" />
     <ClCompile Include="src\Shader\TessellationEvaluationShaderGlsl.cpp" />
     <ClCompile Include="src\Shader\VertexShaderGlsl.cpp" />
-    <ClCompile Include="src\Windows\ExtensionsWindows.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\External\glslang\src\glslang\Include\revision.template" />

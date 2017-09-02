@@ -47,7 +47,6 @@ namespace Renderer
 namespace VulkanRenderer
 {
 	class SwapChain;
-	class Extensions;
 	class VertexArray;
 	class RootSignature;
 	class VulkanContext;
@@ -139,24 +138,6 @@ namespace VulkanRenderer
 		*    The Vulkan context instance, do not free the memory the reference is pointing to
 		*/
 		inline const VulkanContext& getVulkanContext() const;
-
-		/**
-		*  @brief
-		*    Return the available extensions
-		*
-		*  @return
-		*    The available extensions, do not free the memory the reference is pointing to
-		*/
-		inline const Extensions& getExtensions() const;
-
-		/**
-		*  @brief
-		*    Return the available extensions
-		*
-		*  @return
-		*    The available extensions, do not free the memory the reference is pointing to
-		*/
-		inline Extensions& getExtensions();
 
 		//[-------------------------------------------------------]
 		//[ States                                                ]
@@ -272,7 +253,6 @@ namespace VulkanRenderer
 	private:
 		VulkanRuntimeLinking*		mVulkanRuntimeLinking;		///< Vulkan runtime linking instance, always valid
 		VulkanContext*				mVulkanContext;				///< Vulkan context instance, always valid
-		Extensions*					mExtensions;				///< Extensions instance, always valid
 		Renderer::IShaderLanguage*	mShaderLanguageGlsl;		///< GLSL shader language instance (we keep a reference to it), can be a null pointer
 		RootSignature*				mGraphicsRootSignature;		///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
 		Renderer::ISamplerState*	mDefaultSamplerState;		///< Default rasterizer state (we keep a reference to it), can be a null pointer

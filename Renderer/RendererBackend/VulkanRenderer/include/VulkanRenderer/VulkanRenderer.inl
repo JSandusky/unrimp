@@ -38,16 +38,6 @@ namespace VulkanRenderer
 		return *mVulkanContext;
 	}
 
-	inline const Extensions& VulkanRenderer::getExtensions() const
-	{
-		return *mExtensions;
-	}
-
-	inline Extensions& VulkanRenderer::getExtensions()
-	{
-		return *mExtensions;
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

@@ -5,12 +5,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Source Files\Windows">
-      <UniqueIdentifier>{21963b69-5a44-449d-b6dc-d9c36f42db44}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Linux">
-      <UniqueIdentifier>{81395ef8-6832-484a-93e1-9d63d39f4e46}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Shader">
       <UniqueIdentifier>{ff27bada-b551-4241-993e-5bd1a3d26246}</UniqueIdentifier>
     </Filter>
@@ -87,9 +81,6 @@
     </ClInclude>
     <ClInclude Include="include\VulkanRenderer\Shader\FragmentShaderGlsl.h">
       <Filter>Source Files\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="include\VulkanRenderer\Extensions.h">
-      <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="include\VulkanRenderer\Mapping.h">
       <Filter>Source Files</Filter>
@@ -306,12 +297,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Windows\ExtensionsWindows.cpp">
-      <Filter>Source Files\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Linux\ExtensionsLinux.cpp">
-      <Filter>Source Files\Linux</Filter>
-    </ClCompile>
     <ClCompile Include="src\Shader\ProgramGlsl.cpp">
       <Filter>Source Files\Shader</Filter>
     </ClCompile>
@@ -332,9 +317,6 @@
     </ClCompile>
     <ClCompile Include="src\Shader\GeometryShaderGlsl.cpp">
       <Filter>Source Files\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Extensions.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Mapping.cpp">
       <Filter>Source Files</Filter>

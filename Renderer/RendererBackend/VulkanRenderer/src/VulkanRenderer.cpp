@@ -24,7 +24,6 @@
 #include "VulkanRenderer/VulkanRenderer.h"
 #include "VulkanRenderer/VulkanDebug.h"	// For "VULKANRENDERER_RENDERERMATCHCHECK_ASSERT()"
 #include "VulkanRenderer/Mapping.h"
-#include "VulkanRenderer/Extensions.h"
 #include "VulkanRenderer/RootSignature.h"
 #include "VulkanRenderer/ResourceGroup.h"
 #include "VulkanRenderer/VulkanContext.h"
@@ -326,7 +325,6 @@ namespace VulkanRenderer
 		IRenderer(context),
 		mVulkanRuntimeLinking(nullptr),
 		mVulkanContext(nullptr),
-		mExtensions(nullptr),
 		mShaderLanguageGlsl(nullptr),
 		mGraphicsRootSignature(nullptr),
 		mDefaultSamplerState(nullptr),
@@ -352,10 +350,6 @@ namespace VulkanRenderer
 			// Is the Vulkan context initialized?
 			if (mVulkanContext->isInitialized())
 			{
-				// Initialize the Vulkan extensions
-				mExtensions = new Extensions(*mVulkanContext);
-				mExtensions->initialize();
-
 				// Initialize the capabilities
 				initializeCapabilities();
 
@@ -425,9 +419,6 @@ namespace VulkanRenderer
 		{
 			mShaderLanguageGlsl->releaseReference();
 		}
-
-		// Destroy the extensions instance
-		delete mExtensions;
 
 		// Destroy the Vulkan context instance
 		delete mVulkanContext;
