@@ -62,7 +62,7 @@ UNIFORM_BUFFER_BEGIN(2, 0, InstanceUniformBuffer, 2)
 	// y = The assigned material slot inside the material uniform buffer
 	// z = The custom parameters start index inside the instance texture buffer
 	// w = Unused
-	uint4 InstanceIndicesArray[4096];	// 64 KiB
+	uint4 InstanceIndicesArray[FAST_SHADER_BUILD_HACK(4096)];	// 64 KiB
 UNIFORM_BUFFER_END
 
 // Texture buffers

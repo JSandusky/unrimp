@@ -25,6 +25,12 @@
 @property(HLSL)
 	// We're using HLSL syntax inside our shaders. So not much to map but only abstract in here so a mapping to GLSL is possible.
 	@piece(SetCrossPlatformSettings)
+		// Hack to speed up shader compilation, see e.g.
+		// - https://www.gamedev.net/forums/topic/663243-slow-shader-compile-time-when-using-large-arrays/
+		// - https://bitbucket.org/sinbad/ogre/commits/30c9ea48d86718abd26067fcbfe80ea3c78a1432
+		// - https://bitbucket.org/sinbad/ogre/commits/cf46287f17faeed4a47d411e911787c164d296ba
+		#define FAST_SHADER_BUILD_HACK(numberOfElements) 2
+
 		// Shader attribute input
 		#define INPUT_BEGIN struct SHADER_INPUT {
 			#define INPUT_VERTEX_ID uint vertexId : SV_VERTEXID;
@@ -156,6 +162,13 @@
 	@piece(SetCrossPlatformSettings)
 		#version 450 core	// OpenGL 4.5
 		#extension GL_ARB_separate_shader_objects : enable	// The "GL_ARB_separate_shader_objects"-extension is required for Vulkan shaders to work
+
+		// Hack to speed up shader compilation, see e.g.
+		// - https://www.gamedev.net/forums/topic/663243-slow-shader-compile-time-when-using-large-arrays/
+		// - https://bitbucket.org/sinbad/ogre/commits/30c9ea48d86718abd26067fcbfe80ea3c78a1432
+		// - https://bitbucket.org/sinbad/ogre/commits/cf46287f17faeed4a47d411e911787c164d296ba
+		// -> Not relevant for GLSL
+		#define FAST_SHADER_BUILD_HACK(numberOfElements) numberOfElements
 
 		// Shader attribute input
 		#define INPUT_BEGIN
@@ -292,6 +305,13 @@
 	@piece(SetCrossPlatformSettings)
 		#version 410 core	// This is what Mac OS X 10.11 and similar support, no fancy 420, no "#extension GL_ARB_shading_language_420pack : enable" and hence no "layout(binding)" usage possible (no problem, we're using material blueprints with a root signature)
 
+		// Hack to speed up shader compilation, see e.g.
+		// - https://www.gamedev.net/forums/topic/663243-slow-shader-compile-time-when-using-large-arrays/
+		// - https://bitbucket.org/sinbad/ogre/commits/30c9ea48d86718abd26067fcbfe80ea3c78a1432
+		// - https://bitbucket.org/sinbad/ogre/commits/cf46287f17faeed4a47d411e911787c164d296ba
+		// -> Not relevant for GLSL
+		#define FAST_SHADER_BUILD_HACK(numberOfElements) numberOfElements
+
 		// Shader attribute input
 		#define INPUT_BEGIN
 			#define INPUT_VERTEX_ID
@@ -425,6 +445,13 @@
 
 		// #extension GL_EXT_texture_buffer : enable	// TODO(co) Currently we only emulate texture buffer using limited uniform buffer
 		precision highp float;
+
+		// Hack to speed up shader compilation, see e.g.
+		// - https://www.gamedev.net/forums/topic/663243-slow-shader-compile-time-when-using-large-arrays/
+		// - https://bitbucket.org/sinbad/ogre/commits/30c9ea48d86718abd26067fcbfe80ea3c78a1432
+		// - https://bitbucket.org/sinbad/ogre/commits/cf46287f17faeed4a47d411e911787c164d296ba
+		// -> Not relevant for GLSL
+		#define FAST_SHADER_BUILD_HACK(numberOfElements) numberOfElements
 
 		// Shader attribute input// Shader attribute input
 		#define INPUT_BEGIN
