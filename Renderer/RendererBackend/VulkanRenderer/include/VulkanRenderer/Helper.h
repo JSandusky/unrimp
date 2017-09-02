@@ -108,8 +108,8 @@ namespace VulkanRenderer
 		//[-------------------------------------------------------]
 		//[ Transition                                            ]
 		//[-------------------------------------------------------]
-		static void transitionVkImageLayout(const VulkanRenderer& vulkanRenderer, VkImage vkImage, VkFormat vkFormat, VkImageLayout oldVkImageLayout, VkImageLayout newVkImageLayout);
-		static void transitionVkImageLayout(const VulkanRenderer& vulkanRenderer, VkCommandBuffer vkCommandBuffer, VkImage vkImage, VkFormat vkFormat, uint32_t levelCount, uint32_t layerCount, VkImageLayout oldVkImageLayout, VkImageLayout newVkImageLayout);
+		static void transitionVkImageLayout(const VulkanRenderer& vulkanRenderer, VkImage vkImage, VkImageAspectFlags vkImageAspectFlags, VkImageLayout oldVkImageLayout, VkImageLayout newVkImageLayout);
+		static void transitionVkImageLayout(const VulkanRenderer& vulkanRenderer, VkCommandBuffer vkCommandBuffer, VkImage vkImage, VkImageAspectFlags vkImageAspectFlags, uint32_t levelCount, uint32_t layerCount, VkImageLayout oldVkImageLayout, VkImageLayout newVkImageLayout);
 
 		//[-------------------------------------------------------]
 		//[ Buffer                                                ]

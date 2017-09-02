@@ -130,19 +130,19 @@ namespace VulkanRenderer
 		vulkanContext.destroyVkCommandBuffer(vkCommandBuffer);
 	}
 
-	void Helper::transitionVkImageLayout(const VulkanRenderer& vulkanRenderer, VkImage vkImage, VkFormat vkFormat, VkImageLayout oldVkImageLayout, VkImageLayout newVkImageLayout)
+	void Helper::transitionVkImageLayout(const VulkanRenderer& vulkanRenderer, VkImage vkImage, VkImageAspectFlags vkImageAspectFlags, VkImageLayout oldVkImageLayout, VkImageLayout newVkImageLayout)
 	{
 		// Create and begin Vulkan command buffer
 		VkCommandBuffer vkCommandBuffer = beginSingleTimeCommands(vulkanRenderer);
 
 		// Vulkan image memory barrier
-		transitionVkImageLayout(vulkanRenderer, vkCommandBuffer, vkImage, vkFormat, 1, 1, oldVkImageLayout, newVkImageLayout);
+		transitionVkImageLayout(vulkanRenderer, vkCommandBuffer, vkImage, vkImageAspectFlags, 1, 1, oldVkImageLayout, newVkImageLayout);
 
 		// End and destroy Vulkan command buffer
 		endSingleTimeCommands(vulkanRenderer, vkCommandBuffer);
 	}
 
-	void Helper::transitionVkImageLayout(const VulkanRenderer& vulkanRenderer, VkCommandBuffer vkCommandBuffer, VkImage vkImage, VkFormat vkFormat, uint32_t levelCount, uint32_t layerCount, VkImageLayout oldVkImageLayout, VkImageLayout newVkImageLayout)
+	void Helper::transitionVkImageLayout(const VulkanRenderer& vulkanRenderer, VkCommandBuffer vkCommandBuffer, VkImage vkImage, VkImageAspectFlags vkImageAspectFlags, uint32_t levelCount, uint32_t layerCount, VkImageLayout oldVkImageLayout, VkImageLayout newVkImageLayout)
 	{
 		VkImageMemoryBarrier vkImageMemoryBarrier =
 		{
@@ -156,23 +156,13 @@ namespace VulkanRenderer
 			VK_QUEUE_FAMILY_IGNORED,				// dstQueueFamilyIndex (uint32_t)
 			vkImage,								// image (VkImage)
 			{ // subresourceRange (VkImageSubresourceRange)
-				VK_IMAGE_ASPECT_COLOR_BIT,	// aspectMask (VkImageAspectFlags)
-				0,							// baseMipLevel (uint32_t)
-				levelCount,					// levelCount (uint32_t)
-				0,							// baseArrayLayer (uint32_t)
-				layerCount					// layerCount (uint32_t)
+				vkImageAspectFlags,	// aspectMask (VkImageAspectFlags)
+				0,					// baseMipLevel (uint32_t)
+				levelCount,			// levelCount (uint32_t)
+				0,					// baseArrayLayer (uint32_t)
+				layerCount			// layerCount (uint32_t)
 			}
 		};
-
-		// "aspectMask" configuration
-		if (VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL == newVkImageLayout)
-		{
-			vkImageMemoryBarrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
-			if (::detail::hasVkFormatStencilComponent(vkFormat))
-			{
-				vkImageMemoryBarrier.subresourceRange.aspectMask |= VK_IMAGE_ASPECT_STENCIL_BIT;
-			}
-		}
 
 		// "srcAccessMask" and "dstAccessMask" configuration
 		if (VK_IMAGE_LAYOUT_PREINITIALIZED == oldVkImageLayout && VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL == newVkImageLayout)
@@ -295,6 +285,11 @@ namespace VulkanRenderer
 		const uint32_t layerCount = layered ? vkExtent3D.depth : 1;
 		const uint32_t depth	  = layered ? 1 : vkExtent3D.depth;
 		const VkSampleCountFlagBits vkSampleCountFlagBits = Mapping::getVulkanSampleCountFlagBits(numberOfMultisamples);
+		VkImageAspectFlags vkImageAspectFlags = isDepthTextureFormat ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
+		if (::detail::hasVkFormatStencilComponent(vkFormat))
+		{
+			vkImageAspectFlags |= VK_IMAGE_ASPECT_STENCIL_BIT;
+		}
 
 		// Calculate the number of bytes
 		uint32_t numberOfBytes = 0;
@@ -326,7 +321,7 @@ namespace VulkanRenderer
 		}
 
 		// Create the Vulkan image view
-		createVkImageView(vulkanRenderer, vkImage, vkImageViewType, numberOfMipmaps, layerCount, vkFormat, isDepthTextureFormat ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT, vkImageView);
+		createVkImageView(vulkanRenderer, vkImage, vkImageViewType, numberOfMipmaps, layerCount, vkFormat, vkImageAspectFlags, vkImageView);
 
 		// Upload all mipmaps
 		if (nullptr != data)
@@ -339,7 +334,7 @@ namespace VulkanRenderer
 			{ // Upload all mipmaps
 				// Create and begin Vulkan command buffer
 				VkCommandBuffer vkCommandBuffer = beginSingleTimeCommands(vulkanRenderer);
-				transitionVkImageLayout(vulkanRenderer, vkCommandBuffer, vkImage, vkFormat, numberOfMipmaps, layerCount, VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+				transitionVkImageLayout(vulkanRenderer, vkCommandBuffer, vkImage, vkImageAspectFlags, numberOfMipmaps, layerCount, VK_IMAGE_LAYOUT_PREINITIALIZED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
 				// Upload all mipmaps
 				uint32_t bufferOffset  = 0;
@@ -377,7 +372,7 @@ namespace VulkanRenderer
 				vkCmdCopyBufferToImage(vkCommandBuffer, stagingVkBuffer, vkImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, static_cast<uint32_t>(vkBufferImageCopyList.size()), vkBufferImageCopyList.data());
 
 				// End and destroy Vulkan command buffer
-				transitionVkImageLayout(vulkanRenderer, vkCommandBuffer, vkImage, vkFormat, numberOfMipmaps, layerCount, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+				transitionVkImageLayout(vulkanRenderer, vkCommandBuffer, vkImage, vkImageAspectFlags, numberOfMipmaps, layerCount, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 				endSingleTimeCommands(vulkanRenderer, vkCommandBuffer);
 			}
 
