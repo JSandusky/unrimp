@@ -804,7 +804,7 @@ namespace VulkanRenderer
 	{
 		if (nullptr != vkCmdDebugMarkerInsertEXT)
 		{
-			VkDebugMarkerMarkerInfoEXT vkDebugMarkerMarkerInfoEXT =
+			const VkDebugMarkerMarkerInfoEXT vkDebugMarkerMarkerInfoEXT =
 			{
 				VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT,	// sType (VkStructureType)
 				nullptr,										// pNext (const void*)
@@ -824,7 +824,7 @@ namespace VulkanRenderer
 	{
 		if (nullptr != vkCmdDebugMarkerBeginEXT)
 		{
-			VkDebugMarkerMarkerInfoEXT vkDebugMarkerMarkerInfoEXT =
+			const VkDebugMarkerMarkerInfoEXT vkDebugMarkerMarkerInfoEXT =
 			{
 				VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT,	// sType (VkStructureType)
 				nullptr,										// pNext (const void*)

@@ -500,7 +500,7 @@ namespace VulkanRenderer
 		{
 			if (nullptr != vkDebugMarkerSetObjectNameEXT)
 			{
-				VkDebugMarkerObjectNameInfoEXT vkDebugMarkerObjectNameInfoEXT =
+				const VkDebugMarkerObjectNameInfoEXT vkDebugMarkerObjectNameInfoEXT =
 				{
 					VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT,	// sType (VkStructureType)
 					nullptr,												// pNext (const void*)
