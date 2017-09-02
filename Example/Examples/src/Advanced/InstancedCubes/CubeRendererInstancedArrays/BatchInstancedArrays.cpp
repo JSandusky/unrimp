@@ -66,7 +66,7 @@ void BatchInstancedArrays::initialize(Renderer::IBufferManager& bufferManager, R
 		//    - Rotation: Rotation quaternion (xyz) and scale (w)
 		//      -> We don't need to store the w component of the quaternion. It's normalized and storing
 		//         three components while recomputing the fourths component is be sufficient.
-		glm::quat rotation;	// Identity rotation quaternion
+		glm::quat rotation(1.0f, 0.0f, 0.0f, 0.0f);	// Identity rotation quaternion
 		for (uint32_t i = 0; i < mNumberOfCubeInstances; ++i)
 		{
 			{ // Position

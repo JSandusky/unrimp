@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Core/Math/EulerAngles.h"
+#include "RendererRuntime/Core/Math/Math.h"
 
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
@@ -272,7 +273,7 @@ namespace RendererRuntime
 
 	glm::vec3 EulerAngles::matrixToEuler(const glm::mat3& mRot, Order order)
 	{
-		glm::vec3 eulerAngles;
+		glm::vec3 eulerAngles = Math::VEC3_ZERO;
 
 		int i, j, k;
 		bool parityOdd, repetition, rotating;

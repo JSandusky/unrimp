@@ -469,15 +469,15 @@ namespace RendererRuntime
 			glm::vec4 viewSpaceFrustumCorners[8] =
 			{
 				// Near
-				glm::vec4(-1.0f,  1.0f, nearZ, 1.0f),	// 0: Near top left
-				glm::vec4( 1.0f,  1.0f, nearZ, 1.0f),	// 1: Near top right
-				glm::vec4(-1.0f, -1.0f, nearZ, 1.0f),	// 2: Near bottom left
-				glm::vec4( 1.0f, -1.0f, nearZ, 1.0f),	// 3: Near bottom right
+				{-1.0f,  1.0f, nearZ, 1.0f},	// 0: Near top left
+				{ 1.0f,  1.0f, nearZ, 1.0f},	// 1: Near top right
+				{-1.0f, -1.0f, nearZ, 1.0f},	// 2: Near bottom left
+				{ 1.0f, -1.0f, nearZ, 1.0f},	// 3: Near bottom right
 				// Far
-				glm::vec4(-1.0f,  1.0f, 1.0f, 1.0f),	// 4: Far top left
-				glm::vec4( 1.0f,  1.0f, 1.0f, 1.0f),	// 5: Far top right
-				glm::vec4(-1.0f, -1.0f, 1.0f, 1.0f),	// 6: Far bottom left
-				glm::vec4( 1.0f, -1.0f, 1.0f, 1.0f)		// 7: Far bottom right
+				{-1.0f,  1.0f, 1.0f, 1.0f},		// 4: Far top left
+				{ 1.0f,  1.0f, 1.0f, 1.0f},		// 5: Far top right
+				{-1.0f, -1.0f, 1.0f, 1.0f},		// 6: Far bottom left
+				{ 1.0f, -1.0f, 1.0f, 1.0f}		// 7: Far bottom right
 			};
 			const glm::mat4 clipSpaceToViewSpaceMatrix = glm::inverse(mPassData->viewSpaceToClipSpaceMatrix);
 			for (int i = 0; i < 8; ++i)
@@ -713,9 +713,9 @@ namespace RendererRuntime
 			// The following is basing on 'Pseudo Lens Flare' from John Chapman - http://john-chapman-graphics.blogspot.de/2013/02/pseudo-lens-flare.html
 
 			// Get the camera rotation; it just needs to change continuously as the camera rotates
-			glm::vec3 cameraX = mPassData->worldSpaceToViewSpaceMatrix[0];	// Camera x (left) vector
-			glm::vec3 cameraZ = mPassData->worldSpaceToViewSpaceMatrix[1];	// Camera z (forward) vector
-			const float cameraRotation = glm::dot(cameraX, glm::vec3(0.0f, 0.0f, 1.0f)) + glm::dot(cameraZ, glm::vec3(0.0f, 1.0f, 0.0f));
+			const glm::vec3 cameraX = mPassData->worldSpaceToViewSpaceMatrix[0];	// Camera x (left) vector
+			const glm::vec3 cameraZ = mPassData->worldSpaceToViewSpaceMatrix[1];	// Camera z (forward) vector
+			const float cameraRotation = glm::dot(cameraX, Math::VEC3_UNIT_Z) + glm::dot(cameraZ, Math::VEC3_UNIT_Y);
 
 			// Calculate the lens star matrix
 			const glm::mat3 scaleBias1(

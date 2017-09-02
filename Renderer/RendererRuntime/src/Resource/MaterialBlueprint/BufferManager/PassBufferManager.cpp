@@ -27,6 +27,7 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Listener/IMaterialBlueprintResourceListener.h"
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
+#include "RendererRuntime/Core/Math/Math.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 
@@ -45,6 +46,15 @@ namespace RendererRuntime
 		mBufferManager(rendererRuntime.getBufferManager()),
 		mMaterialBlueprintResource(materialBlueprintResource),
 		mMaterialBlueprintResourceManager(rendererRuntime.getMaterialBlueprintResourceManager()),
+		mPassData
+		{
+			Math::MAT4_IDENTITY,	// worldSpaceToClipSpaceMatrix (glm::mat4)
+			Math::MAT4_IDENTITY,	// previousWorldSpaceToClipSpaceMatrix (glm::mat4)
+			Math::MAT4_IDENTITY,	// worldSpaceToViewSpaceMatrix (glm::mat4)
+			Math::QUAT_IDENTITY,	// worldSpaceToViewSpaceQuaternion (glm::quat)
+			Math::MAT4_IDENTITY,	// previousWorldSpaceToViewSpaceMatrix (glm::mat4)
+			Math::MAT4_IDENTITY		// viewSpaceToClipSpaceMatrix (glm::mat4)
+		},
 		mCurrentUniformBufferIndex(0)
 	{
 		const MaterialBlueprintResource::UniformBuffer* passUniformBuffer = mMaterialBlueprintResource.getPassUniformBuffer();

@@ -361,7 +361,6 @@ void VrController::onUpdate(float pastSecondsSinceLastFrame)
 			glm::vec3 skew;
 			glm::vec4 perspective;
 			glm::decompose(devicePoseMatrix, scale, rotation, translation, skew, perspective);
-			rotation = glm::conjugate(rotation);
 
 			// Everything must be relative to the camera world space position
 			translation -= getCameraSceneItem().getParentSceneNodeSafe().getGlobalTransform().position;

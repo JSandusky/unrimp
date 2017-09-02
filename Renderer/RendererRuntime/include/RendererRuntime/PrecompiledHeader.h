@@ -54,6 +54,7 @@ PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4201)	// warning C4201: nonstandard extension used: nameless struct/union
 	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
 	PRAGMA_WARNING_DISABLE_MSVC(4324)	// warning C4324: '<x>': structure was padded due to alignment specifier
+	PRAGMA_WARNING_DISABLE_MSVC(4701)	// warning C4701: potentially uninitialized local variable 'Result' used
 	#include <glm/glm.hpp>
 	#include <glm/gtc/type_ptr.hpp>
 	#include <glm/gtc/quaternion.hpp>

@@ -77,10 +77,10 @@ namespace RendererRuntime
 	LightBufferManager::LightBufferManager(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime),
 		mTextureBuffer(nullptr),
-		mResourceGroup(nullptr),
 		mClusters3DTextureResourceId(getUninitialized<TextureResourceId>()),
 		mLightClustersAabbMinimum(-16.0f, -0.5f, -6.0f),	// TODO(co) Just for the clusters shading kickoff
-		mLightClustersAabbMaximum(14.0f, 15.0f, 7.0f)		// TODO(co) Just for the clusters shading kickoff
+		mLightClustersAabbMaximum(14.0f, 15.0f, 7.0f),		// TODO(co) Just for the clusters shading kickoff
+		mResourceGroup(nullptr)
 	{
 		// Create texture buffer instance
 		mTextureScratchBuffer.resize(std::min(mRendererRuntime.getRenderer().getCapabilities().maximumTextureBufferSize, ::detail::DEFAULT_TEXTURE_BUFFER_NUMBER_OF_BYTES));

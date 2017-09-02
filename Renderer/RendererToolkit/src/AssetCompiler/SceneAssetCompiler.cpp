@@ -31,6 +31,7 @@
 #include "RendererToolkit/Context.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
+#include <RendererRuntime/Core/Math/Math.h>
 #include <RendererRuntime/Core/File/MemoryFile.h>
 #include <RendererRuntime/Resource/Scene/Item/Sky/SkyboxSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/Camera/CameraSceneItem.h>
@@ -266,7 +267,7 @@ namespace RendererToolkit
 							RendererRuntime::v1Scene::Node node;
 
 							// Get the scene node transform
-							node.transform.scale = glm::vec3(1.0f, 1.0f, 1.0f);
+							node.transform.scale = RendererRuntime::Math::VEC3_ONE;
 							if (rapidJsonValueNode.HasMember("Properties"))
 							{
 								const rapidjson::Value& rapidJsonValueProperties = rapidJsonValueNode["Properties"];

@@ -28,14 +28,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline HosekWilkieSky::HosekWilkieSky() :
-		mTurbidity(0.0f),
-		mAlbedo(0.0f),
-		mNormalizedSunY(0.0f)
-	{
-		// Nothing here
-	}
-
 	inline HosekWilkieSky::~HosekWilkieSky()
 	{
 		// Nothing here

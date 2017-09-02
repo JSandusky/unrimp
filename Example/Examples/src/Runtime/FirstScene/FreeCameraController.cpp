@@ -138,7 +138,7 @@ void FreeCameraController::onUpdate(float pastSecondsSinceLastFrame)
 			}
 
 			// Calculate yaw and pitch from transformation
-			// -> GLM 0.9.8.0 "glm::yaw()" and "glm::pitch" behave odd, so "RendererRuntime::EulerAngles::matrixToEuler()" is used instead
+			// -> GLM 0.9.9.0 "glm::yaw()" and "glm::pitch" behave odd, so "RendererRuntime::EulerAngles::matrixToEuler()" is used instead
 			float yaw = 0.0f, pitch = 0.0f;
 			{
 				const glm::vec3 eulerAngles = RendererRuntime::EulerAngles::matrixToEuler(glm::mat3_cast(transform.rotation));

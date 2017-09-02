@@ -194,6 +194,16 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	HosekWilkieSky::HosekWilkieSky() :
+		mWorldSpaceSunDirection(Math::VEC3_UNIT_Z),
+		mTurbidity(0.0f),
+		mAlbedo(0.0f),
+		mNormalizedSunY(0.0f),
+		mSunColor(Math::VEC3_ONE)
+	{
+		memset(&mCoefficients, 0, sizeof(Coefficients));
+	}
+
 	void HosekWilkieSky::recalculate(const glm::vec3& worldSpaceSunDirection, float turbidity, float albedo, float normalizedSunY)
 	{
 		if (mWorldSpaceSunDirection != worldSpaceSunDirection || mTurbidity != turbidity || mAlbedo != albedo || mNormalizedSunY != normalizedSunY)

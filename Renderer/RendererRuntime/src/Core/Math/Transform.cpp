@@ -61,7 +61,6 @@ namespace RendererRuntime
 		glm::vec3 skew;
 		glm::vec4 perspective;
 		glm::decompose(objectSpaceToWorldSpace, scale, rotation, position, skew, perspective);
-		rotation = glm::conjugate(rotation);
 	}
 
 	Transform& Transform::operator+=(const Transform& other)

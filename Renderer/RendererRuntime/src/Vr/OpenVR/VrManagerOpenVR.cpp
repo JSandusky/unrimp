@@ -580,11 +580,7 @@ namespace RendererRuntime
 		vr::VRCompositor()->WaitGetPoses(mVrTrackedDevicePose, vr::k_unMaxTrackedDeviceCount, nullptr, 0);
 
 		// Everything must be relative to the camera world space position
-		glm::vec3 cameraPosition;
-		if (nullptr != cameraSceneItem && nullptr != cameraSceneItem->getParentSceneNode())
-		{
-			cameraPosition = cameraSceneItem->getParentSceneNode()->getGlobalTransform().position;
-		}
+		const glm::vec3& cameraPosition = (nullptr != cameraSceneItem && nullptr != cameraSceneItem->getParentSceneNode()) ? cameraSceneItem->getParentSceneNode()->getGlobalTransform().position : Math::VEC3_ZERO;
 
 		// Don't draw controllers if somebody else has input focus
 		const bool showControllers = (mShowRenderModels && !mVrSystem->IsInputFocusCapturedByAnotherProcess());
@@ -606,7 +602,6 @@ namespace RendererRuntime
 					glm::vec3 skew;
 					glm::vec4 perspective;
 					glm::decompose(devicePoseMatrix, scale, rotation, translation, skew, perspective);
-					rotation = glm::conjugate(rotation);
 
 					// Everything must be relative to the camera world space position
 					translation -= cameraPosition;
@@ -754,9 +749,14 @@ namespace RendererRuntime
 		mVrSystem(nullptr),
 		mVrRenderModels(nullptr),
 		mShowRenderModels(true),
-		mNumberOfValidDevicePoses(0)
+		mNumberOfValidDevicePoses(0),
+		mHmdPoseMatrix(Math::MAT4_IDENTITY)
 	{
 		memset(mSceneNodes, 0, sizeof(SceneNode*) * vr::k_unMaxTrackedDeviceCount);
+		for (int i = 0; i < vr::k_unMaxTrackedDeviceCount; ++i)
+		{
+			mDevicePoseMatrix[i] = Math::MAT4_IDENTITY;
+		}
 	}
 
 	VrManagerOpenVR::~VrManagerOpenVR()

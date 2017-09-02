@@ -46,8 +46,14 @@ namespace RendererRuntime
 	const glm::vec3 Math::VEC3_UP		(0.0f, 1.0f, 0.0f);
 	const glm::vec3 Math::VEC3_UNIT_Z	(0.0f, 0.0f, 1.0f);
 	const glm::vec3 Math::VEC3_FORWARD	(0.0f, 0.0f, 1.0f);
+	// "glm::vec4" constants
+	const glm::vec4 Math::VEC4_ZERO		(0.0f, 0.0f, 0.0f, 0.0f);
+	const glm::vec4 Math::VEC4_ONE		(1.0f, 1.0f, 1.0f, 1.0f);
 	// "glm::mat4" constants
-	const glm::mat4 Math::MAT4_IDENTITY;
+	const glm::mat4 Math::MAT4_IDENTITY (1.0f, 0.0f, 0.0f, 0.0f,
+										 0.0f, 1.0f, 0.0f, 0.0f,
+										 0.0f, 0.0f, 1.0f, 0.0f,
+										 0.0f, 0.0f, 0.0f, 1.0f);
 	// "glm::quat" constants
 	const glm::quat Math::QUAT_IDENTITY(1.0f, 0.0f, 0.0f, 0.0f);
 

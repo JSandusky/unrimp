@@ -114,6 +114,23 @@ namespace RendererRuntime
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	CameraSceneItem::CameraSceneItem(SceneResource& sceneResource) :
+		ISceneItem(sceneResource),
+		mFovY(DEFAULT_FOV_Y),
+		mNearZ(DEFAULT_NEAR_Z),
+		mFarZ(DEFAULT_FAR_Z),
+		mWorldSpaceToViewSpaceMatrix(Math::MAT4_IDENTITY),
+		mViewSpaceToClipSpaceMatrix(Math::MAT4_IDENTITY),
+		mHasCustomWorldSpaceToViewSpaceMatrix(false),
+		mHasCustomViewSpaceToClipSpaceMatrix(false)
+	{
+		// Nothing here
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

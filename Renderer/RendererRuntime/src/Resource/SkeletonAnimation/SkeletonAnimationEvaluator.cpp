@@ -201,7 +201,7 @@ namespace RendererRuntime
 			}
 
 			// Scale
-			glm::vec3 presentScale(1.0f, 1.0f, 1.0f);
+			glm::vec3 presentScale;
 			{
 				uint32_t frame = (timeInTicks >= mLastTimeInTicks) ? std::get<2>(mLastPositions[i]) : 0;
 				while (frame < channelHeader.numberOfScaleKeys - 1)

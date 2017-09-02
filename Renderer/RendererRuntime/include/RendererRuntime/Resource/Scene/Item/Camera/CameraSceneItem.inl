@@ -108,17 +108,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline CameraSceneItem::CameraSceneItem(SceneResource& sceneResource) :
-		ISceneItem(sceneResource),
-		mFovY(DEFAULT_FOV_Y),
-		mNearZ(DEFAULT_NEAR_Z),
-		mFarZ(DEFAULT_FAR_Z),
-		mHasCustomWorldSpaceToViewSpaceMatrix(false),
-		mHasCustomViewSpaceToClipSpaceMatrix(false)
-	{
-		// Nothing here
-	}
-
 	inline CameraSceneItem::~CameraSceneItem()
 	{
 		// Nothing here

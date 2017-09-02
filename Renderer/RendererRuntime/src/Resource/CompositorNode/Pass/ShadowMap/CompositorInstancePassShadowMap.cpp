@@ -138,15 +138,15 @@ namespace RendererRuntime
 			glm::vec4 worldSpaceFrustumCorners[8] =
 			{
 				// Near
-				glm::vec4(-1.0f,  1.0f, nearZ, 1.0f),	// 0: Near top left
-				glm::vec4( 1.0f,  1.0f, nearZ, 1.0f),	// 1: Near top right
-				glm::vec4(-1.0f, -1.0f, nearZ, 1.0f),	// 2: Near bottom left
-				glm::vec4( 1.0f, -1.0f, nearZ, 1.0f),	// 3: Near bottom right
+				{-1.0f,  1.0f, nearZ, 1.0f},	// 0: Near top left
+				{ 1.0f,  1.0f, nearZ, 1.0f},	// 1: Near top right
+				{-1.0f, -1.0f, nearZ, 1.0f},	// 2: Near bottom left
+				{ 1.0f, -1.0f, nearZ, 1.0f},	// 3: Near bottom right
 				// Far
-				glm::vec4(-1.0f,  1.0f, 1.0f, 1.0f),	// 4: Far top left
-				glm::vec4( 1.0f,  1.0f, 1.0f, 1.0f),	// 5: Far top right
-				glm::vec4(-1.0f, -1.0f, 1.0f, 1.0f),	// 6: Far bottom left
-				glm::vec4( 1.0f, -1.0f, 1.0f, 1.0f)		// 7: Far bottom right
+				{-1.0f,  1.0f, 1.0f, 1.0f},		// 4: Far top left
+				{ 1.0f,  1.0f, 1.0f, 1.0f},		// 5: Far top right
+				{-1.0f, -1.0f, 1.0f, 1.0f},		// 6: Far bottom left
+				{ 1.0f, -1.0f, 1.0f, 1.0f}		// 7: Far bottom right
 			};
 			{
 				uint32_t renderTargetWidth = 0;
@@ -187,7 +187,7 @@ namespace RendererRuntime
 					}
 
 					// Calculate the centroid of the view frustum slice
-					glm::vec4 temporaryFrustumCenter;
+					glm::vec4 temporaryFrustumCenter = Math::VEC4_ZERO;
 					for (int i = 0; i < 8; ++i)
 					{
 						temporaryFrustumCenter += cascadeSliceWorldSpaceFrustumCorners[i];
@@ -321,8 +321,8 @@ namespace RendererRuntime
 				if (0 == cascadeIndex)
 				{
 					mPassData.shadowMatrix = shadowMatrix;
-					mPassData.shadowCascadeOffsets[0] = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
-					mPassData.shadowCascadeScales[0] = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+					mPassData.shadowCascadeOffsets[0] = Math::VEC4_ZERO;
+					mPassData.shadowCascadeScales[0] = Math::VEC4_ONE;
 				}
 				else
 				{
@@ -332,11 +332,11 @@ namespace RendererRuntime
 					cascadeCorner = ::detail::transformVectorByMatrix(mPassData.shadowMatrix, cascadeCorner);
 
 					// Do the same for the upper corner
-					glm::vec4 otherCorner = ::detail::transformVectorByMatrix(inverseShadowMatrix, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+					glm::vec4 otherCorner = ::detail::transformVectorByMatrix(inverseShadowMatrix, Math::VEC4_ONE);
 					otherCorner = ::detail::transformVectorByMatrix(mPassData.shadowMatrix, otherCorner);
 
 					// Calculate the scale and offset
-					const glm::vec4 cascadeScale = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f) / (otherCorner - cascadeCorner);
+					const glm::vec4 cascadeScale = Math::VEC4_ONE / (otherCorner - cascadeCorner);
 					mPassData.shadowCascadeOffsets[cascadeIndex] = glm::vec4(-glm::vec3(cascadeCorner), 0.0f);
 					mPassData.shadowCascadeScales[cascadeIndex] = glm::vec4(glm::vec3(cascadeScale), 1.0f);
 				}
@@ -419,6 +419,11 @@ namespace RendererRuntime
 		mVerticalBlurCompositorResourcePassQuad(nullptr),
 		mVerticalBlurCompositorInstancePassQuad(nullptr)
 	{
+		mPassData.shadowMatrix = Math::MAT4_IDENTITY;
+		for (int i = 0; i < CompositorResourcePassShadowMap::MAXIMUM_NUMBER_OF_SHADOW_CASCADES; ++i)
+		{
+			mPassData.shadowCascadeScales[i] = Math::VEC4_ONE;
+		}
 		createShadowMapRenderTarget();
 	}
 

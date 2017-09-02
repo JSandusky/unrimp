@@ -128,7 +128,7 @@ namespace RendererRuntime
 		struct PackedShaderData
 		{
 			// float4 0: xyz = world space light position, w = light radius
-			glm::vec3 position;				///< Parent scene node world space position
+			glm::vec3 position{0.0f, 0.0f, 0.0f};	///< Parent scene node world space position
 			float	  radius = 1.0f;
 			// float4 1: xyz = RGB light diffuse color, w = unused
 			glm::vec3 color{1.0f, 1.0f, 1.0f};
@@ -139,8 +139,8 @@ namespace RendererRuntime
 			float nearClipDistance = 0.0f;
 			float unused           = 0.0f;
 			// float4 3: Only used for spot-light: xyz = normalized view space light direction, w = unused
-			glm::vec3 direction;			///< Derived from the parent scene node world space rotation
-			uint32_t  visible = 1;			///< Boolean, not used inside the shader but well, there's currently space left in here so we're using it
+			glm::vec3 direction{0.0f, 0.0f, 1.0f};	///< Derived from the parent scene node world space rotation
+			uint32_t  visible = 1;					///< Boolean, not used inside the shader but well, there's currently space left in here so we're using it
 		};
 
 

@@ -92,7 +92,7 @@ namespace RendererRuntime
 			int			shadowMapSize = 0;
 			glm::mat4	shadowMatrix;
 			float		shadowCascadeSplits[CompositorResourcePassShadowMap::MAXIMUM_NUMBER_OF_SHADOW_CASCADES] = {};
-			glm::vec4	shadowCascadeOffsets[CompositorResourcePassShadowMap::MAXIMUM_NUMBER_OF_SHADOW_CASCADES];
+			glm::vec4	shadowCascadeOffsets[CompositorResourcePassShadowMap::MAXIMUM_NUMBER_OF_SHADOW_CASCADES] = {};
 			glm::vec4	shadowCascadeScales[CompositorResourcePassShadowMap::MAXIMUM_NUMBER_OF_SHADOW_CASCADES];
 			uint8_t		currentShadowCascadeIndex = 0;
 			float		shadowFilterSize = 0.0f;

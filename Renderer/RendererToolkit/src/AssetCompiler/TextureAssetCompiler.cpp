@@ -103,10 +103,8 @@ namespace
 
 		float calculateToksvig(crnlib::image_u8& normalMapCrunchImage, const glm::vec2& position, float power)
 		{
-			glm::vec4 n;
-
 			// 3x3 filter
-			n  = fetch(normalMapCrunchImage, position, glm::vec2(-1.0f, -1.0f));
+			glm::vec4 n = fetch(normalMapCrunchImage, position, glm::vec2(-1.0f, -1.0f));
 			n += fetch(normalMapCrunchImage, position, glm::vec2( 0.0f, -1.0f));
 			n += fetch(normalMapCrunchImage, position, glm::vec2( 1.0f, -1.0f));
 

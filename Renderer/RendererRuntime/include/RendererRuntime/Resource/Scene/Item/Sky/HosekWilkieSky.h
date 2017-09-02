@@ -68,7 +68,7 @@ namespace RendererRuntime
 		{
 			glm::vec3 A, B, C, D, E, F, G, H, I;
 			glm::vec3 Z;
-			float	  padding[2] = { 0.0f, 0.0f };	///< Padding so this data structure is 32 bytes (2 * float4x4)
+			float	  padding[2];	///< Padding so this data structure is 32 bytes (2 * float4x4)
 		};
 
 
@@ -76,7 +76,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline HosekWilkieSky();
+		HosekWilkieSky();
 		inline ~HosekWilkieSky();
 		inline const Coefficients& getCoefficients() const;
 		inline const glm::vec3& getSunColor() const;

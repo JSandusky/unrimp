@@ -78,6 +78,9 @@ namespace RendererRuntime
 		RENDERERRUNTIME_API_EXPORT static const glm::vec3 VEC3_UP;		///< 0 1 0; coordinate system axis terminology, don't remove
 		RENDERERRUNTIME_API_EXPORT static const glm::vec3 VEC3_UNIT_Z;	///< 0 0 1
 		RENDERERRUNTIME_API_EXPORT static const glm::vec3 VEC3_FORWARD;	///< 0 0 1; coordinate system axis terminology, don't remove
+		// "glm::vec4" constants
+		RENDERERRUNTIME_API_EXPORT static const glm::vec4 VEC4_ZERO;	///< 0 0 0 0
+		RENDERERRUNTIME_API_EXPORT static const glm::vec4 VEC4_ONE;		///< 1 1 1 1
 		// "glm::mat4" constants
 		RENDERERRUNTIME_API_EXPORT static const glm::mat4 MAT4_IDENTITY;
 		// "glm::quat" constants
