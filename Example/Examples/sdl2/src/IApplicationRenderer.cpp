@@ -433,7 +433,7 @@ void IApplicationRenderer::createRenderer()
 			Renderer::IRenderPass* renderPass = mRenderer->createRenderPass(1, &capabilities.preferredSwapChainColorTextureFormat, capabilities.preferredSwapChainDepthStencilTextureFormat);
 
 			// Create a main swap chain instance
-			mMainSwapChain = mRenderer->createSwapChain(*renderPass, Renderer::WindowInfo{mRendererContext->getNativeWindowHandle(), this}, mRenderer->getContext().isUsingExternalContext());
+			mMainSwapChain = mRenderer->createSwapChain(*renderPass, getWindowInfo(mMainWindow), mRenderer->getContext().isUsingExternalContext());
 			RENDERER_SET_RESOURCE_DEBUG_NAME(mMainSwapChain, "Main swap chain")
 			mMainSwapChain->addReference();	// Internal renderer reference
 		}
@@ -698,13 +698,12 @@ Renderer::Context* IApplicationRenderer::createRendererContext() const
 				case SDL_SYSWM_WINDOWS:
 					return new Renderer::Context(Renderer::Context::ContextType::WINDOWS, ::detail::g_RendererLog, info.info.win.window, isOpenGLRenderer);
 		#endif
-#ifdef LINUX
+		#ifdef LINUX
 				case SDL_SYSWM_X11:
 					return new Renderer::X11Context(::detail::g_RendererLog, info.info.x11.display, info.info.x11.window, isOpenGLRenderer);
 				case SDL_SYSWM_WAYLAND:
-					// TODO(sw) For now we misuse the win32 context, the nativ window handle is only used by the renderer instance to determine if a main swapchain should be created or not, because we tell the renderer instance that an external context is used
 					return new Renderer::WaylandContext(::detail::g_RendererLog, info.info.wl.display, info.info.wl.surface, isOpenGLRenderer);
-#endif
+		#endif
 			}
 		}
 	}
@@ -725,4 +724,38 @@ void IApplicationRenderer::getWindowSize(uint32_t &width, uint32_t &height) cons
 		width  = 0;
 		height = 0;
 	}
+}
+
+Renderer::WindowInfo IApplicationRenderer::getWindowInfo(SDL_Window* sdlWindow)
+{
+	Renderer::WindowInfo windowInfo{0, this, nullptr};
+
+	if (nullptr != sdlWindow)
+	{
+		SDL_SysWMinfo info;
+		SDL_VERSION(&info.version);
+	  
+		if(SDL_GetWindowWMInfo(sdlWindow, &info))
+		{
+			switch(info.subsystem)
+			{
+		#ifdef WIN32
+				case SDL_SYSWM_WINDOWS:
+					//return new Renderer::Context(Renderer::Context::ContextType::WINDOWS, ::detail::g_RendererLog, info.info.win.window, isOpenGLRenderer);
+					windowInfo.nativeWindowHandle = info.info.win.window;
+					break;
+		#endif
+		#ifdef LINUX
+				case SDL_SYSWM_X11:
+					windowInfo.nativeWindowHandle = info.info.x11.window;
+					break;
+				case SDL_SYSWM_WAYLAND:
+					windowInfo.waylandSurface = info.info.wl.surface;
+					break;
+		#endif
+			}
+		}
+	}
+
+	return windowInfo;
 }

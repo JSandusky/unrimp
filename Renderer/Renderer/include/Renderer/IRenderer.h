@@ -84,6 +84,9 @@ namespace Renderer
 	{
 		handle nativeWindowHandle; // The native window handle
 		IRenderWindow* renderWindow; // A pointer to a IRenderWindow instance (can be null)
+		#ifdef LINUX
+			wl_surface*	waylandSurface;	// A wayland surface cannot be put into a handle type. So we store a pointer to the wayland surface here
+		#endif
 	};
 	
 	/**
