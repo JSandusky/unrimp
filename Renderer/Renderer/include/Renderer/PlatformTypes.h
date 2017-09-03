@@ -29,8 +29,7 @@
 //[-------------------------------------------------------]
 #include <inttypes.h>	// For uint32_t, uint64_t etc.
 #include <cassert>
-#include <string.h>		// For strcat() and strncat(), we include it here because inside this header macros are defined which uses those methods
-
+#include <string.h>		// For "strcat()" and "strncat()", we include it here because inside this header macros are defined which uses those methods
 
 
 //[-------------------------------------------------------]

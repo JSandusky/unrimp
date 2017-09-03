@@ -1845,7 +1845,7 @@ namespace OpenGLRenderer
 	{
 		// Sanity checks
 		OPENGLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
-		assert((NULL_HANDLE != nativeWindowHandle || nullptr != windowInfo.renderWindow) && "The provided native window handle or renderWindow must not be a null handle/nullptr");
+		assert((NULL_HANDLE != windowInfo.nativeWindowHandle || nullptr != windowInfo.renderWindow) && "The provided native window handle or render window must not be a null handle / null pointer");
 
 		// Create the swap chain
 		return new SwapChain(renderPass, windowInfo, useExternalContext);

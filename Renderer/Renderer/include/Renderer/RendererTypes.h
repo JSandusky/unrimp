@@ -31,6 +31,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace Renderer
+{
+	class IRenderWindow;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace Renderer
@@ -40,6 +49,19 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Definitions                                           ]
 	//[-------------------------------------------------------]
+	/**
+	*  @brief
+	*    Holds information about an window into which the rendering should be done
+	*
+	*  @note
+	*    - One of those members must be valid
+	*/
+	struct WindowInfo
+	{
+		handle		   nativeWindowHandle;	// The native window handle
+		IRenderWindow* renderWindow;		// A pointer to an "Renderer::IRenderWindow"-instance, can be a null pointer
+	};
+
 	/**
 	*  @brief
 	*    Map types

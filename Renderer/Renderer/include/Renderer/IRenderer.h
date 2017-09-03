@@ -46,7 +46,6 @@ namespace Renderer
 {
 	class ITexture;
 	class IResource;
-	class IRenderWindow;
 	class ISwapChain;
 	class IRenderPass;
 	class IFramebuffer;
@@ -74,18 +73,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Holds information about an window into which the rendering should be done
-	*  @note
-	*    One of those members must be valid!
-	*/
-	struct WindowInfo
-	{
-		handle nativeWindowHandle; // The native window handle
-		IRenderWindow* renderWindow; // A pointer to a IRenderWindow instance (can be null)
-	};
-	
 	/**
 	*  @brief
 	*    Abstract renderer interface

@@ -34,7 +34,7 @@
 #elif defined(__ANDROID__)
 	#define VK_USE_PLATFORM_ANDROID_KHR
 #elif defined(LINUX)
-	// TODO(sw) Make this optional which platform we support? For now we support xlib and wayland
+	// TODO(sw) Make this optional which platform we support? For now we support xlib and Wayland.
 	#define VK_USE_PLATFORM_XLIB_KHR
 	#define VK_USE_PLATFORM_WAYLAND_KHR
 #endif

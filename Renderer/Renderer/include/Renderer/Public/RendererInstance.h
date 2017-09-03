@@ -49,6 +49,10 @@
 
 #include <string.h>
 
+
+//[-------------------------------------------------------]
+//[ Global functions                                      ]
+//[-------------------------------------------------------]
 // Statically linked libraries create renderer instance signatures
 // This is needed to do here because the methods in the libraries are also defined in global namespace
 #ifndef SHARED_LIBRARIES

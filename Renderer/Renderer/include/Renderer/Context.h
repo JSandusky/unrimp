@@ -38,10 +38,10 @@ namespace Renderer
 	class ILog;
 }
 #ifdef LINUX
-	// Copied from Xlib.h
+	// Copied from "Xlib.h"
 	struct _XDisplay;
 
-	// Copied from wayland-client.h
+	// Copied from "wayland-client.h"
 	struct wl_display;
 	struct wl_surface;
 #endif
@@ -225,6 +225,7 @@ namespace Renderer
 
 
 	};
+
 	/**
 	*  @brief
 	*    Wayland version of the context class
@@ -246,7 +247,7 @@ namespace Renderer
 		*  @param[in] display
 		*    The Wayland display connection
 		*  @param[in] surface
-		*    The wayland surface
+		*    The Wayland surface
 		*  @param[in] useExternalContext
 		*    Indicates if an external renderer context is used; in this case the renderer itself has nothing to do with the creation/managing of an renderer context
 		*/
@@ -254,22 +255,21 @@ namespace Renderer
 
 		/**
 		*  @brief
-		*    Return the wayland display conenction
+		*    Return the Wayland display connection
 		*
 		*  @return
-		*    The wayland display connection
+		*    The Wayland display connection
 		*/
 		inline wl_display* getDisplay() const;
 
 		/**
 		*  @brief
-		*    Return the wayland surface
+		*    Return the Wayland surface
 		*
 		*  @return
-		*    The wayland surface
+		*    The Wayland surface
 		*/
 		inline wl_surface* getSurface() const;
-
 
 
 	//[-------------------------------------------------------]

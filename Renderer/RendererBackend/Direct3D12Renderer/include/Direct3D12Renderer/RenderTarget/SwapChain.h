@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include <Renderer/RenderTarget/ISwapChain.h>
+#include <Renderer/RendererTypes.h>
 #include <Renderer/WindowsHeader.h>	// For the MS Windows specific data types (UINT, HANDLE etc. for those we better use the real definition)
 
 
@@ -69,7 +70,7 @@ namespace Direct3D12Renderer
 		*  @param[in] renderPass
 		*    Render pass to use, the swap chain keeps a reference to the render pass
 		*  @param[in] windowInfo
-		*     Information about the window to render into
+		*    Information about the window to render into
 		*/
 		SwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowInfo windowInfo);
 
