@@ -137,8 +137,14 @@
 		#define FRAGMENT_POSITION ShaderInput.FragmentPosition
 		#define DECLARE_IS_FRONT_FACE bool IsFrontFace : SV_ISFRONTFACE;
 		#define IS_FRONT_FACE ShaderInput.IsFrontFace
-		#define DECLARE_COVERAGE_MASK uint CoverageMask : SV_COVERAGE;
-		#define COVERAGE_MASK ShaderInput.CoverageMask
+		@property(Direct3D10)
+			#define DECLARE_COVERAGE_MASK
+			#define COVERAGE_MASK 0
+		@end
+		@property(Direct3D11 || Direct3D12)
+			#define DECLARE_COVERAGE_MASK uint CoverageMask : SV_COVERAGE;
+			#define COVERAGE_MASK ShaderInput.CoverageMask
+		@end
 
 		// Compiler hints
 		#define UNROLL_HINT [unroll]
