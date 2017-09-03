@@ -583,7 +583,10 @@
     <ClCompile Include="src\Shader\Separate\GeometryShaderSeparate.cpp" />
     <ClCompile Include="src\Shader\Separate\ProgramSeparate.cpp" />
     <ClCompile Include="src\Shader\Separate\ProgramSeparateDsa.cpp" />
-    <ClCompile Include="src\Shader\Separate\ShaderLanguageSeparate.cpp" />
+    <ClCompile Include="src\Shader\Separate\ShaderLanguageSeparate.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Disabled</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Disabled</Optimization>
+    </ClCompile>
     <ClCompile Include="src\Shader\Separate\TessellationControlShaderSeparate.cpp" />
     <ClCompile Include="src\Shader\Separate\TessellationEvaluationShaderSeparate.cpp" />
     <ClCompile Include="src\Shader\Separate\VertexShaderSeparate.cpp" />

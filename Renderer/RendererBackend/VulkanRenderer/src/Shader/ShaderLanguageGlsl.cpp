@@ -18,6 +18,9 @@
 \*********************************************************/
 
 
+// TODO(co) Visual Studio 2015 compile settings: For some reasons I need to disable optimization for "ShaderLanguageGlsl.cpp" or else "glslang::TShader::parse()" will output the error "ERROR: 0:1: '€' : unexpected token" (glslang (latest commit 652db16ff114747c216ec631767dfd27e3d3c838 - July 7, 2017))
+
+
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]

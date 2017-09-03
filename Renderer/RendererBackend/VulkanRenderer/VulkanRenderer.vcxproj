@@ -503,7 +503,10 @@
     <ClCompile Include="src\Shader\FragmentShaderGlsl.cpp" />
     <ClCompile Include="src\Shader\GeometryShaderGlsl.cpp" />
     <ClCompile Include="src\Shader\ProgramGlsl.cpp" />
-    <ClCompile Include="src\Shader\ShaderLanguageGlsl.cpp" />
+    <ClCompile Include="src\Shader\ShaderLanguageGlsl.cpp">
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Disabled</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Disabled</Optimization>
+    </ClCompile>
     <ClCompile Include="src\Shader\TessellationControlShaderGlsl.cpp" />
     <ClCompile Include="src\Shader\TessellationEvaluationShaderGlsl.cpp" />
     <ClCompile Include="src\Shader\VertexShaderGlsl.cpp" />
