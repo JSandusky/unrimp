@@ -29,6 +29,11 @@
 //[-------------------------------------------------------]
 #include "Renderer/PlatformTypes.h"
 
+#ifdef LINUX
+	// Copied from "wayland-client.h"
+	struct wl_surface;
+#endif
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -60,6 +65,9 @@ namespace Renderer
 	{
 		handle		   nativeWindowHandle;	// The native window handle
 		IRenderWindow* renderWindow;		// A pointer to an "Renderer::IRenderWindow"-instance, can be a null pointer
+		#ifdef LINUX
+			wl_surface*	waylandSurface;	// A wayland surface cannot be put into a handle type. So we store a pointer to the wayland surface here
+		#endif
 	};
 
 	/**
