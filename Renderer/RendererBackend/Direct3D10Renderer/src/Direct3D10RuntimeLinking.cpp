@@ -43,6 +43,7 @@ namespace Direct3D10Renderer
 		mDirect3D10Renderer(direct3D10Renderer),
 		mD3D10SharedLibrary(nullptr),
 		mD3DX10SharedLibrary(nullptr),
+		mD3DCompilerSharedLibrary(nullptr),
 		mEntryPointsRegistered(false),
 		mInitialized(false)
 	{
@@ -60,6 +61,10 @@ namespace Direct3D10Renderer
 		{
 			::FreeLibrary(static_cast<HMODULE>(mD3DX10SharedLibrary));
 		}
+		if (nullptr != mD3DCompilerSharedLibrary)
+		{
+			::FreeLibrary(static_cast<HMODULE>(mD3DCompilerSharedLibrary));
+		}
 	}
 
 	bool Direct3D10RuntimeLinking::isDirect3D10Avaiable()
@@ -73,8 +78,8 @@ namespace Direct3D10Renderer
 			// Load the shared libraries
 			if (loadSharedLibraries())
 			{
-				// Load the D3D10 and D3DX10 entry points
-				mEntryPointsRegistered = (loadD3D10EntryPoints() && loadD3DX10EntryPoints());
+				// Load the D3D10, D3DX10 and D3DCompiler entry points
+				mEntryPointsRegistered = (loadD3D10EntryPoints() && loadD3DX10EntryPoints() && loadD3DCompilerEntryPoints());
 			}
 		}
 
@@ -93,9 +98,17 @@ namespace Direct3D10Renderer
 		if (nullptr != mD3D10SharedLibrary)
 		{
 			mD3DX10SharedLibrary = ::LoadLibraryExA("d3dx10_43.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
-			if (nullptr == mD3DX10SharedLibrary)
+			if (nullptr != mD3DX10SharedLibrary)
 			{
-				RENDERER_LOG(mDirect3D10Renderer.getContext(), CRITICAL, "Failed to load in the Direct3D 10 shared library \"d3dx10_43.dll\"")
+				mD3DCompilerSharedLibrary = ::LoadLibraryExA("D3DCompiler_47.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
+				if (nullptr == mD3DCompilerSharedLibrary)
+				{
+					RENDERER_LOG(mDirect3D10Renderer.getContext(), CRITICAL, "Failed to load in the shared Direct3D 10 library \"D3DCompiler_47.dll\"")
+				}
+			}
+			else
+			{
+				RENDERER_LOG(mDirect3D10Renderer.getContext(), CRITICAL, "Failed to load in the shared Direct3D 10 library \"d3dx10_43.dll\"")
 			}
 		}
 		else
@@ -104,7 +117,7 @@ namespace Direct3D10Renderer
 		}
 
 		// Done
-		return (nullptr != mD3D10SharedLibrary && nullptr != mD3DX10SharedLibrary);
+		return (nullptr != mD3D10SharedLibrary && nullptr != mD3DX10SharedLibrary && nullptr != mD3DCompilerSharedLibrary);
 	}
 
 	bool Direct3D10RuntimeLinking::loadD3D10EntryPoints()
@@ -132,7 +145,6 @@ namespace Direct3D10Renderer
 
 		// Load the entry points
 		IMPORT_FUNC(D3D10CreateDevice);
-		IMPORT_FUNC(D3D10CreateBlob);
 
 		// Undefine the helper macro
 		#undef IMPORT_FUNC
@@ -165,8 +177,41 @@ namespace Direct3D10Renderer
 			}
 
 		// Load the entry points
-		IMPORT_FUNC(D3DX10CompileFromMemory);
 		IMPORT_FUNC(D3DX10FilterTexture);
+
+		// Undefine the helper macro
+		#undef IMPORT_FUNC
+
+		// Done
+		return result;
+	}
+
+	bool Direct3D10RuntimeLinking::loadD3DCompilerEntryPoints()
+	{
+		bool result = true;	// Success by default
+
+		// Define a helper macro
+		#define IMPORT_FUNC(funcName)																																							\
+			if (result)																																											\
+			{																																													\
+				void* symbol = ::GetProcAddress(static_cast<HMODULE>(mD3DCompilerSharedLibrary), #funcName);																					\
+				if (nullptr != symbol)																																							\
+				{																																												\
+					*(reinterpret_cast<void**>(&(funcName))) = symbol;																															\
+				}																																												\
+				else																																											\
+				{																																												\
+					wchar_t moduleFilename[MAX_PATH];																																			\
+					moduleFilename[0] = '\0';																																					\
+					::GetModuleFileNameW(static_cast<HMODULE>(mD3DCompilerSharedLibrary), moduleFilename, MAX_PATH);																			\
+					RENDERER_LOG(mDirect3D10Renderer.getContext(), CRITICAL, "Failed to locate the entry point \"%s\" within the Direct3D 10 shared library \"%s\"", #funcName, moduleFilename)	\
+					result = false;																																								\
+				}																																												\
+			}
+
+		// Load the entry points
+		IMPORT_FUNC(D3DCompile);
+		IMPORT_FUNC(D3DCreateBlob);
 
 		// Undefine the helper macro
 		#undef IMPORT_FUNC

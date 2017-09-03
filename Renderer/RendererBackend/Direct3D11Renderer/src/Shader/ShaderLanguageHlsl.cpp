@@ -63,10 +63,9 @@ namespace Direct3D11Renderer
 
 	ID3DBlob* ShaderLanguageHlsl::loadShaderFromSourcecode(const char* shaderModel, const char* sourceCode, const char* entryPoint) const
 	{
-		// TODO(co) Cleanup
-		ID3DBlob* d3dBlob;
-	
-		HRESULT hr = S_OK;
+		// Sanity checks
+		assert(nullptr != shaderModel);
+		assert(nullptr != sourceCode);
 
 		// Get compile flags
 		UINT compileFlags = D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_WARNINGS_ARE_ERRORS;
@@ -102,20 +101,22 @@ namespace Direct3D11Renderer
 				break;
 		}
 
-		ID3DBlob* errorBlob;
-		hr = D3DX11CompileFromMemory(sourceCode, strlen(sourceCode), nullptr, nullptr, nullptr, entryPoint ? entryPoint : "main", shaderModel, 
-			compileFlags, 0, nullptr, &d3dBlob, &errorBlob, nullptr );
-
-		if (FAILED(hr))
+		// Compile
+		ID3DBlob* d3dBlob = nullptr;
+		ID3DBlob* errorD3dBlob = nullptr;
+		if (FAILED(D3DCompile(sourceCode, strlen(sourceCode), nullptr, nullptr, nullptr, entryPoint ? entryPoint : "main", shaderModel, compileFlags, 0, &d3dBlob, &errorD3dBlob)))
 		{
-			if (nullptr != errorBlob)
+			if (nullptr != errorD3dBlob)
 			{
-				RENDERER_LOG(static_cast<Direct3D11Renderer&>(getRenderer()).getContext(), CRITICAL, static_cast<char*>(errorBlob->GetBufferPointer()))
-				errorBlob->Release();
+				RENDERER_LOG(static_cast<Direct3D11Renderer&>(getRenderer()).getContext(), CRITICAL, static_cast<char*>(errorD3dBlob->GetBufferPointer()))
+				errorD3dBlob->Release();
 			}
 			return nullptr;
 		}
-		if (nullptr != errorBlob ) errorBlob->Release();
+		if (nullptr != errorD3dBlob)
+		{
+			errorD3dBlob->Release();
+		}
 
 		// Done
 		return d3dBlob;
