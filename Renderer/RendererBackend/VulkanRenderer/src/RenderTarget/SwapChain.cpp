@@ -448,11 +448,11 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SwapChain::SwapChain(Renderer::IRenderPass& renderPass, handle nativeWindowHandle) :
+	SwapChain::SwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowInfo windowInfo) :
 		ISwapChain(renderPass),
 		// Operation system window
-		mNativeWindowHandle(nativeWindowHandle),
-		mRenderWindow(nullptr),
+		mNativeWindowHandle(windowInfo.nativeWindowHandle),
+		mRenderWindow(windowInfo.renderWindow),
 		// Vulkan presentation surface
 		mVkSurfaceKHR(VK_NULL_HANDLE),
 		// Vulkan swap chain and color render target related

@@ -24,6 +24,7 @@ cmake_minimum_required(VERSION 3.3.0)
 ##################################################
 ## Preprocessor definitions
 ##################################################
+add_definitions(-DGLM_FORCE_RADIANS -DGLM_FORCE_LEFT_HANDED -DGLM_FORCE_DEPTH_ZERO_TO_ONE -DGLM_ENABLE_EXPERIMENTAL)
 if(NOT RENDERER_DEBUG)
 	add_definitions(-DRENDERER_NO_DEBUG)
 endif()
@@ -42,6 +43,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/mikktspace/include/)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/glm/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/RapidJSON/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/SimpleFileWatcher/src/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/sqlitecpp/SQLiteCpp/include/)

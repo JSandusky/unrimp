@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Linux/OpenGLContextLinux.h"
+#include "OpenGLRenderer/RenderTarget/RenderPass.h"
 #include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
@@ -47,8 +48,8 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	OpenGLContextLinux::OpenGLContextLinux(OpenGLRenderer& openGLRenderer, handle nativeWindowHandle, bool useExternalContext, const OpenGLContextLinux* shareContextLinux) :
-		OpenGLContextLinux(openGLRenderer, nullptr, nativeWindowHandle, useExternalContext, shareContextLinux)
+	OpenGLContextLinux::OpenGLContextLinux(OpenGLRenderer& openGLRenderer, const RenderPass& renderPass, handle nativeWindowHandle, bool useExternalContext, const OpenGLContextLinux* shareContextLinux) :
+		OpenGLContextLinux(openGLRenderer, nullptr, renderPass, nativeWindowHandle, useExternalContext, shareContextLinux)
 	{
 		// Nothing here
 	}
@@ -103,7 +104,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	OpenGLContextLinux::OpenGLContextLinux(OpenGLRenderer& openGLRenderer, OpenGLRuntimeLinking* openGLRuntimeLinking, handle nativeWindowHandle, bool useExternalContext, const OpenGLContextLinux* shareContextLinux) :
+	OpenGLContextLinux::OpenGLContextLinux(OpenGLRenderer& openGLRenderer, OpenGLRuntimeLinking* openGLRuntimeLinking, const RenderPass& renderPass, handle nativeWindowHandle, bool useExternalContext, const OpenGLContextLinux* shareContextLinux) :
 		IOpenGLContext(openGLRuntimeLinking),
 		mOpenGLRenderer(openGLRenderer),
 		mNativeWindowHandle(nativeWindowHandle),
@@ -154,7 +155,7 @@ namespace OpenGLRenderer
 				if (loadOpenGL3EntryPoints())
 				{
 					// Create the render context of the OpenGL window
-					mWindowRenderContext = createOpenGLContext();
+					mWindowRenderContext = createOpenGLContext(renderPass);
 
 					// If there's an OpenGL context, do some final initialization steps
 					if (NULL_HANDLE != mWindowRenderContext)
@@ -196,7 +197,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	GLXContext OpenGLContextLinux::createOpenGLContext()
+	GLXContext OpenGLContextLinux::createOpenGLContext(const RenderPass& renderPass)
 	{
 		#define GLX_CONTEXT_MAJOR_VERSION_ARB	0x2091
 		#define GLX_CONTEXT_MINOR_VERSION_ARB	0x2092
@@ -236,6 +237,8 @@ namespace OpenGLRenderer
 					0
 				};
 
+				// TODO(co) Use more detailed color and depth/stencil information from render pass
+				const int depthBufferBits = 24;//(renderPass.getDepthStencilAttachmentTextureFormat() == Renderer::TextureFormat::Enum::UNKNOWN) ? 24 : 24;
 				int numberOfElements = 0;
 				int visualAttributes[] =
 				{
@@ -245,7 +248,7 @@ namespace OpenGLRenderer
 					GLX_GREEN_SIZE,		8,
 					GLX_BLUE_SIZE,		8,
 					GLX_ALPHA_SIZE,		8,
-					GLX_DEPTH_SIZE,		24,
+					GLX_DEPTH_SIZE,		depthBufferBits,
 					GLX_STENCIL_SIZE,	8,
 					None
 				};

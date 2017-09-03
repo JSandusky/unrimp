@@ -640,14 +640,14 @@ namespace NullRenderer
 		return new RenderPass(*this, numberOfColorAttachments, colorAttachmentTextureFormats, depthStencilAttachmentTextureFormat, numberOfMultisamples);
 	}
 
-	Renderer::ISwapChain* NullRenderer::createSwapChain(Renderer::IRenderPass& renderPass, handle nativeWindowHandle, bool)
+	Renderer::ISwapChain* NullRenderer::createSwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowInfo windowInfo, bool)
 	{
 		// Sanity checks
 		NULLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
-		assert(NULL_HANDLE != nativeWindowHandle && "The provided native window handle must not be a null handle");
+		assert(NULL_HANDLE != windowInfo.nativeWindowHandle && "The provided native window handle must not be a null handle");
 
 		// Create the swap chain
-		return new SwapChain(renderPass, nativeWindowHandle);
+		return new SwapChain(renderPass, windowInfo);
 	}
 
 	Renderer::IFramebuffer* NullRenderer::createFramebuffer(Renderer::IRenderPass& renderPass, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment)

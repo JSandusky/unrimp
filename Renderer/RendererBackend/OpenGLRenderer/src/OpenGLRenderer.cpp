@@ -436,15 +436,15 @@ namespace OpenGLRenderer
 		if (mOpenGLRuntimeLinking->isOpenGLAvaiable())
 		{
 			const handle nativeWindowHandle = mContext.getNativeWindowHandle();
+			const Renderer::TextureFormat::Enum textureFormat = Renderer::TextureFormat::Enum::R8G8B8A8;
+			const RenderPass renderPass(*this, 1, &textureFormat, Renderer::TextureFormat::Enum::UNKNOWN, 1);
 			#ifdef WIN32
 			{
 				// TODO(co) Add external OpenGL context support
-				const Renderer::TextureFormat::Enum textureFormat = Renderer::TextureFormat::Enum::R8G8B8A8;
-				const RenderPass renderPass(*this, 1, &textureFormat, Renderer::TextureFormat::Enum::UNKNOWN, 1);
 				mOpenGLContext = new OpenGLContextWindows(mOpenGLRuntimeLinking, renderPass, nativeWindowHandle);
 			}
 			#elif defined LINUX
-				mOpenGLContext = new OpenGLContextLinux(*this, mOpenGLRuntimeLinking, nativeWindowHandle, mContext.isUsingExternalContext());
+				mOpenGLContext = new OpenGLContextLinux(*this, mOpenGLRuntimeLinking, renderPass, nativeWindowHandle, mContext.isUsingExternalContext());
 			#else
 				#error "Unsupported platform"
 			#endif
@@ -1841,14 +1841,14 @@ namespace OpenGLRenderer
 		return new RenderPass(*this, numberOfColorAttachments, colorAttachmentTextureFormats, depthStencilAttachmentTextureFormat, numberOfMultisamples);
 	}
 
-	Renderer::ISwapChain* OpenGLRenderer::createSwapChain(Renderer::IRenderPass& renderPass, handle nativeWindowHandle, bool useExternalContext)
+	Renderer::ISwapChain* OpenGLRenderer::createSwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowInfo windowInfo, bool useExternalContext)
 	{
 		// Sanity checks
 		OPENGLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
-		assert(NULL_HANDLE != nativeWindowHandle && "The provided native window handle must not be a null handle");
+		assert((NULL_HANDLE != nativeWindowHandle || nullptr != windowInfo.renderWindow) && "The provided native window handle or renderWindow must not be a null handle/nullptr");
 
 		// Create the swap chain
-		return new SwapChain(renderPass, nativeWindowHandle, useExternalContext);
+		return new SwapChain(renderPass, windowInfo, useExternalContext);
 	}
 
 	Renderer::IFramebuffer* OpenGLRenderer::createFramebuffer(Renderer::IRenderPass& renderPass, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment)

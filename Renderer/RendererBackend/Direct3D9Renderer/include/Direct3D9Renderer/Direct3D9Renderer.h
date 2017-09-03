@@ -179,7 +179,7 @@ namespace Direct3D9Renderer
 		//[ Resource creation                                     ]
 		//[-------------------------------------------------------]
 		virtual Renderer::IRenderPass* createRenderPass(uint32_t numberOfColorAttachments, const Renderer::TextureFormat::Enum* colorAttachmentTextureFormats, Renderer::TextureFormat::Enum depthStencilAttachmentTextureFormat = Renderer::TextureFormat::UNKNOWN, uint8_t numberOfMultisamples = 1) override;
-		virtual Renderer::ISwapChain* createSwapChain(Renderer::IRenderPass& renderPass, handle nativeWindowHandle, bool useExternalContext = false) override;
+		virtual Renderer::ISwapChain* createSwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowInfo windowInfo, bool useExternalContext = false) override;
 		virtual Renderer::IFramebuffer* createFramebuffer(Renderer::IRenderPass& renderPass, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment = nullptr) override;
 		virtual Renderer::IBufferManager* createBufferManager() override;
 		virtual Renderer::ITextureManager* createTextureManager() override;

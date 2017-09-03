@@ -1366,14 +1366,14 @@ namespace Direct3D9Renderer
 		return new RenderPass(*this, numberOfColorAttachments, colorAttachmentTextureFormats, depthStencilAttachmentTextureFormat, numberOfMultisamples);
 	}
 
-	Renderer::ISwapChain* Direct3D9Renderer::createSwapChain(Renderer::IRenderPass& renderPass, handle nativeWindowHandle, bool)
+	Renderer::ISwapChain* Direct3D9Renderer::createSwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowInfo windowInfo, bool)
 	{
 		// Sanity checks
 		DIRECT3D9RENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
-		assert(NULL_HANDLE != nativeWindowHandle && "The provided native window handle must not be a null handle");
+		assert(NULL_HANDLE != windoInfo.nativeWindowHandle && "The provided native window handle must not be a null handle");
 
 		// Create the swap chain
-		return new SwapChain(renderPass, nativeWindowHandle);
+		return new SwapChain(renderPass, windowInfo);
 	}
 
 	Renderer::IFramebuffer* Direct3D9Renderer::createFramebuffer(Renderer::IRenderPass& renderPass, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment)

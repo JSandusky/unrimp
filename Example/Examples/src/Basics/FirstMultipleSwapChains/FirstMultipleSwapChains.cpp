@@ -260,7 +260,7 @@ void FirstMultipleSwapChains::onInitialization()
 			#endif
 
 			// Create the swap chain
-			mSwapChain = renderer->createSwapChain(getMainRenderTarget()->getRenderPass(), nativeWindowHandle);
+			mSwapChain = renderer->createSwapChain(getMainRenderTarget()->getRenderPass(), Renderer::WindowInfo{nativeWindowHandle, nullptr});
 
 			// This is only a simple and close-to-the-metal example, don't use OS stuff directly in more complex projects
 			#ifdef WIN32

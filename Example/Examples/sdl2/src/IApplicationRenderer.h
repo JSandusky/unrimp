@@ -116,6 +116,7 @@ namespace Renderer
 {
 	class Context;
 	class RendererInstance;
+	class ISwapChain;
 }
 
 
@@ -276,6 +277,7 @@ private:
 	Renderer::Context*			mRendererContext;	///< Renderer context, can be a null pointer
 	Renderer::RendererInstance* mRendererInstance;	///< Renderer instance, can be a null pointer
 	Renderer::IRenderer*		mRenderer;			///< Renderer instance, can be a null pointer, do not destroy the instance
+	Renderer::ISwapChain*		mMainSwapChain;		///< Main swap chain instance, can be a null pointer, release the instance if you no longer need it
 	Renderer::CommandBuffer		mCommandBuffer;		///< Command buffer
 	ExampleBase*				mExample;
 	SDL_Window	   *mMainWindow;		///< SDL2 window, can be a null pointer, destroy the instance in case you no longer need it

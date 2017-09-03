@@ -64,6 +64,7 @@ namespace Renderer
 		class IVertexArray;
 		class IRenderPass;
 		class IRenderTarget;
+			class IRenderWindow;
 			class ISwapChain;
 			class IFramebuffer;
 			struct FramebufferAttachment;
@@ -1962,6 +1963,11 @@ namespace Renderer
 	// Renderer/IRenderer.h
 	#ifndef __RENDERER_IRENDERER_H__
 	#define __RENDERER_IRENDERER_H__
+		struct WindowInfo
+		{
+			handle nativeWindowHandle;
+			IRenderWindow* renderWindow;
+		};
 		class IRenderer : public RefCount<IRenderer>
 		{
 		public:
@@ -1988,7 +1994,7 @@ namespace Renderer
 			virtual const char* getShaderLanguageName(uint32_t index) const = 0;
 			virtual IShaderLanguage* getShaderLanguage(const char* shaderLanguageName = nullptr) = 0;
 			virtual IRenderPass* createRenderPass(uint32_t numberOfColorAttachments, const TextureFormat::Enum* colorAttachmentTextureFormats, TextureFormat::Enum depthStencilAttachmentTextureFormat = TextureFormat::UNKNOWN, uint8_t numberOfMultisamples = 1) = 0;
-			virtual ISwapChain* createSwapChain(IRenderPass& renderPass, handle nativeWindowHandle, bool useExternalContext = false) = 0;
+			virtual ISwapChain* createSwapChain(IRenderPass& renderPass, WindowInfo windowInfo, bool useExternalContext = false) = 0;
 			virtual IFramebuffer* createFramebuffer(IRenderPass& renderPass, const FramebufferAttachment* colorFramebufferAttachments, const FramebufferAttachment* depthStencilFramebufferAttachment = nullptr) = 0;
 			virtual IBufferManager *createBufferManager() = 0;
 			virtual ITextureManager *createTextureManager() = 0;
