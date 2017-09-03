@@ -31,7 +31,6 @@ if (0 == strcmp(renderer->getName(), "Vulkan"))
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
 vertexShaderSourceCode = R"(#version 450 core	// OpenGL 4.5
-#extension GL_ARB_separate_shader_objects : enable	// The "GL_ARB_separate_shader_objects"-extension is required for Vulkan shaders to work
 
 // Attribute input/output
 layout(location = 0) in float Position;	// Dummy
@@ -54,7 +53,6 @@ void main()
 //[-------------------------------------------------------]
 // One geometry shader invocation per primitive
 geometryShaderSourceCode = R"(#version 450 core	// OpenGL 4.5
-#extension GL_ARB_separate_shader_objects : enable	// The "GL_ARB_separate_shader_objects"-extension is required for Vulkan shaders to work
 
 // Attribute input/output
 layout(points) in;
@@ -95,7 +93,6 @@ void main()
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 fragmentShaderSourceCode = R"(#version 450 core	// OpenGL 4.5
-#extension GL_ARB_separate_shader_objects : enable	// The "GL_ARB_separate_shader_objects"-extension is required for Vulkan shaders to work
 
 // Attribute input/output
 layout(location = 0, index = 0) out vec4 Color0;

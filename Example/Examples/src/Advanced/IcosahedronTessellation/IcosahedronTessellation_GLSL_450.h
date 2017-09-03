@@ -34,7 +34,6 @@ if (0 == strcmp(renderer->getName(), "Vulkan"))
 //[-------------------------------------------------------]
 // One vertex shader invocation per control point of the patch
 vertexShaderSourceCode = R"(#version 450 core	// OpenGL 4.5
-#extension GL_ARB_separate_shader_objects : enable	// The "GL_ARB_separate_shader_objects"-extension is required for Vulkan shaders to work
 
 // Attribute input/output
 layout(location = 0) in  vec3 Position;		// Object space control point position of the patch we received from the input assembly (IA) as input
@@ -54,7 +53,6 @@ void main()
 //[-------------------------------------------------------]
 // One tessellation control shader invocation per patch control point (with super-vision)
 tessellationControlShaderSourceCode = R"(#version 450 core	// OpenGL 4.5
-#extension GL_ARB_separate_shader_objects : enable	// The "GL_ARB_separate_shader_objects"-extension is required for Vulkan shaders to work
 
 // Attribute input/output
 layout(vertices = 3) out;
@@ -91,7 +89,6 @@ void main()
 //[-------------------------------------------------------]
 // One tessellation evaluation shader invocation per point from tessellator
 tessellationEvaluationShaderSourceCode = R"(#version 450 core	// OpenGL 4.5
-#extension GL_ARB_separate_shader_objects : enable	// The "GL_ARB_separate_shader_objects"-extension is required for Vulkan shaders to work
 
 // Attribute input/output
 layout(triangles, equal_spacing, cw) in;
@@ -136,7 +133,6 @@ void main()
 //[-------------------------------------------------------]
 // One geometry shader invocation per primitive
 geometryShaderSourceCode = R"(#version 450 core	// OpenGL 4.5
-#extension GL_ARB_separate_shader_objects : enable	// The "GL_ARB_separate_shader_objects"-extension is required for Vulkan shaders to work
 
 // Attribute input/output
 layout(triangles) in;
@@ -198,7 +194,6 @@ void main()
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 fragmentShaderSourceCode = R"(#version 450 core	// OpenGL 4.5
-#extension GL_ARB_separate_shader_objects : enable	// The "GL_ARB_separate_shader_objects"-extension is required for Vulkan shaders to work
 
 // Attributes
 layout(location = 1) in vec3 gFacetNormal;		// Normalized normal of the primitive we received from the geometry shader (GS) as input

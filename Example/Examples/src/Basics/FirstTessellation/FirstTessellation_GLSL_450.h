@@ -31,7 +31,6 @@ if (0 == strcmp(renderer->getName(), "Vulkan"))
 //[-------------------------------------------------------]
 // One vertex shader invocation per control point of the patch
 vertexShaderSourceCode = R"(#version 450 core	// OpenGL 4.5
-#extension GL_ARB_separate_shader_objects : enable	// The "GL_ARB_separate_shader_objects"-extension is required for Vulkan shaders to work
 
 // Attribute input/output
 layout(location = 0) in vec2 Position;		// Clip space control point position of the patch as input, left/bottom is (-1,-1) and right/top is (1,1)
@@ -51,7 +50,6 @@ void main()
 //[-------------------------------------------------------]
 // One tessellation control shader invocation per patch control point (with super-vision)
 tessellationControlShaderSourceCode = R"(#version 450 core	// OpenGL 4.5
-#extension GL_ARB_separate_shader_objects : enable	// The "GL_ARB_separate_shader_objects"-extension is required for Vulkan shaders to work
 
 // Attribute input/output
 layout(vertices = 3) out;
@@ -81,7 +79,6 @@ void main()
 //[-------------------------------------------------------]
 // One tessellation evaluation shader invocation per point from tessellator
 tessellationEvaluationShaderSourceCode = R"(#version 450 core	// OpenGL 4.5
-#extension GL_ARB_separate_shader_objects : enable	// The "GL_ARB_separate_shader_objects"-extension is required for Vulkan shaders to work
 
 // Attribute input/output
 layout(triangles, equal_spacing, ccw) in;
@@ -115,7 +112,6 @@ void main()
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 fragmentShaderSourceCode = R"(#version 450 core	// OpenGL 4.5
-#extension GL_ARB_separate_shader_objects : enable	// The "GL_ARB_separate_shader_objects"-extension is required for Vulkan shaders to work
 
 // Attribute input/output
 layout(location = 0, index = 0) out vec4 Color0;

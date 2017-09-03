@@ -31,7 +31,6 @@ if (0 == strcmp(mRenderer->getName(), "Vulkan"))
 //[-------------------------------------------------------]
 // One vertex shader invocation per vertex
 vertexShaderSourceCode = R"(#version 450 core	// OpenGL 4.5
-#extension GL_ARB_separate_shader_objects : enable	// The "GL_ARB_separate_shader_objects"-extension is required for Vulkan shaders to work
 
 // Attribute input - Mesh data
 layout(location = 0) in vec3 Position;	// Object space vertex position input
@@ -166,7 +165,6 @@ void main()
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 fragmentShaderSourceCode = R"(#version 450 core	// OpenGL 4.5
-#extension GL_ARB_separate_shader_objects : enable	// The "GL_ARB_separate_shader_objects"-extension is required for Vulkan shaders to work
 
 // Attribute input/output
 layout(location = 1) in vec3 WorldPositionVs;
