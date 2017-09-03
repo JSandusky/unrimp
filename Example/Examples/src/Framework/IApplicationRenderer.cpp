@@ -59,6 +59,7 @@ IApplicationRenderer::IApplicationRenderer(const char* rendererName, ExampleBase
 	mRendererContext(nullptr),
 	mRendererInstance(nullptr),
 	mRenderer(nullptr),
+	mMainSwapChain(nullptr),
 	mExampleBase(exampleBase)
 {
 	if (nullptr != mExampleBase)
