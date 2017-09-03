@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include <Renderer/RenderTarget/ISwapChain.h>
+#include <Renderer/RendererTypes.h>
 
 
 //[-------------------------------------------------------]
@@ -67,7 +68,7 @@ namespace Direct3D10Renderer
 		*  @param[in] renderPass
 		*    Render pass to use, the swap chain keeps a reference to the render pass
 		*  @param[in] windowInfo
-		*     Information about the window to render into
+		*    Information about the window to render into
 		*/
 		SwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowInfo windowInfo);
 

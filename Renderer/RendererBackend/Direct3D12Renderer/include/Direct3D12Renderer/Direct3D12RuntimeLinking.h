@@ -54,7 +54,7 @@ namespace Direct3D12Renderer
 	*    Direct3D 12 runtime linking
 	*
 	*  @todo
-	*    - TODO(co) Looks like there's no "D3DX12", so we stick to "D3DX12" for now
+	*    - TODO(co) Looks like there's no "D3DX12", so we stick to "D3DX11" for now
 	*/
 	class Direct3D12RuntimeLinking
 	{
@@ -192,7 +192,6 @@ namespace Direct3D12Renderer
 	#else
 		#define FNDEF_D3DX11(retType, funcName, args) extern retType (WINAPI *funcPtr_##funcName) args
 	#endif
-	FNDEF_D3DX11(HRESULT,	D3DX11CompileFromMemory,	(LPCSTR, SIZE_T, LPCSTR, CONST D3D10_SHADER_MACRO*, LPD3D10INCLUDE, LPCSTR, LPCSTR, UINT, UINT, ID3DX12ThreadPump*, ID3D10Blob**, ID3D10Blob**, HRESULT*));
 	// FNDEF_D3DX11(HRESULT,	D3DX11FilterTexture,		(ID3D12DeviceContext *, ID3D12Resource *, UINT, UINT));	// TODO(co) Direct3D 12 update
 
 
@@ -200,13 +199,14 @@ namespace Direct3D12Renderer
 	//[ D3DCompiler functions                                 ]
 	//[-------------------------------------------------------]
 	#ifdef DIRECT3D12_DEFINERUNTIMELINKING
-		#define FNDEF_D3DX11(retType, funcName, args) retType (WINAPI *funcPtr_##funcName) args
+		#define FNDEF_D3DX12(retType, funcName, args) retType (WINAPI *funcPtr_##funcName) args
 	#else
-		#define FNDEF_D3DX11(retType, funcName, args) extern retType (WINAPI *funcPtr_##funcName) args
+		#define FNDEF_D3DX12(retType, funcName, args) extern retType (WINAPI *funcPtr_##funcName) args
 	#endif
 	typedef __interface ID3D10Blob *LPD3D10BLOB;	// "__interface" is no keyword of the ISO C++ standard, shouldn't be a problem because this in here is MS Windows only and it's also within the Direct3D headers we have to use
 	typedef ID3D10Blob ID3DBlob;
-	FNDEF_D3DX11(HRESULT,	D3DCreateBlob,				(SIZE_T Size, ID3DBlob** ppBlob));
+	FNDEF_D3DX12(HRESULT,	D3DCompile,		(LPCVOID, SIZE_T, LPCSTR, CONST D3D_SHADER_MACRO*, ID3DInclude*, LPCSTR, LPCSTR, UINT, UINT, ID3DBlob**, ID3DBlob**));
+	FNDEF_D3DX12(HRESULT,	D3DCreateBlob,	(SIZE_T Size, ID3DBlob** ppBlob));
 
 
 	//[-------------------------------------------------------]
@@ -229,10 +229,10 @@ namespace Direct3D12Renderer
 	#endif
 
 	// D3DX11
-	#define D3DX11CompileFromMemory	FNPTR(D3DX11CompileFromMemory)
 	// #define D3DX11FilterTexture		FNPTR(D3DX11FilterTexture)	// TODO(co) Direct3D 12 update
 
 	// D3DCompiler
+	#define D3DCompile		FNPTR(D3DCompile)
 	#define D3DCreateBlob	FNPTR(D3DCreateBlob)
 
 

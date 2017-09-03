@@ -39,10 +39,10 @@
 	#include <atomic>	// For "std::atomic<>"
 #endif
 #ifdef LINUX
-	// Copied from Xlib.h
+	// Copied from "Xlib.h"
 	struct _XDisplay;
 
-	// Copied from wayland-client.h
+	// Copied from "wayland-client.h"
 	struct wl_display;
 	struct wl_surface;
 #endif
@@ -235,7 +235,7 @@ namespace Renderer
 		{
 		public:
 			inline WaylandContext(ILog& log, wl_display* display, wl_surface* surface = 0, bool useExternalContext = false) :
-				Context(Context::ContextType::WAYLAND, log, 1, useExternalContext), // Under wayland the surface (aka window) handle is not an integer, but the renderer implementation expects an integer as window handle so we give here an value != 0 so that a swapchain is created
+				Context(Context::ContextType::WAYLAND, log, 1, useExternalContext),	// Under Wayland the surface (aka window) handle is not an integer, but the renderer implementation expects an integer as window handle so we give here an value != 0 so that a swap chain is created
 				mDisplay(display),
 				mSurface(surface)
 			{
@@ -288,6 +288,14 @@ namespace Renderer
 	// Renderer/RendererTypes.h
 	#ifndef __RENDERER_RENDERER_TYPES_H__
 	#define __RENDERER_RENDERER_TYPES_H__
+		struct WindowInfo
+		{
+			handle nativeWindowHandle;
+			IRenderWindow* renderWindow;
+			#ifdef LINUX
+				wl_surface*	waylandSurface;
+			#endif
+		};
 		enum class MapType
 		{
 			READ			   = 1,
@@ -1963,14 +1971,6 @@ namespace Renderer
 	// Renderer/IRenderer.h
 	#ifndef __RENDERER_IRENDERER_H__
 	#define __RENDERER_IRENDERER_H__
-		struct WindowInfo
-		{
-			handle nativeWindowHandle;
-			IRenderWindow* renderWindow;
-			#ifdef LINUX
-				wl_surface*	waylandSurface;	// A wayland surface cannot be put into a handle type. So we store a pointer to the wayland surface here
-			#endif
-		};
 		class IRenderer : public RefCount<IRenderer>
 		{
 		public:

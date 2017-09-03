@@ -506,6 +506,8 @@
     <ClCompile Include="src\Shader\ShaderLanguageGlsl.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Disabled</Optimization>
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Disabled</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Disabled</Optimization>
+      <Optimization Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Disabled</Optimization>
     </ClCompile>
     <ClCompile Include="src\Shader\TessellationControlShaderGlsl.cpp" />
     <ClCompile Include="src\Shader\TessellationEvaluationShaderGlsl.cpp" />

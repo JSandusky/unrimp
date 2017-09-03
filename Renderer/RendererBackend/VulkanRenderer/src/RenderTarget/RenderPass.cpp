@@ -112,16 +112,16 @@ namespace VulkanRenderer
 		// Create Vulkan create render pass
 		const VkSubpassDescription vkSubpassDescription =
 		{
-			0,																						// flags (VkSubpassDescriptionFlags)
-			VK_PIPELINE_BIND_POINT_GRAPHICS,														// pipelineBindPoint (VkPipelineBindPoint)
-			0,																						// inputAttachmentCount (uint32_t)
-			nullptr,																				// pInputAttachments (const VkAttachmentReference*)
-			mNumberOfColorAttachments,																// colorAttachmentCount (uint32_t)
-			(mNumberOfColorAttachments > 0) ? colorVkAttachmentReferences.data() : nullptr,			// pColorAttachments (const VkAttachmentReference*)
-			nullptr,																				// pResolveAttachments (const VkAttachmentReference*)
-			hasDepthStencilAttachment ? &depthVkAttachmentReference : nullptr,						// pDepthStencilAttachment (const VkAttachmentReference*)
-			0,																						// preserveAttachmentCount (uint32_t)
-			nullptr																					// pPreserveAttachments (const uint32_t*)
+			0,																				// flags (VkSubpassDescriptionFlags)
+			VK_PIPELINE_BIND_POINT_GRAPHICS,												// pipelineBindPoint (VkPipelineBindPoint)
+			0,																				// inputAttachmentCount (uint32_t)
+			nullptr,																		// pInputAttachments (const VkAttachmentReference*)
+			mNumberOfColorAttachments,														// colorAttachmentCount (uint32_t)
+			(mNumberOfColorAttachments > 0) ? colorVkAttachmentReferences.data() : nullptr,	// pColorAttachments (const VkAttachmentReference*)
+			nullptr,																		// pResolveAttachments (const VkAttachmentReference*)
+			hasDepthStencilAttachment ? &depthVkAttachmentReference : nullptr,				// pDepthStencilAttachment (const VkAttachmentReference*)
+			0,																				// preserveAttachmentCount (uint32_t)
+			nullptr																			// pPreserveAttachments (const uint32_t*)
 		};
 		const std::array<VkSubpassDependency, 2> vkSubpassDependencies =
 		{{

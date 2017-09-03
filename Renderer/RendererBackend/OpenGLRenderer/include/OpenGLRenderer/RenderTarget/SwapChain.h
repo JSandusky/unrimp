@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include <Renderer/RenderTarget/ISwapChain.h>
+#include <Renderer/RendererTypes.h>
 
 
 //[-------------------------------------------------------]
@@ -72,7 +73,7 @@ namespace OpenGLRenderer
 		*  @param[in] renderPass
 		*    Render pass to use, the swap chain keeps a reference to the render pass
 		*  @param[in] windowInfo
-		*     Information about the window to render into
+		*    Information about the window to render into
 		*  @param[in] useExternalContext
 		*    Indicates if an external renderer context is used; in this case the renderer itself has nothing to do with the creation/managing of an renderer context
 		*/

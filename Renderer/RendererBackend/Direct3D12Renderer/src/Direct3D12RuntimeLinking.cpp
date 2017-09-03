@@ -227,7 +227,6 @@ namespace Direct3D12Renderer
 			}
 
 		// Load the entry points
-		IMPORT_FUNC(D3DX11CompileFromMemory);
 		// IMPORT_FUNC(D3DX11FilterTexture);	// TODO(co) Direct3D 12 update
 
 		// Undefine the helper macro
@@ -261,6 +260,7 @@ namespace Direct3D12Renderer
 			}
 
 		// Load the entry points
+		IMPORT_FUNC(D3DCompile);
 		IMPORT_FUNC(D3DCreateBlob);
 
 		// Undefine the helper macro

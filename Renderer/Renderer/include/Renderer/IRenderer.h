@@ -46,7 +46,6 @@ namespace Renderer
 {
 	class ITexture;
 	class IResource;
-	class IRenderWindow;
 	class ISwapChain;
 	class IRenderPass;
 	class IFramebuffer;
@@ -74,21 +73,6 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Holds information about an window into which the rendering should be done
-	*  @note
-	*    One of those members must be valid!
-	*/
-	struct WindowInfo
-	{
-		handle nativeWindowHandle; // The native window handle
-		IRenderWindow* renderWindow; // A pointer to a IRenderWindow instance (can be null)
-		#ifdef LINUX
-			wl_surface*	waylandSurface;	// A wayland surface cannot be put into a handle type. So we store a pointer to the wayland surface here
-		#endif
-	};
-	
 	/**
 	*  @brief
 	*    Abstract renderer interface

@@ -88,7 +88,7 @@ namespace Renderer
 
 
 	inline WaylandContext::WaylandContext(ILog& log, wl_display* display, wl_surface* surface, bool useExternalContext) :
-		Context(Context::ContextType::WAYLAND, log, 1, useExternalContext), // Under wayland the surface (aka window) handle is not an integer, but the renderer implementation expects an integer as window handle so we give here an value != 0 so that a swapchain is created
+		Context(Context::ContextType::WAYLAND, log, 1, useExternalContext),	// Under Wayland the surface (aka window) handle is not an integer, but the renderer implementation expects an integer as window handle so we give here an value != 0 so that a swap chain is created
 		mDisplay(display),
 		mSurface(surface)
 	{

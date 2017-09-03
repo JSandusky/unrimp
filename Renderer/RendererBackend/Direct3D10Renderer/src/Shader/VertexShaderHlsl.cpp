@@ -45,7 +45,7 @@ namespace Direct3D10Renderer
 		mD3D10VertexShader(nullptr)
 	{
 		// Backup the vertex shader bytecode
-		D3D10CreateBlob(shaderBytecode.getNumberOfBytes(), &mD3DBlobVertexShader);
+		D3DCreateBlob(shaderBytecode.getNumberOfBytes(), &mD3DBlobVertexShader);
 		memcpy(mD3DBlobVertexShader->GetBufferPointer(), shaderBytecode.getBytecode(), shaderBytecode.getNumberOfBytes());
 
 		// Create the Direct3D 10 vertex shader

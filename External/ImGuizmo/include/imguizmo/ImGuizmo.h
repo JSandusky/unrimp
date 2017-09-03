@@ -96,7 +96,8 @@ void EditTransform(const Camera& camera, matrix_t& matrix)
 		ImGui::InputFloat("Scale Snap", &snap.x);
 		break;
 	}
-
+	ImGuiIO& io = ImGui::GetIO();
+	ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
 	ImGuizmo::Manipulate(camera.mView.m16, camera.mProjection.m16, mCurrentGizmoOperation, mCurrentGizmoMode, matrix.m16, NULL, useSnap ? &snap.x : NULL);
 }
 #endif
@@ -143,6 +144,8 @@ namespace ImGuizmo
 	// These functions have some numerical stability issues for now. Use with caution.
 	IMGUI_API void DecomposeMatrixToComponents(const float *matrix, float *translation, float *rotation, float *scale);
 	IMGUI_API void RecomposeMatrixFromComponents(const float *translation, const float *rotation, const float *scale, float *matrix);
+
+	IMGUI_API void SetRect(float x, float y, float width, float height);
 
 	// Render a cube with face color corresponding to face normal. Usefull for debug/tests
 	IMGUI_API void DrawCube(const float *view, const float *projection, float *matrix);

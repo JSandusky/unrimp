@@ -164,8 +164,7 @@ namespace Direct3D11Renderer
 	#else
 		#define FNDEF_D3DX11(retType, funcName, args) extern retType (WINAPI *funcPtr_##funcName) args
 	#endif
-	FNDEF_D3DX11(HRESULT,	D3DX11CompileFromMemory,	(LPCSTR, SIZE_T, LPCSTR, CONST D3D10_SHADER_MACRO*, LPD3D10INCLUDE, LPCSTR, LPCSTR, UINT, UINT, ID3DX11ThreadPump*, ID3D10Blob**, ID3D10Blob**, HRESULT*));
-	FNDEF_D3DX11(HRESULT,	D3DX11FilterTexture,		(ID3D11DeviceContext*, ID3D11Resource*, UINT, UINT));
+	FNDEF_D3DX11(HRESULT,	D3DX11FilterTexture,	(ID3D11DeviceContext*, ID3D11Resource*, UINT, UINT));
 
 
 	//[-------------------------------------------------------]
@@ -178,7 +177,8 @@ namespace Direct3D11Renderer
 	#endif
 	typedef __interface ID3D10Blob *LPD3D10BLOB;	// "__interface" is no keyword of the ISO C++ standard, shouldn't be a problem because this in here is MS Windows only and it's also within the Direct3D headers we have to use
 	typedef ID3D10Blob ID3DBlob;
-	FNDEF_D3DX11(HRESULT,	D3DCreateBlob,				(SIZE_T Size, ID3DBlob** ppBlob));
+	FNDEF_D3DX11(HRESULT,	D3DCompile,		(LPCVOID, SIZE_T, LPCSTR, CONST D3D_SHADER_MACRO*, ID3DInclude*, LPCSTR, LPCSTR, UINT, UINT, ID3DBlob**, ID3DBlob**));
+	FNDEF_D3DX11(HRESULT,	D3DCreateBlob,	(SIZE_T Size, ID3DBlob** ppBlob));
 
 
 	//[-------------------------------------------------------]
@@ -194,10 +194,10 @@ namespace Direct3D11Renderer
 	#define D3D11CreateDevice	FNPTR(D3D11CreateDevice)
 
 	// D3DX11
-	#define D3DX11CompileFromMemory	FNPTR(D3DX11CompileFromMemory)
-	#define D3DX11FilterTexture		FNPTR(D3DX11FilterTexture)
+	#define D3DX11FilterTexture	FNPTR(D3DX11FilterTexture)
 
 	// D3DCompiler
+	#define D3DCompile		FNPTR(D3DCompile)
 	#define D3DCreateBlob	FNPTR(D3DCreateBlob)
 
 

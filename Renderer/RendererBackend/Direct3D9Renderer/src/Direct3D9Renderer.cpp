@@ -1370,7 +1370,7 @@ namespace Direct3D9Renderer
 	{
 		// Sanity checks
 		DIRECT3D9RENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
-		assert(NULL_HANDLE != windoInfo.nativeWindowHandle && "The provided native window handle must not be a null handle");
+		assert(NULL_HANDLE != windowInfo.nativeWindowHandle && "The provided native window handle must not be a null handle");
 
 		// Create the swap chain
 		return new SwapChain(renderPass, windowInfo);
