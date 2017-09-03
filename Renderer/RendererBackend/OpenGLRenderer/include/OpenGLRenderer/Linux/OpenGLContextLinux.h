@@ -43,6 +43,7 @@ namespace Renderer
 namespace OpenGLRenderer
 {
 	class OpenGLRenderer;
+	class RenderPass;
 }
 
 
@@ -80,6 +81,8 @@ namespace OpenGLRenderer
 		*
 		*  @param[in] openGLRenderer
 		*    Owner OpenGL renderer instance
+		*  @param[in] renderPass
+		*    Render pass
 		*  @param[in] nativeWindowHandle
 		*    Optional native main window handle, can be a null handle
 		*  @param[in] useExternalContext
@@ -87,7 +90,7 @@ namespace OpenGLRenderer
 		*  @param[in] shareContextLinux
 		*    Optional share context, can be a null pointer
 		*/
-		OpenGLContextLinux(OpenGLRenderer& openGLRenderer, handle nativeWindowHandle, bool useExternalContext, const OpenGLContextLinux* shareContextLinux = nullptr);
+		OpenGLContextLinux(OpenGLRenderer& openGLRenderer, const RenderPass& renderPass, handle nativeWindowHandle, bool useExternalContext, const OpenGLContextLinux* shareContextLinux = nullptr);
 
 		/**
 		*  @brief
@@ -137,6 +140,8 @@ namespace OpenGLRenderer
 		*    Owner OpenGL renderer instance
 		*  @param[in] openGLRuntimeLinking
 		*    OpenGL runtime linking instance, if null pointer this isn't a primary context
+		*  @param[in] renderPass
+		*    Render pass
 		*  @param[in] nativeWindowHandle
 		*    Optional native main window handle, can be a null handle
 		*  @param[in] useExternalContext
@@ -144,16 +149,19 @@ namespace OpenGLRenderer
 		*  @param[in] shareContextLinux
 		*    Optional share context, can be a null pointer
 		*/
-		OpenGLContextLinux(OpenGLRenderer& openGLRenderer, OpenGLRuntimeLinking* openGLRuntimeLinking, handle nativeWindowHandle, bool useExternalContext, const OpenGLContextLinux* shareContextLinux = nullptr);
+		OpenGLContextLinux(OpenGLRenderer& openGLRenderer, OpenGLRuntimeLinking* openGLRuntimeLinking, const RenderPass& renderPass, handle nativeWindowHandle, bool useExternalContext, const OpenGLContextLinux* shareContextLinux = nullptr);
 
 		/**
 		*  @brief
 		*    Create a OpenGL context
+		* 
+		*  @param[in] renderPass
+		*    Render pass
 		*
 		*  @return
 		*    The created OpenGL context, null pointer on error
 		*/
-		GLXContext createOpenGLContext();
+		GLXContext createOpenGLContext(const RenderPass& renderPass);
 
 
 	//[-------------------------------------------------------]

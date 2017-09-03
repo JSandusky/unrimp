@@ -436,15 +436,15 @@ namespace OpenGLRenderer
 		if (mOpenGLRuntimeLinking->isOpenGLAvaiable())
 		{
 			const handle nativeWindowHandle = mContext.getNativeWindowHandle();
+			const Renderer::TextureFormat::Enum textureFormat = Renderer::TextureFormat::Enum::R8G8B8A8;
+			const RenderPass renderPass(*this, 1, &textureFormat, Renderer::TextureFormat::Enum::UNKNOWN, 1);
 			#ifdef WIN32
 			{
 				// TODO(co) Add external OpenGL context support
-				const Renderer::TextureFormat::Enum textureFormat = Renderer::TextureFormat::Enum::R8G8B8A8;
-				const RenderPass renderPass(*this, 1, &textureFormat, Renderer::TextureFormat::Enum::UNKNOWN, 1);
 				mOpenGLContext = new OpenGLContextWindows(mOpenGLRuntimeLinking, renderPass, nativeWindowHandle);
 			}
 			#elif defined LINUX
-				mOpenGLContext = new OpenGLContextLinux(*this, mOpenGLRuntimeLinking, nativeWindowHandle, mContext.isUsingExternalContext());
+				mOpenGLContext = new OpenGLContextLinux(*this, mOpenGLRuntimeLinking, renderPass, nativeWindowHandle, mContext.isUsingExternalContext());
 			#else
 				#error "Unsupported platform"
 			#endif

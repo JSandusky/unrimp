@@ -51,8 +51,7 @@ namespace OpenGLRenderer
 		#ifdef WIN32
 			mOpenGLContext(new OpenGLContextWindows(static_cast<const RenderPass&>(renderPass), windowInfo.nativeWindowHandle, static_cast<const OpenGLContextWindows*>(&static_cast<OpenGLRenderer&>(renderPass.getRenderer()).getOpenGLContext()))),
 		#elif defined LINUX
-			// TODO(co) Render pass support to be able to setup e.g. the depth buffer from the outside
-			mOpenGLContext(new OpenGLContextLinux(static_cast<OpenGLRenderer&>(renderPass.getRenderer()), windowInfo.nativeWindowHandle, useExternalContext, static_cast<const OpenGLContextLinux*>(&static_cast<OpenGLRenderer&>(renderPass.getRenderer()).getOpenGLContext()))),
+			mOpenGLContext(new OpenGLContextLinux(static_cast<OpenGLRenderer&>(renderPass.getRenderer()), static_cast<const RenderPass&>(renderPass), windowInfo.nativeWindowHandle, useExternalContext, static_cast<const OpenGLContextLinux*>(&static_cast<OpenGLRenderer&>(renderPass.getRenderer()).getOpenGLContext()))),
 		#else
 			#error "Unsupported platform"
 		#endif
