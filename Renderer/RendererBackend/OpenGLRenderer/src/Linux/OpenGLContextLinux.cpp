@@ -238,7 +238,7 @@ namespace OpenGLRenderer
 				};
 
 				// TODO(co) Use more detailed color and depth/stencil information from render pass
-				const int depthBufferBits = (renderPass.getDepthStencilAttachmentTextureFormat() == Renderer::TextureFormat::Enum::UNKNOWN) ? 0 : 24;
+				const int depthBufferBits = 24;//(renderPass.getDepthStencilAttachmentTextureFormat() == Renderer::TextureFormat::Enum::UNKNOWN) ? 24 : 24;
 				int numberOfElements = 0;
 				int visualAttributes[] =
 				{
