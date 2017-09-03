@@ -198,6 +198,8 @@ namespace RendererRuntime
 			transform.getAsMatrix(matrix);
 			ImGuizmo::OPERATION operation = static_cast<ImGuizmo::OPERATION>(gizmoSettings.currentGizmoOperation);
 			ImGuizmo::MODE mode = (operation == ImGuizmo::SCALE) ? ImGuizmo::LOCAL : static_cast<ImGuizmo::MODE>(gizmoSettings.currentGizmoMode);
+			const ImGuiIO& imGuiIO = ImGui::GetIO();
+			ImGuizmo::SetRect(0, 0, imGuiIO.DisplaySize.x, imGuiIO.DisplaySize.y);
 			ImGuizmo::Manipulate(glm::value_ptr(cameraSceneItem.getWorldSpaceToViewSpaceMatrix()), glm::value_ptr(cameraSceneItem.getViewSpaceToClipSpaceMatrix()), operation, mode, glm::value_ptr(matrix), nullptr, gizmoSettings.useSnap ? &gizmoSettings.snap[0] : nullptr);
 			transform = Transform(matrix);
 		}
