@@ -45,19 +45,19 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SwapChain::SwapChain(Renderer::IRenderPass& renderPass, handle nativeWindowHandle, bool useExternalContext) :
+	SwapChain::SwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowInfo windowInfo, bool useExternalContext) :
 		ISwapChain(renderPass),
-		mNativeWindowHandle(nativeWindowHandle),
+		mNativeWindowHandle(windowInfo.nativeWindowHandle),
 		#ifdef WIN32
-			mOpenGLContext(new OpenGLContextWindows(static_cast<const RenderPass&>(renderPass), nativeWindowHandle, static_cast<const OpenGLContextWindows*>(&static_cast<OpenGLRenderer&>(renderPass.getRenderer()).getOpenGLContext()))),
+			mOpenGLContext(new OpenGLContextWindows(static_cast<const RenderPass&>(renderPass), windowInfo.nativeWindowHandle, static_cast<const OpenGLContextWindows*>(&static_cast<OpenGLRenderer&>(renderPass.getRenderer()).getOpenGLContext()))),
 		#elif defined LINUX
 			// TODO(co) Render pass support to be able to setup e.g. the depth buffer from the outside
-			mOpenGLContext(new OpenGLContextLinux(static_cast<OpenGLRenderer&>(renderPass.getRenderer()), nativeWindowHandle, useExternalContext, static_cast<const OpenGLContextLinux*>(&static_cast<OpenGLRenderer&>(renderPass.getRenderer()).getOpenGLContext()))),
+			mOpenGLContext(new OpenGLContextLinux(static_cast<OpenGLRenderer&>(renderPass.getRenderer()), windowInfo.nativeWindowHandle, useExternalContext, static_cast<const OpenGLContextLinux*>(&static_cast<OpenGLRenderer&>(renderPass.getRenderer()).getOpenGLContext()))),
 		#else
 			#error "Unsupported platform"
 		#endif
 		mOwnsOpenGLContext(true),
-		mRenderWindow(nullptr)
+		mRenderWindow(windowInfo.renderWindow)
 	{
 		#ifdef WIN32
 			std::ignore = useExternalContext;

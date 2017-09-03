@@ -1345,14 +1345,14 @@ namespace OpenGLES3Renderer
 		return new RenderPass(*this, numberOfColorAttachments, colorAttachmentTextureFormats, depthStencilAttachmentTextureFormat, numberOfMultisamples);
 	}
 
-	Renderer::ISwapChain* OpenGLES3Renderer::createSwapChain(Renderer::IRenderPass& renderPass, handle nativeWindowHandle, bool)
+	Renderer::ISwapChain* OpenGLES3Renderer::createSwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowInfo windowInfo, bool)
 	{
 		// Sanity checks
 		OPENGLES3RENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
-		assert(NULL_HANDLE != nativeWindowHandle && "The provided native window handle must not be a null handle");
+		assert((NULL_HANDLE != nativeWindowHandle || nullptr != windowInfo.renderWindow) && "The provided native window handle or renderWindow must not be a null handle/nullptr");
 
 		// Create the swap chain
-		return new SwapChain( renderPass, nativeWindowHandle);
+		return new SwapChain(renderPass, windowInfo);
 	}
 
 	Renderer::IFramebuffer* OpenGLES3Renderer::createFramebuffer(Renderer::IRenderPass& renderPass, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment)

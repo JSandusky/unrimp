@@ -39,7 +39,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SwapChain::SwapChain(Renderer::IRenderPass& renderPass, handle nativeWindowHandle) :
+	SwapChain::SwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowInfo windowInfo) :
 		ISwapChain(renderPass),
 		mDxgiSwapChain(nullptr),
 		mD3D10RenderTargetView(nullptr),
@@ -54,7 +54,7 @@ namespace Direct3D10Renderer
 		ID3D10Device* d3d10Device = static_cast<Direct3D10Renderer&>(renderPass.getRenderer()).getD3D10Device();
 
 		// Get the native window handle
-		const HWND hWnd = reinterpret_cast<HWND>(nativeWindowHandle);
+		const HWND hWnd = reinterpret_cast<HWND>(windowInfo.nativeWindowHandle);
 
 		// Get a DXGI factory instance
 		IDXGIDevice* dxgiDevice = nullptr;

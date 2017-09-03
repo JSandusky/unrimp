@@ -1433,14 +1433,14 @@ namespace Direct3D11Renderer
 		return new RenderPass(*this, numberOfColorAttachments, colorAttachmentTextureFormats, depthStencilAttachmentTextureFormat, numberOfMultisamples);
 	}
 
-	Renderer::ISwapChain* Direct3D11Renderer::createSwapChain(Renderer::IRenderPass& renderPass, handle nativeWindowHandle, bool)
+	Renderer::ISwapChain* Direct3D11Renderer::createSwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowInfo windowInfo, bool)
 	{
 		// Sanity checks
 		DIRECT3D11RENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
-		assert(NULL_HANDLE != nativeWindowHandle && "The provided native window handle must not be a null handle");
+		assert(NULL_HANDLE != windowInfo.nativeWindowHandle && "The provided native window handle must not be a null handle");
 
 		// Create the swap chain
-		return new SwapChain(renderPass, nativeWindowHandle);
+		return new SwapChain(renderPass, windowInfo);
 	}
 
 	Renderer::IFramebuffer* Direct3D11Renderer::createFramebuffer(Renderer::IRenderPass& renderPass, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment)

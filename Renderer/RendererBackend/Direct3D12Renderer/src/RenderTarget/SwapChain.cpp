@@ -41,7 +41,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SwapChain::SwapChain(Renderer::IRenderPass& renderPass, handle nativeWindowHandle) :
+	SwapChain::SwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowInfo windowInfo) :
 		ISwapChain(renderPass),
 		mDxgiSwapChain3(nullptr),
 		mD3D12DescriptorHeapRenderTargetView(nullptr),
@@ -61,7 +61,7 @@ namespace Direct3D12Renderer
 		assert(1 == d3d12RenderPass.getNumberOfColorAttachments());
 
 		// Get the native window handle
-		const HWND hWnd = reinterpret_cast<HWND>(nativeWindowHandle);
+		const HWND hWnd = reinterpret_cast<HWND>(windowInfo.nativeWindowHandle);
 
 		// Get our IDXGI factory instance
 		IDXGIFactory4& dxgiFactory4 = direct3D12Renderer.getDxgiFactory4Safe();

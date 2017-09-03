@@ -39,7 +39,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SwapChain::SwapChain(Renderer::IRenderPass& renderPass, handle nativeWindowHandle) :
+	SwapChain::SwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowInfo windowInfo) :
 		ISwapChain(renderPass),
 		mDirect3DSwapChain9(nullptr),
 		mDirect3DSurface9RenderTarget(nullptr),
@@ -54,7 +54,7 @@ namespace Direct3D9Renderer
 		IDirect3DDevice9* direct3DDevice9 = static_cast<Direct3D9Renderer&>(renderPass.getRenderer()).getDirect3DDevice9();
 
 		// Get the native window handle
-		const HWND hWnd = reinterpret_cast<HWND>(nativeWindowHandle);
+		const HWND hWnd = reinterpret_cast<HWND>(windowInfo.nativeWindowHandle);
 
 		// Get the width and height of the given native window and ensure they are never ever zero
 		// -> See "getSafeWidthAndHeight()"-method comments for details

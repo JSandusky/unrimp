@@ -274,7 +274,7 @@ void IApplicationRenderer::createRenderer()
 			Renderer::IRenderPass* renderPass = mRenderer->createRenderPass(1, &capabilities.preferredSwapChainColorTextureFormat, capabilities.preferredSwapChainDepthStencilTextureFormat);
 
 			// Create a main swap chain instance
-			mMainSwapChain = mRenderer->createSwapChain(*renderPass, getNativeWindowHandle(), mRenderer->getContext().isUsingExternalContext());
+			mMainSwapChain = mRenderer->createSwapChain(*renderPass, Renderer::WindowInfo{getNativeWindowHandle(), nullptr}, mRenderer->getContext().isUsingExternalContext());
 			RENDERER_SET_RESOURCE_DEBUG_NAME(mMainSwapChain, "Main swap chain")
 			mMainSwapChain->addReference();	// Internal renderer reference
 		}
