@@ -310,7 +310,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	void ShaderLanguageSeparate::shaderSourceCodeToShaderBytecode(uint32_t shaderType, const char* sourceCode, Renderer::ShaderBytecode& shaderBytecode)
+	void ShaderLanguageSeparate::shaderSourceCodeToShaderBytecode(OpenGLRenderer& openGLRenderer, uint32_t shaderType, const char* sourceCode, Renderer::ShaderBytecode& shaderBytecode)
 	{
 		#ifdef OPENGLRENDERER_GLSLTOSPIRV
 			// Initialize glslang, if necessary
@@ -322,6 +322,7 @@ namespace OpenGLRenderer
 
 			// GLSL to intermediate
 			// -> OpenGL 4.1 (the best OpenGL version Mac OS X 10.11 supports, so lowest version we have to support)
+			const int glslVersion = 410;
 			EShLanguage shLanguage = EShLangCount;
 			switch (shaderType)
 			{
@@ -346,32 +347,47 @@ namespace OpenGLRenderer
 					break;
 			}
 			glslang::TShader shader(shLanguage);
+			shader.setEnvInput(glslang::EShSourceGlsl, shLanguage, glslang::EShClientOpenGL, glslVersion);
 			shader.setEntryPoint("main");
 			{
 				const char* sourcePointers[] = { sourceCode };
 				shader.setStrings(sourcePointers, 1);
 			}
-			shader.parse(&::detail::DefaultTBuiltInResource, 410, false, EShMsgDefault);
-			glslang::TProgram program;
-			program.addShader(&shader);
-			program.link(EShMsgDefault);
-
-			// Intermediate to SPIR-V
-			const glslang::TIntermediate* intermediate = program.getIntermediate(shLanguage);
-			if (nullptr != intermediate)
+			const EShMessages shMessages = static_cast<EShMessages>(EShMsgDefault | EShMsgSpvRules);
+			if (shader.parse(&::detail::DefaultTBuiltInResource, glslVersion, false, shMessages))
 			{
-				std::vector<unsigned int> spirv;
-				glslang::GlslangToSpv(*intermediate, spirv);
+				glslang::TProgram program;
+				program.addShader(&shader);
+				if (program.link(shMessages))
+				{
+					// Intermediate to SPIR-V
+					const glslang::TIntermediate* intermediate = program.getIntermediate(shLanguage);
+					if (nullptr != intermediate)
+					{
+						std::vector<unsigned int> spirv;
+						glslang::GlslangToSpv(*intermediate, spirv);
 
-				// Encode to SMOL-V: like Vulkan/Khronos SPIR-V, but smaller
-				// -> https://github.com/aras-p/smol-v
-				// -> http://aras-p.info/blog/2016/09/01/SPIR-V-Compression/
-				// -> Don't apply "spv::spirvbin_t::remap()" or the SMOL-V result will be bigger
-				smolv::ByteArray byteArray;
-				smolv::Encode(spirv.data(), sizeof(unsigned int) * spirv.size(), byteArray, smolv::kEncodeFlagStripDebugInfo);
+						// Encode to SMOL-V: like Vulkan/Khronos SPIR-V, but smaller
+						// -> https://github.com/aras-p/smol-v
+						// -> http://aras-p.info/blog/2016/09/01/SPIR-V-Compression/
+						// -> Don't apply "spv::spirvbin_t::remap()" or the SMOL-V result will be bigger
+						smolv::ByteArray byteArray;
+						smolv::Encode(spirv.data(), sizeof(unsigned int) * spirv.size(), byteArray, smolv::kEncodeFlagStripDebugInfo);
 
-				// Done
-				shaderBytecode.setBytecodeCopy(static_cast<uint32_t>(byteArray.size()), reinterpret_cast<uint8_t*>(byteArray.data()));
+						// Done
+						shaderBytecode.setBytecodeCopy(static_cast<uint32_t>(byteArray.size()), reinterpret_cast<uint8_t*>(byteArray.data()));
+					}
+				}
+				else
+				{
+					// Failed to link the program
+					RENDERER_LOG(openGLRenderer.getContext(), CRITICAL, "Failed to link the GLSL program: %s", program.getInfoLog())
+				}
+			}
+			else
+			{
+				// Failed to parse the shader source code
+				RENDERER_LOG(openGLRenderer.getContext(), CRITICAL, "Failed to parse the GLSL shader source code: %s", shader.getInfoLog())
 			}
 		#else
 			std::ignore = shaderType;

@@ -191,7 +191,7 @@ namespace OpenGLRenderer
 		// Return shader bytecode, if requested do to so
 		if (nullptr != shaderBytecode)
 		{
-			ShaderLanguageSeparate::shaderSourceCodeToShaderBytecode(GL_VERTEX_SHADER_ARB, sourceCode, *shaderBytecode);
+			ShaderLanguageSeparate::shaderSourceCodeToShaderBytecode(openGLRenderer, GL_VERTEX_SHADER_ARB, sourceCode, *shaderBytecode);
 		}
 	}
 

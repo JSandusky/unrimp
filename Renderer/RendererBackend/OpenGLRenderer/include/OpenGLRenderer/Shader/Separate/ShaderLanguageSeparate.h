@@ -118,6 +118,8 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Compile shader source code to shader bytecode
 		*
+		*  @param[in] openGLRenderer
+		*    Owner OpenGL renderer instance
 		*  @param[in] shaderType
 		*    Shader type (for example "GL_VERTEX_SHADER_ARB", type GLenum not used in here in order to keep the header slim)
 		*  @param[in] sourceCode
@@ -125,7 +127,7 @@ namespace OpenGLRenderer
 		*  @param[out] shaderBytecode
 		*    Receives the shader SPIR-V bytecode ("GL_ARB_gl_spirv"-extension) compressed via SMOL-V
 		*/
-		static void shaderSourceCodeToShaderBytecode(uint32_t shaderType, const char* sourceCode, Renderer::ShaderBytecode& shaderBytecode);
+		static void shaderSourceCodeToShaderBytecode(OpenGLRenderer& openGLRenderer, uint32_t shaderType, const char* sourceCode, Renderer::ShaderBytecode& shaderBytecode);
 
 
 	//[-------------------------------------------------------]

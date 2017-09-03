@@ -229,6 +229,7 @@ namespace VulkanRenderer
 
 			// GLSL to intermediate
 			// -> OpenGL 4.5
+			const int glslVersion = 450;
 			EShLanguage shLanguage = EShLangCount;
 			if ((vkShaderStageFlagBits & VK_SHADER_STAGE_VERTEX_BIT) != 0)
 			{
@@ -255,53 +256,67 @@ namespace VulkanRenderer
 				assert(false && "Invalid Vulkan shader stage flag bits");
 			}
 			glslang::TShader shader(shLanguage);
+			shader.setEnvInput(glslang::EShSourceGlsl, shLanguage, glslang::EShClientVulkan, glslVersion);
 			shader.setEntryPoint("main");
 			{
 				const char* sourcePointers[] = { sourceCode };
 				shader.setStrings(sourcePointers, 1);
 			}
-			shader.parse(&::detail::DefaultTBuiltInResource, 450, false, static_cast<EShMessages>(EShMsgDefault | EShMsgSpvRules | EShMsgVulkanRules));
-			glslang::TProgram program;
-			program.addShader(&shader);
-			program.link(EShMsgDefault);
-
-			// Intermediate to SPIR-V
-			// TODO(co) Error handling
-			const glslang::TIntermediate* intermediate = program.getIntermediate(shLanguage);
-			if (nullptr != intermediate)
+			const EShMessages shMessages = static_cast<EShMessages>(EShMsgDefault | EShMsgSpvRules | EShMsgVulkanRules);
+			if (shader.parse(&::detail::DefaultTBuiltInResource, glslVersion, false, shMessages))
 			{
-				std::vector<unsigned int> spirv;
-				glslang::GlslangToSpv(*intermediate, spirv);
-
-				// Optional shader bytecode output
-				if (nullptr != shaderBytecode)
+				glslang::TProgram program;
+				program.addShader(&shader);
+				if (program.link(shMessages))
 				{
-					// Encode to SMOL-V: like Vulkan/Khronos SPIR-V, but smaller
-					// -> https://github.com/aras-p/smol-v
-					// -> http://aras-p.info/blog/2016/09/01/SPIR-V-Compression/
-					// -> Don't apply "spv::spirvbin_t::remap()" or the SMOL-V result will be bigger
-					smolv::ByteArray byteArray;
-					smolv::Encode(spirv.data(), sizeof(unsigned int) * spirv.size(), byteArray, smolv::kEncodeFlagStripDebugInfo);
+					// Intermediate to SPIR-V
+					const glslang::TIntermediate* intermediate = program.getIntermediate(shLanguage);
+					if (nullptr != intermediate)
+					{
+						std::vector<unsigned int> spirv;
+						glslang::GlslangToSpv(*intermediate, spirv);
 
-					// Done
-					shaderBytecode->setBytecodeCopy(static_cast<uint32_t>(byteArray.size()), reinterpret_cast<uint8_t*>(byteArray.data()));
+						// Optional shader bytecode output
+						if (nullptr != shaderBytecode)
+						{
+							// Encode to SMOL-V: like Vulkan/Khronos SPIR-V, but smaller
+							// -> https://github.com/aras-p/smol-v
+							// -> http://aras-p.info/blog/2016/09/01/SPIR-V-Compression/
+							// -> Don't apply "spv::spirvbin_t::remap()" or the SMOL-V result will be bigger
+							smolv::ByteArray byteArray;
+							smolv::Encode(spirv.data(), sizeof(unsigned int) * spirv.size(), byteArray, smolv::kEncodeFlagStripDebugInfo);
+
+							// Done
+							shaderBytecode->setBytecodeCopy(static_cast<uint32_t>(byteArray.size()), reinterpret_cast<uint8_t*>(byteArray.data()));
+						}
+
+						// Create the Vulkan shader module
+						const VkShaderModuleCreateInfo vkShaderModuleCreateInfo =
+						{
+							VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,	// sType (VkStructureType)
+							nullptr,										// pNext (const void*)
+							0,												// flags (VkShaderModuleCreateFlags)
+							sizeof(unsigned int) * spirv.size(),			// codeSize (size_t)
+							spirv.data()									// pCode (const uint32_t*)
+						};
+						VkShaderModule vkShaderModule = VK_NULL_HANDLE;
+						if (vkCreateShaderModule(vulkanRenderer.getVulkanContext().getVkDevice(), &vkShaderModuleCreateInfo, nullptr, &vkShaderModule) != VK_SUCCESS)
+						{
+							RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create the Vulkan shader module")
+						}
+						return vkShaderModule;
+					}
 				}
-
-				// Create the Vulkan shader module
-				const VkShaderModuleCreateInfo vkShaderModuleCreateInfo =
+				else
 				{
-					VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,	// sType (VkStructureType)
-					nullptr,										// pNext (const void*)
-					0,												// flags (VkShaderModuleCreateFlags)
-					sizeof(unsigned int) * spirv.size(),			// codeSize (size_t)
-					spirv.data()									// pCode (const uint32_t*)
-				};
-				VkShaderModule vkShaderModule = VK_NULL_HANDLE;
-				if (vkCreateShaderModule(vulkanRenderer.getVulkanContext().getVkDevice(), &vkShaderModuleCreateInfo, nullptr, &vkShaderModule) != VK_SUCCESS)
-				{
-					RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create the Vulkan shader module")
+					// Failed to link the program
+					RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to link the GLSL program: %s", program.getInfoLog())
 				}
-				return vkShaderModule;
+			}
+			else
+			{
+				// Failed to parse the shader source code
+				RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to parse the GLSL shader source code: %s", shader.getInfoLog())
 			}
 		#else
 			std::ignore = vulkanRenderer;
