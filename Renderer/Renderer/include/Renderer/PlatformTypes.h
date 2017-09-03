@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include <inttypes.h>	// For uint32_t, uint64_t etc.
 #include <cassert>
+#include <string.h>		// For strcat() and strncat(), we include it here because inside this header macros are defined which uses those methods
+
 
 
 //[-------------------------------------------------------]
@@ -210,8 +212,6 @@
 //[ Definitions                                           ]
 //[-------------------------------------------------------]
 #ifdef LINUX
-	// TODO(co) Do we really want to include the string stuff in here?
-	#include <strings.h>
 	#define stricmp(a, b)	strcasecmp(a, b)
 #endif
 
