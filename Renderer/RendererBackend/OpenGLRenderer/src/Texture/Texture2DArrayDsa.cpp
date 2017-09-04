@@ -51,7 +51,15 @@ namespace OpenGLRenderer
 		glPixelStorei(GL_UNPACK_ALIGNMENT, (Renderer::TextureFormat::getNumberOfBytesPerElement(textureFormat) & 3) ? 1 : 4);
 
 		// Create the OpenGL texture instance
-		const bool isArbDsa = openGLRenderer.getExtensions().isGL_ARB_direct_state_access();
+		#ifdef WIN32
+			// TODO(co) It appears that DSA "glGenerateTextureMipmap()" is not working (one notices the noise) or we're using it wrong, tested with
+			//			- "InstancedCubes"-example -> "CubeRendereDrawInstanced"
+			//		    - AMD 290X Radeon software version 17.7.2 as well as with GeForce 980m 384.94
+			//		    - Windows 10 x64
+			const bool isArbDsa = (openGLRenderer.getExtensions().isGL_ARB_direct_state_access() && (flags & Renderer::TextureFlag::GENERATE_MIPMAPS) == 0);
+		#else
+			const bool isArbDsa = openGLRenderer.getExtensions().isGL_ARB_direct_state_access();
+		#endif
 		if (isArbDsa)
 		{
 			glCreateTextures(GL_TEXTURE_2D_ARRAY_EXT, 1, &mOpenGLTexture);
