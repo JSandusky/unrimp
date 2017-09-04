@@ -47,7 +47,7 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
-		VkSurfaceKHR createPresentationSurface(const VulkanRenderer::VulkanContext& vulkanContext, VkInstance vkInstance, VkPhysicalDevice vkPhysicalDevice, handle nativeWindowHandle)
+		VkSurfaceKHR createPresentationSurface(const VulkanRenderer::VulkanContext& vulkanContext, VkInstance vkInstance, VkPhysicalDevice vkPhysicalDevice, Renderer::WindowInfo windoInfo)
 		{
 			VkSurfaceKHR vkSurfaceKHR = VK_NULL_HANDLE;
 
@@ -57,7 +57,7 @@ namespace
 					VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR,																// sType (VkStructureType)
 					nullptr,																										// pNext (const void*)
 					0,																												// flags (VkWin32SurfaceCreateFlagsKHR)
-					reinterpret_cast<HINSTANCE>(::GetWindowLongPtr(reinterpret_cast<HWND>(nativeWindowHandle), GWLP_HINSTANCE)),	// hinstance (HINSTANCE)
+					reinterpret_cast<HINSTANCE>(::GetWindowLongPtr(reinterpret_cast<HWND>(windoInfo.nativeWindowHandle), GWLP_HINSTANCE)),	// hinstance (HINSTANCE)
 					reinterpret_cast<HWND>(nativeWindowHandle)																		// hwnd (HWND)
 				};
 				if (vkCreateWin32SurfaceKHR(vkInstance, &vkWin32SurfaceCreateInfoKHR, nullptr, &vkSurfaceKHR) != VK_SUCCESS)
@@ -72,7 +72,7 @@ namespace
 					VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR,		// sType (VkStructureType)
 					nullptr,												// pNext (const void*)
 					0,														// flags (VkAndroidSurfaceCreateFlagsKHR)
-					reinterpret_cast<ANativeWindow*>(nativeWindowHandle)	// window (ANativeWindow*)
+					reinterpret_cast<ANativeWindow*>(windoInfo.nativeWindowHandle)	// window (ANativeWindow*)
 				};
 				if (vkCreateAndroidSurfaceKHR(vkInstance, &vkAndroidSurfaceCreateInfoKHR, nullptr, &vkSurfaceKHR) != VK_SUCCESS)
 				{
@@ -94,7 +94,7 @@ namespace
 						nullptr,										// pNext (const void*)
 						0,												// flags (VkXlibSurfaceCreateFlagsKHR)
 						x11Context.getDisplay(),						// dpy (Display*)
-						nativeWindowHandle								// window (Window)
+						windoInfo.nativeWindowHandle					// window (Window)
 					};
 					if (vkCreateXlibSurfaceKHR(vkInstance, &vkXlibSurfaceCreateInfoKHR, nullptr, &vkSurfaceKHR) != VK_SUCCESS)
 					{
@@ -111,7 +111,7 @@ namespace
 						nullptr,											// pNext (const void*)
 						0,													// flags (VkWaylandSurfaceCreateInfoKHR)
 						waylandContext.getDisplay(),						// display (wl_display*)
-						waylandContext.getSurface()							// surface (wl_surface*)
+						windoInfo.waylandSurface							// surface (wl_surface*)
 					};
 					if (vkCreateWaylandSurfaceKHR(vkInstance, &vkWaylandSurfaceCreateInfoKHR, nullptr, &vkSurfaceKHR) != VK_SUCCESS)
 					{
@@ -433,7 +433,7 @@ namespace VulkanRenderer
 	VkFormat SwapChain::findColorVkFormat(const Renderer::Context& context, VkInstance vkInstance, const VulkanContext& vulkanContext)
 	{
 		const VkPhysicalDevice vkPhysicalDevice = vulkanContext.getVkPhysicalDevice();
-		const VkSurfaceKHR vkSurfaceKHR = detail::createPresentationSurface(vulkanContext, vkInstance, vkPhysicalDevice, context.getNativeWindowHandle());
+		const VkSurfaceKHR vkSurfaceKHR = detail::createPresentationSurface(vulkanContext, vkInstance, vkPhysicalDevice, Renderer::WindowInfo{context.getNativeWindowHandle(), nullptr, nullptr});
 		const VkSurfaceFormatKHR desiredVkSurfaceFormatKHR = ::detail::getSwapChainFormat(context, vkPhysicalDevice, vkSurfaceKHR);
 		vkDestroySurfaceKHR(vkInstance, vkSurfaceKHR, nullptr);
 		return desiredVkSurfaceFormatKHR.format;
@@ -472,7 +472,7 @@ namespace VulkanRenderer
 		const VulkanContext&   vulkanContext	= vulkanRenderer.getVulkanContext();
 		const VkInstance	   vkInstance		= vulkanRenderer.getVulkanRuntimeLinking().getVkInstance();
 		const VkPhysicalDevice vkPhysicalDevice	= vulkanContext.getVkPhysicalDevice();
-		mVkSurfaceKHR = detail::createPresentationSurface(vulkanContext, vkInstance, vkPhysicalDevice, mNativeWindowHandle);
+		mVkSurfaceKHR = detail::createPresentationSurface(vulkanContext, vkInstance, vkPhysicalDevice, windowInfo);
 		if (VK_NULL_HANDLE != mVkSurfaceKHR)
 		{
 			// Create the Vulkan swap chain

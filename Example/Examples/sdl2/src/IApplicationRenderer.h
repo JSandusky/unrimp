@@ -266,6 +266,7 @@ private:
 	bool processMessages();
 	Renderer::Context* createRendererContext() const;
 	void getWindowSize(uint32_t &width, uint32_t &height) const;
+	Renderer::WindowInfo getWindowInfo(SDL_Window* sdlWindow);
 
 
 //[-------------------------------------------------------]

@@ -292,6 +292,9 @@ namespace Renderer
 		{
 			handle nativeWindowHandle;
 			IRenderWindow* renderWindow;
+			#ifdef LINUX
+				wl_surface*	waylandSurface;
+			#endif
 		};
 		enum class MapType
 		{
