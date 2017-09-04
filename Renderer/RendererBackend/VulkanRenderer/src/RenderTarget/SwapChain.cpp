@@ -54,11 +54,11 @@ namespace
 			#ifdef VK_USE_PLATFORM_WIN32_KHR
 				const VkWin32SurfaceCreateInfoKHR vkWin32SurfaceCreateInfoKHR =
 				{
-					VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR,																// sType (VkStructureType)
-					nullptr,																										// pNext (const void*)
-					0,																												// flags (VkWin32SurfaceCreateFlagsKHR)
+					VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR,																		// sType (VkStructureType)
+					nullptr,																												// pNext (const void*)
+					0,																														// flags (VkWin32SurfaceCreateFlagsKHR)
 					reinterpret_cast<HINSTANCE>(::GetWindowLongPtr(reinterpret_cast<HWND>(windoInfo.nativeWindowHandle), GWLP_HINSTANCE)),	// hinstance (HINSTANCE)
-					reinterpret_cast<HWND>(nativeWindowHandle)																		// hwnd (HWND)
+					reinterpret_cast<HWND>(windoInfo.nativeWindowHandle)																	// hwnd (HWND)
 				};
 				if (vkCreateWin32SurfaceKHR(vkInstance, &vkWin32SurfaceCreateInfoKHR, nullptr, &vkSurfaceKHR) != VK_SUCCESS)
 				{
@@ -69,9 +69,9 @@ namespace
 				#warning "TODO(co) Not tested"
 				const VkAndroidSurfaceCreateInfoKHR vkAndroidSurfaceCreateInfoKHR =
 				{
-					VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR,		// sType (VkStructureType)
-					nullptr,												// pNext (const void*)
-					0,														// flags (VkAndroidSurfaceCreateFlagsKHR)
+					VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR,				// sType (VkStructureType)
+					nullptr,														// pNext (const void*)
+					0,																// flags (VkAndroidSurfaceCreateFlagsKHR)
 					reinterpret_cast<ANativeWindow*>(windoInfo.nativeWindowHandle)	// window (ANativeWindow*)
 				};
 				if (vkCreateAndroidSurfaceKHR(vkInstance, &vkAndroidSurfaceCreateInfoKHR, nullptr, &vkSurfaceKHR) != VK_SUCCESS)
