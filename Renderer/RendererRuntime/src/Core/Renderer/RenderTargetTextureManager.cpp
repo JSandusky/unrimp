@@ -75,8 +75,18 @@ namespace RendererRuntime
 
 	void RenderTargetTextureManager::clearRendererResources()
 	{
+		TextureResourceManager& textureResourceManager = mRendererRuntime.getTextureResourceManager();
 		for (RenderTargetTextureElement& renderTargetTextureElement : mSortedRenderTargetTextureVector)
 		{
+			{ // Unload texture resource
+				TextureResource* textureResource = textureResourceManager.getTextureResourceByAssetId(renderTargetTextureElement.assetId);
+				if (nullptr != textureResource)
+				{
+					textureResource->setTexture(nullptr);
+				}
+			}
+
+			// Release renderer texture reference
 			if (nullptr != renderTargetTextureElement.texture)
 			{
 				renderTargetTextureElement.texture->releaseReference();
@@ -87,7 +97,7 @@ namespace RendererRuntime
 
 	void RenderTargetTextureManager::addRenderTargetTexture(AssetId assetId, const RenderTargetTextureSignature& renderTargetTextureSignature)
 	{
-		RenderTargetTextureElement renderTargetTextureElement(renderTargetTextureSignature);
+		RenderTargetTextureElement renderTargetTextureElement(assetId, renderTargetTextureSignature);
 
 		// TODO(co) The render target texture and framebuffer handling is still under construction regarding recycling renderer resources etc. - so for now, just add render target textures to have something to start with
 		{ // Add new render target texture
@@ -200,7 +210,7 @@ namespace RendererRuntime
 						else
 						{
 							// Update texture resource
-							textureResource->setTexture(*renderTargetTextureElement.texture);
+							textureResource->setTexture(renderTargetTextureElement.texture);
 						}
 					}
 				}
@@ -232,10 +242,21 @@ namespace RendererRuntime
 			// Was this the last reference?
 			if (1 == iterator->numberOfReferences)
 			{
+				{ // Unload texture resource
+					TextureResource* textureResource = mRendererRuntime.getTextureResourceManager().getTextureResourceByAssetId(renderTargetTextureElement.assetId);
+					if (nullptr != textureResource)
+					{
+						textureResource->setTexture(nullptr);
+					}
+				}
+
+				// Release renderer texture reference
 				if (nullptr != iterator->texture)
 				{
 					iterator->texture->releaseReference();
 				}
+
+				// Destroy render target texture instance
 				mSortedRenderTargetTextureVector.erase(iterator);
 			}
 			else

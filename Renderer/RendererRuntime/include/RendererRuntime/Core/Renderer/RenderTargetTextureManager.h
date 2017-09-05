@@ -70,11 +70,13 @@ namespace RendererRuntime
 	public:
 		struct RenderTargetTextureElement
 		{
+			AssetId						 assetId;
 			RenderTargetTextureSignature renderTargetTextureSignature;
 			Renderer::ITexture*			 texture;				///< Can be a null pointer, no "Renderer::ITexturePtr" to not have overhead when internally reallocating
 			uint32_t					 numberOfReferences;	///< Number of texture references (don't misuse the renderer texture reference counter for this)
 
 			inline RenderTargetTextureElement() :
+				assetId(getUninitialized<AssetId>()),
 				texture(nullptr),
 				numberOfReferences(0)
 			{
@@ -82,6 +84,7 @@ namespace RendererRuntime
 			}
 
 			inline explicit RenderTargetTextureElement(const RenderTargetTextureSignature& _renderTargetTextureSignature) :
+				assetId(getUninitialized<AssetId>()),
 				renderTargetTextureSignature(_renderTargetTextureSignature),
 				texture(nullptr),
 				numberOfReferences(0)
@@ -89,7 +92,17 @@ namespace RendererRuntime
 				// Nothing here
 			}
 
-			inline RenderTargetTextureElement(const RenderTargetTextureSignature& _renderTargetTextureSignature, Renderer::ITexture& _texture) :
+			inline RenderTargetTextureElement(AssetId _assetId, const RenderTargetTextureSignature& _renderTargetTextureSignature) :
+				assetId(_assetId),
+				renderTargetTextureSignature(_renderTargetTextureSignature),
+				texture(nullptr),
+				numberOfReferences(0)
+			{
+				// Nothing here
+			}
+
+			inline RenderTargetTextureElement(AssetId _assetId, const RenderTargetTextureSignature& _renderTargetTextureSignature, Renderer::ITexture& _texture) :
+				assetId(_assetId),
 				renderTargetTextureSignature(_renderTargetTextureSignature),
 				texture(&_texture),
 				numberOfReferences(0)

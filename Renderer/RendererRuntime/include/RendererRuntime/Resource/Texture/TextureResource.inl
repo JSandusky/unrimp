@@ -38,9 +38,18 @@ namespace RendererRuntime
 		return mTexture;
 	}
 
-	inline void TextureResource::setTexture(Renderer::ITexture& texture)
+	inline void TextureResource::setTexture(Renderer::ITexture* texture)
 	{
-		mTexture = &texture;
+		// Sanity check
+		assert((LoadingState::LOADED == getLoadingState() || LoadingState::UNLOADED == getLoadingState()) && "Texture resource change while in-flight inside the resource streamer");
+
+		// Set new renderer texture
+		if (nullptr != mTexture)
+		{
+			setLoadingState(LoadingState::UNLOADED);
+		}
+		mTexture = texture;
+		setLoadingState(LoadingState::LOADED);
 	}
 
 

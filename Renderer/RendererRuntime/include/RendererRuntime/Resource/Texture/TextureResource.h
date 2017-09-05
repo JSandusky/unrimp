@@ -70,6 +70,7 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class TextureResourceManager;
+		friend class ITextureResourceLoader;
 		friend PackedElementManager<TextureResource, TextureResourceId, 2048>;	// Type definition of template class
 
 
@@ -79,7 +80,7 @@ namespace RendererRuntime
 	public:
 		inline bool isRgbHardwareGammaCorrection() const;
 		inline Renderer::ITexturePtr getTexture() const;
-		inline void setTexture(Renderer::ITexture& texture);
+		inline void setTexture(Renderer::ITexture* texture);
 
 
 	//[-------------------------------------------------------]

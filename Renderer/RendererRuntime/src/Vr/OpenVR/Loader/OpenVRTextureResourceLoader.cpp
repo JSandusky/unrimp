@@ -86,32 +86,21 @@ namespace RendererRuntime
 		}
 	}
 
-	bool OpenVRTextureResourceLoader::onDispatch()
-	{
-		// Create the renderer texture instance
-		if (nullptr != mTexture || nullptr != mVrRenderModelTextureMap)
-		{
-			mTextureResource->setTexture(*(mRendererRuntime.getRenderer().getCapabilities().nativeMultiThreading ? mTexture : createRendererTexture()));
-		}
-
-		// Fully loaded
-		return true;
-	}
-
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Protected RendererRuntime::ITextureResourceLoader methods ]
 	//[-------------------------------------------------------]
 	Renderer::ITexture* OpenVRTextureResourceLoader::createRendererTexture()
 	{
-		// Create the renderer texture instance
-		const bool rgbHardwareGammaCorrection = true;	// TODO(co) It must be possible to set the property name from the outside: Ask the material blueprint whether or not hardware gamma correction should be used
-		Renderer::ITexture2D* texture2D = mRendererRuntime.getTextureManager().createTexture2D(mVrRenderModelTextureMap->unWidth, mVrRenderModelTextureMap->unHeight, rgbHardwareGammaCorrection ? Renderer::TextureFormat::R8G8B8A8_SRGB : Renderer::TextureFormat::R8G8B8A8, static_cast<const void*>(mVrRenderModelTextureMap->rubTextureMapData), Renderer::TextureFlag::GENERATE_MIPMAPS);
-		RENDERER_SET_RESOURCE_DEBUG_NAME(texture2D, getAsset().assetFilename)
-
-		// Free the render model texture, if necessary
+		Renderer::ITexture2D* texture2D = nullptr;
 		if (nullptr != mVrRenderModelTextureMap)
 		{
+			// Create the renderer texture instance
+			const bool rgbHardwareGammaCorrection = true;	// TODO(co) It must be possible to set the property name from the outside: Ask the material blueprint whether or not hardware gamma correction should be used
+			texture2D = mRendererRuntime.getTextureManager().createTexture2D(mVrRenderModelTextureMap->unWidth, mVrRenderModelTextureMap->unHeight, rgbHardwareGammaCorrection ? Renderer::TextureFormat::R8G8B8A8_SRGB : Renderer::TextureFormat::R8G8B8A8, static_cast<const void*>(mVrRenderModelTextureMap->rubTextureMapData), Renderer::TextureFlag::GENERATE_MIPMAPS);
+			RENDERER_SET_RESOURCE_DEBUG_NAME(texture2D, getAsset().assetFilename)
+
+			// Free the render model texture
 			vr::VRRenderModels()->FreeTexture(mVrRenderModelTextureMap);
 			mVrRenderModelTextureMap = nullptr;
 		}

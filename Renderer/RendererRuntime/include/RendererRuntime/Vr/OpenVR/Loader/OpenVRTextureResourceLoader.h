@@ -74,7 +74,13 @@ namespace RendererRuntime
 		inline virtual bool hasDeserialization() const override;
 		inline virtual void onDeserialization(IFile& file) override;
 		virtual void onProcessing() override;
-		virtual bool onDispatch() override;
+
+
+	//[-------------------------------------------------------]
+	//[ Protected RendererRuntime::ITextureResourceLoader methods ]
+	//[-------------------------------------------------------]
+	protected:
+		virtual Renderer::ITexture* createRendererTexture() override;
 
 
 	//[-------------------------------------------------------]
@@ -85,7 +91,6 @@ namespace RendererRuntime
 		inline virtual ~OpenVRTextureResourceLoader() override;
 		explicit OpenVRTextureResourceLoader(const OpenVRTextureResourceLoader&) = delete;
 		OpenVRTextureResourceLoader& operator=(const OpenVRTextureResourceLoader&) = delete;
-		Renderer::ITexture* createRendererTexture();
 
 
 	//[-------------------------------------------------------]

@@ -143,7 +143,7 @@ namespace RendererRuntime
 					// Due to background texture loading, some textures might not be ready, yet
 					// -> But even in this situation there should be a decent fallback texture in place
 					const Texture& texture = textures[i];
-					const TextureResource* textureResource = textureResourceManager.tryGetById(texture.textureResourceId);
+					TextureResource* textureResource = textureResourceManager.tryGetById(texture.textureResourceId);
 					if (nullptr == textureResource)
 					{
 						// Maybe it's a dynamically created texture like a shadow map created by "RendererRuntime::CompositorInstancePassShadowMap"
@@ -153,6 +153,11 @@ namespace RendererRuntime
 						{
 							mTextures[i].textureResourceId = textureResource->getId();
 						}
+					}
+					if (nullptr != textureResource)
+					{
+						// We also need to get informed in case e.g. dynamic compositor textures get changed in order to update the texture resource group accordantly
+						textureResource->connectResourceListener(*this);
 					}
 				}
 

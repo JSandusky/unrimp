@@ -64,8 +64,13 @@ namespace RendererRuntime
 		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
 		virtual void onDeserialization(IFile& file) override;
 		inline virtual void onProcessing() override;
-		virtual bool onDispatch() override;
-		Renderer::ITexture* createRendererTexture();
+
+
+	//[-------------------------------------------------------]
+	//[ Protected RendererRuntime::ITextureResourceLoader methods ]
+	//[-------------------------------------------------------]
+	protected:
+		virtual Renderer::ITexture* createRendererTexture() override;
 
 
 	//[-------------------------------------------------------]

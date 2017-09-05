@@ -64,7 +64,13 @@ namespace RendererRuntime
 		inline virtual ResourceLoaderTypeId getResourceLoaderTypeId() const override;
 		virtual void onDeserialization(IFile& file) override;
 		virtual void onProcessing() override;
-		virtual bool onDispatch() override;
+
+
+	//[-------------------------------------------------------]
+	//[ Protected RendererRuntime::ITextureResourceLoader methods ]
+	//[-------------------------------------------------------]
+	protected:
+		virtual Renderer::ITexture* createRendererTexture() override;
 
 
 	//[-------------------------------------------------------]
@@ -75,7 +81,6 @@ namespace RendererRuntime
 		inline virtual ~CrnTextureResourceLoader() override;
 		explicit CrnTextureResourceLoader(const CrnTextureResourceLoader&) = delete;
 		CrnTextureResourceLoader& operator=(const CrnTextureResourceLoader&) = delete;
-		Renderer::ITexture* createRendererTexture();
 
 
 	//[-------------------------------------------------------]

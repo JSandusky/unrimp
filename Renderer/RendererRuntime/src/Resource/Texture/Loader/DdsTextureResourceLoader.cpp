@@ -666,18 +666,9 @@ namespace RendererRuntime
 		}
 	}
 
-	bool DdsTextureResourceLoader::onDispatch()
-	{
-		// Create the renderer texture instance
-		mTextureResource->setTexture(*(mRendererRuntime.getRenderer().getCapabilities().nativeMultiThreading ? mTexture : createRendererTexture()));
-
-		// Fully loaded
-		return true;
-	}
-
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Protected RendererRuntime::ITextureResourceLoader methods ]
 	//[-------------------------------------------------------]
 	Renderer::ITexture* DdsTextureResourceLoader::createRendererTexture()
 	{

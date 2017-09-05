@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/Texture/Loader/ITextureResourceLoader.h"
+#include "RendererRuntime/Resource/Texture/TextureResource.h"
+#include "RendererRuntime/IRendererRuntime.h"
 
 
 //[-------------------------------------------------------]
@@ -44,7 +46,16 @@ namespace RendererRuntime
 	void ITextureResourceLoader::initialize(const Asset& asset, bool reload, IResource& resource)
 	{
 		IResourceLoader::initialize(asset, reload);
-		mTextureResource = reinterpret_cast<TextureResource*>(&resource);
+		mTextureResource = static_cast<TextureResource*>(&resource);
+	}
+
+	bool ITextureResourceLoader::onDispatch()
+	{
+		// Create the renderer texture instance
+		mTextureResource->mTexture = (mRendererRuntime.getRenderer().getCapabilities().nativeMultiThreading ? mTexture : createRendererTexture());
+
+		// Fully loaded
+		return true;
 	}
 
 
