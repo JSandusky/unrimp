@@ -180,6 +180,8 @@ namespace RendererRuntime
 		explicit MaterialTechnique(const MaterialTechnique&) = delete;
 		MaterialTechnique& operator=(const MaterialTechnique&) = delete;
 		MaterialBufferManager* getMaterialBufferManager() const;
+		inline void clearTextures();
+		inline void makeTextureResourceGroupDirty();
 
 		/**
 		*  @brief
@@ -200,7 +202,7 @@ namespace RendererRuntime
 	private:
 		MaterialTechniqueId			mMaterialTechniqueId;			///< Material technique ID
 		MaterialBlueprintResourceId	mMaterialBlueprintResourceId;	///< Material blueprint resource ID, can be set to uninitialized value
-		mutable Textures			mTextures;
+		Textures					mTextures;
 		uint32_t					mSerializedPipelineStateHash;	///< FNV1a hash of "Renderer::SerializedPipelineState"
 		Renderer::IResourceGroupPtr	mTextureResourceGroup;			///< Texture resource group, can be a null pointer
 

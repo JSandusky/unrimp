@@ -154,7 +154,7 @@ namespace RendererRuntime
 		// TODO(co) Cleanup
 		for (MaterialTechnique* materialTechnique : mSortedMaterialTechniqueVector)
 		{
-			materialTechnique->mTextures.clear();
+			materialTechnique->clearTextures();
 		}
 	}
 
@@ -263,7 +263,7 @@ namespace RendererRuntime
 				case MaterialProperty::Usage::TEXTURE_REFERENCE:
 					for (MaterialTechnique* materialTechnique : mSortedMaterialTechniqueVector)
 					{
-						materialTechnique->mTextures.clear();
+						materialTechnique->clearTextures();
 					}
 					break;
 

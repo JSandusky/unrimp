@@ -44,6 +44,23 @@ namespace RendererRuntime
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	inline void MaterialTechnique::clearTextures()
+	{
+		mTextures.clear();
+		makeTextureResourceGroupDirty();
+	}
+
+	inline void MaterialTechnique::makeTextureResourceGroupDirty()
+	{
+		// Forget about the texture resource group so it's rebuild
+		// TODO(co) Optimization possibility: Allow it to update resource groups instead of always having to destroy and recreate them?
+		mTextureResourceGroup = nullptr;
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

@@ -209,8 +209,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void MaterialTechnique::onLoadingStateChange(const RendererRuntime::IResource&)
 	{
-		// Forget about the texture resource group so it's rebuild
-		mTextureResourceGroup = nullptr;
+		makeTextureResourceGroupDirty();
 	}
 
 
