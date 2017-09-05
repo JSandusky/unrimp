@@ -122,6 +122,12 @@ namespace RendererRuntime
 		// Sanity check
 		assert((LoadingState::LOADED == mLoadingState || LoadingState::UNLOADED == mLoadingState) && "Resource deinitialized while in-flight inside the resource streamer");
 
+		// Update loading state, if necessary
+		if (LoadingState::UNLOADED != mLoadingState)
+		{
+			setLoadingState(LoadingState::UNLOADED);
+		}
+
 		// Disconnect all resource listeners
 		const IResourceListener::ResourceConnection resourceConnection(mResourceManager, mResourceId);
 		for (IResourceListener* resourceListener : mSortedResourceListeners)
@@ -138,7 +144,6 @@ namespace RendererRuntime
 		mResourceManager = nullptr;
 		setUninitialized(mResourceId);
 		setUninitialized(mAssetId);
-		mLoadingState = LoadingState::UNLOADED;
 		mSortedResourceListeners.clear();
 	}
 
