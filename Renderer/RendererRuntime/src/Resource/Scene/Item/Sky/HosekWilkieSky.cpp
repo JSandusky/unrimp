@@ -222,7 +222,7 @@ namespace RendererRuntime
 				// The idea is basing on "Solar Radiance Calculation" - https://www.gamedev.net/topic/671214-simple-solar-radiance-calculation/
 				const float thetaS = std::acos(1.0f - worldSpaceSunDirection.y);
 				const float elevation = (glm::pi<float>() * 0.5f) - thetaS;
-				const float SunSize = glm::radians(0.27f);	// Angular radius of the sun from Earth
+				const float sunSize = glm::radians(0.27f);	// Angular radius of the sun from Earth
 				static const int NUMBER_OF_DISC_SAMPLES = 8;
 				for (int x = 0; x < NUMBER_OF_DISC_SAMPLES; ++x)
 				{
@@ -231,8 +231,8 @@ namespace RendererRuntime
 						const float u = (x + 0.5f) / NUMBER_OF_DISC_SAMPLES;
 						const float v = (y + 0.5f) / NUMBER_OF_DISC_SAMPLES;
 						const glm::vec2 discSamplePos = ::detail::squareToConcentricDiskMapping(u, v);
-						const float cos_theta = elevation + discSamplePos.y * SunSize;
-						const float cos_gamma = discSamplePos.x * SunSize;
+						const float cos_theta = elevation + discSamplePos.y * sunSize;
+						const float cos_gamma = discSamplePos.x * sunSize;
 						const float gamma = acos(cos_gamma);
 						mSunColor += ::detail::hosekWilkie(cos_theta, gamma, cos_gamma, mCoefficients.A, mCoefficients.B, mCoefficients.C, mCoefficients.D, mCoefficients.E, mCoefficients.F, mCoefficients.G, mCoefficients.H, mCoefficients.I);
 					}

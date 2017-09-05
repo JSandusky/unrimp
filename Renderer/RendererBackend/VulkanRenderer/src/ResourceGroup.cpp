@@ -58,6 +58,18 @@ namespace VulkanRenderer
 		// Process all resources and add our reference to the renderer resource
 		const VulkanRenderer& vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
 		const VkDevice vkDevice = vulkanRenderer.getVulkanContext().getVkDevice();
+		if (nullptr != samplerStates)
+		{
+			mSamplerStates = new Renderer::ISamplerState*[mNumberOfResources];
+			for (uint32_t resourceIndex = 0; resourceIndex < mNumberOfResources; ++resourceIndex)
+			{
+				Renderer::ISamplerState* samplerState = mSamplerStates[resourceIndex] = samplerStates[resourceIndex];
+				if (nullptr != samplerState)
+				{
+					samplerState->addReference();
+				}
+			}
+		}
 		for (uint32_t resourceIndex = 0; resourceIndex < mNumberOfResources; ++resourceIndex, ++resources)
 		{
 			Renderer::IResource* resource = *resources;
@@ -189,8 +201,8 @@ namespace VulkanRenderer
 					}
 
 					// Get the sampler state
-					assert(nullptr != samplerStates);
-					const SamplerState* samplerState = static_cast<const SamplerState*>(samplerStates[resourceIndex]);
+					assert(nullptr != mSamplerStates);
+					const SamplerState* samplerState = static_cast<const SamplerState*>(mSamplerStates[resourceIndex]);
 					assert(nullptr != samplerState);
 
 					// Update Vulkan descriptor sets
@@ -239,18 +251,6 @@ namespace VulkanRenderer
 				case Renderer::ResourceType::FRAGMENT_SHADER:
 					RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Invalid Vulkan renderer backend resource type")
 					break;
-			}
-		}
-		if (nullptr != samplerStates)
-		{
-			mSamplerStates = new Renderer::ISamplerState*[mNumberOfResources];
-			for (uint32_t resourceIndex = 0; resourceIndex < mNumberOfResources; ++resourceIndex)
-			{
-				Renderer::ISamplerState* samplerState = mSamplerStates[resourceIndex] = samplerStates[resourceIndex];
-				if (nullptr != samplerState)
-				{
-					samplerState->addReference();
-				}
 			}
 		}
 

@@ -93,7 +93,7 @@ namespace RendererRuntime
 		inline ResourceId getId() const;
 		inline AssetId getAssetId() const;
 		inline LoadingState getLoadingState() const;
-		RENDERERRUNTIME_API_EXPORT void connectResourceListener(IResourceListener& resourceListener);	// No guaranteed resource listener caller order
+		RENDERERRUNTIME_API_EXPORT void connectResourceListener(IResourceListener& resourceListener);	// No guaranteed resource listener caller order, if already connected nothing happens (no double registration)
 		RENDERERRUNTIME_API_EXPORT void disconnectResourceListener(IResourceListener& resourceListener);
 
 

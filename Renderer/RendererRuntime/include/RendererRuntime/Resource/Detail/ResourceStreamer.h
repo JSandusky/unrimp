@@ -107,8 +107,8 @@ namespace RendererRuntime
 			bool				 reload;				///< "true" if the resource is new in memory, else "false" for reload an already loaded resource (and e.g. update cache entries)
 			IResourceManager*	 resourceManager;		///< Must be valid, do not destroy the instance
 			ResourceId			 resourceId;			///< Must be valid
-			// In flight data
-			mutable IResourceLoader* resourceLoader;	///< Null pointer at first, must be valid as soon as the load request is in flight, do not destroy the instance
+			// In-flight data
+			mutable IResourceLoader* resourceLoader;	///< Null pointer at first, must be valid as soon as the load request is in-flight, do not destroy the instance
 
 			// Methods
 			inline LoadRequest(const Asset& _asset, ResourceLoaderTypeId _resourceLoaderTypeId, bool _reload, IResourceManager& _resourceManager, ResourceId _resourceId) :
