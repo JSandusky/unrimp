@@ -30,6 +30,7 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/IndirectBufferManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/LightBufferManager.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
+#include "RendererRuntime/Resource/Material/MaterialTechnique.h"
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
 #include "RendererRuntime/Resource/Detail/ResourceManagerTemplate.h"
 #include "RendererRuntime/Core/Time/TimeManager.h"
@@ -161,16 +162,31 @@ namespace RendererRuntime
 
 	void MaterialBlueprintResourceManager::setDefaultTextureFiltering(Renderer::FilterMode filterMode, uint8_t maximumAnisotropy)
 	{
+		// State change?
 		if (mDefaultTextureFilterMode != filterMode || mDefaultMaximumTextureAnisotropy != maximumAnisotropy)
 		{
+			// Backup the new state
 			mDefaultTextureFilterMode = filterMode;
 			mDefaultMaximumTextureAnisotropy = maximumAnisotropy;
 
-			// Recreate sampler state instances
-			const uint32_t numberOfElements = mInternalResourceManager->getResources().getNumberOfElements();
-			for (uint32_t i = 0; i < numberOfElements; ++i)
-			{
-				mInternalResourceManager->getResources().getElementByIndex(i).onDefaultTextureFilteringChanged(mDefaultTextureFilterMode, mDefaultMaximumTextureAnisotropy);
+			{ // Recreate sampler state instances of all material blueprint resources
+				const uint32_t numberOfElements = mInternalResourceManager->getResources().getNumberOfElements();
+				for (uint32_t i = 0; i < numberOfElements; ++i)
+				{
+					mInternalResourceManager->getResources().getElementByIndex(i).onDefaultTextureFilteringChanged(mDefaultTextureFilterMode, mDefaultMaximumTextureAnisotropy);
+				}
+			}
+
+			{ // Make the texture resource groups of all material techniques dirty to instantly see default texture filtering changes
+				const MaterialResourceManager& materialResourceManager = mRendererRuntime.getMaterialResourceManager();
+				const uint32_t numberOfElements = materialResourceManager.getNumberOfResources();
+				for (uint32_t i = 0; i < numberOfElements; ++i)
+				{
+					for (MaterialTechnique* materialTechnique : materialResourceManager.getByIndex(i).getSortedMaterialTechniqueVector())
+					{
+						materialTechnique->makeTextureResourceGroupDirty();
+					}
+				}
 			}
 		}
 	}
@@ -203,6 +219,8 @@ namespace RendererRuntime
 	{
 		// TODO(co) Experimental implementation (take care of resource cleanup etc.)
 		const uint32_t numberOfElements = mInternalResourceManager->getResources().getNumberOfElements();
+		const MaterialResourceManager& materialResourceManager = mRendererRuntime.getMaterialResourceManager();
+		const uint32_t numberOfMaterialResources = materialResourceManager.getNumberOfResources();
 		for (uint32_t i = 0; i < numberOfElements; ++i)
 		{
 			MaterialBlueprintResource& materialBlueprintResource = mInternalResourceManager->getResources().getElementByIndex(i);
@@ -214,8 +232,6 @@ namespace RendererRuntime
 				// TODO(co) Cleanup: Update all influenced material resources, probably also other material stuff has to be updated
 				materialBlueprintResource.getPipelineStateCacheManager().clearCache();
 				materialBlueprintResource.mTextures.clear();
-				const MaterialResourceManager& materialResourceManager = mRendererRuntime.getMaterialResourceManager();
-				const uint32_t numberOfMaterialResources = materialResourceManager.getNumberOfResources();
 				for (uint32_t elementIndex = 0; elementIndex < numberOfMaterialResources; ++elementIndex)
 				{
 					MaterialResource& materialResource = materialResourceManager.getByIndex(elementIndex);

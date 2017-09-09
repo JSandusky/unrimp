@@ -73,7 +73,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
-		friend class MaterialResource;	// Material technique owner
+		friend class MaterialResource;					// Material technique owner
+		friend class MaterialBlueprintResourceManager;	// Needs to be able to call "RendererRuntime::MaterialTechnique::makeTextureResourceGroupDirty()"
 
 
 	//[-------------------------------------------------------]
