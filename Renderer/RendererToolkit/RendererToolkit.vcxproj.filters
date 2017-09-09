@@ -32,6 +32,9 @@
     <Filter Include="External\mikktspace">
       <UniqueIdentifier>{0931decb-44d0-4f6e-a373-f846631b1677}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\AssetImpoter">
+      <UniqueIdentifier>{053cca99-41a1-4664-baf3-dd90a8cda31c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -182,6 +185,15 @@
     <ClInclude Include="include\RendererToolkit\Context.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererToolkit\AssetImporter\IAssetImporter.h">
+      <Filter>Source Files\AssetImpoter</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererToolkit\AssetImporter\SketchfabAssetImporter.h">
+      <Filter>Source Files\AssetImpoter</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererToolkit\AssetImporter\OgreAssetImporter.h">
+      <Filter>Source Files\AssetImpoter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RendererToolkitImpl.cpp">
@@ -282,6 +294,12 @@
     </ClCompile>
     <ClCompile Include="src\AssetCompiler\IAssetCompiler.cpp">
       <Filter>Source Files\AssetCompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AssetImporter\SketchfabAssetImporter.cpp">
+      <Filter>Source Files\AssetImpoter</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AssetImporter\OgreAssetImporter.cpp">
+      <Filter>Source Files\AssetImpoter</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

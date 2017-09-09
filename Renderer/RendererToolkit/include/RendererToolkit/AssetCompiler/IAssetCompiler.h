@@ -80,6 +80,16 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
+	/**
+	*  @brief
+	*    An asset compiler transforms an asset from a source format into a format the renderer runtime understands
+	*
+	*  @note
+	*    - The asset compiler only crunches data already known to the source asset database (aka "data source"), it doesn't process external assets
+	*    - An asset compiler only cares about a single asset, it doesn't for example processes automatically all material assets
+	*      a mesh asset is referencing and then all texture assets a material assets is referencing
+	*    - Either manually integrate new assets into the source asset database or use an asset importer to do so
+	*/
 	class IAssetCompiler : public Renderer::RefCount<IAssetCompiler>
 	{
 

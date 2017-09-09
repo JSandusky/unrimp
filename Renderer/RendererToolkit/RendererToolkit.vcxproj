@@ -72,6 +72,9 @@
     <ClInclude Include="include\RendererToolkit\AssetCompiler\SkeletonAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\TextureAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\VertexAttributesAssetCompiler.h" />
+    <ClInclude Include="include\RendererToolkit\AssetImporter\IAssetImporter.h" />
+    <ClInclude Include="include\RendererToolkit\AssetImporter\OgreAssetImporter.h" />
+    <ClInclude Include="include\RendererToolkit\AssetImporter\SketchfabAssetImporter.h" />
     <ClInclude Include="include\RendererToolkit\Context.h" />
     <ClInclude Include="include\RendererToolkit\Helper\CacheManager.h" />
     <ClInclude Include="include\RendererToolkit\Helper\FileSystemHelper.h" />
@@ -223,6 +226,8 @@
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
     </ClCompile>
     <ClCompile Include="src\AssetCompiler\VertexAttributesAssetCompiler.cpp" />
+    <ClCompile Include="src\AssetImporter\OgreAssetImporter.cpp" />
+    <ClCompile Include="src\AssetImporter\SketchfabAssetImporter.cpp" />
     <ClCompile Include="src\Helper\CacheManager.cpp" />
     <ClCompile Include="src\Helper\JsonHelper.cpp" />
     <ClCompile Include="src\Helper\JsonMaterialBlueprintHelper.cpp" />

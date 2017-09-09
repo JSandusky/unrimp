@@ -72,6 +72,8 @@ set(SOURCE_CODES
 	src/AssetCompiler/VertexAttributesAssetCompiler.cpp
 	src/AssetCompiler/SkeletonAnimationAssetCompiler.cpp
 	src/AssetCompiler/TextureAssetCompiler.cpp
+	src/AssetImporter/OgreAssetImporter.cpp
+	src/AssetImporter/SketchfabAssetImporter.cpp
 	src/Helper/JsonHelper.cpp
 	src/Helper/JsonMaterialBlueprintHelper.cpp
 	src/Helper/JsonMaterialHelper.cpp
