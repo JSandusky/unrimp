@@ -189,6 +189,145 @@ namespace VulkanRenderer
 		vkCmdPipelineBarrier(vkCommandBuffer, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 1, &vkImageMemoryBarrier);
 	}
 
+	void Helper::transitionVkImageLayout(const VulkanRenderer& vulkanRenderer, VkCommandBuffer vkCommandBuffer, VkImage vkImage, VkImageLayout oldVkImageLayout, VkImageLayout newVkImageLayout, VkImageSubresourceRange vkImageSubresourceRange, VkPipelineStageFlags sourceVkPipelineStageFlags, VkPipelineStageFlags destinationVkPipelineStageFlags)
+	{
+		// Basing on https://github.com/SaschaWillems/Vulkan/tree/master
+
+		// Create an image barrier object
+		VkImageMemoryBarrier vkImageMemoryBarrier =
+		{
+			VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,	// sType (VkStructureType)
+			nullptr,								// pNext (const void*)
+			0,										// srcAccessMask (VkAccessFlags)
+			0,										// dstAccessMask (VkAccessFlags)
+			oldVkImageLayout,						// oldLayout (VkImageLayout)
+			newVkImageLayout,						// newLayout (VkImageLayout)
+			VK_QUEUE_FAMILY_IGNORED,				// srcQueueFamilyIndex (uint32_t)
+			VK_QUEUE_FAMILY_IGNORED,				// dstQueueFamilyIndex (uint32_t)
+			vkImage,								// image (VkImage)
+			vkImageSubresourceRange					// subresourceRange (VkImageSubresourceRange)
+		};
+
+		// Source layouts (old)
+		// -> Source access mask controls actions that have to be finished on the old layout before it will be transitioned to the new layout
+		switch (oldVkImageLayout)
+		{
+			case VK_IMAGE_LAYOUT_UNDEFINED:
+				// Image layout is undefined (or does not matter)
+				// Only valid as initial layout
+				// No flags required, listed only for completeness
+				vkImageMemoryBarrier.srcAccessMask = 0;
+				break;
+
+			case VK_IMAGE_LAYOUT_PREINITIALIZED:
+				// Image is preinitialized
+				// Only valid as initial layout for linear images, preserves memory contents
+				// Make sure host writes have been finished
+				vkImageMemoryBarrier.srcAccessMask = VK_ACCESS_HOST_WRITE_BIT;
+				break;
+
+			case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:
+				// Image is a color attachment
+				// Make sure any writes to the color buffer have been finished
+				vkImageMemoryBarrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+				break;
+
+			case VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL:
+				// Image is a depth/stencil attachment
+				// Make sure any writes to the depth/stencil buffer have been finished
+				vkImageMemoryBarrier.srcAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+				break;
+
+			case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:
+				// Image is a transfer source 
+				// Make sure any reads from the image have been finished
+				vkImageMemoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+				break;
+
+			case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:
+				// Image is a transfer destination
+				// Make sure any writes to the image have been finished
+				vkImageMemoryBarrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+				break;
+
+			case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:
+				// Image is read by a shader
+				// Make sure any shader reads from the image have been finished
+				vkImageMemoryBarrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
+				break;
+
+			case VK_IMAGE_LAYOUT_GENERAL:
+			case VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL:
+			case VK_IMAGE_LAYOUT_PRESENT_SRC_KHR:
+			case VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR:
+			// case VK_IMAGE_LAYOUT_BEGIN_RANGE:	not possible
+			// case VK_IMAGE_LAYOUT_END_RANGE:		not possible
+			case VK_IMAGE_LAYOUT_RANGE_SIZE:
+			case VK_IMAGE_LAYOUT_MAX_ENUM:
+			default:
+				// Other source layouts aren't handled (yet)
+				RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Unsupported Vulkan image old layout transition")
+				break;
+		}
+
+		// Target layouts (new)
+		// -> Destination access mask controls the dependency for the new image layout
+		switch (newVkImageLayout)
+		{
+			case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:
+				// Image will be used as a transfer destination
+				// Make sure any writes to the image have been finished
+				vkImageMemoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+				break;
+
+			case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:
+				// Image will be used as a transfer source
+				// Make sure any reads from the image have been finished
+				vkImageMemoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+				break;
+
+			case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:
+				// Image will be used as a color attachment
+				// Make sure any writes to the color buffer have been finished
+				vkImageMemoryBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+				break;
+
+			case VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL:
+				// Image layout will be used as a depth/stencil attachment
+				// Make sure any writes to depth/stencil buffer have been finished
+				vkImageMemoryBarrier.dstAccessMask |= VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+				break;
+
+			case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:
+				// Image will be read in a shader (sampler, input attachment)
+				// Make sure any writes to the image have been finished
+				if (vkImageMemoryBarrier.srcAccessMask == 0)
+				{
+					vkImageMemoryBarrier.srcAccessMask = (VK_ACCESS_HOST_WRITE_BIT | VK_ACCESS_TRANSFER_WRITE_BIT);
+				}
+				vkImageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+				break;
+
+			case VK_IMAGE_LAYOUT_UNDEFINED:
+			case VK_IMAGE_LAYOUT_GENERAL:
+			case VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL:
+			case VK_IMAGE_LAYOUT_PREINITIALIZED:
+			case VK_IMAGE_LAYOUT_PRESENT_SRC_KHR:
+			case VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR:
+			// case VK_IMAGE_LAYOUT_BEGIN_RANGE:	not possible
+			// case VK_IMAGE_LAYOUT_END_RANGE:		not possible
+			case VK_IMAGE_LAYOUT_RANGE_SIZE:
+			case VK_IMAGE_LAYOUT_MAX_ENUM:
+			default:
+				// Other source layouts aren't handled (yet)
+				RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Unsupported Vulkan image new layout transition")
+				break;
+		}
+
+		// Put barrier inside setup command buffer
+		vkCmdPipelineBarrier(vkCommandBuffer, sourceVkPipelineStageFlags, destinationVkPipelineStageFlags, 0, 0, nullptr, 0, nullptr, 1, &vkImageMemoryBarrier);
+	}
+
 	void Helper::createAndAllocateVkBuffer(const VulkanRenderer& vulkanRenderer, VkBufferUsageFlagBits vkBufferUsageFlagBits, VkMemoryPropertyFlags vkMemoryPropertyFlags, VkDeviceSize numberOfBytes, const void* data, VkBuffer& vkBuffer, VkDeviceMemory& vkDeviceMemory)
 	{
 		const VulkanContext& vulkanContext = vulkanRenderer.getVulkanContext();
@@ -278,6 +417,10 @@ namespace VulkanRenderer
 				vkImageUsageFlags |= VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 			}
 		}
+		if (generateMipmaps)
+		{
+			vkImageUsageFlags |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
+		}
 
 		// Get Vulkan format
 		const VkFormat vkFormat   = Mapping::getVulkanFormat(textureFormat);
@@ -310,9 +453,6 @@ namespace VulkanRenderer
 		else
 		{
 			numberOfBytes = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, vkExtent3D.width, vkExtent3D.height) * vkExtent3D.depth;
-
-			// TODO(co) Add support for "Renderer::TextureFlag::GENERATE_MIPMAPS": See https://github.com/SaschaWillems/Vulkan/tree/master/texturemipmapgen
-			numberOfMipmaps = 1;
 		}
 
 		{ // Create and fill Vulkan image
@@ -343,16 +483,17 @@ namespace VulkanRenderer
 				uint32_t currentDepth  = depth;
 
 				// Allocate list of VkBufferImageCopy and setup VkBufferImageCopy data for each mipmap level
+				const uint32_t numberOfUploadedMipmaps = generateMipmaps ? 1 : numberOfMipmaps;
 				std::vector<VkBufferImageCopy> vkBufferImageCopyList;
-				vkBufferImageCopyList.reserve(numberOfMipmaps);
-				for (uint32_t mipmap = 0; mipmap < numberOfMipmaps; ++mipmap)
+				vkBufferImageCopyList.reserve(numberOfUploadedMipmaps);
+				for (uint32_t mipmap = 0; mipmap < numberOfUploadedMipmaps; ++mipmap)
 				{
 					vkBufferImageCopyList.push_back({
 						bufferOffset,									// bufferOffset (VkDeviceSize)
 						0,												// bufferRowLength (uint32_t)
 						0,												// bufferImageHeight (uint32_t)
 						{ // imageSubresource (VkImageSubresourceLayers)
-							VK_IMAGE_ASPECT_COLOR_BIT,					// aspectMask (VkImageAspectFlags)
+							vkImageAspectFlags,							// aspectMask (VkImageAspectFlags)
 							mipmap,										// mipLevel (uint32_t)
 							0,											// baseArrayLayer (uint32_t)
 							layerCount									// layerCount (uint32_t)
@@ -378,6 +519,88 @@ namespace VulkanRenderer
 
 			// Destroy Vulkan staging buffer
 			destroyAndFreeVkBuffer(vulkanRenderer, stagingVkBuffer, stagingVkDeviceMemory);
+
+			// Generate a complete texture mip-chain at runtime from a base image using image blits and proper image barriers
+			// -> Basing on https://github.com/SaschaWillems/Vulkan/tree/master/texturemipmapgen
+			// -> We copy down the whole mip chain doing a blit from mip-1 to mip. An alternative way would be to always blit from the first mip level and sample that one down.
+			// TODO(co) Some GPUs also offer "asynchronous transfer queues" (check for queue families with only the "VK_QUEUE_TRANSFER_BIT" set) that may be used to speed up such operations
+			if (generateMipmaps)
+			{
+				#ifdef _DEBUG
+				{
+					// Get device properties for the requested Vulkan texture format
+					VkFormatProperties vkFormatProperties;
+					vkGetPhysicalDeviceFormatProperties(vulkanRenderer.getVulkanContext().getVkPhysicalDevice(), vkFormat, &vkFormatProperties);
+
+					// Mip-chain generation requires support for blit source and destination
+					assert(vkFormatProperties.optimalTilingFeatures & VK_FORMAT_FEATURE_BLIT_SRC_BIT);
+					assert(vkFormatProperties.optimalTilingFeatures & VK_FORMAT_FEATURE_BLIT_DST_BIT);
+				}
+				#endif
+
+				// Create and begin Vulkan command buffer
+				VkCommandBuffer vkCommandBuffer = beginSingleTimeCommands(vulkanRenderer);
+
+				// Copy down mips from n-1 to n
+				for (uint32_t i = 1; i < numberOfMipmaps; ++i)
+				{
+					const VkImageBlit VkImageBlit =
+					{
+						{ // srcSubresource (VkImageSubresourceLayers)
+							vkImageAspectFlags,	// aspectMask (VkImageAspectFlags)
+							i - 1,				// mipLevel (uint32_t)
+							0,					// baseArrayLayer (uint32_t)
+							layerCount			// layerCount (uint32_t)
+						},
+						{ // srcOffsets[2] (VkOffset3D)
+							{ 0, 0, 0 },
+							{ std::max(int32_t(vkExtent3D.width >> (i - 1)), 1), std::max(int32_t(vkExtent3D.height >> (i - 1)), 1), 1 }
+						},
+						{ // dstSubresource (VkImageSubresourceLayers)
+							vkImageAspectFlags,	// aspectMask (VkImageAspectFlags)
+							i,					// mipLevel (uint32_t)
+							0,					// baseArrayLayer (uint32_t)
+							layerCount			// layerCount (uint32_t)
+						},
+						{ // dstOffsets[2] (VkOffset3D)
+							{ 0, 0, 0 },
+							{ std::max(int32_t(vkExtent3D.width >> i), 1), std::max(int32_t(vkExtent3D.height >> i), 1), 1 }
+						}
+					};
+					const VkImageSubresourceRange vkImageSubresourceRange =
+					{
+						vkImageAspectFlags,	// aspectMask (VkImageAspectFlags)
+						i,					// baseMipLevel (uint32_t)
+						1,					// levelCount (uint32_t)
+						0,					// baseArrayLayer (uint32_t)
+						layerCount			// layerCount (uint32_t)
+					};
+
+					// Transition current mip level to transfer destination
+					transitionVkImageLayout(vulkanRenderer, vkCommandBuffer, vkImage, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, vkImageSubresourceRange, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_HOST_BIT);
+
+					// Blit from previous level
+					vkCmdBlitImage(vkCommandBuffer, vkImage, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, vkImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &VkImageBlit, VK_FILTER_LINEAR);
+
+					// Transition current mip level to transfer source for read in next iteration
+					transitionVkImageLayout(vulkanRenderer, vkCommandBuffer, vkImage, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, vkImageSubresourceRange, VK_PIPELINE_STAGE_HOST_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT);
+				}
+
+				{ // After the loop, all mip layers are in "VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL"-layout, so transition all to "VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL"-layout
+					const VkImageSubresourceRange vkImageSubresourceRange =
+					{
+						vkImageAspectFlags,		// aspectMask (VkImageAspectFlags)
+						1,						// baseMipLevel (uint32_t)
+						numberOfMipmaps - 1,	// levelCount (uint32_t)
+						0,						// baseArrayLayer (uint32_t)
+						layerCount				// layerCount (uint32_t)
+					};
+					transitionVkImageLayout(vulkanRenderer, vkCommandBuffer, vkImage, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, vkImageSubresourceRange, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT);
+				}
+
+				// End and destroy Vulkan command buffer
+				endSingleTimeCommands(vulkanRenderer, vkCommandBuffer);
+			}
 		}
 
 		// Done
