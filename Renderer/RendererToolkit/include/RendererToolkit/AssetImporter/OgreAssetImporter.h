@@ -42,7 +42,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Ogre ( http://www.ogre3d.org/ ) asset importer
+	*    OGRE ( http://www.ogre3d.org/ ) asset importer
 	*/
 	class OgreAssetImporter : public IAssetImporter
 	{

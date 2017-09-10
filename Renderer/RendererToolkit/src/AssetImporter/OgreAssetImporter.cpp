@@ -34,7 +34,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	const AssetImporterTypeId OgreAssetImporter::TYPE_ID("Ogre");
+	const AssetImporterTypeId OgreAssetImporter::TYPE_ID("OGRE");
 
 
 	//[-------------------------------------------------------]

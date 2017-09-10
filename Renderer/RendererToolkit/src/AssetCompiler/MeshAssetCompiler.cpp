@@ -243,8 +243,21 @@ namespace
 					skeletonData += sizeof(aiMatrix4x4) * numberOfBones;
 					boneOffsetMatrices = reinterpret_cast<aiMatrix4x4*>(skeletonData);
 
+					// OGRE: The scene root node has no name
+					if (0 == assimpNode.mName.length)
+					{
+						if (1 != assimpNode.mNumChildren)
+						{
+							throw std::runtime_error("There can be only single root bone");
+						}
+						fillSkeletonRecursive(*assimpNode.mChildren[0], 0, 0);
+
+						// Some Assimp importers like the OGRE one compensate coordinate system differences by setting a root node transform, so we need to take this into account
+						localBoneMatrices[0] = assimpNode.mTransformation * localBoneMatrices[0];
+					}
+
 					// MD5: The MD5 bones hierarchy is stored inside an Assimp node names "<MD5_Hierarchy>"
-					if (assimpNode.mName == aiString("<MD5_Root>"))
+					else if (assimpNode.mName == aiString("<MD5_Root>"))
 					{
 						for (uint32_t i = 0; i < assimpNode.mNumChildren; ++i)
 						{
@@ -369,8 +382,18 @@ namespace
 		{
 			uint32_t numberOfBones = 0;
 
+			// OGRE: The scene root node has no name
+			if (0 == assimpNode.mName.length)
+			{
+				if (1 != assimpNode.mNumChildren)
+				{
+					throw std::runtime_error("There can be only single root bone");
+				}
+				numberOfBones = getNumberOfBonesRecursive(assimpNode);
+			}
+
 			// MD5: The MD5 bones hierarchy is stored inside an Assimp node names "<MD5_Hierarchy>"
-			if (assimpNode.mName == aiString("<MD5_Root>"))
+			else if (assimpNode.mName == aiString("<MD5_Root>"))
 			{
 				for (uint32_t i = 0; i < assimpNode.mNumChildren; ++i)
 				{

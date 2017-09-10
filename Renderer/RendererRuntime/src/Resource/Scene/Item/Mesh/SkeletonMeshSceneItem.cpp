@@ -91,9 +91,12 @@ namespace RendererRuntime
 		{
 			if (resource.getLoadingState() == IResource::LoadingState::LOADED)
 			{
-				assert(nullptr == mSkeletonAnimationController);
-				mSkeletonAnimationController = new SkeletonAnimationController(getSceneResource().getRendererRuntime(), static_cast<const MeshResource&>(resource).getSkeletonResourceId());
-				mSkeletonAnimationController->startSkeletonAnimationByAssetId(mSkeletonAnimationAssetId);
+				if (isInitialized(mSkeletonAnimationAssetId))
+				{
+					assert(nullptr == mSkeletonAnimationController);
+					mSkeletonAnimationController = new SkeletonAnimationController(getSceneResource().getRendererRuntime(), static_cast<const MeshResource&>(resource).getSkeletonResourceId());
+					mSkeletonAnimationController->startSkeletonAnimationByAssetId(mSkeletonAnimationAssetId);
+				}
 			}
 			else if (nullptr != mSkeletonAnimationController)
 			{

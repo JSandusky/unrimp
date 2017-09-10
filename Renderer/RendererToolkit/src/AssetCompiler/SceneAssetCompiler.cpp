@@ -407,8 +407,9 @@ namespace RendererToolkit
 										{
 											RendererRuntime::v1Scene::SkeletonMeshItem skeletonMeshItem;
 
-											// Map the source asset ID to the compiled asset ID
-											skeletonMeshItem.skeletonAnimationAssetId = JsonHelper::getCompiledAssetId(input, rapidJsonValueItem, "SkeletonAnimation");
+											// Optional skeleton animation: Map the source asset ID to the compiled asset ID
+											skeletonMeshItem.skeletonAnimationAssetId = RendererRuntime::getUninitialized<RendererRuntime::AssetId>();
+											JsonHelper::optionalCompiledAssetId(input, rapidJsonValueItem, "SkeletonAnimation", skeletonMeshItem.skeletonAnimationAssetId);
 
 											// Write down
 											memoryFile.write(&skeletonMeshItem, sizeof(RendererRuntime::v1Scene::SkeletonMeshItem));
