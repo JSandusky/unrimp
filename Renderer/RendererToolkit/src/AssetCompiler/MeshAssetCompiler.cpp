@@ -145,6 +145,7 @@ namespace
 		static const uint8_t NUMBER_OF_BYTES_PER_VERTEX = 28;										///< Number of bytes per vertex (3 float position, 2 float texture coordinate, 4 short QTangent)
 		static const uint8_t NUMBER_OF_BYTES_PER_SKINNED_VERTEX = NUMBER_OF_BYTES_PER_VERTEX + 8;	///< Number of bytes per skinned vertex (+4 byte bone indices, +4 byte bone weights)
 		typedef std::vector<RendererRuntime::v1Mesh::SubMesh> SubMeshes;
+		typedef std::unordered_map<std::string, RendererRuntime::AssetId> MaterialNameToAssetId;
 
 
 		//[-------------------------------------------------------]
@@ -390,9 +391,13 @@ namespace
 		*  @brief
 		*    Get the total number of vertices and indices by using a given Assimp node
 		*
-		*  @param[in]  assimpScene
+		*  @param[in] input
+		*    Asset compiler input
+		*  @param[in] materialNameToAssetId
+		*    Material name to asset ID mapping information
+		*  @param[in] assimpScene
 		*    Assimp scene
-		*  @param[in]  assimpNode
+		*  @param[in] assimpNode
 		*    Assimp node to gather the data from
 		*  @param[out] numberOfVertices
 		*    Receives the number of vertices
@@ -401,7 +406,7 @@ namespace
 		*  @param[out] subMeshes
 		*    Receives the sub-meshes data
 		*/
-		void getNumberOfVerticesAndIndicesRecursive(const RendererToolkit::IAssetCompiler::Input& input, const aiScene& assimpScene, const aiNode& assimpNode, uint32_t& numberOfVertices, uint32_t& numberOfIndices, SubMeshes& subMeshes)
+		void getNumberOfVerticesAndIndicesRecursive(const RendererToolkit::IAssetCompiler::Input& input, const MaterialNameToAssetId& materialNameToAssetId, const aiScene& assimpScene, const aiNode& assimpNode, uint32_t& numberOfVertices, uint32_t& numberOfIndices, SubMeshes& subMeshes)
 		{
 			// Loop through all meshes this node is using
 			for (uint32_t i = 0; i < assimpNode.mNumMeshes; ++i)
@@ -421,19 +426,35 @@ namespace
 
 				{ // Add sub-mesh
 					// Get the source material asset ID
-					aiString materialName;
-					assimpScene.mMaterials[assimpMesh.mMaterialIndex]->Get(AI_MATKEY_NAME, materialName);
-					if (!RendererToolkit::StringHelper::isSourceAssetIdAsString(materialName.C_Str()))
+					RendererRuntime::AssetId materialAssetId = RendererRuntime::getUninitialized<RendererRuntime::AssetId>();
 					{
-						// If we're in luck, the diffuse texture 0 stores the material name
-						assimpScene.mMaterials[assimpMesh.mMaterialIndex]->Get(AI_MATKEY_TEXTURE_DIFFUSE(0), materialName);
+						aiString materialName;
+						const aiMaterial* assimpMaterial = assimpScene.mMaterials[assimpMesh.mMaterialIndex];
+						assimpMaterial->Get(AI_MATKEY_NAME, materialName);
+						MaterialNameToAssetId::const_iterator iterator = materialNameToAssetId.find(materialName.C_Str());
+						if (materialNameToAssetId.cend() != iterator)
+						{
+							materialAssetId = iterator->second;
+						}
+						else
+						{
+							if (!RendererToolkit::StringHelper::isSourceAssetIdAsString(materialName.C_Str()))
+							{
+								// If we're in luck, the diffuse texture 0 stores the material name
+								assimpMaterial->Get(AI_MATKEY_TEXTURE_DIFFUSE(0), materialName);
+							}
+							if (materialName.length > 0 && nullptr == strstr(materialName.C_Str(), AI_DEFAULT_MATERIAL_NAME))
+							{
+								materialAssetId = RendererToolkit::StringHelper::getAssetIdByString(materialName.C_Str(), input);
+							}
+						}
 					}
 
 					// Add sub-mesh
-					if (materialName.length > 0 && nullptr == strstr(materialName.C_Str(), AI_DEFAULT_MATERIAL_NAME))
+					if (RendererRuntime::isInitialized(materialAssetId))
 					{
 						RendererRuntime::v1Mesh::SubMesh subMesh;
-						subMesh.materialAssetId		= RendererToolkit::StringHelper::getAssetIdByString(materialName.C_Str(), input);
+						subMesh.materialAssetId		= materialAssetId;
 						subMesh.primitiveTopology	= static_cast<uint8_t>(Renderer::PrimitiveTopology::TRIANGLE_LIST);
 						subMesh.startIndexLocation	= previousNumberOfIndices;
 						subMesh.numberOfIndices		= numberOfIndices - previousNumberOfIndices;
@@ -445,7 +466,7 @@ namespace
 			// Loop through all child nodes recursively
 			for (uint32_t i = 0; i < assimpNode.mNumChildren; ++i)
 			{
-				getNumberOfVerticesAndIndicesRecursive(input, assimpScene, *assimpNode.mChildren[i], numberOfVertices, numberOfIndices, subMeshes);
+				getNumberOfVerticesAndIndicesRecursive(input, materialNameToAssetId, assimpScene, *assimpNode.mChildren[i], numberOfVertices, numberOfIndices, subMeshes);
 			}
 		}
 
@@ -718,13 +739,9 @@ namespace RendererToolkit
 		// Get the JSON asset object
 		const rapidjson::Value& rapidJsonValueAsset = configuration.rapidJsonDocumentAsset["Asset"];
 
-		// Read configuration
-		std::string inputFile;
-		{
-			// Read mesh asset compiler configuration
-			const rapidjson::Value& rapidJsonValueMeshAssetCompiler = rapidJsonValueAsset["MeshAssetCompiler"];
-			inputFile = rapidJsonValueMeshAssetCompiler["InputFile"].GetString();
-		}
+		// Read mesh asset compiler configuration
+		const rapidjson::Value& rapidJsonValueMeshAssetCompiler = rapidJsonValueAsset["MeshAssetCompiler"];
+		const std::string inputFile = rapidJsonValueMeshAssetCompiler["InputFile"].GetString();
 
 		// Open the input and output file
 		const std::string inputFilename = assetInputDirectory + inputFile;
@@ -765,6 +782,17 @@ namespace RendererToolkit
 			const aiScene* assimpScene = assimpImporter.ReadFile(inputFilename, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_MakeLeftHanded | aiProcess_FlipWindingOrder);
 			if (nullptr != assimpScene && nullptr != assimpScene->mRootNode)
 			{
+				// Get the optional material name to asset ID mapping information
+				::detail::MaterialNameToAssetId materialNameToAssetId;
+				if (rapidJsonValueMeshAssetCompiler.HasMember("MaterialNameToAssetId"))
+				{
+					const rapidjson::Value& rapidJsonValueMaterialNameToAssetId = rapidJsonValueMeshAssetCompiler["MaterialNameToAssetId"];
+					for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIterator = rapidJsonValueMaterialNameToAssetId.MemberBegin(); rapidJsonMemberIterator != rapidJsonValueMaterialNameToAssetId.MemberEnd(); ++rapidJsonMemberIterator)
+					{
+						materialNameToAssetId.emplace(rapidJsonMemberIterator->name.GetString(), StringHelper::getAssetIdByString(rapidJsonMemberIterator->value.GetString(), input));
+					}
+				}
+
 				// Get the number of bones and skeleton
 				const uint32_t numberOfBones = ::detail::getNumberOfBones(*assimpScene->mRootNode);
 				if (numberOfBones > 255)
@@ -777,7 +805,7 @@ namespace RendererToolkit
 				uint32_t numberOfVertices = 0;
 				uint32_t numberOfIndices = 0;
 				::detail::SubMeshes subMeshes;
-				::detail::getNumberOfVerticesAndIndicesRecursive(input, *assimpScene, *assimpScene->mRootNode, numberOfVertices, numberOfIndices, subMeshes);
+				::detail::getNumberOfVerticesAndIndicesRecursive(input, materialNameToAssetId, *assimpScene, *assimpScene->mRootNode, numberOfVertices, numberOfIndices, subMeshes);
 				if (subMeshes.size() > std::numeric_limits<uint16_t>::max())
 				{
 					throw std::runtime_error("The maximum number of supported sub-meshes is " + std::to_string(std::numeric_limits<uint16_t>::max()));
