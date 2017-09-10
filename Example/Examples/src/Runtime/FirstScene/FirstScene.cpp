@@ -228,6 +228,14 @@ void FirstScene::onMouseButtonUp(uint32_t button)
 	}
 }
 
+void FirstScene::onMouseWheel(float delta)
+{
+	if (nullptr != mController)
+	{
+		mController->onMouseWheel(delta);
+	}
+}
+
 void FirstScene::onMouseMove(int x, int y)
 {
 	if (nullptr != mController)

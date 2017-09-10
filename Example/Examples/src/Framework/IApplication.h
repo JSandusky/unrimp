@@ -189,6 +189,18 @@ public:
 
 	/**
 	*  @brief
+	*    Called in case a mouse wheel was used
+	*
+	*  @param[in] delta
+	*    Mouse wheel delta
+	*
+	*  @note
+	*    - The base implementation is empty
+	*/
+	virtual void onMouseWheel(float delta);
+
+	/**
+	*  @brief
 	*    Called in case the mouse moved
 	*
 	*  @param[in] x

@@ -76,4 +76,11 @@ private:
 	FreeCameraController& operator=(const FreeCameraController&) = delete;
 
 
+//[-------------------------------------------------------]
+//[ Private data                                          ]
+//[-------------------------------------------------------]
+private:
+	float mOriginalFovY;
+
+
 };

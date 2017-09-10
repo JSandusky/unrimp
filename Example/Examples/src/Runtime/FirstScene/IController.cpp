@@ -60,6 +60,11 @@ void IController::onMouseButtonUp(uint32_t button)
 	mPressedMouseButtons.erase(button);
 }
 
+void IController::onMouseWheel(float delta)
+{
+	mMouseWheelDelta = delta;
+}
+
 void IController::onMouseMove(int x, int y)
 {
 	const static int MAXIMUM = 100;
@@ -104,6 +109,7 @@ void IController::onUpdate(float)
 //[-------------------------------------------------------]
 IController::IController(RendererRuntime::CameraSceneItem& cameraSceneItem) :
 	mCameraSceneItem(cameraSceneItem),
+	mMouseWheelDelta(0.0f),
 	mMousePositionX(RendererRuntime::getUninitialized<int>()),
 	mMousePositionY(RendererRuntime::getUninitialized<int>()),
 	mMouseMoveX(0),

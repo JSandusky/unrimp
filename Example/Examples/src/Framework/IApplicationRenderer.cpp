@@ -184,6 +184,14 @@ void IApplicationRenderer::onMouseButtonUp(uint32_t button)
 	}
 }
 
+void IApplicationRenderer::onMouseWheel(float delta)
+{
+	if (nullptr != mExampleBase)
+	{
+		mExampleBase->onMouseWheel(delta);
+	}
+}
+
 void IApplicationRenderer::onMouseMove(int x, int y)
 {
 	if (nullptr != mExampleBase)

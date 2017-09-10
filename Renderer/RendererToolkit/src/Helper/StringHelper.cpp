@@ -190,7 +190,7 @@ namespace RendererToolkit
 			}
 			else if (assetIdAsString.length() >= 3 && assetIdAsString.substr(0, 3) == "../")
 			{
-				// "../" = parent directory
+				// "../" = Parent directory
 				std::string resolvedAssetIdAsString = std_filesystem::path((input.assetInputDirectory + assetIdAsString).substr(input.assetPackageInputDirectory.length())).generic_string();
 
 				// TODO(co) The following is quickly hacked together. Is there something like Boost lexical normalize? Didn't find anything ("std_filesystem::canonical()" returns an absolute path).

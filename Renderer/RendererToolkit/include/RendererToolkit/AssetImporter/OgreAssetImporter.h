@@ -43,6 +43,9 @@ namespace RendererToolkit
 	/**
 	*  @brief
 	*    OGRE ( http://www.ogre3d.org/ ) asset importer
+	*
+	*  @todo
+	*    - TODO(co) Under construction
 	*/
 	class OgreAssetImporter : public IAssetImporter
 	{

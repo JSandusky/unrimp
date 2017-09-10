@@ -66,6 +66,9 @@ namespace RendererToolkit
 	*  @note
 	*    - Asset importers won't manipulate the given source assets to not risk introducing any errors
 	*    - The imported assets will be categories by asset type into different directories and decorated with additional asset metadata for asset compilers
+	*
+	*  @todo
+	*    - TODO(co) Under construction
 	*/
 	class IAssetImporter : public Renderer::RefCount<IAssetImporter>
 	{

@@ -43,6 +43,9 @@ namespace RendererToolkit
 	/**
 	*  @brief
 	*    Sketchfab ( https://sketchfab.com/ ) asset importer
+	*
+	*  @todo
+	*    - TODO(co) Under construction
 	*/
 	class SketchfabAssetImporter : public IAssetImporter
 	{

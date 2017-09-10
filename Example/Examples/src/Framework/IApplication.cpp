@@ -108,6 +108,11 @@ void IApplication::onMouseButtonUp(uint32_t)
 	// Nothing here
 }
 
+void IApplication::onMouseWheel(float)
+{
+	// Nothing here
+}
+
 void IApplication::onMouseMove(int, int)
 {
 	// Nothing here

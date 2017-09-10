@@ -170,6 +170,7 @@ public:
 	virtual void onKeyUp(uint32_t key) override;
 	virtual void onMouseButtonDown(uint32_t button) override;
 	virtual void onMouseButtonUp(uint32_t button) override;
+	virtual void onMouseWheel(float delta) override;
 	virtual void onMouseMove(int x, int y) override;
 	virtual void onDrawRequest() override;
 

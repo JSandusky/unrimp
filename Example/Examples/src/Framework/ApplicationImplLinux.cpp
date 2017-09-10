@@ -136,6 +136,7 @@ public:
 				else if (event.xbutton.button == 4 || event.xbutton.button == 5) // Wheel buttons
 				{
 					// TODO(sw)MouseWheel?
+					// TODO(co) mApplication.onMouseWheel(<float>);
 					//imGuiIo.MouseWheel += (event.xbutton.button == 4) ? 1.0f : -1.0f;
 				}
 				break;

@@ -31,10 +31,40 @@
 
 
 //[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global definitions                                    ]
+		//[-------------------------------------------------------]
+		static const float MOVEMENT_SPEED		= 2.0f;
+		static const float FAST_MOVEMENT_FACTOR	= 10.0f;
+		static const float SLOW_MOVEMENT_FACTOR	= 0.1f;
+		static const float MOUSE_WHEEL_FACTOR	= 2.0f;
+		static const float ROTATION_SPEED		= 0.2f;
+		static const float SLOW_ROTATION_FACTOR	= 0.2f;
+		static const float ZOOM_SPEED			= 4.0f;
+		static const float ZOOM_FOV_Y			= glm::radians(10.0f);
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
+
+
+//[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
 FreeCameraController::FreeCameraController(RendererRuntime::CameraSceneItem& cameraSceneItem) :
-	IController(cameraSceneItem)
+	IController(cameraSceneItem),
+	mOriginalFovY(cameraSceneItem.getFovY())
 {
 	// Nothing here
 }
@@ -64,47 +94,51 @@ void FreeCameraController::onUpdate(float pastSecondsSinceLastFrame)
 		glm::quat newRotation = transform.rotation;
 
 		// Keyboard
-		if (!mPressedKeys.empty())
+		if (!mPressedKeys.empty() || 0.0f != mMouseWheelDelta)
 		{
 			// Get the movement speed
-			float movementSpeed = pastSecondsSinceLastFrame * 2.0f;
+			float movementSpeed = pastSecondsSinceLastFrame * ::detail::MOVEMENT_SPEED;
 			{
 				// Speed up = "left shift"-key
 				if (isKeyPressed(16))
 				{
-					movementSpeed *= 10.0f;
+					movementSpeed *= ::detail::FAST_MOVEMENT_FACTOR;
 				}
 
 				// Slow down = "left strg"-key
 				if (isKeyPressed(17))
 				{
-					movementSpeed *= 0.1f;
+					movementSpeed *= ::detail::SLOW_MOVEMENT_FACTOR;
 				}
 			}
 
 			// Get the movement vector
 			glm::vec3 movementVector = RendererRuntime::Math::VEC3_ZERO;
 			{
-				// Move forward = "w"-key
-				if (isKeyPressed(87))
+				// Move forward
+				if (isKeyPressed(87) ||	// "w"-key
+					isKeyPressed(38))	// "Arrow Up"-key
 				{
 					movementVector += transform.rotation * RendererRuntime::Math::VEC3_FORWARD;
 				}
 
-				// Strafe left = "a"-key
-				if (isKeyPressed(65))
+				// Strafe left
+				if (isKeyPressed(65) ||	// "a"-key
+					isKeyPressed(37))	// "Arrow Left"-key
 				{
 					movementVector -= transform.rotation * RendererRuntime::Math::VEC3_RIGHT;
 				}
 
-				// Move backward = "s"-key
-				if (isKeyPressed(83))
+				// Move backward
+				if (isKeyPressed(83) ||	// "s"-key
+					isKeyPressed(40))	// "Arrow Down"-key
 				{
 					movementVector -= transform.rotation * RendererRuntime::Math::VEC3_FORWARD;
 				}
 
 				// Strafe right = "d"-key
-				if (isKeyPressed(68))
+				if (isKeyPressed(68) ||	// "s"-key
+					isKeyPressed(39))	// "Arrow Right"-key
 				{
 					movementVector += transform.rotation * RendererRuntime::Math::VEC3_RIGHT;
 				}
@@ -120,6 +154,13 @@ void FreeCameraController::onUpdate(float pastSecondsSinceLastFrame)
 				{
 					movementVector -= transform.rotation * RendererRuntime::Math::VEC3_UP;
 				}
+
+				// Mouse wheel: Move forward/backward
+				if (0.0f != mMouseWheelDelta)
+				{
+					movementVector += transform.rotation * RendererRuntime::Math::VEC3_FORWARD * mMouseWheelDelta * ::detail::MOUSE_WHEEL_FACTOR;
+					mMouseWheelDelta = 0.0f;
+				}
 			}
 
 			// Update the camera scene node position
@@ -131,10 +172,10 @@ void FreeCameraController::onUpdate(float pastSecondsSinceLastFrame)
 		{
 			// Get the rotation speed
 			// -> Slow down = "q"-key
-			float rotationSpeed = 0.2f;
+			float rotationSpeed = ::detail::ROTATION_SPEED;
 			if (isKeyPressed(81))
 			{
-				rotationSpeed *= 0.2f;
+				rotationSpeed *= ::detail::SLOW_ROTATION_FACTOR;
 			}
 
 			// Calculate yaw and pitch from transformation
@@ -166,6 +207,36 @@ void FreeCameraController::onUpdate(float pastSecondsSinceLastFrame)
 
 			// Update the camera scene node rotation
 			newRotation = glm::quat(glm::vec3(glm::radians(pitch), glm::radians(yaw), 0.0f));
+		}
+
+		// Mouse: Zoom = middle mouse button pressed
+		if (isMouseButtonPressed(2))
+		{
+			// Zoom in
+			float fovY = mCameraSceneItem.getFovY();
+			if (fovY > ::detail::ZOOM_FOV_Y)
+			{
+				fovY -= pastSecondsSinceLastFrame * ::detail::ZOOM_SPEED;
+				if (fovY < ::detail::ZOOM_FOV_Y)
+				{
+					fovY = ::detail::ZOOM_FOV_Y;
+				}
+				mCameraSceneItem.setFovY(fovY);
+			}
+		}
+		else
+		{
+			// Zoom out to original FOV-y
+			float fovY = mCameraSceneItem.getFovY();
+			if (fovY < mOriginalFovY)
+			{
+				fovY += pastSecondsSinceLastFrame * ::detail::ZOOM_SPEED;
+				if (fovY > mOriginalFovY)
+				{
+					fovY = mOriginalFovY;
+				}
+				mCameraSceneItem.setFovY(fovY);
+			}
 		}
 
 		// Tell the camera scene node about the new transform

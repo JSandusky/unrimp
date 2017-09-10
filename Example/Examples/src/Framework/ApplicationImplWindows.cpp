@@ -248,6 +248,21 @@ LRESULT CALLBACK ApplicationImplWindows::wndProc(HWND hWnd, UINT message, WPARAM
 			applicationImplWindows->mApplication->onMouseButtonUp(1);
 			return 0;
 
+		case WM_MBUTTONDOWN:
+			// Inform the owner application instance
+			applicationImplWindows->mApplication->onMouseButtonDown(2);
+			return 0;
+
+		case WM_MBUTTONUP:
+			// Inform the owner application instance
+			applicationImplWindows->mApplication->onMouseButtonUp(2);
+			return 0;
+
+		case WM_MOUSEWHEEL:
+			// Inform the owner application instance
+			applicationImplWindows->mApplication->onMouseWheel(static_cast<float>(GET_WHEEL_DELTA_WPARAM(wParam)) / WHEEL_DELTA);
+			return 0;
+
 		case WM_MOUSEMOVE:
 			// Don't want to include the huge "Windowsx.h" just for the tiny "GET_X_LPARAM()" and "GET_Y_LPARAM()" macros
 			applicationImplWindows->mApplication->onMouseMove(static_cast<int>(static_cast<short>(LOWORD(lParam))), static_cast<int>(static_cast<short>(HIWORD(lParam))));

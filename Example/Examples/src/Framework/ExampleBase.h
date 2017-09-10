@@ -218,6 +218,7 @@ public:
 	virtual void onKeyUp(uint32_t key);
 	virtual void onMouseButtonDown(uint32_t button);
 	virtual void onMouseButtonUp(uint32_t button);
+	virtual void onMouseWheel(float delta);
 	virtual void onMouseMove(int x, int y);
 	virtual void onUpdate();
 	virtual void onDraw();

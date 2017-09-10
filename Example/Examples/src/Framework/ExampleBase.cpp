@@ -95,6 +95,11 @@ void ExampleBase::onMouseButtonUp(uint32_t)
 	// Base does nothing
 }
 
+void ExampleBase::onMouseWheel(float)
+{
+	// Base does nothing
+}
+
 void ExampleBase::onMouseMove(int, int)
 {
 	// Base does nothing
