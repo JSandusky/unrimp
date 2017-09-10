@@ -636,17 +636,51 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
-		bool crunchConsoleOutput(crnlib::eConsoleMessageType type, const char* message, void* data)
+		bool crunchConsoleOutput(crnlib::eConsoleMessageType crunchType, const char* message, void* data)
 		{
-			// Filter Crunch output to ignore messages like "Flipping texture on Y axis" or "Generated 11 mipmap levels in 3.261s"
-			// -> Warnings like "Target bitrate/quality level is not supported for this output file format." don't cause harm either, but just show them so we're aware of possible issues
+			// Map the log message type
+			Renderer::ILog::Type type = Renderer::ILog::Type::TRACE;
+			switch (crunchType)
+			{
+				case crnlib::cDebugConsoleMessage:
+					type = Renderer::ILog::Type::DEBUG;
+					break;
+
+				case crnlib::cProgressConsoleMessage:
+					// Ignored by intent since Crunch writes empty message here (search for "console::progress("");" inside Crunch source codes)
+					// type = Renderer::ILog::Type::TRACE;
+					break;
+
+				case crnlib::cInfoConsoleMessage:
+					type = Renderer::ILog::Type::INFORMATION;
+					break;
+
+				case crnlib::cConsoleConsoleMessage:
+					type = Renderer::ILog::Type::INFORMATION;
+					break;
+
+				case crnlib::cMessageConsoleMessage:
+					type = Renderer::ILog::Type::INFORMATION;
+					break;
+
+				case crnlib::cWarningConsoleMessage:
+					type = Renderer::ILog::Type::WARNING;
+					break;
+
+				case crnlib::cErrorConsoleMessage:
+					type = Renderer::ILog::Type::CRITICAL;
+					break;
+
+				case crnlib::cCMTTotal:
+				default:
+					break;
+			}
+
+			// Write renderer log
 			// TODO(co) More context information like which asset is compiled right now might be useful. We need to keep in mind that there can be multiple texture compiler instances
 			//          running at one and the same time. We could use the Crunch console output data to transport this information, on the other hand we need to ensure that we can
 			//          unregister our function when we're done. "crnlib::console::remove_console_output_func() only checks the function pointer.
-			if (crnlib::cMessageConsoleMessage == type || crnlib::cWarningConsoleMessage == type || crnlib::cErrorConsoleMessage == type)
-			{
-				RENDERER_LOG(*static_cast<const RendererToolkit::Context*>(data), CRITICAL, message)
-			}
+			static_cast<const RendererToolkit::Context*>(data)->getLog().print(type, message);
 
 			// We handled the console output
 			return true;
