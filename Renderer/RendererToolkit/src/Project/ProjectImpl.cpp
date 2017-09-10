@@ -163,6 +163,7 @@ namespace RendererToolkit
 		// TODO(co) Add multi-threading support: Add compiler queue which is processed in the background, ensure compiler instances are reused
 
 		// Get the asset input directory and asset output directory
+		const std::string assetPackageInputDirectory = mProjectDirectory + mAssetPackageDirectoryName;
 		const std::string assetInputDirectory = std_filesystem::path(assetFilename).parent_path().generic_string() + '/';
 		const std::string assetType = rapidJsonValueAssetMetadata["AssetType"].GetString();
 		const std::string assetCategory = rapidJsonValueAssetMetadata["AssetCategory"].GetString();
@@ -172,7 +173,7 @@ namespace RendererToolkit
 		std_filesystem::create_directories(assetOutputDirectory);
 
 		// Asset compiler input
-		IAssetCompiler::Input input(mContext, mProjectName, *mCacheManager.get(), assetFilename, assetInputDirectory, assetOutputDirectory, mSourceAssetIdToCompiledAssetId, mSourceAssetIdToAbsoluteFilename);
+		IAssetCompiler::Input input(mContext, mProjectName, *mCacheManager.get(), assetPackageInputDirectory, assetFilename, assetInputDirectory, assetOutputDirectory, mSourceAssetIdToCompiledAssetId, mSourceAssetIdToAbsoluteFilename);
 
 		// Asset compiler configuration
 		assert(nullptr != mRapidJsonDocument);

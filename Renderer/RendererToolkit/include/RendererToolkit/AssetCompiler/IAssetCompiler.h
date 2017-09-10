@@ -103,6 +103,7 @@ namespace RendererToolkit
 			const Context&							context;
 			const std::string						projectName;
 			CacheManager&							cacheManager;
+			const std::string						assetPackageInputDirectory;
 			const std::string						assetFilename;
 			const std::string						assetInputDirectory;
 			const std::string						assetOutputDirectory;
@@ -110,10 +111,11 @@ namespace RendererToolkit
 			const SourceAssetIdToAbsoluteFilename&	sourceAssetIdToAbsoluteFilename;
 
 			Input() = delete;
-			Input(const Context& _context, const std::string _projectName, CacheManager& _cacheManager, const std::string& _assetFilename, const std::string& _assetInputDirectory, const std::string& _assetOutputDirectory, const SourceAssetIdToCompiledAssetId& _sourceAssetIdToCompiledAssetId, const SourceAssetIdToAbsoluteFilename& _sourceAssetIdToAbsoluteFilename) :
+			Input(const Context& _context, const std::string _projectName, CacheManager& _cacheManager, const std::string& _assetPackageInputDirectory, const std::string& _assetFilename, const std::string& _assetInputDirectory, const std::string& _assetOutputDirectory, const SourceAssetIdToCompiledAssetId& _sourceAssetIdToCompiledAssetId, const SourceAssetIdToAbsoluteFilename& _sourceAssetIdToAbsoluteFilename) :
 				context(_context),
 				projectName(_projectName),
 				cacheManager(_cacheManager),
+				assetPackageInputDirectory(_assetPackageInputDirectory),
 				assetFilename(_assetFilename),
 				assetInputDirectory(_assetInputDirectory),
 				assetOutputDirectory(_assetOutputDirectory),
@@ -133,6 +135,7 @@ namespace RendererToolkit
 			}
 			uint32_t getCompiledAssetIdBySourceAssetIdAsString(const std::string& sourceAssetIdAsString) const
 			{
+				// Source asset ID naming scheme "<name>.asset"
 				SourceAssetIdToCompiledAssetId::const_iterator iterator = sourceAssetIdToCompiledAssetId.find(RendererRuntime::StringId(sourceAssetIdAsString.c_str()));
 				if (iterator == sourceAssetIdToCompiledAssetId.cend())
 				{

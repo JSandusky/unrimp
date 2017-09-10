@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/Helper/StringHelper.h"
+#include "RendererToolkit/Helper/FileSystemHelper.h"
 
 #include <cctype>
 #include <sstream>
@@ -181,10 +182,47 @@ namespace RendererToolkit
 		// - Compiled or runtime generated asset ID naming scheme "<project name>/<asset type>/<asset category>/<asset name>"
 		if (isSourceAssetIdAsString(assetIdAsString))
 		{
-			return input.getCompiledAssetIdBySourceAssetIdAsString(assetIdAsString);
+			// Source asset ID naming scheme "<name>.asset": Handle relative source asset references
+			if (assetIdAsString.length() >= 2 && assetIdAsString.substr(0, 2) == "./")
+			{
+				// "./" = This directory
+				return input.getCompiledAssetIdBySourceAssetIdAsString((input.assetInputDirectory + assetIdAsString.substr(2)).substr(input.assetPackageInputDirectory.length()));
+			}
+			else if (assetIdAsString.length() >= 3 && assetIdAsString.substr(0, 3) == "../")
+			{
+				// "../" = parent directory
+				std::string resolvedAssetIdAsString = std_filesystem::path((input.assetInputDirectory + assetIdAsString).substr(input.assetPackageInputDirectory.length())).generic_string();
+
+				// TODO(co) The following is quickly hacked together. Is there something like Boost lexical normalize? Didn't find anything ("std_filesystem::canonical()" returns an absolute path).
+				std::string currentResolvedAssetIdAsString = resolvedAssetIdAsString;
+				{
+					size_t goToParentIndex = currentResolvedAssetIdAsString.find("/../");
+					while (std::string::npos != goToParentIndex)
+					{
+						const size_t index = currentResolvedAssetIdAsString.rfind("/", goToParentIndex - 1);
+						if (std::string::npos != goToParentIndex)
+						{
+							currentResolvedAssetIdAsString = currentResolvedAssetIdAsString.erase(index, goToParentIndex - index + 3);
+							goToParentIndex = currentResolvedAssetIdAsString.find("/../");
+						}
+						else
+						{
+							throw std::runtime_error("Failed to normalize path \"" + resolvedAssetIdAsString + '\"');
+						}
+					}
+				}
+
+				return input.getCompiledAssetIdBySourceAssetIdAsString(currentResolvedAssetIdAsString);
+			}
+			else
+			{
+				// Relative to the asset package the asset is in
+				return input.getCompiledAssetIdBySourceAssetIdAsString(assetIdAsString);
+			}
 		}
 		else
 		{
+			// Compiled or runtime generated asset ID naming scheme "<project name>/<asset type>/<asset category>/<asset name>"
 			return getAssetIdByString(assetIdAsString);
 		}
 	}
