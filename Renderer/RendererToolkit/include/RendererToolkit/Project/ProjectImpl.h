@@ -125,6 +125,7 @@ namespace RendererToolkit
 		std::string getRenderTargetDataRootDirectory(const char* rendererTarget) const;
 		void buildSourceAssetIdToCompiledAssetId();
 		void threadWorker();
+		void checkAssetIsChanged(const RendererRuntime::Asset& asset, const char* rendererTarget);
 
 
 	//[-------------------------------------------------------]
@@ -144,6 +145,8 @@ namespace RendererToolkit
 		std::atomic<bool>				mShutdownThread;
 		std::thread						mThread;
 		std::unique_ptr<CacheManager>	mCacheManager;
+		
+		std::unordered_map<uint32_t, std::unique_ptr<IAssetCompiler>> mAssetCompilers; ///< List of asset compilers key "AssetCompilerTypeId" (type not used directly or we would need to define a hash-function for it)
 
 
 	};

@@ -35,6 +35,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 
 //[-------------------------------------------------------]
@@ -178,10 +179,18 @@ namespace RendererToolkit
 
 
 	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	public:
+		inline virtual ~IAssetCompiler() override {}
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual RendererToolkit::IAssetCompiler methods ]
 	//[-------------------------------------------------------]
 	public:
 		virtual AssetCompilerTypeId getAssetCompilerTypeId() const = 0;
+		virtual bool checkIfChanged(const Input& input, const Configuration& configuration) const = 0;
 		virtual void compile(const Input& input, const Configuration& configuration, Output& output) = 0;
 
 
@@ -190,7 +199,6 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	protected:
 		inline IAssetCompiler() {}
-		inline virtual ~IAssetCompiler() override {}
 
 
 	};

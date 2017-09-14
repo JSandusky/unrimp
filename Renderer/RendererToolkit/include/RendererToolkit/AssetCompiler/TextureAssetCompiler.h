@@ -104,6 +104,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	public:
 		virtual AssetCompilerTypeId getAssetCompilerTypeId() const override;
+		virtual bool checkIfChanged(const Input& input, const Configuration& configuration) const override;
 		virtual void compile(const Input& input, const Configuration& configuration, Output& output) override;
 
 

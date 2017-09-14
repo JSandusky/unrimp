@@ -128,6 +128,21 @@ namespace RendererToolkit
 		mShutdownThread(false)
 	{
 		mThread = std::thread(&ProjectImpl::threadWorker, this);
+
+		// Setup asset compilers map
+		// TODO(co) Currently this is fixed build in, later on me might want to have this dynamic so we can plugin additional asset compilers
+		mAssetCompilers.emplace(TextureAssetCompiler::TYPE_ID, std::make_unique<TextureAssetCompiler>(mContext));
+		mAssetCompilers.emplace(ShaderPieceAssetCompiler::TYPE_ID, std::make_unique<ShaderPieceAssetCompiler>());
+		mAssetCompilers.emplace(ShaderBlueprintAssetCompiler::TYPE_ID, std::make_unique<ShaderBlueprintAssetCompiler>());
+		mAssetCompilers.emplace(MaterialBlueprintAssetCompiler::TYPE_ID, std::make_unique<MaterialBlueprintAssetCompiler>());
+		mAssetCompilers.emplace(MaterialAssetCompiler::TYPE_ID, std::make_unique<MaterialAssetCompiler>());
+		mAssetCompilers.emplace(SkeletonAssetCompiler::TYPE_ID, std::make_unique<SkeletonAssetCompiler>());
+		mAssetCompilers.emplace(SkeletonAnimationAssetCompiler::TYPE_ID, std::make_unique<SkeletonAnimationAssetCompiler>());
+		mAssetCompilers.emplace(MeshAssetCompiler::TYPE_ID, std::make_unique<MeshAssetCompiler>());
+		mAssetCompilers.emplace(SceneAssetCompiler::TYPE_ID, std::make_unique<SceneAssetCompiler>());
+		mAssetCompilers.emplace(CompositorNodeAssetCompiler::TYPE_ID, std::make_unique<CompositorNodeAssetCompiler>());
+		mAssetCompilers.emplace(CompositorWorkspaceAssetCompiler::TYPE_ID, std::make_unique<CompositorWorkspaceAssetCompiler>());
+		mAssetCompilers.emplace(VertexAttributesAssetCompiler::TYPE_ID, std::make_unique<VertexAttributesAssetCompiler>());
 	}
 
 	ProjectImpl::~ProjectImpl()
@@ -188,53 +203,10 @@ namespace RendererToolkit
 		try
 		{
 			const AssetCompilerTypeId assetCompilerTypeId(assetType.c_str());
-			if (TextureAssetCompiler::TYPE_ID == assetCompilerTypeId)
+			auto findIterator = mAssetCompilers.find(assetCompilerTypeId);
+			if (findIterator != mAssetCompilers.end())
 			{
-				TextureAssetCompiler(mContext).compile(input, configuration, output);
-			}
-			else if (ShaderPieceAssetCompiler::TYPE_ID == assetCompilerTypeId)
-			{
-				ShaderPieceAssetCompiler().compile(input, configuration, output);
-			}
-			else if (ShaderBlueprintAssetCompiler::TYPE_ID == assetCompilerTypeId)
-			{
-				ShaderBlueprintAssetCompiler().compile(input, configuration, output);
-			}
-			else if (MaterialBlueprintAssetCompiler::TYPE_ID == assetCompilerTypeId)
-			{
-				MaterialBlueprintAssetCompiler().compile(input, configuration, output);
-			}
-			else if (MaterialAssetCompiler::TYPE_ID == assetCompilerTypeId)
-			{
-				MaterialAssetCompiler().compile(input, configuration, output);
-			}
-			else if (SkeletonAssetCompiler::TYPE_ID == assetCompilerTypeId)
-			{
-				SkeletonAssetCompiler().compile(input, configuration, output);
-			}
-			else if (SkeletonAnimationAssetCompiler::TYPE_ID == assetCompilerTypeId)
-			{
-				SkeletonAnimationAssetCompiler().compile(input, configuration, output);
-			}
-			else if (MeshAssetCompiler::TYPE_ID == assetCompilerTypeId)
-			{
-				MeshAssetCompiler().compile(input, configuration, output);
-			}
-			else if (SceneAssetCompiler::TYPE_ID == assetCompilerTypeId)
-			{
-				SceneAssetCompiler().compile(input, configuration, output);
-			}
-			else if (CompositorNodeAssetCompiler::TYPE_ID == assetCompilerTypeId)
-			{
-				CompositorNodeAssetCompiler().compile(input, configuration, output);
-			}
-			else if (CompositorWorkspaceAssetCompiler::TYPE_ID == assetCompilerTypeId)
-			{
-				CompositorWorkspaceAssetCompiler().compile(input, configuration, output);
-			}
-			else if (VertexAttributesAssetCompiler::TYPE_ID == assetCompilerTypeId)
-			{
-				VertexAttributesAssetCompiler().compile(input, configuration, output);
+				findIterator->second->compile(input, configuration, output);
 			}
 			else
 			{
@@ -269,6 +241,8 @@ namespace RendererToolkit
 
 		{ // Read project data
 			mProjectDirectory = std_filesystem::path(filename).parent_path().generic_string() + '/';
+
+			mContext.getLog().print(Renderer::ILog::Type::INFORMATION, "Gather asset from %s...", mProjectDirectory.c_str());
 			{ // Asset packages
 				const rapidjson::Value& rapidJsonValueAssetPackages = rapidJsonValueProject["AssetPackages"];
 				if (rapidJsonValueAssetPackages.Size() > 1)
@@ -283,6 +257,8 @@ namespace RendererToolkit
 			readTargetsByFilename(rapidJsonValueProject["TargetsFilename"].GetString());
 			::detail::optionalQualityStrategy(rapidJsonValueProject, "QualityStrategy", mQualityStrategy);
 
+			mContext.getLog().print(Renderer::ILog::Type::INFORMATION, "Found %u assets", mAssetPackage.getSortedAssetVector().size());
+
 			// Setup project folder for cache manager, it will store there its data
 			// TODO(sw) For now only prototype. Change this.
 			mCacheManager = std::make_unique<CacheManager>(mContext, mProjectName);
@@ -296,6 +272,12 @@ namespace RendererToolkit
 		{ // Compile all assets
 			const RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = mAssetPackage.getSortedAssetVector();
 			const size_t numberOfAssets = sortedAssetVector.size();
+
+			for (size_t i = 0; i < numberOfAssets; ++i)
+			{
+				checkAssetIsChanged(sortedAssetVector[i], rendererTarget);
+			}
+
 			for (size_t i = 0; i < numberOfAssets; ++i)
 			{
 				compileAsset(sortedAssetVector[i], rendererTarget, outputAssetPackage);
@@ -475,6 +457,44 @@ namespace RendererToolkit
 			// TODO(co) Implement me
 		}
 		NOP;
+	}
+	
+	void ProjectImpl::checkAssetIsChanged(const RendererRuntime::Asset& asset, const char* rendererTarget)
+	{
+		const std::string assetFilename = mProjectDirectory + asset.assetFilename;
+		std::ifstream inputFileStream(assetFilename, std::ios::binary);
+
+		// Parse JSON
+		rapidjson::Document rapidJsonDocument;
+		JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, assetFilename, "Asset", "1");
+
+		// Mandatory main sections of the asset
+		const rapidjson::Value& rapidJsonValueAsset = rapidJsonDocument["Asset"];
+		const rapidjson::Value& rapidJsonValueAssetMetadata = rapidJsonValueAsset["AssetMetadata"];
+
+		// Dispatch asset compiler
+		// TODO(co) Add multi-threading support: Add compiler queue which is processed in the background, ensure compiler instances are reused
+
+		// Get the asset input directory and asset output directory
+		const std::string assetPackageInputDirectory = mProjectDirectory + mAssetPackageDirectoryName;
+		const std::string assetInputDirectory = std_filesystem::path(assetFilename).parent_path().generic_string() + '/';
+		const std::string assetType = rapidJsonValueAssetMetadata["AssetType"].GetString();
+		const std::string assetCategory = rapidJsonValueAssetMetadata["AssetCategory"].GetString();
+		const std::string assetOutputDirectory = "../" + getRenderTargetDataRootDirectory(rendererTarget) + mAssetPackageDirectoryName + assetType + '/' + assetCategory + '/';
+
+		// Asset compiler input
+		IAssetCompiler::Input input(mContext, mProjectName, *mCacheManager.get(), assetPackageInputDirectory, assetFilename, assetInputDirectory, assetOutputDirectory, mSourceAssetIdToCompiledAssetId, mSourceAssetIdToAbsoluteFilename);
+
+		// Asset compiler configuration
+		assert(nullptr != mRapidJsonDocument);
+		const IAssetCompiler::Configuration configuration(rapidJsonDocument, (*mRapidJsonDocument)["Targets"], rendererTarget, mQualityStrategy);
+
+		const AssetCompilerTypeId assetCompilerTypeId(assetType.c_str());
+		auto findIterator = mAssetCompilers.find(assetCompilerTypeId);
+		if (findIterator != mAssetCompilers.end())
+		{
+			findIterator->second->checkIfChanged(input, configuration);
+		}
 	}
 
 
