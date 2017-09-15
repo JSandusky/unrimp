@@ -102,6 +102,15 @@ namespace RendererToolkit
 		const char* tryGetAssetFilenameByAssetId(RendererRuntime::AssetId assetId) const;
 		void compileAsset(const RendererRuntime::Asset& asset, const char* rendererTarget, RendererRuntime::AssetPackage& outputAssetPackage);
 
+		/**
+		*  @brief
+		*    Inform project about compilation run finish.
+		*
+		*  @note
+		*    Call this after a compilation run has been finish. This will clear any internal caches/states
+		*/
+		void onCompilationRunFinished();
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererToolkit::IProject methods      ]

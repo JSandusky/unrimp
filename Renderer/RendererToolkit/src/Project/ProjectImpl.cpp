@@ -219,6 +219,12 @@ namespace RendererToolkit
 		}
 	}
 
+	void ProjectImpl::onCompilationRunFinished()
+	{
+		// Compilation run finished clear internal cache of cache manager
+		mCacheManager->clearInternalCache();
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererToolkit::IProject methods      ]
@@ -310,6 +316,9 @@ namespace RendererToolkit
 			// Write LZ4 compressed output
 			memoryFile.writeLz4CompressedDataToFile(RendererRuntime::StringId("AssetPackage"), 2, "../" + getRenderTargetDataRootDirectory(rendererTarget) + mAssetPackageDirectoryName + "AssetPackage.assets", mContext.getFileManager());
 		}
+
+		// Compilation run finished clear internal caches/states
+		onCompilationRunFinished();
 	}
 
 	void ProjectImpl::startupAssetMonitor(RendererRuntime::IRendererRuntime& rendererRuntime, const char* rendererTarget)

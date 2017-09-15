@@ -300,6 +300,11 @@ namespace RendererToolkit
 		return false;
 	}
 
+	void CacheManager::clearInternalCache()
+	{
+		mCheckedFilesStatus.clear();
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]

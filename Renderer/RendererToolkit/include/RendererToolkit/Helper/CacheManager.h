@@ -239,6 +239,12 @@ namespace RendererToolkit
 		*/
 		bool dependencyFilesChanged(const std::vector<std::string>& dependencyFiles);
 
+		/**
+		*  @brief
+		*    Clears the internal cache for file changes
+		*/
+		void clearInternalCache();
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
