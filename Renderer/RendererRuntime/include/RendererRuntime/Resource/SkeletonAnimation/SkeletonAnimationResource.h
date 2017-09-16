@@ -93,7 +93,7 @@ namespace RendererRuntime
 			uint32_t boneId;				///< Bone ID ("RendererRuntime::StringId" on bone name)
 			uint32_t numberOfPositionKeys;	///< Number of position keys, must be at least one
 			uint32_t numberOfRotationKeys;	///< Number of rotation keys, must be at least one
-			uint32_t numberOfScaleKeys;		///< Number of scale keys, must be at least one
+			uint32_t numberOfScaleKeys;		///< Number of optional scale keys, can be zero
 		};
 		struct Vector3Key
 		{

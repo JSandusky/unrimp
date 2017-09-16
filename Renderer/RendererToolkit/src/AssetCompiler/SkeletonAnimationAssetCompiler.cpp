@@ -119,8 +119,6 @@ namespace RendererToolkit
 		// Read skeleton animation asset compiler configuration
 		const rapidjson::Value& rapidJsonValueSkeletonAnimationAssetCompiler = rapidJsonValueAsset["SkeletonAnimationAssetCompiler"];
 		const std::string inputFile = rapidJsonValueSkeletonAnimationAssetCompiler["InputFile"].GetString();
-		uint32_t animationIndex = RendererRuntime::getUninitialized<uint32_t>();
-		JsonHelper::optionalIntegerProperty(rapidJsonValueSkeletonAnimationAssetCompiler, "AnimationIndex", animationIndex);
 
 		// Open the input file
 		const std::string inputFilename = assetInputDirectory + inputFile;
@@ -142,6 +140,12 @@ namespace RendererToolkit
 			const aiScene* assimpScene = assimpImporter.ReadFile(absoluteFilename, AssimpHelper::getAssimpFlagsByRapidJsonValue(rapidJsonValueSkeletonAnimationAssetCompiler, "ImportFlags"));
 			if (nullptr != assimpScene && nullptr != assimpScene->mRootNode)
 			{
+				// Read skeleton animation asset compiler configuration
+				uint32_t animationIndex = RendererRuntime::getUninitialized<uint32_t>();
+				JsonHelper::optionalIntegerProperty(rapidJsonValueSkeletonAnimationAssetCompiler, "AnimationIndex", animationIndex);
+				bool ignoreBoneScale = false;
+				JsonHelper::optionalBooleanProperty(rapidJsonValueSkeletonAnimationAssetCompiler, "IgnoreBoneScale", ignoreBoneScale);
+
 				// Get the Assimp animation instance to import
 				// -> In case there are multiple animations stored inside the imported skeleton animation we must
 				//    insist that the skeleton animation compiler gets supplied with the animation index to use
@@ -164,6 +168,31 @@ namespace RendererToolkit
 				}
 				const aiAnimation* assimpAnimation = assimpScene->mAnimations[animationIndex];
 
+				// Determine whether or not bone scale is used, in case it's not ignored in general to start with
+				// TODO(co) Optimization option: Currently, the automatic dynamic bone scale ignoring is over all animation channels. We could
+				//          extend it that it's on per-channel base so that if one channel has bone scale while all other have not, only that
+				//          one channel will save bone scale keys. We could do the same for position and rotation.
+				if (!ignoreBoneScale)
+				{
+					// Let's be ignorant until someone proofs us wrong
+					ignoreBoneScale = true;
+
+					// Try to proof that the guy above is wrong and bone scale is used
+					static const aiVector3D ONE_VECTOR(1.0f, 1.0f, 1.0f);
+					for (unsigned int channel = 0; channel < assimpAnimation->mNumChannels && ignoreBoneScale; ++channel)
+					{
+						const aiNodeAnim* assimpNodeAnim = assimpAnimation->mChannels[channel];
+						for (unsigned int i = 0; i < assimpNodeAnim->mNumScalingKeys; ++i)
+						{
+							if (!assimpNodeAnim->mScalingKeys[i].mValue.Equal(ONE_VECTOR, 1e-5f))
+							{
+								ignoreBoneScale = false;
+								break;
+							}
+						}
+					}
+				}
+
 				// Calculate the number of bytes required to store the complete animation data
 				std::vector<uint32_t> channelByteOffsets;
 				channelByteOffsets.resize(assimpAnimation->mNumChannels);
@@ -175,7 +204,10 @@ namespace RendererToolkit
 					numberOfChannelDataBytes += sizeof(RendererRuntime::SkeletonAnimationResource::ChannelHeader);
 					numberOfChannelDataBytes += sizeof(RendererRuntime::SkeletonAnimationResource::Vector3Key) * assimpNodeAnim->mNumPositionKeys;
 					numberOfChannelDataBytes += sizeof(RendererRuntime::SkeletonAnimationResource::QuaternionKey) * assimpNodeAnim->mNumRotationKeys;
-					numberOfChannelDataBytes += sizeof(RendererRuntime::SkeletonAnimationResource::Vector3Key) * assimpNodeAnim->mNumScalingKeys;
+					if (!ignoreBoneScale)
+					{
+						numberOfChannelDataBytes += sizeof(RendererRuntime::SkeletonAnimationResource::Vector3Key) * assimpNodeAnim->mNumScalingKeys;
+					}
 				}
 
 				{ // Write down the skeleton animation header
@@ -194,13 +226,14 @@ namespace RendererToolkit
 				for (unsigned int channel = 0; channel < assimpAnimation->mNumChannels; ++channel)
 				{
 					const aiNodeAnim* assimpNodeAnim = assimpAnimation->mChannels[channel];
+					const uint32_t numScalingKeys = ignoreBoneScale ? 0 : assimpNodeAnim->mNumScalingKeys;
 
 					{ // Bone channel header
 						RendererRuntime::SkeletonAnimationResource::ChannelHeader channelHeader;
 						channelHeader.boneId			   = RendererRuntime::StringId(assimpNodeAnim->mNodeName.C_Str());
 						channelHeader.numberOfPositionKeys = assimpNodeAnim->mNumPositionKeys;
 						channelHeader.numberOfRotationKeys = assimpNodeAnim->mNumRotationKeys;
-						channelHeader.numberOfScaleKeys	   = assimpNodeAnim->mNumScalingKeys;
+						channelHeader.numberOfScaleKeys	   = numScalingKeys;
 
 						// Write down the bone channel header
 						memoryFile.write(&channelHeader, sizeof(RendererRuntime::SkeletonAnimationResource::ChannelHeader));
@@ -240,10 +273,12 @@ namespace RendererToolkit
 						memoryFile.write(rotationKeys.data(), sizeof(RendererRuntime::SkeletonAnimationResource::QuaternionKey) * assimpNodeAnim->mNumRotationKeys);
 					}
 
-					{ // Write bone channel scale data
+					// Write optional bone channel scale data
+					if (numScalingKeys > 0)
+					{
 						std::vector<RendererRuntime::SkeletonAnimationResource::Vector3Key> scaleKeys;
-						scaleKeys.resize(assimpNodeAnim->mNumScalingKeys);
-						for (unsigned int i = 0; i < assimpNodeAnim->mNumScalingKeys; ++i)
+						scaleKeys.resize(numScalingKeys);
+						for (unsigned int i = 0; i < numScalingKeys; ++i)
 						{
 							const aiVectorKey& assimpVectorKey = assimpNodeAnim->mScalingKeys[i];
 							RendererRuntime::SkeletonAnimationResource::Vector3Key& vector3Key = scaleKeys[i];
@@ -252,7 +287,7 @@ namespace RendererToolkit
 							vector3Key.value.y	   = assimpVectorKey.mValue.y;
 							vector3Key.value.z	   = assimpVectorKey.mValue.z;
 						}
-						memoryFile.write(scaleKeys.data(), sizeof(RendererRuntime::SkeletonAnimationResource::Vector3Key) * assimpNodeAnim->mNumScalingKeys);
+						memoryFile.write(scaleKeys.data(), sizeof(RendererRuntime::SkeletonAnimationResource::Vector3Key) * numScalingKeys);
 					}
 				}
 			}

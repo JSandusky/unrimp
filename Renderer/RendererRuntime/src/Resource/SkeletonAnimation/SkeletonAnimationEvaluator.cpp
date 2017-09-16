@@ -117,7 +117,7 @@ namespace RendererRuntime
 			// Sanity checks
 			assert(channelHeader.numberOfPositionKeys > 0);
 			assert(channelHeader.numberOfRotationKeys > 0);
-			assert(channelHeader.numberOfScaleKeys > 0);
+			// assert(channelHeader.numberOfScaleKeys > 0);	Scale is optional
 
 			// Get channel keys
 			const SkeletonAnimationResource::Vector3Key* positionKeys = reinterpret_cast<const SkeletonAnimationResource::Vector3Key*>(currentChannelData);
@@ -200,27 +200,36 @@ namespace RendererRuntime
 				std::get<1>(mLastPositions[i]) = frame;
 			}
 
-			// Scale
-			glm::vec3 presentScale;
+			// Scale is optional
+			if (channelHeader.numberOfScaleKeys > 0)
 			{
-				uint32_t frame = (timeInTicks >= mLastTimeInTicks) ? std::get<2>(mLastPositions[i]) : 0;
-				while (frame < channelHeader.numberOfScaleKeys - 1)
+				glm::vec3 presentScale;
 				{
-					if (timeInTicks < scaleKeys[frame + 1].timeInTicks)
+					uint32_t frame = (timeInTicks >= mLastTimeInTicks) ? std::get<2>(mLastPositions[i]) : 0;
+					while (frame < channelHeader.numberOfScaleKeys - 1)
 					{
-						break;
+						if (timeInTicks < scaleKeys[frame + 1].timeInTicks)
+						{
+							break;
+						}
+						++frame;
 					}
-					++frame;
+
+					// TODO(co) Interpolation maybe? This time maybe even logarithmic, not linear.
+					presentScale = scaleKeys[frame].value;
+					std::get<2>(mLastPositions[i]) = frame;
 				}
 
-				// TODO(co) Interpolation maybe? This time maybe even logarithmic, not linear.
-				presentScale = scaleKeys[frame].value;
-				std::get<2>(mLastPositions[i]) = frame;
+				// Build a transformation matrix from it
+				// TODO(co) Review temporary matrix instances on the C-runtime stack
+				mTransformMatrices[i] = glm::translate(Math::MAT4_IDENTITY, presentPosition) * glm::toMat4(presentRotation) * glm::scale(Math::MAT4_IDENTITY, presentScale);
 			}
-
-			// Build a transformation matrix from it
-			// TODO(co) Review temporary matrix instances on the C-runtime stack
-			mTransformMatrices[i] = glm::translate(Math::MAT4_IDENTITY, presentPosition) * glm::toMat4(presentRotation) * glm::scale(Math::MAT4_IDENTITY, presentScale);
+			else
+			{
+				// Build a transformation matrix from it
+				// TODO(co) Review temporary matrix instances on the C-runtime stack
+				mTransformMatrices[i] = glm::translate(Math::MAT4_IDENTITY, presentPosition) * glm::toMat4(presentRotation);
+			}
 		}
 
 		mLastTimeInTicks = timeInTicks;
