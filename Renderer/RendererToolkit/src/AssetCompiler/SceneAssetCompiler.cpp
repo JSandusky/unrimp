@@ -206,6 +206,25 @@ namespace RendererToolkit
 		return TYPE_ID;
 	}
 
+	bool SceneAssetCompiler::checkIfChanged(const Input& input, const Configuration& configuration) const
+	{
+		// Get the JSON asset object
+		const rapidjson::Value& rapidJsonValueAsset = configuration.rapidJsonDocumentAsset["Asset"];
+
+		// Read configuration
+		std::string inputFile;
+		{
+			// Read material asset compiler configuration
+			const rapidjson::Value& rapidJsonValueMaterialAssetCompiler = rapidJsonValueAsset["SceneAssetCompiler"];
+			inputFile = rapidJsonValueMaterialAssetCompiler["InputFile"].GetString();
+		}
+
+		const std::string inputFilename = input.assetInputDirectory + inputFile;
+
+		// Let the cache manager check if the files has changed. This speeds up later checks and supports dependency tracking
+		return input.cacheManager.checkIfFileIsModified(configuration.rendererTarget, input.assetFilename, {inputFilename}, RendererRuntime::v1Scene::FORMAT_VERSION);
+	}
+
 	void SceneAssetCompiler::compile(const Input& input, const Configuration& configuration, Output& output)
 	{
 		// Input, configuration and output

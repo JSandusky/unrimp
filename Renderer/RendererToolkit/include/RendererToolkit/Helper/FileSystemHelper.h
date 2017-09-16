@@ -37,7 +37,11 @@
 		#include <filesystem>
 	__pragma(warning(pop))
 #else
-	#include <experimental/filesystem>
+	#ifdef UNRIMP_USE_BOOST_FILESYSTEM
+		#include <boost/filesystem.hpp>
+	#else
+		#include <experimental/filesystem>
+	#endif
 #endif
 
 
@@ -54,7 +58,11 @@ namespace RendererToolkit
 	#ifdef WIN32
 		namespace std_filesystem = std::tr2::sys;
 	#else
-		namespace std_filesystem = std::experimental::filesystem;
+		#ifdef UNRIMP_USE_BOOST_FILESYSTEM
+			namespace std_filesystem = boost::filesystem;
+		#else
+			namespace std_filesystem = std::experimental::filesystem;
+		#endif
 	#endif
 
 

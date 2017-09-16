@@ -178,33 +178,9 @@ namespace RendererToolkit
 
 	bool CacheManager::needsToBeCompiled(const std::string& rendererTarget, const std::string& assetFilename, const std::string& sourceFile, const std::string& destinationFile, uint32_t compilerVersion, CacheEntries& cacheEntries)
 	{
-		// Create "std::filesystem::path" object from the give file paths
-		const std_filesystem::path sourceFilePath(sourceFile);
-		const std_filesystem::path destinationFilePath(destinationFile);
-
-		// Check if the files exists
-		const bool sourceExists = (std_filesystem::exists(sourceFilePath) && std_filesystem::is_regular_file(sourceFilePath));
-		const bool destinationExists = std_filesystem::exists(destinationFilePath);
-
-		if (sourceExists)
-		{
-			// Source exists
-			// -> Check if source has changed
-			cacheEntries.sourceCacheEntries.emplace_back(CacheEntry{});
-			CacheEntry& sourceCacheEntry = cacheEntries.sourceCacheEntries.back();
-			const bool fileChanged = checkIfFileChanged(rendererTarget, sourceFile, compilerVersion, sourceCacheEntry);
-
-			// Check if also the asset file (*.asset) has changed, e.g. compile options has changed
-			const bool assetFileChanged = checkIfFileChanged(rendererTarget, assetFilename, ::detail::ASSET_FORMAT_VERSION, cacheEntries.assetCacheEntry);
-
-			// File needs to be compiled either destination doesn't exists, the source data has changed or the asset file has changed
-			return (fileChanged || assetFileChanged || !destinationExists);
-		}
-		else
-		{
-			// Error! Source could not be found.
-			throw std::runtime_error("Source file \"" + sourceFile + "\" doesn't exist");
-		}
+		std::vector<std::string> sourceFiles;
+		sourceFiles.push_back(sourceFile);
+		return needsToBeCompiled(rendererTarget, assetFilename, sourceFiles, destinationFile, compilerVersion, cacheEntries);
 	}
 
 	bool CacheManager::needsToBeCompiled(const std::string& rendererTarget, const std::string& assetFilename, const std::vector<std::string>& sourceFiles, const std::string& destinationFile, uint32_t compilerVersion, CacheEntries& cacheEntries)
@@ -245,6 +221,15 @@ namespace RendererToolkit
 		// Check if also the asset file (*.asset) has changed, e.g. compile options has changed
 		const bool assetFileChanged = checkIfFileChanged(rendererTarget, assetFilename, ::detail::ASSET_FORMAT_VERSION, cacheEntries.assetCacheEntry);
 
+		if (!assetFileChanged && (sourceFilesChanged || !destinationExists))
+		{
+			// Mark the asset file as changed when asset needs to be compiled and asset file itself didn't changed
+			// This is needed to get asset dependencies properly checked
+			RendererRuntime::StringId fileId(assetFilename.c_str());
+			CheckedFile& checkedFile = mCheckedFilesStatus[fileId];
+			checkedFile.changed = true;
+		}
+
 		// File needs to be compiled either destination doesn't exists, the source data has changed or the asset file has changed
 		return (sourceFilesChanged || assetFileChanged || !destinationExists);
 	}
@@ -266,6 +251,58 @@ namespace RendererToolkit
 
 			transaction.commit();
 		}
+	}
+
+	bool CacheManager::checkIfFileIsModified(const std::string& rendererTarget, const std::string& assetFilename, const std::vector<std::string>& sourceFiles, uint32_t compilerVersion)
+	{
+		bool result = false;
+
+		CacheEntry dummyEntry;
+		
+		// First check the source files...
+		for (const auto& fileName : sourceFiles)
+		{
+			if (checkIfFileChanged(rendererTarget, fileName, compilerVersion, dummyEntry))
+			{
+				result = true;
+			}
+		}
+		
+		// .. check the asset file
+		if (!checkIfFileChanged(rendererTarget, assetFilename, compilerVersion, dummyEntry))
+		{
+			// We don't include this check in the above if to make sure that the function is always called
+			if (result)
+			{
+				// Asset file itself has not changed but the source file so mark the asset file as changed too
+				// Dependencies are defined via the asset file and with this change the asset which depents on this asset knows if the refrenced asset has changed
+				RendererRuntime::StringId fileId(assetFilename.c_str());
+				CheckedFile& checkedFile = mCheckedFilesStatus[fileId];
+				checkedFile.changed = true;
+			}
+		}
+
+		return result;
+	}
+
+	bool CacheManager::dependencyFilesChanged(const std::vector<std::string>& dependencyFiles)
+	{
+		for (const auto& dependencyFile : dependencyFiles)
+		{
+			RendererRuntime::StringId fileId(dependencyFile.c_str());
+			CheckedFilesStatus::iterator findIterator = mCheckedFilesStatus.find(fileId);
+			if (findIterator != mCheckedFilesStatus.end())
+			{
+				if (findIterator->second.changed)
+					return true;
+			}
+		}
+		return false;
+	}
+
+	void CacheManager::clearInternalCache()
+	{
+		mCheckedFilesStatus.clear();
 	}
 
 
@@ -387,14 +424,17 @@ namespace RendererToolkit
 			{
 				if (hasFileEntry)
 				{
-					// A file might be referenced by different assets so first check if the file was already check by a previous call to this method
+					// A file might be referenced by different assets so first check if the file was already checked by a previous call to this method
 					// If so return the result (the file shouldn't change between two checks while a compilation is running)
 					{
 						CheckedFilesStatus::iterator findIterator = mCheckedFilesStatus.find(fileId);
 						if (findIterator != mCheckedFilesStatus.end())
 						{
+							// Copy cache entry data from stored one
+							cacheEntry = findIterator->second.cacheEntry;
+
 							// The file was already checked before simply return the result
-							return findIterator->second;
+							return findIterator->second.changed;
 						}
 					}
 
@@ -403,7 +443,9 @@ namespace RendererToolkit
 						if (cacheEntry.fileSize == fileSize && cacheEntry.fileTime == fileTime && cacheEntry.compilerVersion == compilerVersion)
 						{
 							// The file has not changed -> store the result
-							mCheckedFilesStatus[fileId] = false;
+							CheckedFile& checkedFile = mCheckedFilesStatus[fileId];
+							checkedFile.changed = false;
+							checkedFile.cacheEntry = cacheEntry;
 
 							// Source file didn't changed
 							return false;
@@ -426,7 +468,9 @@ namespace RendererToolkit
 							#endif
 
 							// The file has not changed -> store the result
-							mCheckedFilesStatus[fileId] = false;
+							CheckedFile& checkedFile = mCheckedFilesStatus[fileId];
+							checkedFile.changed = false;
+							checkedFile.cacheEntry = cacheEntry;
 
 							// Source file didn't changed
 							return false;
@@ -440,7 +484,9 @@ namespace RendererToolkit
 							cacheEntry.compilerVersion = compilerVersion;
 
 							// The file has changed -> store the result
-							mCheckedFilesStatus[fileId] = true;
+							CheckedFile& checkedFile = mCheckedFilesStatus[fileId];
+							checkedFile.changed = true;
+							checkedFile.cacheEntry = cacheEntry;
 						}
 					}
 				}
@@ -456,7 +502,9 @@ namespace RendererToolkit
 					cacheEntry.compilerVersion = compilerVersion;
 
 					// The file had no cache entry yet -> store it as "has changed"
-					mCheckedFilesStatus[fileId] = true;
+					CheckedFile& checkedFile = mCheckedFilesStatus[fileId];
+					checkedFile.changed = true;
+					checkedFile.cacheEntry = cacheEntry;
 				}
 			}
 			catch (const std::exception& e)

@@ -105,6 +105,9 @@ namespace RendererToolkit
 								break;
 							}
 						}
+
+						// A compilation run has been finished do cleanup
+						mProjectAssetMonitor.mProjectImpl.onCompilationRunFinished();
 					}
 					mFileActions.clear();
 				}

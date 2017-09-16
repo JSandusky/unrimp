@@ -80,6 +80,25 @@ namespace RendererToolkit
 		return TYPE_ID;
 	}
 
+	bool CompositorWorkspaceAssetCompiler::checkIfChanged(const Input& input, const Configuration& configuration) const
+	{
+		// Get the JSON asset object
+		const rapidjson::Value& rapidJsonValueAsset = configuration.rapidJsonDocumentAsset["Asset"];
+
+		// Read configuration
+		std::string inputFile;
+		{
+			// Read material asset compiler configuration
+			const rapidjson::Value& rapidJsonValueMaterialAssetCompiler = rapidJsonValueAsset["CompositorWorkspaceAssetCompiler"];
+			inputFile = rapidJsonValueMaterialAssetCompiler["InputFile"].GetString();
+		}
+
+		const std::string inputFilename = input.assetInputDirectory + inputFile;
+
+		// Let the cache manager check if the files has changed. This speeds up later checks and supports dependency tracking
+		return input.cacheManager.checkIfFileIsModified(configuration.rendererTarget, input.assetFilename, {inputFilename}, RendererRuntime::v1CompositorWorkspace::FORMAT_VERSION);
+	}
+
 	void CompositorWorkspaceAssetCompiler::compile(const Input& input, const Configuration& configuration, Output& output)
 	{
 		// Input, configuration and output

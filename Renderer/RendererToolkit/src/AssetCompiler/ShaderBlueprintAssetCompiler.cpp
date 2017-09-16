@@ -165,6 +165,25 @@ namespace RendererToolkit
 		return TYPE_ID;
 	}
 
+	bool ShaderBlueprintAssetCompiler::checkIfChanged(const Input& input, const Configuration& configuration) const
+	{
+		// Get the JSON asset object
+		const rapidjson::Value& rapidJsonValueAsset = configuration.rapidJsonDocumentAsset["Asset"];
+
+		// Read configuration
+		std::string inputFile;
+		{
+			// Read material asset compiler configuration
+			const rapidjson::Value& rapidJsonValueMaterialAssetCompiler = rapidJsonValueAsset["ShaderBlueprintAssetCompiler"];
+			inputFile = rapidJsonValueMaterialAssetCompiler["InputFile"].GetString();
+		}
+
+		const std::string inputFilename = input.assetInputDirectory + inputFile;
+
+		// Let the cache manager check if the files has changed. This speeds up later checks and supports dependency tracking
+		return input.cacheManager.checkIfFileIsModified(configuration.rendererTarget, input.assetFilename, {inputFilename}, RendererRuntime::v1ShaderBlueprint::FORMAT_VERSION);
+	}
+
 	void ShaderBlueprintAssetCompiler::compile(const Input& input, const Configuration& configuration, Output& output)
 	{
 		// Input, configuration and output
@@ -192,7 +211,7 @@ namespace RendererToolkit
 		CacheManager::CacheEntries cacheEntries;
 		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1ShaderBlueprint::FORMAT_VERSION, cacheEntries))
 		{
-			std::ifstream inputFileStream(assetInputDirectory + inputFile, std::ios::binary);
+			std::ifstream inputFileStream(inputFilename, std::ios::binary);
 			RendererRuntime::MemoryFile memoryFile(0, 4096);
 
 			{ // Shader blueprint

@@ -80,6 +80,25 @@ namespace RendererToolkit
 		return TYPE_ID;
 	}
 
+	bool MaterialAssetCompiler::checkIfChanged(const Input& input, const Configuration& configuration) const
+	{
+		// Get the JSON asset object
+		const rapidjson::Value& rapidJsonValueAsset = configuration.rapidJsonDocumentAsset["Asset"];
+
+		// Read configuration
+		std::string inputFile;
+		{
+			// Read material asset compiler configuration
+			const rapidjson::Value& rapidJsonValueMaterialAssetCompiler = rapidJsonValueAsset["MaterialAssetCompiler"];
+			inputFile = rapidJsonValueMaterialAssetCompiler["InputFile"].GetString();
+		}
+
+		const std::string inputFilename = input.assetInputDirectory + inputFile;
+
+		// Let the cache manager check if the files has changed. This speeds up later checks and supports dependency tracking
+		return input.cacheManager.checkIfFileIsModified(configuration.rendererTarget, input.assetFilename, {inputFilename}, RendererRuntime::v1Material::FORMAT_VERSION);
+	}
+
 	void MaterialAssetCompiler::compile(const Input& input, const Configuration& configuration, Output& output)
 	{
 		// Input, configuration and output
@@ -102,15 +121,33 @@ namespace RendererToolkit
 		const std::string inputFilename = assetInputDirectory + inputFile;
 		const std::string assetName = std_filesystem::path(input.assetFilename).stem().generic_string();
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".material";
+		
+		std::vector<std::string> inputFilenames;
+		inputFilenames.emplace_back(inputFilename);
+
+		std::vector<std::string> dependecyFiles;
+		
+		// Read in dependecy files
+		{ // Material
+			std::ifstream inputFileStream(inputFilename, std::ios::binary);
+			// Parse JSON
+			rapidjson::Document rapidJsonDocument;
+			JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, inputFilename, "MaterialAsset", "1");
+			
+			// TODO(sw) parts copied from JsonMaterialHelper::getTechniquesAndPropertiesByMaterialAssetId
+			const rapidjson::Value& rapidJsonValueMaterialAsset = rapidJsonDocument["MaterialAsset"];
+			const rapidjson::Value& rapidJsonValueTechniques = rapidJsonValueMaterialAsset["Techniques"];
+			for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorTechniques = rapidJsonValueTechniques.MemberBegin(); rapidJsonMemberIteratorTechniques != rapidJsonValueTechniques.MemberEnd(); ++rapidJsonMemberIteratorTechniques)
+			{
+				const RendererRuntime::AssetId materialBlueprintAssetId = StringHelper::getSourceAssetIdByString(rapidJsonMemberIteratorTechniques->value.GetString());
+				const std::string absoluteMaterialBlueprintAssetFilename = JsonHelper::getAbsoluteAssetFilename(input, materialBlueprintAssetId);
+				dependecyFiles.emplace_back(std::move(absoluteMaterialBlueprintAssetFilename));
+			}
+		}
 
 		// Ask the cache manager whether or not we need to compile the source file (e.g. source changed or target not there)
-		// TODO(co) Material assets are currently excluded from the cache: Material assets depend on 1-n material blueprint assets, if one
-		//          of them changes, the dependent material assets must be recompiled as well so everything is consistent. We need to extend
-		//          the cache manager somehow to be able to model such more complex asset relationships. Lucky us, material asset compilation
-		//          is blazing fast - but it would still be nice to have it cached. Might be useful if we later on need to tell someone about
-		//          changed assets.
-		// CacheManager::CacheEntries cacheEntries;
-		// if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1Material::FORMAT_VERSION, cacheEntries))
+		CacheManager::CacheEntries cacheEntries;
+		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilenames, outputAssetFilename, RendererRuntime::v1Material::FORMAT_VERSION, cacheEntries) || input.cacheManager.dependencyFilesChanged(dependecyFiles))
 		{
 			std::ifstream inputFileStream(inputFilename, std::ios::binary);
 			RendererRuntime::MemoryFile memoryFile(0, 1024);
@@ -141,8 +178,7 @@ namespace RendererToolkit
 			memoryFile.writeLz4CompressedDataToFile(RendererRuntime::v1Material::FORMAT_TYPE, RendererRuntime::v1Material::FORMAT_VERSION, outputAssetFilename, input.context.getFileManager());
 
 			// Store new cache entries or update existing ones
-			// TODO(co) Material assets are currently excluded from the cache: See more detailed comment above
-			// input.cacheManager.storeOrUpdateCacheEntriesInDatabase(cacheEntries);
+			input.cacheManager.storeOrUpdateCacheEntriesInDatabase(cacheEntries);
 		}
 
 		{ // Update the output asset package
