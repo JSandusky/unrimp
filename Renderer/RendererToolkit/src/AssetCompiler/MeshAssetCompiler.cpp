@@ -450,9 +450,9 @@ namespace
 				{ // Add sub-mesh
 					// Get the source material asset ID
 					RendererRuntime::AssetId materialAssetId = RendererRuntime::getUninitialized<RendererRuntime::AssetId>();
+					aiString materialName;
+					const aiMaterial* assimpMaterial = assimpScene.mMaterials[assimpMesh.mMaterialIndex];
 					{
-						aiString materialName;
-						const aiMaterial* assimpMaterial = assimpScene.mMaterials[assimpMesh.mMaterialIndex];
 						assimpMaterial->Get(AI_MATKEY_NAME, materialName);
 						MaterialNameToAssetId::const_iterator iterator = materialNameToAssetId.find(materialName.C_Str());
 						if (materialNameToAssetId.cend() != iterator)
@@ -468,7 +468,15 @@ namespace
 							}
 							if (materialName.length > 0 && nullptr == strstr(materialName.C_Str(), AI_DEFAULT_MATERIAL_NAME))
 							{
-								materialAssetId = RendererToolkit::StringHelper::getAssetIdByString(materialName.C_Str(), input);
+								iterator = materialNameToAssetId.find(materialName.C_Str());
+								if (materialNameToAssetId.cend() != iterator)
+								{
+									materialAssetId = iterator->second;
+								}
+								else
+								{
+									materialAssetId = RendererToolkit::StringHelper::getAssetIdByString(materialName.C_Str(), input);
+								}
 							}
 						}
 					}
@@ -482,6 +490,11 @@ namespace
 						subMesh.startIndexLocation	= previousNumberOfIndices;
 						subMesh.numberOfIndices		= numberOfIndices - previousNumberOfIndices;
 						subMeshes.push_back(subMesh);
+					}
+					else
+					{
+						assimpMaterial->Get(AI_MATKEY_NAME, materialName);
+						throw std::runtime_error("Failed to determine the material asset ID for material \"" + std::string(materialName.C_Str()) + '\"');
 					}
 				}
 			}
@@ -812,7 +825,14 @@ namespace RendererToolkit
 					const rapidjson::Value& rapidJsonValueMaterialNameToAssetId = rapidJsonValueMeshAssetCompiler["MaterialNameToAssetId"];
 					for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIterator = rapidJsonValueMaterialNameToAssetId.MemberBegin(); rapidJsonMemberIterator != rapidJsonValueMaterialNameToAssetId.MemberEnd(); ++rapidJsonMemberIterator)
 					{
-						materialNameToAssetId.emplace(rapidJsonMemberIterator->name.GetString(), StringHelper::getAssetIdByString(rapidJsonMemberIterator->value.GetString(), input));
+						if (materialNameToAssetId.find(rapidJsonMemberIterator->name.GetString()) == materialNameToAssetId.cend())
+						{
+							materialNameToAssetId.emplace(rapidJsonMemberIterator->name.GetString(), StringHelper::getAssetIdByString(rapidJsonMemberIterator->value.GetString(), input));
+						}
+						else
+						{
+							throw std::runtime_error("Duplicate entry inside the mesh asset material name to asset ID mapping: \"" + std::string(rapidJsonMemberIterator->name.GetString()) + '\"');
+						}
 					}
 				}
 
