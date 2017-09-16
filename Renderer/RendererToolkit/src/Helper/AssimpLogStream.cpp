@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererToolkit/AssetImporter/OgreAssetImporter.h"
+#include "RendererToolkit/Helper/AssimpLogStream.h"
 
 
 //[-------------------------------------------------------]
@@ -32,41 +32,32 @@ namespace RendererToolkit
 
 
 	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
-	//[-------------------------------------------------------]
-	const AssetImporterTypeId OgreAssetImporter::TYPE_ID("OGRE");
-
-
-	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	OgreAssetImporter::OgreAssetImporter()
+	AssimpLogStream::AssimpLogStream()
 	{
-		// Nothing here
+		Assimp::DefaultLogger::create("", Assimp::Logger::NORMAL, aiDefaultLogStream_DEBUGGER);
+		Assimp::DefaultLogger::get()->attachStream(this, Assimp::DefaultLogger::Err);
 	}
 
-	OgreAssetImporter::~OgreAssetImporter()
+	AssimpLogStream::~AssimpLogStream()
 	{
-		// Nothing here
+		Assimp::DefaultLogger::get()->detatchStream(this, Assimp::DefaultLogger::Err);
+		Assimp::DefaultLogger::kill();
 	}
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual RendererToolkit::IAssetImporter methods ]
+	//[ Public virtual Assimp::LogStream methods              ]
 	//[-------------------------------------------------------]
-	AssetImporterTypeId OgreAssetImporter::getAssetImporterTypeId() const
+	void AssimpLogStream::write(const char* message)
 	{
-		return TYPE_ID;
-	}
-
-	void OgreAssetImporter::import(const Input&)
-	{
-		// TODO(co) Implement me
-		NOP;
-
-		// TODO(co) Reminder
-		// Set the following mesh and skeleton asset compiler option: "ImportFlags": "TARGET_REALTIME_MAXIMUM_QUALITY"
-		// -> At least the OGRE assets which we care about are already in a left hand coordinate system
+		// Ignore "Error, T88896: Failed to compute tangents; need UV data in channel0" since some sub-meshes might have no texture coordinates, worth a hint but no error
+		if (nullptr != strstr(message, "Error, T88896: Failed to compute tangents; need UV data in channel0"))
+		{
+			mLastErrorMessage = message;
+			throw std::runtime_error(message);
+		}
 	}
 
 

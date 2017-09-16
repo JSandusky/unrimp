@@ -51,6 +51,9 @@
     <None Include="include\RendererToolkit\Context.inl">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="include\RendererToolkit\Helper\AssimpLogStream.inl">
+      <Filter>Source Files\Helper</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererToolkit\RendererToolkitImpl.h">
@@ -194,6 +197,12 @@
     <ClInclude Include="include\RendererToolkit\AssetImporter\OgreAssetImporter.h">
       <Filter>Source Files\AssetImpoter</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererToolkit\Helper\AssimpHelper.h">
+      <Filter>Source Files\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererToolkit\Helper\AssimpLogStream.h">
+      <Filter>Source Files\Helper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RendererToolkitImpl.cpp">
@@ -300,6 +309,12 @@
     </ClCompile>
     <ClCompile Include="src\AssetImporter\OgreAssetImporter.cpp">
       <Filter>Source Files\AssetImpoter</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Helper\AssimpHelper.cpp">
+      <Filter>Source Files\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Helper\AssimpLogStream.cpp">
+      <Filter>Source Files\Helper</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

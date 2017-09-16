@@ -19,9 +19,17 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererToolkit/AssetImporter/OgreAssetImporter.h"
+#include <RendererRuntime/Core/Platform/PlatformTypes.h>
+
+#include <rapidjson/fwd.h>
 
 
 //[-------------------------------------------------------]
@@ -32,42 +40,28 @@ namespace RendererToolkit
 
 
 	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
+	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	const AssetImporterTypeId OgreAssetImporter::TYPE_ID("OGRE");
-
-
-	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	OgreAssetImporter::OgreAssetImporter()
+	class AssimpHelper
 	{
-		// Nothing here
-	}
-
-	OgreAssetImporter::~OgreAssetImporter()
-	{
-		// Nothing here
-	}
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual RendererToolkit::IAssetImporter methods ]
+	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	AssetImporterTypeId OgreAssetImporter::getAssetImporterTypeId() const
-	{
-		return TYPE_ID;
-	}
+	public:
+		static uint32_t getAssimpFlagsByRapidJsonValue(const rapidjson::Value& rapidJsonValue, const char* propertyName);
 
-	void OgreAssetImporter::import(const Input&)
-	{
-		// TODO(co) Implement me
-		NOP;
 
-		// TODO(co) Reminder
-		// Set the following mesh and skeleton asset compiler option: "ImportFlags": "TARGET_REALTIME_MAXIMUM_QUALITY"
-		// -> At least the OGRE assets which we care about are already in a left hand coordinate system
-	}
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		AssimpHelper(const AssimpHelper&) = delete;
+		AssimpHelper& operator=(const AssimpHelper&) = delete;
+
+
+	};
 
 
 //[-------------------------------------------------------]

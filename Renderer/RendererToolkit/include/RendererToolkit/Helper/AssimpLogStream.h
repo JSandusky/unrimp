@@ -19,9 +19,21 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererToolkit/AssetImporter/OgreAssetImporter.h"
+#include <RendererRuntime/Core/Platform/PlatformTypes.h>
+
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4061)	// warning C4061: enumerator 'FORCE_32BIT' in switch of enum 'aiMetadataType' is not explicitly handled by a case label
+	#include <assimp/DefaultLogger.hpp>
+PRAGMA_WARNING_POP
 
 
 //[-------------------------------------------------------]
@@ -32,45 +44,51 @@ namespace RendererToolkit
 
 
 	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
+	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	const AssetImporterTypeId OgreAssetImporter::TYPE_ID("OGRE");
+	class AssimpLogStream : public Assimp::LogStream
+	{
+
+
+	//[-------------------------------------------------------]
+	//[ Public data                                           ]
+	//[-------------------------------------------------------]
+	public:
+		inline const std::string& getLastErrorMessage() const;
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	OgreAssetImporter::OgreAssetImporter()
-	{
-		// Nothing here
-	}
-
-	OgreAssetImporter::~OgreAssetImporter()
-	{
-		// Nothing here
-	}
+	public:
+		AssimpLogStream();
+		virtual ~AssimpLogStream() override;
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual RendererToolkit::IAssetImporter methods ]
+	//[ Public virtual Assimp::LogStream methods              ]
 	//[-------------------------------------------------------]
-	AssetImporterTypeId OgreAssetImporter::getAssetImporterTypeId() const
-	{
-		return TYPE_ID;
-	}
+	public:
+		virtual void write(const char* message) override;
 
-	void OgreAssetImporter::import(const Input&)
-	{
-		// TODO(co) Implement me
-		NOP;
 
-		// TODO(co) Reminder
-		// Set the following mesh and skeleton asset compiler option: "ImportFlags": "TARGET_REALTIME_MAXIMUM_QUALITY"
-		// -> At least the OGRE assets which we care about are already in a left hand coordinate system
-	}
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		std::string mLastErrorMessage;
+
+
+	};
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererToolkit
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererToolkit/Helper/AssimpLogStream.inl"

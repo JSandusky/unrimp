@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/MeshAssetCompiler.h"
 #include "RendererToolkit/Helper/FileSystemHelper.h"
+#include "RendererToolkit/Helper/AssimpLogStream.h"
+#include "RendererToolkit/Helper/AssimpHelper.h"
 #include "RendererToolkit/Helper/CacheManager.h"
 #include "RendererToolkit/Helper/StringHelper.h"
 #include "RendererToolkit/Helper/JsonHelper.h"
@@ -39,8 +41,6 @@ PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4061)	// warning C4061: enumerator 'FORCE_32BIT' in switch of enum 'aiMetadataType' is not explicitly handled by a case label
 	#include <assimp/scene.h>
 	#include <assimp/Importer.hpp>
-	#include <assimp/postprocess.h>
-	#include <assimp/DefaultLogger.hpp>
 PRAGMA_WARNING_POP
 
 #include <mikktspace/mikktspace.h>
@@ -151,59 +151,6 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Classes                                               ]
 		//[-------------------------------------------------------]
-		class AssimpLogStream : public Assimp::LogStream
-		{
-
-
-		//[-------------------------------------------------------]
-		//[ Public data                                           ]
-		//[-------------------------------------------------------]
-		public:
-			inline const std::string& getLastErrorMessage() const
-			{
-				return mLastErrorMessage;
-			}
-
-
-		//[-------------------------------------------------------]
-		//[ Public methods                                        ]
-		//[-------------------------------------------------------]
-		public:
-			AssimpLogStream()
-			{
-				// Nothing here
-			}
-
-			virtual ~AssimpLogStream() override
-			{
-				// Nothing here
-			}
-
-
-		//[-------------------------------------------------------]
-		//[ Public virtual Assimp::LogStream methods              ]
-		//[-------------------------------------------------------]
-		public:
-			virtual void write(const char* message) override
-			{
-				// Ignore "Error, T88896: Failed to compute tangents; need UV data in channel0" since some sub-meshes might have no texture coordinates, worth a hint but no error
-				if (nullptr != strstr(message, "Error, T88896: Failed to compute tangents; need UV data in channel0"))
-				{
-					mLastErrorMessage = message;
-					throw std::runtime_error(message);
-				}
-			}
-
-
-		//[-------------------------------------------------------]
-		//[ Private data                                          ]
-		//[-------------------------------------------------------]
-		private:
-			std::string mLastErrorMessage;
-
-
-		};
-
 		class Skeleton
 		{
 
@@ -820,20 +767,15 @@ namespace RendererToolkit
 			mikktspace::g_MikkTSpaceContext.m_pInterface = &mikkTSpaceInterface;
 			mikktspace::g_MikkTSpaceContext.m_pUserData  = nullptr;
 
-			// Startup Assimp logging
-			::detail::AssimpLogStream assimpLogStream;
-			Assimp::DefaultLogger::create("", Assimp::Logger::NORMAL, aiDefaultLogStream_DEBUGGER);
-			Assimp::DefaultLogger::get()->attachStream(&assimpLogStream, Assimp::DefaultLogger::Err);
-
 			// Create an instance of the Assimp importer class
+			AssimpLogStream assimpLogStream;
 			Assimp::Importer assimpImporter;
 			// assimpImporter.SetPropertyInteger(AI_CONFIG_PP_LBW_MAX_WEIGHTS, 4);	// We're using the "aiProcess_LimitBoneWeights"-flag, 4 is already the default value (don't delete this reminder comment)
 
 			// Load the given mesh
-			// -> "aiProcess_MakeLeftHanded" is added because the rasterizer states directly map to Direct3D
 			// -> We're using "mikktspace" by Morten S. Mikkelsen for semi-standard tangent space generation (see e.g. https://wiki.blender.org/index.php/Dev:Shading/Tangent_Space_Normal_Maps for background information)
 			// -> "aiProcess_CalcTangentSpace" from Assimp is still used to allocate internal memory and enable Assimp to perform work regarding e.g. shared vertices
-			const aiScene* assimpScene = assimpImporter.ReadFile(inputFilename, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_MakeLeftHanded | aiProcess_FlipWindingOrder);
+			const aiScene* assimpScene = assimpImporter.ReadFile(inputFilename, AssimpHelper::getAssimpFlagsByRapidJsonValue(rapidJsonValueMeshAssetCompiler, "ImportFlags"));
 			if (nullptr != assimpScene && nullptr != assimpScene->mRootNode)
 			{
 				// Get the optional material name to asset ID mapping information
@@ -962,10 +904,6 @@ namespace RendererToolkit
 
 			// Store new cache entries or update existing ones
 			input.cacheManager.storeOrUpdateCacheEntriesInDatabase(cacheEntries);
-
-			// Shutdown Assimp logging
-			Assimp::DefaultLogger::get()->detatchStream(&assimpLogStream, Assimp::DefaultLogger::Err);
-			Assimp::DefaultLogger::kill();
 		}
 
 		{ // Update the output asset package

@@ -19,12 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererToolkit/AssetImporter/OgreAssetImporter.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererToolkit
@@ -32,41 +26,11 @@ namespace RendererToolkit
 
 
 	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
+	//[ Public data                                           ]
 	//[-------------------------------------------------------]
-	const AssetImporterTypeId OgreAssetImporter::TYPE_ID("OGRE");
-
-
-	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	OgreAssetImporter::OgreAssetImporter()
+	inline const std::string& AssimpLogStream::getLastErrorMessage() const
 	{
-		// Nothing here
-	}
-
-	OgreAssetImporter::~OgreAssetImporter()
-	{
-		// Nothing here
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual RendererToolkit::IAssetImporter methods ]
-	//[-------------------------------------------------------]
-	AssetImporterTypeId OgreAssetImporter::getAssetImporterTypeId() const
-	{
-		return TYPE_ID;
-	}
-
-	void OgreAssetImporter::import(const Input&)
-	{
-		// TODO(co) Implement me
-		NOP;
-
-		// TODO(co) Reminder
-		// Set the following mesh and skeleton asset compiler option: "ImportFlags": "TARGET_REALTIME_MAXIMUM_QUALITY"
-		// -> At least the OGRE assets which we care about are already in a left hand coordinate system
+		return mLastErrorMessage;
 	}
 
 

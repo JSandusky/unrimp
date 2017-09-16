@@ -78,6 +78,8 @@ set(SOURCE_CODES
 	src/Helper/JsonMaterialBlueprintHelper.cpp
 	src/Helper/JsonMaterialHelper.cpp
 	src/Helper/StringHelper.cpp
+	src/Helper/AssimpHelper.cpp
+	src/Helper/AssimpLogStream.cpp
 	src/Helper/CacheManager.cpp
 	src/Project/ProjectAssetMonitor.cpp
 	src/Project/ProjectImpl.cpp

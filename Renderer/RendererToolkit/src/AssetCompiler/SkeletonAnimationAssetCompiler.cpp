@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/SkeletonAnimationAssetCompiler.h"
 #include "RendererToolkit/Helper/FileSystemHelper.h"
+#include "RendererToolkit/Helper/AssimpLogStream.h"
+#include "RendererToolkit/Helper/AssimpHelper.h"
 #include "RendererToolkit/Helper/CacheManager.h"
 #include "RendererToolkit/Helper/StringHelper.h"
 #include "RendererToolkit/Helper/JsonHelper.h"
@@ -39,8 +41,6 @@ PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4061)	// warning C4061: enumerator 'FORCE_32BIT' in switch of enum 'aiMetadataType' is not explicitly handled by a case label
 	#include <assimp/scene.h>
 	#include <assimp/Importer.hpp>
-	#include <assimp/postprocess.h>
-	#include <assimp/DefaultLogger.hpp>
 PRAGMA_WARNING_POP
 
 // Disable warnings in external headers, we can't fix them
@@ -51,75 +51,6 @@ PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4625)	// warning C4625: 'rapidjson::GenericMember<Encoding,Allocator>': copy constructor was implicitly defined as deleted
 	#include <rapidjson/document.h>
 PRAGMA_WARNING_POP
-
-
-//[-------------------------------------------------------]
-//[ Anonymous detail namespace                            ]
-//[-------------------------------------------------------]
-namespace
-{
-	namespace detail
-	{
-
-
-		//[-------------------------------------------------------]
-		//[ Classes                                               ]
-		//[-------------------------------------------------------]
-		class AssimpLogStream : public Assimp::LogStream
-		{
-
-
-		//[-------------------------------------------------------]
-		//[ Public data                                           ]
-		//[-------------------------------------------------------]
-		public:
-			inline const std::string& getLastErrorMessage() const
-			{
-				return mLastErrorMessage;
-			}
-
-
-		//[-------------------------------------------------------]
-		//[ Public methods                                        ]
-		//[-------------------------------------------------------]
-		public:
-			AssimpLogStream()
-			{
-				// Nothing here
-			}
-
-			virtual ~AssimpLogStream() override
-			{
-				// Nothing here
-			}
-
-
-		//[-------------------------------------------------------]
-		//[ Public virtual Assimp::LogStream methods              ]
-		//[-------------------------------------------------------]
-		public:
-			virtual void write(const char* message) override
-			{
-				mLastErrorMessage = message;
-				throw std::runtime_error(message);
-			}
-
-
-		//[-------------------------------------------------------]
-		//[ Private data                                          ]
-		//[-------------------------------------------------------]
-		private:
-			std::string mLastErrorMessage;
-
-
-		};
-
-
-//[-------------------------------------------------------]
-//[ Anonymous detail namespace                            ]
-//[-------------------------------------------------------]
-	} // detail
-}
 
 
 //[-------------------------------------------------------]
@@ -185,15 +116,11 @@ namespace RendererToolkit
 		// Get the JSON asset object
 		const rapidjson::Value& rapidJsonValueAsset = configuration.rapidJsonDocumentAsset["Asset"];
 
-		// Read configuration
-		std::string inputFile;
+		// Read skeleton animation asset compiler configuration
+		const rapidjson::Value& rapidJsonValueSkeletonAnimationAssetCompiler = rapidJsonValueAsset["SkeletonAnimationAssetCompiler"];
+		const std::string inputFile = rapidJsonValueSkeletonAnimationAssetCompiler["InputFile"].GetString();
 		uint32_t animationIndex = RendererRuntime::getUninitialized<uint32_t>();
-		{
-			// Read skeleton animation asset compiler configuration
-			const rapidjson::Value& rapidJsonValueSkeletonAnimationAssetCompiler = rapidJsonValueAsset["SkeletonAnimationAssetCompiler"];
-			inputFile = rapidJsonValueSkeletonAnimationAssetCompiler["InputFile"].GetString();
-			JsonHelper::optionalIntegerProperty(rapidJsonValueSkeletonAnimationAssetCompiler, "AnimationIndex", animationIndex);
-		}
+		JsonHelper::optionalIntegerProperty(rapidJsonValueSkeletonAnimationAssetCompiler, "AnimationIndex", animationIndex);
 
 		// Open the input file
 		const std::string inputFilename = assetInputDirectory + inputFile;
@@ -206,18 +133,13 @@ namespace RendererToolkit
 		{
 			RendererRuntime::MemoryFile memoryFile(0, 4096);
 
-			// Startup Assimp logging
-			::detail::AssimpLogStream assimpLogStream;
-			Assimp::DefaultLogger::create("", Assimp::Logger::NORMAL, aiDefaultLogStream_DEBUGGER);
-			Assimp::DefaultLogger::get()->attachStream(&assimpLogStream, Assimp::DefaultLogger::Err);
-
 			// Create an instance of the Assimp importer class
+			AssimpLogStream assimpLogStream;
 			Assimp::Importer assimpImporter;
 
 			// Load the given mesh
-			// -> "aiProcess_MakeLeftHanded" is added because the rasterizer states directly map to Direct3D
 			const std::string absoluteFilename = assetInputDirectory + inputFile;
-			const aiScene* assimpScene = assimpImporter.ReadFile(absoluteFilename, aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_MakeLeftHanded);
+			const aiScene* assimpScene = assimpImporter.ReadFile(absoluteFilename, AssimpHelper::getAssimpFlagsByRapidJsonValue(rapidJsonValueSkeletonAnimationAssetCompiler, "ImportFlags"));
 			if (nullptr != assimpScene && nullptr != assimpScene->mRootNode)
 			{
 				// Get the Assimp animation instance to import
@@ -344,10 +266,6 @@ namespace RendererToolkit
 
 			// Store new cache entries or update existing ones
 			input.cacheManager.storeOrUpdateCacheEntriesInDatabase(cacheEntries);
-
-			// Shutdown Assimp logging
-			Assimp::DefaultLogger::get()->detatchStream(&assimpLogStream, Assimp::DefaultLogger::Err);
-			Assimp::DefaultLogger::kill();
 		}
 
 		{ // Update the output asset package
