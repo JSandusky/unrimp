@@ -167,6 +167,7 @@ namespace RendererToolkit
 					animationIndex = 0;
 				}
 				const aiAnimation* assimpAnimation = assimpScene->mAnimations[animationIndex];
+				const bool isMd5 = (aiString("<MD5_Hierarchy>") == assimpScene->mRootNode->mName);
 
 				// Determine whether or not bone scale is used, in case it's not ignored in general to start with
 				// TODO(co) Optimization option: Currently, the automatic dynamic bone scale ignoring is over all animation channels. We could
@@ -264,7 +265,12 @@ namespace RendererToolkit
 						{
 							const aiQuatKey& assimpQuatKey = assimpNodeAnim->mRotationKeys[i];
 							RendererRuntime::SkeletonAnimationResource::QuaternionKey& quaternionKey = rotationKeys[i];
-							const aiQuaternion assimpQuaternion = (0 == channel) ? (assimpQuaternionOffset * assimpQuatKey.mValue) : assimpQuatKey.mValue;
+							aiQuaternion assimpQuaternion = (0 == channel) ? (assimpQuaternionOffset * assimpQuatKey.mValue) : assimpQuatKey.mValue;
+							if (!isMd5)
+							{
+								// TODO(co) Somehow there's a flip when loading OGRE/MD5 skeleton animations. Haven't tried other formats, yet.
+								assimpQuaternion.Conjugate();
+							}
 							quaternionKey.timeInTicks = static_cast<float>(assimpQuatKey.mTime);
 							quaternionKey.value[0]	  = assimpQuaternion.x;
 							quaternionKey.value[1]	  = assimpQuaternion.y;
