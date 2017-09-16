@@ -202,11 +202,10 @@ namespace RendererToolkit
 		// TODO(co) Currently this is fixed build in, later on me might want to have this dynamic so we can plugin additional asset compilers
 		try
 		{
-			const AssetCompilerTypeId assetCompilerTypeId(assetType.c_str());
-			auto findIterator = mAssetCompilers.find(assetCompilerTypeId);
-			if (findIterator != mAssetCompilers.end())
+			AssetCompilers::const_iterator iterator = mAssetCompilers.find(AssetCompilerTypeId(assetType.c_str()));
+			if (mAssetCompilers.end() != iterator)
 			{
-				findIterator->second->compile(input, configuration, output);
+				iterator->second->compile(input, configuration, output);
 			}
 			else
 			{
@@ -247,8 +246,7 @@ namespace RendererToolkit
 
 		{ // Read project data
 			mProjectDirectory = std_filesystem::path(filename).parent_path().generic_string() + '/';
-
-			mContext.getLog().print(Renderer::ILog::Type::INFORMATION, "Gather asset from %s...", mProjectDirectory.c_str());
+			RENDERER_LOG(mContext, INFORMATION, "Gather asset from %s...", mProjectDirectory.c_str())
 			{ // Asset packages
 				const rapidjson::Value& rapidJsonValueAssetPackages = rapidJsonValueProject["AssetPackages"];
 				if (rapidJsonValueAssetPackages.Size() > 1)
@@ -262,8 +260,7 @@ namespace RendererToolkit
 			}
 			readTargetsByFilename(rapidJsonValueProject["TargetsFilename"].GetString());
 			::detail::optionalQualityStrategy(rapidJsonValueProject, "QualityStrategy", mQualityStrategy);
-
-			mContext.getLog().print(Renderer::ILog::Type::INFORMATION, "Found %u assets", mAssetPackage.getSortedAssetVector().size());
+			RENDERER_LOG(mContext, INFORMATION, "Found %u assets", mAssetPackage.getSortedAssetVector().size())
 
 			// Setup project folder for cache manager, it will store there its data
 			// TODO(sw) For now only prototype. Change this.
@@ -278,12 +275,10 @@ namespace RendererToolkit
 		{ // Compile all assets
 			const RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = mAssetPackage.getSortedAssetVector();
 			const size_t numberOfAssets = sortedAssetVector.size();
-
 			for (size_t i = 0; i < numberOfAssets; ++i)
 			{
 				checkAssetIsChanged(sortedAssetVector[i], rendererTarget);
 			}
-
 			for (size_t i = 0; i < numberOfAssets; ++i)
 			{
 				compileAsset(sortedAssetVector[i], rendererTarget, outputAssetPackage);
@@ -467,7 +462,7 @@ namespace RendererToolkit
 		}
 		NOP;
 	}
-	
+
 	void ProjectImpl::checkAssetIsChanged(const RendererRuntime::Asset& asset, const char* rendererTarget)
 	{
 		const std::string assetFilename = mProjectDirectory + asset.assetFilename;
@@ -495,14 +490,12 @@ namespace RendererToolkit
 		IAssetCompiler::Input input(mContext, mProjectName, *mCacheManager.get(), assetPackageInputDirectory, assetFilename, assetInputDirectory, assetOutputDirectory, mSourceAssetIdToCompiledAssetId, mSourceAssetIdToAbsoluteFilename);
 
 		// Asset compiler configuration
-		assert(nullptr != mRapidJsonDocument);
-		const IAssetCompiler::Configuration configuration(rapidJsonDocument, (*mRapidJsonDocument)["Targets"], rendererTarget, mQualityStrategy);
-
-		const AssetCompilerTypeId assetCompilerTypeId(assetType.c_str());
-		auto findIterator = mAssetCompilers.find(assetCompilerTypeId);
-		if (findIterator != mAssetCompilers.end())
+		AssetCompilers::const_iterator iterator = mAssetCompilers.find(AssetCompilerTypeId(assetType.c_str()));
+		if (mAssetCompilers.end() != iterator)
 		{
-			findIterator->second->checkIfChanged(input, configuration);
+			assert(nullptr != mRapidJsonDocument);
+			const IAssetCompiler::Configuration configuration(rapidJsonDocument, (*mRapidJsonDocument)["Targets"], rendererTarget, mQualityStrategy);
+			iterator->second->checkIfChanged(input, configuration);
 		}
 	}
 

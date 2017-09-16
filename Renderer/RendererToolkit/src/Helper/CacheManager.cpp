@@ -224,10 +224,8 @@ namespace RendererToolkit
 		if (!assetFileChanged && (sourceFilesChanged || !destinationExists))
 		{
 			// Mark the asset file as changed when asset needs to be compiled and asset file itself didn't changed
-			// This is needed to get asset dependencies properly checked
-			RendererRuntime::StringId fileId(assetFilename.c_str());
-			CheckedFile& checkedFile = mCheckedFilesStatus[fileId];
-			checkedFile.changed = true;
+			// -> This is needed to get asset dependencies properly checked
+			mCheckedFilesStatus[RendererRuntime::StringId(assetFilename.c_str())].changed = true;
 		}
 
 		// File needs to be compiled either destination doesn't exists, the source data has changed or the asset file has changed
@@ -256,13 +254,12 @@ namespace RendererToolkit
 	bool CacheManager::checkIfFileIsModified(const std::string& rendererTarget, const std::string& assetFilename, const std::vector<std::string>& sourceFiles, uint32_t compilerVersion)
 	{
 		bool result = false;
-
 		CacheEntry dummyEntry;
-		
+
 		// First check the source files...
-		for (const auto& fileName : sourceFiles)
+		for (const std::string& filename : sourceFiles)
 		{
-			if (checkIfFileChanged(rendererTarget, fileName, compilerVersion, dummyEntry))
+			if (checkIfFileChanged(rendererTarget, filename, compilerVersion, dummyEntry))
 			{
 				result = true;
 			}
@@ -275,10 +272,8 @@ namespace RendererToolkit
 			if (result)
 			{
 				// Asset file itself has not changed but the source file so mark the asset file as changed too
-				// Dependencies are defined via the asset file and with this change the asset which depents on this asset knows if the refrenced asset has changed
-				RendererRuntime::StringId fileId(assetFilename.c_str());
-				CheckedFile& checkedFile = mCheckedFilesStatus[fileId];
-				checkedFile.changed = true;
+				// Dependencies are defined via the asset file and with this change the asset which depends on this asset knows if the referenced asset has changed
+				mCheckedFilesStatus[RendererRuntime::StringId(assetFilename.c_str())].changed = true;
 			}
 		}
 
@@ -287,16 +282,17 @@ namespace RendererToolkit
 
 	bool CacheManager::dependencyFilesChanged(const std::vector<std::string>& dependencyFiles)
 	{
-		for (const auto& dependencyFile : dependencyFiles)
+		for (const std::string& dependencyFile : dependencyFiles)
 		{
-			RendererRuntime::StringId fileId(dependencyFile.c_str());
-			CheckedFilesStatus::iterator findIterator = mCheckedFilesStatus.find(fileId);
-			if (findIterator != mCheckedFilesStatus.end())
+			CheckedFilesStatus::const_iterator iterator = mCheckedFilesStatus.find(RendererRuntime::StringId(dependencyFile.c_str()));
+			if (mCheckedFilesStatus.end() != iterator && iterator->second.changed)
 			{
-				if (findIterator->second.changed)
-					return true;
+				// Changed
+				return true;
 			}
 		}
+
+		// Not changed
 		return false;
 	}
 
@@ -427,14 +423,14 @@ namespace RendererToolkit
 					// A file might be referenced by different assets so first check if the file was already checked by a previous call to this method
 					// If so return the result (the file shouldn't change between two checks while a compilation is running)
 					{
-						CheckedFilesStatus::iterator findIterator = mCheckedFilesStatus.find(fileId);
-						if (findIterator != mCheckedFilesStatus.end())
+						CheckedFilesStatus::const_iterator iterator = mCheckedFilesStatus.find(fileId);
+						if (mCheckedFilesStatus.end() != iterator)
 						{
 							// Copy cache entry data from stored one
-							cacheEntry = findIterator->second.cacheEntry;
+							cacheEntry = iterator->second.cacheEntry;
 
 							// The file was already checked before simply return the result
-							return findIterator->second.changed;
+							return iterator->second.changed;
 						}
 					}
 

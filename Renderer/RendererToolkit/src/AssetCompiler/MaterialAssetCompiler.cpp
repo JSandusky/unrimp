@@ -93,9 +93,8 @@ namespace RendererToolkit
 			inputFile = rapidJsonValueMaterialAssetCompiler["InputFile"].GetString();
 		}
 
+		// Let the cache manager check whether or not the files have been changed in order to speed up later checks and to support dependency tracking
 		const std::string inputFilename = input.assetInputDirectory + inputFile;
-
-		// Let the cache manager check if the files has changed. This speeds up later checks and supports dependency tracking
 		return input.cacheManager.checkIfFileIsModified(configuration.rendererTarget, input.assetFilename, {inputFilename}, RendererRuntime::v1Material::FORMAT_VERSION);
 	}
 
@@ -121,19 +120,16 @@ namespace RendererToolkit
 		const std::string inputFilename = assetInputDirectory + inputFile;
 		const std::string assetName = std_filesystem::path(input.assetFilename).stem().generic_string();
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".material";
-		
-		std::vector<std::string> inputFilenames;
-		inputFilenames.emplace_back(inputFilename);
 
-		std::vector<std::string> dependecyFiles;
-		
-		// Read in dependecy files
+		// Read in dependency files
+		std::vector<std::string> dependencyFiles;
 		{ // Material
 			std::ifstream inputFileStream(inputFilename, std::ios::binary);
+
 			// Parse JSON
 			rapidjson::Document rapidJsonDocument;
 			JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, inputFilename, "MaterialAsset", "1");
-			
+
 			// TODO(sw) parts copied from JsonMaterialHelper::getTechniquesAndPropertiesByMaterialAssetId
 			const rapidjson::Value& rapidJsonValueMaterialAsset = rapidJsonDocument["MaterialAsset"];
 			const rapidjson::Value& rapidJsonValueTechniques = rapidJsonValueMaterialAsset["Techniques"];
@@ -141,13 +137,15 @@ namespace RendererToolkit
 			{
 				const RendererRuntime::AssetId materialBlueprintAssetId = StringHelper::getSourceAssetIdByString(rapidJsonMemberIteratorTechniques->value.GetString());
 				const std::string absoluteMaterialBlueprintAssetFilename = JsonHelper::getAbsoluteAssetFilename(input, materialBlueprintAssetId);
-				dependecyFiles.emplace_back(std::move(absoluteMaterialBlueprintAssetFilename));
+				dependencyFiles.emplace_back(std::move(absoluteMaterialBlueprintAssetFilename));
 			}
 		}
 
 		// Ask the cache manager whether or not we need to compile the source file (e.g. source changed or target not there)
 		CacheManager::CacheEntries cacheEntries;
-		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilenames, outputAssetFilename, RendererRuntime::v1Material::FORMAT_VERSION, cacheEntries) || input.cacheManager.dependencyFilesChanged(dependecyFiles))
+		std::vector<std::string> inputFilenames;
+		inputFilenames.emplace_back(inputFilename);
+		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilenames, outputAssetFilename, RendererRuntime::v1Material::FORMAT_VERSION, cacheEntries) || input.cacheManager.dependencyFilesChanged(dependencyFiles))
 		{
 			std::ifstream inputFileStream(inputFilename, std::ios::binary);
 			RendererRuntime::MemoryFile memoryFile(0, 1024);

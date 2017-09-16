@@ -93,9 +93,8 @@ namespace RendererToolkit
 			inputFile = rapidJsonValueMaterialAssetCompiler["InputFile"].GetString();
 		}
 
-		const std::string inputFilename = input.assetInputDirectory + inputFile;
-
 		// Let the cache manager check if the files has changed. This speeds up later checks and supports dependency tracking
+		const std::string inputFilename = input.assetInputDirectory + inputFile;
 		return input.cacheManager.checkIfFileIsModified(configuration.rendererTarget, input.assetFilename, {inputFilename}, RendererRuntime::v1VertexAttributes::FORMAT_VERSION);
 	}
 

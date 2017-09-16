@@ -208,7 +208,7 @@ namespace RendererToolkit
 
 		/**
 		*  @brief
-		*    Return if at least on of the given files is modified since the last check
+		*    Return whether or not least one of the given files has been modified since the last check
 		*
 		*  @param[in] rendererTarget
 		*    The renderer target for which the asset should be compiled
@@ -220,28 +220,28 @@ namespace RendererToolkit
 		*    Compiler version so we can detect compiler version changes and enforce compiling even if the source data has not been changed
 		*
 		*  @return
-		*    True if any of the files is modified otherwise false
+		*    "true" if any of the files have been modified otherwise "false"
 		* 
 		*  @note
-		*    This fills an internal cache which stores the check result. This will speed up needsToBeCompiled checks and support dependency tracking
+		*    - This method fills an internal cache which stores the check result in order to speed up "RendererToolkit::CacheManager::needsToBeCompiled()"-calls and support dependency tracking
 		*/
 		bool checkIfFileIsModified(const std::string& rendererTarget, const std::string& assetFilename, const std::vector<std::string>& sourceFiles, uint32_t compilerVersion);
 
 		/**
 		*  @brief
-		*    Return if at least on of the given files has been changed since the last check
+		*    Return whether or not least one of the given files has been modified since the last check
 		*
 		*  @param[in] dependencyFiles
 		*    List of dependency files to check
 		*
 		*  @return
-		*    True if any of the files is modified otherwise false
+		*    "true" if any of the files have been modified otherwise "false"
 		*/
 		bool dependencyFilesChanged(const std::vector<std::string>& dependencyFiles);
 
 		/**
 		*  @brief
-		*    Clears the internal cache for file changes
+		*    Clear the internal cache for file changes
 		*/
 		void clearInternalCache();
 
@@ -324,7 +324,7 @@ namespace RendererToolkit
 	private:
 		struct CheckedFile
 		{
-			bool changed;
+			bool	   changed;
 			CacheEntry cacheEntry;
 		};
 		typedef std::unordered_map<uint32_t, CheckedFile> CheckedFilesStatus;
