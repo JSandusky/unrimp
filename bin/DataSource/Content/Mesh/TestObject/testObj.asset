@@ -14,7 +14,15 @@
 		},
 		"MeshAssetCompiler":
 		{
-			"InputFile": "testObj.obj"
+			"InputFile": "testObj.obj",
+			"MaterialNameToAssetId":
+			{
+				"BackGroundMat": "Material/TestObject/InnerMat.asset",
+				"InnerMat": "Material/TestObject/InnerMat.asset",
+				"LTELogo": "Material/TestObject/LTELogo.asset",
+				"Material": "Material/TestObject/OuterMat.asset",
+				"OuterMat": "Material/TestObject/OuterMat.asset"
+			}
 		}
 	}
 }
