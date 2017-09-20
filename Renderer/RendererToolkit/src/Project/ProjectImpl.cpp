@@ -218,6 +218,38 @@ namespace RendererToolkit
 		}
 	}
 
+	void ProjectImpl::tryCompileAssetIncludingDependencies(const RendererRuntime::Asset& asset, const char* rendererTarget, RendererRuntime::AssetPackage& outputAssetPackage) noexcept
+	{
+		try
+		{
+			// Compile the given asset
+			compileAsset(asset, rendererTarget, outputAssetPackage);
+
+			// Compile other assets depending on the given asset, if necessary
+			const RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = mAssetPackage.getSortedAssetVector();
+			const size_t numberOfAssets = sortedAssetVector.size();
+			for (size_t i = 0; i < numberOfAssets; ++i)
+			{
+				const RendererRuntime::Asset& dependedAsset = sortedAssetVector[i];
+				if (checkAssetIsChanged(dependedAsset, rendererTarget) && &dependedAsset != &asset)
+				{
+					try
+					{
+						compileAsset(dependedAsset, rendererTarget, outputAssetPackage);
+					}
+					catch (const std::exception& e)
+					{
+						RENDERER_LOG(mContext, CRITICAL, e.what())
+					}
+				}
+			}
+		}
+		catch (const std::exception& e)
+		{
+			RENDERER_LOG(mContext, CRITICAL, e.what())
+		}
+	}
+
 	void ProjectImpl::onCompilationRunFinished()
 	{
 		// Compilation run finished clear internal cache of cache manager
@@ -463,7 +495,7 @@ namespace RendererToolkit
 		NOP;
 	}
 
-	void ProjectImpl::checkAssetIsChanged(const RendererRuntime::Asset& asset, const char* rendererTarget)
+	bool ProjectImpl::checkAssetIsChanged(const RendererRuntime::Asset& asset, const char* rendererTarget)
 	{
 		const std::string assetFilename = mProjectDirectory + asset.assetFilename;
 		std::ifstream inputFileStream(assetFilename, std::ios::binary);
@@ -495,8 +527,11 @@ namespace RendererToolkit
 		{
 			assert(nullptr != mRapidJsonDocument);
 			const IAssetCompiler::Configuration configuration(rapidJsonDocument, (*mRapidJsonDocument)["Targets"], rendererTarget, mQualityStrategy);
-			iterator->second->checkIfChanged(input, configuration);
+			return iterator->second->checkIfChanged(input, configuration);
 		}
+
+		// Not changed
+		return false;
 	}
 
 

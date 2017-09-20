@@ -107,10 +107,11 @@ namespace RendererRuntime
 		const uint32_t numberOfElements = mInternalResourceManager->getResources().getNumberOfElements();
 		for (uint32_t i = 0; i < numberOfElements; ++i)
 		{
-			if (mInternalResourceManager->getResources().getElementByIndex(i).getAssetId() == assetId)
+			const CompositorNodeResource& compositorNodeResource = mInternalResourceManager->getResources().getElementByIndex(i);
+			if (compositorNodeResource.getAssetId() == assetId)
 			{
 				CompositorNodeResourceId compositorNodeResourceId = getUninitialized<CompositorNodeResourceId>();
-				loadCompositorNodeResourceByAssetId(assetId, compositorNodeResourceId, nullptr, true);
+				loadCompositorNodeResourceByAssetId(assetId, compositorNodeResourceId, nullptr, true, compositorNodeResource.getResourceLoaderTypeId());
 
 				{ // Reload all compositor workspace resources using this compositor node resource
 					CompositorWorkspaceResourceManager& compositorWorkspaceResourceManager = mRendererRuntime.getCompositorWorkspaceResourceManager();

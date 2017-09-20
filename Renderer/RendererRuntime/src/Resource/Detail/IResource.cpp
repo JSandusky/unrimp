@@ -101,6 +101,7 @@ namespace RendererRuntime
 		std::swap(mResourceManager,			resource.mResourceManager);
 		std::swap(mResourceId,				resource.mResourceId);
 		std::swap(mAssetId,					resource.mAssetId);
+		std::swap(mResourceLoaderTypeId,	resource.mResourceLoaderTypeId);
 		std::swap(mLoadingState,			resource.mLoadingState);
 		std::swap(mSortedResourceListeners,	resource.mSortedResourceListeners);	// This is fine, resource listeners store a resource ID instead of a raw pointer
 
@@ -144,6 +145,7 @@ namespace RendererRuntime
 		mResourceManager = nullptr;
 		setUninitialized(mResourceId);
 		setUninitialized(mAssetId);
+		setUninitialized(mResourceLoaderTypeId);
 		mSortedResourceListeners.clear();
 	}
 

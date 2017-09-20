@@ -29,6 +29,7 @@
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/InstanceBufferManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/IndirectBufferManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/LightBufferManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialBufferManager.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialTechnique.h"
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
@@ -98,6 +99,7 @@ namespace RendererRuntime
 			materialBlueprintResource = &mInternalResourceManager->getResources().addElement();
 			materialBlueprintResource->setResourceManager(this);
 			materialBlueprintResource->setAssetId(assetId);
+			materialBlueprintResource->setResourceLoaderTypeId(resourceLoaderTypeId);
 			load = true;
 		}
 
@@ -219,29 +221,54 @@ namespace RendererRuntime
 	{
 		// TODO(co) Experimental implementation (take care of resource cleanup etc.)
 		const uint32_t numberOfElements = mInternalResourceManager->getResources().getNumberOfElements();
-		const MaterialResourceManager& materialResourceManager = mRendererRuntime.getMaterialResourceManager();
-		const uint32_t numberOfMaterialResources = materialResourceManager.getNumberOfResources();
 		for (uint32_t i = 0; i < numberOfElements; ++i)
 		{
 			MaterialBlueprintResource& materialBlueprintResource = mInternalResourceManager->getResources().getElementByIndex(i);
 			if (materialBlueprintResource.getAssetId() == assetId)
 			{
-				MaterialBlueprintResourceId materialBlueprintResourceId = getUninitialized<MaterialBlueprintResourceId>();
-				loadMaterialBlueprintResourceByAssetId(assetId, materialBlueprintResourceId, nullptr, true);
-
-				// TODO(co) Cleanup: Update all influenced material resources, probably also other material stuff has to be updated
-				materialBlueprintResource.getPipelineStateCacheManager().clearCache();
-				materialBlueprintResource.mTextures.clear();
-				for (uint32_t elementIndex = 0; elementIndex < numberOfMaterialResources; ++elementIndex)
-				{
-					MaterialResource& materialResource = materialResourceManager.getByIndex(elementIndex);
-					// TODO(co)
-				//	if (materialResource->getMaterialBlueprintResource() == materialBlueprintResource)
+				{ // Properly release material buffer slots
+					MaterialBufferManager* materialBufferManager = materialBlueprintResource.mMaterialBufferManager;
+					const MaterialResourceManager& materialResourceManager = mRendererRuntime.getMaterialResourceManager();
+					const uint32_t numberOfMaterials = materialResourceManager.getNumberOfResources();
+					for (uint32_t materialIndex = 0; materialIndex < numberOfMaterials; ++materialIndex)
 					{
-						materialResource.releaseTextures();
+						for (MaterialTechnique* materialTechnique : materialResourceManager.getByIndex(materialIndex).getSortedMaterialTechniqueVector())
+						{
+							if (materialTechnique->getMaterialBlueprintResourceId() == materialBlueprintResource.getId() && isInitialized(materialTechnique->getAssignedMaterialSlot()))
+							{
+								materialBufferManager->releaseSlot(*materialTechnique);
+							}
+						}
 					}
 				}
 
+				// Reload material blueprint resource
+				MaterialBlueprintResourceId materialBlueprintResourceId = getUninitialized<MaterialBlueprintResourceId>();
+				loadMaterialBlueprintResourceByAssetId(assetId, materialBlueprintResourceId, nullptr, true, materialBlueprintResource.getResourceLoaderTypeId());
+
+				// Clear pipeline state cache manager
+				materialBlueprintResource.getPipelineStateCacheManager().clearCache();
+
+				{ // Make the texture resource groups of all material techniques
+					MaterialBufferManager* materialBufferManager = materialBlueprintResource.mMaterialBufferManager;
+					const MaterialResourceManager& materialResourceManager = mRendererRuntime.getMaterialResourceManager();
+					const uint32_t numberOfMaterials = materialResourceManager.getNumberOfResources();
+					for (uint32_t materialIndex = 0; materialIndex < numberOfMaterials; ++materialIndex)
+					{
+						for (MaterialTechnique* materialTechnique : materialResourceManager.getByIndex(materialIndex).getSortedMaterialTechniqueVector())
+						{
+							if (materialTechnique->getMaterialBlueprintResourceId() == materialBlueprintResource.getId())
+							{
+								materialTechnique->makeTextureResourceGroupDirty();
+								if (nullptr != materialBufferManager)
+								{
+									materialBufferManager->requestSlot(*materialTechnique);
+								}
+								materialTechnique->calculateSerializedPipelineStateHash();
+							}
+						}
+					}
+				}
 				break;
 			}
 		}

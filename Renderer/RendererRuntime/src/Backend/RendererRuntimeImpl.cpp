@@ -257,9 +257,12 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void RendererRuntimeImpl::reloadResourceByAssetId(AssetId assetId)
 	{
-		// TODO(co) If required later on, change this method to a "were's one, there are many"-signature (meaning passing multiple asset IDs at once)
-		std::unique_lock<std::mutex> resourcesToReloadMutexLock(mResourcesToReloadMutex);
-		mResourcesToReload.insert(assetId);
+		// TODO(co) Optimization: If required later on, change this method to a "were's one, there are many"-signature (meaning passing multiple asset IDs at once)
+		std::unique_lock<std::mutex> assetIdsOfResourcesToReloadMutexLock(mAssetIdsOfResourcesToReloadMutex);
+		if (std::find(mAssetIdsOfResourcesToReload.begin(), mAssetIdsOfResourcesToReload.end(), assetId) == mAssetIdsOfResourcesToReload.cend())
+		{
+			mAssetIdsOfResourcesToReload.push_back(assetId);
+		}
 	}
 
 	void RendererRuntimeImpl::update()
@@ -268,11 +271,11 @@ namespace RendererRuntime
 		mTimeManager->update();
 
 		{ // Handle resource reloading requests
-			std::unique_lock<std::mutex> resourcesToReloadMutexLock(mResourcesToReloadMutex);
-			if (!mResourcesToReload.empty())
+			std::unique_lock<std::mutex> assetIdsOfResourcesToReloadMutexLock(mAssetIdsOfResourcesToReloadMutex);
+			if (!mAssetIdsOfResourcesToReload.empty())
 			{
 				const size_t numberOfResourceManagers = mResourceManagers.size();
-				for (uint32_t assetId : mResourcesToReload)
+				for (uint32_t assetId : mAssetIdsOfResourcesToReload)
 				{
 					// Inform the individual resource manager instances
 					for (size_t i = 0; i < numberOfResourceManagers; ++i)
@@ -280,7 +283,7 @@ namespace RendererRuntime
 						mResourceManagers[i]->reloadResourceByAssetId(assetId);
 					}
 				}
-				mResourcesToReload.clear();
+				mAssetIdsOfResourcesToReload.clear();
 			}
 		}
 

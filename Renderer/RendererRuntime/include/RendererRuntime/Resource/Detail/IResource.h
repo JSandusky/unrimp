@@ -53,8 +53,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef StringId AssetId;		///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
-	typedef uint32_t ResourceId;	///< POD resource identifier
+	typedef StringId AssetId;				///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
+	typedef uint32_t ResourceId;			///< POD resource identifier
+	typedef StringId ResourceLoaderTypeId;	///< Resource loader type identifier, internally just a POD "uint32_t", usually created by hashing the file format extension (if the resource loader is processing file data in the first place)
 
 
 	//[-------------------------------------------------------]
@@ -92,6 +93,7 @@ namespace RendererRuntime
 		template <typename T> T& getResourceManager() const;
 		inline ResourceId getId() const;
 		inline AssetId getAssetId() const;
+		inline ResourceLoaderTypeId getResourceLoaderTypeId() const;
 		inline LoadingState getLoadingState() const;
 		RENDERERRUNTIME_API_EXPORT void connectResourceListener(IResourceListener& resourceListener);	// No guaranteed resource listener caller order, if already connected nothing happens (no double registration)
 		RENDERERRUNTIME_API_EXPORT void disconnectResourceListener(IResourceListener& resourceListener);
@@ -108,6 +110,7 @@ namespace RendererRuntime
 		RENDERERRUNTIME_API_EXPORT IResource& operator=(IResource&& resource);
 		inline void setResourceManager(IResourceManager* resourceManager);
 		inline void setAssetId(AssetId assetId);
+		inline void setResourceLoaderTypeId(ResourceLoaderTypeId resourceLoaderTypeId);
 		void setLoadingState(LoadingState loadingState);
 
 		//[-------------------------------------------------------]
@@ -128,9 +131,10 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IResourceManager*		mResourceManager;	///< Owner resource manager, always valid
-		ResourceId				mResourceId;		///< Unique resource ID inside the resource manager
-		AssetId					mAssetId;			///< In case the resource is an instance of an asset, this is the ID of this asset
+		IResourceManager*		mResourceManager;		///< Owner resource manager, always valid
+		ResourceId				mResourceId;			///< Unique resource ID inside the resource manager
+		AssetId					mAssetId;				///< In case the resource is an instance of an asset, this is the ID of this asset
+		ResourceLoaderTypeId	mResourceLoaderTypeId;
 		LoadingState			mLoadingState;
 		SortedResourceListeners mSortedResourceListeners;
 

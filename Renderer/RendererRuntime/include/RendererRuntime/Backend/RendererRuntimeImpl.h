@@ -30,7 +30,6 @@
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <mutex>
-#include <unordered_set>
 
 
 //[-------------------------------------------------------]
@@ -114,7 +113,7 @@ namespace RendererRuntime
 	//[ Private definitions                                   ]
 	//[-------------------------------------------------------]
 	private:
-		typedef std::unordered_set<uint32_t> ResourcesToReload;	///< Set of "AssetId" (type not used directly or we would need to define a hash-function for it)
+		typedef std::vector<AssetId> AssetIdsOfResourcesToReload;	///< We're using a vector in here to maintain the provided asset ID order
 
 
 	//[-------------------------------------------------------]
@@ -122,8 +121,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		// Resource hot-reloading
-		std::mutex		  mResourcesToReloadMutex;
-		ResourcesToReload mResourcesToReload;
+		std::mutex					mAssetIdsOfResourcesToReloadMutex;
+		AssetIdsOfResourcesToReload	mAssetIdsOfResourcesToReload;
 
 
 	};

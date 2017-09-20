@@ -93,7 +93,7 @@ namespace RendererToolkit
 								// TODO(co) Performance: Add asset compiler queue so we can compile more then one asset at a time in background
 								// TODO(co) At the moment, we only support modifying already existing asset data, we should add support for changes inside the runtime asset package as well
 								RendererRuntime::AssetPackage outputAssetPackage;
-								mProjectAssetMonitor.mProjectImpl.compileAsset(asset, mProjectAssetMonitor.mRendererTarget.c_str(), outputAssetPackage);
+								mProjectAssetMonitor.mProjectImpl.tryCompileAssetIncludingDependencies(asset, mProjectAssetMonitor.mRendererTarget.c_str(), outputAssetPackage);
 
 								// Inform the asset manager about the modified assets (just pass them individually, there's no real benefit in trying to apply "were's one, there are many" in this situation)
 								const RendererRuntime::AssetPackage::SortedAssetVector& sortedOutputAssetVector = outputAssetPackage.getSortedAssetVector();

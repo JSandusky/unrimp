@@ -87,7 +87,7 @@ namespace
 			}
 			else
 			{
-				throw std::runtime_error("Invalid material property value reference \"" + valueAsString + "\", first character must be @");
+				throw std::runtime_error("Invalid material property value reference \"" + valueAsString + "\", first character must be @ if you intended to reference a material property");
 			}
 		}
 
@@ -538,7 +538,11 @@ namespace RendererToolkit
 					const RendererRuntime::MaterialProperty& otherMaterialProperty = *iterator;
 					if (materialProperty.getValueType() != otherMaterialProperty.getValueType())
 					{
-						throw std::runtime_error(std::string("Material blueprint asset ") + std::to_string(technique.materialBlueprintAssetId) + " referenced by material technique \"" + materialTechniqueIdToName[technique.materialTechniqueId] + "\" has material property \"" + materialPropertyIdToName[materialProperty.getMaterialPropertyId()] + "\" which differs in value type to another already registered material property");
+						throw std::runtime_error(std::string("Material blueprint asset ") + input.sourceAssetIdToDebugName(technique.materialBlueprintAssetId) + " referenced by material technique \"" + materialTechniqueIdToName[technique.materialTechniqueId] + "\" has material property \"" + materialPropertyIdToName[materialProperty.getMaterialPropertyId()] + "\" which differs in value type to another already registered material property. Ensure that the overlapping material properties of all referenced material blueprint assets are consistent.");
+					}
+					if (static_cast<const RendererRuntime::MaterialPropertyValue&>(materialProperty) != static_cast<const RendererRuntime::MaterialPropertyValue&>(otherMaterialProperty))
+					{
+						throw std::runtime_error(std::string("Material blueprint asset ") + input.sourceAssetIdToDebugName(technique.materialBlueprintAssetId) + " referenced by material technique \"" + materialTechniqueIdToName[technique.materialTechniqueId] + "\" has material property \"" + materialPropertyIdToName[materialProperty.getMaterialPropertyId()] + "\" which differs in default value to another already registered material property. Ensure that the overlapping material properties of all referenced material blueprint assets are consistent.");
 					}
 				}
 			}

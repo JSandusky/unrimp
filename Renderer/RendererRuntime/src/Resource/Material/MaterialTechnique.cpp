@@ -62,9 +62,11 @@ namespace RendererRuntime
 
 	MaterialTechnique::~MaterialTechnique()
 	{
-		MaterialBufferManager* materialBufferManager = getMaterialBufferManager();
-		if (nullptr != materialBufferManager)
+		// Due to hot-reloading it's possible that there's no assigned material slot, so we need to do a check here
+		if (isInitialized(getAssignedMaterialSlot()))
 		{
+			MaterialBufferManager* materialBufferManager = getMaterialBufferManager();
+			assert(nullptr != materialBufferManager);
 			materialBufferManager->releaseSlot(*this);
 		}
 	}

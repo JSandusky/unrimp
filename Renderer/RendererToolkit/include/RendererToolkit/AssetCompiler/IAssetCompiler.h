@@ -144,6 +144,15 @@ namespace RendererToolkit
 				}
 				return iterator->second;
 			}
+			std::string sourceAssetIdToDebugName(uint32_t sourceAssetId) const
+			{
+				SourceAssetIdToAbsoluteFilename::const_iterator iterator = sourceAssetIdToAbsoluteFilename.find(sourceAssetId);
+				if (iterator == sourceAssetIdToAbsoluteFilename.cend())
+				{
+					throw std::runtime_error(std::string("Source asset ID ") + std::to_string(sourceAssetId) + " is unknown");
+				}
+				return '\"' + iterator->second + "\" (ID = " + std::to_string(sourceAssetId) + ')';
+			}
 
 			Input(const Input&) = delete;
 			Input& operator=(const Input&) = delete;

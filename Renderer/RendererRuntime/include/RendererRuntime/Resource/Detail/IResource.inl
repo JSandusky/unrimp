@@ -58,6 +58,11 @@ namespace RendererRuntime
 		return mAssetId;
 	}
 
+	inline ResourceLoaderTypeId IResource::getResourceLoaderTypeId() const
+	{
+		return mResourceLoaderTypeId;
+	}
+
 	inline IResource::LoadingState IResource::getLoadingState() const
 	{
 		return mLoadingState;
@@ -71,6 +76,7 @@ namespace RendererRuntime
 		mResourceManager(nullptr),
 		mResourceId(getUninitialized<ResourceId>()),
 		mAssetId(getUninitialized<AssetId>()),
+		mResourceLoaderTypeId(getUninitialized<ResourceLoaderTypeId>()),
 		mLoadingState(LoadingState::UNLOADED)
 	{
 		// Nothing here
@@ -82,6 +88,7 @@ namespace RendererRuntime
 		assert(nullptr == mResourceManager);
 		assert(isUninitialized(mResourceId));
 		assert(isUninitialized(mAssetId));
+		assert(isUninitialized(mResourceLoaderTypeId));
 		assert(LoadingState::UNLOADED == mLoadingState);
 		assert(mSortedResourceListeners.empty());
 	}
@@ -96,12 +103,18 @@ namespace RendererRuntime
 		mAssetId = assetId;
 	}
 
+	inline void IResource::setResourceLoaderTypeId(ResourceLoaderTypeId resourceLoaderTypeId)
+	{
+		mResourceLoaderTypeId = resourceLoaderTypeId;
+	}
+
 	inline void IResource::initializeElement(ResourceId resourceId)
 	{
 		// Sanity checks
 		assert(nullptr == mResourceManager);
 		assert(isUninitialized(mResourceId));
 		assert(isUninitialized(mAssetId));
+		assert(isUninitialized(mResourceLoaderTypeId));
 		assert(LoadingState::UNLOADED == mLoadingState);
 		assert(mSortedResourceListeners.empty());
 

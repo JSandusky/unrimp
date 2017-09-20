@@ -127,6 +127,7 @@ namespace RendererRuntime
 			resource = &mResources.addElement();
 			resource->setResourceManager(&mResourceManager);
 			resource->setAssetId(assetId);
+			resource->setResourceLoaderTypeId(resourceLoaderTypeId);
 			load = true;
 		}
 
@@ -159,10 +160,11 @@ namespace RendererRuntime
 		const uint32_t numberOfElements = mResources.getNumberOfElements();
 		for (uint32_t i = 0; i < numberOfElements; ++i)
 		{
-			if (mResources.getElementByIndex(i).getAssetId() == assetId)
+			const TYPE& resource = mResources.getElementByIndex(i);
+			if (resource.getAssetId() == assetId)
 			{
 				ID_TYPE resourceId = getUninitialized<ID_TYPE>();
-				loadResourceByAssetId(assetId, resourceId, nullptr, true, LOADER_TYPE::TYPE_ID);
+				loadResourceByAssetId(assetId, resourceId, nullptr, true, resource.getResourceLoaderTypeId());
 				break;
 			}
 		}

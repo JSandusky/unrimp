@@ -189,6 +189,7 @@ namespace RendererRuntime
 			textureResource = &mInternalResourceManager->getResources().addElement();
 			textureResource->setResourceManager(this);
 			textureResource->setAssetId(assetId);
+			textureResource->setResourceLoaderTypeId(resourceLoaderTypeId);
 			textureResource->mRgbHardwareGammaCorrection = rgbHardwareGammaCorrection;
 			load = true;
 		}
@@ -319,7 +320,7 @@ namespace RendererRuntime
 			if (textureResource.getAssetId() == assetId)
 			{
 				TextureResourceId textureResourceId = getUninitialized<TextureResourceId>();
-				loadTextureResourceByAssetId(assetId, getUninitialized<AssetId>(), textureResourceId, nullptr, textureResource.isRgbHardwareGammaCorrection(), true);
+				loadTextureResourceByAssetId(assetId, getUninitialized<AssetId>(), textureResourceId, nullptr, textureResource.isRgbHardwareGammaCorrection(), true, textureResource.getResourceLoaderTypeId());
 				break;
 			}
 		}
