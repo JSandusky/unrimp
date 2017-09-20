@@ -167,7 +167,6 @@ namespace RendererToolkit
 					animationIndex = 0;
 				}
 				const aiAnimation* assimpAnimation = assimpScene->mAnimations[animationIndex];
-				const bool isMd5 = (aiString("<MD5_Hierarchy>") == assimpScene->mRootNode->mName);
 
 				// Determine whether or not bone scale is used, in case it's not ignored in general to start with
 				// TODO(co) Optimization option: Currently, the automatic dynamic bone scale ignoring is over all animation channels. We could
@@ -261,6 +260,7 @@ namespace RendererToolkit
 						std::vector<RendererRuntime::SkeletonAnimationResource::QuaternionKey> rotationKeys;
 						rotationKeys.resize(assimpNodeAnim->mNumRotationKeys);
 						const aiQuaternion assimpQuaternionOffset(aiMatrix3x3(assimpScene->mRootNode->mTransformation));
+						const bool isMd5 = (aiString("<MD5_Hierarchy>") == assimpScene->mRootNode->mName);
 						for (unsigned int i = 0; i < assimpNodeAnim->mNumRotationKeys; ++i)
 						{
 							const aiQuatKey& assimpQuatKey = assimpNodeAnim->mRotationKeys[i];
