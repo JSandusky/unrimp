@@ -6,10 +6,7 @@
 	},
 	"MaterialAsset":
 	{
-		"Techniques":
-		{
-			"Transparent": "MaterialBlueprint/Scene/TransparentMesh.asset"
-		},
+		"BaseMaterial": "Material/Base/TransparentMesh.asset",
 		"Properties":
 		{
 			"Opacity": "0.6",

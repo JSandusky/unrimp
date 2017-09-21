@@ -67,7 +67,8 @@ namespace RendererToolkit
 		static void optionalComparisonFuncProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::ComparisonFunc& value, const RendererRuntime::MaterialProperties::SortedPropertyVector* sortedMaterialPropertyVector = nullptr);
 		static void readMaterialPropertyValues(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValueProperties, RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector);
 		static void getTechniquesAndPropertiesByMaterialAssetId(const IAssetCompiler::Input& input, rapidjson::Document& rapidJsonDocument, std::vector<RendererRuntime::v1Material::Technique>& techniques, RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector);
-		static void getPropertiesByMaterialAssetId(const IAssetCompiler::Input& input, RendererRuntime::AssetId materialAssetId, RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector);
+		static void getPropertiesByMaterialAssetId(const IAssetCompiler::Input& input, RendererRuntime::AssetId materialAssetId, RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, std::vector<RendererRuntime::v1Material::Technique>* techniques = nullptr);
+		static void getDependencyFiles(const IAssetCompiler::Input& input, const std::string& inputFilename, std::vector<std::string>& dependencyFiles);
 
 
 	//[-------------------------------------------------------]

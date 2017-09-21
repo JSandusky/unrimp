@@ -6,6 +6,9 @@
 	},
 	"MaterialAsset":
 	{
-		"BaseMaterial": "Material/Base/Mesh.asset"
+		"Techniques":
+		{
+			"Transparent": "MaterialBlueprint/Scene/TransparentMesh.asset"
+		}
 	}
 }

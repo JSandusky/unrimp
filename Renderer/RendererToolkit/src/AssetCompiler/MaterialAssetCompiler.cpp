@@ -82,42 +82,10 @@ namespace RendererToolkit
 
 	bool MaterialAssetCompiler::checkIfChanged(const Input& input, const Configuration& configuration) const
 	{
-		// Input and configuration
-		const std::string& assetInputDirectory = input.assetInputDirectory;
-
-		// Get the JSON asset object
-		const rapidjson::Value& rapidJsonValueAsset = configuration.rapidJsonDocumentAsset["Asset"];
-
-		// Read configuration
-		std::string inputFile;
-		{
-			// Read material asset compiler configuration
-			const rapidjson::Value& rapidJsonValueMaterialAssetCompiler = rapidJsonValueAsset["MaterialAssetCompiler"];
-			inputFile = rapidJsonValueMaterialAssetCompiler["InputFile"].GetString();
-		}
-
-		// Open the input file
-		const std::string inputFilename = assetInputDirectory + inputFile;
-
 		// Read in dependency files
 		std::vector<std::string> dependencyFiles;
-		{ // Material
-			std::ifstream inputFileStream(inputFilename, std::ios::binary);
-
-			// Parse JSON
-			rapidjson::Document rapidJsonDocument;
-			JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, inputFilename, "MaterialAsset", "1");
-
-			// TODO(sw) parts copied from JsonMaterialHelper::getTechniquesAndPropertiesByMaterialAssetId
-			const rapidjson::Value& rapidJsonValueMaterialAsset = rapidJsonDocument["MaterialAsset"];
-			const rapidjson::Value& rapidJsonValueTechniques = rapidJsonValueMaterialAsset["Techniques"];
-			for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorTechniques = rapidJsonValueTechniques.MemberBegin(); rapidJsonMemberIteratorTechniques != rapidJsonValueTechniques.MemberEnd(); ++rapidJsonMemberIteratorTechniques)
-			{
-				const RendererRuntime::AssetId materialBlueprintAssetId = StringHelper::getSourceAssetIdByString(rapidJsonMemberIteratorTechniques->value.GetString());
-				const std::string absoluteMaterialBlueprintAssetFilename = JsonHelper::getAbsoluteAssetFilename(input, materialBlueprintAssetId);
-				dependencyFiles.emplace_back(std::move(absoluteMaterialBlueprintAssetFilename));
-			}
-		}
+		const std::string inputFilename = input.assetInputDirectory + configuration.rapidJsonDocumentAsset["Asset"]["MaterialAssetCompiler"]["InputFile"].GetString();
+		JsonMaterialHelper::getDependencyFiles(input, inputFilename, dependencyFiles);
 
 		// Let the cache manager check whether or not the files have been changed in order to speed up later checks and to support dependency tracking
 		return (input.cacheManager.checkIfFileIsModified(configuration.rendererTarget, input.assetFilename, {inputFilename}, RendererRuntime::v1Material::FORMAT_VERSION) || input.cacheManager.dependencyFilesChanged(dependencyFiles));
@@ -133,38 +101,14 @@ namespace RendererToolkit
 		// Get the JSON asset object
 		const rapidjson::Value& rapidJsonValueAsset = configuration.rapidJsonDocumentAsset["Asset"];
 
-		// Read configuration
-		std::string inputFile;
-		{
-			// Read material asset compiler configuration
-			const rapidjson::Value& rapidJsonValueMaterialAssetCompiler = rapidJsonValueAsset["MaterialAssetCompiler"];
-			inputFile = rapidJsonValueMaterialAssetCompiler["InputFile"].GetString();
-		}
-
 		// Open the input file
-		const std::string inputFilename = assetInputDirectory + inputFile;
+		const std::string inputFilename = assetInputDirectory + rapidJsonValueAsset["MaterialAssetCompiler"]["InputFile"].GetString();
 		const std::string assetName = std_filesystem::path(input.assetFilename).stem().generic_string();
 		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".material";
 
 		// Read in dependency files
 		std::vector<std::string> dependencyFiles;
-		{ // Material
-			std::ifstream inputFileStream(inputFilename, std::ios::binary);
-
-			// Parse JSON
-			rapidjson::Document rapidJsonDocument;
-			JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, inputFilename, "MaterialAsset", "1");
-
-			// TODO(sw) parts copied from JsonMaterialHelper::getTechniquesAndPropertiesByMaterialAssetId
-			const rapidjson::Value& rapidJsonValueMaterialAsset = rapidJsonDocument["MaterialAsset"];
-			const rapidjson::Value& rapidJsonValueTechniques = rapidJsonValueMaterialAsset["Techniques"];
-			for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorTechniques = rapidJsonValueTechniques.MemberBegin(); rapidJsonMemberIteratorTechniques != rapidJsonValueTechniques.MemberEnd(); ++rapidJsonMemberIteratorTechniques)
-			{
-				const RendererRuntime::AssetId materialBlueprintAssetId = StringHelper::getSourceAssetIdByString(rapidJsonMemberIteratorTechniques->value.GetString());
-				const std::string absoluteMaterialBlueprintAssetFilename = JsonHelper::getAbsoluteAssetFilename(input, materialBlueprintAssetId);
-				dependencyFiles.emplace_back(std::move(absoluteMaterialBlueprintAssetFilename));
-			}
-		}
+		JsonMaterialHelper::getDependencyFiles(input, inputFilename, dependencyFiles);
 
 		// Ask the cache manager whether or not we need to compile the source file (e.g. source changed or target not there)
 		CacheManager::CacheEntries cacheEntries;

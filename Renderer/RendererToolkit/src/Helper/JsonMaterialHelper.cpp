@@ -495,67 +495,84 @@ namespace RendererToolkit
 
 	void JsonMaterialHelper::getTechniquesAndPropertiesByMaterialAssetId(const IAssetCompiler::Input& input, rapidjson::Document& rapidJsonDocument, std::vector<RendererRuntime::v1Material::Technique>& techniques, RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector)
 	{
-		// Mandatory main sections of the material
 		const rapidjson::Value& rapidJsonValueMaterialAsset = rapidJsonDocument["MaterialAsset"];
-		const rapidjson::Value& rapidJsonValueTechniques = rapidJsonValueMaterialAsset["Techniques"];
-		const rapidjson::Value& rapidJsonValueProperties = rapidJsonValueMaterialAsset["Properties"];
 
-		// Gather the asset IDs of all used material blueprints (one material blueprint per material technique)
-		techniques.reserve(rapidJsonValueTechniques.MemberCount());
-		std::unordered_map<uint32_t, std::string> materialTechniqueIdToName;	// Key = "RendererRuntime::MaterialTechniqueId"
-		for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorTechniques = rapidJsonValueTechniques.MemberBegin(); rapidJsonMemberIteratorTechniques != rapidJsonValueTechniques.MemberEnd(); ++rapidJsonMemberIteratorTechniques)
+		// Optional base material
+		// -> Named toolkit time base material and not parent material by intent to not intermix it with the dynamic runtime parent material
+		if (rapidJsonValueMaterialAsset.HasMember("BaseMaterial"))
 		{
-			// Add technique
-			RendererRuntime::v1Material::Technique technique;
-			technique.materialTechniqueId	   = RendererRuntime::StringId(rapidJsonMemberIteratorTechniques->name.GetString());
-			technique.materialBlueprintAssetId = StringHelper::getSourceAssetIdByString(rapidJsonMemberIteratorTechniques->value.GetString());
-			techniques.push_back(technique);
-			materialTechniqueIdToName.emplace(technique.materialTechniqueId, rapidJsonMemberIteratorTechniques->name.GetString());
-		}
-		std::sort(techniques.begin(), techniques.end(), detail::orderByMaterialTechniqueId);
-
-		// Gather all material blueprint properties of all referenced material blueprints
-		for (RendererRuntime::v1Material::Technique& technique : techniques)
-		{
-			RendererRuntime::MaterialProperties::SortedPropertyVector newSortedMaterialPropertyVector;
-			MaterialPropertyIdToName materialPropertyIdToName;
-			JsonMaterialBlueprintHelper::getPropertiesByMaterialBlueprintAssetId(input, technique.materialBlueprintAssetId, newSortedMaterialPropertyVector, &materialPropertyIdToName);
-
-			// Add properties and avoid duplicates while doing so
-			for (const RendererRuntime::MaterialProperty& materialProperty : newSortedMaterialPropertyVector)
+			// Sanity check
+			if (rapidJsonValueMaterialAsset.HasMember("Techniques"))
 			{
-				const RendererRuntime::MaterialPropertyId materialPropertyId = materialProperty.getMaterialPropertyId();
-				RendererRuntime::MaterialProperties::SortedPropertyVector::const_iterator iterator = std::lower_bound(sortedMaterialPropertyVector.cbegin(), sortedMaterialPropertyVector.cend(), materialPropertyId, RendererRuntime::detail::OrderByMaterialPropertyId());
-				if (iterator == sortedMaterialPropertyVector.end() || iterator->getMaterialPropertyId() != materialPropertyId)
-				{
-					// Add new material property
-					sortedMaterialPropertyVector.insert(iterator, materialProperty);
-				}
-				else
-				{
-					// Sanity checks
-					// -> Do not check for usage since some material properties like "UseDiffuseMap" might be defined inside some material blueprints just for consistency using an unknown usage
-					const RendererRuntime::MaterialProperty& otherMaterialProperty = *iterator;
-					if (materialProperty.getValueType() != otherMaterialProperty.getValueType())
-					{
-						throw std::runtime_error(std::string("Material blueprint asset ") + input.sourceAssetIdToDebugName(technique.materialBlueprintAssetId) + " referenced by material technique \"" + materialTechniqueIdToName[technique.materialTechniqueId] + "\" has material property \"" + materialPropertyIdToName[materialProperty.getMaterialPropertyId()] + "\" which differs in value type to another already registered material property. Ensure that the overlapping material properties of all referenced material blueprint assets are consistent.");
-					}
-					if (static_cast<const RendererRuntime::MaterialPropertyValue&>(materialProperty) != static_cast<const RendererRuntime::MaterialPropertyValue&>(otherMaterialProperty))
-					{
-						throw std::runtime_error(std::string("Material blueprint asset ") + input.sourceAssetIdToDebugName(technique.materialBlueprintAssetId) + " referenced by material technique \"" + materialTechniqueIdToName[technique.materialTechniqueId] + "\" has material property \"" + materialPropertyIdToName[materialProperty.getMaterialPropertyId()] + "\" which differs in default value to another already registered material property. Ensure that the overlapping material properties of all referenced material blueprint assets are consistent.");
-					}
-				}
+				throw std::runtime_error("The material has a base material defined as well as techniques. There can be only one of them.");
 			}
 
-			// Transform the source asset ID into a local asset ID
-			technique.materialBlueprintAssetId = input.getCompiledAssetIdBySourceAssetId(technique.materialBlueprintAssetId);
+			// Get material techniques and properties from the base material
+			getPropertiesByMaterialAssetId(input, StringHelper::getSourceAssetIdByString(rapidJsonValueMaterialAsset["BaseMaterial"].GetString()), sortedMaterialPropertyVector, &techniques);
+		}
+		else
+		{
+			// Gather the asset IDs of all used material blueprints (one material blueprint per material technique)
+			const rapidjson::Value& rapidJsonValueTechniques = rapidJsonValueMaterialAsset["Techniques"];
+			techniques.reserve(rapidJsonValueTechniques.MemberCount());
+			std::unordered_map<uint32_t, std::string> materialTechniqueIdToName;	// Key = "RendererRuntime::MaterialTechniqueId"
+			for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorTechniques = rapidJsonValueTechniques.MemberBegin(); rapidJsonMemberIteratorTechniques != rapidJsonValueTechniques.MemberEnd(); ++rapidJsonMemberIteratorTechniques)
+			{
+				// Add technique
+				RendererRuntime::v1Material::Technique technique;
+				technique.materialTechniqueId	   = RendererRuntime::StringId(rapidJsonMemberIteratorTechniques->name.GetString());
+				technique.materialBlueprintAssetId = StringHelper::getSourceAssetIdByString(rapidJsonMemberIteratorTechniques->value.GetString());
+				techniques.push_back(technique);
+				materialTechniqueIdToName.emplace(technique.materialTechniqueId, rapidJsonMemberIteratorTechniques->name.GetString());
+			}
+			std::sort(techniques.begin(), techniques.end(), detail::orderByMaterialTechniqueId);
+
+			// Gather all material blueprint properties of all referenced material blueprints
+			for (RendererRuntime::v1Material::Technique& technique : techniques)
+			{
+				RendererRuntime::MaterialProperties::SortedPropertyVector newSortedMaterialPropertyVector;
+				MaterialPropertyIdToName materialPropertyIdToName;
+				JsonMaterialBlueprintHelper::getPropertiesByMaterialBlueprintAssetId(input, technique.materialBlueprintAssetId, newSortedMaterialPropertyVector, &materialPropertyIdToName);
+
+				// Add properties and avoid duplicates while doing so
+				for (const RendererRuntime::MaterialProperty& materialProperty : newSortedMaterialPropertyVector)
+				{
+					const RendererRuntime::MaterialPropertyId materialPropertyId = materialProperty.getMaterialPropertyId();
+					RendererRuntime::MaterialProperties::SortedPropertyVector::const_iterator iterator = std::lower_bound(sortedMaterialPropertyVector.cbegin(), sortedMaterialPropertyVector.cend(), materialPropertyId, RendererRuntime::detail::OrderByMaterialPropertyId());
+					if (iterator == sortedMaterialPropertyVector.end() || iterator->getMaterialPropertyId() != materialPropertyId)
+					{
+						// Add new material property
+						sortedMaterialPropertyVector.insert(iterator, materialProperty);
+					}
+					else
+					{
+						// Sanity checks
+						// -> Do not check for usage since some material properties like "UseDiffuseMap" might be defined inside some material blueprints just for consistency using an unknown usage
+						const RendererRuntime::MaterialProperty& otherMaterialProperty = *iterator;
+						if (materialProperty.getValueType() != otherMaterialProperty.getValueType())
+						{
+							throw std::runtime_error(std::string("Material blueprint asset ") + input.sourceAssetIdToDebugName(technique.materialBlueprintAssetId) + " referenced by material technique \"" + materialTechniqueIdToName[technique.materialTechniqueId] + "\" has material property \"" + materialPropertyIdToName[materialProperty.getMaterialPropertyId()] + "\" which differs in value type to another already registered material property. Ensure that the overlapping material properties of all referenced material blueprint assets are consistent.");
+						}
+						if (static_cast<const RendererRuntime::MaterialPropertyValue&>(materialProperty) != static_cast<const RendererRuntime::MaterialPropertyValue&>(otherMaterialProperty))
+						{
+							throw std::runtime_error(std::string("Material blueprint asset ") + input.sourceAssetIdToDebugName(technique.materialBlueprintAssetId) + " referenced by material technique \"" + materialTechniqueIdToName[technique.materialTechniqueId] + "\" has material property \"" + materialPropertyIdToName[materialProperty.getMaterialPropertyId()] + "\" which differs in default value to another already registered material property. Ensure that the overlapping material properties of all referenced material blueprint assets are consistent.");
+						}
+					}
+				}
+
+				// Transform the source asset ID into a local asset ID
+				technique.materialBlueprintAssetId = input.getCompiledAssetIdBySourceAssetId(technique.materialBlueprintAssetId);
+			}
 		}
 
-		// Properties: Update material property values were required
-		JsonMaterialHelper::readMaterialPropertyValues(input, rapidJsonValueProperties, sortedMaterialPropertyVector);
+		// Optional properties: Update material property values were required
+		if (rapidJsonValueMaterialAsset.HasMember("Properties"))
+		{
+			JsonMaterialHelper::readMaterialPropertyValues(input, rapidJsonValueMaterialAsset["Properties"], sortedMaterialPropertyVector);
+		}
 	}
 
-	void JsonMaterialHelper::getPropertiesByMaterialAssetId(const IAssetCompiler::Input& input, RendererRuntime::AssetId materialAssetId, RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector)
+	void JsonMaterialHelper::getPropertiesByMaterialAssetId(const IAssetCompiler::Input& input, RendererRuntime::AssetId materialAssetId, RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, std::vector<RendererRuntime::v1Material::Technique>* techniques)
 	{
 		// TODO(co) Error handling and simplification
 
@@ -575,8 +592,43 @@ namespace RendererToolkit
 		std::ifstream materialInputFileStream(absoluteMaterialFilename, std::ios::binary);
 		rapidjson::Document rapidJsonDocument;
 		JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, materialInputFileStream, absoluteMaterialFilename, "MaterialAsset", "1");
-		std::vector<RendererRuntime::v1Material::Technique> techniques;
-		getTechniquesAndPropertiesByMaterialAssetId(input, rapidJsonDocument, techniques, sortedMaterialPropertyVector);
+		std::vector<RendererRuntime::v1Material::Technique> temporaryTechniques;
+		getTechniquesAndPropertiesByMaterialAssetId(input, rapidJsonDocument, (nullptr != techniques) ? *techniques : temporaryTechniques, sortedMaterialPropertyVector);
+	}
+
+	void JsonMaterialHelper::getDependencyFiles(const IAssetCompiler::Input& input, const std::string& inputFilename, std::vector<std::string>& dependencyFiles)
+	{
+		// Parse JSON
+		rapidjson::Document rapidJsonDocument;
+		std::ifstream inputFileStream(inputFilename, std::ios::binary);
+		JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, inputFilename, "MaterialAsset", "1");
+
+		// Optional base material
+		// -> Named toolkit time base material and not parent material by intent to not intermix it with the dynamic runtime parent material
+		const rapidjson::Value& rapidJsonValueMaterialAsset = rapidJsonDocument["MaterialAsset"];
+		if (rapidJsonValueMaterialAsset.HasMember("BaseMaterial"))
+		{
+			// Sanity check
+			if (rapidJsonValueMaterialAsset.HasMember("Techniques"))
+			{
+				throw std::runtime_error("The material has a base material defined as well as techniques. There can be only one of them.");
+			}
+
+			// Get base material asset ID
+			const RendererRuntime::AssetId materialAssetId = StringHelper::getSourceAssetIdByString(rapidJsonValueMaterialAsset["BaseMaterial"].GetString());
+			const std::string absoluteMaterialAssetFilename = JsonHelper::getAbsoluteAssetFilename(input, materialAssetId);
+			dependencyFiles.emplace_back(std::move(absoluteMaterialAssetFilename));
+		}
+		else
+		{
+			const rapidjson::Value& rapidJsonValueTechniques = rapidJsonValueMaterialAsset["Techniques"];
+			for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorTechniques = rapidJsonValueTechniques.MemberBegin(); rapidJsonMemberIteratorTechniques != rapidJsonValueTechniques.MemberEnd(); ++rapidJsonMemberIteratorTechniques)
+			{
+				const RendererRuntime::AssetId materialBlueprintAssetId = StringHelper::getSourceAssetIdByString(rapidJsonMemberIteratorTechniques->value.GetString());
+				const std::string absoluteMaterialBlueprintAssetFilename = JsonHelper::getAbsoluteAssetFilename(input, materialBlueprintAssetId);
+				dependencyFiles.emplace_back(std::move(absoluteMaterialBlueprintAssetFilename));
+			}
+		}
 	}
 
 

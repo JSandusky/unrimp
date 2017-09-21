@@ -6,14 +6,7 @@
 	},
 	"MaterialAsset":
 	{
-		"Techniques":
-		{
-			"Default": "MaterialBlueprint/Debug/Mesh.asset",
-			"Debug": "MaterialBlueprint/Debug/Mesh.asset",
-			"Forward": "MaterialBlueprint/Forward/Mesh.asset",
-			"Deferred": "MaterialBlueprint/Deferred/Mesh.asset",
-			"DepthOnly": "MaterialBlueprint/Scene/MeshDepthOnly.asset"
-		},
+		"BaseMaterial": "Material/Base/Mesh.asset",
 		"Properties":
 		{
 			"_drgb_nxa": "Texture/Sponza/sponza_fabric_green_drgb_nxa.asset",

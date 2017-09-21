@@ -6,14 +6,7 @@
 	},
 	"MaterialAsset":
 	{
-		"Techniques":
-		{
-			"Default": "MaterialBlueprint/Debug/SkinnedMesh.asset",
-			"Debug": "MaterialBlueprint/Debug/SkinnedMesh.asset",
-			"Forward": "MaterialBlueprint/Forward/SkinnedMesh.asset",
-			"Deferred": "MaterialBlueprint/Deferred/SkinnedMesh.asset",
-			"DepthOnly": "MaterialBlueprint/Scene/SkinnedMeshDepthOnly.asset"
-		},
+		"BaseMaterial": "Material/Base/SkinnedMesh.asset",
 		"Properties":
 		{
 			"CullMode": "NONE",
