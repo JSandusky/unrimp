@@ -158,10 +158,14 @@
 	*    N = Surface normal
 	*  @param[in] V
 	*    V = Camera direction
+	*  @param[in] reflectionColor
+	*    Reflection color, has horizon occlusion build in
 	*  @param[in] L
 	*    L = Light direction
+	*  @param[in] lightColor
+	*    Light color
 	*/
-	float3 CalculateLighting(float3 albedo, float roughness, float metallic, float3 N, float3 V, float3 L, float3 lightColor)
+	float3 CalculateLighting(float3 albedo, float roughness, float metallic, float3 N, float3 V, float3 reflectionColor, float3 L, float3 lightColor)
 	{
 		// Derive data
 		float3 R = reflect(-V, N);
@@ -177,13 +181,6 @@
 
 		// Diffuse part
 		float3 diffuseColor = lightColor * diffuseBurley(albedo, roughness, dotNV, dotNL, dotVH);
-
-		// Reflection part
-		// -> Select mip level based on roughness
-		R = MultiplyQuaternionVector(PassData.ViewSpaceToWorldSpaceQuaternion, R);
-		float2 cubeDimension = CAST_TO(GET_TEXTURE_CUBE_SIZE(ReflectionCubeMap), float2);
-		float numberOfCubeMipmaps = log2(max(cubeDimension.x, cubeDimension.y));
-		float3 reflectionColor = horiz * SAMPLE_CUBE_LOD(ReflectionCubeMap, SamplerLinear, float4(R, roughness * numberOfCubeMipmaps)).rgb;
 
 		// Specular part
 		// -> F0 based on metallic factor of material
@@ -241,10 +238,14 @@
 	*    N = Surface normal
 	*  @param[in] V
 	*    V = Camera direction
+	*  @param[in] reflectionColor
+	*    Reflection color, has horizon occlusion build in
 	*  @param[in] L
 	*    L = Light direction
+	*  @param[in] lightColor
+	*    Light color
 	*/
-	float3 CalculateLighting(float3 albedo, float roughness, float metallic, float3 N, float3 V, float3 L, float3 lightColor)
+	float3 CalculateLighting(float3 albedo, float roughness, float metallic, float3 N, float3 V, float3 reflectionColor, float3 L, float3 lightColor)
 	{
 		// Perform traditional Blinn-Phong diffuse and specular lighting
 
@@ -268,6 +269,24 @@
 	}
 @end
 
+@piece(CalculateReflectionColor)
+	float3 reflectionColor;
+	{
+		// -> Select mip level based on roughness
+		float3 R = reflect(-worldSpaceIncident, worldSpaceNormal);
+		R = MultiplyQuaternionVector(PassData.ViewSpaceToWorldSpaceQuaternion, R);
+		float2 cubeDimension = CAST_TO(GET_TEXTURE_CUBE_SIZE(ReflectionCubeMap), float2);
+		float numberOfCubeMipmaps = log2(max(cubeDimension.x, cubeDimension.y));
+		reflectionColor = SAMPLE_CUBE_LOD(ReflectionCubeMap, SamplerLinear, float4(R, roughness * numberOfCubeMipmaps)).rgb;
+
+		// Image quality improvement via "Horizon Occlusion for Normal Mapped Reflections" ( http://marmosetco.tumblr.com/post/81245981087 )
+		float horizonFade = 1.3f;
+		float horiz = SATURATE(1.0f + horizonFade * dot(R, worldSpaceNormal));
+		horiz *= horiz;
+		reflectionColor *= horiz;
+	}
+@end
+
 @piece(PerformClusteredShading)
 	// Compute light cluster and fetch its light mask: Basing on the clustered shading demo from Emil Persson - http://humus.name/index.php?page=3D
 	// "
@@ -288,46 +307,41 @@
 
 		// Check if the fragment is inside the bounding volume of the light
 		float4 lightPositionRadius = TEXTURE_BUFFER_FETCH(LightTextureBuffer, lightIndex * 4u);
-		float3 direction = lightPositionRadius.xyz - worldSpacePosition;
-		float distance = length(direction);
-		if (distance < lightPositionRadius.w)
+		float3 lightDirection = lightPositionRadius.xyz - worldSpacePosition;
+		float lightDistance = length(lightDirection);
+		if (lightDistance < lightPositionRadius.w)
 		{
 			float4 lightColorType = TEXTURE_BUFFER_FETCH(LightTextureBuffer, lightIndex * 4u + 1u);
 			float lightIntensity = 1.0f;
 
-			// Normalize the direction
-			direction /= distance;
+			// Normalize the light direction
+			lightDirection /= lightDistance;
 
 			// Spot-light attenuation
 			if (2.0f == lightColorType.w)
 			{
 				float4 innerOuterNearClip = TEXTURE_BUFFER_FETCH(LightTextureBuffer, lightIndex * 4u + 2u);
-				if (distance < innerOuterNearClip.z)
+				if (lightDistance < innerOuterNearClip.z)
 				{
 					// Early escape: Not influenced by the light
 					continue;
 				}
 				float3 spotlightDirection = TEXTURE_BUFFER_FETCH(LightTextureBuffer, lightIndex * 4u + 3u).xyz;
-				float spotlightAngle = SATURATE(dot(spotlightDirection, -direction));
+				float spotlightAngle = SATURATE(dot(spotlightDirection, -lightDirection));
 				float spotlightFalloff = SATURATE((spotlightAngle - innerOuterNearClip.x) / (innerOuterNearClip.y - innerOuterNearClip.x));
 				lightIntensity *= (1.0f - spotlightFalloff);
 			}
 
 			// Attenuation by using inverse-square falloff for higher quality falloff
 			// -> Physically accurate inverse-square falloff as described in "Real Shading in Unreal Engine 4" by Brian Karis, Epic Games - "Lighting Model" on page 12 - http://blog.selfshadow.com/publications/s2013-shading-course/karis/s2013_pbs_epic_notes_v2.pdf
-			float distanceLightRadius = distance / lightPositionRadius.w;
+			float distanceLightRadius = lightDistance / lightPositionRadius.w;
 			float t1 = SATURATE(1.0f - distanceLightRadius * distanceLightRadius * distanceLightRadius * distanceLightRadius);
-			lightIntensity *= t1 / (distance * distance + 1.0f);
+			lightIntensity *= t1 / (lightDistance * lightDistance + 1.0f);
 
 			// Calculate lighting
-			if (lightIntensity > 0.0f)
+			if (lightIntensity > 0.0f && dot(worldSpaceNormal, lightDirection) > 0.0f)
 			{
-				float3 worldSpaceNormal = MultiplyQuaternionVector(PassData.ViewSpaceToWorldSpaceQuaternion, viewSpaceNormal);
-				if (dot(worldSpaceNormal, direction) > 0.0f)
-				{
-					float3 worldSpaceIncident = MultiplyQuaternionVector(PassData.ViewSpaceToWorldSpaceQuaternion, viewSpaceIncident);
-					color += CalculateLighting(diffuse, roughness, metallic, worldSpaceNormal, worldSpaceIncident, direction, lightColorType.rgb * lightIntensity);
-				}
+				color += CalculateLighting(diffuse, roughness, metallic, worldSpaceNormal, worldSpaceIncident, reflectionColor, lightDirection, lightColorType.rgb * lightIntensity);
 			}
 		}
 	}
