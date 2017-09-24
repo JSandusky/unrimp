@@ -41,6 +41,7 @@
 #include "RendererToolkit/AssetCompiler/CompositorWorkspaceAssetCompiler.h"
 #include "RendererToolkit/Context.h"
 
+#include <RendererRuntime/IRendererRuntime.h>
 #include <RendererRuntime/Core/File/MemoryFile.h>
 #include <RendererRuntime/Core/Platform/PlatformManager.h>
 #include <RendererRuntime/Asset/Loader/AssetPackageFileFormat.h>
@@ -308,13 +309,32 @@ namespace RendererToolkit
 		{ // Compile all assets
 			const RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = mAssetPackage.getSortedAssetVector();
 			const size_t numberOfAssets = sortedAssetVector.size();
+			std::vector<RendererRuntime::AssetId> changedAssetIds;
 			for (size_t i = 0; i < numberOfAssets; ++i)
 			{
-				checkAssetIsChanged(sortedAssetVector[i], rendererTarget);
+				const RendererRuntime::Asset& asset = sortedAssetVector[i];
+				if (checkAssetIsChanged(asset, rendererTarget))
+				{
+					changedAssetIds.push_back(asset.assetId);
+				}
 			}
 			for (size_t i = 0; i < numberOfAssets; ++i)
 			{
 				compileAsset(sortedAssetVector[i], rendererTarget, outputAssetPackage);
+			}
+			if (nullptr != mProjectAssetMonitor)
+			{
+				// TODO(co) Call "RendererRuntime::IRendererRuntime::reloadResourceByAssetId()" directly after an asset has been compiled to see changes as early as possible.
+				//          Need to do some refactoring for this like calling asset compilers only in case of a change while still creating/updating valid asset packages.
+				for (RendererRuntime::AssetId sourceAssetId : changedAssetIds)
+				{
+					SourceAssetIdToCompiledAssetId::const_iterator iterator = mSourceAssetIdToCompiledAssetId.find(sourceAssetId);
+					if (iterator == mSourceAssetIdToCompiledAssetId.cend())
+					{
+						throw std::runtime_error(std::string("Source asset ID ") + std::to_string(sourceAssetId) + " is unknown");
+					}
+					mProjectAssetMonitor->mRendererRuntime.reloadResourceByAssetId(iterator->second);
+				}
 			}
 		}
 

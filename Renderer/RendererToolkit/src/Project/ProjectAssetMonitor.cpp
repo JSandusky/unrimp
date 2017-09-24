@@ -199,6 +199,9 @@ namespace RendererToolkit
 		detail::FileWatchListener fileWatchListener(*this);
 		const FW::WatchID watchID = fileWatcher.addWatch(mProjectImpl.getProjectDirectory(), &fileWatchListener, true);
 
+		// On startup we need to check for changes which were done while the project asset monitor wasn't running
+		mProjectImpl.compileAllAssets(mRendererTarget.c_str());
+
 		// Update the file watcher object as long as the project asset monitor is up-and-running
 		while (!mShutdownThread)
 		{

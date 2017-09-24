@@ -66,6 +66,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
+		friend class ProjectImpl;	// TODO(co) Remove this later on
 		friend class detail::FileWatchListener;
 
 

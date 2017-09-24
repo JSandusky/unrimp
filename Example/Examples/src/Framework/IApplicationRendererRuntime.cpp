@@ -137,7 +137,7 @@ void IApplicationRendererRuntime::onInitialization()
 
 				#ifdef SHARED_LIBRARIES
 				{
-					// TODO(co) First asset hot-reloading test
+					// Load renderer toolkit project to enable hot-reloading in case of asset changes
 					RendererToolkit::IRendererToolkit* rendererToolkit = getRendererToolkit();
 					if (nullptr != rendererToolkit)
 					{
@@ -158,8 +158,7 @@ void IApplicationRendererRuntime::onInitialization()
 							}
 							catch (const std::exception& e)
 							{
-								const char* text = e.what();
-								text = text;
+								RENDERER_LOG(renderer->getContext(), CRITICAL, "Failed to load renderer toolkit project: %s", e.what())
 							}
 						}
 					}
