@@ -53,15 +53,16 @@ namespace RendererRuntime
 	*  @remarks
 	*    The asset reference table is always kept in memory so we have to implement it in an efficient way.
 	*    No "std::string" by intent to be cache friendly and avoid memory trashing, which is important here.
-	*    132 bytes per asset might sound not much, but when having e.g. 30.000 assets which is not unusual for a
-	*    more complex project, you end up in having a 3 MiB asset reference table in memory.
+	*    140 bytes per asset might sound not much, but when having e.g. 30.000 assets which is not unusual for a
+	*    more complex project, you end up in having a 4 MiB asset reference table in memory.
 	*/
 	struct Asset
 	{
 		static const uint32_t MAXIMUM_ASSET_FILENAME_LENGTH = 127;
 
-		AssetId assetId;											///< Asset ID
-		char	assetFilename[MAXIMUM_ASSET_FILENAME_LENGTH + 1];	///< Asset UTF-8 filename, +1 for the terminating zero
+		AssetId  assetId;											///< Asset ID
+		uint64_t fileHash;											///< 64-bit FNV-1a hash of the asset file
+		char	 assetFilename[MAXIMUM_ASSET_FILENAME_LENGTH + 1];	///< Asset UTF-8 filename, +1 for the terminating zero
 	};
 
 

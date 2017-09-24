@@ -189,6 +189,7 @@
     <ClInclude Include="include\RendererRuntime\Asset\Asset.h" />
     <ClInclude Include="include\RendererRuntime\Asset\AssetManager.h" />
     <ClInclude Include="include\RendererRuntime\Asset\AssetPackage.h" />
+    <ClInclude Include="include\RendererRuntime\Asset\Serializer\AssetPackageFileFormat.h" />
     <ClInclude Include="include\RendererRuntime\Asset\Serializer\AssetPackageSerializer.h" />
     <ClInclude Include="include\RendererRuntime\Backend\RendererBackendManager.h" />
     <ClInclude Include="include\RendererRuntime\Backend\RendererRuntimeImpl.h" />

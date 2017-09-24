@@ -23,36 +23,9 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Asset/Serializer/AssetPackageSerializer.h"
+#include "RendererRuntime/Asset/Serializer/AssetPackageFileFormat.h"
 #include "RendererRuntime/Asset/AssetPackage.h"
 #include "RendererRuntime/Core/File/MemoryFile.h"
-
-
-//[-------------------------------------------------------]
-//[ Anonymous detail namespace                            ]
-//[-------------------------------------------------------]
-namespace
-{
-	namespace detail
-	{
-
-
-		//[-------------------------------------------------------]
-		//[ Global definitions                                    ]
-		//[-------------------------------------------------------]
-		static const uint32_t FORMAT_TYPE	 = RendererRuntime::StringId("AssetPackage");
-		static const uint32_t FORMAT_VERSION = 2;
-
-		struct AssetPackageHeader
-		{
-			uint32_t numberOfAssets;
-		};
-
-
-//[-------------------------------------------------------]
-//[ Anonymous detail namespace                            ]
-//[-------------------------------------------------------]
-	} // detail
-}
 
 
 //[-------------------------------------------------------]
@@ -69,12 +42,12 @@ namespace RendererRuntime
 	{
 		// Tell the memory mapped file about the LZ4 compressed data and decompress it at once
 		MemoryFile memoryFile;
-		memoryFile.loadLz4CompressedDataFromFile(::detail::FORMAT_TYPE, ::detail::FORMAT_VERSION, file);
+		memoryFile.loadLz4CompressedDataFromFile(v1AssetPackage::FORMAT_TYPE, v1AssetPackage::FORMAT_VERSION, file);
 		memoryFile.decompress();
 
 		// Read in the asset package header
-		::detail::AssetPackageHeader assetPackageHeader;
-		memoryFile.read(&assetPackageHeader, sizeof(::detail::AssetPackageHeader));
+		v1AssetPackage::AssetPackageHeader assetPackageHeader;
+		memoryFile.read(&assetPackageHeader, sizeof(v1AssetPackage::AssetPackageHeader));
 
 		// Read in the asset package content in one single burst
 		AssetPackage::SortedAssetVector& sortedAssetVector = assetPackage.getWritableSortedAssetVector();

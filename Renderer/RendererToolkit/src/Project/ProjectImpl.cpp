@@ -43,6 +43,7 @@
 
 #include <RendererRuntime/Core/File/MemoryFile.h>
 #include <RendererRuntime/Core/Platform/PlatformManager.h>
+#include <RendererRuntime/Asset/Serializer/AssetPackageFileFormat.h>
 
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
@@ -325,23 +326,16 @@ namespace RendererToolkit
 			std::sort(sortedAssetVector.begin(), sortedAssetVector.end(), ::detail::orderByAssetId);
 
 			{ // Write down the asset package header
-				#pragma pack(push)
-				#pragma pack(1)
-					struct AssetPackageHeader
-					{
-						uint32_t numberOfAssets;
-					};
-				#pragma pack(pop)
-				AssetPackageHeader assetPackageHeader;
+				RendererRuntime::v1AssetPackage::AssetPackageHeader assetPackageHeader;
 				assetPackageHeader.numberOfAssets = static_cast<uint32_t>(sortedAssetVector.size());
-				memoryFile.write(&assetPackageHeader, sizeof(AssetPackageHeader));
+				memoryFile.write(&assetPackageHeader, sizeof(RendererRuntime::v1AssetPackage::AssetPackageHeader));
 			}
 
 			// Write down the asset package content in one single burst
 			memoryFile.write(sortedAssetVector.data(), sizeof(RendererRuntime::Asset) * sortedAssetVector.size());
 
 			// Write LZ4 compressed output
-			memoryFile.writeLz4CompressedDataToFile(RendererRuntime::StringId("AssetPackage"), 2, "../" + getRenderTargetDataRootDirectory(rendererTarget) + mAssetPackageDirectoryName + "AssetPackage.assets", mContext.getFileManager());
+			memoryFile.writeLz4CompressedDataToFile(RendererRuntime::StringId("AssetPackage"), RendererRuntime::v1AssetPackage::FORMAT_VERSION, "../" + getRenderTargetDataRootDirectory(rendererTarget) + mAssetPackageDirectoryName + "AssetPackage.assets", mContext.getFileManager());
 		}
 
 		// Compilation run finished clear internal caches/states

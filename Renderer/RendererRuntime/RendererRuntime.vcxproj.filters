@@ -1238,6 +1238,9 @@
     <ClInclude Include="include\RendererRuntime\Core\Renderer\RenderPassManager.h">
       <Filter>Source Files\Core\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Asset\Serializer\AssetPackageFileFormat.h">
+      <Filter>Source Files\Asset\Serializer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">

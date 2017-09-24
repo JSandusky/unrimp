@@ -173,6 +173,10 @@ namespace RendererRuntime
 				hash = calculateFNV1a64(reinterpret_cast<const uint8_t*>(buffer.data()), static_cast<uint32_t>(readInBytes), hash);
 			}
 		}
+		else
+		{
+			assert(false && "Failed to open the file");
+		}
 
 		// Done
 		return hash;
