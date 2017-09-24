@@ -38,7 +38,7 @@
     <None Include="CMakeLists.txt" />
     <None Include="include\RendererRuntime\Asset\AssetManager.inl" />
     <None Include="include\RendererRuntime\Asset\AssetPackage.inl" />
-    <None Include="include\RendererRuntime\Asset\Serializer\AssetPackageSerializer.inl" />
+    <None Include="include\RendererRuntime\Asset\Loader\AssetPackageLoader.inl" />
     <None Include="include\RendererRuntime\Backend\RendererBackendManager.inl" />
     <None Include="include\RendererRuntime\Context.inl" />
     <None Include="include\RendererRuntime\Core\File\IFile.inl" />
@@ -189,8 +189,8 @@
     <ClInclude Include="include\RendererRuntime\Asset\Asset.h" />
     <ClInclude Include="include\RendererRuntime\Asset\AssetManager.h" />
     <ClInclude Include="include\RendererRuntime\Asset\AssetPackage.h" />
-    <ClInclude Include="include\RendererRuntime\Asset\Serializer\AssetPackageFileFormat.h" />
-    <ClInclude Include="include\RendererRuntime\Asset\Serializer\AssetPackageSerializer.h" />
+    <ClInclude Include="include\RendererRuntime\Asset\Loader\AssetPackageFileFormat.h" />
+    <ClInclude Include="include\RendererRuntime\Asset\Loader\AssetPackageLoader.h" />
     <ClInclude Include="include\RendererRuntime\Backend\RendererBackendManager.h" />
     <ClInclude Include="include\RendererRuntime\Backend\RendererRuntimeImpl.h" />
     <ClInclude Include="include\RendererRuntime\Context.h" />
@@ -213,7 +213,7 @@
     <ClInclude Include="include\RendererRuntime\Core\Renderer\RenderPassManager.h" />
     <ClInclude Include="include\RendererRuntime\Core\Renderer\RenderTargetTextureManager.h" />
     <ClInclude Include="include\RendererRuntime\Core\Renderer\RenderTargetTextureSignature.h" />
-    <ClInclude Include="include\RendererRuntime\Core\Serializer.h" />
+    <ClInclude Include="include\RendererRuntime\Core\Loader.h" />
     <ClInclude Include="include\RendererRuntime\Core\String.h" />
     <ClInclude Include="include\RendererRuntime\Core\StringId.h" />
     <ClInclude Include="include\RendererRuntime\Core\SwizzleVectorElementRemove.h" />
@@ -533,7 +533,7 @@
     </ClCompile>
     <ClCompile Include="src\Asset\AssetManager.cpp" />
     <ClCompile Include="src\Asset\AssetPackage.cpp" />
-    <ClCompile Include="src\Asset\Serializer\AssetPackageSerializer.cpp" />
+    <ClCompile Include="src\Asset\Loader\AssetPackageLoader.cpp" />
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp" />
     <ClCompile Include="src\Context.cpp" />
     <ClCompile Include="src\Core\File\MemoryFile.cpp" />

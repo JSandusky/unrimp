@@ -24,7 +24,7 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/Asset/AssetPackage.h"
-#include "RendererRuntime/Asset/Serializer/AssetPackageSerializer.h"
+#include "RendererRuntime/Asset/Loader/AssetPackageLoader.h"
 #include "RendererRuntime/Core/File/IFileManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
@@ -68,7 +68,7 @@ namespace RendererRuntime
 		if (nullptr != file)
 		{
 			AssetPackage* assetPackage = new AssetPackage(assetPackageId);
-			AssetPackageSerializer().loadAssetPackage(*assetPackage, *file);
+			AssetPackageLoader().loadAssetPackage(*assetPackage, *file);
 			mAssetPackageVector.push_back(assetPackage);
 			fileManager.closeFile(*file);
 

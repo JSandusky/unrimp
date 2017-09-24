@@ -25,22 +25,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Core/Serializer.h"
-
-
-//[-------------------------------------------------------]
-//[ Forward declarations                                  ]
-//[-------------------------------------------------------]
-namespace RendererRuntime
-{
-	class IFile;
-	class AssetPackage;
-}
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -50,25 +34,18 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class AssetPackageSerializer : protected Serializer
+	class Loader
 	{
 
 
 	//[-------------------------------------------------------]
-	//[ Friends                                               ]
+	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-		friend class AssetManager;
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	private:
-		inline AssetPackageSerializer();
-		inline ~AssetPackageSerializer();
-		explicit AssetPackageSerializer(const AssetPackageSerializer&) = delete;
-		AssetPackageSerializer& operator=(const AssetPackageSerializer&) = delete;
-		void loadAssetPackage(AssetPackage& assetPackage, IFile& file);
+	protected:
+		inline Loader() {}
+		inline ~Loader() {}
+		explicit Loader(const Loader&) = delete;
+		Loader& operator=(const Loader&) = delete;
 
 
 	};
@@ -78,9 +55,3 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Asset/Serializer/AssetPackageSerializer.inl"

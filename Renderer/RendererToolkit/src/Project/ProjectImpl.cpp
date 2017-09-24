@@ -43,7 +43,7 @@
 
 #include <RendererRuntime/Core/File/MemoryFile.h>
 #include <RendererRuntime/Core/Platform/PlatformManager.h>
-#include <RendererRuntime/Asset/Serializer/AssetPackageFileFormat.h>
+#include <RendererRuntime/Asset/Loader/AssetPackageFileFormat.h>
 
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH

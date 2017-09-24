@@ -17,7 +17,7 @@
     <Filter Include="Source Files\Asset">
       <UniqueIdentifier>{e365c668-c101-42ff-9599-bc8ae75788e6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Asset\Serializer">
+    <Filter Include="Source Files\Asset\Loader">
       <UniqueIdentifier>{534c1d11-6add-4364-90ac-ec603eedc7a7}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Resource">
@@ -240,8 +240,8 @@
     <None Include="include\RendererRuntime\Asset\AssetPackage.inl">
       <Filter>Source Files\Asset</Filter>
     </None>
-    <None Include="include\RendererRuntime\Asset\Serializer\AssetPackageSerializer.inl">
-      <Filter>Source Files\Asset\Serializer</Filter>
+    <None Include="include\RendererRuntime\Asset\Loader\AssetPackageLoader.inl">
+      <Filter>Source Files\Asset\Loader</Filter>
     </None>
     <None Include="include\RendererRuntime\Resource\Mesh\Loader\MeshResourceLoader.inl">
       <Filter>Source Files\Resource\Mesh\Loader</Filter>
@@ -632,7 +632,7 @@
     <ClInclude Include="include\RendererRuntime\Export.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Core\Serializer.h">
+    <ClInclude Include="include\RendererRuntime\Core\Loader.h">
       <Filter>Source Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Core\StringId.h">
@@ -662,8 +662,8 @@
     <ClInclude Include="include\RendererRuntime\Asset\AssetManager.h">
       <Filter>Source Files\Asset</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Asset\Serializer\AssetPackageSerializer.h">
-      <Filter>Source Files\Asset\Serializer</Filter>
+    <ClInclude Include="include\RendererRuntime\Asset\Loader\AssetPackageLoader.h">
+      <Filter>Source Files\Asset\Loader</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Material\MaterialResourceManager.h">
       <Filter>Source Files\Resource\Material</Filter>
@@ -1238,8 +1238,8 @@
     <ClInclude Include="include\RendererRuntime\Core\Renderer\RenderPassManager.h">
       <Filter>Source Files\Core\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Asset\Serializer\AssetPackageFileFormat.h">
-      <Filter>Source Files\Asset\Serializer</Filter>
+    <ClInclude Include="include\RendererRuntime\Asset\Loader\AssetPackageFileFormat.h">
+      <Filter>Source Files\Asset\Loader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1255,8 +1255,8 @@
     <ClCompile Include="src\Asset\AssetPackage.cpp">
       <Filter>Source Files\Asset</Filter>
     </ClCompile>
-    <ClCompile Include="src\Asset\Serializer\AssetPackageSerializer.cpp">
-      <Filter>Source Files\Asset\Serializer</Filter>
+    <ClCompile Include="src\Asset\Loader\AssetPackageLoader.cpp">
+      <Filter>Source Files\Asset\Loader</Filter>
     </ClCompile>
     <ClCompile Include="src\Resource\Material\MaterialResourceManager.cpp">
       <Filter>Source Files\Resource\Material</Filter>

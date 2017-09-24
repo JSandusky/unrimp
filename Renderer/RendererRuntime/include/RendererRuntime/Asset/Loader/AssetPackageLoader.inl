@@ -19,16 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/PrecompiledHeader.h"
-#include "RendererRuntime/Asset/Serializer/AssetPackageSerializer.h"
-#include "RendererRuntime/Asset/Serializer/AssetPackageFileFormat.h"
-#include "RendererRuntime/Asset/AssetPackage.h"
-#include "RendererRuntime/Core/File/MemoryFile.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -38,21 +28,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	void AssetPackageSerializer::loadAssetPackage(AssetPackage& assetPackage, IFile& file)
+	inline AssetPackageLoader::AssetPackageLoader()
 	{
-		// Tell the memory mapped file about the LZ4 compressed data and decompress it at once
-		MemoryFile memoryFile;
-		memoryFile.loadLz4CompressedDataFromFile(v1AssetPackage::FORMAT_TYPE, v1AssetPackage::FORMAT_VERSION, file);
-		memoryFile.decompress();
+		// Nothing here
+	}
 
-		// Read in the asset package header
-		v1AssetPackage::AssetPackageHeader assetPackageHeader;
-		memoryFile.read(&assetPackageHeader, sizeof(v1AssetPackage::AssetPackageHeader));
-
-		// Read in the asset package content in one single burst
-		AssetPackage::SortedAssetVector& sortedAssetVector = assetPackage.getWritableSortedAssetVector();
-		sortedAssetVector.resize(assetPackageHeader.numberOfAssets);
-		memoryFile.read(sortedAssetVector.data(), sizeof(Asset) * assetPackageHeader.numberOfAssets);
+	inline AssetPackageLoader::~AssetPackageLoader()
+	{
+		// Nothing here
 	}
 
 

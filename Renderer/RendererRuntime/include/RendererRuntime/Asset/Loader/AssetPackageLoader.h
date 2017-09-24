@@ -19,6 +19,28 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Core/Loader.h"
+
+
+//[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class IFile;
+	class AssetPackage;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -26,20 +48,39 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Classes                                               ]
+	//[-------------------------------------------------------]
+	class AssetPackageLoader : protected Loader
+	{
+
+
+	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class AssetManager;
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	inline AssetPackageSerializer::AssetPackageSerializer()
-	{
-		// Nothing here
-	}
+	private:
+		inline AssetPackageLoader();
+		inline ~AssetPackageLoader();
+		explicit AssetPackageLoader(const AssetPackageLoader&) = delete;
+		AssetPackageLoader& operator=(const AssetPackageLoader&) = delete;
+		void loadAssetPackage(AssetPackage& assetPackage, IFile& file);
 
-	inline AssetPackageSerializer::~AssetPackageSerializer()
-	{
-		// Nothing here
-	}
+
+	};
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Asset/Loader/AssetPackageLoader.inl"

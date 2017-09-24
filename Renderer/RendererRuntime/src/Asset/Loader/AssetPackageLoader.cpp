@@ -19,9 +19,13 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
+//[ Includes                                              ]
 //[-------------------------------------------------------]
-#pragma once
+#include "RendererRuntime/PrecompiledHeader.h"
+#include "RendererRuntime/Asset/Loader/AssetPackageLoader.h"
+#include "RendererRuntime/Asset/Loader/AssetPackageFileFormat.h"
+#include "RendererRuntime/Asset/AssetPackage.h"
+#include "RendererRuntime/Core/File/MemoryFile.h"
 
 
 //[-------------------------------------------------------]
@@ -32,23 +36,24 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Classes                                               ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	class Serializer
+	void AssetPackageLoader::loadAssetPackage(AssetPackage& assetPackage, IFile& file)
 	{
+		// Tell the memory mapped file about the LZ4 compressed data and decompress it at once
+		MemoryFile memoryFile;
+		memoryFile.loadLz4CompressedDataFromFile(v1AssetPackage::FORMAT_TYPE, v1AssetPackage::FORMAT_VERSION, file);
+		memoryFile.decompress();
 
+		// Read in the asset package header
+		v1AssetPackage::AssetPackageHeader assetPackageHeader;
+		memoryFile.read(&assetPackageHeader, sizeof(v1AssetPackage::AssetPackageHeader));
 
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	protected:
-		inline Serializer() {}
-		inline ~Serializer() {}
-		explicit Serializer(const Serializer&) = delete;
-		Serializer& operator=(const Serializer&) = delete;
-
-
-	};
+		// Read in the asset package content in one single burst
+		AssetPackage::SortedAssetVector& sortedAssetVector = assetPackage.getWritableSortedAssetVector();
+		sortedAssetVector.resize(assetPackageHeader.numberOfAssets);
+		memoryFile.read(sortedAssetVector.data(), sizeof(Asset) * assetPackageHeader.numberOfAssets);
+	}
 
 
 //[-------------------------------------------------------]

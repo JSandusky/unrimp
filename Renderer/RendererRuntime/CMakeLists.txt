@@ -64,7 +64,7 @@ set(SOURCE_CODES
 	src/Context.cpp
 	src/Asset/AssetManager.cpp
 	src/Asset/AssetPackage.cpp
-	src/Asset/Serializer/AssetPackageSerializer.cpp
+	src/Asset/Loader/AssetPackageLoader.cpp
 	src/Backend/RendererRuntimeImpl.cpp
 	src/Core/Math/Math.cpp
 	src/Core/Math/EulerAngles.cpp

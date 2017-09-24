@@ -27,6 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Core/Loader.h"
 #include "RendererRuntime/Asset/Asset.h"
 
 
@@ -57,7 +58,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class IResourceLoader
+	class IResourceLoader : protected Loader
 	{
 
 
