@@ -78,7 +78,7 @@ namespace
 		namespace PipelineStateCache
 		{
 			static const uint32_t FORMAT_TYPE	 = RendererRuntime::StringId("PipelineStateCache");
-			static const uint32_t FORMAT_VERSION = 0;
+			static const uint32_t FORMAT_VERSION = 1;
 		}
 
 

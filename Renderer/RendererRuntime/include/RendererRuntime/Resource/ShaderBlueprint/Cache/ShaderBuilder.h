@@ -53,6 +53,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
+	typedef StringId						AssetId;				///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
+	typedef std::vector<AssetId>			AssetIds;
 	typedef std::map<StringId, std::string>	DynamicShaderPieces;	// TODO(co) Unordered map might perform better
 
 
@@ -68,6 +70,18 @@ namespace RendererRuntime
 	*/
 	class ShaderBuilder
 	{
+
+
+	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		struct BuildShader
+		{
+			std::string sourceCode;
+			AssetIds	assetIds;						///< List of IDs of the assets (shader blueprint, shader piece) which took part in the shader cache creation
+			uint64_t	combinedAssetFileHashes = 0;	///< Combination of the file hash of all assets (shader blueprint, shader piece) which took part in the shader cache creation
+		};
 
 
 	//[-------------------------------------------------------]
@@ -96,11 +110,10 @@ namespace RendererRuntime
 		*    Shader blueprint resource to use
 		*  @param[in] shaderProperties
 		*    Shader properties to use
-		*
-		*  @return
-		*    The created shader source code
+		*  @param[out] buildShader
+		*    Receives the build shader
 		*/
-		const std::string& createSourceCode(const ShaderPieceResourceManager& shaderPieceResourceManager, const ShaderBlueprintResource& shaderBlueprintResource, const ShaderProperties& shaderProperties);
+		void createSourceCode(const ShaderPieceResourceManager& shaderPieceResourceManager, const ShaderBlueprintResource& shaderBlueprintResource, const ShaderProperties& shaderProperties, BuildShader& buildShader);
 
 
 	//[-------------------------------------------------------]

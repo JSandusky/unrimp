@@ -108,7 +108,9 @@ namespace RendererRuntime
 				{
 					// Build the shader source code
 					ShaderBuilder shaderBuilder;
-					const std::string& sourceCode = shaderBuilder.createSourceCode(mShaderBlueprintResourceManager.getRendererRuntime().getShaderPieceResourceManager(), *shaderBlueprintResource, pipelineStateSignature.getShaderProperties());
+					ShaderBuilder::BuildShader buildShader;
+					shaderBuilder.createSourceCode(mShaderBlueprintResourceManager.getRendererRuntime().getShaderPieceResourceManager(), *shaderBlueprintResource, pipelineStateSignature.getShaderProperties(), buildShader);
+					const std::string& sourceCode = buildShader.sourceCode;
 					if (sourceCode.empty())
 					{
 						// TODO(co) Error handling
@@ -134,6 +136,8 @@ namespace RendererRuntime
 							// Create the shader instance
 							Renderer::IShader* shader = nullptr;
 							shaderCache = new ShaderCache(shaderCacheId);
+							shaderCache->mAssetIds = buildShader.assetIds;
+							shaderCache->mCombinedAssetFileHashes = buildShader.combinedAssetFileHashes;
 							switch (shaderType)
 							{
 								case ShaderType::Vertex:
@@ -207,40 +211,101 @@ namespace RendererRuntime
 	void ShaderCacheManager::loadCache(IFile& file)
 	{
 		// TODO(co) This can certainly be implemented in a more efficient way. For instance, we could store all shader bytecodes inside a LZ4 compressed buffer and let shader caches directly point into this buffer.
+		typedef std::unordered_set<ShaderCacheId> OutOfDateShaderCacheIds;
+		OutOfDateShaderCacheIds outOfDateShaderCacheIds;
+		const AssetManager& assetManager = mShaderBlueprintResourceManager.getRendererRuntime().getAssetManager();
 
 		{ // Load shader caches
 			uint32_t numberOfShaderCaches = getUninitialized<uint32_t>();
 			file.read(&numberOfShaderCaches, sizeof(uint32_t));
 			mShaderCacheByShaderCacheId.reserve(numberOfShaderCaches);
 			std::vector<uint8_t> bytecode;
+			AssetIds assetIds;
 			for (uint32_t i = 0; i < numberOfShaderCaches; ++i)
 			{
-				ShaderCache* shaderCache = new ShaderCache();
-				file.read(&shaderCache->mShaderCacheId, sizeof(ShaderCacheId));
+				ShaderCache* shaderCache = nullptr;
+
+				// Load shader cache
+				ShaderCacheId shaderCacheId = getUninitialized<ShaderCacheId>();
+				file.read(&shaderCacheId, sizeof(ShaderCacheId));
 				uint32_t numberOfBytes = getUninitialized<uint32_t>();
 				file.read(&numberOfBytes, sizeof(uint32_t));
 				if (isInitialized(numberOfBytes))
 				{
-					bytecode.resize(numberOfBytes);
-					file.read(bytecode.data(), numberOfBytes);
-					shaderCache->mShaderBytecode.setBytecodeCopy(numberOfBytes, bytecode.data());
+					// Master shader cache
+
+					// Load list of IDs of the assets (shader blueprint, shader piece) which took part in the shader cache creation
+					uint32_t numberOfAssetIds = getUninitialized<uint32_t>();
+					file.read(&numberOfAssetIds, sizeof(uint32_t));
+					assert(0 != numberOfAssetIds);
+					assetIds.resize(numberOfAssetIds);
+					file.read(assetIds.data(), sizeof(uint32_t) * numberOfAssetIds);
+					uint64_t combinedAssetFileHashes = getUninitialized<uint64_t>();
+					file.read(&combinedAssetFileHashes, sizeof(uint64_t));
+
+					// Check whether or not the shader cache is still valid
+					uint64_t currentCombinedAssetFileHashes = Math::FNV1a_INITIAL_HASH_64;
+					for (AssetId assetId : assetIds)
+					{
+						const Asset* asset = assetManager.tryGetAssetByAssetId(assetId);
+						if (nullptr != asset)
+						{
+							currentCombinedAssetFileHashes = Math::calculateFNV1a64(reinterpret_cast<const uint8_t*>(&asset->fileHash), sizeof(uint64_t), currentCombinedAssetFileHashes);
+						}
+					}
+					if (currentCombinedAssetFileHashes != combinedAssetFileHashes)
+					{
+						// Shader cache is out-of-date
+						file.skip(numberOfBytes);
+						outOfDateShaderCacheIds.insert(shaderCacheId);
+					}
+					else
+					{
+						// Shader cache is still valid
+
+						// Create shader cache instance
+						shaderCache = new ShaderCache(shaderCacheId);
+						shaderCache->mAssetIds = assetIds;
+						shaderCache->mCombinedAssetFileHashes = combinedAssetFileHashes;
+
+						// Load shader bytecode
+						bytecode.resize(numberOfBytes);
+						file.read(bytecode.data(), numberOfBytes);
+						shaderCache->mShaderBytecode.setBytecodeCopy(numberOfBytes, bytecode.data());
+					}
 				}
 				else
 				{
 					ShaderCacheId masterShaderCacheId = getUninitialized<ShaderCacheId>();
 					file.read(&masterShaderCacheId, sizeof(ShaderCacheId));
-					ShaderCacheByShaderCacheId::const_iterator masterShaderCacheIdIterator = mShaderCacheByShaderCacheId.find(masterShaderCacheId);
-					if (masterShaderCacheIdIterator != mShaderCacheByShaderCacheId.cend())
+					if (outOfDateShaderCacheIds.find(masterShaderCacheId) == outOfDateShaderCacheIds.cend())
 					{
-						shaderCache->mMasterShaderCache = masterShaderCacheIdIterator->second;
+						// Shader cache is still valid
+						ShaderCacheByShaderCacheId::const_iterator masterShaderCacheIdIterator = mShaderCacheByShaderCacheId.find(masterShaderCacheId);
+						if (masterShaderCacheIdIterator != mShaderCacheByShaderCacheId.cend())
+						{
+							// Create shader cache instance
+							shaderCache = new ShaderCache(shaderCacheId);
+							shaderCache->mMasterShaderCache = masterShaderCacheIdIterator->second;
+						}
+						else
+						{
+							// Error!
+							assert(false && "The shader cache is corrupt since a master shader cache is referenced which doesn't exist");
+						}
 					}
 					else
 					{
-						// Error!
-						assert(false && "The shader cache is corrupt since a master shader cache is referenced which doesn't exist");
+						// Shader cache is out-of-date
+						outOfDateShaderCacheIds.insert(shaderCacheId);
 					}
 				}
-				mShaderCacheByShaderCacheId.emplace(shaderCache->mShaderCacheId, shaderCache);
+
+				// Register shader cache
+				if (nullptr != shaderCache)
+				{
+					mShaderCacheByShaderCacheId.emplace(shaderCache->mShaderCacheId, shaderCache);
+				}
 			}
 		}
 
@@ -254,7 +319,11 @@ namespace RendererRuntime
 				file.read(&shaderSourceCodeId, sizeof(ShaderSourceCodeId));
 				ShaderCacheId shaderCacheId = getUninitialized<ShaderCacheId>();
 				file.read(&shaderCacheId, sizeof(ShaderCacheId));
-				mShaderCacheByShaderSourceCodeId.emplace(shaderSourceCodeId, shaderCacheId);
+				if (outOfDateShaderCacheIds.find(shaderCacheId) == outOfDateShaderCacheIds.cend())
+				{
+					// Shader cache is still valid
+					mShaderCacheByShaderSourceCodeId.emplace(shaderSourceCodeId, shaderCacheId);
+				}
 			}
 		}
 
@@ -274,6 +343,7 @@ namespace RendererRuntime
 				const ShaderCache* shaderCache = shaderCacheElement.second;
 				if (nullptr == shaderCache->getMasterShaderCache())
 				{
+					// Master shader cache
 					const Renderer::ShaderBytecode& shaderBytecode = shaderCache->mShaderBytecode;
 					const uint32_t numberOfBytes = shaderBytecode.getNumberOfBytes();
 					assert(0 != numberOfBytes && "A shader cache must always have a valid shader bytecode, else it's a pointless shader cache");
@@ -281,6 +351,15 @@ namespace RendererRuntime
 					{
 						file.write(&shaderCache->mShaderCacheId, sizeof(ShaderCacheId));
 						file.write(&numberOfBytes, sizeof(uint32_t));
+
+						// Write list of IDs of the assets (shader blueprint, shader piece) which took part in the shader cache creation
+						const uint32_t numberOfAssetIds = static_cast<uint32_t>(shaderCache->mAssetIds.size());
+						assert(0 != numberOfAssetIds);
+						file.write(&numberOfAssetIds, sizeof(uint32_t));
+						file.write(shaderCache->mAssetIds.data(), sizeof(uint32_t) * numberOfAssetIds);
+						file.write(&shaderCache->mCombinedAssetFileHashes, sizeof(uint64_t));
+
+						// Write shader bytecode
 						file.write(shaderBytecode.getBytecode(), numberOfBytes);
 					}
 				}

@@ -28,6 +28,13 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline const Asset& AssetManager::getAssetByAssetId(AssetId assetId) const
+	{
+		const Asset* asset = tryGetAssetByAssetId(assetId);
+		assert(nullptr != asset);
+		return *asset;
+	}
+
 	inline const char* AssetManager::tryGetAssetFilenameByAssetId(AssetId assetId) const
 	{
 		const Asset* asset = tryGetAssetByAssetId(assetId);

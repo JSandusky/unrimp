@@ -76,35 +76,39 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	bool MemoryFile::loadLz4CompressedDataFromFile(uint32_t formatType, uint32_t formatVersion, const std::string& filename, const IFileManager& fileManager)
 	{
+		bool result = false;
 		IFile* file = fileManager.openFile(IFileManager::FileMode::READ, filename.c_str());
 		if (nullptr != file)
 		{
 			// Tell the memory mapped file about the LZ4 compressed data
-			loadLz4CompressedDataFromFile(formatType, formatVersion, *file);
+			result = loadLz4CompressedDataFromFile(formatType, formatVersion, *file);
 
 			// Close file
 			fileManager.closeFile(*file);
-
-			// Done
-			return true;
 		}
 
-		// Error!
-		return false;
+		// Done
+		return result;
 	}
 
-	void MemoryFile::loadLz4CompressedDataFromFile(uint32_t formatType, uint32_t formatVersion, IFile& file)
+	bool MemoryFile::loadLz4CompressedDataFromFile(uint32_t formatType, uint32_t formatVersion, IFile& file)
 	{
 		// Read in the file format header
 		::detail::FileFormatHeader fileFormatHeader;
 		file.read(&fileFormatHeader, sizeof(::detail::FileFormatHeader));
-		assert(formatType == fileFormatHeader.formatType);
-		assert(formatVersion == fileFormatHeader.formatVersion);
-		std::ignore = formatType;
-		std::ignore = formatVersion;
+		if (formatType == fileFormatHeader.formatType && formatVersion == fileFormatHeader.formatVersion)
+		{
+			// Tell the memory mapped file about the LZ4 compressed data
+			setLz4CompressedDataByFile(file, fileFormatHeader.numberOfCompressedBytes, fileFormatHeader.numberOfDecompressedBytes);
 
-		// Tell the memory mapped file about the LZ4 compressed data
-		setLz4CompressedDataByFile(file, fileFormatHeader.numberOfCompressedBytes, fileFormatHeader.numberOfDecompressedBytes);
+			// Done
+			return true;
+		}
+		else
+		{
+			// Error!
+			return false;
+		}
 	}
 
 	void MemoryFile::setLz4CompressedDataByFile(IFile& file, uint32_t numberOfCompressedBytes, uint32_t numberOfDecompressedBytes)

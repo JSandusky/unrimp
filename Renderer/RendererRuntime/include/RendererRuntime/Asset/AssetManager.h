@@ -95,6 +95,7 @@ namespace RendererRuntime
 		//[ Asset                                                 ]
 		//[-------------------------------------------------------]
 		RENDERERRUNTIME_API_EXPORT const Asset* tryGetAssetByAssetId(AssetId assetId) const;
+		inline const Asset& getAssetByAssetId(AssetId assetId) const;
 		inline const char* tryGetAssetFilenameByAssetId(AssetId assetId) const;
 
 

@@ -81,7 +81,7 @@ namespace RendererRuntime
 		inline ByteVector& getByteVector();
 		inline const ByteVector& getByteVector() const;
 		RENDERERRUNTIME_API_EXPORT bool loadLz4CompressedDataFromFile(uint32_t formatType, uint32_t formatVersion, const std::string& filename, const IFileManager& fileManager);
-		RENDERERRUNTIME_API_EXPORT void loadLz4CompressedDataFromFile(uint32_t formatType, uint32_t formatVersion, IFile& file);
+		RENDERERRUNTIME_API_EXPORT bool loadLz4CompressedDataFromFile(uint32_t formatType, uint32_t formatVersion, IFile& file);
 		RENDERERRUNTIME_API_EXPORT void setLz4CompressedDataByFile(IFile& file, uint32_t numberOfCompressedBytes, uint32_t numberOfDecompressedBytes);
 		RENDERERRUNTIME_API_EXPORT void decompress();
 		RENDERERRUNTIME_API_EXPORT bool writeLz4CompressedDataToFile(uint32_t formatType, uint32_t formatVersion, const std::string& filename, const IFileManager& fileManager) const;

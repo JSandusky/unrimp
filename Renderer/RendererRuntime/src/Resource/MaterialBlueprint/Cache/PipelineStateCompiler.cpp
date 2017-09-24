@@ -232,7 +232,9 @@ namespace RendererRuntime
 								if (nullptr != shaderBlueprintResource)
 								{
 									// Build the shader source code
-									const std::string& sourceCode = shaderBuilder.createSourceCode(shaderPieceResourceManager, *shaderBlueprintResource, pipelineStateSignature.getShaderProperties());
+									ShaderBuilder::BuildShader buildShader;
+									shaderBuilder.createSourceCode(shaderPieceResourceManager, *shaderBlueprintResource, pipelineStateSignature.getShaderProperties(), buildShader);
+									const std::string& sourceCode = buildShader.sourceCode;
 									if (sourceCode.empty())
 									{
 										// TODO(co) Error handling
@@ -256,6 +258,8 @@ namespace RendererRuntime
 										{
 											// Create the new shader cache instance
 											shaderCache = new ShaderCache(shaderCacheId);
+											shaderCache->mAssetIds = buildShader.assetIds;
+											shaderCache->mCombinedAssetFileHashes = buildShader.combinedAssetFileHashes;
 											shaderCacheManager.mShaderCacheByShaderCacheId.emplace(shaderCacheId, shaderCache);
 											shaderCacheManager.mShaderCacheByShaderSourceCodeId.emplace(shaderSourceCodeId, shaderCacheId);
 											compilerRequest.shaderSourceCode[i] = sourceCode;

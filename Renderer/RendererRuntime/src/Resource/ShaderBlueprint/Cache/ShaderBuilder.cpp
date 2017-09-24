@@ -60,6 +60,9 @@ THE SOFTWARE.
 #include "RendererRuntime/Resource/ShaderBlueprint/ShaderBlueprintResource.h"
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResourceManager.h"
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResource.h"
+#include "RendererRuntime/Asset/AssetManager.h"
+#include "RendererRuntime/Core/Math/Math.h"
+#include "RendererRuntime/IRendererRuntime.h"
 
 #include <algorithm>
 
@@ -777,11 +780,14 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	const std::string& ShaderBuilder::createSourceCode(const ShaderPieceResourceManager& shaderPieceResourceManager, const ShaderBlueprintResource& shaderBlueprintResource, const ShaderProperties& shaderProperties)
+	void ShaderBuilder::createSourceCode(const ShaderPieceResourceManager& shaderPieceResourceManager, const ShaderBlueprintResource& shaderBlueprintResource, const ShaderProperties& shaderProperties, BuildShader& buildShader)
 	{
 		mShaderProperties = shaderProperties;
 		mShaderProperties.setPropertyValues(static_cast<const ShaderBlueprintResourceManager&>(shaderBlueprintResource.getResourceManager()).getRendererShaderProperties());
 		mDynamicShaderPieces.clear();
+		buildShader.assetIds.push_back(shaderBlueprintResource.getAssetId());
+		const AssetManager& assetManager = shaderPieceResourceManager.getRendererRuntime().getAssetManager();
+		uint64_t combinedAssetFileHashes = Math::calculateFNV1a64(reinterpret_cast<const uint8_t*>(&assetManager.getAssetByAssetId(shaderBlueprintResource.getAssetId()).fileHash), sizeof(uint64_t), Math::FNV1a_INITIAL_HASH_64);
 
 		{ // Process the shader piece resources to include
 			const ShaderBlueprintResource::IncludeShaderPieceResourceIds& includeShaderPieceResourceIds = shaderBlueprintResource.getIncludeShaderPieceResourceIds();
@@ -791,6 +797,9 @@ namespace RendererRuntime
 				const ShaderPieceResource* shaderPieceResource = shaderPieceResourceManager.tryGetById(includeShaderPieceResourceIds[i]);
 				if (nullptr != shaderPieceResource)
 				{
+					buildShader.assetIds.push_back(shaderPieceResource->getAssetId());
+					combinedAssetFileHashes = Math::calculateFNV1a64(reinterpret_cast<const uint8_t*>(&assetManager.getAssetByAssetId(shaderPieceResource->getAssetId()).fileHash), sizeof(uint64_t), combinedAssetFileHashes);
+
 					// Initialize
 					mInString = shaderPieceResource->getShaderSourceCode();
 					mOutString.clear();
@@ -832,7 +841,8 @@ namespace RendererRuntime
 		Preprocessor::preprocess(shaderPieceResourceManager.getRendererRuntime(), mInString, mOutString);
 
 		// Done
-		return mOutString;
+		buildShader.sourceCode = mOutString;
+		buildShader.combinedAssetFileHashes = combinedAssetFileHashes;
 	}
 
 
