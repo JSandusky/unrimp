@@ -73,22 +73,21 @@ namespace RendererToolkit
 			{
 				if (!mFileActions.empty())
 				{
+					// TODO(co) The current simple solution is not sufficient for large scale projects having ten thousands of assets: Add more efficient asset search which can handle asset dependencies as well
+					/*
 					const size_t numberOfFileActions = mFileActions.size();
 					for (size_t fileActionIndex = 0; fileActionIndex < numberOfFileActions; ++fileActionIndex)
 					{
 						const FileAction& fileAction = mFileActions[fileActionIndex];
-
+						*/
+					{
 						// Get the corresponding asset
-						// TODO(co) The current simple solution is not sufficient for large scale projects having ten thousands of assets: Add more efficient asset search
-						// TODO(co) Add support for asset "FileDependencies". The current solution is just a quick'n'dirty prototype which will not work when multiple or other named asset data files are involved.
-						const std::string test = std_filesystem::path(fileAction.filename).replace_extension("asset").generic_string();
-
 						const RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = mProjectAssetMonitor.mProjectImpl.getAssetPackage().getSortedAssetVector();
 						const size_t numberOfAssets = sortedAssetVector.size();
 						for (size_t i = 0; i < numberOfAssets; ++i)
 						{
 							const RendererRuntime::Asset& asset = sortedAssetVector[i];
-							if (test == asset.assetFilename)
+							if (mProjectAssetMonitor.mProjectImpl.checkAssetIsChanged(asset, mProjectAssetMonitor.mRendererTarget.c_str()))
 							{
 								// TODO(co) Performance: Add asset compiler queue so we can compile more then one asset at a time in background
 								// TODO(co) At the moment, we only support modifying already existing asset data, we should add support for changes inside the runtime asset package as well

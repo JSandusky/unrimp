@@ -100,6 +100,7 @@ namespace RendererToolkit
 		inline const std::string& getProjectDirectory() const;
 		inline const RendererRuntime::AssetPackage& getAssetPackage() const;
 		const char* tryGetAssetFilenameByAssetId(RendererRuntime::AssetId assetId) const;
+		bool checkAssetIsChanged(const RendererRuntime::Asset& asset, const char* rendererTarget);
 		void compileAsset(const RendererRuntime::Asset& asset, const char* rendererTarget, RendererRuntime::AssetPackage& outputAssetPackage);
 		void tryCompileAssetIncludingDependencies(const RendererRuntime::Asset& asset, const char* rendererTarget, RendererRuntime::AssetPackage& outputAssetPackage) noexcept;
 
@@ -135,7 +136,6 @@ namespace RendererToolkit
 		std::string getRenderTargetDataRootDirectory(const char* rendererTarget) const;
 		void buildSourceAssetIdToCompiledAssetId();
 		void threadWorker();
-		bool checkAssetIsChanged(const RendererRuntime::Asset& asset, const char* rendererTarget);
 
 
 	//[-------------------------------------------------------]

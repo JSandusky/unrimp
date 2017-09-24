@@ -212,6 +212,41 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
+		void getOutputAssetFilenameAndCrunchOutputTextureFileType(const RendererToolkit::IAssetCompiler::Configuration& configuration, const std::string& assetFileFormat, const std::string& assetName, const std::string& assetOutputDirectory, std::string& outputAssetFilename, crnlib::texture_file_types::format& crunchOutputTextureFileType)
+		{
+			const rapidjson::Value& rapidJsonValueTargets = configuration.rapidJsonValueTargets;
+
+			// Get the JSON targets object
+			std::string textureTargetName;
+			{
+				const rapidjson::Value& rapidJsonValueRendererTargets = rapidJsonValueTargets["RendererTargets"];
+				const rapidjson::Value& rapidJsonValueRendererTarget = rapidJsonValueRendererTargets[configuration.rendererTarget.c_str()];
+				textureTargetName = rapidJsonValueRendererTarget["TextureTarget"].GetString();
+			}
+			{
+				std::string fileFormat = assetFileFormat;
+				if (fileFormat.empty())
+				{
+					const rapidjson::Value& rapidJsonValueTextureTargets = rapidJsonValueTargets["TextureTargets"];
+					const rapidjson::Value& rapidJsonValueTextureTarget = rapidJsonValueTextureTargets[textureTargetName.c_str()];
+					fileFormat = rapidJsonValueTextureTarget["FileFormat"].GetString();
+				}
+				outputAssetFilename = assetOutputDirectory + assetName + '.' + fileFormat;
+				if (fileFormat == "crn")
+				{
+					crunchOutputTextureFileType = crnlib::texture_file_types::cFormatCRN;
+				}
+				else if (fileFormat == "dds")
+				{
+					crunchOutputTextureFileType = crnlib::texture_file_types::cFormatDDS;
+				}
+				else if (fileFormat == "ktx")
+				{
+					crunchOutputTextureFileType = crnlib::texture_file_types::cFormatKTX;
+				}
+			}
+		}
+
 		TextureSemantic getTextureSemanticByRapidJsonValue(const rapidjson::Value& rapidJsonValue)
 		{
 			const char* valueAsString = rapidJsonValue.GetString();
@@ -1209,25 +1244,37 @@ namespace RendererToolkit
 		return TYPE_ID;
 	}
 
-	bool TextureAssetCompiler::checkIfChanged(const Input& /*input*/, const Configuration& /*configuration*/) const
+	bool TextureAssetCompiler::checkIfChanged(const Input& input, const Configuration& configuration) const
 	{
-		// TODO(sw) Implement me? Do we have an asset which depends on a texture source asset?
-		return false;
-// 		// Get the JSON asset object
-// 		const rapidjson::Value& rapidJsonValueAsset = configuration.rapidJsonDocumentAsset["Asset"];
-// 
-// 		// Read configuration
-// 		std::string inputFile;
-// 		{
-// 			// Read material asset compiler configuration
-// 			const rapidjson::Value& rapidJsonValueMaterialAssetCompiler = rapidJsonValueAsset["TextureAssetCompiler"];
-// 			inputFile = rapidJsonValueMaterialAssetCompiler["InputFile"].GetString();
-// 		}
-// 
-// 		const std::string inputFilename = input.assetInputDirectory + inputFile;
-// 
-// 		// Let the cache manager check if the files has changed. This speeds up later checks and supports dependency tracking
-// 		return input.cacheManager.checkIfFileIsModified(configuration.rendererTarget, input.assetFilename, {inputFilename}, RendererRuntime::v1ShaderPiece::FORMAT_VERSION);
+		const rapidjson::Value& rapidJsonValueTextureAssetCompiler = configuration.rapidJsonDocumentAsset["Asset"]["TextureAssetCompiler"];
+		const std::string& assetInputDirectory = input.assetInputDirectory;
+		std::string inputFile;
+		if (rapidJsonValueTextureAssetCompiler.HasMember("InputFile"))
+		{
+			inputFile = rapidJsonValueTextureAssetCompiler["InputFile"].GetString();
+		}
+		::detail::TextureSemantic textureSemantic = ::detail::TextureSemantic::UNKNOWN;
+		::detail::optionalTextureSemanticProperty(rapidJsonValueTextureAssetCompiler, "TextureSemantic", textureSemantic);
+		std::string assetFileFormat;
+		if (rapidJsonValueTextureAssetCompiler.HasMember("FileFormat"))
+		{
+			assetFileFormat = rapidJsonValueTextureAssetCompiler["FileFormat"].GetString();
+		}
+		if (::detail::TextureSemantic::COLOR_CORRECTION_LOOKUP_TABLE == textureSemantic)
+		{
+			assetFileFormat = "dds";
+		}
+		const std::string inputAssetFilename = assetInputDirectory + inputFile;
+		const std::string assetName = std_filesystem::path(input.assetFilename).stem().generic_string();
+
+		// Get output related settings
+		std::string outputAssetFilename;
+		crnlib::texture_file_types::format crunchOutputTextureFileType = crnlib::texture_file_types::cFormatCRN;
+		::detail::getOutputAssetFilenameAndCrunchOutputTextureFileType(configuration, assetFileFormat, assetName, input.assetOutputDirectory, outputAssetFilename, crunchOutputTextureFileType);
+
+		// Check if changed
+		std::vector<CacheManager::CacheEntries> cacheEntries;
+		return ::detail::checkIfChanged(input, configuration, rapidJsonValueTextureAssetCompiler, textureSemantic, inputAssetFilename, outputAssetFilename, cacheEntries);
 	}
 
 	void TextureAssetCompiler::compile(const Input& input, const Configuration& configuration, Output& output)
@@ -1303,39 +1350,7 @@ namespace RendererToolkit
 		// Get output related settings
 		std::string outputAssetFilename;
 		crnlib::texture_file_types::format crunchOutputTextureFileType = crnlib::texture_file_types::cFormatCRN;
-		{
-			const rapidjson::Value& rapidJsonValueTargets = configuration.rapidJsonValueTargets;
-
-			// Get the JSON targets object
-			std::string textureTargetName;
-			{
-				const rapidjson::Value& rapidJsonValueRendererTargets = rapidJsonValueTargets["RendererTargets"];
-				const rapidjson::Value& rapidJsonValueRendererTarget = rapidJsonValueRendererTargets[configuration.rendererTarget.c_str()];
-				textureTargetName = rapidJsonValueRendererTarget["TextureTarget"].GetString();
-			}
-			{
-				std::string fileFormat = assetFileFormat;
-				if (fileFormat.empty())
-				{
-					const rapidjson::Value& rapidJsonValueTextureTargets = rapidJsonValueTargets["TextureTargets"];
-					const rapidjson::Value& rapidJsonValueTextureTarget = rapidJsonValueTextureTargets[textureTargetName.c_str()];
-					fileFormat = rapidJsonValueTextureTarget["FileFormat"].GetString();
-				}
-				outputAssetFilename = assetOutputDirectory + assetName + '.' + fileFormat;
-				if (fileFormat == "crn")
-				{
-					crunchOutputTextureFileType = crnlib::texture_file_types::cFormatCRN;
-				}
-				else if (fileFormat == "dds")
-				{
-					crunchOutputTextureFileType = crnlib::texture_file_types::cFormatDDS;
-				}
-				else if (fileFormat == "ktx")
-				{
-					crunchOutputTextureFileType = crnlib::texture_file_types::cFormatKTX;
-				}
-			}
-		}
+		::detail::getOutputAssetFilenameAndCrunchOutputTextureFileType(configuration, assetFileFormat, assetName, assetOutputDirectory, outputAssetFilename, crunchOutputTextureFileType);
 
 		// Ask the cache manager whether or not we need to compile the source file (e.g. source changed or target not there)
 		std::vector<CacheManager::CacheEntries> cacheEntries;

@@ -162,6 +162,45 @@ namespace RendererToolkit
 		return mAssetPackage.tryGetAssetFilenameByAssetId(assetId);
 	}
 
+	bool ProjectImpl::checkAssetIsChanged(const RendererRuntime::Asset& asset, const char* rendererTarget)
+	{
+		const std::string assetFilename = mProjectDirectory + asset.assetFilename;
+		std::ifstream inputFileStream(assetFilename, std::ios::binary);
+
+		// Parse JSON
+		rapidjson::Document rapidJsonDocument;
+		JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, assetFilename, "Asset", "1");
+
+		// Mandatory main sections of the asset
+		const rapidjson::Value& rapidJsonValueAsset = rapidJsonDocument["Asset"];
+		const rapidjson::Value& rapidJsonValueAssetMetadata = rapidJsonValueAsset["AssetMetadata"];
+
+		// Dispatch asset compiler
+		// TODO(co) Add multi-threading support: Add compiler queue which is processed in the background, ensure compiler instances are reused
+
+		// Get the asset input directory and asset output directory
+		const std::string assetPackageInputDirectory = mProjectDirectory + mAssetPackageDirectoryName;
+		const std::string assetInputDirectory = std_filesystem::path(assetFilename).parent_path().generic_string() + '/';
+		const std::string assetType = rapidJsonValueAssetMetadata["AssetType"].GetString();
+		const std::string assetCategory = rapidJsonValueAssetMetadata["AssetCategory"].GetString();
+		const std::string assetOutputDirectory = "../" + getRenderTargetDataRootDirectory(rendererTarget) + mAssetPackageDirectoryName + assetType + '/' + assetCategory + '/';
+
+		// Asset compiler input
+		IAssetCompiler::Input input(mContext, mProjectName, *mCacheManager.get(), assetPackageInputDirectory, assetFilename, assetInputDirectory, assetOutputDirectory, mSourceAssetIdToCompiledAssetId, mSourceAssetIdToAbsoluteFilename);
+
+		// Asset compiler configuration
+		AssetCompilers::const_iterator iterator = mAssetCompilers.find(AssetCompilerTypeId(assetType.c_str()));
+		if (mAssetCompilers.end() != iterator)
+		{
+			assert(nullptr != mRapidJsonDocument);
+			const IAssetCompiler::Configuration configuration(rapidJsonDocument, (*mRapidJsonDocument)["Targets"], rendererTarget, mQualityStrategy);
+			return iterator->second->checkIfChanged(input, configuration);
+		}
+
+		// Not changed
+		return false;
+	}
+
 	void ProjectImpl::compileAsset(const RendererRuntime::Asset& asset, const char* rendererTarget, RendererRuntime::AssetPackage& outputAssetPackage)
 	{
 		// Open the input stream
@@ -507,45 +546,6 @@ namespace RendererToolkit
 			// TODO(co) Implement me
 		}
 		NOP;
-	}
-
-	bool ProjectImpl::checkAssetIsChanged(const RendererRuntime::Asset& asset, const char* rendererTarget)
-	{
-		const std::string assetFilename = mProjectDirectory + asset.assetFilename;
-		std::ifstream inputFileStream(assetFilename, std::ios::binary);
-
-		// Parse JSON
-		rapidjson::Document rapidJsonDocument;
-		JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, assetFilename, "Asset", "1");
-
-		// Mandatory main sections of the asset
-		const rapidjson::Value& rapidJsonValueAsset = rapidJsonDocument["Asset"];
-		const rapidjson::Value& rapidJsonValueAssetMetadata = rapidJsonValueAsset["AssetMetadata"];
-
-		// Dispatch asset compiler
-		// TODO(co) Add multi-threading support: Add compiler queue which is processed in the background, ensure compiler instances are reused
-
-		// Get the asset input directory and asset output directory
-		const std::string assetPackageInputDirectory = mProjectDirectory + mAssetPackageDirectoryName;
-		const std::string assetInputDirectory = std_filesystem::path(assetFilename).parent_path().generic_string() + '/';
-		const std::string assetType = rapidJsonValueAssetMetadata["AssetType"].GetString();
-		const std::string assetCategory = rapidJsonValueAssetMetadata["AssetCategory"].GetString();
-		const std::string assetOutputDirectory = "../" + getRenderTargetDataRootDirectory(rendererTarget) + mAssetPackageDirectoryName + assetType + '/' + assetCategory + '/';
-
-		// Asset compiler input
-		IAssetCompiler::Input input(mContext, mProjectName, *mCacheManager.get(), assetPackageInputDirectory, assetFilename, assetInputDirectory, assetOutputDirectory, mSourceAssetIdToCompiledAssetId, mSourceAssetIdToAbsoluteFilename);
-
-		// Asset compiler configuration
-		AssetCompilers::const_iterator iterator = mAssetCompilers.find(AssetCompilerTypeId(assetType.c_str()));
-		if (mAssetCompilers.end() != iterator)
-		{
-			assert(nullptr != mRapidJsonDocument);
-			const IAssetCompiler::Configuration configuration(rapidJsonDocument, (*mRapidJsonDocument)["Targets"], rendererTarget, mQualityStrategy);
-			return iterator->second->checkIfChanged(input, configuration);
-		}
-
-		// Not changed
-		return false;
 	}
 
 
