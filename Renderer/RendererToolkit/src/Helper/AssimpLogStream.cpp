@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/Helper/AssimpLogStream.h"
 
+#include <stdexcept>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
