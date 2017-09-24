@@ -31,7 +31,6 @@ PRAGMA_WARNING_DISABLE_MSVC(4244)	// warning C4244: '<x>': conversion from '<y>'
 #include "RendererToolkit/Helper/FileSystemHelper.h"
 #include "RendererToolkit/Context.h"
 
-#include <RendererRuntime/Core/Math/Math.h>
 #include <RendererRuntime/Core/File/IFileManager.h>
 
 // Disable warnings in external headers, we can't fix them
@@ -42,6 +41,13 @@ PRAGMA_WARNING_PUSH
 PRAGMA_WARNING_POP
 
 #include <sqlite3.h>
+
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: '<x>': conversion from '<y>' to '<z>', signed/unsigned mismatch
+	PRAGMA_WARNING_DISABLE_MSVC(4100)	// warning C4100: '<x>': unreferenced formal parameter
+	#include <picosha2/picosha2.h>
+PRAGMA_WARNING_POP
 
 #include <fstream>
 #include <iostream>
@@ -61,6 +67,49 @@ namespace
 		//[-------------------------------------------------------]
 		static const uint16_t ASSET_FORMAT_VERSION = 1;
 		static const uint32_t DATABASE_SCHEMA_VERSION = 1; // Database schema versioning
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		// Hashes a file with using sha256
+		std::string hash256_file(const std::string& filename)
+		{
+			// Try open file
+			std::ifstream file(filename, std::ios::binary);
+			if (file)
+			{
+				// File could be open create hasher object
+				picosha2::hash256_one_by_one hasher;
+
+				// Read data in 32768 byte blocks
+				std::vector<char> buffer(32768, 0);
+
+				// Read the file content into chunks and process them
+				while (file.read(buffer.data(), static_cast<std::streamsize>(buffer.size())))
+				{
+					// We have read in a fully chunk process it
+					hasher.process(buffer.begin(), buffer.end());
+				}
+
+				// Check if we have remaining bytes to process (less then the chunk size)
+				const std::streamsize readInBytes = file.gcount();
+				if (readInBytes > 0)
+				{
+					// Process the remaining bytes
+					hasher.process(buffer.begin(), buffer.begin() + static_cast<int>(readInBytes));
+				}
+
+				// We are finished processing the file, finish up the hashing
+				hasher.finish();
+
+				// Return the result as an hex string
+				return picosha2::get_hash_hex_string(hasher);
+			}
+
+			// File could not be opened return empty string
+			return std::string();
+		}
 
 
 //[-------------------------------------------------------]
@@ -401,8 +450,8 @@ namespace RendererToolkit
 					#endif
 					{
 						// Current file differs in file size and/or file time do the second step:
-						// Check the compiler version and the 64-bit FNV-1a hash
-						const std::string fileHash = std::to_string(RendererRuntime::Math::calculateFileFNV1a64ByFilename(filename));
+						// Check the compiler version and the sha256 hash
+						const std::string fileHash = ::detail::hash256_file(filename);
 						if (cacheEntry.fileHash == fileHash && cacheEntry.compilerVersion == compilerVersion)
 						{
 							#ifdef CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME
@@ -445,7 +494,7 @@ namespace RendererToolkit
 					cacheEntry.fileId		   = fileId;
 					cacheEntry.fileSize		   = fileSize;
 					cacheEntry.fileTime		   = fileTime;
-					cacheEntry.fileHash		   = std::to_string(RendererRuntime::Math::calculateFileFNV1a64ByFilename(filename));
+					cacheEntry.fileHash		   = ::detail::hash256_file(filename);
 					cacheEntry.compilerVersion = compilerVersion;
 
 					// The file had no cache entry yet -> store it as "has changed"

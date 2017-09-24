@@ -69,7 +69,7 @@ namespace RendererToolkit
 	// FileHash API
 	/*
 	* Unrimp cache database layout
-	* - Initial caches 64-bit FNV-1a hashes of input files (mainly textures because they take the longest to be "compiled")
+	* - Initial caches sha256 hashes of input files (mainly textures because they take the longest to be "compiled")
 	*   - Table FileHash (rendererTarget text NOT NULL, fileId integer NOT NULL, hash text NOT NULL)
 	* 
 	* SQLite only supports one writer but multiple readers, when a database connection is not shared between threads.
@@ -91,7 +91,7 @@ namespace RendererToolkit
 			bool					  isNewEntry;		///< Indicates of the given cache entry data should be inserted instead of updating an existing one
 			RendererRuntime::StringId fileId;			///< ID of the file (string hash of the filename)
 			std::string				  rendererTarget;	///< The renderer target
-			std::string				  fileHash;			///< The 64-bit FNV-1a hash of the file content
+			std::string				  fileHash;			///< The sha256 hash of the file content (as hex string)
 			int64_t					  fileSize;			///< The file size; SQLite doesn't support 64 bit unsigned integers only 64 bit signed ones
 			int64_t					  fileTime;			///< The file time (last write time); SQLite doesn't support 64 bit unsigned integers only 64 bit signed ones
 			uint32_t				  compilerVersion;	///< Compiler version so we can detect compiler version changes and enforce compiling even if the source data has not been changed
