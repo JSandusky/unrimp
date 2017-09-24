@@ -243,7 +243,7 @@ namespace RendererRuntime
 										// Generate the shader source code ID
 										// -> Especially in complex shaders, there are situations where different shader combinations result in one and the same shader source code
 										// -> Shader compilation is considered to be expensive, so we need to be pretty sure that we really need to perform this heavy work
-										const ShaderSourceCodeId shaderSourceCodeId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(sourceCode.c_str()), static_cast<uint32_t>(sourceCode.size()));
+										const ShaderSourceCodeId shaderSourceCodeId = Math::calculateFNV1a32(reinterpret_cast<const uint8_t*>(sourceCode.c_str()), static_cast<uint32_t>(sourceCode.size()));
 										ShaderCacheManager::ShaderCacheByShaderSourceCodeId::const_iterator shaderSourceCodeIdIterator = shaderCacheManager.mShaderCacheByShaderSourceCodeId.find(shaderSourceCodeId);
 										if (shaderSourceCodeIdIterator != shaderCacheManager.mShaderCacheByShaderSourceCodeId.cend())
 										{

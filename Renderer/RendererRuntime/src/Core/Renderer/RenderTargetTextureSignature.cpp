@@ -45,16 +45,16 @@ namespace RendererRuntime
 		mAllowResolutionScale(allowResolutionScale),
 		mWidthScale(widthScale),
 		mHeightScale(heightScale),
-		mRenderTargetTextureSignatureId(Math::FNV1a_INITIAL_HASH)
+		mRenderTargetTextureSignatureId(Math::FNV1a_INITIAL_HASH_32)
 	{
-		mRenderTargetTextureSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mWidth), sizeof(uint32_t), mRenderTargetTextureSignatureId);
-		mRenderTargetTextureSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mHeight), sizeof(uint32_t), mRenderTargetTextureSignatureId);
-		mRenderTargetTextureSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mTextureFormat), sizeof(Renderer::TextureFormat::Enum), mRenderTargetTextureSignatureId);
-		mRenderTargetTextureSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mAllowMultisample), sizeof(bool), mRenderTargetTextureSignatureId);
-		mRenderTargetTextureSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mGenerateMipmaps), sizeof(bool), mRenderTargetTextureSignatureId);
-		mRenderTargetTextureSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mWidthScale), sizeof(float), mRenderTargetTextureSignatureId);
-		mRenderTargetTextureSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mHeightScale), sizeof(float), mRenderTargetTextureSignatureId);
-		mRenderTargetTextureSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mAllowResolutionScale), sizeof(bool), mRenderTargetTextureSignatureId);
+		mRenderTargetTextureSignatureId = Math::calculateFNV1a32(reinterpret_cast<const uint8_t*>(&mWidth), sizeof(uint32_t), mRenderTargetTextureSignatureId);
+		mRenderTargetTextureSignatureId = Math::calculateFNV1a32(reinterpret_cast<const uint8_t*>(&mHeight), sizeof(uint32_t), mRenderTargetTextureSignatureId);
+		mRenderTargetTextureSignatureId = Math::calculateFNV1a32(reinterpret_cast<const uint8_t*>(&mTextureFormat), sizeof(Renderer::TextureFormat::Enum), mRenderTargetTextureSignatureId);
+		mRenderTargetTextureSignatureId = Math::calculateFNV1a32(reinterpret_cast<const uint8_t*>(&mAllowMultisample), sizeof(bool), mRenderTargetTextureSignatureId);
+		mRenderTargetTextureSignatureId = Math::calculateFNV1a32(reinterpret_cast<const uint8_t*>(&mGenerateMipmaps), sizeof(bool), mRenderTargetTextureSignatureId);
+		mRenderTargetTextureSignatureId = Math::calculateFNV1a32(reinterpret_cast<const uint8_t*>(&mWidthScale), sizeof(float), mRenderTargetTextureSignatureId);
+		mRenderTargetTextureSignatureId = Math::calculateFNV1a32(reinterpret_cast<const uint8_t*>(&mHeightScale), sizeof(float), mRenderTargetTextureSignatureId);
+		mRenderTargetTextureSignatureId = Math::calculateFNV1a32(reinterpret_cast<const uint8_t*>(&mAllowResolutionScale), sizeof(bool), mRenderTargetTextureSignatureId);
 	}
 
 

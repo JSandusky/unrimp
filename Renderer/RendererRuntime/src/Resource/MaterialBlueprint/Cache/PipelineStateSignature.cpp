@@ -45,11 +45,11 @@ namespace
 		//[-------------------------------------------------------]
 		RendererRuntime::ShaderCombinationId generateShaderCombinationId(const RendererRuntime::ShaderBlueprintResource& shaderBlueprintResource, const RendererRuntime::ShaderProperties& shaderProperties, const RendererRuntime::DynamicShaderPieces& dynamicShaderPieces)
 		{
-			RendererRuntime::ShaderCombinationId shaderCombinationId(RendererRuntime::Math::FNV1a_INITIAL_HASH);
+			RendererRuntime::ShaderCombinationId shaderCombinationId(RendererRuntime::Math::FNV1a_INITIAL_HASH_32);
 
 			{ // Apply shader blueprint resource ID
 				const RendererRuntime::ShaderBlueprintResourceId shaderBlueprintResourceId = shaderBlueprintResource.getId();
-				shaderCombinationId = RendererRuntime::Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&shaderBlueprintResourceId), sizeof(uint32_t), shaderCombinationId);
+				shaderCombinationId = RendererRuntime::Math::calculateFNV1a32(reinterpret_cast<const uint8_t*>(&shaderBlueprintResourceId), sizeof(uint32_t), shaderCombinationId);
 			}
 
 			// Apply shader properties
@@ -63,10 +63,10 @@ namespace
 					// No need to check for zero-value shader properties in here, already optimized out by "RendererRuntime::MaterialBlueprintResource::optimizeShaderProperties()"
 
 					// Apply shader property ID
-					shaderCombinationId = RendererRuntime::Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&shaderPropertyId), sizeof(uint32_t), shaderCombinationId);
+					shaderCombinationId = RendererRuntime::Math::calculateFNV1a32(reinterpret_cast<const uint8_t*>(&shaderPropertyId), sizeof(uint32_t), shaderCombinationId);
 
 					// Apply shader property value
-					shaderCombinationId = RendererRuntime::Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&property.value), sizeof(int32_t), shaderCombinationId);
+					shaderCombinationId = RendererRuntime::Math::calculateFNV1a32(reinterpret_cast<const uint8_t*>(&property.value), sizeof(int32_t), shaderCombinationId);
 				}
 			}
 
@@ -74,10 +74,10 @@ namespace
 			for (auto& dynamicShaderPiecesElement : dynamicShaderPieces)
 			{
 				// Apply dynamic shader piece ID
-				shaderCombinationId = RendererRuntime::Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&dynamicShaderPiecesElement.first), sizeof(uint32_t), shaderCombinationId);
+				shaderCombinationId = RendererRuntime::Math::calculateFNV1a32(reinterpret_cast<const uint8_t*>(&dynamicShaderPiecesElement.first), sizeof(uint32_t), shaderCombinationId);
 
 				// Apply shader property value
-				shaderCombinationId = RendererRuntime::Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(dynamicShaderPiecesElement.second.c_str()), static_cast<uint32_t>(dynamicShaderPiecesElement.second.length()), shaderCombinationId);
+				shaderCombinationId = RendererRuntime::Math::calculateFNV1a32(reinterpret_cast<const uint8_t*>(dynamicShaderPiecesElement.second.c_str()), static_cast<uint32_t>(dynamicShaderPiecesElement.second.length()), shaderCombinationId);
 			}
 
 			// Done
@@ -140,7 +140,7 @@ namespace RendererRuntime
 		mPrimitiveTopology			 = primitiveTopology;
 		mSerializedPipelineStateHash = serializedPipelineStateHash;
 		mShaderProperties			 = shaderProperties;
-		mPipelineStateSignatureId	 = Math::FNV1a_INITIAL_HASH;
+		mPipelineStateSignatureId	 = Math::FNV1a_INITIAL_HASH_32;
 		for (uint8_t i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
 		{
 			mShaderCombinationId[i] = getUninitialized<ShaderCombinationId>();
@@ -153,9 +153,9 @@ namespace RendererRuntime
 		}
 
 		// Incorporate primitive hashes
-		mPipelineStateSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mMaterialBlueprintResourceId), sizeof(uint32_t), mPipelineStateSignatureId);
-		mPipelineStateSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mPrimitiveTopology), sizeof(Renderer::PrimitiveTopology), mPipelineStateSignatureId);
-		mPipelineStateSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mSerializedPipelineStateHash), sizeof(uint32_t), mPipelineStateSignatureId);
+		mPipelineStateSignatureId = Math::calculateFNV1a32(reinterpret_cast<const uint8_t*>(&mMaterialBlueprintResourceId), sizeof(uint32_t), mPipelineStateSignatureId);
+		mPipelineStateSignatureId = Math::calculateFNV1a32(reinterpret_cast<const uint8_t*>(&mPrimitiveTopology), sizeof(Renderer::PrimitiveTopology), mPipelineStateSignatureId);
+		mPipelineStateSignatureId = Math::calculateFNV1a32(reinterpret_cast<const uint8_t*>(&mSerializedPipelineStateHash), sizeof(uint32_t), mPipelineStateSignatureId);
 
 		// Incorporate shader related hashes
 		const ShaderBlueprintResourceManager& shaderBlueprintResourceManager = materialBlueprintResource.getResourceManager<MaterialBlueprintResourceManager>().getRendererRuntime().getShaderBlueprintResourceManager();
@@ -165,7 +165,7 @@ namespace RendererRuntime
 			if (nullptr != shaderBlueprintResource)
 			{
 				const uint32_t hash = mShaderCombinationId[i] = ::detail::generateShaderCombinationId(*shaderBlueprintResource, mShaderProperties, mDynamicShaderPieces[i]);
-				mPipelineStateSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&hash), sizeof(uint32_t), mPipelineStateSignatureId);
+				mPipelineStateSignatureId = Math::calculateFNV1a32(reinterpret_cast<const uint8_t*>(&hash), sizeof(uint32_t), mPipelineStateSignatureId);
 			}
 		}
 	}

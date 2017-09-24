@@ -279,7 +279,7 @@ namespace RendererRuntime
 			}
 
 			// Calculate the FNV1a hash of "Renderer::SerializedPipelineState"
-			mSerializedPipelineStateHash = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&serializedPipelineState), sizeof(Renderer::SerializedPipelineState));
+			mSerializedPipelineStateHash = Math::calculateFNV1a32(reinterpret_cast<const uint8_t*>(&serializedPipelineState), sizeof(Renderer::SerializedPipelineState));
 
 			// Register the FNV1a hash of "Renderer::SerializedPipelineState" inside the material blueprint resource manager so it's sufficient to pass around the tiny hash instead the over 400 bytes full serialized pipeline state
 			getMaterialResourceManager().getRendererRuntime().getMaterialBlueprintResourceManager().addSerializedPipelineState(mSerializedPipelineStateHash, serializedPipelineState);

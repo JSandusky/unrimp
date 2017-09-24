@@ -40,14 +40,14 @@ namespace RendererRuntime
 		mNumberOfColorTextures(numberOfColorTextures),
 		mColorTextureAssetIds{colorTextureAssetIds[0], colorTextureAssetIds[1], colorTextureAssetIds[2], colorTextureAssetIds[3], colorTextureAssetIds[4], colorTextureAssetIds[5], colorTextureAssetIds[6], colorTextureAssetIds[7]},
 		mDepthStencilTextureAssetId(depthStencilTextureAssetId),
-		mFramebufferSignatureId(Math::FNV1a_INITIAL_HASH)
+		mFramebufferSignatureId(Math::FNV1a_INITIAL_HASH_32)
 	{
-		mFramebufferSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mNumberOfColorTextures), sizeof(AssetId), mFramebufferSignatureId);
+		mFramebufferSignatureId = Math::calculateFNV1a32(reinterpret_cast<const uint8_t*>(&mNumberOfColorTextures), sizeof(AssetId), mFramebufferSignatureId);
 		for (uint8_t i = 0; i < mNumberOfColorTextures; ++i)
 		{
-			mFramebufferSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mColorTextureAssetIds[i]), sizeof(AssetId), mFramebufferSignatureId);
+			mFramebufferSignatureId = Math::calculateFNV1a32(reinterpret_cast<const uint8_t*>(&mColorTextureAssetIds[i]), sizeof(AssetId), mFramebufferSignatureId);
 		}
-		mFramebufferSignatureId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&mDepthStencilTextureAssetId), sizeof(AssetId), mFramebufferSignatureId);
+		mFramebufferSignatureId = Math::calculateFNV1a32(reinterpret_cast<const uint8_t*>(&mDepthStencilTextureAssetId), sizeof(AssetId), mFramebufferSignatureId);
 	}
 
 

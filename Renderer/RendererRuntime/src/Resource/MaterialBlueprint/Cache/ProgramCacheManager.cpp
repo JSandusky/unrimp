@@ -46,13 +46,13 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	ProgramCacheId ProgramCacheManager::generateProgramCacheId(const PipelineStateSignature& pipelineStateSignature)
 	{
-		ProgramCacheId programCacheId = Math::FNV1a_INITIAL_HASH;
+		ProgramCacheId programCacheId = Math::FNV1a_INITIAL_HASH_32;
 		for (uint8_t i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
 		{
 			const ShaderCombinationId shaderCombinationId = pipelineStateSignature.getShaderCombinationId(static_cast<ShaderType>(i));
 			if (isInitialized(shaderCombinationId))
 			{
-				programCacheId = Math::calculateFNV1a(reinterpret_cast<const uint8_t*>(&shaderCombinationId), sizeof(ShaderCombinationId), programCacheId);
+				programCacheId = Math::calculateFNV1a32(reinterpret_cast<const uint8_t*>(&shaderCombinationId), sizeof(ShaderCombinationId), programCacheId);
 			}
 		}
 

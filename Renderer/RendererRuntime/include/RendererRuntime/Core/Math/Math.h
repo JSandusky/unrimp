@@ -68,7 +68,8 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		static const uint32_t FNV1a_INITIAL_HASH = 0xcbf29ce4;
+		static const uint32_t FNV1a_INITIAL_HASH_32 = 0xcbf29ce4;
+		static const uint64_t FNV1a_INITIAL_HASH_64 = 0xcbf29ce484222325;
 		// "glm::vec3" constants
 		RENDERERRUNTIME_API_EXPORT static const glm::vec3 VEC3_ZERO;	///< 0 0 0
 		RENDERERRUNTIME_API_EXPORT static const glm::vec3 VEC3_ONE;		///< 1 1 1
@@ -141,7 +142,8 @@ namespace RendererRuntime
 		//[-------------------------------------------------------]
 		//[ Hash                                                  ]
 		//[-------------------------------------------------------]
-		RENDERERRUNTIME_API_EXPORT static uint32_t calculateFNV1a(const uint8_t* content, uint32_t numberOfBytes, uint32_t hash = FNV1a_INITIAL_HASH);
+		RENDERERRUNTIME_API_EXPORT static uint32_t calculateFNV1a32(const uint8_t* content, uint32_t numberOfBytes, uint32_t hash = FNV1a_INITIAL_HASH_32);
+		RENDERERRUNTIME_API_EXPORT static uint64_t calculateFNV1a64(const uint8_t* content, uint32_t numberOfBytes, uint64_t hash = FNV1a_INITIAL_HASH_64);
 
 
 	//[-------------------------------------------------------]
