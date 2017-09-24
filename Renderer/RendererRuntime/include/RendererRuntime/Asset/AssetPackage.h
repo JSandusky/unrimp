@@ -79,6 +79,7 @@ namespace RendererRuntime
 		RENDERERRUNTIME_API_EXPORT void addAsset(AssetId assetId, const char* assetFilename);
 		RENDERERRUNTIME_API_EXPORT const Asset* tryGetAssetByAssetId(AssetId assetId) const;
 		inline const char* tryGetAssetFilenameByAssetId(AssetId assetId) const;
+		RENDERERRUNTIME_API_EXPORT bool validateIntegrity() const;
 
 		// For internal use only (exposed for API performance reasons)
 		inline SortedAssetVector& getWritableSortedAssetVector();

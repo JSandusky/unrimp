@@ -60,7 +60,7 @@ namespace RendererRuntime
 		return *assetPackage;
 	}
 
-	void AssetManager::addAssetPackageByFilename(AssetPackageId assetPackageId, const char* filename)
+	AssetPackage* AssetManager::addAssetPackageByFilename(AssetPackageId assetPackageId, const char* filename)
 	{
 		assert(nullptr == tryGetAssetPackageById(assetPackageId) && "Asset package ID is already used");
 		IFileManager& fileManager = mRendererRuntime.getFileManager();
@@ -71,11 +71,15 @@ namespace RendererRuntime
 			AssetPackageSerializer().loadAssetPackage(*assetPackage, *file);
 			mAssetPackageVector.push_back(assetPackage);
 			fileManager.closeFile(*file);
+
+			// Done
+			return assetPackage;
 		}
 		else
 		{
 			// Error! This is horrible. No assets.
 			assert(false);
+			return nullptr;
 		}
 	}
 

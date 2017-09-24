@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Asset/AssetPackage.h"
+#include "RendererRuntime/Core/Math/Math.h"
 
 #include <cassert>
 #include <algorithm>
@@ -85,6 +86,21 @@ namespace RendererRuntime
 	{
 		SortedAssetVector::const_iterator iterator = std::lower_bound(mSortedAssetVector.cbegin(), mSortedAssetVector.cend(), assetId, ::detail::OrderByAssetId());
 		return (iterator != mSortedAssetVector.end() && iterator->assetId == assetId) ? &(*iterator) : nullptr;
+	}
+
+	bool AssetPackage::validateIntegrity() const
+	{
+		for (const Asset& asset : mSortedAssetVector)
+		{
+			if (Math::calculateFileFNV1a64ByFilename(asset.assetFilename) != asset.fileHash)
+			{
+				// Invalid integrity
+				return false;
+			}
+		}
+
+		// Valid integrity
+		return true;
 	}
 
 
