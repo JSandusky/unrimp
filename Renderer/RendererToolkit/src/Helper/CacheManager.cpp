@@ -479,9 +479,16 @@ namespace RendererToolkit
 			query.bind(6, cacheEntry.compilerVersion);
 
 			// Execute statement and check if we got a result
-			if (!query.exec())
+			try
 			{
-				throw std::runtime_error("Error inserting data to database");
+				if (!query.exec())
+				{
+					throw std::runtime_error("Error inserting data to database");
+				}
+			}
+			catch (const SQLite::Exception& e)
+			{
+				throw std::runtime_error("Error inserting data to database: " + std::string(e.getErrorStr()));
 			}
 		}
 		else
@@ -496,9 +503,16 @@ namespace RendererToolkit
 			updateQuery.bind(6, cacheEntry.rendererTarget);
 
 			// Execute statement and check if we got a result
-			if (!updateQuery.exec())
+			try
 			{
-				throw std::runtime_error("Error updating data to database");
+				if (!updateQuery.exec())
+				{
+					throw std::runtime_error("Error updating data to database");
+				}
+			}
+			catch (const SQLite::Exception& e)
+			{
+				throw std::runtime_error("Error updating data to database: " + std::string(e.getErrorStr()));
 			}
 		}
 	}
