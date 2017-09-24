@@ -26,6 +26,8 @@
 
 #include <Renderer/Public/Renderer.h>
 
+#include <fstream>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -141,6 +143,38 @@ namespace RendererRuntime
 		{
 			hash = (hash ^ *content) * MAGIC_PRIME;
 		}
+		return hash;
+	}
+
+	uint64_t Math::calculateFileFNV1a64ByFilename(const std::string& filename)
+	{
+		uint64_t hash = FNV1a_INITIAL_HASH_64;
+
+		// Try open file
+		std::ifstream file(filename, std::ios::binary);
+		if (file)
+		{
+			// Read data in 32768 byte blocks
+			static const uint32_t NUMBER_OF_BYTES = 32768;
+			std::vector<char> buffer(NUMBER_OF_BYTES, 0);
+
+			// Read the file content into chunks and process them
+			while (file.read(buffer.data(), NUMBER_OF_BYTES))
+			{
+				// We have read in a full chunk, process it
+				hash = calculateFNV1a64(reinterpret_cast<const uint8_t*>(buffer.data()), NUMBER_OF_BYTES, hash);
+			}
+
+			// Check if we have remaining bytes to process (less then the chunk size)
+			const std::streamsize readInBytes = file.gcount();
+			if (readInBytes > 0)
+			{
+				// Process the remaining bytes
+				hash = calculateFNV1a64(reinterpret_cast<const uint8_t*>(buffer.data()), static_cast<uint32_t>(readInBytes), hash);
+			}
+		}
+
+		// Done
 		return hash;
 	}
 

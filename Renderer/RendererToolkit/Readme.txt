@@ -26,7 +26,6 @@ Renderer toolkit.
 - Assimp
 - crunch
 - GLM (header only library)
-- picosha2 (header only library)
 - RapidJSON (header only library)
 - mikktspace (directly compiled and linked in)
 - sqlitecpp (directly compiled and linked in)

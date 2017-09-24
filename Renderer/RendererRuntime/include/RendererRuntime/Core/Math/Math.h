@@ -39,6 +39,7 @@ PRAGMA_WARNING_PUSH
 PRAGMA_WARNING_POP
 
 #include <inttypes.h>	// For uint32_t, uint64_t etc.
+#include <string>
 
 
 //[-------------------------------------------------------]
@@ -144,6 +145,7 @@ namespace RendererRuntime
 		//[-------------------------------------------------------]
 		RENDERERRUNTIME_API_EXPORT static uint32_t calculateFNV1a32(const uint8_t* content, uint32_t numberOfBytes, uint32_t hash = FNV1a_INITIAL_HASH_32);
 		RENDERERRUNTIME_API_EXPORT static uint64_t calculateFNV1a64(const uint8_t* content, uint32_t numberOfBytes, uint64_t hash = FNV1a_INITIAL_HASH_64);
+		RENDERERRUNTIME_API_EXPORT static uint64_t calculateFileFNV1a64ByFilename(const std::string& filename);
 
 
 	//[-------------------------------------------------------]
