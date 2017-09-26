@@ -28,9 +28,10 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline Context::Context(Renderer::ILog& log, RendererRuntime::IFileManager& fileManager) :
+	inline Context::Context(Renderer::ILog& log, RendererRuntime::IFileManager& fileManager, IProgressLog* progressLog) :
 		mLog(log),
-		mFileManager(fileManager)
+		mFileManager(fileManager),
+		mProgressLog(progressLog)
 	{
 		// Nothing here
 	}
@@ -48,6 +49,11 @@ namespace RendererToolkit
 	inline RendererRuntime::IFileManager& Context::getFileManager() const
 	{
 		return mFileManager;
+	}
+
+	inline IProgressLog* Context::getProgressLog() const
+	{
+		return mProgressLog;
 	}
 
 

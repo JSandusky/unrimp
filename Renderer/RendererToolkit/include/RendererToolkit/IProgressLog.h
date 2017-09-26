@@ -35,10 +35,6 @@ namespace RendererRuntime
 {
 	class IFileManager;
 }
-namespace RendererToolkit
-{
-	class IProgressLog;
-}
 
 
 //[-------------------------------------------------------]
@@ -53,78 +49,62 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Context class encapsulating all embedding related wirings
+	*   Interface for progress logging
 	*/
-	class Context
+	class IProgressLog
 	{
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
+	//[ Public virtual RendererToolkit::IProgressLog methods  ]
 	//[-------------------------------------------------------]
 	public:
 		/**
 		*  @brief
-		*    Constructor
-		*
-		*  @param[in] log
-		*    Log instance to use, the log instance must stay valid as long as the renderer toolkit instance exists
-		*  @param[in] fileManager
-		*    File manager instance to use, the file manager instance must stay valid as long as the renderer toolkit instance exists
-		*  @param[in] progressLog
-		*    Progress log instance to use, the progress log instance must stay valid as long as the renderer toolkit instance exists, when no progress logging should be used a nullptr can be given
+		*    Prints a single formatted message
+		* 
+		*  @param[in] format
+		*    "sprintf"-style formatted log message nullptr can be given
+		* 
+		*  @note
+		*    No new line is appended to the output
 		*/
-		inline Context(Renderer::ILog& log, RendererRuntime::IFileManager& fileManager, IProgressLog* progressLog = nullptr);
+		virtual void print(const char* format, ...) = 0;
 
 		/**
 		*  @brief
-		*    Destructor
+		*    Prints a single formatted message as line
+		* 
+		*  @param[in] format
+		*    "sprintf"-style formatted log message nullptr can be given
+		* 
+		*  @note
+		*    A new line is appended to the output
 		*/
-		inline ~Context();
+		virtual void printLine(const char* format, ...) = 0;
 
 		/**
 		*  @brief
-		*    Return the used log instance
-		*
-		*  @return
-		*    The used log instance
+		*    Prints an progress
+		* 
+		*  @param[in] current
+		*    The current progress value
+		*  @param[in] max
+		*    The max progress value
 		*/
-		inline Renderer::ILog& getLog() const;
-
-		/**
-		*  @brief
-		*    Return the used file manager instance
-		*
-		*  @return
-		*    The used file manager instance
-		*/
-		inline RendererRuntime::IFileManager& getFileManager() const;
-
-		/**
-		*  @brief
-		*    Return the used progress log instance
-		*
-		*  @return
-		*    The used progress log instance, can be a nullptr when no progress logging is enabled
-		*/
-		inline IProgressLog* getProgressLog() const;
+		virtual void printProgress(uint32_t current, uint32_t max) = 0;
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	private:
-		explicit Context(const Context&) = delete;
-		Context& operator=(const Context&) = delete;
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-		Renderer::ILog&				   mLog;
-		RendererRuntime::IFileManager& mFileManager;
-		IProgressLog*				   mProgressLog;
+	protected:
+		inline IProgressLog()
+		{}
+		inline virtual ~IProgressLog()
+		{}
+		explicit IProgressLog(const IProgressLog&) = delete;
+		IProgressLog& operator=(const IProgressLog&) = delete;
 
 
 	};
@@ -133,10 +113,4 @@ namespace RendererToolkit
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // Renderer
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "RendererToolkit/Context.inl"
+} // RendererToolkit

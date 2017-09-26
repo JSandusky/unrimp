@@ -40,6 +40,7 @@
 #include "RendererToolkit/AssetCompiler/MaterialBlueprintAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/CompositorWorkspaceAssetCompiler.h"
 #include "RendererToolkit/Context.h"
+#include "RendererToolkit/IProgressLog.h"
 
 #include <RendererRuntime/IRendererRuntime.h>
 #include <RendererRuntime/Core/File/MemoryFile.h>
@@ -348,6 +349,12 @@ namespace RendererToolkit
 		{ // Compile all assets
 			const RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = mAssetPackage.getSortedAssetVector();
 			const size_t numberOfAssets = sortedAssetVector.size();
+
+			if(nullptr != mContext.getProgressLog())
+			{
+				mContext.getProgressLog()->printLine("Check %u Assets for changes...", numberOfAssets);
+			}
+
 			std::vector<RendererRuntime::AssetId> changedAssetIds;
 			for (size_t i = 0; i < numberOfAssets; ++i)
 			{
@@ -357,10 +364,29 @@ namespace RendererToolkit
 					changedAssetIds.push_back(asset.assetId);
 				}
 			}
+
+			if(nullptr != mContext.getProgressLog())
+			{
+				mContext.getProgressLog()->printLine("Found %u changed Assets", changedAssetIds.size());
+				mContext.getProgressLog()->printProgress(0, numberOfAssets);
+			}
+
 			for (size_t i = 0; i < numberOfAssets; ++i)
 			{
 				compileAsset(sortedAssetVector[i], rendererTarget, outputAssetPackage);
+
+				if(nullptr != mContext.getProgressLog())
+				{
+					mContext.getProgressLog()->printProgress(i+1, numberOfAssets);
+				}
 			}
+
+			if(nullptr != mContext.getProgressLog())
+			{
+				// Print a new line character. To have any following progress logs start on a new line
+				mContext.getProgressLog()->print("\n");
+			}
+
 			if (nullptr != mProjectAssetMonitor)
 			{
 				// TODO(co) Call "RendererRuntime::IRendererRuntime::reloadResourceByAssetId()" directly after an asset has been compiled to see changes as early as possible.

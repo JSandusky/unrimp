@@ -25,118 +25,63 @@
 
 
 //[-------------------------------------------------------]
-//[ Forward declarations                                  ]
+//[ Includes                                              ]
 //[-------------------------------------------------------]
-namespace Renderer
-{
-	class ILog;
-}
-namespace RendererRuntime
-{
-	class IFileManager;
-}
-namespace RendererToolkit
-{
-	class IProgressLog;
-}
+#include <RendererToolkit/IProgressLog.h>
+
+#include <mutex>
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Classes                                               ]
 //[-------------------------------------------------------]
-namespace RendererToolkit
+/**
+*  @brief
+*    Console progress log implementation class one can use
+*
+*  @note
+*    - Designed to be instanced and used inside a single C++ file
+*/
+class ConsoleProgressLog : public RendererToolkit::IProgressLog
 {
-
-
-	//[-------------------------------------------------------]
-	//[ Classes                                               ]
-	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Context class encapsulating all embedding related wirings
-	*/
-	class Context
-	{
-
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		/**
-		*  @brief
-		*    Constructor
-		*
-		*  @param[in] log
-		*    Log instance to use, the log instance must stay valid as long as the renderer toolkit instance exists
-		*  @param[in] fileManager
-		*    File manager instance to use, the file manager instance must stay valid as long as the renderer toolkit instance exists
-		*  @param[in] progressLog
-		*    Progress log instance to use, the progress log instance must stay valid as long as the renderer toolkit instance exists, when no progress logging should be used a nullptr can be given
-		*/
-		inline Context(Renderer::ILog& log, RendererRuntime::IFileManager& fileManager, IProgressLog* progressLog = nullptr);
+		inline ConsoleProgressLog();
+		inline virtual ~ConsoleProgressLog() override;
 
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		inline ~Context();
 
-		/**
-		*  @brief
-		*    Return the used log instance
-		*
-		*  @return
-		*    The used log instance
-		*/
-		inline Renderer::ILog& getLog() const;
-
-		/**
-		*  @brief
-		*    Return the used file manager instance
-		*
-		*  @return
-		*    The used file manager instance
-		*/
-		inline RendererRuntime::IFileManager& getFileManager() const;
-
-		/**
-		*  @brief
-		*    Return the used progress log instance
-		*
-		*  @return
-		*    The used progress log instance, can be a nullptr when no progress logging is enabled
-		*/
-		inline IProgressLog* getProgressLog() const;
+	//[-------------------------------------------------------]
+	//[ Public virtual RendererToolkit::IProgressLog methods  ]
+	//[-------------------------------------------------------]
+	public:
+		inline virtual void print(const char* format, ...) override;
+		inline virtual void printLine(const char* format, ...) override;
+		inline virtual void printProgress(uint32_t current, uint32_t max) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		explicit Context(const Context&) = delete;
-		Context& operator=(const Context&) = delete;
+		explicit ConsoleProgressLog(const ConsoleProgressLog&) = delete;
+		ConsoleProgressLog& operator=(const ConsoleProgressLog&) = delete;
+
+		inline void printInternal(const char* message, uint32_t numberOfCharacters, bool addNewLine);
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Renderer::ILog&				   mLog;
-		RendererRuntime::IFileManager& mFileManager;
-		IProgressLog*				   mProgressLog;
-
-
-	};
-
-
-//[-------------------------------------------------------]
-//[ Namespace                                             ]
-//[-------------------------------------------------------]
-} // Renderer
+		std::mutex mMutex;
+};
 
 
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererToolkit/Context.inl"
+#include "ConsoleProgressLog.inl"
+

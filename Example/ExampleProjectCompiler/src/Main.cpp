@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Main.h"
+#include "ConsoleProgressLog.h"
 
 #include <RendererToolkit/Context.h>
 #include <RendererToolkit/Public/RendererToolkit.h>
@@ -32,6 +33,7 @@
 #include <Renderer/Public/StdLog.h>
 
 #include <iostream>
+#include <algorithm>
 
 
 //[-------------------------------------------------------]
@@ -39,9 +41,13 @@
 //[-------------------------------------------------------]
 int programEntryPoint(CommandLineArguments& commandLineArguments)
 {
+	auto findIterator = std::find(commandLineArguments.getArguments().begin(), commandLineArguments.getArguments().end(), std::string("-v"));
+	const bool enableProgressLogging = (findIterator != commandLineArguments.getArguments().end());
+
 	Renderer::StdLog stdLog;
+	ConsoleProgressLog progressLog;
 	RendererRuntime::StdFileManager stdFileManager(stdLog);
-	RendererToolkit::Context rendererToolkitContext(stdLog, stdFileManager);
+	RendererToolkit::Context rendererToolkitContext(stdLog, stdFileManager, enableProgressLogging ? &progressLog : nullptr);
 	RendererToolkit::RendererToolkitInstance rendererToolkitInstance(rendererToolkitContext);
 	RendererToolkit::IRendererToolkit* rendererToolkit = rendererToolkitInstance.getRendererToolkit();
 	if (nullptr != rendererToolkit)
@@ -64,9 +70,21 @@ int programEntryPoint(CommandLineArguments& commandLineArguments)
 				// For now all given arguments are interpreted as render target
 				for (const std::string& renderTarget : commandLineArguments.getArguments())
 				{
-					RENDERER_LOG(rendererToolkitContext, INFORMATION, "Compiling for target: \"%s\"", renderTarget.c_str())
-					project->compileAllAssets(renderTarget.c_str());
-					RENDERER_LOG(rendererToolkitContext, INFORMATION, "Compilation done")
+					// Ignore empty arguments and when they start with an '-', which marks it as an option
+					if (!renderTarget.empty() && renderTarget[0] != '-')
+					{
+						if (enableProgressLogging)
+						{
+							progressLog.printLine("Compiling for target: \"%s\"", renderTarget.c_str());
+						}
+
+						project->compileAllAssets(renderTarget.c_str());
+
+						if (enableProgressLogging)
+						{
+							progressLog.printLine("Compilation done");
+						}
+					}
 				}
 			}
 		}
