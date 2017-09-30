@@ -63,6 +63,7 @@ namespace
 			size_t currentPosition = 0;
 
 			// Till the end...
+			std::vector<std::string> stringParts;
 			while (currentPosition < endPosition)
 			{
 				const size_t index = sourceString.find(instructionName, currentPosition);
@@ -94,7 +95,6 @@ namespace
 						}
 
 						// TODO(co) I'm sure we can optimize this, but to have something to start with stick to a simple to implement solution
-						static std::vector<std::string> stringParts;	// Optimization: To avoid constant allocations/deallocations, use a static instance (not multi-threading safe, of course)
 						stringParts.clear();
 						RendererToolkit::StringHelper::splitString(sourceString.substr(currentPosition, expressionEndPosition - currentPosition), " 	()!,", stringParts);
 						for (const std::string& stringPart : stringParts)

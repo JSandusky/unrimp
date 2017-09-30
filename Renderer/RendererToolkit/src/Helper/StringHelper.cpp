@@ -61,7 +61,7 @@ namespace
 
 			do
 			{
-				const char& character = text[currentIndex];
+				const char character = text[currentIndex];
 				if (character != ' ' && character != '\t')
 				{
 					return currentIndex;

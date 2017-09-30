@@ -29,8 +29,6 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/IAssetCompiler.h"
 
-#include <vector>
-
 
 //[-------------------------------------------------------]
 //[ Global definitions                                    ]

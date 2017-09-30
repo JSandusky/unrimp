@@ -71,12 +71,12 @@ namespace Renderer
 	public:
 		/**
 		*  @brief
-		*    Print a formated log message
+		*    Print a formatted log message
 		*
 		*  @param[in] type
 		*    Log message type
 		*  @param[in] format
-		*    "sprintf"-style formated log message
+		*    "sprintf"-style formatted log message
 		*/
 		virtual void print(Type type, const char* format, ...) = 0;
 
@@ -112,7 +112,7 @@ namespace Renderer
 *  @param[in] type
 *    Log message type
 *  @param[in] format
-*    "sprintf"-style formated log message
+*    "sprintf"-style formatted log message
 *
 *  @note
 *    - Example: RENDERER_LOG(mContext, DEBUG, "Direct3D 11 renderer backend startup")
