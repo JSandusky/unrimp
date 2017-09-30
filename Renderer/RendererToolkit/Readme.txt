@@ -28,7 +28,6 @@ Renderer toolkit.
 - GLM (header only library)
 - RapidJSON (header only library)
 - mikktspace (directly compiled and linked in)
-- sqlitecpp (directly compiled and linked in)
 - SimpleFileWatcher (directly compiled and linked in)
 
 

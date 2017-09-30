@@ -111,14 +111,17 @@ namespace
 			return false;
 		}
 
-		bool savePipelineStateObjectCacheFile(const RendererRuntime::IRendererRuntime& rendererRuntime, const RendererRuntime::MemoryFile& memoryFile)
+		void savePipelineStateObjectCacheFile(const RendererRuntime::IRendererRuntime& rendererRuntime, const RendererRuntime::MemoryFile& memoryFile)
 		{
 			std::string directoryName;
 			std::string filename;
 			getPipelineStateObjectCacheFilename(rendererRuntime, directoryName, filename);
 			RendererRuntime::IFileManager& fileManager = rendererRuntime.getFileManager();
 			fileManager.createDirectories(directoryName.c_str());
-			return memoryFile.writeLz4CompressedDataToFile(PipelineStateCache::FORMAT_TYPE, PipelineStateCache::FORMAT_VERSION, filename, fileManager);
+			if (!memoryFile.writeLz4CompressedDataToFile(PipelineStateCache::FORMAT_TYPE, PipelineStateCache::FORMAT_VERSION, filename, fileManager))
+			{
+				RENDERER_LOG(rendererRuntime.getContext(), CRITICAL, "The renderer runtime failed to save the pipeline state object cache to \"%s\"", filename)
+			}
 		}
 
 
@@ -336,10 +339,7 @@ namespace RendererRuntime
 			MemoryFile memoryFile;
 			mShaderBlueprintResourceManager->savePipelineStateObjectCache(memoryFile);
 			mMaterialBlueprintResourceManager->savePipelineStateObjectCache(memoryFile);
-			if (!::detail::savePipelineStateObjectCacheFile(*this, memoryFile))
-			{
-				// TODO(co) Error! Unable to save the pipeline state object cache. Communicate this.
-			}
+			::detail::savePipelineStateObjectCacheFile(*this, memoryFile);
 		}
 	}
 

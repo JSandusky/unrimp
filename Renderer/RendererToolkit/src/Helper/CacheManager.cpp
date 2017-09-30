@@ -21,30 +21,14 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-// Disable warnings in external headers, we can't fix them -> those warnings here happen apparently when instancing a template
-#include <RendererRuntime/Core/Platform/PlatformTypes.h>
-PRAGMA_WARNING_DISABLE_MSVC(4242)	// warning C4242: '<x>': conversion from '<y>' to '<z>', possible loss of data
-PRAGMA_WARNING_DISABLE_MSVC(4244)	// warning C4244: '<x>': conversion from '<y>' to '<z>', possible loss of data
-
 #include "RendererToolkit/Helper/CacheManager.h"
-#include "RendererToolkit/Helper/StringHelper.h"
 #include "RendererToolkit/Helper/FileSystemHelper.h"
 #include "RendererToolkit/Context.h"
 
+#include <RendererRuntime/IRendererRuntime.h>
 #include <RendererRuntime/Core/Math/Math.h>
+#include <RendererRuntime/Core/File/MemoryFile.h>
 #include <RendererRuntime/Core/File/IFileManager.h>
-
-// Disable warnings in external headers, we can't fix them
-PRAGMA_WARNING_PUSH
-	PRAGMA_WARNING_DISABLE_MSVC(4626)	// warning C4626: '<x>': assignment operator was implicitly defined as deleted
-	PRAGMA_WARNING_DISABLE_MSVC(5027)	// warning C5027: '<x>': move assignment operator was implicitly defined as deleted
-	#include <SQLiteCpp/SQLiteCpp.h>
-PRAGMA_WARNING_POP
-
-#include <sqlite3.h>
-
-#include <fstream>
-#include <iostream>
 
 
 //[-------------------------------------------------------]
@@ -60,7 +44,53 @@ namespace
 		//[ Global definitions                                    ]
 		//[-------------------------------------------------------]
 		static const uint16_t ASSET_FORMAT_VERSION = 1;
-		static const uint32_t DATABASE_SCHEMA_VERSION = 1; // Database schema versioning
+		namespace RendererToolkitCache
+		{
+			static const uint32_t FORMAT_TYPE	 = RendererRuntime::StringId("RendererToolkitCache");
+			static const uint32_t FORMAT_VERSION = 1;
+		}
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		void getRendererToolkitCacheFilename(const RendererRuntime::IFileManager& fileManager, const std::string& projectName, std::string& directoryName, std::string& filename)
+		{
+			directoryName = std::string(fileManager.getAbsoluteLocalDataDirectoryName()) + "/RendererToolkitCache/";
+			filename = directoryName + projectName + ".cache";
+		}
+
+		bool loadRendererToolkitCacheFile(const RendererRuntime::IFileManager& fileManager, const std::string& projectName, RendererRuntime::MemoryFile& memoryFile)
+		{
+			// Tell the memory mapped file about the LZ4 compressed data and decompress it at once
+			std::string directoryName;
+			std::string filename;
+			getRendererToolkitCacheFilename(fileManager, projectName, directoryName, filename);
+			if (fileManager.doesFileExist(filename.c_str()) && memoryFile.loadLz4CompressedDataFromFile(RendererToolkitCache::FORMAT_TYPE, RendererToolkitCache::FORMAT_VERSION, filename, fileManager))
+			{
+				memoryFile.decompress();
+
+				// Done
+				return true;
+			}
+			
+			// Failed to load the cache
+			// -> No error since the cache might just not exist which is a valid situation
+			return false;
+		}
+
+		void saveRendererToolkitCacheFile(const RendererToolkit::Context& context, const std::string& projectName, const RendererRuntime::MemoryFile& memoryFile)
+		{
+			std::string directoryName;
+			std::string filename;
+			const RendererRuntime::IFileManager& fileManager = context.getFileManager();
+			getRendererToolkitCacheFilename(fileManager, projectName, directoryName, filename);
+			fileManager.createDirectories(directoryName.c_str());
+			if (!memoryFile.writeLz4CompressedDataToFile(RendererToolkitCache::FORMAT_TYPE, RendererToolkitCache::FORMAT_VERSION, filename, fileManager))
+			{
+				RENDERER_LOG(context, CRITICAL, "The renderer toolkit failed to save the cache to \"%s\"", filename)
+			}
+		}
 
 
 //[-------------------------------------------------------]
@@ -91,40 +121,16 @@ namespace RendererToolkit
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	CacheManager::CacheManager(const Context& context, const std::string& projectName) :
-		mContext(context)
+		mContext(context),
+		mProjectName(projectName),
+		mDiskCacheDirty(false)
 	{
-		std_filesystem::path cachePath(mContext.getFileManager().getAbsoluteLocalDataDirectoryName());
-		cachePath /= "RendererToolkitCache";
-
-		// Ensure that the cache output directory exists
-		std_filesystem::create_directories(cachePath);
-
-		// Try open the database
-		try
-		{
-			if (sqlite3_initialize() != SQLITE_OK)
-			{
-				throw std::runtime_error("Failed to initialize SQLite");
-			}
-			std_filesystem::path databasePath(cachePath);
-			databasePath /= projectName + ".db3";
-			mDatabaseConnection = std::make_unique<SQLite::Database>(databasePath.string(), SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE | SQLITE_OPEN_NOMUTEX);
-		}
-		catch (const std::exception& e)
-		{
-			throw std::runtime_error("Error opening cache database: " + std::string(e.what()));
-		}
-
-		setupCacheDataBase();
+		loadCache();
 	}
 
 	CacheManager::~CacheManager()
 	{
-		mDatabaseConnection.reset();
-		if (sqlite3_shutdown() != SQLITE_OK)
-		{
-			RENDERER_LOG(mContext, CRITICAL, "The renderer toolkit failed to shutdown SQLite")
-		}
+		saveCache();
 	}
 
 	bool CacheManager::needsToBeCompiled(const std::string& rendererTarget, const std::string& assetFilename, const std::string& sourceFile, const std::string& destinationFile, uint32_t compilerVersion, CacheEntries& cacheEntries)
@@ -147,7 +153,7 @@ namespace RendererToolkit
 		{
 			if (!checkIfFileExists(sourceFile))
 			{
-				// Error! Source could not be found.
+				// Error! Source file could not be found.
 				throw std::runtime_error("Source file \"" + sourceFile + "\" doesn't exist");
 			}
 		}
@@ -161,17 +167,15 @@ namespace RendererToolkit
 		for (const std::string& sourceFile : sourceFiles)
 		{
 			cacheEntries.sourceCacheEntries.emplace_back(CacheEntry{});
-			CacheEntry& sourceCacheEntry = cacheEntries.sourceCacheEntries.back();
-			if (checkIfFileChanged(rendererTarget, sourceFile, compilerVersion, sourceCacheEntry))
+			if (checkIfFileChanged(rendererTarget, sourceFile, compilerVersion, cacheEntries.sourceCacheEntries.back()))
 			{
-				// One of the source files has changed;
+				// One of the source files has changed
 				sourceFilesChanged = true;
 			}
 		}
 
 		// Check if also the asset file (*.asset) has changed, e.g. compile options has changed
 		const bool assetFileChanged = checkIfFileChanged(rendererTarget, assetFilename, ::detail::ASSET_FORMAT_VERSION, cacheEntries.assetCacheEntry);
-
 		if (!assetFileChanged && (sourceFilesChanged || !destinationExists))
 		{
 			// Mark the asset file as changed when asset needs to be compiled and asset file itself didn't changed
@@ -183,23 +187,15 @@ namespace RendererToolkit
 		return (sourceFilesChanged || assetFileChanged || !destinationExists);
 	}
 
-	void CacheManager::storeOrUpdateCacheEntriesInDatabase(const CacheEntries& cacheEntries)
+	void CacheManager::storeOrUpdateCacheEntries(const CacheEntries& cacheEntries)
 	{
-		if (nullptr != mDatabaseConnection)
+		for (const CacheEntry& sourceCacheEntry : cacheEntries.sourceCacheEntries)
 		{
-			// Write all or nothing -> use an transaction
-			SQLite::Transaction transaction(*mDatabaseConnection.get());
-
-			for (const CacheEntry& sourceCacheEntry : cacheEntries.sourceCacheEntries)
-			{
-				storeOrUpdateCacheEntryInDatabase(sourceCacheEntry);
-			}
-
-			// There must always be an asset metadata file
-			storeOrUpdateCacheEntryInDatabase(cacheEntries.assetCacheEntry);
-
-			transaction.commit();
+			storeOrUpdateCacheEntry(sourceCacheEntry);
 		}
+
+		// There must always be an asset metadata file
+		storeOrUpdateCacheEntry(cacheEntries.assetCacheEntry);
 	}
 
 	bool CacheManager::checkIfFileIsModified(const std::string& rendererTarget, const std::string& assetFilename, const std::vector<std::string>& sourceFiles, uint32_t compilerVersion)
@@ -207,7 +203,7 @@ namespace RendererToolkit
 		bool result = false;
 		CacheEntry dummyEntry;
 
-		// First check the source files...
+		// Check the source files
 		for (const std::string& filename : sourceFiles)
 		{
 			if (checkIfFileChanged(rendererTarget, filename, compilerVersion, dummyEntry))
@@ -216,7 +212,7 @@ namespace RendererToolkit
 			}
 		}
 		
-		// .. check the asset file
+		// Check the asset file
 		if (!checkIfFileChanged(rendererTarget, assetFilename, compilerVersion, dummyEntry))
 		{
 			// We don't include this check in the above if to make sure that the function is always called
@@ -252,293 +248,184 @@ namespace RendererToolkit
 		mCheckedFilesStatus.clear();
 	}
 
+	void CacheManager::saveCache()
+	{
+		// Do only save the renderer toolkit cache if writing local data is allowed
+		if (mDiskCacheDirty && nullptr != mContext.getFileManager().getAbsoluteLocalDataDirectoryName())
+		{
+			const uint32_t numberOfStoredCacheEntries = static_cast<uint32_t>(mStoredCacheEntries.size());
+			RendererRuntime::MemoryFile memoryFile(0, sizeof(uint32_t) + numberOfStoredCacheEntries * sizeof(CacheEntry));
+			memoryFile.write(&numberOfStoredCacheEntries, sizeof(uint32_t));
+			for (const auto& cacheEntryElement : mStoredCacheEntries)
+			{
+				memoryFile.write(&cacheEntryElement.second, sizeof(CacheEntry));
+			}
+
+			// Save file
+			::detail::saveRendererToolkitCacheFile(mContext, mProjectName, memoryFile);
+			mDiskCacheDirty = false;
+		}
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	bool CacheManager::setupCacheDataBase()
+	void CacheManager::loadCache()
 	{
-		// Setup cache to speedup project compilation
-		if (nullptr != mDatabaseConnection)
+		// Clear cache
+		mDiskCacheDirty = false;
+		mStoredCacheEntries.clear();
+		mCheckedFilesStatus.clear();
+
+		// Load file
+		RendererRuntime::MemoryFile memoryFile;
+		if (::detail::loadRendererToolkitCacheFile(mContext.getFileManager(), mProjectName, memoryFile))
 		{
-			try
+			uint32_t numberOfStoredCacheEntries = 0;
+			memoryFile.read(&numberOfStoredCacheEntries, sizeof(uint32_t));
+			mStoredCacheEntries.reserve(numberOfStoredCacheEntries);
+			CacheEntry cacheEntry;
+			for (uint32_t i = 0; i < numberOfStoredCacheEntries; ++i)
 			{
-				const bool isNewDatabase = getIfDataBaseIsNew();
-
-				if (!mDatabaseConnection->tableExists("FileInfo"))
-				{
-					mDatabaseConnection->exec("CREATE TABLE FileInfo (rendererTarget text NOT NULL, fileId integer NOT NULL, hash text NOT NULL, fileTime integer NOT NULL, fileSize integer NOT NULL, compilerVersion integer NOT NULL, PRIMARY KEY (rendererTarget, fileId))");
-				}
-
-				if (mDatabaseConnection->tableExists("VersionInfo"))
-				{
-					const uint32_t schemaVersion = getSchemaVersionOfDatabase();
-					if (schemaVersion != detail::DATABASE_SCHEMA_VERSION)
-					{
-						updateDatabaseDueSchemaChange(schemaVersion);
-					}
-				}
-				else
-				{
-					SQLite::Transaction transaction(*mDatabaseConnection.get());
-					mDatabaseConnection->exec("CREATE TABLE VersionInfo (schemaVersion integer NOT NULL)");
-					
-					SQLite::Statement query(*mDatabaseConnection.get(), "INSERT INTO VersionInfo (schemaVersion) VALUES(?)");
-					query.bind(1, detail::DATABASE_SCHEMA_VERSION);
-					query.exec();
-
-					transaction.commit();
-
-					// Pre "VersionInfo"-schema version update database, but only do this when the database wasn't just created
-					if (!isNewDatabase)
-					{
-						updateDatabaseDueSchemaChange(0);
-					}
-				}
-
-				// Done
-				return true;
-			}
-			catch (const std::exception& e)
-			{
-				throw std::runtime_error("Error setting up cache database: " + std::string(e.what()));
+				memoryFile.read(&cacheEntry, sizeof(CacheEntry));
+				mStoredCacheEntries.emplace(cacheEntry.getKey(), cacheEntry);
 			}
 		}
-
-		// Error
-		return false;
 	}
 
-	bool CacheManager::fillEntryForFile(const std::string& rendererTarget, RendererRuntime::StringId fileId, CacheManager::CacheEntry& cacheEntry)
+	bool CacheManager::fillEntryForFile(const std::string& rendererTarget, RendererRuntime::StringId fileId, CacheEntry& cacheEntry)
 	{
-		if (mDatabaseConnection)
+		const StoredCacheEntries::const_iterator iterator = mStoredCacheEntries.find(CacheEntry::generateKey(rendererTarget, fileId));
+		if (mStoredCacheEntries.cend() == iterator)
 		{
-			try
-			{
-				// Compile the query to get the hash for a file stored in the database
-				SQLite::Statement query(*mDatabaseConnection.get(), "SELECT hash, fileSize, fileTime, compilerVersion FROM FileInfo WHERE fileId = ? AND rendererTarget = ?");
-				query.bind(1, fileId);
-				query.bind(2, rendererTarget);
+			// No stored cache entry found
+			static const CacheEntry defaultCacheEntry;
+			cacheEntry = defaultCacheEntry;
 
-				// Execute statement and check if we got a result
-				if (query.executeStep())
-				{
-					cacheEntry.rendererTarget = rendererTarget;
-					cacheEntry.fileId = fileId;
-					cacheEntry.fileHash = query.getColumn(0).getString();
-					cacheEntry.fileSize = query.getColumn(1).getInt64();
-					cacheEntry.fileTime = query.getColumn(2).getInt64();
-					cacheEntry.compilerVersion = query.getColumn(3).getUInt();
-
-					// Done
-					return true;
-				}
-			}
-			catch (const std::exception& e)
-			{
-				throw std::runtime_error("Error querying data from database: " + std::string(e.what()));
-			}
+			// Error!
+			return false;
 		}
+		else
+		{
+			// Stored cache entry found
+			cacheEntry = iterator->second;
 
-		// Error
-		return false;
+			// Done
+			return true;
+		}
 	}
 
 	bool CacheManager::checkIfFileChanged(const std::string& rendererTarget, const std::string& filename, uint32_t compilerVersion, CacheEntry& cacheEntry)
 	{
-		if (mDatabaseConnection)
+		// Gather file data
+		const std_filesystem::path filePath(filename);
+
+		// Get the last write time
+		const std_filesystem::file_time_type lastWriteTime = std_filesystem::last_write_time(filePath);
+		const int64_t fileTime = static_cast<int64_t>(decltype(lastWriteTime)::clock::to_time_t(lastWriteTime));
+		const uint64_t fileSize = static_cast<uint64_t>(std_filesystem::file_size(filePath));
+
+		// Get cache entry data if an entry exists
+		RendererRuntime::StringId fileId(filename.c_str());
+		const bool hasFileEntry = fillEntryForFile(rendererTarget, fileId, cacheEntry);
+		if (hasFileEntry)
 		{
-			// Gather file data
-			const std_filesystem::path filePath(filename);
-
-			// Get the last write time
-			const std_filesystem::file_time_type lastWriteTime = std_filesystem::last_write_time(filePath);
-			const int64_t fileTime = static_cast<int64_t>(decltype(lastWriteTime)::clock::to_time_t(lastWriteTime));
-
-			// TODO(sw) std::filesystem::file_size returns uintmax_t which is a unsigned 64 bit value (under 64 bit OS), but SQLite only supports signed 64 bit integers (for file size in bytes this would mean a maximum supported size of ~8 388 607 Terabytes)
-			const int64_t fileSize = static_cast<int64_t>(std_filesystem::file_size(filePath));
-
-			// Get cache entry data if an entry exists
-			RendererRuntime::StringId fileId(filename.c_str());
-			const bool hasFileEntry = fillEntryForFile(rendererTarget, fileId, cacheEntry);
-			try
+			// A file might be referenced by different assets so first check if the file was already checked by a previous call to this method
+			// If so return the result (the file shouldn't change between two checks while a compilation is running)
 			{
-				if (hasFileEntry)
+				CheckedFilesStatus::const_iterator iterator = mCheckedFilesStatus.find(fileId);
+				if (mCheckedFilesStatus.end() != iterator)
 				{
-					// A file might be referenced by different assets so first check if the file was already checked by a previous call to this method
-					// If so return the result (the file shouldn't change between two checks while a compilation is running)
-					{
-						CheckedFilesStatus::const_iterator iterator = mCheckedFilesStatus.find(fileId);
-						if (mCheckedFilesStatus.end() != iterator)
-						{
-							// Copy cache entry data from stored one
-							cacheEntry = iterator->second.cacheEntry;
+					// Copy cache entry data from stored one
+					cacheEntry = iterator->second.cacheEntry;
 
-							// The file was already checked before simply return the result
-							return iterator->second.changed;
-						}
-					}
+					// The file was already checked before simply return the result
+					return iterator->second.changed;
+				}
+			}
 
-					// First and faster step: check file size and file time as well as the compiler version (needed so that we also detect compiler version changes here too)
-					if (cacheEntry.fileSize == fileSize && cacheEntry.fileTime == fileTime && cacheEntry.compilerVersion == compilerVersion)
-					{
-						// The file has not changed -> store the result
-						CheckedFile& checkedFile = mCheckedFilesStatus[fileId];
-						checkedFile.changed = false;
-						checkedFile.cacheEntry = cacheEntry;
+			// First and faster step: Check file size and file time as well as the compiler version (needed so that we also detect compiler version changes here too)
+			if (cacheEntry.fileSize == fileSize && cacheEntry.fileTime == fileTime && cacheEntry.compilerVersion == compilerVersion)
+			{
+				// The file has not changed -> store the result
+				CheckedFile& checkedFile = mCheckedFilesStatus[fileId];
+				checkedFile.changed = false;
+				checkedFile.cacheEntry = cacheEntry;
 
-						// Source file didn't changed
-						return false;
-					}
-					else
-					{
-						// Current file differs in file size and/or file time do the second step:
-						// Check the compiler version and the 64-bit FNV-1a hash
-						const std::string fileHash = std::to_string(RendererRuntime::Math::calculateFileFNV1a64ByFilename(mContext.getFileManager(), filename));
-						if (cacheEntry.fileHash == fileHash && cacheEntry.compilerVersion == compilerVersion)
-						{
-							// Hash of the file and compiler version didn't changed but store the changed fileSize/fileTime
-							cacheEntry.isNewEntry	   = false;
-							cacheEntry.fileSize		   = fileSize;
-							cacheEntry.fileTime		   = fileTime;
-							cacheEntry.compilerVersion = compilerVersion;
-							storeOrUpdateCacheEntryInDatabase(cacheEntry);
+				// Source file didn't changed
+				return false;
+			}
+			else
+			{
+				// Current file differs in file size and/or file time do the second step:
+				// Check the compiler version and the 64-bit FNV-1a hash
+				const uint64_t fileHash = RendererRuntime::Math::calculateFileFNV1a64ByFilename(mContext.getFileManager(), filename);
+				if (cacheEntry.fileHash == fileHash && cacheEntry.compilerVersion == compilerVersion)
+				{
+					// Hash of the file and compiler version didn't changed but store the changed file size/time
+					cacheEntry.fileSize		   = fileSize;
+					cacheEntry.fileTime		   = fileTime;
+					cacheEntry.compilerVersion = compilerVersion;
+					storeOrUpdateCacheEntry(cacheEntry);
 
-							// The file has not changed -> store the result
-							CheckedFile& checkedFile = mCheckedFilesStatus[fileId];
-							checkedFile.changed = false;
-							checkedFile.cacheEntry = cacheEntry;
+					// The file has not changed -> store the result
+					CheckedFile& checkedFile = mCheckedFilesStatus[fileId];
+					checkedFile.changed = false;
+					checkedFile.cacheEntry = cacheEntry;
 
-							// Source file didn't changed
-							return false;
-						}
-						else
-						{
-							cacheEntry.isNewEntry	   = false;
-							cacheEntry.fileSize		   = fileSize;
-							cacheEntry.fileTime		   = fileTime;
-							cacheEntry.fileHash		   = fileHash;
-							cacheEntry.compilerVersion = compilerVersion;
-
-							// The file has changed -> store the result
-							CheckedFile& checkedFile = mCheckedFilesStatus[fileId];
-							checkedFile.changed = true;
-							checkedFile.cacheEntry = cacheEntry;
-						}
-					}
+					// Source file didn't changed
+					return false;
 				}
 				else
 				{
-					// No cache entry exists yet: Store the data
-					cacheEntry.isNewEntry	   = true;
-					cacheEntry.rendererTarget  = rendererTarget;
-					cacheEntry.fileId		   = fileId;
 					cacheEntry.fileSize		   = fileSize;
 					cacheEntry.fileTime		   = fileTime;
-					cacheEntry.fileHash		   = std::to_string(RendererRuntime::Math::calculateFileFNV1a64ByFilename(mContext.getFileManager(), filename));
+					cacheEntry.fileHash		   = fileHash;
 					cacheEntry.compilerVersion = compilerVersion;
 
-					// The file had no cache entry yet -> store it as "has changed"
+					// The file has changed -> store the result
 					CheckedFile& checkedFile = mCheckedFilesStatus[fileId];
 					checkedFile.changed = true;
 					checkedFile.cacheEntry = cacheEntry;
 				}
 			}
-			catch (const std::exception& e)
-			{
-				throw std::runtime_error("Error querying data from database: " + std::string(e.what()));
-			}
+		}
+		else
+		{
+			// No cache entry exists yet: Store the data
+			cacheEntry.rendererTargetId	= RendererRuntime::StringId(rendererTarget.c_str());
+			cacheEntry.fileId			= fileId;
+			cacheEntry.fileSize			= fileSize;
+			cacheEntry.fileTime			= fileTime;
+			cacheEntry.fileHash			= RendererRuntime::Math::calculateFileFNV1a64ByFilename(mContext.getFileManager(), filename);
+			cacheEntry.compilerVersion	= compilerVersion;
+
+			// The file had no cache entry yet -> store it as "has changed"
+			CheckedFile& checkedFile = mCheckedFilesStatus[fileId];
+			checkedFile.changed = true;
+			checkedFile.cacheEntry = cacheEntry;
 		}
 
 		// Default file has changed to do not break compilation, if cache doesn't work
 		return true;
 	}
 	
-	void CacheManager::storeOrUpdateCacheEntryInDatabase(const CacheEntry& cacheEntry)
+	void CacheManager::storeOrUpdateCacheEntry(const CacheEntry& cacheEntry)
 	{
-		// This method should only be called when a database connection exists so no need to do a check here
-		if (cacheEntry.isNewEntry)
+		const uint64_t cacheEntryKey = cacheEntry.getKey();
+		const StoredCacheEntries::iterator iterator = mStoredCacheEntries.find(cacheEntryKey);
+		if (mStoredCacheEntries.cend() == iterator)
 		{
-			// No entry in the cache: Store it
-			SQLite::Statement query(*mDatabaseConnection.get(), "INSERT INTO FileInfo VALUES(?, ?, ?, ?, ?, ?)");
-			query.bind(1, cacheEntry.rendererTarget);
-			query.bind(2, cacheEntry.fileId);
-			query.bind(3, cacheEntry.fileHash);
-			query.bind(4, static_cast<long long>(cacheEntry.fileTime));
-			query.bind(5, static_cast<long long>(cacheEntry.fileSize));
-			query.bind(6, cacheEntry.compilerVersion);
-
-			// Execute statement and check if we got a result
-			try
-			{
-				if (!query.exec())
-				{
-					throw std::runtime_error("Error inserting data to database");
-				}
-			}
-			catch (const SQLite::Exception& e)
-			{
-				throw std::runtime_error("Error inserting data to database: " + std::string(e.getErrorStr()));
-			}
+			// Store new cache entry
+			mStoredCacheEntries.emplace(cacheEntryKey, cacheEntry);
 		}
 		else
 		{
-			// Entry exists, update stored values
-			SQLite::Statement updateQuery(*mDatabaseConnection.get(), "UPDATE FileInfo SET hash = ?, fileTime = ?, fileSize = ?, compilerVersion = ? WHERE fileId = ? AND rendererTarget = ?");
-			updateQuery.bind(1, cacheEntry.fileHash);
-			updateQuery.bind(2, static_cast<long long>(cacheEntry.fileTime));
-			updateQuery.bind(3, static_cast<long long>(cacheEntry.fileSize));
-			updateQuery.bind(4, cacheEntry.compilerVersion);
-			updateQuery.bind(5, cacheEntry.fileId);
-			updateQuery.bind(6, cacheEntry.rendererTarget);
-
-			// Execute statement and check if we got a result
-			try
-			{
-				if (!updateQuery.exec())
-				{
-					throw std::runtime_error("Error updating data to database");
-				}
-			}
-			catch (const SQLite::Exception& e)
-			{
-				throw std::runtime_error("Error updating data to database: " + std::string(e.getErrorStr()));
-			}
+			// Update existing cache entry
+			iterator->second = cacheEntry;
 		}
-	}
-
-	uint32_t CacheManager::getSchemaVersionOfDatabase() const
-	{
-		SQLite::Statement query(*mDatabaseConnection.get(), "SELECT schemaVersion FROM VersionInfo");
-
-		// Execute statement and check if we got a result
-		return query.executeStep() ? static_cast<uint32_t>(query.getColumn(0).getUInt()) : 0;
-	}
-
-	void CacheManager::updateDatabaseDueSchemaChange(uint32_t oldSchemaVersion)
-	{
-		SQLite::Transaction transaction(*mDatabaseConnection.get());
-		if (0 == oldSchemaVersion)
-		{
-			// Pre "VersionInfo"-table: Add "compilerVersion" to the "FileInfo"-table
-			mDatabaseConnection->exec("ALTER TABLE FileInfo ADD compilerVersion integer DEFAULT 0 NOT NULL");
-		}
-
-		// Update schema version in database
-		// -> We can use here a update statement even when the "oldSchemaVersion = 0" ("VersionInfo"-table doesn't exists already) because in this case the table was created before this method is called
-		SQLite::Statement query(*mDatabaseConnection.get(), "UPDATE VersionInfo  SET schemaVersion = ?");
-		query.bind(1, detail::DATABASE_SCHEMA_VERSION);
-		query.exec();
-
-		// Done updating execute commit transaction
-		transaction.commit();
-	}
-
-	bool CacheManager::getIfDataBaseIsNew()
-	{
-		// A newly created database has a schema_version of zero (http://www.sqlite.org/pragma.html#pragma_schema_version)
-		const int64_t sqlite_schema_version = mDatabaseConnection->execAndGet("PRAGMA schema_version").getInt64();
-		return (0 == sqlite_schema_version);
+		mDiskCacheDirty = true;
 	}
 
 

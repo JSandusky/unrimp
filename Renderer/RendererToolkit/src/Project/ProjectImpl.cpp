@@ -257,6 +257,9 @@ namespace RendererToolkit
 		{
 			throw std::runtime_error("Failed to compile asset with filename \"" + std::string(asset.assetFilename) + "\": " + std::string(e.what()));
 		}
+
+		// Save renderer toolkit cache
+		mCacheManager->saveCache();
 	}
 
 	void ProjectImpl::tryCompileAssetIncludingDependencies(const RendererRuntime::Asset& asset, const char* rendererTarget, RendererRuntime::AssetPackage& outputAssetPackage) noexcept
@@ -294,6 +297,7 @@ namespace RendererToolkit
 	void ProjectImpl::onCompilationRunFinished()
 	{
 		// Compilation run finished clear internal cache of cache manager
+		mCacheManager->saveCache();
 		mCacheManager->clearInternalCache();
 	}
 

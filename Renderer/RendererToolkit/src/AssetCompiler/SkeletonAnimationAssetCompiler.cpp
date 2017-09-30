@@ -306,7 +306,7 @@ namespace RendererToolkit
 			memoryFile.writeLz4CompressedDataToFile(RendererRuntime::v1SkeletonAnimation::FORMAT_TYPE, RendererRuntime::v1SkeletonAnimation::FORMAT_VERSION, outputAssetFilename, input.context.getFileManager());
 
 			// Store new cache entries or update existing ones
-			input.cacheManager.storeOrUpdateCacheEntriesInDatabase(cacheEntries);
+			input.cacheManager.storeOrUpdateCacheEntries(cacheEntries);
 		}
 
 		{ // Update the output asset package

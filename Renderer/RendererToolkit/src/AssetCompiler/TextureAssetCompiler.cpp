@@ -1368,7 +1368,7 @@ namespace RendererToolkit
 			// Store new cache entries or update existing ones
 			for (const CacheManager::CacheEntries& currentCacheEntries : cacheEntries)
 			{
-				input.cacheManager.storeOrUpdateCacheEntriesInDatabase(currentCacheEntries);
+				input.cacheManager.storeOrUpdateCacheEntries(currentCacheEntries);
 			}
 		}
 

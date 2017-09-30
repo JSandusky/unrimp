@@ -46,7 +46,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/mikktspace/includ
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/glm/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/RapidJSON/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/SimpleFileWatcher/src/)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/sqlitecpp/SQLiteCpp/include/)
 
 link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/${OS_ARCHITECTURE}/Assimp/lib)
 
@@ -107,9 +106,9 @@ endif()
 if(STATIC_LIBRARY)
 	add_library(RendererToolkitStatic STATIC ${SOURCE_CODES})
 	if (WIN32)
-		set(LIBRARIES ${LIBRARIES} ${CMAKE_STATIC_LIBRARY_PREFIX}assimpStatic${CMAKE_STATIC_LIBRARY_SUFFIX} zlibStatic.lib SQLiteCpp sqlite3)
+		set(LIBRARIES ${LIBRARIES} ${CMAKE_STATIC_LIBRARY_PREFIX}assimpStatic${CMAKE_STATIC_LIBRARY_SUFFIX} zlibStatic.lib)
 	elseif(UNIX)
-		set(LIBRARIES ${LIBRARIES} assimp tiff minizip crunch stdc++fs SQLiteCpp sqlite3 dl)
+		set(LIBRARIES ${LIBRARIES} assimp tiff minizip crunch stdc++fs dl)
 
 		if (HAVE_CXX_FILESYSTEM_TS_SUPPORT)
 			set(LIBRARIES ${LIBRARIES} stdc++fs)
@@ -120,15 +119,15 @@ if(STATIC_LIBRARY)
 
 	target_link_libraries(RendererToolkitStatic ${LIBRARIES})
 
-	add_dependencies(RendererToolkitStatic crunch SQLiteCpp)
+	add_dependencies(RendererToolkitStatic crunch)
 endif()
 if(SHARED_LIBRARY)
 	add_library(RendererToolkit SHARED ${SOURCE_CODES})
 	set_target_properties(RendererToolkit PROPERTIES COMPILE_FLAGS "-DSHARED_LIBRARIES -DRENDERERTOOLKIT_EXPORTS")
 	if(WIN32)
-		target_link_libraries(RendererToolkit assimp.lib crnlib.lib SQLiteCpp sqlite3)
+		target_link_libraries(RendererToolkit assimp.lib crnlib.lib)
 	else()
-		target_link_libraries(RendererToolkit ${CMAKE_SHARED_LIBRARY_PREFIX}assimp${CMAKE_SHARED_LIBRARY_SUFFIX} tiff minizip crunch SQLiteCpp sqlite3 dl)
+		target_link_libraries(RendererToolkit ${CMAKE_SHARED_LIBRARY_PREFIX}assimp${CMAKE_SHARED_LIBRARY_SUFFIX} tiff minizip crunch dl)
 		if (HAVE_CXX_FILESYSTEM_TS_SUPPORT)
 			target_link_libraries(RendererToolkit stdc++fs)
 		elseif(Boost_FILESYSTEM_FOUND)
@@ -136,7 +135,7 @@ if(SHARED_LIBRARY)
 		endif()
 	endif()
 
-	add_dependencies(RendererToolkit crunch SQLiteCpp)
+	add_dependencies(RendererToolkit crunch)
 endif()
 
 

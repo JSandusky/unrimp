@@ -128,7 +128,7 @@ namespace RendererToolkit
 			// RendererRuntime::MemoryFile memoryFile(0, 4096);
 
 			// Store new cache entries or update existing ones
-			input.cacheManager.storeOrUpdateCacheEntriesInDatabase(cacheEntries);
+			input.cacheManager.storeOrUpdateCacheEntries(cacheEntries);
 		}
 
 		{ // Update the output asset package

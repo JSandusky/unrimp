@@ -50,16 +50,6 @@
     <ClInclude Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcherLinux.h" />
     <ClInclude Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcherOSX.h" />
     <ClInclude Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcherWin32.h" />
-    <ClInclude Include="..\..\External\sqlitecpp\SQLiteCpp\include\SQLiteCpp\Assertion.h" />
-    <ClInclude Include="..\..\External\sqlitecpp\SQLiteCpp\include\SQLiteCpp\Backup.h" />
-    <ClInclude Include="..\..\External\sqlitecpp\SQLiteCpp\include\SQLiteCpp\Column.h" />
-    <ClInclude Include="..\..\External\sqlitecpp\SQLiteCpp\include\SQLiteCpp\Database.h" />
-    <ClInclude Include="..\..\External\sqlitecpp\SQLiteCpp\include\SQLiteCpp\Exception.h" />
-    <ClInclude Include="..\..\External\sqlitecpp\SQLiteCpp\include\SQLiteCpp\SQLiteCpp.h" />
-    <ClInclude Include="..\..\External\sqlitecpp\SQLiteCpp\include\SQLiteCpp\Statement.h" />
-    <ClInclude Include="..\..\External\sqlitecpp\SQLiteCpp\include\SQLiteCpp\Transaction.h" />
-    <ClInclude Include="..\..\External\sqlitecpp\SQLiteCpp\include\SQLiteCpp\VariadicBind.h" />
-    <ClInclude Include="..\..\External\sqlitecpp\SQLiteCpp\sqlite3\sqlite3.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\CompositorNodeAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\CompositorWorkspaceAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\IAssetCompiler.h" />
@@ -127,76 +117,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcherWin32.cpp" />
-    <ClCompile Include="..\..\External\sqlitecpp\SQLiteCpp\sqlite3\sqlite3.c">
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
-    </ClCompile>
-    <ClCompile Include="..\..\External\sqlitecpp\SQLiteCpp\src\Backup.cpp">
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
-    </ClCompile>
-    <ClCompile Include="..\..\External\sqlitecpp\SQLiteCpp\src\Column.cpp">
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
-    </ClCompile>
-    <ClCompile Include="..\..\External\sqlitecpp\SQLiteCpp\src\Database.cpp">
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
-    </ClCompile>
-    <ClCompile Include="..\..\External\sqlitecpp\SQLiteCpp\src\Exception.cpp">
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
-    </ClCompile>
-    <ClCompile Include="..\..\External\sqlitecpp\SQLiteCpp\src\Statement.cpp">
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
-    </ClCompile>
-    <ClCompile Include="..\..\External\sqlitecpp\SQLiteCpp\src\Transaction.cpp">
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
-    </ClCompile>
     <ClCompile Include="src\AssetCompiler\CompositorNodeAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\CompositorWorkspaceAssetCompiler.cpp" />
     <ClCompile Include="src\AssetCompiler\IAssetCompiler.cpp" />
@@ -379,7 +299,7 @@
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\mikktspace\include\;..\..\External\RapidJSON\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\mikktspace\include\;..\..\External\RapidJSON\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -411,7 +331,7 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\mikktspace\include\;..\..\External\RapidJSON\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\mikktspace\include\;..\..\External\RapidJSON\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;X64_ARCHITECTURE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -443,7 +363,7 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\mikktspace\include\;..\..\External\RapidJSON\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\mikktspace\include\;..\..\External\RapidJSON\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;SHARED_LIBRARIES;RENDERERTOOLKIT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -454,7 +374,7 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)d_dynamic\;..\..\External\Windows_$(PlatformTarget)\zlib\lib\;..\..\External\Windows_$(PlatformTarget)\Assimp\lib\;..\..\External\Windows_$(PlatformTarget)\crunch\lib\MTd_DynamicDebug\;..\..\External\Windows_$(PlatformTarget)\SQLiteCpp\lib\MTd_DynamicDebug\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)d_dynamic\;..\..\External\Windows_$(PlatformTarget)\zlib\lib\;..\..\External\Windows_$(PlatformTarget)\Assimp\lib\;..\..\External\Windows_$(PlatformTarget)\crunch\lib\MTd_DynamicDebug\</AdditionalLibraryDirectories>
       <AdditionalDependencies>RendererRuntimeD.lib;zlibstatic.lib;assimp.lib;crnlibD.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
@@ -473,7 +393,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\mikktspace\include\;..\..\External\RapidJSON\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\mikktspace\include\;..\..\External\RapidJSON\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;X64_ARCHITECTURE;SHARED_LIBRARIES;RENDERERTOOLKIT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -484,7 +404,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)d_dynamic\;..\..\External\Windows_$(PlatformTarget)\zlib\lib\;..\..\External\Windows_$(PlatformTarget)\Assimp\lib\;..\..\External\Windows_$(PlatformTarget)\crunch\lib\MTd_DynamicDebug\;..\..\External\Windows_$(PlatformTarget)\SQLiteCpp\lib\MTd_DynamicDebug\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)d_dynamic\;..\..\External\Windows_$(PlatformTarget)\zlib\lib\;..\..\External\Windows_$(PlatformTarget)\Assimp\lib\;..\..\External\Windows_$(PlatformTarget)\crunch\lib\MTd_DynamicDebug\</AdditionalLibraryDirectories>
       <AdditionalDependencies>RendererRuntimeD.lib;zlibstatic.lib;assimp.lib;crnlibD.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
@@ -505,7 +425,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\mikktspace\include\;..\..\External\RapidJSON\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\mikktspace\include\;..\..\External\RapidJSON\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;RENDERERTOOLKIT_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -550,7 +470,7 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\mikktspace\include\;..\..\External\RapidJSON\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\mikktspace\include\;..\..\External\RapidJSON\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;X64_ARCHITECTURE;RENDERERTOOLKIT_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -594,7 +514,7 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\mikktspace\include\;..\..\External\RapidJSON\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\mikktspace\include\;..\..\External\RapidJSON\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;SHARED_LIBRARIES;RENDERERTOOLKIT_EXPORTS;RENDERERTOOLKIT_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -615,7 +535,7 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)_dynamic\;..\..\External\Windows_$(PlatformTarget)\zlib\lib\;..\..\External\Windows_$(PlatformTarget)\Assimp\lib\;..\..\External\Windows_$(PlatformTarget)\crunch\lib\MT_DynamicRelease\;..\..\External\Windows_$(PlatformTarget)\SQLiteCpp\lib\MT_DynamicRelease\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)_dynamic\;..\..\External\Windows_$(PlatformTarget)\zlib\lib\;..\..\External\Windows_$(PlatformTarget)\Assimp\lib\;..\..\External\Windows_$(PlatformTarget)\crunch\lib\MT_DynamicRelease\</AdditionalLibraryDirectories>
       <AdditionalDependencies>RendererRuntime.lib;zlibstatic.lib;assimp.lib;crnlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
@@ -636,7 +556,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\mikktspace\include\;..\..\External\RapidJSON\include\;..\..\External\sqlitecpp\SQLiteCpp\sqlite3\;..\..\External\sqlitecpp\SQLiteCpp\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\include\;..\..\External\mikktspace\include\;..\..\External\RapidJSON\include\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;X64_ARCHITECTURE;SHARED_LIBRARIES;RENDERERTOOLKIT_EXPORTS;RENDERERTOOLKIT_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -656,7 +576,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)_dynamic\;..\..\External\Windows_$(PlatformTarget)\zlib\lib\;..\..\External\Windows_$(PlatformTarget)\Assimp\lib\;..\..\External\Windows_$(PlatformTarget)\crunch\lib\MT_DynamicRelease\;..\..\External\Windows_$(PlatformTarget)\SQLiteCpp\lib\MT_DynamicRelease\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)_dynamic\;..\..\External\Windows_$(PlatformTarget)\zlib\lib\;..\..\External\Windows_$(PlatformTarget)\Assimp\lib\;..\..\External\Windows_$(PlatformTarget)\crunch\lib\MT_DynamicRelease\</AdditionalLibraryDirectories>
       <AdditionalDependencies>RendererRuntime.lib;zlibstatic.lib;assimp.lib;crnlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
