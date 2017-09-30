@@ -41,7 +41,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../Renderer/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../RendererRuntime/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/include/)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/inc/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/mikktspace/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/glm/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/RapidJSON/include/)
@@ -55,8 +55,102 @@ link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/${OS_ARCHITECTURE}/A
 ##################################################
 # Cross-platform source codes
 set(SOURCE_CODES
+	# SimpleFileWatcher external library
 	${CMAKE_CURRENT_SOURCE_DIR}/../../External/SimpleFileWatcher/src/FileWatcher/FileWatcher.cpp
+	# mikktspace external library
 	${CMAKE_CURRENT_SOURCE_DIR}/../../External/mikktspace/src/mikktspace.c
+	# crunch external library
+		#api
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crnlib.cpp
+		# comp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_dxt.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_dxt_endpoint_refiner.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_dxt_fast.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_dxt_hc_common.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_dxt1.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_dxt5a.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_etc.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_huffman_codes.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_lzma_codec.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_miniz.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_prefix_coding.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_qdxt1.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_qdxt5.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_rg_etc1.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_ryg_dxt.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_symbol_codec.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_zeng.cpp
+		# console
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_colorized_console.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_console.cpp
+		# containers
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_hash_map.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_sparse_bit_array.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_value.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_vector.cpp
+		# crn
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_comp.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_dds_comp.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_decomp.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_dxt_hc.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_texture_comp.cpp
+		# file
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_file_utils.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_find_files.cpp
+		# image
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_image_utils.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_jpgd.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_jpge.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_pixel_format.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_resample_filters.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_resampler.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_stb_image.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_threaded_resampler.cpp
+		# lzmalib
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/lzma_7zBuf.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/lzma_7zBuf2.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/lzma_7zCrc.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/lzma_7zFile.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/lzma_7zStream.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/lzma_Alloc.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/lzma_Bcj2.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/lzma_Bra.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/lzma_Bra86.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/lzma_BraIA64.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/lzma_LzFind.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/lzma_LzFindMt.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/lzma_LzmaDec.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/lzma_LzmaEnc.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/lzma_LzmaLib.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/lzma_Threads.cpp
+		# math
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_math.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_rand.cpp
+		# stream
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_data_stream.cpp
+		# string
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_dynamic_string.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_strutils.cpp
+		# texture
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_dxt_image.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_ktx_texture.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_mipmapped_texture.cpp
+		# texture_conversion
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_texture_conversion.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_texture_file_types.cpp
+		# utils
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_arealist.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_checksum.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_command_line_params.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_hash.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_timer.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_utils.cpp
+		# root
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_assert.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_core.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_mem.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_platform.cpp
+	# Renderer toolkit
 	src/AssetCompiler/IAssetCompiler.cpp
 	src/AssetCompiler/CompositorNodeAssetCompiler.cpp
 	src/AssetCompiler/CompositorWorkspaceAssetCompiler.cpp
@@ -88,14 +182,20 @@ if(WIN32)
 	# Windows source codes
 	set(SOURCE_CODES
 		${SOURCE_CODES}
+		# SimpleFileWatcher external library
 		${CMAKE_CURRENT_SOURCE_DIR}/../../External/SimpleFileWatcher/src/FileWatcher/FileWatcherWin32.cpp
+		# crunch external library
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_threading_win32.cpp
 	)
 endif()
 if(UNIX)
 	# Linux source codes
 	set(SOURCE_CODES
 		${SOURCE_CODES}
+		# SimpleFileWatcher external library
 		${CMAKE_CURRENT_SOURCE_DIR}/../../External/SimpleFileWatcher/src/FileWatcher/FileWatcherLinux.cpp
+		# crunch external library
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_threading_pthreads.cpp
 	)
 endif()
 
@@ -106,9 +206,9 @@ endif()
 if(STATIC_LIBRARY)
 	add_library(RendererToolkitStatic STATIC ${SOURCE_CODES})
 	if (WIN32)
-		set(LIBRARIES ${LIBRARIES} ${CMAKE_STATIC_LIBRARY_PREFIX}assimpStatic${CMAKE_STATIC_LIBRARY_SUFFIX} zlibStatic.lib)
+		set(LIBRARIES ${LIBRARIES} ${CMAKE_STATIC_LIBRARY_PREFIX}assimpStatic${CMAKE_STATIC_LIBRARY_SUFFIX})
 	elseif(UNIX)
-		set(LIBRARIES ${LIBRARIES} assimp tiff minizip crunch stdc++fs dl)
+		set(LIBRARIES ${LIBRARIES} assimp tiff minizip stdc++fs dl)
 
 		if (HAVE_CXX_FILESYSTEM_TS_SUPPORT)
 			set(LIBRARIES ${LIBRARIES} stdc++fs)
@@ -119,7 +219,7 @@ if(STATIC_LIBRARY)
 
 	target_link_libraries(RendererToolkitStatic ${LIBRARIES})
 
-	add_dependencies(RendererToolkitStatic crunch)
+	add_dependencies(RendererToolkitStatic)
 endif()
 if(SHARED_LIBRARY)
 	add_library(RendererToolkit SHARED ${SOURCE_CODES})
@@ -127,7 +227,7 @@ if(SHARED_LIBRARY)
 	if(WIN32)
 		target_link_libraries(RendererToolkit assimp.lib crnlib.lib)
 	else()
-		target_link_libraries(RendererToolkit ${CMAKE_SHARED_LIBRARY_PREFIX}assimp${CMAKE_SHARED_LIBRARY_SUFFIX} tiff minizip crunch dl)
+		target_link_libraries(RendererToolkit ${CMAKE_SHARED_LIBRARY_PREFIX}assimp${CMAKE_SHARED_LIBRARY_SUFFIX} tiff minizip dl)
 		if (HAVE_CXX_FILESYSTEM_TS_SUPPORT)
 			target_link_libraries(RendererToolkit stdc++fs)
 		elseif(Boost_FILESYSTEM_FOUND)
@@ -135,7 +235,7 @@ if(SHARED_LIBRARY)
 		endif()
 	endif()
 
-	add_dependencies(RendererToolkit crunch)
+	add_dependencies(RendererToolkit)
 endif()
 
 

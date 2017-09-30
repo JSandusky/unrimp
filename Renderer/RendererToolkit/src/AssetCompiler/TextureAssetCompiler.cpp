@@ -46,11 +46,11 @@ PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_CLANG("-Warray-bounds")			// warning: array index 1 is past the end of the array (which contains 1 element) [-Warray-bounds]
 	PRAGMA_WARNING_DISABLE_GCC("-Wunused-value")			// warning: expression result unused [-Wunused-value]
 	PRAGMA_WARNING_DISABLE_GCC("-Wunused-local-typedefs")	// warning: typedef ‘<x>’ locally defined but not used [-Wunused-value]
-	#include <crunch/crnlib.h>
-	#include <crunch/dds_defs.h>
-	#include <crunch/crnlib/crn_texture_conversion.h>
-	#include <crunch/crnlib/crn_command_line_params.h>
-	#include <crunch/crnlib/crn_console.h>
+	#include <crnlib.h>
+	#include <dds_defs.h>
+	#include <../src/crn_texture_conversion.h>
+	#include <../src/crn_command_line_params.h>
+	#include <../src/crn_console.h>
 PRAGMA_WARNING_POP
 
 // Disable warnings in external headers, we can't fix them
