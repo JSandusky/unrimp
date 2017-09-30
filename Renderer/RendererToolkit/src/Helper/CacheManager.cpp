@@ -213,7 +213,7 @@ namespace RendererToolkit
 		}
 		
 		// Check the asset file
-		if (!checkIfFileChanged(rendererTarget, assetFilename, compilerVersion, dummyEntry))
+		if (!checkIfFileChanged(rendererTarget, assetFilename, ::detail::ASSET_FORMAT_VERSION, dummyEntry))
 		{
 			// We don't include this check in the above if to make sure that the function is always called
 			if (result)
