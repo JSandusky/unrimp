@@ -351,18 +351,12 @@ namespace RendererToolkit
 			// Gather file data
 			const std_filesystem::path filePath(filename);
 
-			#ifdef CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME
-				// Get the last write time
-				const std_filesystem::file_time_type lastWriteTime = std_filesystem::last_write_time(filePath);
-				const int64_t fileTime = static_cast<int64_t>(decltype(lastWriteTime)::clock::to_time_t(lastWriteTime));
+			// Get the last write time
+			const std_filesystem::file_time_type lastWriteTime = std_filesystem::last_write_time(filePath);
+			const int64_t fileTime = static_cast<int64_t>(decltype(lastWriteTime)::clock::to_time_t(lastWriteTime));
 
-				// TODO(sw) std::filesystem::file_size returns uintmax_t which is a unsigned 64 bit value (under 64 bit OS), but SQLite only supports signed 64 bit integers (for file size in bytes this would mean a maximum supported size of ~8 388 607 Terabytes)
-				const int64_t fileSize = static_cast<int64_t>(std_filesystem::file_size(filePath));
-			#else
-				// No file time and size checks, but the values are stored
-				const int64_t fileTime = 0;
-				const int64_t fileSize = 0;
-			#endif
+			// TODO(sw) std::filesystem::file_size returns uintmax_t which is a unsigned 64 bit value (under 64 bit OS), but SQLite only supports signed 64 bit integers (for file size in bytes this would mean a maximum supported size of ~8 388 607 Terabytes)
+			const int64_t fileSize = static_cast<int64_t>(std_filesystem::file_size(filePath));
 
 			// Get cache entry data if an entry exists
 			RendererRuntime::StringId fileId(filename.c_str());
@@ -385,34 +379,30 @@ namespace RendererToolkit
 						}
 					}
 
-					#ifdef CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME
-						// First and faster step: check file size and file time as well as the compiler version (needed so that we also detect compiler version changes here too)
-						if (cacheEntry.fileSize == fileSize && cacheEntry.fileTime == fileTime && cacheEntry.compilerVersion == compilerVersion)
-						{
-							// The file has not changed -> store the result
-							CheckedFile& checkedFile = mCheckedFilesStatus[fileId];
-							checkedFile.changed = false;
-							checkedFile.cacheEntry = cacheEntry;
+					// First and faster step: check file size and file time as well as the compiler version (needed so that we also detect compiler version changes here too)
+					if (cacheEntry.fileSize == fileSize && cacheEntry.fileTime == fileTime && cacheEntry.compilerVersion == compilerVersion)
+					{
+						// The file has not changed -> store the result
+						CheckedFile& checkedFile = mCheckedFilesStatus[fileId];
+						checkedFile.changed = false;
+						checkedFile.cacheEntry = cacheEntry;
 
-							// Source file didn't changed
-							return false;
-						}
-						else
-					#endif
+						// Source file didn't changed
+						return false;
+					}
+					else
 					{
 						// Current file differs in file size and/or file time do the second step:
 						// Check the compiler version and the 64-bit FNV-1a hash
 						const std::string fileHash = std::to_string(RendererRuntime::Math::calculateFileFNV1a64ByFilename(filename));
 						if (cacheEntry.fileHash == fileHash && cacheEntry.compilerVersion == compilerVersion)
 						{
-							#ifdef CACHEMANAGER_CHECK_FILE_SIZE_AND_TIME
-								// Hash of the file and compiler version didn't changed but store the changed fileSize/fileTime
-								cacheEntry.isNewEntry	   = false;
-								cacheEntry.fileSize		   = fileSize;
-								cacheEntry.fileTime		   = fileTime;
-								cacheEntry.compilerVersion = compilerVersion;
-								storeOrUpdateCacheEntryInDatabase(cacheEntry);
-							#endif
+							// Hash of the file and compiler version didn't changed but store the changed fileSize/fileTime
+							cacheEntry.isNewEntry	   = false;
+							cacheEntry.fileSize		   = fileSize;
+							cacheEntry.fileTime		   = fileTime;
+							cacheEntry.compilerVersion = compilerVersion;
+							storeOrUpdateCacheEntryInDatabase(cacheEntry);
 
 							// The file has not changed -> store the result
 							CheckedFile& checkedFile = mCheckedFilesStatus[fileId];
