@@ -124,8 +124,8 @@ namespace RendererRuntime
 
 	uint32_t Math::calculateFNV1a32(const uint8_t* content, uint32_t numberOfBytes, uint32_t hash)
 	{
-		// 32-bit FNV-1a implementation basing on http://de.wikipedia.org/wiki/FNV_%28Informatik%29
-		static const uint32_t MAGIC_PRIME = 2166136261u;
+		// 32-bit FNV-1a implementation basing on http://www.isthe.com/chongo/tech/comp/fnv/
+		static const uint32_t MAGIC_PRIME = 16777619u;
 		const uint8_t* end = content + numberOfBytes;
 		for ( ; content < end; ++content)
 		{
@@ -136,8 +136,8 @@ namespace RendererRuntime
 
 	uint64_t Math::calculateFNV1a64(const uint8_t* content, uint32_t numberOfBytes, uint64_t hash)
 	{
-		// 64-bit FNV-1a implementation basing on http://de.wikipedia.org/wiki/FNV_%28Informatik%29
-		static const uint64_t MAGIC_PRIME = 0x00000100000001b3u;
+		// 64-bit FNV-1a implementation basing on http://www.isthe.com/chongo/tech/comp/fnv/
+		static const uint64_t MAGIC_PRIME = 1099511628211u;
 		const uint8_t* end = content + numberOfBytes;
 		for ( ; content < end; ++content)
 		{
