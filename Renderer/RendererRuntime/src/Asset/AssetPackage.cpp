@@ -88,11 +88,11 @@ namespace RendererRuntime
 		return (iterator != mSortedAssetVector.end() && iterator->assetId == assetId) ? &(*iterator) : nullptr;
 	}
 
-	bool AssetPackage::validateIntegrity() const
+	bool AssetPackage::validateIntegrity(const IFileManager& fileManager) const
 	{
 		for (const Asset& asset : mSortedAssetVector)
 		{
-			if (Math::calculateFileFNV1a64ByFilename(asset.assetFilename) != asset.fileHash)
+			if (Math::calculateFileFNV1a64ByFilename(fileManager, asset.assetFilename) != asset.fileHash)
 			{
 				// Invalid integrity
 				return false;

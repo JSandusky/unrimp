@@ -394,7 +394,7 @@ namespace RendererToolkit
 					{
 						// Current file differs in file size and/or file time do the second step:
 						// Check the compiler version and the 64-bit FNV-1a hash
-						const std::string fileHash = std::to_string(RendererRuntime::Math::calculateFileFNV1a64ByFilename(filename));
+						const std::string fileHash = std::to_string(RendererRuntime::Math::calculateFileFNV1a64ByFilename(mContext.getFileManager(), filename));
 						if (cacheEntry.fileHash == fileHash && cacheEntry.compilerVersion == compilerVersion)
 						{
 							// Hash of the file and compiler version didn't changed but store the changed fileSize/fileTime
@@ -435,7 +435,7 @@ namespace RendererToolkit
 					cacheEntry.fileId		   = fileId;
 					cacheEntry.fileSize		   = fileSize;
 					cacheEntry.fileTime		   = fileTime;
-					cacheEntry.fileHash		   = std::to_string(RendererRuntime::Math::calculateFileFNV1a64ByFilename(filename));
+					cacheEntry.fileHash		   = std::to_string(RendererRuntime::Math::calculateFileFNV1a64ByFilename(mContext.getFileManager(), filename));
 					cacheEntry.compilerVersion = compilerVersion;
 
 					// The file had no cache entry yet -> store it as "has changed"

@@ -23,10 +23,10 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Core/Math/Math.h"
+#include "RendererRuntime/Core/File/IFile.h"
+#include "RendererRuntime/Core/File/IFileManager.h"
 
 #include <Renderer/Public/Renderer.h>
-
-#include <fstream>
 
 
 //[-------------------------------------------------------]
@@ -146,32 +146,37 @@ namespace RendererRuntime
 		return hash;
 	}
 
-	uint64_t Math::calculateFileFNV1a64ByFilename(const std::string& filename)
+	uint64_t Math::calculateFileFNV1a64ByFilename(const IFileManager& fileManager, const std::string& filename)
 	{
 		uint64_t hash = FNV1a_INITIAL_HASH_64;
 
 		// Try open file
-		std::ifstream file(filename, std::ios::binary);
-		if (file)
+		IFile* file = fileManager.openFile(IFileManager::FileMode::READ, filename.c_str());
+		if (nullptr != file)
 		{
-			// Read data in 32768 byte blocks
-			static const uint32_t NUMBER_OF_BYTES = 32768;
-			std::vector<char> buffer(NUMBER_OF_BYTES, 0);
-
 			// Read the file content into chunks and process them
-			while (file.read(buffer.data(), NUMBER_OF_BYTES))
+			static const uint32_t NUMBER_OF_CHUNK_BYTES = 32768;
+			uint8_t chunkBuffer[NUMBER_OF_CHUNK_BYTES];
+			const size_t numberOfFileBytes = file->getNumberOfBytes();
+			const size_t numberOfChunks = numberOfFileBytes / NUMBER_OF_CHUNK_BYTES;
+			for (size_t i = 0; i < numberOfChunks; ++i)
 			{
 				// We have read in a full chunk, process it
-				hash = calculateFNV1a64(reinterpret_cast<const uint8_t*>(buffer.data()), NUMBER_OF_BYTES, hash);
+				file->read(chunkBuffer, NUMBER_OF_CHUNK_BYTES);
+				hash = calculateFNV1a64(chunkBuffer, NUMBER_OF_CHUNK_BYTES, hash);
 			}
 
 			// Check if we have remaining bytes to process (less then the chunk size)
-			const std::streamsize readInBytes = file.gcount();
-			if (readInBytes > 0)
+			const size_t remainingFileBytes = numberOfFileBytes - (numberOfChunks * NUMBER_OF_CHUNK_BYTES);
+			if (remainingFileBytes > 0)
 			{
 				// Process the remaining bytes
-				hash = calculateFNV1a64(reinterpret_cast<const uint8_t*>(buffer.data()), static_cast<uint32_t>(readInBytes), hash);
+				file->read(chunkBuffer, remainingFileBytes);
+				hash = calculateFNV1a64(chunkBuffer, static_cast<uint32_t>(remainingFileBytes), hash);
 			}
+
+			// Close file
+			fileManager.closeFile(*file);
 		}
 		else
 		{

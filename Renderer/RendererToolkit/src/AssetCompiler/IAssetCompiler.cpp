@@ -38,7 +38,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	void IAssetCompiler::outputAsset(const std::string& assetIdAsString, const std::string& outputAssetFilename, RendererRuntime::AssetPackage& outputAssetPackage)
+	void IAssetCompiler::outputAsset(const RendererRuntime::IFileManager& fileManager, const std::string& assetIdAsString, const std::string& outputAssetFilename, RendererRuntime::AssetPackage& outputAssetPackage)
 	{
 		// Sanity check
 		if (outputAssetFilename.size() > RendererRuntime::Asset::MAXIMUM_ASSET_FILENAME_LENGTH)
@@ -49,7 +49,7 @@ namespace RendererToolkit
 		// Output asset
 		RendererRuntime::Asset outputAsset;
 		outputAsset.assetId = StringHelper::getAssetIdByString(assetIdAsString.c_str());
-		outputAsset.fileHash = RendererRuntime::Math::calculateFileFNV1a64ByFilename(outputAssetFilename);
+		outputAsset.fileHash = RendererRuntime::Math::calculateFileFNV1a64ByFilename(fileManager, outputAssetFilename);
 		strcpy(outputAsset.assetFilename, outputAssetFilename.c_str());
 		outputAssetPackage.getWritableSortedAssetVector().push_back(outputAsset);
 	}

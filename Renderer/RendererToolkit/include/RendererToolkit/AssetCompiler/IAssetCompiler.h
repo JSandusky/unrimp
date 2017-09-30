@@ -44,6 +44,7 @@
 namespace RendererRuntime
 {
 	class AssetPackage;
+	class IFileManager;
 }
 namespace RendererToolkit
 {
@@ -184,7 +185,7 @@ namespace RendererToolkit
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
 	public:
-		static void outputAsset(const std::string& assetIdAsString, const std::string& outputAssetFilename, RendererRuntime::AssetPackage& outputAssetPackage);
+		static void outputAsset(const RendererRuntime::IFileManager& fileManager, const std::string& assetIdAsString, const std::string& outputAssetFilename, RendererRuntime::AssetPackage& outputAssetPackage);
 
 
 	//[-------------------------------------------------------]
