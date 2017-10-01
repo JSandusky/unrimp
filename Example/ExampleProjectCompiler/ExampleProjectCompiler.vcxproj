@@ -189,8 +189,8 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)d_static\;..\..\External\Windows_$(PlatformTarget)\Assimp\lib\;..\..\External\Windows_$(PlatformTarget)\crunch\lib\MTd_StaticDebug\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>RendererRuntimeStaticD.lib;RendererToolkitStaticD.lib;assimpStaticD.lib;crnlibD.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)d_static\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>RendererRuntimeStaticD.lib;RendererToolkitStaticD.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>MSVCRT;LIBCMT</IgnoreSpecificDefaultLibraries>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
@@ -220,8 +220,8 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_static\"
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)d_static\;..\..\External\Windows_$(PlatformTarget)\Assimp\lib\;..\..\External\Windows_$(PlatformTarget)\crunch\lib\MTd_StaticDebug\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>RendererRuntimeStaticD.lib;RendererToolkitStaticD.lib;assimpStaticD.lib;crnlibD.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)d_static\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>RendererRuntimeStaticD.lib;RendererToolkitStaticD.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>MSVCRT;LIBCMT</IgnoreSpecificDefaultLibraries>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
@@ -259,7 +259,6 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_static\"
     <PostBuildEvent>
       <Command>md "..\..\bin\$(PlatformTarget)d_dynamic\"
 copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_dynamic\"
-copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin\$(PlatformTarget)d_dynamic\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -291,7 +290,6 @@ copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin
     <PostBuildEvent>
       <Command>md "..\..\bin\$(PlatformTarget)d_dynamic\"
 copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_dynamic\"
-copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin\$(PlatformTarget)d_dynamic\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -326,8 +324,8 @@ copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)_static\;..\..\External\Windows_$(PlatformTarget)\Assimp\lib\;..\..\External\Windows_$(PlatformTarget)\crunch\lib\MT_StaticRelease\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>RendererRuntimeStatic.lib;RendererToolkitStatic.lib;assimpStatic.lib;crnlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)_static\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>RendererRuntimeStatic.lib;RendererToolkitStatic.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>MSVCRT</IgnoreSpecificDefaultLibraries>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
@@ -367,8 +365,8 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_static\"
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)_static\;..\..\External\Windows_$(PlatformTarget)\Assimp\lib\;..\..\External\Windows_$(PlatformTarget)\crunch\lib\MT_StaticRelease\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>RendererRuntimeStatic.lib;RendererToolkitStatic.lib;assimpStatic.lib;crnlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)_static\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>RendererRuntimeStatic.lib;RendererToolkitStatic.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>MSVCRT</IgnoreSpecificDefaultLibraries>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
@@ -417,7 +415,6 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_static\"
     <PostBuildEvent>
       <Command>md "..\..\bin\$(PlatformTarget)_dynamic\"
 copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
-copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin\$(PlatformTarget)_dynamic\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -459,7 +456,6 @@ copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin
     <PostBuildEvent>
       <Command>md "..\..\bin\$(PlatformTarget)_dynamic\"
 copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
-copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin\$(PlatformTarget)_dynamic\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

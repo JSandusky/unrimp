@@ -23,8 +23,8 @@ Renderer toolkit.
 
 
 == Dependencies ==
-- Assimp
-- crunch
+- Assimp (directly compiled and linked in)
+- crunch (directly compiled and linked in)
 - GLM (header only library)
 - RapidJSON (header only library)
 - mikktspace (directly compiled and linked in)

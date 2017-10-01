@@ -150,12 +150,9 @@ set(RENDERER_RUNTIME		"1"	CACHE BOOL "Build renderer runtime?")
 # No examples for Android for now
 if(NOT ANDROID)
 	# Examples
-	set(EXAMPLES				"1"	CACHE BOOL "Build examples?")
-		# Advanced examples options
-		set(EXAMPLES_ASSIMP		"1"	CACHE BOOL "Build Open Asset Import Library (ASSIMP) examples? (will add approximately 2 MB to the executable size when statically linked)")
-		mark_as_advanced(EXAMPLES_ASSIMP)
+	set(EXAMPLES				 "1" CACHE BOOL "Build examples?")
 	set(EXAMPLE_PROJECT_COMPILER "1" CACHE BOOL "Build example project compiler?")
-	set(EXAMPLE_RUNNER_SDL2 "0" CACHE BOOL "Build sdl2 version of the examples?")
+	set(EXAMPLE_RUNNER_SDL2 	 "0" CACHE BOOL "Build sdl2 version of the examples?")
 endif()
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")

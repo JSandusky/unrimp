@@ -47,8 +47,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/glm/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/RapidJSON/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/SimpleFileWatcher/src/)
 
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/${OS_ARCHITECTURE}/Assimp/lib)
-
 
 ##################################################
 ## Source codes
@@ -150,6 +148,133 @@ set(SOURCE_CODES
 		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_core.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_mem.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_platform.cpp
+	# Assimp external library
+		# Common
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/BaseImporter.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/BaseProcess.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/Bitmap.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/CInterfaceIOWrapper.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/CreateAnimMesh.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/DefaultIOStream.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/DefaultIOSystem.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/Importer.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/ImporterRegistry.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/PostStepRegistry.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/RemoveComments.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/scene.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/SceneCombiner.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/ScenePreprocessor.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/SGSpatialSort.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/SkeletonMeshBuilder.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/SpatialSort.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/SplitByBoneCountProcess.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/StandardShapes.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/Subdivision.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/TargetAnimation.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/Version.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/VertexTriangleAdjacency.cpp
+		# contrib
+			# ConvertUTF
+			${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/contrib/ConvertUTF/ConvertUTF.c
+			# irrXML (at least OGRE importer is using it)
+			${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/contrib/irrXML/irrXML.cpp
+			# poly2tri (at least BLEND importer is using it)
+			${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/contrib/poly2tri/poly2tri/common/shapes.cc
+			${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/contrib/poly2tri/poly2tri/sweep/advancing_front.cc
+			${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/contrib/poly2tri/poly2tri/sweep/cdt.cc
+			${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/contrib/poly2tri/poly2tri/sweep/sweep.cc
+			${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/contrib/poly2tri/poly2tri/sweep/sweep_context.cc
+			${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/contrib/poly2tri/poly2tri/sweep/advancing_front.cc
+			# zlib (at least FBX importer is using it)
+			${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/contrib/zlib/adler32.c
+			${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/contrib/zlib/compress.c
+			${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/contrib/zlib/crc32.c
+			${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/contrib/zlib/deflate.c
+			${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/contrib/zlib/gzclose.c
+			${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/contrib/zlib/gzlib.c
+			${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/contrib/zlib/gzread.c
+			${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/contrib/zlib/gzwrite.c
+			${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/contrib/zlib/infback.c
+			${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/contrib/zlib/inffast.c
+			${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/contrib/zlib/inflate.c
+			${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/contrib/zlib/inftrees.c
+			${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/contrib/zlib/trees.c
+			${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/contrib/zlib/uncompr.c
+			${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/contrib/zlib/zutil.c
+		# Logging
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/DefaultLogger.cpp
+		# MaterialSystem
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/MaterialSystem.cpp
+		# MD5
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/MD5Loader.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/MD5Parser.cpp
+		# GLTF
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/glTFExporter.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/glTFImporter.cpp
+		# FBX
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/FBXAnimation.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/FBXBinaryTokenizer.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/FBXConverter.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/FBXDeformer.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/FBXDocument.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/FBXDocumentUtil.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/FBXImporter.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/FBXMaterial.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/FBXMeshGeometry.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/FBXModel.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/FBXNodeAttribute.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/FBXParser.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/FBXProperties.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/FBXTokenizer.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/FBXUtil.cpp
+		# BLEND
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/BlenderBMesh.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/BlenderDNA.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/BlenderLoader.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/BlenderModifier.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/BlenderScene.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/BlenderTessellator.cpp
+		# COLLADA
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/ColladaExporter.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/ColladaLoader.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/ColladaParser.cpp
+		# OBJ
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/ObjExporter.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/ObjFileImporter.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/ObjFileMtlImporter.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/ObjFileParser.cpp
+		# OGRE
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/OgreBinarySerializer.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/OgreImporter.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/OgreMaterial.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/OgreStructs.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/OgreXmlSerializer.cpp
+		# PostProcessing
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/CalcTangentsProcess.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/ComputeUVMappingProcess.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/ConvertToLHProcess.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/DeboneProcess.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/FindDegenerates.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/FindInstancesProcess.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/FindInvalidDataProcess.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/FixNormalsStep.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/GenFaceNormalsProcess.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/GenVertexNormalsProcess.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/ImproveCacheLocality.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/JoinVerticesProcess.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/LimitBoneWeightsProcess.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/MakeVerboseFormat.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/OptimizeGraph.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/OptimizeMeshes.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/PretransformVertices.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/ProcessHelper.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/RemoveRedundantMaterials.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/RemoveVCProcess.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/SortByPTypeProcess.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/SplitLargeMeshes.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/TextureTransform.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/TriangulateProcess.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/Assimp/code/ValidateDataStructure.cpp
 	# Renderer toolkit
 	src/AssetCompiler/IAssetCompiler.cpp
 	src/AssetCompiler/CompositorNodeAssetCompiler.cpp
@@ -206,9 +331,9 @@ endif()
 if(STATIC_LIBRARY)
 	add_library(RendererToolkitStatic STATIC ${SOURCE_CODES})
 	if (WIN32)
-		set(LIBRARIES ${LIBRARIES} ${CMAKE_STATIC_LIBRARY_PREFIX}assimpStatic${CMAKE_STATIC_LIBRARY_SUFFIX})
+		# Nothing here
 	elseif(UNIX)
-		set(LIBRARIES ${LIBRARIES} assimp tiff minizip stdc++fs dl)
+		set(LIBRARIES ${LIBRARIES} stdc++fs dl)
 
 		if (HAVE_CXX_FILESYSTEM_TS_SUPPORT)
 			set(LIBRARIES ${LIBRARIES} stdc++fs)
@@ -225,9 +350,9 @@ if(SHARED_LIBRARY)
 	add_library(RendererToolkit SHARED ${SOURCE_CODES})
 	set_target_properties(RendererToolkit PROPERTIES COMPILE_FLAGS "-DSHARED_LIBRARIES -DRENDERERTOOLKIT_EXPORTS")
 	if(WIN32)
-		target_link_libraries(RendererToolkit assimp.lib crnlib.lib)
+		Nothing here
 	else()
-		target_link_libraries(RendererToolkit ${CMAKE_SHARED_LIBRARY_PREFIX}assimp${CMAKE_SHARED_LIBRARY_SUFFIX} tiff minizip dl)
+		target_link_libraries(RendererToolkit dl)
 		if (HAVE_CXX_FILESYSTEM_TS_SUPPORT)
 			target_link_libraries(RendererToolkit stdc++fs)
 		elseif(Boost_FILESYSTEM_FOUND)
@@ -256,14 +381,6 @@ if(SHARED_LIBRARY)
 	if(WIN32)
 		add_custom_command(TARGET RendererToolkit
 			COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/RendererToolkit.lib" ${OUTPUT_LIB_DIR}
-		)
-	endif()
-	if(WIN32 AND EXAMPLES_ASSIMP)
-		add_custom_command(TARGET Examples
-			COMMAND ${CMAKE_COMMAND} -E copy "${OUTPUT_EXTERNAL_OS_ARCHITECTURE_DIR}/Assimp/bin/${CMAKE_SHARED_LIBRARY_PREFIX}assimp${CMAKE_SHARED_LIBRARY_SUFFIX}" ${OUTPUT_BIN_DIR}
-		)
-		add_custom_command(TARGET Examples
-			COMMAND ${CMAKE_COMMAND} -E copy "${OUTPUT_EXTERNAL_OS_ARCHITECTURE_DIR}/VisualStudio/bin/${CMAKE_SHARED_LIBRARY_PREFIX}msvcp110${CMAKE_SHARED_LIBRARY_SUFFIX}" ${OUTPUT_BIN_DIR}
 		)
 	endif()
 endif()

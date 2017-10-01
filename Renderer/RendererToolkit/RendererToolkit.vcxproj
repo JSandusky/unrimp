@@ -35,6 +35,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\External\Assimp\code\BlenderDNA.inl" />
+    <None Include="..\..\External\Assimp\code\glTFAsset.inl" />
+    <None Include="..\..\External\Assimp\code\glTFAssetWriter.inl" />
+    <None Include="..\..\External\Assimp\include\assimp\color4.inl" />
+    <None Include="..\..\External\Assimp\include\assimp\material.inl" />
+    <None Include="..\..\External\Assimp\include\assimp\matrix3x3.inl" />
+    <None Include="..\..\External\Assimp\include\assimp\matrix4x4.inl" />
+    <None Include="..\..\External\Assimp\include\assimp\quaternion.inl" />
+    <None Include="..\..\External\Assimp\include\assimp\vector2.inl" />
+    <None Include="..\..\External\Assimp\include\assimp\vector3.inl" />
     <None Include="CMakeLists.txt" />
     <None Include="include\RendererToolkit\Context.inl" />
     <None Include="include\RendererToolkit\Helper\AssimpLogStream.inl" />
@@ -44,6 +54,185 @@
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\External\Assimp\code\BlenderBMesh.h" />
+    <ClInclude Include="..\..\External\Assimp\code\BlenderDNA.h" />
+    <ClInclude Include="..\..\External\Assimp\code\BlenderIntermediate.h" />
+    <ClInclude Include="..\..\External\Assimp\code\BlenderLoader.h" />
+    <ClInclude Include="..\..\External\Assimp\code\BlenderModifier.h" />
+    <ClInclude Include="..\..\External\Assimp\code\BlenderScene.h" />
+    <ClInclude Include="..\..\External\Assimp\code\BlenderSceneGen.h" />
+    <ClInclude Include="..\..\External\Assimp\code\BlenderTessellator.h" />
+    <ClInclude Include="..\..\External\Assimp\code\ColladaExporter.h" />
+    <ClInclude Include="..\..\External\Assimp\code\ColladaHelper.h" />
+    <ClInclude Include="..\..\External\Assimp\code\ColladaLoader.h" />
+    <ClInclude Include="..\..\External\Assimp\code\ColladaParser.h" />
+    <ClInclude Include="..\..\External\Assimp\code\FBXCompileConfig.h" />
+    <ClInclude Include="..\..\External\Assimp\code\FBXConverter.h" />
+    <ClInclude Include="..\..\External\Assimp\code\FBXDocument.h" />
+    <ClInclude Include="..\..\External\Assimp\code\FBXDocumentUtil.h" />
+    <ClInclude Include="..\..\External\Assimp\code\FBXImporter.h" />
+    <ClInclude Include="..\..\External\Assimp\code\FBXImportSettings.h" />
+    <ClInclude Include="..\..\External\Assimp\code\FBXMeshGeometry.h" />
+    <ClInclude Include="..\..\External\Assimp\code\FBXParser.h" />
+    <ClInclude Include="..\..\External\Assimp\code\FBXProperties.h" />
+    <ClInclude Include="..\..\External\Assimp\code\FBXTokenizer.h" />
+    <ClInclude Include="..\..\External\Assimp\code\FBXUtil.h" />
+    <ClInclude Include="..\..\External\Assimp\code\glTFAsset.h" />
+    <ClInclude Include="..\..\External\Assimp\code\glTFAssetWriter.h" />
+    <ClInclude Include="..\..\External\Assimp\code\glTFExporter.h" />
+    <ClInclude Include="..\..\External\Assimp\code\glTFImporter.h" />
+    <ClInclude Include="..\..\External\Assimp\code\MD5Loader.h" />
+    <ClInclude Include="..\..\External\Assimp\code\MD5Parser.h" />
+    <ClInclude Include="..\..\External\Assimp\code\ObjExporter.h" />
+    <ClInclude Include="..\..\External\Assimp\code\ObjFileData.h" />
+    <ClInclude Include="..\..\External\Assimp\code\ObjFileImporter.h" />
+    <ClInclude Include="..\..\External\Assimp\code\ObjFileMtlImporter.h" />
+    <ClInclude Include="..\..\External\Assimp\code\ObjFileParser.h" />
+    <ClInclude Include="..\..\External\Assimp\code\ObjTools.h" />
+    <ClInclude Include="..\..\External\Assimp\contrib\ConvertUTF\ConvertUTF.h" />
+    <ClInclude Include="..\..\External\Assimp\contrib\irrXML\CXMLReaderImpl.h" />
+    <ClInclude Include="..\..\External\Assimp\contrib\irrXML\heapsort.h" />
+    <ClInclude Include="..\..\External\Assimp\contrib\irrXML\irrArray.h" />
+    <ClInclude Include="..\..\External\Assimp\contrib\irrXML\irrString.h" />
+    <ClInclude Include="..\..\External\Assimp\contrib\irrXML\irrTypes.h" />
+    <ClInclude Include="..\..\External\Assimp\contrib\irrXML\irrXML.h" />
+    <ClInclude Include="..\..\External\Assimp\contrib\poly2tri\poly2tri\common\shapes.h" />
+    <ClInclude Include="..\..\External\Assimp\contrib\poly2tri\poly2tri\common\utils.h" />
+    <ClInclude Include="..\..\External\Assimp\contrib\poly2tri\poly2tri\poly2tri.h" />
+    <ClInclude Include="..\..\External\Assimp\contrib\poly2tri\poly2tri\sweep\advancing_front.h" />
+    <ClInclude Include="..\..\External\Assimp\contrib\poly2tri\poly2tri\sweep\cdt.h" />
+    <ClInclude Include="..\..\External\Assimp\contrib\poly2tri\poly2tri\sweep\sweep.h" />
+    <ClInclude Include="..\..\External\Assimp\contrib\poly2tri\poly2tri\sweep\sweep_context.h" />
+    <ClInclude Include="..\..\External\Assimp\contrib\zlib\crc32.h" />
+    <ClInclude Include="..\..\External\Assimp\contrib\zlib\deflate.h" />
+    <ClInclude Include="..\..\External\Assimp\contrib\zlib\gzguts.h" />
+    <ClInclude Include="..\..\External\Assimp\contrib\zlib\inffast.h" />
+    <ClInclude Include="..\..\External\Assimp\contrib\zlib\inffixed.h" />
+    <ClInclude Include="..\..\External\Assimp\contrib\zlib\inflate.h" />
+    <ClInclude Include="..\..\External\Assimp\contrib\zlib\inftrees.h" />
+    <ClInclude Include="..\..\External\Assimp\contrib\zlib\trees.h" />
+    <ClInclude Include="..\..\External\Assimp\contrib\zlib\zconf.h" />
+    <ClInclude Include="..\..\External\Assimp\contrib\zlib\zlib.h" />
+    <ClInclude Include="..\..\External\Assimp\contrib\zlib\zutil.h" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\ai_assert.h" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\anim.h" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\camera.h" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\cexport.h" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\cfileio.h" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\cimport.h" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\color4.h" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\Compiler\poppack1.h" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\Compiler\pstdint.h" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\Compiler\pushpack1.h" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\config.h" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\DefaultIOStream.h" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\DefaultIOSystem.h" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\DefaultLogger.hpp" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\Defines.h" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\defs.h" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\Exporter.hpp" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\Importer.hpp" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\importerdesc.h" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\IOStream.hpp" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\IOSystem.hpp" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\light.h" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\Logger.hpp" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\LogStream.hpp" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\material.h" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\matrix3x3.h" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\matrix4x4.h" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\mesh.h" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\metadata.h" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\NullLogger.hpp" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\postprocess.h" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\ProgressHandler.hpp" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\quaternion.h" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\scene.h" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\texture.h" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\types.h" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\vector2.h" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\vector3.h" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\version.h" />
+    <ClInclude Include="..\..\External\Assimp\code\BaseImporter.h" />
+    <ClInclude Include="..\..\External\Assimp\code\BaseProcess.h" />
+    <ClInclude Include="..\..\External\Assimp\code\Bitmap.h" />
+    <ClInclude Include="..\..\External\Assimp\code\ByteSwapper.h" />
+    <ClInclude Include="..\..\External\Assimp\code\CalcTangentsProcess.h" />
+    <ClInclude Include="..\..\External\Assimp\code\CInterfaceIOWrapper.h" />
+    <ClInclude Include="..\..\External\Assimp\code\ComputeUVMappingProcess.h" />
+    <ClInclude Include="..\..\External\Assimp\code\configuration.h" />
+    <ClInclude Include="..\..\External\Assimp\code\ConvertToLHProcess.h" />
+    <ClInclude Include="..\..\External\Assimp\code\CreateAnimMesh.h" />
+    <ClInclude Include="..\..\External\Assimp\code\DeboneProcess.h" />
+    <ClInclude Include="..\..\External\Assimp\code\DefaultProgressHandler.h" />
+    <ClInclude Include="..\..\External\Assimp\code\Exceptional.h" />
+    <ClInclude Include="..\..\External\Assimp\code\fast_atof.h" />
+    <ClInclude Include="..\..\External\Assimp\code\FileLogStream.h" />
+    <ClInclude Include="..\..\External\Assimp\code\FileSystemFilter.h" />
+    <ClInclude Include="..\..\External\Assimp\code\FindDegenerates.h" />
+    <ClInclude Include="..\..\External\Assimp\code\FindInstancesProcess.h" />
+    <ClInclude Include="..\..\External\Assimp\code\FindInvalidDataProcess.h" />
+    <ClInclude Include="..\..\External\Assimp\code\FixNormalsStep.h" />
+    <ClInclude Include="..\..\External\Assimp\code\GenericProperty.h" />
+    <ClInclude Include="..\..\External\Assimp\code\GenFaceNormalsProcess.h" />
+    <ClInclude Include="..\..\External\Assimp\code\GenVertexNormalsProcess.h" />
+    <ClInclude Include="..\..\External\Assimp\code\Hash.h" />
+    <ClInclude Include="..\..\External\Assimp\code\IFF.h" />
+    <ClInclude Include="..\..\External\Assimp\code\Importer.h" />
+    <ClInclude Include="..\..\External\Assimp\code\ImproveCacheLocality.h" />
+    <ClInclude Include="..\..\External\Assimp\code\IOStreamBuffer.h" />
+    <ClInclude Include="..\..\External\Assimp\code\irrXMLWrapper.h" />
+    <ClInclude Include="..\..\External\Assimp\code\JoinVerticesProcess.h" />
+    <ClInclude Include="..\..\External\Assimp\code\LimitBoneWeightsProcess.h" />
+    <ClInclude Include="..\..\External\Assimp\code\LineSplitter.h" />
+    <ClInclude Include="..\..\External\Assimp\code\LogAux.h" />
+    <ClInclude Include="..\..\External\Assimp\code\Macros.h" />
+    <ClInclude Include="..\..\External\Assimp\code\MakeVerboseFormat.h" />
+    <ClInclude Include="..\..\External\Assimp\code\MaterialSystem.h" />
+    <ClInclude Include="..\..\External\Assimp\code\MemoryIOWrapper.h" />
+    <ClInclude Include="..\..\External\Assimp\code\OgreBinarySerializer.h" />
+    <ClInclude Include="..\..\External\Assimp\code\OgreImporter.h" />
+    <ClInclude Include="..\..\External\Assimp\code\OgreParsingUtils.h" />
+    <ClInclude Include="..\..\External\Assimp\code\OgreStructs.h" />
+    <ClInclude Include="..\..\External\Assimp\code\OgreXmlSerializer.h" />
+    <ClInclude Include="..\..\External\Assimp\code\OptimizeGraph.h" />
+    <ClInclude Include="..\..\External\Assimp\code\OptimizeMeshes.h" />
+    <ClInclude Include="..\..\External\Assimp\code\ParsingUtils.h" />
+    <ClInclude Include="..\..\External\Assimp\code\PolyTools.h" />
+    <ClInclude Include="..\..\External\Assimp\code\PretransformVertices.h" />
+    <ClInclude Include="..\..\External\Assimp\code\ProcessHelper.h" />
+    <ClInclude Include="..\..\External\Assimp\code\Profiler.h" />
+    <ClInclude Include="..\..\External\Assimp\code\qnan.h" />
+    <ClInclude Include="..\..\External\Assimp\code\RemoveComments.h" />
+    <ClInclude Include="..\..\External\Assimp\code\RemoveRedundantMaterials.h" />
+    <ClInclude Include="..\..\External\Assimp\code\RemoveVCProcess.h" />
+    <ClInclude Include="..\..\External\Assimp\code\revision.h" />
+    <ClInclude Include="..\..\External\Assimp\code\SceneCombiner.h" />
+    <ClInclude Include="..\..\External\Assimp\code\ScenePreprocessor.h" />
+    <ClInclude Include="..\..\External\Assimp\code\ScenePrivate.h" />
+    <ClInclude Include="..\..\External\Assimp\code\SGSpatialSort.h" />
+    <ClInclude Include="..\..\External\Assimp\code\SkeletonMeshBuilder.h" />
+    <ClInclude Include="..\..\External\Assimp\code\SmoothingGroups.h" />
+    <ClInclude Include="..\..\External\Assimp\code\SortByPTypeProcess.h" />
+    <ClInclude Include="..\..\External\Assimp\code\SpatialSort.h" />
+    <ClInclude Include="..\..\External\Assimp\code\SplitByBoneCountProcess.h" />
+    <ClInclude Include="..\..\External\Assimp\code\SplitLargeMeshes.h" />
+    <ClInclude Include="..\..\External\Assimp\code\StandardShapes.h" />
+    <ClInclude Include="..\..\External\Assimp\code\StdOStreamLogStream.h" />
+    <ClInclude Include="..\..\External\Assimp\code\StreamReader.h" />
+    <ClInclude Include="..\..\External\Assimp\code\StreamWriter.h" />
+    <ClInclude Include="..\..\External\Assimp\code\StringComparison.h" />
+    <ClInclude Include="..\..\External\Assimp\code\StringUtils.h" />
+    <ClInclude Include="..\..\External\Assimp\code\Subdivision.h" />
+    <ClInclude Include="..\..\External\Assimp\code\TargetAnimation.h" />
+    <ClInclude Include="..\..\External\Assimp\code\TextureTransform.h" />
+    <ClInclude Include="..\..\External\Assimp\code\TinyFormatter.h" />
+    <ClInclude Include="..\..\External\Assimp\code\TriangulateProcess.h" />
+    <ClInclude Include="..\..\External\Assimp\code\ValidateDataStructure.h" />
+    <ClInclude Include="..\..\External\Assimp\code\Vertex.h" />
+    <ClInclude Include="..\..\External\Assimp\code\VertexTriangleAdjacency.h" />
+    <ClInclude Include="..\..\External\Assimp\code\Win32DebugLogStream.h" />
+    <ClInclude Include="..\..\External\Assimp\code\XMLTools.h" />
     <ClInclude Include="..\..\External\crunch\inc\crnlib.h" />
     <ClInclude Include="..\..\External\crunch\inc\crn_decomp.h" />
     <ClInclude Include="..\..\External\crunch\inc\dds_defs.h" />
@@ -191,6 +380,1087 @@
     <ClInclude Include="include\RendererToolkit\WindowsHeader.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\External\Assimp\code\BlenderBMesh.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\BlenderDNA.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\BlenderLoader.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\BlenderModifier.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\BlenderScene.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\BlenderTessellator.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\ColladaExporter.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\ColladaLoader.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\ColladaParser.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\FBXAnimation.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">TurnOffAllWarnings</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\FBXBinaryTokenizer.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">TurnOffAllWarnings</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\FBXConverter.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">TurnOffAllWarnings</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\FBXDeformer.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">TurnOffAllWarnings</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\FBXDocument.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">TurnOffAllWarnings</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\FBXDocumentUtil.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">TurnOffAllWarnings</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\FBXImporter.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">TurnOffAllWarnings</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\FBXMaterial.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">TurnOffAllWarnings</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\FBXMeshGeometry.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">TurnOffAllWarnings</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\FBXModel.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">TurnOffAllWarnings</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\FBXNodeAttribute.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">TurnOffAllWarnings</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\FBXParser.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">TurnOffAllWarnings</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\FBXProperties.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">TurnOffAllWarnings</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\FBXTokenizer.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">TurnOffAllWarnings</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\FBXUtil.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">TurnOffAllWarnings</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\glTFExporter.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level1</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level1</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level1</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level1</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level1</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level1</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level1</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level1</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\glTFImporter.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level1</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level1</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level1</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level1</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level1</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level1</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level1</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level1</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\MD5Loader.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\MD5Parser.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\ObjExporter.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\ObjFileImporter.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\ObjFileMtlImporter.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\ObjFileParser.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\contrib\ConvertUTF\ConvertUTF.c" />
+    <ClCompile Include="..\..\External\Assimp\contrib\irrXML\irrXML.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\BaseImporter.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\BaseProcess.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\Bitmap.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\CalcTangentsProcess.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\CInterfaceIOWrapper.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\ComputeUVMappingProcess.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\ConvertToLHProcess.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\CreateAnimMesh.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\DeboneProcess.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\DefaultIOStream.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\DefaultIOSystem.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\DefaultLogger.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\FindDegenerates.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\FindInstancesProcess.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\FindInvalidDataProcess.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\FixNormalsStep.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\GenFaceNormalsProcess.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\GenVertexNormalsProcess.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\Importer.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\ImporterRegistry.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\ImproveCacheLocality.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\JoinVerticesProcess.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\LimitBoneWeightsProcess.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\MakeVerboseFormat.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\MaterialSystem.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\OgreBinarySerializer.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\OgreImporter.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\OgreMaterial.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\OgreStructs.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\OgreXmlSerializer.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\OptimizeGraph.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\OptimizeMeshes.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\PostStepRegistry.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\PretransformVertices.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\ProcessHelper.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\RemoveComments.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\RemoveRedundantMaterials.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\RemoveVCProcess.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\scene.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\SceneCombiner.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\ScenePreprocessor.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\SGSpatialSort.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\SkeletonMeshBuilder.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\SortByPTypeProcess.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\SpatialSort.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\SplitByBoneCountProcess.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\SplitLargeMeshes.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\StandardShapes.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\Subdivision.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\TargetAnimation.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\TextureTransform.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\TriangulateProcess.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\ValidateDataStructure.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\Version.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\VertexTriangleAdjacency.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\contrib\poly2tri\poly2tri\common\shapes.cc">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\contrib\poly2tri\poly2tri\sweep\advancing_front.cc">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\contrib\poly2tri\poly2tri\sweep\cdt.cc">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\contrib\poly2tri\poly2tri\sweep\sweep.cc">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\contrib\poly2tri\poly2tri\sweep\sweep_context.cc">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\contrib\zlib\adler32.c">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\contrib\zlib\compress.c">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\contrib\zlib\crc32.c">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\contrib\zlib\deflate.c">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\contrib\zlib\gzclose.c">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\contrib\zlib\gzlib.c">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\contrib\zlib\gzread.c">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\contrib\zlib\gzwrite.c">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\contrib\zlib\infback.c">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\contrib\zlib\inffast.c">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\contrib\zlib\inflate.c">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\contrib\zlib\inftrees.c">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\contrib\zlib\trees.c">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\contrib\zlib\uncompr.c">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\contrib\zlib\zutil.c">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
     <ClCompile Include="..\..\External\crunch\src\crnlib.cpp">
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
       <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">false</TreatWarningAsError>
@@ -1874,8 +3144,8 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)d_dynamic\;..\..\External\Windows_$(PlatformTarget)\Assimp\lib\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>RendererRuntimeD.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)d_dynamic\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>RendererRuntimeD.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>
@@ -1885,8 +3155,7 @@ md "..\..\bin\$(PlatformTarget)d_dynamic\"
 copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)d_dynamic\
 md "..\..\include\Renderer\"
 copy "include\RendererToolkit\Public\RendererToolkit.h" "..\..\include\Renderer\"
-copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\Renderer\"
-copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin\$(PlatformTarget)d_dynamic\"</Command>
+copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\Renderer\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">
@@ -1904,8 +3173,8 @@ copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)d_dynamic\;..\..\External\Windows_$(PlatformTarget)\Assimp\lib\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>RendererRuntimeD.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)d_dynamic\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>RendererRuntimeD.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>
@@ -1915,8 +3184,7 @@ md "..\..\bin\$(PlatformTarget)d_dynamic\"
 copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)d_dynamic\
 md "..\..\include\Renderer\"
 copy "include\RendererToolkit\Public\RendererToolkit.h" "..\..\include\Renderer\"
-copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\Renderer\"
-copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin\$(PlatformTarget)d_dynamic\"</Command>
+copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\Renderer\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">
@@ -2035,8 +3303,8 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)_dynamic\;..\..\External\Windows_$(PlatformTarget)\Assimp\lib\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>RendererRuntime.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)_dynamic\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>RendererRuntime.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>
@@ -2046,8 +3314,7 @@ md "..\..\bin\$(PlatformTarget)_dynamic\"
 copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)_dynamic\
 md "..\..\include\Renderer\"
 copy "include\RendererToolkit\Public\RendererToolkit.h" "..\..\include\Renderer\"
-copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\Renderer\"
-copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin\$(PlatformTarget)_dynamic\"</Command>
+copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\Renderer\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">
@@ -2076,8 +3343,8 @@ copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)_dynamic\;..\..\External\Windows_$(PlatformTarget)\Assimp\lib\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>RendererRuntime.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)_dynamic\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>RendererRuntime.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <PostBuildEvent>
@@ -2087,8 +3354,7 @@ md "..\..\bin\$(PlatformTarget)_dynamic\"
 copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)_dynamic\
 md "..\..\include\Renderer\"
 copy "include\RendererToolkit\Public\RendererToolkit.h" "..\..\include\Renderer\"
-copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\Renderer\"
-copy "..\..\External\Windows_$(PlatformTarget)\Assimp\bin\assimp.dll" "..\..\bin\$(PlatformTarget)_dynamic\"</Command>
+copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\Renderer\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
