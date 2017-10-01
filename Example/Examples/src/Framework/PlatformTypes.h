@@ -25,9 +25,150 @@
 
 
 //[-------------------------------------------------------]
+//[ C++ compiler keywords                                 ]
+//[-------------------------------------------------------]
+#ifdef WIN32
+	/**
+	*  @brief
+	*    Force the compiler to inline something
+	*
+	*  @note
+	*    - Do only use this when you really have to, usually it's best to let the compiler decide by using the standard keyword "inline"
+	*/
+	#define FORCEINLINE __forceinline
+
+	/**
+	*  @brief
+	*    No operation macro ("_asm nop"/"__nop()")
+	*/
+	#define NOP __nop()
+
+	/**
+	*  @brief
+	*    Platform specific "#pragma warning(push)" (MS Windows Visual Studio)
+	*/
+	#define PRAGMA_WARNING_PUSH __pragma(warning(push))
+
+	/**
+	*  @brief
+	*    Platform specific "#pragma warning(pop)" (MS Windows Visual Studio)
+	*/
+	#define PRAGMA_WARNING_POP __pragma(warning(pop))
+
+	/**
+	*  @brief
+	*    Platform specific "#pragma warning(disable: <x>)" (MS Windows Visual Studio)
+	*/
+	#define PRAGMA_WARNING_DISABLE_MSVC(id) __pragma(warning(disable: id))
+
+	/**
+	*  @brief
+	*    Platform specific "#pragma clang diagnostic ignored <x>" (Clang)
+	*/
+	#define PRAGMA_WARNING_DISABLE_CLANG(id)
+
+	/**
+	*  @brief
+	*    Platform specific "#pragma GCC diagnostic ignored <x>" (GCC)
+	*/
+	#define PRAGMA_WARNING_DISABLE_GCC(id)
+#elif LINUX
+	/**
+	*  @brief
+	*    Force the compiler to inline something
+	*
+	*  @note
+	*    - Do only use this when you really have to, usually it's best to let the compiler decide by using the standard keyword "inline"
+	*/
+	#define FORCEINLINE __attribute__((always_inline))
+
+	/**
+	*  @brief
+	*    No operation macro ("_asm nop"/__nop())
+	*/
+	#define NOP asm ("nop");
+
+	#ifdef __clang__
+		/**
+		*  @brief
+		*    Platform specific "#pragma clang diagnostic push" (Clang)
+		*/
+		#define PRAGMA_WARNING_PUSH _Pragma("clang diagnostic push")
+
+		/**
+		*  @brief
+		*    Platform specific "#pragma clang diagnostic pop" (Clang)
+		*/
+		#define PRAGMA_WARNING_POP _Pragma("clang diagnostic pop")
+
+		/**
+		*  @brief
+		*    Platform specific "#pragma warning(disable: <x>)" (MS Windows Visual Studio)
+		*/
+		#define PRAGMA_WARNING_DISABLE_MSVC(id)
+
+		/**
+		*  @brief
+		*    Platform specific "#pragma GCC diagnostic ignored <x>" (GCC)
+		*/
+		#define PRAGMA_WARNING_DISABLE_GCC(id)
+
+		/**
+		*  @brief
+		*    Platform specific "#pragma clang diagnostic ignored <x>" (Clang)
+		*/
+		// We need stringify because _Pragma expects an string literal
+		#define PRAGMA_STRINGIFY(a) #a
+		#define PRAGMA_WARNING_DISABLE_CLANG(id) _Pragma(PRAGMA_STRINGIFY(clang diagnostic ignored id) )
+	#elif __GNUC__
+		// gcc
+		/**
+		*  @brief
+		*    Platform specific "#pragma GCC diagnostic push" (GCC)
+		*/
+		#define PRAGMA_WARNING_PUSH _Pragma("GCC diagnostic push")
+
+		/**
+		*  @brief
+		*    Platform specific "#pragma warning(pop)" (GCC)
+		*/
+		#define PRAGMA_WARNING_POP _Pragma("GCC diagnostic pop")
+
+		/**
+		*  @brief
+		*    Platform specific "#pragma warning(disable: <x>)" (MS Windows Visual Studio)
+		*/
+		#define PRAGMA_WARNING_DISABLE_MSVC(id)
+
+		/**
+		*  @brief
+		*    Platform specific "#pragma GCC diagnostic ignored <x>" (GCC)
+		*/
+		// We need stringify because _Pragma expects an string literal
+		#define PRAGMA_STRINGIFY(a) #a
+		#define PRAGMA_WARNING_DISABLE_GCC(id) _Pragma(PRAGMA_STRINGIFY(GCC diagnostic ignored id) )
+
+		/**
+		*  @brief
+		*    Platform specific "#pragma clang diagnostic ignored <x>" (Clang)
+		*/
+		#define PRAGMA_WARNING_DISABLE_CLANG(id)
+	#else
+		#error "Unsupported compiler"
+	#endif
+#else
+	#error "Unsupported platform"
+#endif
+
+
+//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <inttypes.h>	// For uint32_t, uint64_t etc.
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4668)	// warning C4668: '_M_HYBRID_X86_ARM64' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+	#include <inttypes.h>	// For uint32_t, uint64_t etc.
+PRAGMA_WARNING_POP
 
 
 //[-------------------------------------------------------]
@@ -43,7 +184,7 @@
 		#define NULL_HANDLE 0
 	#endif
 #elif LINUX
-	#if X64_ARCHITECTURE
+	#ifdef X64_ARCHITECTURE
 		typedef uint64_t handle;
 	#else
 		typedef uint32_t handle;

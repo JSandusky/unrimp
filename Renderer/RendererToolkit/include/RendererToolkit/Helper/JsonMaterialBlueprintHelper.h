@@ -31,7 +31,11 @@
 
 #include <RendererRuntime/Resource/Material/MaterialProperties.h>
 
-#include <rapidjson/fwd.h>
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4668)	// warning C4668: '_M_HYBRID_X86_ARM64' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+	#include <rapidjson/fwd.h>
+PRAGMA_WARNING_POP
 
 #include <unordered_map>
 

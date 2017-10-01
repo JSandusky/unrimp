@@ -88,7 +88,7 @@ namespace
 			fileManager.createDirectories(directoryName.c_str());
 			if (!memoryFile.writeLz4CompressedDataToFile(RendererToolkitCache::FORMAT_TYPE, RendererToolkitCache::FORMAT_VERSION, filename, fileManager))
 			{
-				RENDERER_LOG(context, CRITICAL, "The renderer toolkit failed to save the cache to \"%s\"", filename)
+				RENDERER_LOG(context, CRITICAL, "The renderer toolkit failed to save the cache to \"%s\"", filename.c_str())
 			}
 		}
 

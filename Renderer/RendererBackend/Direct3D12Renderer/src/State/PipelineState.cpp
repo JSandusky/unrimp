@@ -51,8 +51,8 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	PipelineState::PipelineState(Direct3D12Renderer& direct3D12Renderer, const Renderer::PipelineState& pipelineState) :
 		IPipelineState(direct3D12Renderer),
-		mD3D12PipelineState(nullptr),
 		mD3D12PrimitiveTopology(static_cast<D3D12_PRIMITIVE_TOPOLOGY>(pipelineState.primitiveTopology)),
+		mD3D12PipelineState(nullptr),
 		mRootSignature(pipelineState.rootSignature),
 		mProgram(pipelineState.program),
 		mRenderPass(pipelineState.renderPass)

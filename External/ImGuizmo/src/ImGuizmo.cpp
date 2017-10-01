@@ -24,6 +24,7 @@
 #ifdef WIN32
 	#pragma warning(disable: 4063)	// warning C4063: case '<x>' is not a valid value for switch of enum '<y>'
 	#pragma warning(disable: 4365)	// warning C4365: 'argument': conversion from '<x>' to '<y>', signed/unsigned mismatch
+	#pragma warning(disable: 4668)	// warning C4668: '_M_HYBRID_X86_ARM64' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
 #endif
 
 #include <imgui/imgui.h>

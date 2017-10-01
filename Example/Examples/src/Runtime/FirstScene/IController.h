@@ -27,8 +27,15 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <inttypes.h>	// For uint32_t, uint64_t etc.
-#include <unordered_set>
+#include "Framework/PlatformTypes.h"
+
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'argument': conversion from 'long' to 'unsigned int', signed/unsigned mismatch
+	PRAGMA_WARNING_DISABLE_MSVC(4571)	// warning C4571: Informational: catch(...) semantics changed since Visual C++ 7.1; structured exceptions (SEH) are no longer caught
+	PRAGMA_WARNING_DISABLE_MSVC(4625)	// warning C4625: 'std::_Hash<std::_Uset_traits<_Kty,std::_Uhash_compare<_Kty,_Hasher,_Keyeq>,_Alloc,false>>': copy constructor was implicitly defined as deleted
+	#include <unordered_set>
+PRAGMA_WARNING_POP
 
 
 //[-------------------------------------------------------]

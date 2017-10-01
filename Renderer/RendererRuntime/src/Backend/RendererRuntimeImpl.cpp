@@ -120,7 +120,7 @@ namespace
 			fileManager.createDirectories(directoryName.c_str());
 			if (!memoryFile.writeLz4CompressedDataToFile(PipelineStateCache::FORMAT_TYPE, PipelineStateCache::FORMAT_VERSION, filename, fileManager))
 			{
-				RENDERER_LOG(rendererRuntime.getContext(), CRITICAL, "The renderer runtime failed to save the pipeline state object cache to \"%s\"", filename)
+				RENDERER_LOG(rendererRuntime.getContext(), CRITICAL, "The renderer runtime failed to save the pipeline state object cache to \"%s\"", filename.c_str())
 			}
 		}
 

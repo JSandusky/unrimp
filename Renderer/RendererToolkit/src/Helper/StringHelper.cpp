@@ -25,7 +25,11 @@
 #include "RendererToolkit/Helper/FileSystemHelper.h"
 
 #include <cctype>
-#include <sstream>
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'initializing': conversion from 'int' to '::size_t', signed/unsigned mismatch
+	PRAGMA_WARNING_DISABLE_MSVC(4774)	// warning C4774: '_scprintf' : format string expected in argument 1 is not a string literal
+	#include <sstream>
+PRAGMA_WARNING_POP
 #include <algorithm>
 
 

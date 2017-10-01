@@ -62,7 +62,6 @@ namespace RendererToolkit
 	void OgreAssetImporter::import(const Input&)
 	{
 		// TODO(co) Implement me
-		NOP;
 
 		// TODO(co) Reminder
 		// Set the following mesh and skeleton asset compiler option: "ImportFlags": "TARGET_REALTIME_MAXIMUM_QUALITY"

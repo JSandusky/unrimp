@@ -28,15 +28,79 @@
 
 
 //[-------------------------------------------------------]
+//[ C++ compiler keywords                                 ]
+//[-------------------------------------------------------]
+// Renderer/PlatformTypes.h
+#ifndef __RENDERER_PLATFORM_TYPES_H__
+// #define __RENDERER_PLATFORM_TYPES_H__ // Don't define here, defined below
+	#ifdef WIN32
+		#ifndef NULL_HANDLE
+			#define NULL_HANDLE 0
+		#endif
+		#define FORCEINLINE __forceinline
+		#define NOP __nop()
+		#define PRAGMA_WARNING_PUSH __pragma(warning(push))
+		#define PRAGMA_WARNING_POP __pragma(warning(pop))
+		#define PRAGMA_WARNING_DISABLE_MSVC(id) __pragma(warning(disable: id))
+		#define PRAGMA_WARNING_DISABLE_CLANG(id)
+		#define PRAGMA_WARNING_DISABLE_GCC(id)
+	#elif LINUX
+		#ifndef NULL_HANDLE
+			#define NULL_HANDLE 0
+		#endif
+		#define FORCEINLINE __attribute__((always_inline))
+		#define NOP asm ("nop");
+		#ifdef __clang__
+			#define PRAGMA_WARNING_PUSH _Pragma("clang diagnostic push")
+			#define PRAGMA_WARNING_POP _Pragma("clang diagnostic pop")
+			#define PRAGMA_WARNING_DISABLE_MSVC(id)
+			#define PRAGMA_WARNING_DISABLE_GCC(id)
+			#define PRAGMA_STRINGIFY(a) #a
+			#define PRAGMA_WARNING_DISABLE_CLANG(id) _Pragma(PRAGMA_STRINGIFY(clang diagnostic ignored id) )
+		#elif __GNUC__
+			#define PRAGMA_WARNING_PUSH _Pragma("GCC diagnostic push")
+			#define PRAGMA_WARNING_POP _Pragma("GCC diagnostic pop")
+			#define PRAGMA_WARNING_DISABLE_MSVC(id)
+			#define PRAGMA_STRINGIFY(a) #a
+			#define PRAGMA_WARNING_DISABLE_GCC(id) _Pragma(PRAGMA_STRINGIFY(GCC diagnostic ignored id) )
+			#define PRAGMA_WARNING_DISABLE_CLANG(id)
+		#else
+			#error "Unsupported compiler"
+		#endif
+	#else
+		#error "Unsupported platform"
+	#endif
+	#ifdef RENDERER_NO_DEBUG
+		#define RENDERER_SET_RESOURCE_DEBUG_NAME(resource, name)
+	#else
+		#define RENDERER_SET_RESOURCE_DEBUG_NAME(resource, name) if (nullptr != resource) { (resource)->setDebugName(name); }
+	#endif
+#endif
+
+
+//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <inttypes.h>	// For "uint32_t", "uint64_t" etc.
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4668)	// warning C4668: '_M_HYBRID_X86_ARM64' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+	#include <inttypes.h>	// For uint32_t, uint64_t etc.
+PRAGMA_WARNING_POP
 #include <string.h>		// For "strcpy()"
 #ifndef RENDERER_NO_DEBUG
 	#include <cassert>
 #endif
 #ifndef RENDERER_NO_STATISTICS
-	#include <atomic>	// For "std::atomic<>"
+	// Disable warnings in external headers, we can't fix them
+	PRAGMA_WARNING_PUSH
+		PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'return': conversion from 'int' to 'std::char_traits<wchar_t>::int_type', signed/unsigned mismatch
+		PRAGMA_WARNING_DISABLE_MSVC(4623)	// warning C4623: 'std::_List_node<_Ty,std::_Default_allocator_traits<_Alloc>::void_pointer>': default constructor was implicitly defined as deleted
+		PRAGMA_WARNING_DISABLE_MSVC(4625)	// warning C4625: 'std::_Ptr_base<_Ty>': copy constructor was implicitly defined as deleted
+		PRAGMA_WARNING_DISABLE_MSVC(4626)	// warning C4626: 'std::_Compressed_pair<glslang::pool_allocator<char>,std::_String_val<std::_Simple_types<_Ty>>,false>': assignment operator was implicitly defined as deleted
+		PRAGMA_WARNING_DISABLE_MSVC(4668)	// warning C4668: '_M_HYBRID_X86_ARM64' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+		PRAGMA_WARNING_DISABLE_MSVC(5027)	// warning C5027: 'std::_Compressed_pair<glslang::pool_allocator<char>,std::_String_val<std::_Simple_types<_Ty>>,false>': move assignment operator was implicitly defined as deleted
+		#include <atomic>	// For "std::atomic<>"
+	PRAGMA_WARNING_POP
 #endif
 #ifdef LINUX
 	// Copied from "Xlib.h"
@@ -111,51 +175,14 @@ namespace Renderer
 			#else
 				typedef unsigned __int32 handle;
 			#endif
-			#ifndef NULL_HANDLE
-				#define NULL_HANDLE 0
-			#endif
-			#define FORCEINLINE __forceinline
-			#define NOP __nop()
-			#define PRAGMA_WARNING_PUSH __pragma(warning(push))
-			#define PRAGMA_WARNING_POP __pragma(warning(pop))
-			#define PRAGMA_WARNING_DISABLE_MSVC(id) __pragma(warning(disable: id))
-			#define PRAGMA_WARNING_DISABLE_CLANG(id)
-			#define PRAGMA_WARNING_DISABLE_GCC(id)
 		#elif LINUX
-			#if X64_ARCHITECTURE
+			#ifdef X64_ARCHITECTURE
 				typedef uint64_t handle;
 			#else
 				typedef uint32_t handle;
 			#endif
-			#ifndef NULL_HANDLE
-				#define NULL_HANDLE 0
-			#endif
-			#define FORCEINLINE __attribute__((always_inline))
-			#define NOP asm ("nop");
-			#ifdef __clang__
-				#define PRAGMA_WARNING_PUSH _Pragma("clang diagnostic push")
-				#define PRAGMA_WARNING_POP _Pragma("clang diagnostic pop")
-				#define PRAGMA_WARNING_DISABLE_MSVC(id)
-				#define PRAGMA_WARNING_DISABLE_GCC(id)
-				#define PRAGMA_STRINGIFY(a) #a
-				#define PRAGMA_WARNING_DISABLE_CLANG(id) _Pragma(PRAGMA_STRINGIFY(clang diagnostic ignored id) )
-			#elif __GNUC__
-				#define PRAGMA_WARNING_PUSH _Pragma("GCC diagnostic push")
-				#define PRAGMA_WARNING_POP _Pragma("GCC diagnostic pop")
-				#define PRAGMA_WARNING_DISABLE_MSVC(id)
-				#define PRAGMA_STRINGIFY(a) #a
-				#define PRAGMA_WARNING_DISABLE_GCC(id) _Pragma(PRAGMA_STRINGIFY(GCC diagnostic ignored id) )
-				#define PRAGMA_WARNING_DISABLE_CLANG(id)
-			#else
-				#error "Unsupported compiler"
-			#endif
 		#else
 			#error "Unsupported platform"
-		#endif
-		#ifdef RENDERER_NO_DEBUG
-			#define RENDERER_SET_RESOURCE_DEBUG_NAME(resource, name)
-		#else
-			#define RENDERER_SET_RESOURCE_DEBUG_NAME(resource, name) if (nullptr != resource) { (resource)->setDebugName(name); }
 		#endif
 	#endif
 

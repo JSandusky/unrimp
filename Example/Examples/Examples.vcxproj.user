@@ -22,13 +22,13 @@
     <LocalDebuggerCommand>$(SolutionDir)bin\$(PlatformTarget)_static\ExamplesStatic.exe</LocalDebuggerCommand>
     <LocalDebuggerWorkingDirectory>$(SolutionDir)bin\$(PlatformTarget)_static\</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>FirstScene -r OpenGL</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>FirstScene -r Vulkan</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">
     <LocalDebuggerCommand>$(SolutionDir)bin\$(PlatformTarget)_dynamic\Examples.exe</LocalDebuggerCommand>
     <LocalDebuggerWorkingDirectory>$(SolutionDir)bin\$(PlatformTarget)_dynamic\</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>FirstScene -r Direct3D11</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>FirstScene -r Vulkan</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">
     <LocalDebuggerCommand>$(SolutionDir)bin\$(PlatformTarget)_dynamic\Examples.exe</LocalDebuggerCommand>

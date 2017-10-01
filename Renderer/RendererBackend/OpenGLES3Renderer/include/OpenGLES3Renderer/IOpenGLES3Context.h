@@ -31,16 +31,7 @@
 
 #include <GLES3/gl3.h>
 #include <GLES3/gl2ext.h>
-
-#ifdef WIN32
-	// Disable warnings in external headers, we can't fix them
-	__pragma(warning(push))
-		__pragma(warning(disable: 4668))	// warning C4668: '<x>' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
-		#include <EGL/egl.h>
-	__pragma(warning(pop))
-#else
-	#include <EGL/egl.h>
-#endif
+#include <EGL/egl.h>
 
 // Get rid of some nasty OS macros
 #undef None	// Linux: Undefine "None", this name is used inside enums defined by Unrimp (which gets defined inside Xlib.h pulled in by egl.h)

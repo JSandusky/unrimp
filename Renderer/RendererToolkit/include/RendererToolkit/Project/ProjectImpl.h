@@ -32,9 +32,17 @@
 
 #include <RendererRuntime/Asset/AssetPackage.h>
 
-#include <thread>
-#include <atomic>
-#include <memory> // For std::unique_ptr
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'return': conversion from 'int' to 'std::char_traits<wchar_t>::int_type', signed/unsigned mismatch
+	PRAGMA_WARNING_DISABLE_MSVC(4571)	// warning C4571: Informational: catch(...) semantics changed since Visual C++ 7.1; structured exceptions (SEH) are no longer caught
+	PRAGMA_WARNING_DISABLE_MSVC(4625)	// warning C4625: 'std::_Ptr_base<_Ty>': copy constructor was implicitly defined as deleted
+	PRAGMA_WARNING_DISABLE_MSVC(4626)	// warning C4626: 'std::_Ptr_base<_Ty>': assignment operator was implicitly defined as deleted
+	PRAGMA_WARNING_DISABLE_MSVC(4668)	// warning C4668: '_M_HYBRID_X86_ARM64' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+	#include <thread>
+	#include <atomic>	// For "std::atomic<>"
+	#include <memory>	// For std::unique_ptr
+PRAGMA_WARNING_POP
 
 
 //[-------------------------------------------------------]

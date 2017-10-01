@@ -27,6 +27,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Core/Platform/PlatformTypes.h"
+
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4201)	// warning C4201: nonstandard extension used: nameless struct/union
@@ -34,7 +36,11 @@ PRAGMA_WARNING_PUSH
 	#include <glm/gtc/quaternion.hpp>
 PRAGMA_WARNING_POP
 
-#include <inttypes.h>	// For uint32_t, uint64_t etc.
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4668)	// warning C4668: '_M_HYBRID_X86_ARM64' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+	#include <inttypes.h>	// For uint32_t, uint64_t etc.
+PRAGMA_WARNING_POP
 
 
 //[-------------------------------------------------------]

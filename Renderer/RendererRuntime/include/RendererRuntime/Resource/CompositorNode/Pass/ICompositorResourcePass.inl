@@ -23,8 +23,12 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/GetUninitialized.h"
 
-#include <tuple>	// For "std::ignore"
-#include <cassert>
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'return': conversion from 'int' to 'std::char_traits<wchar_t>::int_type', signed/unsigned mismatch
+	#include <tuple>	// For "std::ignore"
+	#include <cassert>
+PRAGMA_WARNING_POP
 
 
 //[-------------------------------------------------------]

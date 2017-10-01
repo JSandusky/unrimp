@@ -11,6 +11,7 @@
 // Disable warnings
 #ifdef WIN32
 	#pragma warning(disable: 4365)	// warning C4365: 'argument': conversion from 'int' to 'const size_t', signed/unsigned mismatch
+	#pragma warning(disable: 4668)	// warning C4668: '_M_HYBRID_X86_ARM64' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
 #endif
 
 #if defined(_MSC_VER) && !defined(_CRT_SECURE_NO_WARNINGS)

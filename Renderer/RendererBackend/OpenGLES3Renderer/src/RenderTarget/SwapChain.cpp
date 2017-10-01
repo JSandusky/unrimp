@@ -25,7 +25,12 @@
 #include "OpenGLES3Renderer/IOpenGLES3Context.h"
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
-#include <algorithm>
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'argument': conversion from 'long' to 'unsigned int', signed/unsigned mismatch
+	PRAGMA_WARNING_DISABLE_MSVC(4668)	// warning C4668: '_M_HYBRID_X86_ARM64' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+	#include <algorithm>
+PRAGMA_WARNING_POP
 
 
 //[-------------------------------------------------------]

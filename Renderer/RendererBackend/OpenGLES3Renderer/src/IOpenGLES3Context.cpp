@@ -32,7 +32,12 @@
 	#include <android/native_window.h>	// For "ANativeWindow_setBuffersGeometry()"
 #endif
 
-#include <tuple>	// For "std::ignore"
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4668)	// warning C4668: '_M_HYBRID_X86_ARM64' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'return': conversion from 'int' to 'std::char_traits<wchar_t>::int_type', signed/unsigned mismatch
+	#include <tuple>	// For "std::ignore"
+PRAGMA_WARNING_POP
 
 
 //[-------------------------------------------------------]

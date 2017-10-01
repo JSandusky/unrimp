@@ -27,8 +27,9 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <cstring>		// For "memcpy()"
-#include <inttypes.h>	// For uint32_t, uint64_t etc.
+#include "Renderer/PlatformTypes.h"
+
+#include <cstring>	// For "memcpy()"
 
 
 //[-------------------------------------------------------]

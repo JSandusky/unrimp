@@ -27,9 +27,13 @@
 	#ifdef UNICODE
 		#include "utf8/utf8.h"	// To convert utf16 strings to utf8
 	#else
-		#include <sstream>
-		#include <iterator>
-		#include <algorithm>
+		PRAGMA_WARNING_PUSH
+			PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'initializing': conversion from 'int' to '::size_t', signed/unsigned mismatch
+			PRAGMA_WARNING_DISABLE_MSVC(4774)	// warning C4774: '_scprintf' : format string expected in argument 1 is not a string literal
+			#include <sstream>
+			#include <iterator>
+			#include <algorithm>
+		PRAGMA_WARNING_POP
 	#endif
 #endif
 

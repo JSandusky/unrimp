@@ -32,7 +32,12 @@
 
 #include <Renderer/Public/Renderer.h>
 
-#include <map>
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4625)	// warning C4625: 'std::_Tree<std::_Tmap_traits<_Kty,_Ty,_Pr,_Alloc,false>>': copy constructor was implicitly defined as deleted
+	PRAGMA_WARNING_DISABLE_MSVC(4571)	// warning C4571: Informational: catch(...) semantics changed since Visual C++ 7.1; structured exceptions (SEH) are no longer caught
+	#include <map>
+PRAGMA_WARNING_POP
 
 
 //[-------------------------------------------------------]

@@ -29,8 +29,14 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
 
-#include <inttypes.h>	// For uint32_t, uint64_t etc.
-#include <vector>
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'argument': conversion from 'long' to 'unsigned int', signed/unsigned mismatch
+	PRAGMA_WARNING_DISABLE_MSVC(4571)	// warning C4571: Informational: catch(...) semantics changed since Visual C++ 7.1; structured exceptions (SEH) are no longer caught
+	PRAGMA_WARNING_DISABLE_MSVC(4668)	// warning C4668: '_M_HYBRID_X86_ARM64' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+	#include <inttypes.h>	// For uint32_t, uint64_t etc.
+	#include <vector>
+PRAGMA_WARNING_POP
 
 
 //[-------------------------------------------------------]

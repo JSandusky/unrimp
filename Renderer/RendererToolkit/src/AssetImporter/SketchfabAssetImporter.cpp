@@ -62,7 +62,6 @@ namespace RendererToolkit
 	void SketchfabAssetImporter::import(const Input&)
 	{
 		// TODO(co) Implement me
-		NOP;
 	}
 
 
