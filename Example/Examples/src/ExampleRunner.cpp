@@ -198,10 +198,10 @@ int ExampleRunner::runExample(const std::string& rendererName, const std::string
 	bool rendererNotSupportedByExample = false;
 	if (m_supportedRendererForExample.end() != supportedRenderer)
 	{
-		auto supportedRendererList = supportedRenderer->second;
+		const SupportedRenderers& supportedRendererList = supportedRenderer->second;
 		rendererNotSupportedByExample =  std::find(supportedRendererList.begin(), supportedRendererList.end(), rendererName) == supportedRendererList.end();
 	}
-	
+
 	if (m_availableExamples.end() == example || m_availableRenderer.end() == renderer || rendererNotSupportedByExample)
 	{
 		if (m_availableExamples.end() == example)
@@ -223,11 +223,13 @@ int ExampleRunner::runExample(const std::string& rendererName, const std::string
 }
 
 template<typename T>
-void ExampleRunner::addExample(const std::string& name, RunnerMethod runnerMethod, T const &supportedRendererList)
+void ExampleRunner::addExample(const std::string& name, RunnerMethod runnerMethod, T const& supportedRendererList)
 {
 	m_availableExamples.insert(std::pair<std::string,RunnerMethod>(name, runnerMethod));
-	std::vector<std::string> supportedRenderer;
-	for (auto renderer = supportedRendererList.begin(); renderer != supportedRendererList.end(); ++renderer)
-		supportedRenderer.push_back(*renderer);
-	m_supportedRendererForExample.insert(std::pair<std::string, std::vector<std::string>>(name, std::move(supportedRenderer)));
+	SupportedRenderers supportedRenderers;
+	for (const std::string& supportedRenderer : supportedRendererList)
+	{
+		supportedRenderers.push_back(supportedRenderer);
+	}
+	m_supportedRendererForExample.insert(std::pair<std::string, std::vector<std::string>>(name, std::move(supportedRenderers)));
 }

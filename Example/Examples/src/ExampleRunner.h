@@ -51,7 +51,8 @@ protected:
 	typedef int(*RunnerMethod)(const char*);
 	typedef std::map<std::string, RunnerMethod> AvailableExamplesMap;
 	typedef std::set<std::string> AvailableRendererMap;
-	typedef std::map<std::string, std::vector<std::string>> ExampleToSupportedRendererMap;
+	typedef std::vector<std::string> SupportedRenderers;
+	typedef std::map<std::string, SupportedRenderers> ExampleToSupportedRendererMap;
 	
 	ExampleRunner();
 	
