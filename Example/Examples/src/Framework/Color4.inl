@@ -22,28 +22,19 @@
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
 inline Color4::Color4() :
-	r(0.0f),
-	g(0.0f),
-	b(0.0f),
-	a(0.0f)
+	value { 0.0f, 0.0f, 0.0f, 0.0f }
 {
 	// Nothing here
 }
 
 inline Color4::Color4(const Color4& source) :
-	r(source.r),
-	g(source.g),
-	b(source.b),
-	a(source.a)
+	value { source[0], source[1], source[2], source[3] }
 {
 	// Nothing here
 }
 
 inline Color4::Color4(float _r, float _g, float _b, float _a) :
-	r(_r),
-	g(_g),
-	b(_b),
-	a(_a)
+	value { _r, _g, _b, _a }
 {
 	// Nothing here
 }
@@ -55,19 +46,19 @@ inline Color4::~Color4()
 
 inline Color4& Color4::operator =(const Color4& source)
 {
-	r = source.r;
-	g = source.g;
-	b = source.b;
-	a = source.a;
+	value[0] = source.value[0];
+	value[1] = source.value[1];
+	value[2] = source.value[2];
+	value[3] = source.value[3];
 	return *this;
 }
 
 inline Color4::operator float *()
 {
-	return &r;
+	return &value[0];
 }
 
 inline Color4::operator const float *() const
 {
-	return &r;
+	return &value[0];
 }

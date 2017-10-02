@@ -98,18 +98,18 @@ ExampleRunner::ExampleRunner()
 			"Null"
 		#elif defined(RENDERER_ONLY_OPENGL) || defined(LINUX)
 			"OpenGL"
-		#elif RENDERER_ONLY_OPENGLES3
+		#elifdef RENDERER_ONLY_OPENGLES3
 			"OpenGLES3"
-		#elif RENDERER_ONLY_VULKAN
+		#elifdef RENDERER_ONLY_VULKAN
 			"Vulkan"
 		#elif WIN32
 			#ifdef RENDERER_ONLY_DIRECT3D9
 				"Direct3D9"
-			#elif RENDERER_ONLY_DIRECT3D10
+			#elifdef RENDERER_ONLY_DIRECT3D10
 				"Direct3D10"
-			#elif RENDERER_ONLY_DIRECT3D11
+			#elifdef RENDERER_ONLY_DIRECT3D11
 				"Direct3D11"
-			#elif RENDERER_ONLY_DIRECT3D12
+			#elifdef RENDERER_ONLY_DIRECT3D12
 				"Direct3D12"
 			#endif
 		#endif

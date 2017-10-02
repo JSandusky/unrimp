@@ -56,7 +56,7 @@ public:
 		struct
 		{
 			float r, g, b, a;
-		};
+		} rgba;
 	};
 
 

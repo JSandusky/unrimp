@@ -286,7 +286,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-      <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710</AdditionalOptions>
+      <AdditionalOptions>/wd 4514 /wd 4996 /wd 4820 /wd 4710</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
@@ -312,7 +312,7 @@ copy $(OutDir)\$(TargetName).lib ..\..\..\lib\$(PlatformTarget)d_static\
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-      <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710</AdditionalOptions>
+      <AdditionalOptions>/wd 4514 /wd 4996 /wd 4820 /wd 4710</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
@@ -338,7 +338,7 @@ copy $(OutDir)\$(TargetName).lib ..\..\..\lib\$(PlatformTarget)d_static\
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-      <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710</AdditionalOptions>
+      <AdditionalOptions>/wd 4514 /wd 4996 /wd 4820 /wd 4710</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
@@ -363,7 +363,7 @@ copy $(OutDir)\$(TargetName).dll ..\..\..\bin\$(PlatformTarget)d_dynamic\
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-      <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710</AdditionalOptions>
+      <AdditionalOptions>/wd 4514 /wd 4996 /wd 4820 /wd 4710</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
@@ -398,7 +398,7 @@ copy $(OutDir)\$(TargetName).dll ..\..\..\bin\$(PlatformTarget)d_dynamic\
       <FloatingPointExceptions>false</FloatingPointExceptions>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <CompileAsManaged>false</CompileAsManaged>
-      <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710 /wd 4711</AdditionalOptions>
+      <AdditionalOptions>/wd 4514 /wd 4996 /wd 4820 /wd 4710 /wd 4711</AdditionalOptions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
@@ -435,7 +435,7 @@ copy $(OutDir)\$(TargetName).lib ..\..\..\lib\$(PlatformTarget)_static\
       <FloatingPointExceptions>false</FloatingPointExceptions>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <CompileAsManaged>false</CompileAsManaged>
-      <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710 /wd 4711</AdditionalOptions>
+      <AdditionalOptions>/wd 4514 /wd 4996 /wd 4820 /wd 4710 /wd 4711</AdditionalOptions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
@@ -473,7 +473,7 @@ copy $(OutDir)\$(TargetName).lib ..\..\..\lib\$(PlatformTarget)_static\
       <FloatingPointExceptions>false</FloatingPointExceptions>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <CompileAsManaged>false</CompileAsManaged>
-      <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710 /wd 4711</AdditionalOptions>
+      <AdditionalOptions>/wd 4514 /wd 4996 /wd 4820 /wd 4710 /wd 4711</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
@@ -509,7 +509,7 @@ copy $(OutDir)\$(TargetName).dll ..\..\..\bin\$(PlatformTarget)_dynamic\
       <FloatingPointExceptions>false</FloatingPointExceptions>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <CompileAsManaged>false</CompileAsManaged>
-      <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710 /wd 4711</AdditionalOptions>
+      <AdditionalOptions>/wd 4514 /wd 4996 /wd 4820 /wd 4710 /wd 4711</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>

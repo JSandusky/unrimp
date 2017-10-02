@@ -179,7 +179,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-      <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710 /wd 4201 /wd 4995 /wd 4668 /wd 4350</AdditionalOptions>
+      <AdditionalOptions>/wd 4514 /wd 4996 /wd 4820 /wd 4710</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <TreatWarningAsError>false</TreatWarningAsError>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -210,7 +210,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_static\"
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-      <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710 /wd 4201 /wd 4995 /wd 4668 /wd 4350</AdditionalOptions>
+      <AdditionalOptions>/wd 4514 /wd 4996 /wd 4820 /wd 4710</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <TreatWarningAsError>false</TreatWarningAsError>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -241,7 +241,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_static\"
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-      <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710 /wd 4201 /wd 4995 /wd 4668 /wd 4350</AdditionalOptions>
+      <AdditionalOptions>/wd 4514 /wd 4996 /wd 4820 /wd 4710</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -272,7 +272,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_dynamic\"
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-      <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710 /wd 4201 /wd 4995 /wd 4668 /wd 4350</AdditionalOptions>
+      <AdditionalOptions>/wd 4514 /wd 4996 /wd 4820 /wd 4710</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -313,7 +313,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_dynamic\"
       <FloatingPointExceptions>false</FloatingPointExceptions>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <CompileAsManaged>false</CompileAsManaged>
-      <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710 /wd 4201 /wd 4995 /wd 4668 /wd 4350 /wd 4711</AdditionalOptions>
+      <AdditionalOptions>/wd 4514 /wd 4996 /wd 4820 /wd 4710 /wd 4711</AdditionalOptions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -354,7 +354,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_static\"
       <FloatingPointExceptions>false</FloatingPointExceptions>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <CompileAsManaged>false</CompileAsManaged>
-      <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710 /wd 4201 /wd 4995 /wd 4668 /wd 4350 /wd 4711</AdditionalOptions>
+      <AdditionalOptions>/wd 4514 /wd 4996 /wd 4820 /wd 4710 /wd 4711</AdditionalOptions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -396,7 +396,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_static\"
       <FloatingPointExceptions>false</FloatingPointExceptions>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <CompileAsManaged>false</CompileAsManaged>
-      <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710 /wd 4201 /wd 4995 /wd 4668 /wd 4350 /wd 4711</AdditionalOptions>
+      <AdditionalOptions>/wd 4514 /wd 4996 /wd 4820 /wd 4710 /wd 4711</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -437,7 +437,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
       <FloatingPointExceptions>false</FloatingPointExceptions>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <CompileAsManaged>false</CompileAsManaged>
-      <AdditionalOptions>/wd 4514 /wd 4481 /wd 4996 /wd 4820 /wd 4710 /wd 4201 /wd 4995 /wd 4668 /wd 4350 /wd 4711</AdditionalOptions>
+      <AdditionalOptions>/wd 4514 /wd 4996 /wd 4820 /wd 4710 /wd 4711</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
