@@ -36,6 +36,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\External\Assimp\code\BlenderDNA.inl" />
+    <None Include="..\..\External\Assimp\code\glTF2Asset.inl" />
+    <None Include="..\..\External\Assimp\code\glTF2AssetWriter.inl" />
     <None Include="..\..\External\Assimp\code\glTFAsset.inl" />
     <None Include="..\..\External\Assimp\code\glTFAssetWriter.inl" />
     <None Include="..\..\External\Assimp\include\assimp\color4.inl" />
@@ -77,6 +79,10 @@
     <ClInclude Include="..\..\External\Assimp\code\FBXProperties.h" />
     <ClInclude Include="..\..\External\Assimp\code\FBXTokenizer.h" />
     <ClInclude Include="..\..\External\Assimp\code\FBXUtil.h" />
+    <ClInclude Include="..\..\External\Assimp\code\glTF2Asset.h" />
+    <ClInclude Include="..\..\External\Assimp\code\glTF2AssetWriter.h" />
+    <ClInclude Include="..\..\External\Assimp\code\glTF2Exporter.h" />
+    <ClInclude Include="..\..\External\Assimp\code\glTF2Importer.h" />
     <ClInclude Include="..\..\External\Assimp\code\glTFAsset.h" />
     <ClInclude Include="..\..\External\Assimp\code\glTFAssetWriter.h" />
     <ClInclude Include="..\..\External\Assimp\code\glTFExporter.h" />
@@ -89,7 +95,6 @@
     <ClInclude Include="..\..\External\Assimp\code\ObjFileMtlImporter.h" />
     <ClInclude Include="..\..\External\Assimp\code\ObjFileParser.h" />
     <ClInclude Include="..\..\External\Assimp\code\ObjTools.h" />
-    <ClInclude Include="..\..\External\Assimp\contrib\ConvertUTF\ConvertUTF.h" />
     <ClInclude Include="..\..\External\Assimp\contrib\irrXML\CXMLReaderImpl.h" />
     <ClInclude Include="..\..\External\Assimp\contrib\irrXML\heapsort.h" />
     <ClInclude Include="..\..\External\Assimp\contrib\irrXML\irrArray.h" />
@@ -148,6 +153,7 @@
     <ClInclude Include="..\..\External\Assimp\include\assimp\ProgressHandler.hpp" />
     <ClInclude Include="..\..\External\Assimp\include\assimp\quaternion.h" />
     <ClInclude Include="..\..\External\Assimp\include\assimp\scene.h" />
+    <ClInclude Include="..\..\External\Assimp\include\assimp\SceneCombiner.h" />
     <ClInclude Include="..\..\External\Assimp\include\assimp\texture.h" />
     <ClInclude Include="..\..\External\Assimp\include\assimp\types.h" />
     <ClInclude Include="..\..\External\Assimp\include\assimp\vector2.h" />
@@ -345,6 +351,10 @@
     <ClInclude Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcherLinux.h" />
     <ClInclude Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcherOSX.h" />
     <ClInclude Include="..\..\External\SimpleFileWatcher\src\FileWatcher\FileWatcherWin32.h" />
+    <ClInclude Include="..\..\External\utf8cpp\utf8\utf8.h" />
+    <ClInclude Include="..\..\External\utf8cpp\utf8\utf8\checked.h" />
+    <ClInclude Include="..\..\External\utf8cpp\utf8\utf8\core.h" />
+    <ClInclude Include="..\..\External\utf8cpp\utf8\utf8\unchecked.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\CompositorNodeAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\CompositorWorkspaceAssetCompiler.h" />
     <ClInclude Include="include\RendererToolkit\AssetCompiler\IAssetCompiler.h" />
@@ -620,6 +630,26 @@
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">TurnOffAllWarnings</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">TurnOffAllWarnings</WarningLevel>
     </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\glTF2Exporter.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level1</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level1</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level1</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level1</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level1</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level1</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level1</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level1</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\glTF2Importer.cpp">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level1</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level1</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">Level1</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">Level1</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">Level1</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level1</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level1</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level1</WarningLevel>
+    </ClCompile>
     <ClCompile Include="..\..\External\Assimp\code\glTFExporter.cpp">
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level1</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level1</WarningLevel>
@@ -700,7 +730,6 @@
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
     </ClCompile>
-    <ClCompile Include="..\..\External\Assimp\contrib\ConvertUTF\ConvertUTF.c" />
     <ClCompile Include="..\..\External\Assimp\contrib\irrXML\irrXML.cpp">
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">Level2</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">Level2</WarningLevel>

@@ -34,7 +34,7 @@ extern "C" {
 **   https://github.com/KhronosGroup/OpenGL-Registry
 */
 
-#define GLX_GLXEXT_VERSION 20170221
+#define GLX_GLXEXT_VERSION 20170926
 
 /* Generated C header for:
  * API: glx
@@ -175,6 +175,11 @@ typedef GLXContext ( *PFNGLXCREATECONTEXTATTRIBSARBPROC) (Display *dpy, GLXFBCon
 GLXContext glXCreateContextAttribsARB (Display *dpy, GLXFBConfig config, GLXContext share_context, Bool direct, const int *attrib_list);
 #endif
 #endif /* GLX_ARB_create_context */
+
+#ifndef GLX_ARB_create_context_no_error
+#define GLX_ARB_create_context_no_error 1
+#define GLX_CONTEXT_OPENGL_NO_ERROR_ARB   0x31B3
+#endif /* GLX_ARB_create_context_no_error */
 
 #ifndef GLX_ARB_create_context_profile
 #define GLX_ARB_create_context_profile 1
@@ -497,6 +502,16 @@ typedef Bool ( *PFNGLXSET3DFXMODEMESAPROC) (int mode);
 Bool glXSet3DfxModeMESA (int mode);
 #endif
 #endif /* GLX_MESA_set_3dfx_mode */
+
+#ifndef GLX_MESA_swap_control
+#define GLX_MESA_swap_control 1
+typedef int ( *PFNGLXGETSWAPINTERVALMESAPROC) (void);
+typedef void ( *PFNGLXSWAPINTERVALMESAPROC) (unsigned int interval);
+#ifdef GLX_GLXEXT_PROTOTYPES
+int glXGetSwapIntervalMESA (void);
+void glXSwapIntervalMESA (unsigned int interval);
+#endif
+#endif /* GLX_MESA_swap_control */
 
 #ifndef GLX_NV_copy_buffer
 #define GLX_NV_copy_buffer 1

@@ -1,4 +1,4 @@
-The official OpenGL extension headers from http://www.opengl.org/registry/
+The official OpenGL extension headers from http://www.opengl.org/registry/ downloaded at October 2, 2017
 
 "gl.h" and "glx.h" are from MesaLib 10.2.2
 - License: MIT License (http://mesa3d.org/license.html)

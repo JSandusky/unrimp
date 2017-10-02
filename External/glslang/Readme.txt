@@ -1,4 +1,4 @@
-glslang (latest commit 652db16ff114747c216ec631767dfd27e3d3c838 - July 7, 2017)
+glslang (latest commit 092b7d2e2040ed28812f7d98e11af3b05d4bcbae - September 30, 2017)
 	"Khronos reference front-end for GLSL and ESSL, and sample SPIR-V generator"
 - License: Multiple different licenses, see source codes
 - Online: https://github.com/KhronosGroup/glslang

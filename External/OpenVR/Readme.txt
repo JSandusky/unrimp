@@ -1,4 +1,4 @@
-OpenVR SDK 1.0.7
+OpenVR SDK 1.0.10 (September 1, 2017)
 - License
 	"
 	Copyright (c) 2015, Valve Corporation

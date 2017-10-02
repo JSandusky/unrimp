@@ -182,7 +182,7 @@ namespace RendererRuntime
 		IMPORT_FUNC(VR_GetGenericInterface);
 		IMPORT_FUNC(VR_IsInterfaceVersionValid);
 		IMPORT_FUNC(VR_GetInitToken);
-		IMPORT_FUNC(VR_InitInternal);
+		IMPORT_FUNC(VR_InitInternal2);
 		IMPORT_FUNC(VR_ShutdownInternal);
 
 		// Done

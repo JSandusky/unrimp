@@ -95,9 +95,6 @@
     <Filter Include="External\Assimp\contrib">
       <UniqueIdentifier>{b7cd3630-c7e3-48b8-aa92-bc80bed06b7a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="External\Assimp\contrib\ConvertUTF">
-      <UniqueIdentifier>{03e38137-a509-4275-9c6e-e3a2ca0db43b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="External\Assimp\PostProcessing">
       <UniqueIdentifier>{ba53ce81-a459-4184-bf7d-947b0fd17071}</UniqueIdentifier>
     </Filter>
@@ -136,6 +133,9 @@
     </Filter>
     <Filter Include="External\Assimp\COLLADA">
       <UniqueIdentifier>{72723479-278f-4ad3-a173-ae027216ed9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External\Assimp\contrib\utf8cpp">
+      <UniqueIdentifier>{6227f39c-5d28-4b12-b5d6-86def2adae5c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -177,14 +177,20 @@
     <None Include="..\..\External\Assimp\include\assimp\vector3.inl">
       <Filter>External\Assimp\Public</Filter>
     </None>
-    <None Include="..\..\External\Assimp\code\glTFAssetWriter.inl">
+    <None Include="..\..\External\Assimp\code\BlenderDNA.inl">
+      <Filter>External\Assimp\BLEND</Filter>
+    </None>
+    <None Include="..\..\External\Assimp\code\glTF2Asset.inl">
+      <Filter>External\Assimp\GLTF</Filter>
+    </None>
+    <None Include="..\..\External\Assimp\code\glTF2AssetWriter.inl">
       <Filter>External\Assimp\GLTF</Filter>
     </None>
     <None Include="..\..\External\Assimp\code\glTFAsset.inl">
       <Filter>External\Assimp\GLTF</Filter>
     </None>
-    <None Include="..\..\External\Assimp\code\BlenderDNA.inl">
-      <Filter>External\Assimp\BLEND</Filter>
+    <None Include="..\..\External\Assimp\code\glTFAssetWriter.inl">
+      <Filter>External\Assimp\GLTF</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1022,18 +1028,6 @@
     <ClInclude Include="..\..\External\Assimp\code\ObjFileImporter.h">
       <Filter>External\Assimp\OBJ</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\External\Assimp\code\glTFAssetWriter.h">
-      <Filter>External\Assimp\GLTF</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\External\Assimp\code\glTFExporter.h">
-      <Filter>External\Assimp\GLTF</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\External\Assimp\code\glTFImporter.h">
-      <Filter>External\Assimp\GLTF</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\External\Assimp\code\glTFAsset.h">
-      <Filter>External\Assimp\GLTF</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\External\Assimp\code\FBXDocumentUtil.h">
       <Filter>External\Assimp\FBX</Filter>
     </ClInclude>
@@ -1157,8 +1151,44 @@
     <ClInclude Include="..\..\External\Assimp\code\ColladaLoader.h">
       <Filter>External\Assimp\COLLADA</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\External\Assimp\contrib\ConvertUTF\ConvertUTF.h">
-      <Filter>External\Assimp\contrib\ConvertUTF</Filter>
+    <ClInclude Include="..\..\External\Assimp\code\glTF2Asset.h">
+      <Filter>External\Assimp\GLTF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\Assimp\code\glTF2AssetWriter.h">
+      <Filter>External\Assimp\GLTF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\Assimp\code\glTF2Exporter.h">
+      <Filter>External\Assimp\GLTF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\Assimp\code\glTF2Importer.h">
+      <Filter>External\Assimp\GLTF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\Assimp\code\glTFAsset.h">
+      <Filter>External\Assimp\GLTF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\Assimp\code\glTFAssetWriter.h">
+      <Filter>External\Assimp\GLTF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\Assimp\code\glTFExporter.h">
+      <Filter>External\Assimp\GLTF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\Assimp\code\glTFImporter.h">
+      <Filter>External\Assimp\GLTF</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\Assimp\include\assimp\SceneCombiner.h">
+      <Filter>External\Assimp\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\utf8cpp\utf8\utf8.h">
+      <Filter>External\Assimp\contrib\utf8cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\utf8cpp\utf8\utf8\checked.h">
+      <Filter>External\Assimp\contrib\utf8cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\utf8cpp\utf8\utf8\core.h">
+      <Filter>External\Assimp\contrib\utf8cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\External\utf8cpp\utf8\utf8\unchecked.h">
+      <Filter>External\Assimp\contrib\utf8cpp</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1669,12 +1699,6 @@
     <ClCompile Include="..\..\External\Assimp\code\ObjFileImporter.cpp">
       <Filter>External\Assimp\OBJ</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\External\Assimp\code\glTFExporter.cpp">
-      <Filter>External\Assimp\GLTF</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\External\Assimp\code\glTFImporter.cpp">
-      <Filter>External\Assimp\GLTF</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\External\Assimp\code\FBXDocumentUtil.cpp">
       <Filter>External\Assimp\FBX</Filter>
     </ClCompile>
@@ -1807,8 +1831,17 @@
     <ClCompile Include="..\..\External\Assimp\code\ColladaLoader.cpp">
       <Filter>External\Assimp\COLLADA</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\External\Assimp\contrib\ConvertUTF\ConvertUTF.c">
-      <Filter>External\Assimp\contrib\ConvertUTF</Filter>
+    <ClCompile Include="..\..\External\Assimp\code\glTF2Exporter.cpp">
+      <Filter>External\Assimp\GLTF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\glTF2Importer.cpp">
+      <Filter>External\Assimp\GLTF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\glTFExporter.cpp">
+      <Filter>External\Assimp\GLTF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\External\Assimp\code\glTFImporter.cpp">
+      <Filter>External\Assimp\GLTF</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
