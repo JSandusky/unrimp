@@ -1,16 +1,8 @@
-/bin/x86_dynamic
-/bin/x86_static
-/bin/x86d_dynamic
-/bin/x86d_static
-/Projects.v11.suo
+/.vs
 /include
 /lib
-/tmp
-/Projects.sdf
-/Projects.opensdf
-/Projects.v14.suo
+*.kdev4
+/build*
 # ignore all in bin folder except the DataSource subfolder
 /bin/*
 !/bin/DataSource
-*.kdev4
-/build*
