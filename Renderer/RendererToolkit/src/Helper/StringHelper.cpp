@@ -24,13 +24,12 @@
 #include "RendererToolkit/Helper/StringHelper.h"
 #include "RendererToolkit/Helper/FileSystemHelper.h"
 
-#include <cctype>
 PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'initializing': conversion from 'int' to '::size_t', signed/unsigned mismatch
 	PRAGMA_WARNING_DISABLE_MSVC(4774)	// warning C4774: '_scprintf' : format string expected in argument 1 is not a string literal
+	#include <fstream>
 	#include <sstream>
 PRAGMA_WARNING_POP
-#include <algorithm>
 
 
 //[-------------------------------------------------------]
@@ -76,6 +75,149 @@ namespace
 
 			// Nothing found
 			return std::string::npos;
+		}
+
+		void stripCommentsFromSourceCode(const std::string& sourceCode, std::string& targetCode)
+		{
+			const size_t endPosition = sourceCode.length();
+			size_t currentPosition = 0;
+
+			// Performance: Pre-allocate memory by assuming the worst-case
+			targetCode.reserve(endPosition);
+
+			// We have two kinds of comments
+			// - Single-line comments: Starts with "//" -> all text till the next new line character is a comment
+			// - Multi-line comments: Starts with "/*" and ends with */ all text (even new lines) between the two position is a comment
+
+			// Till the end...
+			while (currentPosition < endPosition)
+			{
+				// Find start character of comments (... or divisions... )
+				size_t index = sourceCode.find('/', currentPosition);
+				if (std::string::npos != index)
+				{
+					{ // Copy everything up to this point into the target code
+						const size_t numberOfCharactersToCopy = index - currentPosition;
+						if (numberOfCharactersToCopy > 0)
+						{
+							targetCode.append(sourceCode, currentPosition, numberOfCharactersToCopy);
+						}
+						currentPosition = index;
+					}
+
+					// Division or a comment, if comment, one-liner or block?
+					if (index + 1 < endPosition)
+					{
+						const char nextCharacter = sourceCode[index + 1];
+						if ('/' == nextCharacter)
+						{
+							// One-line-comment
+							index = sourceCode.find('\n', currentPosition);
+							if (std::string::npos != index)
+							{
+								// Ignore everything up to this new index
+								currentPosition = index;
+
+								// Don't strip the new line character, when the comment is not the only text in the line
+								// Check if there are any non whitespace characters (space, tab (\t) or \r) on the same text line
+
+								// Find the previous new line, we do the search in the targetCode, because each character before the comment start is already copied to the target
+								// And we might need to remove the remaining line when it only consists of white spaces
+								const size_t lineStartIndex = targetCode.rfind('\n');
+								if (std::string::npos == lineStartIndex)
+								{
+									// We are at the beginning of the source so check the whole content we might need to clear it
+									size_t indexIfNonWhiteSpaceBeforeCommentStart = rfindNextNonWhiteSpace(targetCode, 0, targetCode.length() - 1);
+									if (std::string::npos == indexIfNonWhiteSpaceBeforeCommentStart)
+									{
+										// The whole content consists only of white spaces
+										targetCode.clear();
+
+										// Ignore the new line character of the current line
+										currentPosition += 1;
+									}
+									else
+									{
+										// Remove any characters from target from the found position to the end of the text
+										targetCode.erase(indexIfNonWhiteSpaceBeforeCommentStart + 1);	// The +1 is needed so we don't strip the non tab/space character too
+																										// Don't strip the new line character
+									}
+								}
+								else
+								{
+									// We are at a different text line then the first one check the content from the found position to the end
+									size_t indexIfNonWhiteSpaceBeforeCommentStart = rfindNextNonWhiteSpace(targetCode, lineStartIndex + 1, targetCode.length() - 1);	// The +1 to start with the next character after the new line
+									if (std::string::npos == indexIfNonWhiteSpaceBeforeCommentStart)
+									{
+										// The whole line consists only of white spaces
+										targetCode.erase(lineStartIndex + 1);	// The +1 is needed so we don't strip the new line character too
+																				// Ignore the new line character of the current line
+										currentPosition += 1;
+									}
+									else
+									{
+										// We have non white space characters in front of the comment
+										// Remove any characters from target from the found position to the end of the text
+										targetCode.erase(indexIfNonWhiteSpaceBeforeCommentStart + 1);	// The +1 is needed so we don't strip the non tab/space character too
+																										// Don't strip the new line character
+									}
+								}
+							}
+							else
+							{
+								// We're done, end-of-file
+								currentPosition = endPosition;
+								break;
+							}
+						}
+						else if ('*' == nextCharacter)
+						{
+							// Block-comment
+							index = sourceCode.find("*/", currentPosition);
+							if (std::string::npos != index)
+							{
+								// Ignore everything up to this new index
+								currentPosition = index + 2;	// +2 = skip */
+																// Strip also the new line when the */ is the last in the text line
+								if (currentPosition + 1 < endPosition && sourceCode[currentPosition + 1] == '\n')
+								{
+									++currentPosition;
+								}
+							}
+							else
+							{
+								// We're done, end-of-file
+								currentPosition = endPosition;
+								break;
+							}
+						}
+						else
+						{
+							// Division, add it
+							targetCode += '/';
+							++currentPosition;
+						}
+					}
+					else
+					{
+						// We're done, end-of-file
+						break;
+					}
+				}
+				else
+				{
+					// We're done, end-of-file
+					break;
+				}
+			}
+
+			// Append the rest to the target code, if there's a rest
+			if (currentPosition < endPosition)
+			{
+				// In C++14 exists an overload "append(const string& str, size_t subpos, size_t sublen = npos)" but it seems GCC 6.2.0 doesn't specifies the default value for the last parameter
+				// -> Thus specify it explicitly
+				targetCode.append(sourceCode, currentPosition, std::string::npos);
+			}
 		}
 
 		// TODO(sw) This code is only needed when not using boost::filesystem and a c++ runtime library which implements fully the c++ filesystem TS
@@ -321,147 +463,23 @@ namespace RendererToolkit
 		}
 	}
 
-	void StringHelper::stripCommentsFromSourceCode(const std::string& sourceCode, std::string& targetCode)
+	void StringHelper::readSourceCodeWithStrippedCommentsByFilename(const std::string& absoluteFilename, std::string& sourceCode)
 	{
-		const size_t endPosition = sourceCode.length();
-		size_t currentPosition = 0;
+		// Open file
+		std::ifstream inputFileStream(absoluteFilename, std::ios::binary);
 
-		// Performance: Pre-allocate memory by assuming the worst-case
-		targetCode.reserve(endPosition);
+		// Get file size
+		inputFileStream.seekg(0, std::ifstream::end);
+		const std::streampos numberOfBytes = inputFileStream.tellg();
+		inputFileStream.seekg(0, std::ifstream::beg);
 
-		// We have two kinds of comments
-		// - Single-line comments: Starts with "//" -> all text till the next new line character is a comment
-		// - Multi-line comments: Starts with "/*" and ends with */ all text (even new lines) between the two position is a comment
+		// Read original source code
+		std::string originalSourceCode;
+		originalSourceCode.resize(static_cast<size_t>(numberOfBytes));
+		inputFileStream.read(const_cast<char*>(originalSourceCode.c_str()), numberOfBytes);
 
-		// Till the end...
-		while (currentPosition < endPosition)
-		{
-			// Find start character of comments (... or divisions... )
-			size_t index = sourceCode.find('/', currentPosition);
-			if (std::string::npos != index)
-			{
-				{ // Copy everything up to this point into the target code
-					const size_t numberOfCharactersToCopy = index - currentPosition;
-					if (numberOfCharactersToCopy > 0)
-					{
-						targetCode.append(sourceCode, currentPosition, numberOfCharactersToCopy);
-					}
-					currentPosition = index;
-				}
-
-				// Division or a comment, if comment, one-liner or block?
-				if (index + 1 < endPosition)
-				{
-					const char nextCharacter = sourceCode[index + 1];
-					if ('/' == nextCharacter)
-					{
-						// One-line-comment
-						index = sourceCode.find('\n', currentPosition);
-						if (std::string::npos != index)
-						{
-							// Ignore everything up to this new index
-							currentPosition = index;
-
-							// Don't strip the new line character, when the comment is not the only text in the line
-							// Check if there are any non whitespace characters (space, tab (\t) or \r) on the same text line
-
-							// Find the previous new line, we do the search in the targetCode, because each character before the comment start is already copied to the target
-							// And we might need to remove the remaining line when it only consists of white spaces
-							const size_t lineStartIndex = targetCode.rfind('\n');
-							if (std::string::npos == lineStartIndex)
-							{
-								// We are at the beginning of the source so check the whole content we might need to clear it
-								size_t indexIfNonWhiteSpaceBeforeCommentStart = ::detail::rfindNextNonWhiteSpace(targetCode, 0, targetCode.length() - 1);
-								if (std::string::npos == indexIfNonWhiteSpaceBeforeCommentStart)
-								{
-									// The whole content consists only of white spaces
-									targetCode.clear();
-
-									// Ignore the new line character of the current line
-									currentPosition += 1;
-								}
-								else
-								{
-									// Remove any characters from target from the found position to the end of the text
-									targetCode.erase(indexIfNonWhiteSpaceBeforeCommentStart + 1);	// The +1 is needed so we don't strip the non tab/space character too
-																									// Don't strip the new line character
-								}
-							}
-							else
-							{
-								// We are at a different text line then the first one check the content from the found position to the end
-								size_t indexIfNonWhiteSpaceBeforeCommentStart = ::detail::rfindNextNonWhiteSpace(targetCode, lineStartIndex + 1, targetCode.length() - 1);	// The +1 to start with the next character after the new line
-								if (std::string::npos == indexIfNonWhiteSpaceBeforeCommentStart)
-								{
-									// The whole line consists only of white spaces
-									targetCode.erase(lineStartIndex + 1);	// The +1 is needed so we don't strip the new line character too
-																			// Ignore the new line character of the current line
-									currentPosition += 1;
-								}
-								else
-								{
-									// We have non white space characters in front of the comment
-									// Remove any characters from target from the found position to the end of the text
-									targetCode.erase(indexIfNonWhiteSpaceBeforeCommentStart + 1);	// The +1 is needed so we don't strip the non tab/space character too
-																									// Don't strip the new line character
-								}
-							}
-						}
-						else
-						{
-							// We're done, end-of-file
-							currentPosition = endPosition;
-							break;
-						}
-					}
-					else if ('*' == nextCharacter)
-					{
-						// Block-comment
-						index = sourceCode.find("*/", currentPosition);
-						if (std::string::npos != index)
-						{
-							// Ignore everything up to this new index
-							currentPosition = index + 2;	// +2 = skip */
-															// Strip also the new line when the */ is the last in the text line
-							if (currentPosition + 1 < endPosition && sourceCode[currentPosition + 1] == '\n')
-							{
-								++currentPosition;
-							}
-						}
-						else
-						{
-							// We're done, end-of-file
-							currentPosition = endPosition;
-							break;
-						}
-					}
-					else
-					{
-						// Division, add it
-						targetCode += '/';
-						++currentPosition;
-					}
-				}
-				else
-				{
-					// We're done, end-of-file
-					break;
-				}
-			}
-			else
-			{
-				// We're done, end-of-file
-				break;
-			}
-		}
-
-		// Append the rest to the target code, if there's a rest
-		if (currentPosition < endPosition)
-		{
-			// In C++14 exists an overload "append(const string& str, size_t subpos, size_t sublen = npos)" but it seems GCC 6.2.0 doesn't specifies the default value for the last parameter
-			// -> Thus specify it explicitly
-			targetCode.append(sourceCode, currentPosition, std::string::npos);
-		}
+		// Strip comments from source code
+		::detail::stripCommentsFromSourceCode(originalSourceCode, sourceCode);
 	}
 
 

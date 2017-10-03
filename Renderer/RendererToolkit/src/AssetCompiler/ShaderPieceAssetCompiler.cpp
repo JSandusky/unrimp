@@ -45,12 +45,6 @@ PRAGMA_WARNING_PUSH
 	#include <rapidjson/document.h>
 PRAGMA_WARNING_POP
 
-// Disable warnings in external headers, we can't fix them
-PRAGMA_WARNING_PUSH
-	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'initializing': conversion from 'int' to '::size_t', signed/unsigned mismatch
-	#include <fstream>
-PRAGMA_WARNING_POP
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -132,23 +126,12 @@ namespace RendererToolkit
 		CacheManager::CacheEntries cacheEntries;
 		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1ShaderPiece::FORMAT_VERSION, cacheEntries))
 		{
-			std::ifstream inputFileStream(inputFilename, std::ios::binary);
 			RendererRuntime::MemoryFile memoryFile(0, 4096);
 
 			{ // Shader piece
 				// Get file size and file data
 				std::string sourceCode;
-				{
-					std::string originalSourceCode;
-					inputFileStream.seekg(0, std::ifstream::end);
-					const std::streampos numberOfBytes = inputFileStream.tellg();
-					inputFileStream.seekg(0, std::ifstream::beg);
-					originalSourceCode.resize(static_cast<size_t>(numberOfBytes));
-					inputFileStream.read(const_cast<char*>(originalSourceCode.c_str()), numberOfBytes);
-
-					// Strip comments from source code
-					StringHelper::stripCommentsFromSourceCode(originalSourceCode, sourceCode);
-				}
+				StringHelper::readSourceCodeWithStrippedCommentsByFilename(inputFilename, sourceCode);
 				const size_t numberOfBytes = sourceCode.length();
 
 				{ // Write down the shader piece header
