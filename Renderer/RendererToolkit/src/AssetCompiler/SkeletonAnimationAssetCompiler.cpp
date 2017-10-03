@@ -31,7 +31,9 @@
 #include "RendererToolkit/Context.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
+#include <RendererRuntime/Core/File/IFile.h>
 #include <RendererRuntime/Core/File/MemoryFile.h>
+#include <RendererRuntime/Core/File/IFileManager.h>
 #include <RendererRuntime/Core/GetUninitialized.h>
 #include <RendererRuntime/Resource/SkeletonAnimation/SkeletonAnimationResource.h>
 #include <RendererRuntime/Resource/SkeletonAnimation/Loader/SkeletonAnimationFileFormat.h>
@@ -95,44 +97,23 @@ namespace RendererToolkit
 
 	bool SkeletonAnimationAssetCompiler::checkIfChanged(const Input& input, const Configuration& configuration) const
 	{
-		// Get the JSON asset object
-		const rapidjson::Value& rapidJsonValueAsset = configuration.rapidJsonDocumentAsset["Asset"];
-
-		// Read configuration
-		std::string inputFile;
-		{
-			// Read material asset compiler configuration
-			const rapidjson::Value& rapidJsonValueMaterialAssetCompiler = rapidJsonValueAsset["SkeletonAnimationAssetCompiler"];
-			inputFile = rapidJsonValueMaterialAssetCompiler["InputFile"].GetString();
-		}
-
 		// Let the cache manager check whether or not the files have been changed in order to speed up later checks and to support dependency tracking
-		const std::string inputFilename = input.assetInputDirectory + inputFile;
-		return input.cacheManager.checkIfFileIsModified(configuration.rendererTarget, input.assetFilename, {inputFilename}, RendererRuntime::v1SkeletonAnimation::FORMAT_VERSION);
+		const std::string virtualInputFilename = input.virtualAssetInputDirectory + '/' + configuration.rapidJsonDocumentAsset["Asset"]["SkeletonAnimationAssetCompiler"]["InputFile"].GetString();
+		return input.cacheManager.checkIfFileIsModified(configuration.rendererTarget, input.virtualAssetFilename, {virtualInputFilename}, RendererRuntime::v1SkeletonAnimation::FORMAT_VERSION);
 	}
 
 	void SkeletonAnimationAssetCompiler::compile(const Input& input, const Configuration& configuration, Output& output)
 	{
-		// Input, configuration and output
-		const std::string&			   assetInputDirectory	= input.assetInputDirectory;
-		const std::string&			   assetOutputDirectory	= input.assetOutputDirectory;
-		RendererRuntime::AssetPackage& outputAssetPackage	= *output.outputAssetPackage;
-
-		// Get the JSON asset object
+		// Get relevant data
 		const rapidjson::Value& rapidJsonValueAsset = configuration.rapidJsonDocumentAsset["Asset"];
-
-		// Read skeleton animation asset compiler configuration
 		const rapidjson::Value& rapidJsonValueSkeletonAnimationAssetCompiler = rapidJsonValueAsset["SkeletonAnimationAssetCompiler"];
-		const std::string inputFile = rapidJsonValueSkeletonAnimationAssetCompiler["InputFile"].GetString();
-
-		// Open the input file
-		const std::string inputFilename = assetInputDirectory + inputFile;
-		const std::string assetName = std_filesystem::path(input.assetFilename).stem().generic_string();
-		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".skeleton_animation";
+		const std::string virtualInputFilename = input.virtualAssetInputDirectory + '/' + rapidJsonValueSkeletonAnimationAssetCompiler["InputFile"].GetString();
+		const std::string assetName = std_filesystem::path(input.virtualAssetFilename).stem().generic_string();
+		const std::string virtualOutputAssetFilename = input.virtualAssetOutputDirectory + '/' + assetName + ".skeleton_animation";
 
 		// Ask the cache manager whether or not we need to compile the source file (e.g. source changed or target not there)
 		CacheManager::CacheEntries cacheEntries;
-		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1SkeletonAnimation::FORMAT_VERSION, cacheEntries))
+		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.virtualAssetFilename, virtualInputFilename, virtualOutputAssetFilename, RendererRuntime::v1SkeletonAnimation::FORMAT_VERSION, cacheEntries))
 		{
 			RendererRuntime::MemoryFile memoryFile(0, 4096);
 
@@ -140,9 +121,16 @@ namespace RendererToolkit
 			AssimpLogStream assimpLogStream;
 			Assimp::Importer assimpImporter;
 
+			// TODO(co) Implement own "Assimp::IOSystem" for file manager mapping
+			// Get absolute destination filename
+			const std::string absoluteDestinationFilename = input.context.getFileManager().mapVirtualToAbsoluteFilename(RendererRuntime::IFileManager::FileMode::READ, virtualInputFilename.c_str());
+			if (absoluteDestinationFilename.empty())
+			{
+				throw std::runtime_error("Failed determine the absolute destination filename of the virtual destination filename \"" + std::string(virtualInputFilename) + '\"');
+			}
+
 			// Load the given mesh
-			const std::string absoluteFilename = assetInputDirectory + inputFile;
-			const aiScene* assimpScene = assimpImporter.ReadFile(absoluteFilename, AssimpHelper::getAssimpFlagsByRapidJsonValue(rapidJsonValueSkeletonAnimationAssetCompiler, "ImportFlags"));
+			const aiScene* assimpScene = assimpImporter.ReadFile(absoluteDestinationFilename, AssimpHelper::getAssimpFlagsByRapidJsonValue(rapidJsonValueSkeletonAnimationAssetCompiler, "ImportFlags"));
 			if (nullptr != assimpScene && nullptr != assimpScene->mRootNode)
 			{
 				// Read skeleton animation asset compiler configuration
@@ -157,13 +145,13 @@ namespace RendererToolkit
 				// -> One skeleton animation assets contains one skeleton animation, everything else would make things more complicated in high-level animation systems
 				if (!assimpScene->HasAnimations())
 				{
-					throw std::runtime_error("The input file \"" + absoluteFilename + "\" contains no animations");
+					throw std::runtime_error("The input file \"" + virtualInputFilename + "\" contains no animations");
 				}
 				if (assimpScene->mNumAnimations > 1)
 				{
 					if (RendererRuntime::isUninitialized(animationIndex))
 					{
-						throw std::runtime_error("The input file \"" + absoluteFilename + "\" contains multiple animations, but the skeleton animation compiler wasn't provided with an animation index");
+						throw std::runtime_error("The input file \"" + virtualInputFilename + "\" contains multiple animations, but the skeleton animation compiler wasn't provided with an animation index");
 					}
 				}
 				else
@@ -308,7 +296,7 @@ namespace RendererToolkit
 			}
 
 			// Write LZ4 compressed output
-			memoryFile.writeLz4CompressedDataToFile(RendererRuntime::v1SkeletonAnimation::FORMAT_TYPE, RendererRuntime::v1SkeletonAnimation::FORMAT_VERSION, outputAssetFilename, input.context.getFileManager());
+			memoryFile.writeLz4CompressedDataToFile(RendererRuntime::v1SkeletonAnimation::FORMAT_TYPE, RendererRuntime::v1SkeletonAnimation::FORMAT_VERSION, virtualOutputAssetFilename, input.context.getFileManager());
 
 			// Store new cache entries or update existing ones
 			input.cacheManager.storeOrUpdateCacheEntries(cacheEntries);
@@ -317,7 +305,7 @@ namespace RendererToolkit
 		{ // Update the output asset package
 			const std::string assetCategory = rapidJsonValueAsset["AssetMetadata"]["AssetCategory"].GetString();
 			const std::string assetIdAsString = input.projectName + "/SkeletonAnimation/" + assetCategory + '/' + assetName;
-			outputAsset(input.context.getFileManager(), assetIdAsString, outputAssetFilename, outputAssetPackage);
+			outputAsset(input.context.getFileManager(), assetIdAsString, virtualOutputAssetFilename, *output.outputAssetPackage);
 		}
 	}
 

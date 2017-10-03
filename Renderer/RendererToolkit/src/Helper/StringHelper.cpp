@@ -24,10 +24,12 @@
 #include "RendererToolkit/Helper/StringHelper.h"
 #include "RendererToolkit/Helper/FileSystemHelper.h"
 
+#include <RendererRuntime/Core/File/IFile.h>
+#include <RendererRuntime/Core/File/IFileManager.h>
+
 PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'initializing': conversion from 'int' to '::size_t', signed/unsigned mismatch
 	PRAGMA_WARNING_DISABLE_MSVC(4774)	// warning C4774: '_scprintf' : format string expected in argument 1 is not a string literal
-	#include <fstream>
 	#include <sstream>
 PRAGMA_WARNING_POP
 
@@ -441,12 +443,12 @@ namespace RendererToolkit
 			if (assetIdAsString.length() >= 2 && assetIdAsString.substr(0, 2) == "./")
 			{
 				// "./" = This directory
-				return input.getCompiledAssetIdBySourceAssetIdAsString((input.assetInputDirectory + assetIdAsString.substr(2)).substr(input.assetPackageInputDirectory.length()));
+				return input.getCompiledAssetIdBySourceAssetIdAsString((input.virtualAssetInputDirectory + '/' + assetIdAsString.substr(2)).substr(input.virtualAssetPackageInputDirectory.length() + 1));
 			}
 			else if (assetIdAsString.length() >= 3 && assetIdAsString.substr(0, 3) == "../")
 			{
 				// "../" = Parent directory
-				const std_filesystem::path resolvedAssetId = std_filesystem::path((input.assetInputDirectory + assetIdAsString).substr(input.assetPackageInputDirectory.length()));
+				const std_filesystem::path resolvedAssetId = std_filesystem::path((input.virtualAssetInputDirectory + '/' + assetIdAsString).substr(input.virtualAssetPackageInputDirectory.length() + 1));
 				const std_filesystem::path currentResolvedAssetId = ::detail::path_lexically_normal(resolvedAssetId);
 				return input.getCompiledAssetIdBySourceAssetIdAsString(currentResolvedAssetId.generic_string());
 			}
@@ -463,20 +465,37 @@ namespace RendererToolkit
 		}
 	}
 
-	void StringHelper::readSourceCodeWithStrippedCommentsByFilename(const std::string& absoluteFilename, std::string& sourceCode)
+	void StringHelper::readStringByFilename(const RendererRuntime::IFileManager& fileManager, const std::string& virtualFilename, std::string& string)
 	{
-		// Open file
-		std::ifstream inputFileStream(absoluteFilename, std::ios::binary);
+		// Sanity check
+		if (!fileManager.doesFileExist(virtualFilename.c_str()))
+		{
+			throw std::runtime_error("Failed to load string file \"" + virtualFilename + "\": File doesn't exist");
+		}
 
-		// Get file size
-		inputFileStream.seekg(0, std::ifstream::end);
-		const std::streampos numberOfBytes = inputFileStream.tellg();
-		inputFileStream.seekg(0, std::ifstream::beg);
+		// Open the file for reading
+		RendererRuntime::IFile* file = fileManager.openFile(RendererRuntime::IFileManager::FileMode::READ, virtualFilename.c_str());
+		if (nullptr != file)
+		{
+			// Load the whole file content as string
+			const size_t numberOfBytes = file->getNumberOfBytes();
+			string.resize(numberOfBytes);
+			file->read(const_cast<void*>(static_cast<const void*>(string.data())), numberOfBytes);	// TODO(co) Get rid of the evil const-cast
 
+			// Close file
+			fileManager.closeFile(*file);
+		}
+		else
+		{
+			throw std::runtime_error("Failed to load string file \"" + virtualFilename + "\": Can't open file for reading");
+		}
+	}
+
+	void StringHelper::readSourceCodeWithStrippedCommentsByFilename(const RendererRuntime::IFileManager& fileManager, const std::string& virtualFilename, std::string& sourceCode)
+	{
 		// Read original source code
 		std::string originalSourceCode;
-		originalSourceCode.resize(static_cast<size_t>(numberOfBytes));
-		inputFileStream.read(const_cast<char*>(originalSourceCode.c_str()), numberOfBytes);
+		readStringByFilename(fileManager, virtualFilename, originalSourceCode);
 
 		// Strip comments from source code
 		::detail::stripCommentsFromSourceCode(originalSourceCode, sourceCode);

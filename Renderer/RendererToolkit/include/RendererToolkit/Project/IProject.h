@@ -36,6 +36,7 @@
 namespace RendererRuntime
 {
 	class IRendererRuntime;
+	typedef const char* AbsoluteDirectoryName;	///< UTF-8 absolute directory name (example: "c:/MyProject"), without "/" at the end, never ever a null pointer and always finished by a terminating zero
 }
 namespace RendererToolkit
 {
@@ -80,7 +81,7 @@ namespace RendererToolkit
 	//[ Public virtual RendererToolkit::IProject methods      ]
 	//[-------------------------------------------------------]
 	public:
-		virtual void loadByFilename(const char* filename) = 0;
+		virtual void load(RendererRuntime::AbsoluteDirectoryName absoluteDirectoryName) = 0;
 		virtual void compileAllAssets(const char* rendererTarget) = 0;
 		virtual void startupAssetMonitor(RendererRuntime::IRendererRuntime& rendererRuntime, const char* rendererTarget) = 0;
 		virtual void shutdownAssetMonitor() = 0;

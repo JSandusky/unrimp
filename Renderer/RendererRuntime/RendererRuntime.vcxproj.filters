@@ -624,6 +624,9 @@
     <None Include="include\RendererRuntime\Core\Renderer\RenderPassManager.inl">
       <Filter>Source Files\Core\Renderer</Filter>
     </None>
+    <None Include="include\RendererRuntime\Core\File\PhysicsFSFileManager.inl">
+      <Filter>Source Files\Core\File</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -1240,6 +1243,9 @@
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Asset\Loader\AssetPackageFileFormat.h">
       <Filter>Source Files\Asset\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\File\PhysicsFSFileManager.h">
+      <Filter>Source Files\Core\File</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

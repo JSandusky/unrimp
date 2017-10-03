@@ -32,7 +32,9 @@
 
 #include <RendererRuntime/Core/Math/Math.h>
 #include <RendererRuntime/Asset/AssetPackage.h>
+#include <RendererRuntime/Core/File/IFile.h>
 #include <RendererRuntime/Core/File/MemoryFile.h>
+#include <RendererRuntime/Core/File/IFileManager.h>
 #include <RendererRuntime/Resource/Mesh/MeshResource.h>
 #include <RendererRuntime/Resource/Mesh/Loader/MeshFileFormat.h>
 
@@ -719,44 +721,23 @@ namespace RendererToolkit
 
 	bool MeshAssetCompiler::checkIfChanged(const Input& input, const Configuration& configuration) const
 	{
-		// Get the JSON asset object
-		const rapidjson::Value& rapidJsonValueAsset = configuration.rapidJsonDocumentAsset["Asset"];
-
-		// Read configuration
-		std::string inputFile;
-		{
-			// Read material asset compiler configuration
-			const rapidjson::Value& rapidJsonValueMaterialAssetCompiler = rapidJsonValueAsset["MeshAssetCompiler"];
-			inputFile = rapidJsonValueMaterialAssetCompiler["InputFile"].GetString();
-		}
-
 		// Let the cache manager check whether or not the files have been changed in order to speed up later checks and to support dependency tracking
-		const std::string inputFilename = input.assetInputDirectory + inputFile;
-		return input.cacheManager.checkIfFileIsModified(configuration.rendererTarget, input.assetFilename, {inputFilename}, RendererRuntime::v1Mesh::FORMAT_VERSION);
+		const std::string virtualInputFilename = input.virtualAssetInputDirectory + '/' + configuration.rapidJsonDocumentAsset["Asset"]["MeshAssetCompiler"]["InputFile"].GetString();
+		return input.cacheManager.checkIfFileIsModified(configuration.rendererTarget, input.virtualAssetFilename, {virtualInputFilename}, RendererRuntime::v1Mesh::FORMAT_VERSION);
 	}
 
 	void MeshAssetCompiler::compile(const Input& input, const Configuration& configuration, Output& output)
 	{
-		// Input, configuration and output
-		const std::string&			   assetInputDirectory	= input.assetInputDirectory;
-		const std::string&			   assetOutputDirectory	= input.assetOutputDirectory;
-		RendererRuntime::AssetPackage& outputAssetPackage	= *output.outputAssetPackage;
-
-		// Get the JSON asset object
+		// Get relevant data
 		const rapidjson::Value& rapidJsonValueAsset = configuration.rapidJsonDocumentAsset["Asset"];
-
-		// Read mesh asset compiler configuration
 		const rapidjson::Value& rapidJsonValueMeshAssetCompiler = rapidJsonValueAsset["MeshAssetCompiler"];
-		const std::string inputFile = rapidJsonValueMeshAssetCompiler["InputFile"].GetString();
-
-		// Open the input and output file
-		const std::string inputFilename = assetInputDirectory + inputFile;
-		const std::string assetName = std_filesystem::path(input.assetFilename).stem().generic_string();
-		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".mesh";
+		const std::string virtualInputFilename = input.virtualAssetInputDirectory + '/' + rapidJsonValueMeshAssetCompiler["InputFile"].GetString();
+		const std::string assetName = std_filesystem::path(input.virtualAssetFilename).stem().generic_string();
+		const std::string virtualOutputAssetFilename = input.virtualAssetOutputDirectory + '/' + assetName + ".mesh";
 
 		// Ask the cache manager whether or not we need to compile the source file (e.g. source changed or target not there)
 		CacheManager::CacheEntries cacheEntries;
-		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1Mesh::FORMAT_VERSION, cacheEntries))
+		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.virtualAssetFilename, virtualInputFilename, virtualOutputAssetFilename, RendererRuntime::v1Mesh::FORMAT_VERSION, cacheEntries))
 		{
 			RendererRuntime::MemoryFile memoryFile(0, 42 * 1024);
 
@@ -777,10 +758,18 @@ namespace RendererToolkit
 			Assimp::Importer assimpImporter;
 			// assimpImporter.SetPropertyInteger(AI_CONFIG_PP_LBW_MAX_WEIGHTS, 4);	// We're using the "aiProcess_LimitBoneWeights"-flag, 4 is already the default value (don't delete this reminder comment)
 
+			// TODO(co) Implement own "Assimp::IOSystem" for file manager mapping
+			// Get absolute destination filename
+			const std::string absoluteDestinationFilename = input.context.getFileManager().mapVirtualToAbsoluteFilename(RendererRuntime::IFileManager::FileMode::READ, virtualInputFilename.c_str());
+			if (absoluteDestinationFilename.empty())
+			{
+				throw std::runtime_error("Failed determine the absolute destination filename of the virtual destination filename \"" + std::string(virtualInputFilename) + '\"');
+			}
+
 			// Load the given mesh
 			// -> We're using "mikktspace" by Morten S. Mikkelsen for semi-standard tangent space generation (see e.g. https://wiki.blender.org/index.php/Dev:Shading/Tangent_Space_Normal_Maps for background information)
 			// -> "aiProcess_CalcTangentSpace" from Assimp is still used to allocate internal memory and enable Assimp to perform work regarding e.g. shared vertices
-			const aiScene* assimpScene = assimpImporter.ReadFile(inputFilename, AssimpHelper::getAssimpFlagsByRapidJsonValue(rapidJsonValueMeshAssetCompiler, "ImportFlags"));
+			const aiScene* assimpScene = assimpImporter.ReadFile(absoluteDestinationFilename, AssimpHelper::getAssimpFlagsByRapidJsonValue(rapidJsonValueMeshAssetCompiler, "ImportFlags"));
 			if (nullptr != assimpScene && nullptr != assimpScene->mRootNode)
 			{
 				// Get the optional material name to asset ID mapping information
@@ -905,7 +894,7 @@ namespace RendererToolkit
 			}
 
 			// Write LZ4 compressed output
-			memoryFile.writeLz4CompressedDataToFile(RendererRuntime::v1Mesh::FORMAT_TYPE, RendererRuntime::v1Mesh::FORMAT_VERSION, outputAssetFilename, input.context.getFileManager());
+			memoryFile.writeLz4CompressedDataToFile(RendererRuntime::v1Mesh::FORMAT_TYPE, RendererRuntime::v1Mesh::FORMAT_VERSION, virtualOutputAssetFilename, input.context.getFileManager());
 
 			// Store new cache entries or update existing ones
 			input.cacheManager.storeOrUpdateCacheEntries(cacheEntries);
@@ -914,7 +903,7 @@ namespace RendererToolkit
 		{ // Update the output asset package
 			const std::string assetCategory = rapidJsonValueAsset["AssetMetadata"]["AssetCategory"].GetString();
 			const std::string assetIdAsString = input.projectName + "/Mesh/" + assetCategory + '/' + assetName;
-			outputAsset(input.context.getFileManager(), assetIdAsString, outputAssetFilename, outputAssetPackage);
+			outputAsset(input.context.getFileManager(), assetIdAsString, virtualOutputAssetFilename, *output.outputAssetPackage);
 		}
 	}
 

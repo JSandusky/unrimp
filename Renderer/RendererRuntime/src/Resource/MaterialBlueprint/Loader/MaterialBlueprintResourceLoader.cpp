@@ -236,7 +236,7 @@ namespace RendererRuntime
 
 		// Create the root signature
 		mMaterialBlueprintResource->mRootSignaturePtr = renderer.createRootSignature(mRootSignature);
-		RENDERER_SET_RESOURCE_DEBUG_NAME(mMaterialBlueprintResource->mRootSignaturePtr, getAsset().assetFilename)
+		RENDERER_SET_RESOURCE_DEBUG_NAME(mMaterialBlueprintResource->mRootSignaturePtr, getAsset().virtualFilename)
 
 		// Get the used vertex attributes resource
 		mRendererRuntime.getVertexAttributesResourceManager().loadVertexAttributesResourceByAssetId(mVertexAttributesAssetId, mMaterialBlueprintResource->mVertexAttributesResourceId);
@@ -345,7 +345,7 @@ namespace RendererRuntime
 					materialBlueprintSamplerState->maxAnisotropy = defaultMaximumTextureAnisotropy;
 				}
 				samplerState.samplerStatePtr = renderer.createSamplerState(*materialBlueprintSamplerState);
-				RENDERER_SET_RESOURCE_DEBUG_NAME(samplerState.samplerStatePtr, getAsset().assetFilename)
+				RENDERER_SET_RESOURCE_DEBUG_NAME(samplerState.samplerStatePtr, getAsset().virtualFilename)
 			}
 			mMaterialBlueprintResource->mSamplerStateGroup = nullptr;
 		}

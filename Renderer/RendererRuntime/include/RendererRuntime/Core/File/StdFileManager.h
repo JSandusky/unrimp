@@ -27,6 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Core/Platform/PlatformTypes.h"
 #include "RendererRuntime/Core/File/IFileManager.h"
 
 // Disable warnings in external headers, we can't fix them
@@ -40,6 +41,7 @@ PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(5026)	// warning C5026: 'std::_Generic_error_category': move constructor was implicitly defined as deleted
 	PRAGMA_WARNING_DISABLE_MSVC(5027)	// warning C5027: 'std::_Generic_error_category': move assignment operator was implicitly defined as deleted
 	#include <string>
+	#include <unordered_map>
 PRAGMA_WARNING_POP
 
 
@@ -66,14 +68,6 @@ namespace RendererRuntime
 	*  @brief
 	*    STD file manager implementation class one can use
 	*
-	*  @remarks
-	*    For the Unrimp examples were using the following directory structure
-	*    - "<root directory>/bin/x64_static"
-	*    - "<root directory>/bin/DataPc"
-	*    - "<root directory>/bin/LocalData"
-	*    -> For end-user products, you might want to choose a local user data directory
-	*    -> In here we assume that the current directory has not been changed and still points to the directory the running executable is in (e.g. "<root directory>/bin/x64_static")
-	*
 	*  @note
 	*    - Designed to be instanced and used inside a single C++ file
 	*/
@@ -85,7 +79,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline explicit StdFileManager(Renderer::ILog& log);
+		inline StdFileManager(Renderer::ILog& log, const std::string& relativeRootDirectory);
 		inline virtual ~StdFileManager() override;
 
 
@@ -93,10 +87,14 @@ namespace RendererRuntime
 	//[ Public virtual RendererRuntime::IFileManager methods  ]
 	//[-------------------------------------------------------]
 	public:
-		inline virtual const char* getAbsoluteLocalDataDirectoryName() const override;
-		inline virtual void createDirectories(const char* directoryName) const override;
-		inline virtual bool doesFileExist(const char* filename) const override;
-		inline virtual IFile* openFile(FileMode fileMode, const char* filename) const override;
+		inline virtual const char* getLocalDataMountPoint() const override;
+		inline virtual bool mountDirectory(AbsoluteDirectoryName absoluteDirectoryName, const char* mountPoint, bool appendToPath = false) override;
+		inline virtual bool doesFileExist(VirtualFilename virtualFilename) const override;
+		inline virtual std::string mapVirtualToAbsoluteFilename(FileMode fileMode, VirtualFilename virtualFilename) const override;
+		inline virtual int64_t getLastModificationTime(VirtualFilename virtualFilename) const override;
+		inline virtual int64_t getFileSize(VirtualFilename virtualFilename) const override;
+		inline virtual bool createDirectories(VirtualDirectoryName virtualDirectoryName) const override;
+		inline virtual IFile* openFile(FileMode fileMode, VirtualFilename virtualFilename) const override;
 		inline virtual void closeFile(IFile& file) const override;
 
 
@@ -109,11 +107,26 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		typedef std::vector<std::string>								AbsoluteDirectoryNames;
+		typedef std::unordered_map<std::string, AbsoluteDirectoryNames>	MountedDirectories;	///< Key = UTF-8 mount point name (example: "MyProject"), value = absolute UTF-8 names of the mounted directories (example: "c:/MyProject")
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		inline bool getAbsoluteDirectoryNamesByMountPoint(VirtualFilename virtualFilename, const AbsoluteDirectoryNames** absoluteDirectoryNames, std::string& relativeFilename) const;
+
+
+	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Renderer::ILog&   mLog;
-		const std::string mAbsoluteLocalDataDirectoryName;
+		Renderer::ILog&    mLog;
+		MountedDirectories mMountedDirectories;
 
 
 	};

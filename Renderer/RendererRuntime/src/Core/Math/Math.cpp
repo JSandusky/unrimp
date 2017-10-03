@@ -146,12 +146,12 @@ namespace RendererRuntime
 		return hash;
 	}
 
-	uint64_t Math::calculateFileFNV1a64ByFilename(const IFileManager& fileManager, const std::string& filename)
+	uint64_t Math::calculateFileFNV1a64ByVirtualFilename(const IFileManager& fileManager, VirtualFilename virtualFilename)
 	{
 		uint64_t hash = FNV1a_INITIAL_HASH_64;
 
 		// Try open file
-		IFile* file = fileManager.openFile(IFileManager::FileMode::READ, filename.c_str());
+		IFile* file = fileManager.openFile(IFileManager::FileMode::READ, virtualFilename);
 		if (nullptr != file)
 		{
 			// Read the file content into chunks and process them

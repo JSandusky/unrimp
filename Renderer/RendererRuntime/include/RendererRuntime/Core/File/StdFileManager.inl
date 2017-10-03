@@ -76,6 +76,12 @@ namespace
 
 
 		//[-------------------------------------------------------]
+		//[ Definitions                                           ]
+		//[-------------------------------------------------------]
+		static const char* STD_LOCAL_DATA_MOUNT_POINT = "LocalData";
+
+
+		//[-------------------------------------------------------]
 		//[ Classes                                               ]
 		//[-------------------------------------------------------]
 		class StdFile : public RendererRuntime::IFile
@@ -122,8 +128,8 @@ namespace
 		//[ Public methods                                        ]
 		//[-------------------------------------------------------]
 		public:
-			explicit StdReadFile(const char* filename) :
-				mFileStream(filename, std::ios::binary)
+			explicit StdReadFile(const std::string& absoluteFilename) :
+				mFileStream(absoluteFilename, std::ios::binary)
 			{
 				// Nothing here
 			}
@@ -198,8 +204,8 @@ namespace
 		//[ Public methods                                        ]
 		//[-------------------------------------------------------]
 		public:
-			explicit StdWriteFile(const char* filename) :
-				mFileStream(filename, std::ios::binary)
+			explicit StdWriteFile(const std::string& absoluteFilename) :
+				mFileStream(absoluteFilename, std::ios::binary)
 			{
 				// Nothing here
 			}
@@ -281,11 +287,18 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline StdFileManager::StdFileManager(Renderer::ILog& log) :
-		mLog(log),
-		mAbsoluteLocalDataDirectoryName(std_filesystem::canonical(std_filesystem::current_path() / "/../LocalData").generic_string())
+	inline StdFileManager::StdFileManager(Renderer::ILog& log, const std::string& relativeRootDirectory) :
+		IFileManager(relativeRootDirectory),
+		mLog(log)
 	{
-		// Nothing here
+		// Setup local data mount point
+		std_filesystem::path absoluteDirectoryName = std_filesystem::canonical(std_filesystem::current_path());
+		if (!relativeRootDirectory.empty())
+		{
+			absoluteDirectoryName /= relativeRootDirectory;
+		}
+		absoluteDirectoryName /= ::detail::STD_LOCAL_DATA_MOUNT_POINT;
+		mountDirectory(absoluteDirectoryName.generic_string().c_str(), ::detail::STD_LOCAL_DATA_MOUNT_POINT);
 	}
 
 	inline StdFileManager::~StdFileManager()
@@ -297,45 +310,209 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererRuntime::IFileManager methods  ]
 	//[-------------------------------------------------------]
-	inline const char* StdFileManager::getAbsoluteLocalDataDirectoryName() const
+	inline const char* StdFileManager::getLocalDataMountPoint() const
 	{
-		return mAbsoluteLocalDataDirectoryName.c_str();
+		return ::detail::STD_LOCAL_DATA_MOUNT_POINT;
 	}
 
-	inline void StdFileManager::createDirectories(const char* directoryName) const
+	inline bool StdFileManager::mountDirectory(AbsoluteDirectoryName absoluteDirectoryName, const char* mountPoint, bool appendToPath)
 	{
-		std_filesystem::create_directories(directoryName);
-	}
+		// Sanity check
+		assert(nullptr != absoluteDirectoryName);
+		assert(nullptr != mountPoint);
+		#ifdef _DEBUG
+			// Additional sanity check: The same absolute directory name shouldn't be added to too different mount points
+			for (const auto& pair : mMountedDirectories)
+			{
+				if (pair.first != mountPoint)
+				{
+					const AbsoluteDirectoryNames& absoluteDirectoryNames = pair.second;
+					assert(absoluteDirectoryNames.cend() == std::find(absoluteDirectoryNames.begin(), absoluteDirectoryNames.end(), absoluteDirectoryName) && "The same absolute directory name shouldn't be added to too different mount points");
+				}
+			}
+		#endif
 
-	inline bool StdFileManager::doesFileExist(const char* filename) const
-	{
-		return std_filesystem::exists(filename);
-	}
-
-	inline IFile* StdFileManager::openFile(FileMode fileMode, const char* filename) const
-	{
-		assert(nullptr != filename);
-		::detail::StdFile* file = nullptr;
-		if (FileMode::READ == fileMode)
+		// Mount directory
+		MountedDirectories::iterator mountedDirectoriesIterator = mMountedDirectories.find(mountPoint);
+		if (mMountedDirectories.cend() == mountedDirectoriesIterator)
 		{
-			file = new ::detail::StdReadFile(filename);
+			// The mount point is unknown so far, register it
+			mMountedDirectories.emplace(mountPoint, AbsoluteDirectoryNames{absoluteDirectoryName});
 		}
 		else
 		{
-			file = new ::detail::StdWriteFile(filename);
+			// The mount point is already known, append or prepend?
+			AbsoluteDirectoryNames& absoluteDirectoryNames = mountedDirectoriesIterator->second;
+			AbsoluteDirectoryNames::const_iterator absoluteDirectoryNamesIterator = std::find(absoluteDirectoryNames.begin(), absoluteDirectoryNames.end(), absoluteDirectoryName);
+			if (absoluteDirectoryNames.cend() == absoluteDirectoryNamesIterator)
+			{
+				if (appendToPath)
+				{
+					// Append
+					absoluteDirectoryNames.push_back(absoluteDirectoryName);
+				}
+				else
+				{
+					// Prepend
+					absoluteDirectoryNames.insert(absoluteDirectoryNames.begin(), absoluteDirectoryName);
+				}
+			}
+			else
+			{
+				assert(false && "Duplicate absolute directory name detected, this situation should be avoided by the caller");
+			}
 		}
-		if (file->isInvalid())
+
+		// Done
+		return true;
+	}
+
+	inline bool StdFileManager::doesFileExist(VirtualFilename virtualFilename) const
+	{
+		return !mapVirtualToAbsoluteFilename(FileMode::READ, virtualFilename).empty();
+	}
+
+	inline std::string StdFileManager::mapVirtualToAbsoluteFilename(FileMode fileMode, VirtualFilename virtualFilename) const
+	{
+		// Sanity check
+		assert(nullptr != virtualFilename);
+
+		// Get absolute directory names
+		const AbsoluteDirectoryNames* absoluteDirectoryNames = nullptr;
+		std::string relativeFilename;
+		if (getAbsoluteDirectoryNamesByMountPoint(virtualFilename, &absoluteDirectoryNames, relativeFilename) && absoluteDirectoryNames != nullptr)
 		{
-			mLog.print(Renderer::ILog::Type::CRITICAL, "Failed to open file %s", filename);
-			delete file;
-			file = nullptr;
+			for (const std::string& absoluteDirectoryName : *absoluteDirectoryNames)
+			{
+				const std::string absoluteFilename = absoluteDirectoryName + '/' + relativeFilename;
+				if (std_filesystem::exists(absoluteFilename))
+				{
+					return absoluteFilename;
+				}
+			}
+
+			// Still here and writing a file?
+			if (FileMode::WRITE == fileMode && !absoluteDirectoryNames->empty())
+			{
+				return (*absoluteDirectoryNames)[0] + '/' + relativeFilename;
+			}
 		}
+
+		// Failed to map
+		return "";
+	}
+
+	inline int64_t StdFileManager::getLastModificationTime(VirtualFilename virtualFilename) const
+	{
+		const std::string absoluteFilename = mapVirtualToAbsoluteFilename(FileMode::READ, virtualFilename);
+		if (!absoluteFilename.empty())
+		{
+			const std_filesystem::file_time_type lastWriteTime = std_filesystem::last_write_time(absoluteFilename);
+			return static_cast<int64_t>(decltype(lastWriteTime)::clock::to_time_t(lastWriteTime));
+		}
+
+		// Error!
+		return -1;
+	}
+
+	inline int64_t StdFileManager::getFileSize(VirtualFilename virtualFilename) const
+	{
+		const std::string absoluteFilename = mapVirtualToAbsoluteFilename(FileMode::READ, virtualFilename);
+		return absoluteFilename.empty() ? -1 : static_cast<int64_t>(std_filesystem::file_size(absoluteFilename));
+	}
+
+	inline bool StdFileManager::createDirectories(VirtualDirectoryName virtualDirectoryName) const
+	{
+		// Sanity check
+		assert(nullptr != virtualDirectoryName);
+
+		// Create directories
+		const AbsoluteDirectoryNames* absoluteDirectoryNames = nullptr;
+		std::string relativeFilename;
+		if (getAbsoluteDirectoryNamesByMountPoint(virtualDirectoryName, &absoluteDirectoryNames, relativeFilename) && absoluteDirectoryNames != nullptr)
+		{
+			for (const std::string& absoluteDirectoryName : *absoluteDirectoryNames)
+			{
+				if (!std_filesystem::create_directories(absoluteDirectoryName + '/' + relativeFilename))
+				{
+					// Failed to create the directories
+					return false;
+				}
+			}
+		}
+
+		// Directories have been created successfully
+		return true;
+	}
+
+	inline IFile* StdFileManager::openFile(FileMode fileMode, VirtualFilename virtualFilename) const
+	{
+		::detail::StdFile* file = nullptr;
+		const std::string absoluteFilename = mapVirtualToAbsoluteFilename(fileMode, virtualFilename);
+		if (!absoluteFilename.empty())
+		{
+			if (FileMode::READ == fileMode)
+			{
+				file = new ::detail::StdReadFile(absoluteFilename);
+			}
+			else
+			{
+				file = new ::detail::StdWriteFile(absoluteFilename);
+			}
+			if (file->isInvalid())
+			{
+				mLog.print(Renderer::ILog::Type::CRITICAL, "Failed to open file %s", virtualFilename);
+				delete file;
+				file = nullptr;
+			}
+		}
+
+		// Done
 		return file;
 	}
 
 	inline void StdFileManager::closeFile(IFile& file) const
 	{
 		delete static_cast< ::detail::StdFile*>(&file);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	inline bool StdFileManager::getAbsoluteDirectoryNamesByMountPoint(VirtualFilename virtualFilename, const AbsoluteDirectoryNames** absoluteDirectoryNames, std::string& relativeFilename) const
+	{
+		assert(nullptr != absoluteDirectoryNames);
+
+		// Get mount point
+		// TODO(co) Use "std::string_view" as soon as its available
+		const std::string stdVirtualFilename = virtualFilename;
+		const size_t slashIndex = stdVirtualFilename.find("/");
+		if (std::string::npos != slashIndex)
+		{
+			const std::string mountPoint = stdVirtualFilename.substr(0, slashIndex);
+			MountedDirectories::const_iterator iterator = mMountedDirectories.find(mountPoint);
+			if (mMountedDirectories.cend() != iterator)
+			{
+				*absoluteDirectoryNames = &iterator->second;
+				relativeFilename = stdVirtualFilename.substr(slashIndex + 1);
+
+				// Done
+				return true;
+			}
+			else
+			{
+				// Error!
+				assert(false && "Unknown mount point inside the virtual filename");
+				return false;
+			}
+		}
+		else
+		{
+			// Error!
+			assert(false && "Failed to find the mount point inside the virtual filename");
+			return false;
+		}
 	}
 
 

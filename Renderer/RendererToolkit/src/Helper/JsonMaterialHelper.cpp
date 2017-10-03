@@ -26,6 +26,7 @@
 #include "RendererToolkit/Helper/FileSystemHelper.h"
 #include "RendererToolkit/Helper/StringHelper.h"
 #include "RendererToolkit/Helper/JsonHelper.h"
+#include "RendererToolkit/Context.h"
 
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
@@ -582,27 +583,27 @@ namespace RendererToolkit
 
 		// Read material asset compiler configuration
 		std::string materialInputFile;
-		const std::string absoluteMaterialAssetFilename = JsonHelper::getAbsoluteAssetFilename(input, materialAssetId);
+		const std::string& virtualMaterialAssetFilename = JsonHelper::getVirtualAssetFilename(input, materialAssetId);
 		{
 			// Parse material asset JSON
 			rapidjson::Document rapidJsonDocumentMaterialAsset;
-			JsonHelper::parseDocumentByFilename(rapidJsonDocumentMaterialAsset, absoluteMaterialAssetFilename, "Asset", "1");
+			JsonHelper::loadDocumentByFilename(input.context.getFileManager(), virtualMaterialAssetFilename, "Asset", "1", rapidJsonDocumentMaterialAsset);
 			materialInputFile = rapidJsonDocumentMaterialAsset["Asset"]["MaterialAssetCompiler"]["InputFile"].GetString();
 		}
 
 		// Parse material JSON
-		const std::string absoluteMaterialFilename = std_filesystem::path(absoluteMaterialAssetFilename).parent_path().generic_string() + '/' + materialInputFile;
+		const std::string virtualMaterialFilename = std_filesystem::path(virtualMaterialAssetFilename).parent_path().generic_string() + '/' + materialInputFile;
 		rapidjson::Document rapidJsonDocument;
-		JsonHelper::parseDocumentByFilename(rapidJsonDocument, absoluteMaterialFilename, "MaterialAsset", "1");
+		JsonHelper::loadDocumentByFilename(input.context.getFileManager(), virtualMaterialFilename, "MaterialAsset", "1", rapidJsonDocument);
 		std::vector<RendererRuntime::v1Material::Technique> temporaryTechniques;
 		getTechniquesAndPropertiesByMaterialAssetId(input, rapidJsonDocument, (nullptr != techniques) ? *techniques : temporaryTechniques, sortedMaterialPropertyVector);
 	}
 
-	void JsonMaterialHelper::getDependencyFiles(const IAssetCompiler::Input& input, const std::string& inputFilename, std::vector<std::string>& dependencyFiles)
+	void JsonMaterialHelper::getDependencyFiles(const IAssetCompiler::Input& input, const std::string& virtualInputFilename, std::vector<std::string>& virtualDependencyFilenames)
 	{
 		// Parse JSON
 		rapidjson::Document rapidJsonDocument;
-		JsonHelper::parseDocumentByFilename(rapidJsonDocument, inputFilename, "MaterialAsset", "1");
+		JsonHelper::loadDocumentByFilename(input.context.getFileManager(), virtualInputFilename, "MaterialAsset", "1", rapidJsonDocument);
 
 		// Optional base material
 		// -> Named toolkit time base material and not parent material by intent to not intermix it with the dynamic runtime parent material
@@ -617,8 +618,7 @@ namespace RendererToolkit
 
 			// Get base material asset ID
 			const RendererRuntime::AssetId materialAssetId = StringHelper::getSourceAssetIdByString(rapidJsonValueMaterialAsset["BaseMaterial"].GetString());
-			const std::string absoluteMaterialAssetFilename = JsonHelper::getAbsoluteAssetFilename(input, materialAssetId);
-			dependencyFiles.emplace_back(std::move(absoluteMaterialAssetFilename));
+			virtualDependencyFilenames.emplace_back(JsonHelper::getVirtualAssetFilename(input, materialAssetId));
 		}
 		else
 		{
@@ -626,8 +626,7 @@ namespace RendererToolkit
 			for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorTechniques = rapidJsonValueTechniques.MemberBegin(); rapidJsonMemberIteratorTechniques != rapidJsonValueTechniques.MemberEnd(); ++rapidJsonMemberIteratorTechniques)
 			{
 				const RendererRuntime::AssetId materialBlueprintAssetId = StringHelper::getSourceAssetIdByString(rapidJsonMemberIteratorTechniques->value.GetString());
-				const std::string absoluteMaterialBlueprintAssetFilename = JsonHelper::getAbsoluteAssetFilename(input, materialBlueprintAssetId);
-				dependencyFiles.emplace_back(std::move(absoluteMaterialBlueprintAssetFilename));
+				virtualDependencyFilenames.emplace_back(JsonHelper::getVirtualAssetFilename(input, materialBlueprintAssetId));
 			}
 		}
 	}

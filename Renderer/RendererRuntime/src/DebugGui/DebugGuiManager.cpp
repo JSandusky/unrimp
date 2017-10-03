@@ -336,23 +336,22 @@ namespace RendererRuntime
 	{
 		// Change ImGui filenames so one is able to guess where those files come from when using Unrimp
 		const IFileManager& fileManager = rendererRuntime.getFileManager();
-		const char* absoluteLocalDataDirectoryName = fileManager.getAbsoluteLocalDataDirectoryName();
+		const char* localDataMountPoint = fileManager.getLocalDataMountPoint();
 		ImGuiIO& imGuiIo = ImGui::GetIO();
-		if (nullptr != absoluteLocalDataDirectoryName)
+		imGuiIo.IniFilename = nullptr;
+		imGuiIo.LogFilename = nullptr;
+		if (nullptr != localDataMountPoint)
 		{
-			// TODO(sw) These files doesn't get read/written via an file interface -> can break on mobile devices
-			const std::string debugGuiDirectoryName = std::string(absoluteLocalDataDirectoryName) + "/DebugGui";
-			mIniFilename = debugGuiDirectoryName + "/UnrimpDebugGuiLayout.ini";
-			mLogFilename = debugGuiDirectoryName + "/UnrimpDebugGuiLog.txt";
-			fileManager.createDirectories(debugGuiDirectoryName.c_str());
-			imGuiIo.IniFilename = mIniFilename.c_str();
-			imGuiIo.LogFilename = mLogFilename.c_str();
-		}
-		else
-		{
-			// Writing local data isn't allowed, unset standard ImGui filenames
-			imGuiIo.IniFilename = nullptr;
-			imGuiIo.LogFilename = nullptr;
+			// TODO(sw) These files don't get read/written via an file interface -> can break on mobile devices
+			// TODO(co) The file manager now works with virtual filenames, this might resolve the issue since the local data mount point is considered to map to a file location were the application is allowed to write
+			const std::string virtualDebugGuiDirectoryName = std::string(localDataMountPoint) + "/DebugGui";
+			mIniFilename = virtualDebugGuiDirectoryName + "/UnrimpDebugGuiLayout.ini";
+			mLogFilename = virtualDebugGuiDirectoryName + "/UnrimpDebugGuiLog.txt";
+			if (fileManager.doesFileExist(virtualDebugGuiDirectoryName.c_str()) || fileManager.createDirectories(virtualDebugGuiDirectoryName.c_str()))
+			{
+				imGuiIo.IniFilename = mIniFilename.c_str();
+				imGuiIo.LogFilename = mLogFilename.c_str();
+			}
 		}
 
 		// TODO(co) When having ImGui window rounding and anti-aliased shapes active (ImGui default) and using

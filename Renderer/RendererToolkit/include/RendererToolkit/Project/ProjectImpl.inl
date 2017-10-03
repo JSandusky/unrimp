@@ -33,9 +33,9 @@ namespace RendererToolkit
 		return mProjectName;
 	}
 
-	inline const std::string& ProjectImpl::getProjectDirectory() const
+	inline const std::string& ProjectImpl::getAbsoluteProjectDirectory() const
 	{
-		return mProjectDirectory;
+		return mAbsoluteProjectDirectory;
 	}
 
 	inline const RendererRuntime::AssetPackage& ProjectImpl::getAssetPackage() const

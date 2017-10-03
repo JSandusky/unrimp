@@ -497,7 +497,7 @@ namespace RendererRuntime
 						rendererSamplerState.maxAnisotropy = maximumDefaultAnisotropy;
 					}
 					samplerState.samplerStatePtr = renderer.createSamplerState(rendererSamplerState);
-					RENDERER_SET_RESOURCE_DEBUG_NAME(samplerState.samplerStatePtr, asset->assetFilename)
+					RENDERER_SET_RESOURCE_DEBUG_NAME(samplerState.samplerStatePtr, asset->virtualFilename)
 				}
 			}
 		}

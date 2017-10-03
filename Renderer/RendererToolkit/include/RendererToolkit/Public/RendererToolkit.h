@@ -39,6 +39,7 @@
 namespace RendererRuntime
 {
 	class IRendererRuntime;
+	typedef const char* AbsoluteDirectoryName;
 }
 namespace RendererToolkit
 {
@@ -77,7 +78,7 @@ namespace RendererToolkit
 	public:
 		virtual ~IProject() override;
 	public:
-		virtual void loadByFilename(const char* filename) = 0;
+		virtual void load(RendererRuntime::AbsoluteDirectoryName absoluteProjectDirectoryName) = 0;
 		virtual void compileAllAssets(const char* rendererTarget) = 0;
 		virtual void startupAssetMonitor(RendererRuntime::IRendererRuntime& rendererRuntime, const char* rendererTarget) = 0;
 		virtual void shutdownAssetMonitor() = 0;

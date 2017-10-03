@@ -40,7 +40,7 @@
 int programEntryPoint(CommandLineArguments& commandLineArguments)
 {
 	Renderer::StdLog stdLog;
-	RendererRuntime::StdFileManager stdFileManager(stdLog);
+	RendererRuntime::StdFileManager stdFileManager(stdLog, "..");
 	RendererToolkit::Context rendererToolkitContext(stdLog, stdFileManager);
 	RendererToolkit::RendererToolkitInstance rendererToolkitInstance(rendererToolkitContext);
 	RendererToolkit::IRendererToolkit* rendererToolkit = rendererToolkitInstance.getRendererToolkit();
@@ -49,7 +49,7 @@ int programEntryPoint(CommandLineArguments& commandLineArguments)
 		RendererToolkit::IProject* project = rendererToolkit->createProject();
 		try
 		{
-			project->loadByFilename("../DataSource/Example.project");
+			project->load("../DataSource/Example");
 
 			if (commandLineArguments.getArguments().empty())
 			{

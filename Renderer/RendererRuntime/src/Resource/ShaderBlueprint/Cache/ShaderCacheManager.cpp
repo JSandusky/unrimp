@@ -168,7 +168,7 @@ namespace RendererRuntime
 							// Create the new shader cache instance
 							if (nullptr != shader)
 							{
-								RENDERER_SET_RESOURCE_DEBUG_NAME(shader, mShaderBlueprintResourceManager.getRendererRuntime().getAssetManager().tryGetAssetByAssetId(shaderBlueprintResource->getAssetId())->assetFilename)
+								RENDERER_SET_RESOURCE_DEBUG_NAME(shader, mShaderBlueprintResourceManager.getRendererRuntime().getAssetManager().tryGetAssetByAssetId(shaderBlueprintResource->getAssetId())->virtualFilename)
 								assert((!shaderLanguage.getRenderer().getCapabilities().shaderBytecode || 0 != shaderCache->mShaderBytecode.getNumberOfBytes()) && "Invalid shader bytecode received from renderer implementation");
 								shaderCache->mShaderPtr = shader;
 								mShaderCacheByShaderCacheId.emplace(shaderCacheId, shaderCache);

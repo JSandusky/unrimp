@@ -29,6 +29,8 @@
 #include "RendererToolkit/Context.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
+#include <RendererRuntime/Core/File/IFile.h>
+#include <RendererRuntime/Core/File/IFileManager.h>
 
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
@@ -66,8 +68,6 @@ PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(5027)	// warning C5027: 'std::_Generic_error_category': move assignment operator was implicitly defined as deleted
 	#include <rapidjson/document.h>
 PRAGMA_WARNING_POP
-
-#include <fstream>
 
 
 //[-------------------------------------------------------]
@@ -214,9 +214,163 @@ namespace
 
 
 		//[-------------------------------------------------------]
+		//[ Global classes                                        ]
+		//[-------------------------------------------------------]
+		class FileStream : public crnlib::data_stream
+		{
+
+
+		//[-------------------------------------------------------]
+		//[ Public methods                                        ]
+		//[-------------------------------------------------------]
+		public:
+			FileStream(RendererRuntime::IFileManager& fileManager, RendererRuntime::IFileManager::FileMode fileMode, RendererRuntime::VirtualFilename virtualFilename) :
+				crnlib::data_stream(virtualFilename, crnlib::cDataStreamReadable),
+				mFileManager(fileManager),
+				mFile(fileManager.openFile(fileMode, virtualFilename)),
+				mFileSize((nullptr != mFile) ? mFile->getNumberOfBytes() : 0),
+				mOffset(0)
+			{
+				m_opened = (nullptr != mFile);
+			}
+
+			virtual ~FileStream() override
+			{
+				close();
+			}
+
+
+		//[-------------------------------------------------------]
+		//[ Public virtual crnlib::data_stream methods            ]
+		//[-------------------------------------------------------]
+		public:
+			virtual bool close() override
+			{
+				if (nullptr != mFile)
+				{
+					// Close file
+					mFileManager.closeFile(*mFile);
+
+					// Reset data
+					mFile	  = nullptr;
+					mFileSize = 0;
+					mOffset	  = 0;
+					m_opened  = false;
+					m_error   = false;
+					m_got_cr  = false;
+
+					// Done
+					return true;
+				}
+
+				// Error!
+				return false;
+			}
+
+			virtual crnlib::uint read(void* pBuf, crnlib::uint len) override
+			{
+				CRNLIB_ASSERT(pBuf && (len <= 0x7FFFFFFF));
+				if (!m_opened || !is_readable() || !len)
+				{
+					return 0;
+				}
+				len = static_cast<crnlib::uint>(crnlib::math::minimum<crnlib::uint64>(len, get_remaining()));
+				mFile->read(pBuf, len);
+				mOffset += len;
+				return len;
+			}
+
+			virtual crnlib::uint write(const void* pBuf, crnlib::uint len) override
+			{
+				CRNLIB_ASSERT(pBuf && (len <= 0x7FFFFFFF));
+				if (!m_opened || !is_writable() || !len)
+				{
+					return 0;
+				}
+				mFile->write(pBuf, len);
+				mOffset += len;
+				mFileSize = crnlib::math::maximum(mFileSize, mOffset);
+				return len;
+			}
+
+			virtual bool flush() override
+			{
+				// Nothing here
+				return true;
+			}
+
+			virtual crnlib::uint64 get_size() override
+			{
+				return m_opened ? mFileSize : 0;
+			}
+
+			virtual crnlib::uint64 get_remaining() override
+			{
+				if (!m_opened)
+				{
+					return 0;
+				}
+				CRNLIB_ASSERT(mOffset <= mFileSize);
+				return mFileSize - mOffset;
+			}
+
+			virtual crnlib::uint64 get_ofs() override
+			{
+				return m_opened ? mOffset : 0;
+			}
+
+			virtual bool seek(crnlib::int64, bool) override
+			{
+				// Nothing here
+				return false;
+			}
+
+
+		//[-------------------------------------------------------]
+		//[ Private data                                          ]
+		//[-------------------------------------------------------]
+		private:
+			RendererRuntime::IFileManager& mFileManager;
+			RendererRuntime::IFile*		   mFile;
+			uint64_t					   mFileSize;
+			uint64_t					   mOffset;
+
+
+		};
+
+		class FileDataStreamSerializer : public crnlib::data_stream_serializer
+		{
+
+
+		//[-------------------------------------------------------]
+		//[ Public methods                                        ]
+		//[-------------------------------------------------------]
+		public:
+			FileDataStreamSerializer(RendererRuntime::IFileManager& fileManager, RendererRuntime::IFileManager::FileMode fileMode, RendererRuntime::VirtualFilename virtualFilename) :
+				mFileStream(fileManager, fileMode, virtualFilename)
+			{
+				if (!mFileStream.is_opened())
+				{
+					throw std::runtime_error("Failed to open source file \"" + std::string(virtualFilename) + '\"');
+				}
+				set_stream(&mFileStream);
+			}
+
+
+		//[-------------------------------------------------------]
+		//[ Private data                                          ]
+		//[-------------------------------------------------------]
+		private:
+			FileStream mFileStream;
+
+
+		};
+
+
+		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
-		void getOutputAssetFilenameAndCrunchOutputTextureFileType(const RendererToolkit::IAssetCompiler::Configuration& configuration, const std::string& assetFileFormat, const std::string& assetName, const std::string& assetOutputDirectory, std::string& outputAssetFilename, crnlib::texture_file_types::format& crunchOutputTextureFileType)
+		void getVirtualOutputAssetFilenameAndCrunchOutputTextureFileType(const RendererToolkit::IAssetCompiler::Configuration& configuration, const std::string& assetFileFormat, const std::string& assetName, const std::string& virtualAssetOutputDirectory, std::string& virtualOutputAssetFilename, crnlib::texture_file_types::format& crunchOutputTextureFileType)
 		{
 			const rapidjson::Value& rapidJsonValueTargets = configuration.rapidJsonValueTargets;
 
@@ -235,7 +389,7 @@ namespace
 					const rapidjson::Value& rapidJsonValueTextureTarget = rapidJsonValueTextureTargets[textureTargetName.c_str()];
 					fileFormat = rapidJsonValueTextureTarget["FileFormat"].GetString();
 				}
-				outputAssetFilename = assetOutputDirectory + assetName + '.' + fileFormat;
+				virtualOutputAssetFilename = virtualAssetOutputDirectory + '/' + assetName + '.' + fileFormat;
 				if (fileFormat == "crn")
 				{
 					crunchOutputTextureFileType = crnlib::texture_file_types::cFormatCRN;
@@ -289,18 +443,19 @@ namespace
 			value = getTextureSemanticByRapidJsonValue(rapidJsonValue[propertyName]);
 		}
 
-		void load2DCrunchMipmappedTextureInternal(const char* sourceFilename, crnlib::mipmapped_texture& crunchMipmappedTexture)
+		void load2DCrunchMipmappedTextureInternal(RendererRuntime::IFileManager& fileManager, RendererRuntime::VirtualFilename virtualSourceFilename, crnlib::mipmapped_texture& crunchMipmappedTexture)
 		{
-			crnlib::texture_file_types::format crunchSourceFileFormat = crnlib::texture_file_types::determine_file_format(sourceFilename);
+			crnlib::texture_file_types::format crunchSourceFileFormat = crnlib::texture_file_types::determine_file_format(virtualSourceFilename);
 			if (crunchSourceFileFormat == crnlib::texture_file_types::cFormatInvalid)
 			{
-				throw std::runtime_error("Unrecognized file type \"" + std::string(sourceFilename) + '\"');
+				throw std::runtime_error("Unrecognized file type \"" + std::string(virtualSourceFilename) + '\"');
 			}
-			if (!crunchMipmappedTexture.read_from_file(sourceFilename, crunchSourceFileFormat))
+			FileDataStreamSerializer fileDataStreamSerializer(fileManager, RendererRuntime::IFileManager::FileMode::READ, virtualSourceFilename);
+			if (!crunchMipmappedTexture.read_from_stream(fileDataStreamSerializer, crunchSourceFileFormat))
 			{
 				if (crunchMipmappedTexture.get_last_error().is_empty())
 				{
-					throw std::runtime_error("Failed reading source file \"" + std::string(sourceFilename) + '\"');
+					throw std::runtime_error("Failed reading source file \"" + std::string(virtualSourceFilename) + '\"');
 				}
 				else
 				{
@@ -309,27 +464,27 @@ namespace
 			}
 		}
 
-		void load2DCrunchMipmappedTexture(const char* sourceFilename, const char* sourceNormalMapFilename, crnlib::mipmapped_texture& crunchMipmappedTexture, crnlib::texture_conversion::convert_params& crunchConvertParams)
+		void load2DCrunchMipmappedTexture(RendererRuntime::IFileManager& fileManager, RendererRuntime::VirtualFilename virtualSourceFilename, RendererRuntime::VirtualFilename virtualSourceNormalMapFilename, crnlib::mipmapped_texture& crunchMipmappedTexture, crnlib::texture_conversion::convert_params& crunchConvertParams)
 		{
 			// Load, generate or compose mipmapped Crunch texture
-			if (nullptr != sourceFilename && nullptr == sourceNormalMapFilename)
+			if (nullptr != virtualSourceFilename && nullptr == virtualSourceNormalMapFilename)
 			{
 				// Just load source texture
-				load2DCrunchMipmappedTextureInternal(sourceFilename, crunchMipmappedTexture);
+				load2DCrunchMipmappedTextureInternal(fileManager, virtualSourceFilename, crunchMipmappedTexture);
 
 				// Use source texture mipmaps?
-				if (crnlib::texture_file_types::supports_mipmaps(crnlib::texture_file_types::determine_file_format(sourceFilename)))
+				if (crnlib::texture_file_types::supports_mipmaps(crnlib::texture_file_types::determine_file_format(virtualSourceFilename)))
 				{
 					crunchConvertParams.m_mipmap_params.m_mode = cCRNMipModeUseSourceMips;
 				}
 			}
-			else if (nullptr == sourceFilename && nullptr != sourceNormalMapFilename)
+			else if (nullptr == virtualSourceFilename && nullptr != virtualSourceNormalMapFilename)
 			{
 				// Just generate a roughness map using a given normal map using Toksvig specular anti-aliasing to reduce shimmering
 
 				// Load normal map texture
 				crnlib::mipmapped_texture normalMapCrunchMipmappedTexture;
-				load2DCrunchMipmappedTextureInternal(sourceNormalMapFilename, normalMapCrunchMipmappedTexture);
+				load2DCrunchMipmappedTextureInternal(fileManager, virtualSourceNormalMapFilename, normalMapCrunchMipmappedTexture);
 
 				// Create Toksvig specular anti-aliasing to reduce shimmering
 				crunchMipmappedTexture.init(normalMapCrunchMipmappedTexture.get_width(), normalMapCrunchMipmappedTexture.get_height(), 1, 1, crnlib::PIXEL_FMT_L8, "Toksvig", crnlib::cDefaultOrientationFlags);
@@ -341,11 +496,11 @@ namespace
 
 				// Load roughness map
 				crnlib::mipmapped_texture roughnessMapCrunchMipmappedTexture;
-				load2DCrunchMipmappedTextureInternal(sourceFilename, roughnessMapCrunchMipmappedTexture);
+				load2DCrunchMipmappedTextureInternal(fileManager, virtualSourceFilename, roughnessMapCrunchMipmappedTexture);
 
 				// Load normal map
 				crnlib::mipmapped_texture normalMapCrunchMipmappedTexture;
-				load2DCrunchMipmappedTextureInternal(sourceNormalMapFilename, normalMapCrunchMipmappedTexture);
+				load2DCrunchMipmappedTextureInternal(fileManager, virtualSourceNormalMapFilename, normalMapCrunchMipmappedTexture);
 
 				// Sanity check
 				if (roughnessMapCrunchMipmappedTexture.get_width() != normalMapCrunchMipmappedTexture.get_width() ||
@@ -400,10 +555,10 @@ namespace
 		//[ Public methods                                        ]
 		//[-------------------------------------------------------]
 		public:
-			TextureChannelPacking(const RendererToolkit::IAssetCompiler::Configuration& configuration, const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* basePath, const char* sourceNormalMapFilename, crnlib::texture_conversion::convert_params& crunchConvertParams)
+			TextureChannelPacking(RendererRuntime::IFileManager& fileManager, const RendererToolkit::IAssetCompiler::Configuration& configuration, const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* basePath, RendererRuntime::VirtualFilename virtualSourceNormalMapFilename, crnlib::texture_conversion::convert_params& crunchConvertParams)
 			{
 				loadLayout(configuration, rapidJsonValueTextureAssetCompiler, crunchConvertParams);
-				loadSourceCrunchMipmappedTextures(rapidJsonValueTextureAssetCompiler, basePath, sourceNormalMapFilename);
+				loadSourceCrunchMipmappedTextures(fileManager, rapidJsonValueTextureAssetCompiler, basePath, virtualSourceNormalMapFilename);
 			}
 
 			crnlib::uint getDestinationWidth() const
@@ -545,12 +700,12 @@ namespace
 				}
 			}
 
-			std::string getSourceNormalMapFilename(const char* basePath, const char* sourceNormalMapFilename, const rapidjson::Value& rapidJsonValueInputFiles) const
+			std::string getSourceNormalMapFilename(const char* basePath, RendererRuntime::VirtualFilename virtualSourceNormalMapFilename, const rapidjson::Value& rapidJsonValueInputFiles) const
 			{
-				if (nullptr != sourceNormalMapFilename)
+				if (nullptr != virtualSourceNormalMapFilename)
 				{
 					// Use the normal map we received
-					return sourceNormalMapFilename;
+					return virtualSourceNormalMapFilename;
 				}
 				else
 				{
@@ -568,7 +723,7 @@ namespace
 				return "";
 			}
 
-			void loadSourceCrunchMipmappedTextures(const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* basePath, const char* sourceNormalMapFilename)
+			void loadSourceCrunchMipmappedTextures(RendererRuntime::IFileManager& fileManager, const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* basePath, RendererRuntime::VirtualFilename virtualSourceNormalMapFilename)
 			{
 				const bool toksvigSpecularAntiAliasing = isToksvigSpecularAntiAliasingEnabled(rapidJsonValueTextureAssetCompiler);
 
@@ -593,12 +748,12 @@ namespace
 							if (textureSemantic == TextureSemantic::ROUGHNESS_MAP && toksvigSpecularAntiAliasing)
 							{
 								// Search for normal map
-								usedSourceNormalMapFilename = getSourceNormalMapFilename(basePath, sourceNormalMapFilename, rapidJsonValueInputFiles);
+								usedSourceNormalMapFilename = getSourceNormalMapFilename(basePath, virtualSourceNormalMapFilename, rapidJsonValueInputFiles);
 							}
 
 							// Load Crunch mipmapped texture
 							crnlib::texture_conversion::convert_params crunchConvertParams;
-							load2DCrunchMipmappedTexture((std::string(basePath) + rapidJsonMemberIteratorInputFile->value.GetString()).c_str(), usedSourceNormalMapFilename.empty() ? nullptr : usedSourceNormalMapFilename.c_str(), source.crunchMipmappedTexture, crunchConvertParams);
+							load2DCrunchMipmappedTexture(fileManager, (std::string(basePath) + rapidJsonMemberIteratorInputFile->value.GetString()).c_str(), usedSourceNormalMapFilename.empty() ? nullptr : usedSourceNormalMapFilename.c_str(), source.crunchMipmappedTexture, crunchConvertParams);
 
 							// Sanity check: Ensure the number of channels matches
 							const crnlib::image_u8* crunchImage = source.crunchMipmappedTexture.get_level(0, 0)->get_image();
@@ -628,12 +783,12 @@ namespace
 							if (!source.crunchMipmappedTexture.is_valid())
 							{
 								// Search for normal map
-								const std::string usedSourceNormalMapFilename = getSourceNormalMapFilename(basePath, sourceNormalMapFilename, rapidJsonValueInputFiles);
+								const std::string usedSourceNormalMapFilename = getSourceNormalMapFilename(basePath, virtualSourceNormalMapFilename, rapidJsonValueInputFiles);
 								if (!usedSourceNormalMapFilename.empty())
 								{
 									// Load Crunch mipmapped texture
 									crnlib::texture_conversion::convert_params crunchConvertParams;
-									load2DCrunchMipmappedTexture(nullptr, usedSourceNormalMapFilename.c_str(), source.crunchMipmappedTexture, crunchConvertParams);
+									load2DCrunchMipmappedTexture(fileManager, nullptr, usedSourceNormalMapFilename.c_str(), source.crunchMipmappedTexture, crunchConvertParams);
 								}
 							}
 							break;
@@ -775,15 +930,15 @@ namespace
 			return filenames;
 		}
 
-		bool checkIfChanged(const RendererToolkit::IAssetCompiler::Input& input, const RendererToolkit::IAssetCompiler::Configuration& configuration, const rapidjson::Value& rapidJsonValueTextureAssetCompiler, TextureSemantic textureSemantic, const std::string& inputAssetFilename, const std::string& outputAssetFilename, std::vector<RendererToolkit::CacheManager::CacheEntries>& cacheEntries)
+		bool checkIfChanged(const RendererToolkit::IAssetCompiler::Input& input, const RendererToolkit::IAssetCompiler::Configuration& configuration, const rapidjson::Value& rapidJsonValueTextureAssetCompiler, TextureSemantic textureSemantic, const std::string& virtualInputAssetFilename, const std::string& virtualOutputAssetFilename, std::vector<RendererToolkit::CacheManager::CacheEntries>& cacheEntries)
 		{
 			if (TextureSemantic::REFLECTION_CUBE_MAP == textureSemantic)
 			{
 				// A cube map has six source files (for each face one source), so check if any of the six files has been changed
-				// -> "inputAssetFilename" specifies the base directory of the faces source files
-				const Filenames faceFilenames = getCubemapFilenames(rapidJsonValueTextureAssetCompiler, inputAssetFilename);
+				// -> "virtualInputAssetFilename" specifies the base directory of the faces source files
+				const Filenames faceFilenames = getCubemapFilenames(rapidJsonValueTextureAssetCompiler, virtualInputAssetFilename);
 				RendererToolkit::CacheManager::CacheEntries cacheEntriesCandidate;
-				if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, faceFilenames, outputAssetFilename, TEXTURE_FORMAT_VERSION, cacheEntriesCandidate))
+				if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.virtualAssetFilename, faceFilenames, virtualOutputAssetFilename, TEXTURE_FORMAT_VERSION, cacheEntriesCandidate))
 				{
 					// Changed
 					cacheEntries.push_back(cacheEntriesCandidate);
@@ -797,31 +952,31 @@ namespace
 			{
 				// A roughness map has two source files: First the roughness map itself and second a normal map
 				// -> An asset can specify both files or only one of them
-				// -> "inputAssetFilename" points to the roughness map
+				// -> "virtualInputAssetFilename" points to the roughness map
 				// -> We need to fetch the name of the input normal map
-				std::string normalMapAssetFilename;
+				std::string virtualNormalMapAssetFilename;
 				if (rapidJsonValueTextureAssetCompiler.HasMember("NormalMapInputFile"))
 				{
 					const std::string normalMapInputFile = rapidJsonValueTextureAssetCompiler["NormalMapInputFile"].GetString();
 					if (!normalMapInputFile.empty())
 					{
-						normalMapAssetFilename = input.assetInputDirectory + normalMapInputFile;
+						virtualNormalMapAssetFilename = input.virtualAssetInputDirectory + '/' + normalMapInputFile;
 					}
 				}
 
 				// Setup a list of source files
-				Filenames inputFilenames;
-				if (!inputAssetFilename.empty())
+				Filenames virtualInputFilenames;
+				if (!virtualInputAssetFilename.empty())
 				{
-					inputFilenames.emplace_back(inputAssetFilename);
+					virtualInputFilenames.emplace_back(virtualInputAssetFilename);
 				}
-				if (!normalMapAssetFilename.empty())
+				if (!virtualNormalMapAssetFilename.empty())
 				{
-					inputFilenames.emplace_back(normalMapAssetFilename);
+					virtualInputFilenames.emplace_back(virtualNormalMapAssetFilename);
 				}
 
 				RendererToolkit::CacheManager::CacheEntries cacheEntriesCandidate;
-				if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilenames, outputAssetFilename, TEXTURE_FORMAT_VERSION, cacheEntriesCandidate))
+				if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.virtualAssetFilename, virtualInputFilenames, virtualOutputAssetFilename, TEXTURE_FORMAT_VERSION, cacheEntriesCandidate))
 				{
 					// Changed
 					cacheEntries.push_back(cacheEntriesCandidate);
@@ -838,10 +993,10 @@ namespace
 				filenames.reserve(rapidJsonValueInputFiles.MemberCount());
 				for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorInputFile = rapidJsonValueInputFiles.MemberBegin(); rapidJsonMemberIteratorInputFile != rapidJsonValueInputFiles.MemberEnd(); ++rapidJsonMemberIteratorInputFile)
 				{
-					filenames.emplace_back(inputAssetFilename + rapidJsonMemberIteratorInputFile->value.GetString());
+					filenames.emplace_back(virtualInputAssetFilename + rapidJsonMemberIteratorInputFile->value.GetString());
 				}
 				RendererToolkit::CacheManager::CacheEntries cacheEntriesCandidate;
-				if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, filenames, outputAssetFilename, TEXTURE_FORMAT_VERSION, cacheEntriesCandidate))
+				if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.virtualAssetFilename, filenames, virtualOutputAssetFilename, TEXTURE_FORMAT_VERSION, cacheEntriesCandidate))
 				{
 					// Changed
 					cacheEntries.push_back(cacheEntriesCandidate);
@@ -855,7 +1010,7 @@ namespace
 			{
 				// Asset has single source file
 				RendererToolkit::CacheManager::CacheEntries cacheEntriesCandidate;
-				if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputAssetFilename, outputAssetFilename, TEXTURE_FORMAT_VERSION, cacheEntriesCandidate))
+				if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.virtualAssetFilename, virtualInputAssetFilename, virtualOutputAssetFilename, TEXTURE_FORMAT_VERSION, cacheEntriesCandidate))
 				{
 					// Changed
 					cacheEntries.push_back(cacheEntriesCandidate);
@@ -867,18 +1022,19 @@ namespace
 			}
 		}
 
-		void loadCubeCrunchMipmappedTexture(const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* basePath, crnlib::mipmapped_texture& crunchMipmappedTexture)
+		void loadCubeCrunchMipmappedTexture(RendererRuntime::IFileManager& fileManager, const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* basePath, crnlib::mipmapped_texture& crunchMipmappedTexture)
 		{
 			// The face order must be: +X, -X, -Y, +Y, +Z, -Z
 			const Filenames faceFilenames = getCubemapFilenames(rapidJsonValueTextureAssetCompiler, basePath);
 			for (size_t faceIndex = 0; faceIndex < faceFilenames.size(); ++faceIndex)
 			{
 				// Load the 2D source image
+				const std::string& virtualInputFilename = faceFilenames[faceIndex];
+				FileDataStreamSerializer fileDataStreamSerializer(fileManager, RendererRuntime::IFileManager::FileMode::READ, virtualInputFilename.c_str());
 				crnlib::image_u8* source2DImage = crnlib::crnlib_new<crnlib::image_u8>();
-				const std::string& inputFile = faceFilenames[faceIndex];
-				if (!crnlib::image_utils::read_from_file(*source2DImage, inputFile.c_str()))
+				if (!crnlib::image_utils::read_from_stream(*source2DImage, fileDataStreamSerializer))
 				{
-					throw std::runtime_error(std::string("Failed to load image \"") + inputFile + '\"');
+					throw std::runtime_error(std::string("Failed to load image \"") + virtualInputFilename + '\"');
 				}
 
 				// Sanity check
@@ -906,10 +1062,10 @@ namespace
 			}
 		}
 
-		void loadPackedChannelsCrunchMipmappedTexture(const RendererToolkit::IAssetCompiler::Configuration& configuration, const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* basePath, const char* sourceNormalMapFilename, crnlib::mipmapped_texture& crunchMipmappedTexture, crnlib::texture_conversion::convert_params& crunchConvertParams)
+		void loadPackedChannelsCrunchMipmappedTexture(RendererRuntime::IFileManager& fileManager, const RendererToolkit::IAssetCompiler::Configuration& configuration, const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* basePath, RendererRuntime::VirtualFilename virtualSourceNormalMapFilename, crnlib::mipmapped_texture& crunchMipmappedTexture, crnlib::texture_conversion::convert_params& crunchConvertParams)
 		{
 			// Load texture channel packing layout and source textures
-			TextureChannelPacking textureChannelPacking(configuration, rapidJsonValueTextureAssetCompiler, basePath, sourceNormalMapFilename, crunchConvertParams);
+			TextureChannelPacking textureChannelPacking(fileManager, configuration, rapidJsonValueTextureAssetCompiler, basePath, virtualSourceNormalMapFilename, crunchConvertParams);
 
 			// Allocate the resulting Crunch mipmapped texture
 			const crnlib::uint width = textureChannelPacking.getDestinationWidth();
@@ -953,34 +1109,43 @@ namespace
 			}
 		}
 
-		void convertFile(const RendererToolkit::IAssetCompiler::Input& input, const RendererToolkit::IAssetCompiler::Configuration& configuration, const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* basePath, const char* sourceFilename, const char* destinationFilename, crnlib::texture_file_types::format outputCrunchTextureFileType, TextureSemantic textureSemantic, bool createMipmaps, float mipmapBlurriness, const char* sourceNormalMapFilename)
+		void convertFile(const RendererToolkit::IAssetCompiler::Input& input, const RendererToolkit::IAssetCompiler::Configuration& configuration, const rapidjson::Value& rapidJsonValueTextureAssetCompiler, const char* basePath, RendererRuntime::VirtualFilename virtualSourceFilename, RendererRuntime::VirtualFilename virtualDestinationFilename, crnlib::texture_file_types::format outputCrunchTextureFileType, TextureSemantic textureSemantic, bool createMipmaps, float mipmapBlurriness, RendererRuntime::VirtualFilename virtualSourceNormalMapFilename)
 		{
 			crnlib::texture_conversion::convert_params crunchConvertParams;
 
 			// Load mipmapped Crunch texture
 			crnlib::mipmapped_texture crunchMipmappedTexture;
+			RendererRuntime::IFileManager& fileManager = input.context.getFileManager();
 			if (TextureSemantic::REFLECTION_CUBE_MAP == textureSemantic)
 			{
-				loadCubeCrunchMipmappedTexture(rapidJsonValueTextureAssetCompiler, basePath, crunchMipmappedTexture);
+				loadCubeCrunchMipmappedTexture(fileManager, rapidJsonValueTextureAssetCompiler, basePath, crunchMipmappedTexture);
 				crunchConvertParams.m_texture_type = crnlib::cTextureTypeCubemap;
 			}
 			else if (TextureSemantic::PACKED_CHANNELS == textureSemantic)
 			{
-				loadPackedChannelsCrunchMipmappedTexture(configuration, rapidJsonValueTextureAssetCompiler, basePath, sourceNormalMapFilename, crunchMipmappedTexture, crunchConvertParams);
+				loadPackedChannelsCrunchMipmappedTexture(fileManager, configuration, rapidJsonValueTextureAssetCompiler, basePath, virtualSourceNormalMapFilename, crunchMipmappedTexture, crunchConvertParams);
 				crunchConvertParams.m_texture_type = crunchMipmappedTexture.determine_texture_type();
 			}
 			else
 			{
 				if (!isToksvigSpecularAntiAliasingEnabled(rapidJsonValueTextureAssetCompiler))
 				{
-					sourceNormalMapFilename = nullptr;
+					virtualSourceNormalMapFilename = nullptr;
 				}
-				load2DCrunchMipmappedTexture(sourceFilename, sourceNormalMapFilename, crunchMipmappedTexture, crunchConvertParams);
+				load2DCrunchMipmappedTexture(fileManager, virtualSourceFilename, virtualSourceNormalMapFilename, crunchMipmappedTexture, crunchConvertParams);
 				crunchConvertParams.m_texture_type = crunchMipmappedTexture.determine_texture_type();
 			}
 
+			// Get absolute destination filename
+			const std::string absoluteDestinationFilename = fileManager.mapVirtualToAbsoluteFilename(RendererRuntime::IFileManager::FileMode::WRITE, virtualDestinationFilename);
+			if (absoluteDestinationFilename.empty())
+			{
+				throw std::runtime_error("Failed determine the absolute destination filename of the virtual destination filename \"" + std::string(virtualDestinationFilename) + '\"');
+			}
+
+			// Setup Crunch parameters
 			crunchConvertParams.m_pInput_texture = &crunchMipmappedTexture;
-			crunchConvertParams.m_dst_filename = destinationFilename;
+			crunchConvertParams.m_dst_filename = absoluteDestinationFilename.c_str();
 			crunchConvertParams.m_dst_file_type = outputCrunchTextureFileType;
 			crunchConvertParams.m_y_flip = true;
 			crunchConvertParams.m_no_stats = true;
@@ -1135,7 +1300,7 @@ namespace
 			{
 				if (crunchConvertParams.m_error_message.is_empty())
 				{
-					throw std::runtime_error("Failed writing output file \"" + std::string(destinationFilename) + '\"');
+					throw std::runtime_error("Failed writing output file \"" + std::string(virtualDestinationFilename) + '\"');
 				}
 				else
 				{
@@ -1144,11 +1309,12 @@ namespace
 			}
 		}
 
-		void convertColorCorrectionLookupTable(const char* sourceFilename, const char* destinationFilename)
+		void convertColorCorrectionLookupTable(RendererRuntime::IFileManager& fileManager, RendererRuntime::VirtualFilename virtualSourceFilename, RendererRuntime::VirtualFilename virtualDestinationFilename)
 		{
 			// Load the 2D source image
+			FileDataStreamSerializer fileDataStreamSerializer(fileManager, RendererRuntime::IFileManager::FileMode::READ, virtualSourceFilename);
 			crnlib::image_u8 sourceImage;
-			crnlib::image_utils::read_from_file(sourceImage, sourceFilename);
+			crnlib::image_utils::read_from_stream(sourceImage, fileDataStreamSerializer);
 
 			// Sanity checks
 			if (sourceImage.get_width() < sourceImage.get_height())
@@ -1197,10 +1363,15 @@ namespace
 			ddsSurfaceDesc2.lPitch								= (ddsSurfaceDesc2.dwWidth * ddsSurfaceDesc2.ddpfPixelFormat.dwRGBBitCount) >> 3;
 
 			// Write down the 3D destination texture
-			std::ofstream outputFileStream(destinationFilename, std::ios::binary);
-			outputFileStream.write("DDS ", sizeof(uint32_t));
-			outputFileStream.write(reinterpret_cast<const char*>(&ddsSurfaceDesc2), sizeof(crnlib::DDSURFACEDESC2));
-			outputFileStream.write(reinterpret_cast<const char*>(destinationData), sizeof(crnlib::color_quad_u8) * numberOfTexelsPerLayer * depth);
+			RendererRuntime::IFile* file = fileManager.openFile(RendererRuntime::IFileManager::FileMode::WRITE, virtualDestinationFilename);
+			if (nullptr == file)
+			{
+				throw std::runtime_error("Failed to open destination file \"" + std::string(virtualDestinationFilename) + '\"');
+			}
+			file->write("DDS ", sizeof(uint32_t));
+			file->write(reinterpret_cast<const char*>(&ddsSurfaceDesc2), sizeof(crnlib::DDSURFACEDESC2));
+			file->write(reinterpret_cast<const char*>(destinationData), sizeof(crnlib::color_quad_u8) * numberOfTexelsPerLayer * depth);
+			fileManager.closeFile(*file);
 
 			// Done
 			delete [] destinationData;
@@ -1252,7 +1423,7 @@ namespace RendererToolkit
 	bool TextureAssetCompiler::checkIfChanged(const Input& input, const Configuration& configuration) const
 	{
 		const rapidjson::Value& rapidJsonValueTextureAssetCompiler = configuration.rapidJsonDocumentAsset["Asset"]["TextureAssetCompiler"];
-		const std::string& assetInputDirectory = input.assetInputDirectory;
+		const std::string& virtualAssetInputDirectory = input.virtualAssetInputDirectory;
 		std::string inputFile;
 		if (rapidJsonValueTextureAssetCompiler.HasMember("InputFile"))
 		{
@@ -1269,26 +1440,21 @@ namespace RendererToolkit
 		{
 			assetFileFormat = "dds";
 		}
-		const std::string inputAssetFilename = assetInputDirectory + inputFile;
-		const std::string assetName = std_filesystem::path(input.assetFilename).stem().generic_string();
+		const std::string virtualInputAssetFilename = virtualAssetInputDirectory + '/' + inputFile;
+		const std::string assetName = std_filesystem::path(input.virtualAssetFilename).stem().generic_string();
 
 		// Get output related settings
-		std::string outputAssetFilename;
+		std::string virtualOutputAssetFilename;
 		crnlib::texture_file_types::format crunchOutputTextureFileType = crnlib::texture_file_types::cFormatCRN;
-		::detail::getOutputAssetFilenameAndCrunchOutputTextureFileType(configuration, assetFileFormat, assetName, input.assetOutputDirectory, outputAssetFilename, crunchOutputTextureFileType);
+		::detail::getVirtualOutputAssetFilenameAndCrunchOutputTextureFileType(configuration, assetFileFormat, assetName, input.virtualAssetOutputDirectory, virtualOutputAssetFilename, crunchOutputTextureFileType);
 
 		// Check if changed
 		std::vector<CacheManager::CacheEntries> cacheEntries;
-		return ::detail::checkIfChanged(input, configuration, rapidJsonValueTextureAssetCompiler, textureSemantic, inputAssetFilename, outputAssetFilename, cacheEntries);
+		return ::detail::checkIfChanged(input, configuration, rapidJsonValueTextureAssetCompiler, textureSemantic, virtualInputAssetFilename, virtualOutputAssetFilename, cacheEntries);
 	}
 
 	void TextureAssetCompiler::compile(const Input& input, const Configuration& configuration, Output& output)
 	{
-		// Input, configuration and output
-		const std::string&			   assetInputDirectory	= input.assetInputDirectory;
-		const std::string&			   assetOutputDirectory	= input.assetOutputDirectory;
-		RendererRuntime::AssetPackage& outputAssetPackage	= *output.outputAssetPackage;
-
 		// Get the JSON asset object
 		const rapidjson::Value& rapidJsonValueAsset = configuration.rapidJsonDocumentAsset["Asset"];
 
@@ -1324,9 +1490,10 @@ namespace RendererToolkit
 				createMipmaps = false;
 			}
 		}
-		const std::string inputAssetFilename = assetInputDirectory + inputFile;
-		const std::string normalMapAssetFilename = assetInputDirectory + normalMapInputFile;
-		const std::string assetName = std_filesystem::path(input.assetFilename).stem().generic_string();
+		const std::string& virtualAssetInputDirectory = input.virtualAssetInputDirectory;
+		const std::string virtualInputAssetFilename = virtualAssetInputDirectory + '/' + inputFile;
+		const std::string virtualNormalMapAssetFilename = virtualAssetInputDirectory + '/' + normalMapInputFile;
+		const std::string assetName = std_filesystem::path(input.virtualAssetFilename).stem().generic_string();
 
 		// Sanity checks
 		if (inputFile.empty())
@@ -1353,21 +1520,21 @@ namespace RendererToolkit
 		}
 
 		// Get output related settings
-		std::string outputAssetFilename;
+		std::string virtualOutputAssetFilename;
 		crnlib::texture_file_types::format crunchOutputTextureFileType = crnlib::texture_file_types::cFormatCRN;
-		::detail::getOutputAssetFilenameAndCrunchOutputTextureFileType(configuration, assetFileFormat, assetName, assetOutputDirectory, outputAssetFilename, crunchOutputTextureFileType);
+		::detail::getVirtualOutputAssetFilenameAndCrunchOutputTextureFileType(configuration, assetFileFormat, assetName, input.virtualAssetOutputDirectory, virtualOutputAssetFilename, crunchOutputTextureFileType);
 
 		// Ask the cache manager whether or not we need to compile the source file (e.g. source changed or target not there)
 		std::vector<CacheManager::CacheEntries> cacheEntries;
-		if (::detail::checkIfChanged(input, configuration, rapidJsonValueTextureAssetCompiler, textureSemantic, inputAssetFilename, outputAssetFilename, cacheEntries))
+		if (::detail::checkIfChanged(input, configuration, rapidJsonValueTextureAssetCompiler, textureSemantic, virtualInputAssetFilename, virtualOutputAssetFilename, cacheEntries))
 		{
 			if (::detail::TextureSemantic::COLOR_CORRECTION_LOOKUP_TABLE == textureSemantic)
 			{
-				detail::convertColorCorrectionLookupTable(inputAssetFilename.c_str(), outputAssetFilename.c_str());
+				detail::convertColorCorrectionLookupTable(input.context.getFileManager(), virtualInputAssetFilename.c_str(), virtualOutputAssetFilename.c_str());
 			}
 			else
 			{
-				detail::convertFile(input, configuration, rapidJsonValueTextureAssetCompiler, inputAssetFilename.c_str(), inputFile.empty() ? nullptr : inputAssetFilename.c_str(), outputAssetFilename.c_str(), crunchOutputTextureFileType, textureSemantic, createMipmaps, mipmapBlurriness, normalMapInputFile.empty() ? nullptr : normalMapAssetFilename.c_str());
+				detail::convertFile(input, configuration, rapidJsonValueTextureAssetCompiler, virtualInputAssetFilename.c_str(), inputFile.empty() ? nullptr : virtualInputAssetFilename.c_str(), virtualOutputAssetFilename.c_str(), crunchOutputTextureFileType, textureSemantic, createMipmaps, mipmapBlurriness, normalMapInputFile.empty() ? nullptr : virtualNormalMapAssetFilename.c_str());
 			}
 
 			// Store new cache entries or update existing ones
@@ -1380,7 +1547,7 @@ namespace RendererToolkit
 		{ // Update the output asset package
 			const std::string assetCategory = rapidJsonValueAsset["AssetMetadata"]["AssetCategory"].GetString();
 			const std::string assetIdAsString = input.projectName + "/Texture/" + assetCategory + '/' + assetName;
-			outputAsset(input.context.getFileManager(), assetIdAsString, outputAssetFilename, outputAssetPackage);
+			outputAsset(input.context.getFileManager(), assetIdAsString, virtualOutputAssetFilename, *output.outputAssetPackage);
 		}
 	}
 

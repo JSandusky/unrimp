@@ -26,9 +26,19 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	inline const std::string& IFileManager::getRelativeRootDirectory() const
+	{
+		return mRelativeRootDirectory;
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline IFileManager::IFileManager()
+	inline IFileManager::IFileManager(const std::string& relativeRootDirectory) :
+		mRelativeRootDirectory(relativeRootDirectory)
 	{
 		// Nothing here
 	}

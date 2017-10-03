@@ -44,6 +44,7 @@
     <None Include="include\RendererRuntime\Core\File\IFile.inl" />
     <None Include="include\RendererRuntime\Core\File\IFileManager.inl" />
     <None Include="include\RendererRuntime\Core\File\MemoryFile.inl" />
+    <None Include="include\RendererRuntime\Core\File\PhysicsFSFileManager.inl" />
     <None Include="include\RendererRuntime\Core\File\StdFileManager.inl" />
     <None Include="include\RendererRuntime\Core\Math\Transform.inl" />
     <None Include="include\RendererRuntime\Core\PackedElementManager.inl" />
@@ -197,6 +198,7 @@
     <ClInclude Include="include\RendererRuntime\Core\File\IFile.h" />
     <ClInclude Include="include\RendererRuntime\Core\File\IFileManager.h" />
     <ClInclude Include="include\RendererRuntime\Core\File\MemoryFile.h" />
+    <ClInclude Include="include\RendererRuntime\Core\File\PhysicsFSFileManager.h" />
     <ClInclude Include="include\RendererRuntime\Core\File\StdFileManager.h" />
     <ClInclude Include="include\RendererRuntime\Core\GetUninitialized.h" />
     <ClInclude Include="include\RendererRuntime\Core\MakeId.h" />

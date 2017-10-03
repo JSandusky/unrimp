@@ -78,9 +78,9 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef RendererRuntime::StringId AssetCompilerTypeId;	///< Asset compiler type identifier, internally just a POD "uint32_t"
+	typedef RendererRuntime::StringId AssetCompilerTypeId;								///< Asset compiler type identifier, internally just a POD "uint32_t"
 	typedef std::unordered_map<uint32_t, uint32_t> SourceAssetIdToCompiledAssetId;		// Key = source asset ID, value = compiled asset ID ("AssetId"-type not used directly or we would need to define a hash-function for it)
-	typedef std::unordered_map<uint32_t, std::string> SourceAssetIdToAbsoluteFilename;	// Key = source asset ID, absolute asset filename
+	typedef std::unordered_map<uint32_t, std::string> SourceAssetIdToVirtualFilename;	// Key = source asset ID, virtual asset filename
 
 	/**
 	*  @brief
@@ -120,24 +120,24 @@ namespace RendererToolkit
 			const Context&							context;
 			const std::string						projectName;
 			CacheManager&							cacheManager;
-			const std::string						assetPackageInputDirectory;
-			const std::string						assetFilename;
-			const std::string						assetInputDirectory;
-			const std::string						assetOutputDirectory;
+			const std::string						virtualAssetPackageInputDirectory;	///< Without "/" at the end
+			const std::string						virtualAssetFilename;
+			const std::string						virtualAssetInputDirectory;			///< Without "/" at the end
+			const std::string						virtualAssetOutputDirectory;		///< Without "/" at the end
 			const SourceAssetIdToCompiledAssetId&	sourceAssetIdToCompiledAssetId;
-			const SourceAssetIdToAbsoluteFilename&	sourceAssetIdToAbsoluteFilename;
+			const SourceAssetIdToVirtualFilename&	sourceAssetIdToVirtualFilename;
 
 			Input() = delete;
-			Input(const Context& _context, const std::string _projectName, CacheManager& _cacheManager, const std::string& _assetPackageInputDirectory, const std::string& _assetFilename, const std::string& _assetInputDirectory, const std::string& _assetOutputDirectory, const SourceAssetIdToCompiledAssetId& _sourceAssetIdToCompiledAssetId, const SourceAssetIdToAbsoluteFilename& _sourceAssetIdToAbsoluteFilename) :
+			Input(const Context& _context, const std::string _projectName, CacheManager& _cacheManager, const std::string& _virtualAssetPackageInputDirectory, const std::string& _virtualAssetFilename, const std::string& _virtualAssetInputDirectory, const std::string& _virtualAssetOutputDirectory, const SourceAssetIdToCompiledAssetId& _sourceAssetIdToCompiledAssetId, const SourceAssetIdToVirtualFilename& _sourceAssetIdToVirtualFilename) :
 				context(_context),
 				projectName(_projectName),
 				cacheManager(_cacheManager),
-				assetPackageInputDirectory(_assetPackageInputDirectory),
-				assetFilename(_assetFilename),
-				assetInputDirectory(_assetInputDirectory),
-				assetOutputDirectory(_assetOutputDirectory),
+				virtualAssetPackageInputDirectory(_virtualAssetPackageInputDirectory),
+				virtualAssetFilename(_virtualAssetFilename),
+				virtualAssetInputDirectory(_virtualAssetInputDirectory),
+				virtualAssetOutputDirectory(_virtualAssetOutputDirectory),
 				sourceAssetIdToCompiledAssetId(_sourceAssetIdToCompiledAssetId),
-				sourceAssetIdToAbsoluteFilename(_sourceAssetIdToAbsoluteFilename)
+				sourceAssetIdToVirtualFilename(_sourceAssetIdToVirtualFilename)
 			{
 				// Nothing here
 			}
@@ -162,8 +162,8 @@ namespace RendererToolkit
 			}
 			std::string sourceAssetIdToDebugName(uint32_t sourceAssetId) const
 			{
-				SourceAssetIdToAbsoluteFilename::const_iterator iterator = sourceAssetIdToAbsoluteFilename.find(sourceAssetId);
-				if (iterator == sourceAssetIdToAbsoluteFilename.cend())
+				SourceAssetIdToVirtualFilename::const_iterator iterator = sourceAssetIdToVirtualFilename.find(sourceAssetId);
+				if (iterator == sourceAssetIdToVirtualFilename.cend())
 				{
 					throw std::runtime_error(std::string("Source asset ID ") + std::to_string(sourceAssetId) + " is unknown");
 				}
@@ -200,7 +200,7 @@ namespace RendererToolkit
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
 	public:
-		static void outputAsset(const RendererRuntime::IFileManager& fileManager, const std::string& assetIdAsString, const std::string& outputAssetFilename, RendererRuntime::AssetPackage& outputAssetPackage);
+		static void outputAsset(const RendererRuntime::IFileManager& fileManager, const std::string& assetIdAsString, const std::string& virtualOutputAssetFilename, RendererRuntime::AssetPackage& outputAssetPackage);
 
 
 	//[-------------------------------------------------------]

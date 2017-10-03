@@ -49,6 +49,10 @@ PRAGMA_WARNING_POP
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	typedef const char* VirtualFilename;	///< UTF-8 virtual filename, the virtual filename scheme is "<mount point = project name>/<asset type>/<asset category>/<asset name>.<file extension>" (example "Example/Mesh/Monster/Squirrel.mesh"), never ever a null pointer and always finished by a terminating zero
+}
 namespace RendererToolkit
 {
 	class Context;
@@ -87,8 +91,8 @@ namespace RendererToolkit
 			uint32_t rendererTargetId = 0;	///< ID of the render target (string hash of the render target)
 			// Data
 			uint64_t fileHash		  = 0;	///< The 64-bit FNV-1a hash of the file content
-			uint64_t fileSize		  = 0;	///< The file size
-			int64_t	 fileTime		  = 0;	///< The file time (last write time)
+			int64_t  fileSize		  = 0;	///< The file size
+			int64_t  fileTime		  = 0;	///< The file time (last write time)
 			uint32_t compilerVersion  = 0;	///< Compiler version so we can detect compiler version changes and enforce compiling even if the source data has not been changed
 			// Method
 			inline uint64_t getKey() const
@@ -109,23 +113,6 @@ namespace RendererToolkit
 
 
 	//[-------------------------------------------------------]
-	//[ Public static methods                                 ]
-	//[-------------------------------------------------------]
-	public:
-		/**
-		*  @brief
-		*    Check if the given file exists and is a regular file (e.g. not a directory)
-		*
-		*  @param[in] filename
-		*    The filename to check
-		*
-		*  @return
-		*    "true" if the file exists otherwise "false"
-		*/
-		static bool checkIfFileExists(const std::string& filename);
-
-
-	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
@@ -136,7 +123,7 @@ namespace RendererToolkit
 		*  @param[in] context
 		*    The renderer toolkit context to use, the renderer toolkit context instance must stay valid as long as the cache manager instance exists
 		*  @param[in] projectName
-		*    Name of the project this cache is for
+		*    UTF-8 name of the project this cache is for
 		*/
 		CacheManager(const Context& context, const std::string& projectName);
 
@@ -151,13 +138,13 @@ namespace RendererToolkit
 		*    Return if an asset needs to be compiled
 		*
 		*  @param[in] rendererTarget
-		*    The renderer target for which the asset should be compiled
-		*  @param[in] assetFilename
-		*    The asset file which contains asset meta data of the asset
-		*  @param[in] sourceFile
-		*    The source file of the asset
-		*  @param[in] destinationFile
-		*    The destination file of the asset which contains the compiled data of the source
+		*    The UTF-8 renderer target name for which the asset should be compiled
+		*  @param[in] virtualAssetFilename
+		*    Virtual UTF-8 filename of the file containing the asset metadata
+		*  @param[in] virtualSourceFilename
+		*    Virtual UTF-8 source filename of the asset
+		*  @param[in] virtualDestinationFilename
+		*    The virtual UTF-8 filename of the destination file of the asset which contains the compiled data of the source
 		*  @param[in] compilerVersion
 		*    Compiler version so we can detect compiler version changes and enforce compiling even if the source data has not been changed
 		*  @param[out] cacheEntries
@@ -166,20 +153,20 @@ namespace RendererToolkit
 		*  @return
 		*    "true" if the file needs to be compiled (aka source changed, destination doesn't exists or is yet unknown file) otherwise "false"
 		*/
-		bool needsToBeCompiled(const std::string& rendererTarget, const std::string& assetFilename, const std::string& sourceFile, const std::string& destinationFile, uint32_t compilerVersion, CacheEntries& cacheEntries);
+		bool needsToBeCompiled(const std::string& rendererTarget, const std::string& virtualAssetFilename, const std::string& virtualSourceFilename, const std::string& virtualDestinationFilename, uint32_t compilerVersion, CacheEntries& cacheEntries);
 
 		/**
 		*  @brief
 		*    Return if an asset needs to be compiled
 		*
 		*  @param[in] rendererTarget
-		*    The renderer target for which the asset should be compiled
-		*  @param[in] assetFilename
-		*    The asset file which contains asset meta data of the asset
-		*  @param[in] sourceFiles
-		*    A list of source files of the asset
-		*  @param[in] destinationFile
-		*    The destination file of the asset which contains the compiled data of the source
+		*    The UTF-8 renderer target name for which the asset should be compiled
+		*  @param[in] virtualAssetFilename
+		*    Virtual UTF-8 filename of the file containing the asset metadata
+		*  @param[in] virtualSourceFilenames
+		*    Virtual UTF-8 source filenames of the assets
+		*  @param[in] virtualDestinationFilename
+		*    The virtual UTF-8 filename of the destination file of the asset which contains the compiled data of the source
 		*  @param[in] compilerVersion
 		*    Compiler version so we can detect compiler version changes and enforce compiling even if the source data has not been changed
 		*  @param[out] cacheEntries
@@ -188,7 +175,7 @@ namespace RendererToolkit
 		*  @return
 		*    "true" if the file needs to be compiled (aka source changed, destination doesn't exists or is yet unknown file) otherwise "false"
 		*/
-		bool needsToBeCompiled(const std::string& rendererTarget, const std::string& assetFilename, const std::vector<std::string>& sourceFiles, const std::string& destinationFile, uint32_t compilerVersion, CacheEntries& cacheEntries);
+		bool needsToBeCompiled(const std::string& rendererTarget, const std::string& virtualAssetFilename, const std::vector<std::string>& virtualSourceFilenames, const std::string& virtualDestinationFilename, uint32_t compilerVersion, CacheEntries& cacheEntries);
 
 		/**
 		*  @brief
@@ -204,11 +191,11 @@ namespace RendererToolkit
 		*    Return whether or not least one of the given files has been modified since the last check
 		*
 		*  @param[in] rendererTarget
-		*    The renderer target for which the asset should be compiled
-		*  @param[in] assetFilename
-		*    The asset filename to check
-		*  @param[in] sourceFiles
-		*    A list of source files to check
+		*    The UTF-8 renderer target name for which the asset should be compiled
+		*  @param[in] virtualAssetFilename
+		*    Virtual UTF-8 filename of the file containing the asset metadata
+		*  @param[in] virtualSourceFilenames
+		*    Virtual UTF-8 source filenames of the assets
 		*  @param[in] compilerVersion
 		*    Compiler version so we can detect compiler version changes and enforce compiling even if the source data has not been changed
 		*
@@ -218,19 +205,19 @@ namespace RendererToolkit
 		*  @note
 		*    - This method fills an internal cache which stores the check result in order to speed up "RendererToolkit::CacheManager::needsToBeCompiled()"-calls and support dependency tracking
 		*/
-		bool checkIfFileIsModified(const std::string& rendererTarget, const std::string& assetFilename, const std::vector<std::string>& sourceFiles, uint32_t compilerVersion);
+		bool checkIfFileIsModified(const std::string& rendererTarget, const std::string& virtualAssetFilename, const std::vector<std::string>& virtualSourceFilenames, uint32_t compilerVersion);
 
 		/**
 		*  @brief
 		*    Return whether or not least one of the given files has been modified since the last check
 		*
-		*  @param[in] dependencyFiles
-		*    List of dependency files to check
+		*  @param[in] virtualDependencyFilenames
+		*    Virtual UTF-8 dependency filenames to check
 		*
 		*  @return
 		*    "true" if any of the files have been modified otherwise "false"
 		*/
-		bool dependencyFilesChanged(const std::vector<std::string>& dependencyFiles);
+		bool dependencyFilesChanged(const std::vector<std::string>& virtualDependencyFilenames);
 
 		/**
 		*  @brief
@@ -260,7 +247,7 @@ namespace RendererToolkit
 		*    Fill an cache entry with the stored data, if it exists
 		*
 		*  @param[in] rendererTarget
-		*    The renderer target for which the asset should be compiled
+		*    The UTF-8 renderer target name for which the asset should be compiled
 		*  @param[in] fileId
 		*    The file ID (e.g. string hash of the file path) which represents the file to check
 		*  @param[out] cacheEntry
@@ -276,9 +263,9 @@ namespace RendererToolkit
 		*    Check if file has changed
 		*
 		*  @param[in] rendererTarget
-		*    The renderer target for which the asset should be compiled
-		*  @param[in] filename
-		*    The filename to check
+		*    The UTF-8 renderer target name for which the asset should be compiled
+		*  @param[in] virtualFilename
+		*    The virtual filename to check
 		*  @param[in] compilerVersion
 		*    Compiler version so we can detect compiler version changes and enforce compiling even if the source data has not been changed
 		*  @param[out] cacheEntry
@@ -290,7 +277,7 @@ namespace RendererToolkit
 		*  @note
 		*    - When a change was detected the an cache entry is stored/updated
 		*/
-		bool checkIfFileChanged(const std::string& rendererTarget, const std::string& filename, uint32_t compilerVersion, CacheEntry& cacheEntry);
+		bool checkIfFileChanged(const std::string& rendererTarget, RendererRuntime::VirtualFilename virtualFilename, uint32_t compilerVersion, CacheEntry& cacheEntry);
 
 		/**
 		*  @brief
@@ -324,7 +311,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	private:
 		const Context&	   mContext;
-		const std::string  mProjectName;
+		const std::string  mProjectName;	///< UTF-8 name of the project this cache is for
 		StoredCacheEntries mStoredCacheEntries;
 		bool			   mDiskCacheDirty;
 

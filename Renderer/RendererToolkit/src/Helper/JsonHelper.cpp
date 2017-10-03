@@ -23,7 +23,6 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/Helper/JsonHelper.h"
 #include "RendererToolkit/Helper/StringHelper.h"
-#include "RendererToolkit/Helper/FileSystemHelper.h"
 
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
@@ -39,7 +38,6 @@ PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(5027)	// warning C5027: 'std::_Generic_error_category': move assignment operator was implicitly defined as deleted
 	PRAGMA_WARNING_DISABLE_MSVC(5026)	// warning C5026: 'std::_Generic_error_category': move constructor was implicitly defined as deleted
 	#include <rapidjson/document.h>
-	#include <rapidjson/istreamwrapper.h>
 	#include <rapidjson/error/en.h>
 PRAGMA_WARNING_POP
 
@@ -53,10 +51,9 @@ PRAGMA_WARNING_POP
 
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
-	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'initializing': conversion from 'int' to '::size_t', signed/unsigned mismatch
-	#include <fstream>
+	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'return': conversion from 'int' to 'std::_Rand_urng_from_func::result_type', signed/unsigned mismatch
+	#include <algorithm> // For "std::count()"
 PRAGMA_WARNING_POP
-#include <algorithm> // For "std::count()"
 
 
 //[-------------------------------------------------------]
@@ -296,34 +293,21 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	void JsonHelper::parseDocumentByFilename(rapidjson::Document& rapidJsonDocument, const std::string& absoluteFilename, const std::string& formatType, const std::string& formatVersion)
+	void JsonHelper::loadDocumentByFilename(const RendererRuntime::IFileManager& fileManager, const std::string& virtualFilename, const std::string& formatType, const std::string& formatVersion, rapidjson::Document& rapidJsonDocument)
 	{
-		// Sanity check
-		if (!std_filesystem::exists(absoluteFilename))
-		{
-			throw std::runtime_error("Failed to parse JSON file \"" + absoluteFilename + "\": File doesn't exist");
-		}
+		// Load the whole file content as string
+		std::string fileContentAsString;
+		StringHelper::readStringByFilename(fileManager, virtualFilename, fileContentAsString);
 
 		// Load the JSON document
-		std::ifstream inputFileStream(absoluteFilename, std::ios::binary);
-		rapidjson::IStreamWrapper rapidJsonIStreamWrapper(inputFileStream);
-		const rapidjson::ParseResult rapidJsonParseResult = rapidJsonDocument.ParseStream(rapidJsonIStreamWrapper);
+		const rapidjson::ParseResult rapidJsonParseResult = rapidJsonDocument.Parse(fileContentAsString.c_str());
 		if (rapidJsonParseResult.Code() != rapidjson::kParseErrorNone)
 		{
 			// Get the line number
-			// TODO(co) This is nuts. There must be a much simpler solution to get the line number.
-			std::string fileContent;
-			{
-				inputFileStream.seekg(0, std::ifstream::end);
-				const std::streampos numberOfBytes = inputFileStream.tellg();
-				inputFileStream.seekg(0, std::ifstream::beg);
-				fileContent.resize(static_cast<size_t>(numberOfBytes));
-				inputFileStream.read(const_cast<char*>(fileContent.c_str()), numberOfBytes);
-			}
-			const std::streamoff lineNumber = std::count(fileContent.begin(), fileContent.begin() + static_cast<std::streamoff>(rapidJsonParseResult.Offset()), '\n');
+			const std::streamoff lineNumber = std::count(fileContentAsString.begin(), fileContentAsString.begin() + static_cast<std::streamoff>(rapidJsonParseResult.Offset()), '\n');
 
 			// Throw exception with human readable error message
-			throw std::runtime_error("Failed to parse JSON file \"" + absoluteFilename + "\": " + rapidjson::GetParseError_En(rapidJsonParseResult.Code()) + " (line " + std::to_string(lineNumber) + ')');
+			throw std::runtime_error("Failed to parse JSON file \"" + virtualFilename + "\": " + rapidjson::GetParseError_En(rapidJsonParseResult.Code()) + " (line " + std::to_string(lineNumber) + ')');
 		}
 
 		{ // Mandatory format header: Check whether or not the file format matches
@@ -947,12 +931,19 @@ namespace RendererToolkit
 		#undef ELSE_IF_VALUE
 	}
 
-	std::string JsonHelper::getAbsoluteAssetFilename(const IAssetCompiler::Input& input, uint32_t sourceAssetId)
+	const std::string& JsonHelper::getVirtualAssetFilename(const IAssetCompiler::Input& input, uint32_t sourceAssetId)
 	{
-		SourceAssetIdToAbsoluteFilename::const_iterator iterator = input.sourceAssetIdToAbsoluteFilename.find(sourceAssetId);
-		const std::string absoluteFilename = (iterator != input.sourceAssetIdToAbsoluteFilename.cend()) ? iterator->second : "";
-		// TODO(co) Error handling: Compiled asset ID not found (meaning invalid source asset ID given)
-		return absoluteFilename;
+		SourceAssetIdToVirtualFilename::const_iterator iterator = input.sourceAssetIdToVirtualFilename.find(sourceAssetId);
+		if (input.sourceAssetIdToVirtualFilename.cend() != iterator)
+		{
+			return iterator->second;
+		}
+		else
+		{
+			// TODO(co) Error handling: Compiled asset ID not found (meaning invalid source asset ID given)
+			static const std::string EMPTY_STRING;
+			return EMPTY_STRING;
+		}
 	}
 
 

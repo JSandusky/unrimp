@@ -66,10 +66,10 @@ namespace RendererRuntime
 		return mSortedAssetVector;
 	}
 
-	inline const char* AssetPackage::tryGetAssetFilenameByAssetId(AssetId assetId) const
+	inline VirtualFilename AssetPackage::tryGetVirtualFilenameByAssetId(AssetId assetId) const
 	{
 		const Asset* asset = tryGetAssetByAssetId(assetId);
-		return (nullptr != asset) ? asset->assetFilename : nullptr;
+		return (nullptr != asset) ? asset->virtualFilename : nullptr;
 	}
 
 	inline AssetPackage::SortedAssetVector& AssetPackage::getWritableSortedAssetVector()

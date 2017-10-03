@@ -83,52 +83,24 @@ namespace RendererToolkit
 
 	bool SkeletonAssetCompiler::checkIfChanged(const Input& input, const Configuration& configuration) const
 	{
-		// Get the JSON asset object
-		const rapidjson::Value& rapidJsonValueAsset = configuration.rapidJsonDocumentAsset["Asset"];
-
-		// Read configuration
-		std::string inputFile;
-		{
-			// Read material asset compiler configuration
-			const rapidjson::Value& rapidJsonValueMaterialAssetCompiler = rapidJsonValueAsset["SkeletonAssetCompiler"];
-			inputFile = rapidJsonValueMaterialAssetCompiler["InputFile"].GetString();
-		}
-
 		// Let the cache manager check whether or not the files have been changed in order to speed up later checks and to support dependency tracking
-		const std::string inputFilename = input.assetInputDirectory + inputFile;
-		return input.cacheManager.checkIfFileIsModified(configuration.rendererTarget, input.assetFilename, {inputFilename}, RendererRuntime::v1Skeleton::FORMAT_VERSION);
+		const std::string virtualInputFilename = input.virtualAssetInputDirectory + '/' + configuration.rapidJsonDocumentAsset["Asset"]["SkeletonAssetCompiler"]["InputFile"].GetString();
+		return input.cacheManager.checkIfFileIsModified(configuration.rendererTarget, input.virtualAssetFilename, {virtualInputFilename}, RendererRuntime::v1Skeleton::FORMAT_VERSION);
 	}
 
 	void SkeletonAssetCompiler::compile(const Input& input, const Configuration& configuration, Output& output)
 	{
-		// Input, configuration and output
-		const std::string&			   assetInputDirectory	= input.assetInputDirectory;
-		const std::string&			   assetOutputDirectory	= input.assetOutputDirectory;
-		RendererRuntime::AssetPackage& outputAssetPackage	= *output.outputAssetPackage;
-
-		// Get the JSON asset object
+		// Get relevant data
 		const rapidjson::Value& rapidJsonValueAsset = configuration.rapidJsonDocumentAsset["Asset"];
-
-		// Read configuration
-		std::string inputFile;
-		{
-			// Read skeleton asset compiler configuration
-			const rapidjson::Value& rapidJsonValueSkeletonAssetCompiler = rapidJsonValueAsset["SkeletonAssetCompiler"];
-			inputFile = rapidJsonValueSkeletonAssetCompiler["InputFile"].GetString();
-		}
-
-		// Open the input file
-		const std::string inputFilename = assetInputDirectory + inputFile;
-		const std::string assetName = std_filesystem::path(input.assetFilename).stem().generic_string();
-		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".skeleton";
+		const std::string virtualInputFilename = input.virtualAssetInputDirectory + '/' + rapidJsonValueAsset["SkeletonAssetCompiler"]["InputFile"].GetString();
+		const std::string assetName = std_filesystem::path(input.virtualAssetFilename).stem().generic_string();
+		const std::string virtualOutputAssetFilename = input.virtualAssetOutputDirectory + '/' + assetName + ".skeleton";
 
 		// Ask the cache manager whether or not we need to compile the source file (e.g. source changed or target not there)
 		CacheManager::CacheEntries cacheEntries;
-		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1Skeleton::FORMAT_VERSION, cacheEntries))
+		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.virtualAssetFilename, virtualInputFilename, virtualOutputAssetFilename, RendererRuntime::v1Skeleton::FORMAT_VERSION, cacheEntries))
 		{
 			// TODO(co) Right now, there's no standalone skeleton asset, only the skeleton which is part of a mesh
-			// std::ifstream inputFileStream(inputFilename, std::ios::binary);
-			// RendererRuntime::MemoryFile memoryFile(0, 4096);
 
 			// Store new cache entries or update existing ones
 			input.cacheManager.storeOrUpdateCacheEntries(cacheEntries);
@@ -137,7 +109,7 @@ namespace RendererToolkit
 		{ // Update the output asset package
 			const std::string assetCategory = rapidJsonValueAsset["AssetMetadata"]["AssetCategory"].GetString();
 			const std::string assetIdAsString = input.projectName + "/Skeleton/" + assetCategory + '/' + assetName;
-			outputAsset(input.context.getFileManager(), assetIdAsString, outputAssetFilename, outputAssetPackage);
+			outputAsset(input.context.getFileManager(), assetIdAsString, virtualOutputAssetFilename, *output.outputAssetPackage);
 		}
 	}
 

@@ -688,7 +688,7 @@ namespace RendererRuntime
 			// 2D texture
 			texture = mRendererRuntime.getTextureManager().createTexture2D(mWidth, mHeight, static_cast<Renderer::TextureFormat::Enum>(mTextureFormat), mImageData, mDataContainsMipmaps ? Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS : 0u);
 		}
-		RENDERER_SET_RESOURCE_DEBUG_NAME(texture, getAsset().assetFilename)
+		RENDERER_SET_RESOURCE_DEBUG_NAME(texture, getAsset().virtualFilename)
 		return texture;
 	}
 

@@ -215,7 +215,7 @@ namespace RendererRuntime
 			if (isUninitialized(resourceLoaderTypeId))
 			{
 				// The totally primitive texture resource loader type detection is sufficient for now
-				const char* filenameExtension = strrchr(&asset->assetFilename[0], '.');
+				const char* filenameExtension = strrchr(&asset->virtualFilename[0], '.');
 				if (nullptr != filenameExtension)
 				{
 					resourceLoaderTypeId = StringId(filenameExtension + 1);

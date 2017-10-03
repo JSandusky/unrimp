@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/IAssetCompiler.h"
+#include "RendererToolkit/Helper/FileSystemHelper.h"
 #include "RendererToolkit/Helper/StringHelper.h"
 
 #include <RendererRuntime/Core/Math/Math.h>
@@ -38,19 +39,20 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	void IAssetCompiler::outputAsset(const RendererRuntime::IFileManager& fileManager, const std::string& assetIdAsString, const std::string& outputAssetFilename, RendererRuntime::AssetPackage& outputAssetPackage)
+	void IAssetCompiler::outputAsset(const RendererRuntime::IFileManager& fileManager, const std::string& assetIdAsString, const std::string& virtualOutputAssetFilename, RendererRuntime::AssetPackage& outputAssetPackage)
 	{
 		// Sanity check
-		if (outputAssetFilename.size() > RendererRuntime::Asset::MAXIMUM_ASSET_FILENAME_LENGTH)
+		const std::string virtualFilename = assetIdAsString + std_filesystem::path(virtualOutputAssetFilename).extension().generic_string();
+		if (virtualFilename.size() > RendererRuntime::Asset::MAXIMUM_ASSET_FILENAME_LENGTH)
 		{
-			throw std::runtime_error("The output asset filename \"" + outputAssetFilename + "\" exceeds the length limit of " + std::to_string(RendererRuntime::Asset::MAXIMUM_ASSET_FILENAME_LENGTH));
+			throw std::runtime_error("The output asset filename \"" + virtualFilename + "\" exceeds the length limit of " + std::to_string(RendererRuntime::Asset::MAXIMUM_ASSET_FILENAME_LENGTH));
 		}
 
 		// Output asset
 		RendererRuntime::Asset outputAsset;
 		outputAsset.assetId = StringHelper::getAssetIdByString(assetIdAsString.c_str());
-		outputAsset.fileHash = RendererRuntime::Math::calculateFileFNV1a64ByFilename(fileManager, outputAssetFilename);
-		strcpy(outputAsset.assetFilename, outputAssetFilename.c_str());
+		outputAsset.fileHash = RendererRuntime::Math::calculateFileFNV1a64ByVirtualFilename(fileManager, virtualOutputAssetFilename.c_str());
+		strcpy(outputAsset.virtualFilename, virtualFilename.c_str());
 		outputAssetPackage.getWritableSortedAssetVector().push_back(outputAsset);
 	}
 

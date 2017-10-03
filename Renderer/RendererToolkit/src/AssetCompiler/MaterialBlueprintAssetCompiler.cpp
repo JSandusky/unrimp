@@ -167,29 +167,13 @@ namespace RendererToolkit
 
 	bool MaterialBlueprintAssetCompiler::checkIfChanged(const Input& input, const Configuration& configuration) const
 	{
-		// Get the JSON asset object
-		const rapidjson::Value& rapidJsonValueAsset = configuration.rapidJsonDocumentAsset["Asset"];
-
-		// Read configuration
-		std::string inputFile;
-		{
-			// Read material blueprint asset compiler configuration
-			const rapidjson::Value& rapidJsonValueMaterialBlueprintAssetCompiler = rapidJsonValueAsset["MaterialBlueprintAssetCompiler"];
-			inputFile = rapidJsonValueMaterialBlueprintAssetCompiler["InputFile"].GetString();
-		}
-
 		// Let the cache manager check whether or not the files have been changed in order to speed up later checks and to support dependency tracking
-		const std::string inputFilename = input.assetInputDirectory + inputFile;
-		return input.cacheManager.checkIfFileIsModified(configuration.rendererTarget, input.assetFilename, {inputFilename}, RendererRuntime::v1MaterialBlueprint::FORMAT_VERSION);
+		const std::string virtualInputFilename = input.virtualAssetInputDirectory + '/' + configuration.rapidJsonDocumentAsset["Asset"]["MaterialBlueprintAssetCompiler"]["InputFile"].GetString();
+		return input.cacheManager.checkIfFileIsModified(configuration.rendererTarget, input.virtualAssetFilename, {virtualInputFilename}, RendererRuntime::v1MaterialBlueprint::FORMAT_VERSION);
 	}
 
 	void MaterialBlueprintAssetCompiler::compile(const Input& input, const Configuration& configuration, Output& output)
 	{
-		// Input, configuration and output
-		const std::string&			   assetInputDirectory	= input.assetInputDirectory;
-		const std::string&			   assetOutputDirectory	= input.assetOutputDirectory;
-		RendererRuntime::AssetPackage& outputAssetPackage	= *output.outputAssetPackage;
-
 		// Get the JSON asset object
 		const rapidjson::Value& rapidJsonValueAsset = configuration.rapidJsonDocumentAsset["Asset"];
 
@@ -203,21 +187,21 @@ namespace RendererToolkit
 			JsonHelper::optionalBooleanProperty(rapidJsonValueMaterialBlueprintAssetCompiler, "AllowCrazyNumberOfShaderCombinations", allowCrazyNumberOfShaderCombinations);
 		}
 
-		// Open the input file
-		const std::string inputFilename = assetInputDirectory + inputFile;
-		const std::string assetName = std_filesystem::path(input.assetFilename).stem().generic_string();
-		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".material_blueprint";
+		// Get relevant data
+		const std::string virtualInputFilename = input.virtualAssetInputDirectory + '/' + inputFile;
+		const std::string assetName = std_filesystem::path(input.virtualAssetFilename).stem().generic_string();
+		const std::string virtualOutputAssetFilename = input.virtualAssetOutputDirectory + '/' + assetName + ".material_blueprint";
 
 		// Ask the cache manager whether or not we need to compile the source file (e.g. source changed or target not there)
 		CacheManager::CacheEntries cacheEntries;
-		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1MaterialBlueprint::FORMAT_VERSION, cacheEntries))
+		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.virtualAssetFilename, virtualInputFilename, virtualOutputAssetFilename, RendererRuntime::v1MaterialBlueprint::FORMAT_VERSION, cacheEntries))
 		{
 			RendererRuntime::MemoryFile memoryFile(0, 4096);
 
 			{ // Material blueprint
 				// Parse JSON
 				rapidjson::Document rapidJsonDocument;
-				JsonHelper::parseDocumentByFilename(rapidJsonDocument, inputFilename, "MaterialBlueprintAsset", "2");
+				JsonHelper::loadDocumentByFilename(input.context.getFileManager(), virtualInputFilename, "MaterialBlueprintAsset", "2", rapidJsonDocument);
 
 				// Mandatory and optional main sections of the material blueprint
 				// -> For ease-of-use the material blueprint is edited by the user in a resource-group-style containing all needed information
@@ -251,7 +235,7 @@ namespace RendererToolkit
 						static const uint32_t MAXIMUM_NUMBER_OF_SHADER_COMBINATIONS = 4;	// This is no technical limit. See "RendererRuntime::MaterialBlueprintResource" class documentation regarding shader combination explosion for background information.
 						if (numberOfShaderCombinationProperties > MAXIMUM_NUMBER_OF_SHADER_COMBINATIONS)
 						{
-							throw std::runtime_error("Material blueprint asset \"" + inputFilename + "\" is using " + std::to_string(numberOfShaderCombinationProperties) + " shader combination material properties. In order to prevent an shader combination explosion, only " + std::to_string(MAXIMUM_NUMBER_OF_SHADER_COMBINATIONS) + " shader combination material properties are allowed. If you know what you're doing, the child protection can be disabled by using \"AllowCrazyNumberOfShaderCombinations\"=\"TRUE\" inside the material blueprint asset compiler configuration.");
+							throw std::runtime_error("Material blueprint asset \"" + virtualInputFilename + "\" is using " + std::to_string(numberOfShaderCombinationProperties) + " shader combination material properties. In order to prevent an shader combination explosion, only " + std::to_string(MAXIMUM_NUMBER_OF_SHADER_COMBINATIONS) + " shader combination material properties are allowed. If you know what you're doing, the child protection can be disabled by using \"AllowCrazyNumberOfShaderCombinations\"=\"TRUE\" inside the material blueprint asset compiler configuration.");
 						}
 					}
 				}
@@ -297,7 +281,7 @@ namespace RendererToolkit
 			}
 
 			// Write LZ4 compressed output
-			memoryFile.writeLz4CompressedDataToFile(RendererRuntime::v1MaterialBlueprint::FORMAT_TYPE, RendererRuntime::v1MaterialBlueprint::FORMAT_VERSION, outputAssetFilename, input.context.getFileManager());
+			memoryFile.writeLz4CompressedDataToFile(RendererRuntime::v1MaterialBlueprint::FORMAT_TYPE, RendererRuntime::v1MaterialBlueprint::FORMAT_VERSION, virtualOutputAssetFilename, input.context.getFileManager());
 
 			// Store new cache entries or update existing ones
 			input.cacheManager.storeOrUpdateCacheEntries(cacheEntries);
@@ -306,7 +290,7 @@ namespace RendererToolkit
 		{ // Update the output asset package
 			const std::string assetCategory = rapidJsonValueAsset["AssetMetadata"]["AssetCategory"].GetString();
 			const std::string assetIdAsString = input.projectName + "/MaterialBlueprint/" + assetCategory + '/' + assetName;
-			outputAsset(input.context.getFileManager(), assetIdAsString, outputAssetFilename, outputAssetPackage);
+			outputAsset(input.context.getFileManager(), assetIdAsString, virtualOutputAssetFilename, *output.outputAssetPackage);
 		}
 	}
 

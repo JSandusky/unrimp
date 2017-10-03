@@ -85,20 +85,20 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
-		void getPipelineStateObjectCacheFilename(const RendererRuntime::IRendererRuntime& rendererRuntime, std::string& directoryName, std::string& filename)
+		void getPipelineStateObjectCacheFilename(const RendererRuntime::IRendererRuntime& rendererRuntime, std::string& virtualDirectoryName, std::string& virtualFilename)
 		{
-			directoryName = std::string(rendererRuntime.getFileManager().getAbsoluteLocalDataDirectoryName()) + "/PipelineStateObjectCache/";
-			filename = directoryName + rendererRuntime.getRenderer().getName() + ".pso_cache";
+			virtualDirectoryName = std::string(rendererRuntime.getFileManager().getLocalDataMountPoint()) + "/PipelineStateObjectCache";
+			virtualFilename = virtualDirectoryName + '/' + rendererRuntime.getRenderer().getName() + ".pso_cache";
 		}
 
 		bool loadPipelineStateObjectCacheFile(const RendererRuntime::IRendererRuntime& rendererRuntime, RendererRuntime::MemoryFile& memoryFile)
 		{
 			// Tell the memory mapped file about the LZ4 compressed data and decompress it at once
-			std::string directoryName;
-			std::string filename;
-			getPipelineStateObjectCacheFilename(rendererRuntime, directoryName, filename);
+			std::string virtualDirectoryName;
+			std::string virtualFilename;
+			getPipelineStateObjectCacheFilename(rendererRuntime, virtualDirectoryName, virtualFilename);
 			const RendererRuntime::IFileManager& fileManager = rendererRuntime.getFileManager();
-			if (fileManager.doesFileExist(filename.c_str()) && memoryFile.loadLz4CompressedDataFromFile(PipelineStateCache::FORMAT_TYPE, PipelineStateCache::FORMAT_VERSION, filename, fileManager))
+			if (fileManager.doesFileExist(virtualFilename.c_str()) && memoryFile.loadLz4CompressedDataFromFile(PipelineStateCache::FORMAT_TYPE, PipelineStateCache::FORMAT_VERSION, virtualFilename, fileManager))
 			{
 				memoryFile.decompress();
 
@@ -113,14 +113,14 @@ namespace
 
 		void savePipelineStateObjectCacheFile(const RendererRuntime::IRendererRuntime& rendererRuntime, const RendererRuntime::MemoryFile& memoryFile)
 		{
-			std::string directoryName;
-			std::string filename;
-			getPipelineStateObjectCacheFilename(rendererRuntime, directoryName, filename);
+			std::string virtualDirectoryName;
+			std::string virtualFilename;
+			getPipelineStateObjectCacheFilename(rendererRuntime, virtualDirectoryName, virtualFilename);
 			RendererRuntime::IFileManager& fileManager = rendererRuntime.getFileManager();
-			fileManager.createDirectories(directoryName.c_str());
-			if (!memoryFile.writeLz4CompressedDataToFile(PipelineStateCache::FORMAT_TYPE, PipelineStateCache::FORMAT_VERSION, filename, fileManager))
+			if ((fileManager.doesFileExist(virtualDirectoryName.c_str()) || fileManager.createDirectories(virtualDirectoryName.c_str())) &&
+				!memoryFile.writeLz4CompressedDataToFile(PipelineStateCache::FORMAT_TYPE, PipelineStateCache::FORMAT_VERSION, virtualFilename, fileManager))
 			{
-				RENDERER_LOG(rendererRuntime.getContext(), CRITICAL, "The renderer runtime failed to save the pipeline state object cache to \"%s\"", filename.c_str())
+				RENDERER_LOG(rendererRuntime.getContext(), CRITICAL, "The renderer runtime failed to save the pipeline state object cache to \"%s\"", virtualFilename.c_str())
 			}
 		}
 
@@ -334,7 +334,7 @@ namespace RendererRuntime
 		// Do only save the pipeline state object cache if writing local data is allowed
 		if (mRenderer->getCapabilities().shaderBytecode &&
 			(mShaderBlueprintResourceManager->doesPipelineStateObjectCacheNeedSaving() || mMaterialBlueprintResourceManager->doesPipelineStateObjectCacheNeedSaving()) &&
-			nullptr != mFileManager->getAbsoluteLocalDataDirectoryName())
+			nullptr != mFileManager->getLocalDataMountPoint())
 		{
 			MemoryFile memoryFile;
 			mShaderBlueprintResourceManager->savePipelineStateObjectCache(memoryFile);

@@ -35,10 +35,10 @@ namespace RendererRuntime
 		return *asset;
 	}
 
-	inline const char* AssetManager::tryGetAssetFilenameByAssetId(AssetId assetId) const
+	inline VirtualFilename AssetManager::tryGetVirtualFilenameByAssetId(AssetId assetId) const
 	{
 		const Asset* asset = tryGetAssetByAssetId(assetId);
-		return (nullptr != asset) ? asset->assetFilename : nullptr;
+		return (nullptr != asset) ? asset->virtualFilename : nullptr;
 	}
 
 

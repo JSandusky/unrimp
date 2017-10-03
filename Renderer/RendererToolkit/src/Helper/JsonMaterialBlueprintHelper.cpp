@@ -26,6 +26,7 @@
 #include "RendererToolkit/Helper/FileSystemHelper.h"
 #include "RendererToolkit/Helper/StringHelper.h"
 #include "RendererToolkit/Helper/JsonHelper.h"
+#include "RendererToolkit/Context.h"
 
 #include <RendererRuntime/Core/File/IFile.h>
 #include <RendererRuntime/Resource/ShaderBlueprint/Cache/ShaderProperties.h>
@@ -291,18 +292,18 @@ namespace RendererToolkit
 
 		// Read material blueprint asset compiler configuration
 		std::string materialBlueprintInputFile;
-		const std::string absoluteMaterialBlueprintAssetFilename = JsonHelper::getAbsoluteAssetFilename(input, materialBlueprintAssetId);
+		const std::string& virtualMaterialBlueprintAssetFilename = JsonHelper::getVirtualAssetFilename(input, materialBlueprintAssetId);
 		{
 			// Parse material blueprint asset JSON
 			rapidjson::Document rapidJsonDocumentMaterialBlueprintAsset;
-			JsonHelper::parseDocumentByFilename(rapidJsonDocumentMaterialBlueprintAsset, absoluteMaterialBlueprintAssetFilename, "Asset", "1");
+			JsonHelper::loadDocumentByFilename(input.context.getFileManager(), virtualMaterialBlueprintAssetFilename, "Asset", "1", rapidJsonDocumentMaterialBlueprintAsset);
 			materialBlueprintInputFile = rapidJsonDocumentMaterialBlueprintAsset["Asset"]["MaterialBlueprintAssetCompiler"]["InputFile"].GetString();
 		}
 
 		// Parse material blueprint JSON
-		const std::string absoluteMaterialBlueprintFilename = std_filesystem::path(absoluteMaterialBlueprintAssetFilename).parent_path().generic_string() + '/' + materialBlueprintInputFile;
+		const std::string virtualMaterialBlueprintFilename = std_filesystem::path(virtualMaterialBlueprintAssetFilename).parent_path().generic_string() + '/' + materialBlueprintInputFile;
 		rapidjson::Document rapidJsonDocument;
-		JsonHelper::parseDocumentByFilename(rapidJsonDocument, absoluteMaterialBlueprintFilename, "MaterialBlueprintAsset", "2");
+		JsonHelper::loadDocumentByFilename(input.context.getFileManager(), virtualMaterialBlueprintFilename, "MaterialBlueprintAsset", "2", rapidJsonDocument);
 		RendererRuntime::ShaderProperties visualImportanceOfShaderProperties;
 		RendererRuntime::ShaderProperties maximumIntegerValueOfShaderProperties;
 		readProperties(input, rapidJsonDocument["MaterialBlueprintAsset"]["Properties"], sortedMaterialPropertyVector, visualImportanceOfShaderProperties, maximumIntegerValueOfShaderProperties, true, true, materialPropertyIdToName);

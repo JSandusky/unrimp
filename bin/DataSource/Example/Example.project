@@ -8,7 +8,6 @@
 	{
 		"ProjectMetadata":
 		{
-			"Name": "Example",
 			"Copyright": "Copyright (c) 2012-2017 The Unrimp Team"
 		},
 		"AssetPackages": ["Content"],

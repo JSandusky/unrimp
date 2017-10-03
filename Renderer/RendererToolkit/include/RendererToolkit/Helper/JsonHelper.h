@@ -69,7 +69,7 @@ namespace RendererToolkit
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
 	public:
-		static void parseDocumentByFilename(rapidjson::Document& rapidJsonDocument, const std::string& absoluteFilename, const std::string& formatType, const std::string& formatVersion);
+		static void loadDocumentByFilename(const RendererRuntime::IFileManager& fileManager, const std::string& virtualFilename, const std::string& formatType, const std::string& formatVersion, rapidjson::Document& rapidJsonDocument);
 		static void optionalBooleanProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, bool& value);
 		static void optionalBooleanProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, int& value);
 		static void optionalByteProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, uint8_t& value);
@@ -95,7 +95,7 @@ namespace RendererToolkit
 		static void optionalCompiledAssetId(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValue, const char* propertyName, RendererRuntime::AssetId& compiledAssetId);
 		static RendererRuntime::AssetId getCompiledAssetId(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValue, const char* propertyName);
 		static Renderer::TextureFormat::Enum mandatoryTextureFormat(const rapidjson::Value& rapidJsonValue);
-		static std::string getAbsoluteAssetFilename(const IAssetCompiler::Input& input, uint32_t sourceAssetId);	// TODO(co) Move this elsewhere? (not JSON related)
+		static const std::string& getVirtualAssetFilename(const IAssetCompiler::Input& input, uint32_t sourceAssetId);	// TODO(co) Move this elsewhere? (not JSON related)
 
 
 	//[-------------------------------------------------------]

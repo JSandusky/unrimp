@@ -441,7 +441,7 @@ namespace RendererRuntime
 		*    combinations. The creation of all possible combinations is usually done at tool-time before shipping a product. Runtime pipeline state
 		*    compilation should only be the last resort for performance reasons, even if it's asynchronous.
 		*
-		*  @notes
+		*  @note
 		*    - The material blueprint resource must be fully loaded for this to work
 		*/
 		RENDERERRUNTIME_API_EXPORT void createPipelineStateCaches(bool mandatoryOnly);

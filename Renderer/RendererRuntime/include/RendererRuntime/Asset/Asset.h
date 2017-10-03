@@ -60,9 +60,9 @@ namespace RendererRuntime
 	{
 		static const uint32_t MAXIMUM_ASSET_FILENAME_LENGTH = 127;
 
-		AssetId  assetId;											///< Asset ID
-		uint64_t fileHash;											///< 64-bit FNV-1a hash of the asset file
-		char	 assetFilename[MAXIMUM_ASSET_FILENAME_LENGTH + 1];	///< Asset UTF-8 filename, +1 for the terminating zero
+		AssetId  assetId;												///< Asset ID
+		uint64_t fileHash;												///< 64-bit FNV-1a hash of the asset file
+		char	 virtualFilename[MAXIMUM_ASSET_FILENAME_LENGTH + 1];	///< Virtual asset UTF-8 filename inside the asset package, +1 for the terminating zero
 	};
 
 

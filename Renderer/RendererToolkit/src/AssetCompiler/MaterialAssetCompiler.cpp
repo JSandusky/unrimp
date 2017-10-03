@@ -86,45 +86,38 @@ namespace RendererToolkit
 	bool MaterialAssetCompiler::checkIfChanged(const Input& input, const Configuration& configuration) const
 	{
 		// Read in dependency files
-		std::vector<std::string> dependencyFiles;
-		const std::string inputFilename = input.assetInputDirectory + configuration.rapidJsonDocumentAsset["Asset"]["MaterialAssetCompiler"]["InputFile"].GetString();
-		JsonMaterialHelper::getDependencyFiles(input, inputFilename, dependencyFiles);
+		std::vector<std::string> virtualDependencyFilenames;
+		const std::string virtualInputFilename = input.virtualAssetInputDirectory + '/' + configuration.rapidJsonDocumentAsset["Asset"]["MaterialAssetCompiler"]["InputFile"].GetString();
+		JsonMaterialHelper::getDependencyFiles(input, virtualInputFilename, virtualDependencyFilenames);
 
 		// Let the cache manager check whether or not the files have been changed in order to speed up later checks and to support dependency tracking
-		return (input.cacheManager.checkIfFileIsModified(configuration.rendererTarget, input.assetFilename, {inputFilename}, RendererRuntime::v1Material::FORMAT_VERSION) || input.cacheManager.dependencyFilesChanged(dependencyFiles));
+		return (input.cacheManager.checkIfFileIsModified(configuration.rendererTarget, input.virtualAssetFilename, {virtualInputFilename}, RendererRuntime::v1Material::FORMAT_VERSION) || input.cacheManager.dependencyFilesChanged(virtualDependencyFilenames));
 	}
 
 	void MaterialAssetCompiler::compile(const Input& input, const Configuration& configuration, Output& output)
 	{
-		// Input, configuration and output
-		const std::string&			   assetInputDirectory	= input.assetInputDirectory;
-		const std::string&			   assetOutputDirectory	= input.assetOutputDirectory;
-		RendererRuntime::AssetPackage& outputAssetPackage	= *output.outputAssetPackage;
-
-		// Get the JSON asset object
+		// Get relevant data
 		const rapidjson::Value& rapidJsonValueAsset = configuration.rapidJsonDocumentAsset["Asset"];
-
-		// Open the input file
-		const std::string inputFilename = assetInputDirectory + rapidJsonValueAsset["MaterialAssetCompiler"]["InputFile"].GetString();
-		const std::string assetName = std_filesystem::path(input.assetFilename).stem().generic_string();
-		const std::string outputAssetFilename = assetOutputDirectory + assetName + ".material";
+		const std::string virtualInputFilename = input.virtualAssetInputDirectory + '/' + rapidJsonValueAsset["MaterialAssetCompiler"]["InputFile"].GetString();
+		const std::string assetName = std_filesystem::path(input.virtualAssetFilename).stem().generic_string();
+		const std::string virtualOutputAssetFilename = input.virtualAssetOutputDirectory + '/' + assetName + ".material";
 
 		// Read in dependency files
-		std::vector<std::string> dependencyFiles;
-		JsonMaterialHelper::getDependencyFiles(input, inputFilename, dependencyFiles);
+		std::vector<std::string> virtualDependencyFilenames;
+		JsonMaterialHelper::getDependencyFiles(input, virtualInputFilename, virtualDependencyFilenames);
 
 		// Ask the cache manager whether or not we need to compile the source file (e.g. source changed or target not there)
 		CacheManager::CacheEntries cacheEntries;
-		std::vector<std::string> inputFilenames;
-		inputFilenames.emplace_back(inputFilename);
-		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilenames, outputAssetFilename, RendererRuntime::v1Material::FORMAT_VERSION, cacheEntries) || input.cacheManager.dependencyFilesChanged(dependencyFiles))
+		std::vector<std::string> virtualInputFilenames;
+		virtualInputFilenames.emplace_back(virtualInputFilename);
+		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.virtualAssetFilename, virtualInputFilenames, virtualOutputAssetFilename, RendererRuntime::v1Material::FORMAT_VERSION, cacheEntries) || input.cacheManager.dependencyFilesChanged(virtualDependencyFilenames))
 		{
 			RendererRuntime::MemoryFile memoryFile(0, 1024);
 
 			{ // Material
 				// Parse JSON
 				rapidjson::Document rapidJsonDocument;
-				JsonHelper::parseDocumentByFilename(rapidJsonDocument, inputFilename, "MaterialAsset", "1");
+				JsonHelper::loadDocumentByFilename(input.context.getFileManager(), virtualInputFilename, "MaterialAsset", "1", rapidJsonDocument);
 				std::vector<RendererRuntime::v1Material::Technique> techniques;
 				RendererRuntime::MaterialProperties::SortedPropertyVector sortedMaterialPropertyVector;
 				JsonMaterialHelper::getTechniquesAndPropertiesByMaterialAssetId(input, rapidJsonDocument, techniques, sortedMaterialPropertyVector);
@@ -144,7 +137,7 @@ namespace RendererToolkit
 			}
 
 			// Write LZ4 compressed output
-			memoryFile.writeLz4CompressedDataToFile(RendererRuntime::v1Material::FORMAT_TYPE, RendererRuntime::v1Material::FORMAT_VERSION, outputAssetFilename, input.context.getFileManager());
+			memoryFile.writeLz4CompressedDataToFile(RendererRuntime::v1Material::FORMAT_TYPE, RendererRuntime::v1Material::FORMAT_VERSION, virtualOutputAssetFilename, input.context.getFileManager());
 
 			// Store new cache entries or update existing ones
 			input.cacheManager.storeOrUpdateCacheEntries(cacheEntries);
@@ -153,7 +146,7 @@ namespace RendererToolkit
 		{ // Update the output asset package
 			const std::string assetCategory = rapidJsonValueAsset["AssetMetadata"]["AssetCategory"].GetString();
 			const std::string assetIdAsString = input.projectName + "/Material/" + assetCategory + '/' + assetName;
-			outputAsset(input.context.getFileManager(), assetIdAsString, outputAssetFilename, outputAssetPackage);
+			outputAsset(input.context.getFileManager(), assetIdAsString, virtualOutputAssetFilename, *output.outputAssetPackage);
 		}
 	}
 

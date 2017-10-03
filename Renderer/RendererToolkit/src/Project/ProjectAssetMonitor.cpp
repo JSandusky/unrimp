@@ -23,7 +23,6 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/Project/ProjectAssetMonitor.h"
 #include "RendererToolkit/Project/ProjectImpl.h"
-#include "RendererToolkit/Helper/FileSystemHelper.h"
 
 #include <RendererRuntime/IRendererRuntime.h>
 #include <RendererRuntime/Core/Platform/PlatformManager.h>
@@ -190,7 +189,7 @@ namespace RendererToolkit
 		// Create the file watcher object
 		FW::FileWatcher fileWatcher;
 		detail::FileWatchListener fileWatchListener(*this);
-		const FW::WatchID watchID = fileWatcher.addWatch(mProjectImpl.getProjectDirectory(), &fileWatchListener, true);
+		const FW::WatchID watchID = fileWatcher.addWatch(mProjectImpl.getAbsoluteProjectDirectory(), &fileWatchListener, true);
 
 		// On startup we need to check for changes which were done while the project asset monitor wasn't running
 		mProjectImpl.compileAllAssets(mRendererTarget.c_str());

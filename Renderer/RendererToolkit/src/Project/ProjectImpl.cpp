@@ -43,6 +43,7 @@
 
 #include <RendererRuntime/IRendererRuntime.h>
 #include <RendererRuntime/Core/File/MemoryFile.h>
+#include <RendererRuntime/Core/File/IFileManager.h>
 #include <RendererRuntime/Core/Platform/PlatformManager.h>
 #include <RendererRuntime/Asset/Loader/AssetPackageFileFormat.h>
 
@@ -62,6 +63,7 @@ PRAGMA_WARNING_POP
 
 #include <cassert>
 #include <algorithm>
+#include <unordered_set>
 
 
 //[-------------------------------------------------------]
@@ -131,24 +133,25 @@ namespace RendererToolkit
 		mQualityStrategy(QualityStrategy::PRODUCTION),
 		mRapidJsonDocument(nullptr),
 		mProjectAssetMonitor(nullptr),
-		mShutdownThread(false)
+		mShutdownThread(false),
+		mCacheManager(nullptr)
 	{
 		mThread = std::thread(&ProjectImpl::threadWorker, this);
 
 		// Setup asset compilers map
 		// TODO(co) Currently this is fixed build in, later on me might want to have this dynamic so we can plugin additional asset compilers
-		mAssetCompilers.emplace(TextureAssetCompiler::TYPE_ID, std::make_unique<TextureAssetCompiler>(mContext));
-		mAssetCompilers.emplace(ShaderPieceAssetCompiler::TYPE_ID, std::make_unique<ShaderPieceAssetCompiler>());
-		mAssetCompilers.emplace(ShaderBlueprintAssetCompiler::TYPE_ID, std::make_unique<ShaderBlueprintAssetCompiler>());
-		mAssetCompilers.emplace(MaterialBlueprintAssetCompiler::TYPE_ID, std::make_unique<MaterialBlueprintAssetCompiler>());
-		mAssetCompilers.emplace(MaterialAssetCompiler::TYPE_ID, std::make_unique<MaterialAssetCompiler>());
-		mAssetCompilers.emplace(SkeletonAssetCompiler::TYPE_ID, std::make_unique<SkeletonAssetCompiler>());
-		mAssetCompilers.emplace(SkeletonAnimationAssetCompiler::TYPE_ID, std::make_unique<SkeletonAnimationAssetCompiler>());
-		mAssetCompilers.emplace(MeshAssetCompiler::TYPE_ID, std::make_unique<MeshAssetCompiler>());
-		mAssetCompilers.emplace(SceneAssetCompiler::TYPE_ID, std::make_unique<SceneAssetCompiler>());
-		mAssetCompilers.emplace(CompositorNodeAssetCompiler::TYPE_ID, std::make_unique<CompositorNodeAssetCompiler>());
-		mAssetCompilers.emplace(CompositorWorkspaceAssetCompiler::TYPE_ID, std::make_unique<CompositorWorkspaceAssetCompiler>());
-		mAssetCompilers.emplace(VertexAttributesAssetCompiler::TYPE_ID, std::make_unique<VertexAttributesAssetCompiler>());
+		mAssetCompilers.emplace(TextureAssetCompiler::TYPE_ID, new TextureAssetCompiler(mContext));
+		mAssetCompilers.emplace(ShaderPieceAssetCompiler::TYPE_ID, new ShaderPieceAssetCompiler());
+		mAssetCompilers.emplace(ShaderBlueprintAssetCompiler::TYPE_ID, new ShaderBlueprintAssetCompiler());
+		mAssetCompilers.emplace(MaterialBlueprintAssetCompiler::TYPE_ID, new MaterialBlueprintAssetCompiler());
+		mAssetCompilers.emplace(MaterialAssetCompiler::TYPE_ID, new MaterialAssetCompiler());
+		mAssetCompilers.emplace(SkeletonAssetCompiler::TYPE_ID, new SkeletonAssetCompiler());
+		mAssetCompilers.emplace(SkeletonAnimationAssetCompiler::TYPE_ID, new SkeletonAnimationAssetCompiler());
+		mAssetCompilers.emplace(MeshAssetCompiler::TYPE_ID, new MeshAssetCompiler());
+		mAssetCompilers.emplace(SceneAssetCompiler::TYPE_ID, new SceneAssetCompiler());
+		mAssetCompilers.emplace(CompositorNodeAssetCompiler::TYPE_ID, new CompositorNodeAssetCompiler());
+		mAssetCompilers.emplace(CompositorWorkspaceAssetCompiler::TYPE_ID, new CompositorWorkspaceAssetCompiler());
+		mAssetCompilers.emplace(VertexAttributesAssetCompiler::TYPE_ID, new VertexAttributesAssetCompiler());
 	}
 
 	ProjectImpl::~ProjectImpl()
@@ -158,21 +161,25 @@ namespace RendererToolkit
 		mThread.join();
 
 		// Clear
+		for (const auto& pair : mAssetCompilers)
+		{
+			delete pair.second;
+		}
 		clear();
 	}
 
-	const char* ProjectImpl::tryGetAssetFilenameByAssetId(RendererRuntime::AssetId assetId) const
+	RendererRuntime::VirtualFilename ProjectImpl::tryGetVirtualFilenameByAssetId(RendererRuntime::AssetId assetId) const
 	{
-		return mAssetPackage.tryGetAssetFilenameByAssetId(assetId);
+		return mAssetPackage.tryGetVirtualFilenameByAssetId(assetId);
 	}
 
 	bool ProjectImpl::checkAssetIsChanged(const RendererRuntime::Asset& asset, const char* rendererTarget)
 	{
-		const std::string assetFilename = mProjectDirectory + asset.assetFilename;
+		const std::string& virtualAssetFilename = asset.virtualFilename;
 
 		// Parse JSON
 		rapidjson::Document rapidJsonDocument;
-		JsonHelper::parseDocumentByFilename(rapidJsonDocument, assetFilename, "Asset", "1");
+		JsonHelper::loadDocumentByFilename(mContext.getFileManager(), virtualAssetFilename, "Asset", "1", rapidJsonDocument);
 
 		// Mandatory main sections of the asset
 		const rapidjson::Value& rapidJsonValueAsset = rapidJsonDocument["Asset"];
@@ -182,14 +189,14 @@ namespace RendererToolkit
 		// TODO(co) Add multi-threading support: Add compiler queue which is processed in the background, ensure compiler instances are reused
 
 		// Get the asset input directory and asset output directory
-		const std::string assetPackageInputDirectory = mProjectDirectory + mAssetPackageDirectoryName;
-		const std::string assetInputDirectory = std_filesystem::path(assetFilename).parent_path().generic_string() + '/';
+		const std::string virtualAssetPackageInputDirectory = mProjectName + '/' + mAssetPackageDirectoryName;
+		const std::string virtualAssetInputDirectory = std_filesystem::path(virtualAssetFilename).parent_path().generic_string();
 		const std::string assetType = rapidJsonValueAssetMetadata["AssetType"].GetString();
 		const std::string assetCategory = rapidJsonValueAssetMetadata["AssetCategory"].GetString();
-		const std::string assetOutputDirectory = "../" + getRenderTargetDataRootDirectory(rendererTarget) + mAssetPackageDirectoryName + assetType + '/' + assetCategory + '/';
+		const std::string virtualAssetOutputDirectory = getRenderTargetDataRootDirectory(rendererTarget) + '/' + mAssetPackageDirectoryName + '/' + assetType + '/' + assetCategory;
 
 		// Asset compiler input
-		IAssetCompiler::Input input(mContext, mProjectName, *mCacheManager.get(), assetPackageInputDirectory, assetFilename, assetInputDirectory, assetOutputDirectory, mSourceAssetIdToCompiledAssetId, mSourceAssetIdToAbsoluteFilename);
+		IAssetCompiler::Input input(mContext, mProjectName, *mCacheManager, virtualAssetPackageInputDirectory, virtualAssetFilename, virtualAssetInputDirectory, virtualAssetOutputDirectory, mSourceAssetIdToCompiledAssetId, mSourceAssetIdToVirtualFilename);
 
 		// Asset compiler configuration
 		AssetCompilers::const_iterator iterator = mAssetCompilers.find(AssetCompilerTypeId(assetType.c_str()));
@@ -207,11 +214,12 @@ namespace RendererToolkit
 	void ProjectImpl::compileAsset(const RendererRuntime::Asset& asset, const char* rendererTarget, RendererRuntime::AssetPackage& outputAssetPackage)
 	{
 		// Open the input stream
-		const std::string assetFilename = mProjectDirectory + asset.assetFilename;
+		const std::string& virtualAssetFilename = asset.virtualFilename;
 
 		// Parse JSON
 		rapidjson::Document rapidJsonDocument;
-		JsonHelper::parseDocumentByFilename(rapidJsonDocument, assetFilename, "Asset", "1");
+		const RendererRuntime::IFileManager& fileManager = mContext.getFileManager();
+		JsonHelper::loadDocumentByFilename(fileManager, virtualAssetFilename, "Asset", "1", rapidJsonDocument);
 
 		// Mandatory main sections of the asset
 		const rapidjson::Value& rapidJsonValueAsset = rapidJsonDocument["Asset"];
@@ -221,17 +229,17 @@ namespace RendererToolkit
 		// TODO(co) Add multi-threading support: Add compiler queue which is processed in the background, ensure compiler instances are reused
 
 		// Get the asset input directory and asset output directory
-		const std::string assetPackageInputDirectory = mProjectDirectory + mAssetPackageDirectoryName;
-		const std::string assetInputDirectory = std_filesystem::path(assetFilename).parent_path().generic_string() + '/';
+		const std::string virtualAssetPackageInputDirectory = mProjectName + '/' + mAssetPackageDirectoryName;
+		const std::string virtualAssetInputDirectory = std_filesystem::path(virtualAssetFilename).parent_path().generic_string();
 		const std::string assetType = rapidJsonValueAssetMetadata["AssetType"].GetString();
 		const std::string assetCategory = rapidJsonValueAssetMetadata["AssetCategory"].GetString();
-		const std::string assetOutputDirectory = "../" + getRenderTargetDataRootDirectory(rendererTarget) + mAssetPackageDirectoryName + assetType + '/' + assetCategory + '/';
+		const std::string virtualAssetOutputDirectory = getRenderTargetDataRootDirectory(rendererTarget) + '/' + mAssetPackageDirectoryName + '/' + assetType + '/' + assetCategory;
 
 		// Ensure that the asset output directory exists, else creating output file streams will fail
-		std_filesystem::create_directories(assetOutputDirectory);
+		fileManager.createDirectories(virtualAssetOutputDirectory.c_str());
 
 		// Asset compiler input
-		IAssetCompiler::Input input(mContext, mProjectName, *mCacheManager.get(), assetPackageInputDirectory, assetFilename, assetInputDirectory, assetOutputDirectory, mSourceAssetIdToCompiledAssetId, mSourceAssetIdToAbsoluteFilename);
+		IAssetCompiler::Input input(mContext, mProjectName, *mCacheManager, virtualAssetPackageInputDirectory, virtualAssetFilename, virtualAssetInputDirectory, virtualAssetOutputDirectory, mSourceAssetIdToCompiledAssetId, mSourceAssetIdToVirtualFilename);
 
 		// Asset compiler configuration
 		assert(nullptr != mRapidJsonDocument);
@@ -257,7 +265,7 @@ namespace RendererToolkit
 		}
 		catch (const std::exception& e)
 		{
-			throw std::runtime_error("Failed to compile asset with filename \"" + std::string(asset.assetFilename) + "\": " + std::string(e.what()));
+			throw std::runtime_error("Failed to compile asset with filename \"" + std::string(asset.virtualFilename) + "\": " + std::string(e.what()));
 		}
 
 		// Save renderer toolkit cache
@@ -307,22 +315,30 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public virtual RendererToolkit::IProject methods      ]
 	//[-------------------------------------------------------]
-	void ProjectImpl::loadByFilename(const char* filename)
+	void ProjectImpl::load(RendererRuntime::AbsoluteDirectoryName absoluteProjectDirectoryName)
 	{
 		// Clear the previous project
 		clear();
 
+		{ // Get the project name
+			mAbsoluteProjectDirectory = std::string(absoluteProjectDirectoryName);
+			const size_t lastSlash = mAbsoluteProjectDirectory.find_last_of("/");
+			mProjectName = (std::string::npos != lastSlash) ? mAbsoluteProjectDirectory.substr(lastSlash + 1) : mAbsoluteProjectDirectory;
+		}
+
+		// Mount project read-only data source file system directory
+		RendererRuntime::IFileManager& fileManager = mContext.getFileManager();
+		fileManager.mountDirectory(absoluteProjectDirectoryName, mProjectName.c_str());
+
 		// Parse JSON
 		rapidjson::Document rapidJsonDocument;
-		JsonHelper::parseDocumentByFilename(rapidJsonDocument, filename, "Project", "1");
+		JsonHelper::loadDocumentByFilename(fileManager, mProjectName + '/' + mProjectName + ".project", "Project", "1", rapidJsonDocument);
 
 		// Read project metadata
 		const rapidjson::Value& rapidJsonValueProject = rapidJsonDocument["Project"];
-		mProjectName = rapidJsonValueProject["ProjectMetadata"]["Name"].GetString();
 
 		{ // Read project data
-			mProjectDirectory = std_filesystem::path(filename).parent_path().generic_string() + '/';
-			RENDERER_LOG(mContext, INFORMATION, "Gather asset from %s...", mProjectDirectory.c_str())
+			RENDERER_LOG(mContext, INFORMATION, "Gather asset from %s...", mAbsoluteProjectDirectory.c_str())
 			{ // Asset packages
 				const rapidjson::Value& rapidJsonValueAssetPackages = rapidJsonValueProject["AssetPackages"];
 				if (rapidJsonValueAssetPackages.Size() > 1)
@@ -331,17 +347,30 @@ namespace RendererToolkit
 				}
 				for (rapidjson::SizeType i = 0; i < rapidJsonValueAssetPackages.Size(); ++i)
 				{
-					readAssetPackageByDirectory(std::string(rapidJsonValueAssetPackages[i].GetString()) + '/');
+					readAssetPackageByDirectory(std::string(rapidJsonValueAssetPackages[i].GetString()));
 				}
 			}
 			readTargetsByFilename(rapidJsonValueProject["TargetsFilename"].GetString());
 			::detail::optionalQualityStrategy(rapidJsonValueProject, "QualityStrategy", mQualityStrategy);
 			RENDERER_LOG(mContext, INFORMATION, "Found %u assets", mAssetPackage.getSortedAssetVector().size())
-
-			// Setup project folder for cache manager, it will store there its data
-			// TODO(sw) For now only prototype. Change this.
-			mCacheManager = std::make_unique<CacheManager>(mContext, mProjectName);
 		}
+
+		{ // Mount project read/write file system directories
+			const rapidjson::Value& rapidJsonValueRendererTargets = (*mRapidJsonDocument)["Targets"]["RendererTargets"];
+			std::unordered_set<std::string> renderTargetDataRootDirectories;
+			for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorRenderTarget = rapidJsonValueRendererTargets.MemberBegin(); rapidJsonMemberIteratorRenderTarget != rapidJsonValueRendererTargets.MemberEnd(); ++rapidJsonMemberIteratorRenderTarget)
+			{
+				renderTargetDataRootDirectories.insert(getRenderTargetDataRootDirectory(rapidJsonMemberIteratorRenderTarget->name.GetString()));
+			}
+			const std::string& relativeRootDirectory = fileManager.getRelativeRootDirectory();
+			for (const std::string& renderTargetDataRootDirectory : renderTargetDataRootDirectories)
+			{
+				fileManager.mountDirectory((relativeRootDirectory + '/' + renderTargetDataRootDirectory).c_str(), renderTargetDataRootDirectory.c_str());
+			}
+		}
+
+		// Setup project folder for cache manager, it will store there its data
+		mCacheManager = new CacheManager(mContext, mProjectName);
 	}
 
 	void ProjectImpl::compileAllAssets(const char* rendererTarget)
@@ -397,7 +426,7 @@ namespace RendererToolkit
 			memoryFile.write(sortedAssetVector.data(), sizeof(RendererRuntime::Asset) * sortedAssetVector.size());
 
 			// Write LZ4 compressed output
-			memoryFile.writeLz4CompressedDataToFile(RendererRuntime::StringId("AssetPackage"), RendererRuntime::v1AssetPackage::FORMAT_VERSION, "../" + getRenderTargetDataRootDirectory(rendererTarget) + mAssetPackageDirectoryName + "AssetPackage.assets", mContext.getFileManager());
+			memoryFile.writeLz4CompressedDataToFile(RendererRuntime::StringId("AssetPackage"), RendererRuntime::v1AssetPackage::FORMAT_VERSION, getRenderTargetDataRootDirectory(rendererTarget) + '/' + mAssetPackageDirectoryName + "/AssetPackage.assets", mContext.getFileManager());
 		}
 
 		// Compilation run finished clear internal caches/states
@@ -427,14 +456,15 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	void ProjectImpl::clear()
 	{
+		// TODO(co) Add support for file system directory unmounting
 		shutdownAssetMonitor();
 		mProjectName.clear();
 		mQualityStrategy = QualityStrategy::PRODUCTION;
-		mProjectDirectory.clear();
+		mAbsoluteProjectDirectory.clear();
 		mAssetPackage.clear();
 		mAssetPackageDirectoryName.clear();
 		mSourceAssetIdToCompiledAssetId.clear();
-		mSourceAssetIdToAbsoluteFilename.clear();
+		mSourceAssetIdToVirtualFilename.clear();
 		if (nullptr != mRapidJsonDocument)
 		{
 			delete mRapidJsonDocument;
@@ -444,12 +474,12 @@ namespace RendererToolkit
 
 	void ProjectImpl::readAssetPackageByDirectory(const std::string& directoryName)
 	{
-		// Get the asset package name (includes "/" at the end)
+		// Get the asset package name
 		mAssetPackageDirectoryName = directoryName;
 
 		// Discover assets
 		RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = mAssetPackage.getWritableSortedAssetVector();
-		const std::string absoluteDirectoryName = mProjectDirectory + directoryName;
+		const std::string absoluteDirectoryName = mAbsoluteProjectDirectory + '/' + directoryName;
 		for (auto& iterator: std_filesystem::recursive_directory_iterator(absoluteDirectoryName))
 		{
 			if (std_filesystem::is_regular_file(iterator))
@@ -457,20 +487,19 @@ namespace RendererToolkit
 				std::string assetIdAsString = iterator.path().generic_string();
 				if (StringHelper::isSourceAssetIdAsString(assetIdAsString))
 				{
-					assetIdAsString.erase(0, absoluteDirectoryName.length());
-
 					// Get asset data
-					const std::string assetFilename = mAssetPackageDirectoryName + assetIdAsString;
-					if (assetFilename.length() > RendererRuntime::Asset::MAXIMUM_ASSET_FILENAME_LENGTH)
+					assetIdAsString.erase(0, absoluteDirectoryName.length() + 1);
+					const std::string virtualAssetFilename = mProjectName + '/' + mAssetPackageDirectoryName + '/' + assetIdAsString;
+					if (virtualAssetFilename.length() > RendererRuntime::Asset::MAXIMUM_ASSET_FILENAME_LENGTH)
 					{
-						const std::string message = "Asset filename \"" + assetFilename + "\" is too long. Maximum allowed asset filename number of bytes is " + std::to_string(RendererRuntime::Asset::MAXIMUM_ASSET_FILENAME_LENGTH);
+						const std::string message = "Asset filename \"" + virtualAssetFilename + "\" is too long. Maximum allowed asset filename number of bytes is " + std::to_string(RendererRuntime::Asset::MAXIMUM_ASSET_FILENAME_LENGTH);
 						throw std::runtime_error(message);
 					}
 
 					// Copy asset data
 					RendererRuntime::Asset asset;
 					asset.assetId = StringHelper::getSourceAssetIdByString(assetIdAsString.c_str());
-					strcpy(asset.assetFilename, assetFilename.c_str());
+					strcpy(asset.virtualFilename, virtualAssetFilename.c_str());
 					sortedAssetVector.push_back(asset);
 				}
 			}
@@ -481,17 +510,14 @@ namespace RendererToolkit
 		buildSourceAssetIdToCompiledAssetId();
 	}
 
-	void ProjectImpl::readTargetsByFilename(const std::string& filename)
+	void ProjectImpl::readTargetsByFilename(const std::string& relativeFilename)
 	{
-		// Open the input stream
-		const std::string absoluteFilename = mProjectDirectory + filename;
-
 		// Parse JSON
 		if (nullptr == mRapidJsonDocument)
 		{
 			mRapidJsonDocument = new rapidjson::Document();
 		}
-		JsonHelper::parseDocumentByFilename(*mRapidJsonDocument, absoluteFilename, "Targets", "1");
+		JsonHelper::loadDocumentByFilename(mContext.getFileManager(), mProjectName + '/' + relativeFilename, "Targets", "1", *mRapidJsonDocument);
 	}
 
 	std::string ProjectImpl::getRenderTargetDataRootDirectory(const char* rendererTarget) const
@@ -499,13 +525,13 @@ namespace RendererToolkit
 		assert(nullptr != mRapidJsonDocument);
 		const rapidjson::Value& rapidJsonValueRendererTargets = (*mRapidJsonDocument)["Targets"]["RendererTargets"];
 		const rapidjson::Value& rapidJsonValueRendererTarget = rapidJsonValueRendererTargets[rendererTarget];
-		return "Data" + std::string(rapidJsonValueRendererTarget["Platform"].GetString()) + '/';
+		return "Data" + std::string(rapidJsonValueRendererTarget["Platform"].GetString());
 	}
 
 	void ProjectImpl::buildSourceAssetIdToCompiledAssetId()
 	{
 		assert(0 == mSourceAssetIdToCompiledAssetId.size());
-		assert(0 == mSourceAssetIdToAbsoluteFilename.size());
+		assert(0 == mSourceAssetIdToVirtualFilename.size());
 
 		const RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = mAssetPackage.getSortedAssetVector();
 		const size_t numberOfAssets = sortedAssetVector.size();
@@ -513,12 +539,10 @@ namespace RendererToolkit
 		{
 			const RendererRuntime::Asset& asset = sortedAssetVector[i];
 
-			// Open the input stream
-			const std::string absoluteAssetFilename = mProjectDirectory + asset.assetFilename;
-
 			// Parse JSON
 			rapidjson::Document rapidJsonDocument;
-			JsonHelper::parseDocumentByFilename(rapidJsonDocument, absoluteAssetFilename, "Asset", "1");
+			const std::string& virtualFilename = asset.virtualFilename;
+			JsonHelper::loadDocumentByFilename(mContext.getFileManager(), virtualFilename, "Asset", "1", rapidJsonDocument);
 
 			// Mandatory main sections of the asset
 			const rapidjson::Value& rapidJsonValueAsset = rapidJsonDocument["Asset"];
@@ -527,14 +551,14 @@ namespace RendererToolkit
 			// Get the relevant asset metadata parts
 			const std::string assetCategory = rapidJsonValueAssetMetadata["AssetCategory"].GetString();
 			const std::string assetType = rapidJsonValueAssetMetadata["AssetType"].GetString();
-			const std::string assetName = std_filesystem::path(asset.assetFilename).stem().generic_string();
+			const std::string assetName = std_filesystem::path(virtualFilename).stem().generic_string();
 
 			// Construct the asset ID as string
 			const std::string compiledAssetIdAsString = mProjectName + '/' + assetType + '/' + assetCategory + '/' + assetName;
 
 			// Hash the asset ID and put it into the map
 			mSourceAssetIdToCompiledAssetId.emplace(asset.assetId, RendererRuntime::StringId(compiledAssetIdAsString.c_str()));
-			mSourceAssetIdToAbsoluteFilename.emplace(asset.assetId, mProjectDirectory + asset.assetFilename);
+			mSourceAssetIdToVirtualFilename.emplace(asset.assetId, virtualFilename);
 		}
 	}
 

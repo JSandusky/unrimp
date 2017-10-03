@@ -155,6 +155,12 @@ Standalone renderer examples.
 		- Virtual reality (VR)
 
 
+== Dependencies ==
+- Renderer runtime
+- Renderer toolkit for hot-reloading support
+- PhysicsFS (directly compiled and linked in)
+
+
 == Preprocessor Definitions ==
 For only supporting a particular renderer:
 - "RENDERER_ONLY_NULL":			 Do only support Null

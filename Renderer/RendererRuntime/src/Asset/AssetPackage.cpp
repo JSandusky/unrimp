@@ -72,14 +72,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	void AssetPackage::addAsset(AssetId assetId, const char* assetFilename)
+	void AssetPackage::addAsset(AssetId assetId, VirtualFilename virtualFilename)
 	{
 		assert(nullptr == tryGetAssetByAssetId(assetId) && "Asset ID is already used");
-		assert((strlen(assetFilename) <= Asset::MAXIMUM_ASSET_FILENAME_LENGTH) && "The asset filename is too long");
+		assert((strlen(virtualFilename) <= Asset::MAXIMUM_ASSET_FILENAME_LENGTH) && "The asset filename is too long");
 		SortedAssetVector::const_iterator iterator = std::lower_bound(mSortedAssetVector.cbegin(), mSortedAssetVector.cend(), assetId, ::detail::OrderByAssetId());
 		Asset& asset = *mSortedAssetVector.insert(iterator, Asset());
 		asset.assetId = assetId;
-		strncpy(asset.assetFilename, assetFilename, Asset::MAXIMUM_ASSET_FILENAME_LENGTH);
+		strncpy(asset.virtualFilename, virtualFilename, Asset::MAXIMUM_ASSET_FILENAME_LENGTH);
 	}
 
 	const Asset* AssetPackage::tryGetAssetByAssetId(AssetId assetId) const
@@ -92,7 +92,7 @@ namespace RendererRuntime
 	{
 		for (const Asset& asset : mSortedAssetVector)
 		{
-			if (Math::calculateFileFNV1a64ByFilename(fileManager, asset.assetFilename) != asset.fileHash)
+			if (Math::calculateFileFNV1a64ByVirtualFilename(fileManager, asset.virtualFilename) != asset.fileHash)
 			{
 				// Invalid integrity
 				return false;

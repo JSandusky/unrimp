@@ -70,6 +70,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/glm/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/utf8cpp)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/ImGui/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/OpenVR/include/)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/PhysicsFS/include/)
 
 
 ##################################################
@@ -77,6 +78,13 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/OpenVR/include/)
 ##################################################
 # Cross-platform source codes
 set(SOURCE_CODES
+	# PhysicsFS external library
+	${CMAKE_CURRENT_SOURCE_DIR}/../../External/PhysicsFS/src/physfs.c
+	${CMAKE_CURRENT_SOURCE_DIR}/../../External/PhysicsFS/src/physfs_archiver_7z.c
+	${CMAKE_CURRENT_SOURCE_DIR}/../../External/PhysicsFS/src/physfs_archiver_dir.c
+	${CMAKE_CURRENT_SOURCE_DIR}/../../External/PhysicsFS/src/physfs_archiver_unpacked.c
+	${CMAKE_CURRENT_SOURCE_DIR}/../../External/PhysicsFS/src/physfs_byteorder.c
+	${CMAKE_CURRENT_SOURCE_DIR}/../../External/PhysicsFS/src/physfs_unicode.c
 	# Cross-platform source codes
 	src/Advanced/FirstGpgpu/FirstGpgpu.cpp
 	src/Advanced/IcosahedronTessellation/IcosahedronTessellation.cpp
@@ -107,6 +115,8 @@ if(WIN32)
 		${SOURCE_CODES}
 		src/Framework/ApplicationImplWindows.cpp
 		src/PrecompiledHeader.cpp
+		# PhysicsFS external library
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/PhysicsFS/src/physfs_platform_windows.c
 	)
 elseif(UNIX)
 	# Linux source codes
@@ -115,6 +125,8 @@ elseif(UNIX)
 		src/Framework/ApplicationImplLinux.cpp
 		src/Framework/X11Window.cpp
 		src/Framework/X11Application.cpp
+		# PhysicsFS external library
+		${CMAKE_CURRENT_SOURCE_DIR}/../../External/PhysicsFS/src/physfs_platform_posix.c
 	)
 endif()
 if(RENDERER_RUNTIME)

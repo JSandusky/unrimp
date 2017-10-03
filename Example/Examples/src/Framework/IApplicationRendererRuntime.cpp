@@ -43,6 +43,7 @@
 #endif
 
 #include <RendererRuntime/Public/RendererRuntimeInstance.h>
+#include <RendererRuntime/Core/File/PhysicsFSFileManager.h>
 #include <RendererRuntime/Core/File/StdFileManager.h>
 #include <RendererRuntime/Asset/AssetManager.h>
 #include <RendererRuntime/Context.h>
@@ -114,7 +115,8 @@ void IApplicationRendererRuntime::onInitialization()
 	if (nullptr != renderer)
 	{
 		// Create the renderer runtime instance
-		mFileManager = new RendererRuntime::StdFileManager(renderer->getContext().getLog());
+		mFileManager = new RendererRuntime::StdFileManager(renderer->getContext().getLog(), "..");
+//		mFileManager = new RendererRuntime::PhysicsFSFileManager(renderer->getContext().getLog(), "..");	// TODO(co) Use PhysicsFS
 		mRendererRuntimeContext = new RendererRuntime::Context(*renderer, *mFileManager);
 		mRendererRuntimeInstance = new RendererRuntime::RendererRuntimeInstance(*mRendererRuntimeContext);
 
@@ -122,17 +124,10 @@ void IApplicationRendererRuntime::onInitialization()
 			RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
 			if (nullptr != rendererRuntime)
 			{
-				// TODO(co) Under construction: Will probably become "mount asset package"
 				// Add used asset package
 				const bool rendererIsOpenGLES = (0 == strcmp(renderer->getName(), "OpenGLES3"));
-				if (rendererIsOpenGLES)
-				{
-					rendererRuntime->getAssetManager().addAssetPackageByFilename("Example/Content", "../DataMobile/Content/AssetPackage.assets");
-				}
-				else
-				{
-					rendererRuntime->getAssetManager().addAssetPackageByFilename("Example/Content", "../DataPc/Content/AssetPackage.assets");
-				}
+				mFileManager->mountDirectory(rendererIsOpenGLES ? "../DataMobile/Content" : "../DataPc/Content", "Example");
+				rendererRuntime->getAssetManager().addAssetPackageByFilename("Example/Content", "Example/AssetPackage.assets");
 				rendererRuntime->loadPipelineStateObjectCache();
 
 				#ifdef SHARED_LIBRARIES
@@ -146,15 +141,8 @@ void IApplicationRendererRuntime::onInitialization()
 						{
 							try
 							{
-								mProject->loadByFilename("../DataSource/Example.project");
-								if (rendererIsOpenGLES)
-								{
-									mProject->startupAssetMonitor(*rendererRuntime, "OpenGLES3_300");
-								}
-								else
-								{
-									mProject->startupAssetMonitor(*rendererRuntime, "Direct3D11_50");
-								}
+								mProject->load("../DataSource/Example");
+								mProject->startupAssetMonitor(*rendererRuntime, rendererIsOpenGLES ? "OpenGLES3_300" : "Direct3D11_50");
 							}
 							catch (const std::exception& e)
 							{
@@ -184,6 +172,7 @@ void IApplicationRendererRuntime::onDeinitialization()
 	delete mRendererRuntimeContext;
 	mRendererRuntimeContext = nullptr;
 	delete static_cast<RendererRuntime::StdFileManager*>(mFileManager);
+//	delete static_cast<RendererRuntime::PhysicsFSFileManager*>(mFileManager);	// TODO(co) Use PhysicsFS
 	mFileManager = nullptr;
 	#ifdef SHARED_LIBRARIES
 		if (nullptr != mProject)

@@ -54,7 +54,7 @@ namespace RendererRuntime
 		// Load the render model texture
 		vr::IVRRenderModels* vrRenderModels = vr::VRRenderModels();
 		vr::EVRRenderModelError vrRenderModelError = vr::VRRenderModelError_Loading;
-		const vr::TextureID_t diffuseTextureId = static_cast<vr::TextureID_t>(std::atoi(getAsset().assetFilename));
+		const vr::TextureID_t diffuseTextureId = static_cast<vr::TextureID_t>(std::atoi(getAsset().virtualFilename));
 		while (vrRenderModelError == vr::VRRenderModelError_Loading)
 		{
 			vrRenderModelError = vrRenderModels->LoadTexture_Async(diffuseTextureId, &mVrRenderModelTextureMap);
@@ -98,7 +98,7 @@ namespace RendererRuntime
 			// Create the renderer texture instance
 			const bool rgbHardwareGammaCorrection = true;	// TODO(co) It must be possible to set the property name from the outside: Ask the material blueprint whether or not hardware gamma correction should be used
 			texture2D = mRendererRuntime.getTextureManager().createTexture2D(mVrRenderModelTextureMap->unWidth, mVrRenderModelTextureMap->unHeight, rgbHardwareGammaCorrection ? Renderer::TextureFormat::R8G8B8A8_SRGB : Renderer::TextureFormat::R8G8B8A8, static_cast<const void*>(mVrRenderModelTextureMap->rubTextureMapData), Renderer::TextureFlag::GENERATE_MIPMAPS);
-			RENDERER_SET_RESOURCE_DEBUG_NAME(texture2D, getAsset().assetFilename)
+			RENDERER_SET_RESOURCE_DEBUG_NAME(texture2D, getAsset().virtualFilename)
 
 			// Free the render model texture
 			vr::VRRenderModels()->FreeTexture(mVrRenderModelTextureMap);
