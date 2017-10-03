@@ -1354,9 +1354,6 @@
     <ClCompile Include="..\..\External\crunch\src\crn_console.cpp">
       <Filter>External\crunch\console</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\External\crunch\src\crn_hash_map.cpp">
-      <Filter>External\crunch\containers</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\External\crunch\src\crn_sparse_bit_array.cpp">
       <Filter>External\crunch\containers</Filter>
     </ClCompile>

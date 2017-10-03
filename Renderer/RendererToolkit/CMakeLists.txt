@@ -82,7 +82,6 @@ set(SOURCE_CODES
 		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_colorized_console.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_console.cpp
 		# containers
-		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_hash_map.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_sparse_bit_array.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_value.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/src/crn_vector.cpp
