@@ -61,11 +61,6 @@ PRAGMA_WARNING_PUSH
 PRAGMA_WARNING_POP
 
 #include <cassert>
-// Disable warnings in external headers, we can't fix them
-PRAGMA_WARNING_PUSH
-	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'initializing': conversion from 'int' to '::size_t', signed/unsigned mismatch
-	#include <fstream>
-PRAGMA_WARNING_POP
 #include <algorithm>
 
 
@@ -174,11 +169,10 @@ namespace RendererToolkit
 	bool ProjectImpl::checkAssetIsChanged(const RendererRuntime::Asset& asset, const char* rendererTarget)
 	{
 		const std::string assetFilename = mProjectDirectory + asset.assetFilename;
-		std::ifstream inputFileStream(assetFilename, std::ios::binary);
 
 		// Parse JSON
 		rapidjson::Document rapidJsonDocument;
-		JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, assetFilename, "Asset", "1");
+		JsonHelper::parseDocumentByFilename(rapidJsonDocument, assetFilename, "Asset", "1");
 
 		// Mandatory main sections of the asset
 		const rapidjson::Value& rapidJsonValueAsset = rapidJsonDocument["Asset"];
@@ -214,11 +208,10 @@ namespace RendererToolkit
 	{
 		// Open the input stream
 		const std::string assetFilename = mProjectDirectory + asset.assetFilename;
-		std::ifstream inputFileStream(assetFilename, std::ios::binary);
 
 		// Parse JSON
 		rapidjson::Document rapidJsonDocument;
-		JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, assetFilename, "Asset", "1");
+		JsonHelper::parseDocumentByFilename(rapidJsonDocument, assetFilename, "Asset", "1");
 
 		// Mandatory main sections of the asset
 		const rapidjson::Value& rapidJsonValueAsset = rapidJsonDocument["Asset"];
@@ -319,12 +312,9 @@ namespace RendererToolkit
 		// Clear the previous project
 		clear();
 
-		// Open the input stream
-		std::ifstream inputFileStream(filename, std::ios::binary);
-
 		// Parse JSON
 		rapidjson::Document rapidJsonDocument;
-		JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, filename, "Project", "1");
+		JsonHelper::parseDocumentByFilename(rapidJsonDocument, filename, "Project", "1");
 
 		// Read project metadata
 		const rapidjson::Value& rapidJsonValueProject = rapidJsonDocument["Project"];
@@ -495,14 +485,13 @@ namespace RendererToolkit
 	{
 		// Open the input stream
 		const std::string absoluteFilename = mProjectDirectory + filename;
-		std::ifstream inputFileStream(absoluteFilename, std::ios::binary);
 
 		// Parse JSON
 		if (nullptr == mRapidJsonDocument)
 		{
 			mRapidJsonDocument = new rapidjson::Document();
 		}
-		JsonHelper::parseDocumentByInputFileStream(*mRapidJsonDocument, inputFileStream, absoluteFilename, "Targets", "1");
+		JsonHelper::parseDocumentByFilename(*mRapidJsonDocument, absoluteFilename, "Targets", "1");
 	}
 
 	std::string ProjectImpl::getRenderTargetDataRootDirectory(const char* rendererTarget) const
@@ -526,11 +515,10 @@ namespace RendererToolkit
 
 			// Open the input stream
 			const std::string absoluteAssetFilename = mProjectDirectory + asset.assetFilename;
-			std::ifstream inputFileStream(absoluteAssetFilename, std::ios::binary);
 
 			// Parse JSON
 			rapidjson::Document rapidJsonDocument;
-			JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, absoluteAssetFilename, "Asset", "1");
+			JsonHelper::parseDocumentByFilename(rapidJsonDocument, absoluteAssetFilename, "Asset", "1");
 
 			// Mandatory main sections of the asset
 			const rapidjson::Value& rapidJsonValueAsset = rapidJsonDocument["Asset"];

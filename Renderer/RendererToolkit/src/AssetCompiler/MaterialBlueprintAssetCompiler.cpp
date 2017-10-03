@@ -48,12 +48,6 @@ PRAGMA_WARNING_PUSH
 	#include <rapidjson/document.h>
 PRAGMA_WARNING_POP
 
-// Disable warnings in external headers, we can't fix them
-PRAGMA_WARNING_PUSH
-	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'initializing': conversion from 'int' to '::size_t', signed/unsigned mismatch
-	#include <fstream>
-PRAGMA_WARNING_POP
-
 
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]
@@ -218,13 +212,12 @@ namespace RendererToolkit
 		CacheManager::CacheEntries cacheEntries;
 		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1MaterialBlueprint::FORMAT_VERSION, cacheEntries))
 		{
-			std::ifstream inputFileStream(inputFilename, std::ios::binary);
 			RendererRuntime::MemoryFile memoryFile(0, 4096);
 
 			{ // Material blueprint
 				// Parse JSON
 				rapidjson::Document rapidJsonDocument;
-				JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, inputFilename, "MaterialBlueprintAsset", "2");
+				JsonHelper::parseDocumentByFilename(rapidJsonDocument, inputFilename, "MaterialBlueprintAsset", "2");
 
 				// Mandatory and optional main sections of the material blueprint
 				// -> For ease-of-use the material blueprint is edited by the user in a resource-group-style containing all needed information

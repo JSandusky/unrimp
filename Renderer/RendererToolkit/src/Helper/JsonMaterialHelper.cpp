@@ -41,11 +41,6 @@ PRAGMA_WARNING_PUSH
 	#include <rapidjson/document.h>
 PRAGMA_WARNING_POP
 
-// Disable warnings in external headers, we can't fix them
-PRAGMA_WARNING_PUSH
-	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'initializing': conversion from 'int' to '::size_t', signed/unsigned mismatch
-	#include <fstream>
-PRAGMA_WARNING_POP
 #include <algorithm>
 
 
@@ -590,17 +585,15 @@ namespace RendererToolkit
 		const std::string absoluteMaterialAssetFilename = JsonHelper::getAbsoluteAssetFilename(input, materialAssetId);
 		{
 			// Parse material asset JSON
-			std::ifstream materialAssetInputFileStream(absoluteMaterialAssetFilename, std::ios::binary);
 			rapidjson::Document rapidJsonDocumentMaterialAsset;
-			JsonHelper::parseDocumentByInputFileStream(rapidJsonDocumentMaterialAsset, materialAssetInputFileStream, absoluteMaterialAssetFilename, "Asset", "1");
+			JsonHelper::parseDocumentByFilename(rapidJsonDocumentMaterialAsset, absoluteMaterialAssetFilename, "Asset", "1");
 			materialInputFile = rapidJsonDocumentMaterialAsset["Asset"]["MaterialAssetCompiler"]["InputFile"].GetString();
 		}
 
 		// Parse material JSON
 		const std::string absoluteMaterialFilename = std_filesystem::path(absoluteMaterialAssetFilename).parent_path().generic_string() + '/' + materialInputFile;
-		std::ifstream materialInputFileStream(absoluteMaterialFilename, std::ios::binary);
 		rapidjson::Document rapidJsonDocument;
-		JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, materialInputFileStream, absoluteMaterialFilename, "MaterialAsset", "1");
+		JsonHelper::parseDocumentByFilename(rapidJsonDocument, absoluteMaterialFilename, "MaterialAsset", "1");
 		std::vector<RendererRuntime::v1Material::Technique> temporaryTechniques;
 		getTechniquesAndPropertiesByMaterialAssetId(input, rapidJsonDocument, (nullptr != techniques) ? *techniques : temporaryTechniques, sortedMaterialPropertyVector);
 	}
@@ -609,8 +602,7 @@ namespace RendererToolkit
 	{
 		// Parse JSON
 		rapidjson::Document rapidJsonDocument;
-		std::ifstream inputFileStream(inputFilename, std::ios::binary);
-		JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, inputFilename, "MaterialAsset", "1");
+		JsonHelper::parseDocumentByFilename(rapidJsonDocument, inputFilename, "MaterialAsset", "1");
 
 		// Optional base material
 		// -> Named toolkit time base material and not parent material by intent to not intermix it with the dynamic runtime parent material

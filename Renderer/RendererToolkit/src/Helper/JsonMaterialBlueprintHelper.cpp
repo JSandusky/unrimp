@@ -45,11 +45,6 @@ PRAGMA_WARNING_PUSH
 	#include <rapidjson/document.h>
 PRAGMA_WARNING_POP
 
-// Disable warnings in external headers, we can't fix them
-PRAGMA_WARNING_PUSH
-	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'initializing': conversion from 'int' to '::size_t', signed/unsigned mismatch
-	#include <fstream>
-PRAGMA_WARNING_POP
 #include <algorithm>
 #include <unordered_set>
 
@@ -299,17 +294,15 @@ namespace RendererToolkit
 		const std::string absoluteMaterialBlueprintAssetFilename = JsonHelper::getAbsoluteAssetFilename(input, materialBlueprintAssetId);
 		{
 			// Parse material blueprint asset JSON
-			std::ifstream materialBlueprintAssetInputFileStream(absoluteMaterialBlueprintAssetFilename, std::ios::binary);
 			rapidjson::Document rapidJsonDocumentMaterialBlueprintAsset;
-			JsonHelper::parseDocumentByInputFileStream(rapidJsonDocumentMaterialBlueprintAsset, materialBlueprintAssetInputFileStream, absoluteMaterialBlueprintAssetFilename, "Asset", "1");
+			JsonHelper::parseDocumentByFilename(rapidJsonDocumentMaterialBlueprintAsset, absoluteMaterialBlueprintAssetFilename, "Asset", "1");
 			materialBlueprintInputFile = rapidJsonDocumentMaterialBlueprintAsset["Asset"]["MaterialBlueprintAssetCompiler"]["InputFile"].GetString();
 		}
 
 		// Parse material blueprint JSON
 		const std::string absoluteMaterialBlueprintFilename = std_filesystem::path(absoluteMaterialBlueprintAssetFilename).parent_path().generic_string() + '/' + materialBlueprintInputFile;
-		std::ifstream materialBlueprintInputFileStream(absoluteMaterialBlueprintFilename, std::ios::binary);
 		rapidjson::Document rapidJsonDocument;
-		JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, materialBlueprintInputFileStream, absoluteMaterialBlueprintFilename, "MaterialBlueprintAsset", "2");
+		JsonHelper::parseDocumentByFilename(rapidJsonDocument, absoluteMaterialBlueprintFilename, "MaterialBlueprintAsset", "2");
 		RendererRuntime::ShaderProperties visualImportanceOfShaderProperties;
 		RendererRuntime::ShaderProperties maximumIntegerValueOfShaderProperties;
 		readProperties(input, rapidJsonDocument["MaterialBlueprintAsset"]["Properties"], sortedMaterialPropertyVector, visualImportanceOfShaderProperties, maximumIntegerValueOfShaderProperties, true, true, materialPropertyIdToName);

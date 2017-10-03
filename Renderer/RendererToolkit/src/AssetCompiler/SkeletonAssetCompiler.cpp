@@ -45,8 +45,6 @@ PRAGMA_WARNING_PUSH
 	#include <rapidjson/document.h>
 PRAGMA_WARNING_POP
 
-#include <fstream>
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

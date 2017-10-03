@@ -47,12 +47,6 @@ PRAGMA_WARNING_PUSH
 	#include <rapidjson/document.h>
 PRAGMA_WARNING_POP
 
-// Disable warnings in external headers, we can't fix them
-PRAGMA_WARNING_PUSH
-	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'initializing': conversion from 'int' to '::size_t', signed/unsigned mismatch
-	#include <fstream>
-PRAGMA_WARNING_POP
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -125,13 +119,12 @@ namespace RendererToolkit
 		inputFilenames.emplace_back(inputFilename);
 		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilenames, outputAssetFilename, RendererRuntime::v1Material::FORMAT_VERSION, cacheEntries) || input.cacheManager.dependencyFilesChanged(dependencyFiles))
 		{
-			std::ifstream inputFileStream(inputFilename, std::ios::binary);
 			RendererRuntime::MemoryFile memoryFile(0, 1024);
 
 			{ // Material
 				// Parse JSON
 				rapidjson::Document rapidJsonDocument;
-				JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, inputFilename, "MaterialAsset", "1");
+				JsonHelper::parseDocumentByFilename(rapidJsonDocument, inputFilename, "MaterialAsset", "1");
 				std::vector<RendererRuntime::v1Material::Technique> techniques;
 				RendererRuntime::MaterialProperties::SortedPropertyVector sortedMaterialPropertyVector;
 				JsonMaterialHelper::getTechniquesAndPropertiesByMaterialAssetId(input, rapidJsonDocument, techniques, sortedMaterialPropertyVector);

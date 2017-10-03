@@ -55,12 +55,6 @@ PRAGMA_WARNING_PUSH
 	#include <rapidjson/document.h>
 PRAGMA_WARNING_POP
 
-// Disable warnings in external headers, we can't fix them
-PRAGMA_WARNING_PUSH
-	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'initializing': conversion from 'int' to '::size_t', signed/unsigned mismatch
-	#include <fstream>
-PRAGMA_WARNING_POP
-
 
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]
@@ -260,13 +254,12 @@ namespace RendererToolkit
 		CacheManager::CacheEntries cacheEntries;
 		if (input.cacheManager.needsToBeCompiled(configuration.rendererTarget, input.assetFilename, inputFilename, outputAssetFilename, RendererRuntime::v1Scene::FORMAT_VERSION, cacheEntries))
 		{
-			std::ifstream inputFileStream(inputFilename, std::ios::binary);
 			RendererRuntime::MemoryFile memoryFile(0, 4096);
 
 			{ // Scene
 				// Parse JSON
 				rapidjson::Document rapidJsonDocument;
-				JsonHelper::parseDocumentByInputFileStream(rapidJsonDocument, inputFileStream, inputFilename, "SceneAsset", "1");
+				JsonHelper::parseDocumentByFilename(rapidJsonDocument, inputFilename, "SceneAsset", "1");
 
 				{ // Write down the scene resource header
 					RendererRuntime::v1Scene::SceneHeader sceneHeader;

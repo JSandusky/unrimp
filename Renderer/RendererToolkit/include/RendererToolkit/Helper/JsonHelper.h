@@ -69,7 +69,7 @@ namespace RendererToolkit
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
 	public:
-		static void parseDocumentByInputFileStream(rapidjson::Document& rapidJsonDocument, std::ifstream& inputFileStream, const std::string& inputFilename, const std::string& formatType, const std::string& formatVersion);
+		static void parseDocumentByFilename(rapidjson::Document& rapidJsonDocument, const std::string& absoluteFilename, const std::string& formatType, const std::string& formatVersion);
 		static void optionalBooleanProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, bool& value);
 		static void optionalBooleanProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, int& value);
 		static void optionalByteProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, uint8_t& value);

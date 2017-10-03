@@ -296,15 +296,16 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	void JsonHelper::parseDocumentByInputFileStream(rapidjson::Document& rapidJsonDocument, std::ifstream& inputFileStream, const std::string& inputFilename, const std::string& formatType, const std::string& formatVersion)
+	void JsonHelper::parseDocumentByFilename(rapidjson::Document& rapidJsonDocument, const std::string& absoluteFilename, const std::string& formatType, const std::string& formatVersion)
 	{
 		// Sanity check
-		if (!std_filesystem::exists(inputFilename))
+		if (!std_filesystem::exists(absoluteFilename))
 		{
-			throw std::runtime_error("Failed to parse JSON file \"" + inputFilename + "\": File doesn't exist");
+			throw std::runtime_error("Failed to parse JSON file \"" + absoluteFilename + "\": File doesn't exist");
 		}
 
 		// Load the JSON document
+		std::ifstream inputFileStream(absoluteFilename, std::ios::binary);
 		rapidjson::IStreamWrapper rapidJsonIStreamWrapper(inputFileStream);
 		const rapidjson::ParseResult rapidJsonParseResult = rapidJsonDocument.ParseStream(rapidJsonIStreamWrapper);
 		if (rapidJsonParseResult.Code() != rapidjson::kParseErrorNone)
@@ -322,7 +323,7 @@ namespace RendererToolkit
 			const std::streamoff lineNumber = std::count(fileContent.begin(), fileContent.begin() + static_cast<std::streamoff>(rapidJsonParseResult.Offset()), '\n');
 
 			// Throw exception with human readable error message
-			throw std::runtime_error("Failed to parse JSON file \"" + inputFilename + "\": " + rapidjson::GetParseError_En(rapidJsonParseResult.Code()) + " (line " + std::to_string(lineNumber) + ')');
+			throw std::runtime_error("Failed to parse JSON file \"" + absoluteFilename + "\": " + rapidjson::GetParseError_En(rapidJsonParseResult.Code()) + " (line " + std::to_string(lineNumber) + ')');
 		}
 
 		{ // Mandatory format header: Check whether or not the file format matches
