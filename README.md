@@ -252,7 +252,7 @@ Useful Asset Sources
 Hints
 ======
 - Assets are referenced by using
-	- Source asset ID naming scheme "<name>.asset"
+	- Source asset ID naming scheme ```"<name>.asset"```
 	- Compiled or runtime generated asset ID naming scheme ```"<project name>/<asset type>/<asset category>/<asset name>"```
 - Error strategy
 	- Inside renderer toolkit: Exceptions in extreme, up to no error tolerance. If something smells odd, blame it to make it possible to detect problems as early as possible in the production pipeline.
