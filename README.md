@@ -41,14 +41,14 @@ Features
 	- Lightweight renderer implementations
 		- Designed with AZDO ("Almost Zero Driver Overhead") in mind
 		- Implementations try to stick as best as possible close-to-the-metal and as a result are just a few KiB instead of MiB in memory size
-		- Implementations load the entry points of Direct3D, OpenGL and so on during runtime, meaning it's possible to react on system failures by e.g. dynamically switching to another renderer implementation
+		- Implementations load the entry points of Vulkan, Direct3D, OpenGL and so on during runtime, meaning it's possible to react on system failures by e.g. dynamically switching to another renderer implementation
 	- Support for static and dynamic build
 	- Separation into backend, runtime and toolkit for asset cooking
 		- Backend abstracts way the underlying renderer API like Vulkan/OpenGL/DirectX
 		- Runtime designed with end-user and middleware-user in mind
 			- Efficiency and responsiveness over flexibility (were it isn't useful in practice)
 			- Intented to be controlled by a high-level entity-component system, no unused implementation feature overkill in the basic runtime
-		- Toolkit designed with developer in mind: Asset source flexibility, asset background compilation, hot-reloading
+		- Toolkit designed with developer fast iterations in mind: Asset source flexibility, asset background compilation, hot-reloading
 - Cross-platform
 	- Microsoft Windows x86 and x64
 	- Linux
@@ -64,11 +64,7 @@ Renderer API and Backends
 	- Direct3D 11
 	- Direct3D 12 (early phase)
 	- Vulkan (not feature complete, yet)
-	- OpenGL
-		- By default a OpenGL 4.1 context is created, the best OpenGL version Mac OS X 10.11 supports, so lowest version we have to support
-		- SPIR-V support for cross-platform vendor and GPU driver independent shader bytecodes
-			- Optional build in online GLSL to SPIR-V compilation using [glslang](https://github.com/KhronosGroup/glslang), offline compilation before shipping a product is preferred of course but not manditory
-			- Using [SMOL-V](https://github.com/aras-p/smol-v): like Vulkan/Khronos SPIR-V, but smaller
+	- OpenGL (by default a OpenGL 4.1 context is created, the best OpenGL version Mac OS X 10.11 supports, so lowest version we have to support)
 	- OpenGL ES 3
 	(legacy = critical features like uniform buffer, texture buffer and/or compute shaders are missing which are required for modern efficient renderers which provide e.g. automatic instancing or clustered deferred rendering)
 - Render targets
@@ -83,6 +79,9 @@ Renderer API and Backends
 		- Fragment shader (FS, "pixel shader" in Direct3D terminology)
 	- Shader data sources
 		- Shader bytecode (aka shader microcode, binary large object (BLOB))
+			- Vulkan and OpenGL: SPIR-V support for cross-platform vendor and GPU driver independent shader bytecodes
+				- Optional build in online GLSL to SPIR-V compilation using [glslang](https://github.com/KhronosGroup/glslang), offline compilation before shipping a product is preferred of course but not manditory
+				- Using [SMOL-V](https://github.com/aras-p/smol-v): like Vulkan/Khronos SPIR-V, but smaller
 		- Shader source code
 - Buffers
 	- Vertex array object (VAO, input-assembler (IA) stage) with support for multiple vertex streams
@@ -123,7 +122,7 @@ Renderer Runtime (e.g. "The Game")
 	- Support for shader combinations (Uber-shaders)
 	- Support for reusable shader pieces
 	- Material inheritance for materials which should share common properties, but differ in other properties
-	- Using [MojoShader](https://icculus.org/mojoshader/) as shader preprocessor so the resulting shaders are compact and easy to debug
+	- Using [MojoShader](https://icculus.org/mojoshader/) as shader preprocessor so the resulting shader source codes are compact and easy to debug
 	- Asyncrounous pipeline state compilation, including a fallback system to reduce visual artefacts in case of pipeline cache misses
 - Compositor: Setup your overal rendering flow without a single line of C++ source code
 	- The compositor is using the material blueprint system, meaning compact C++ implementation while offering mighty possibilities
@@ -172,7 +171,7 @@ Renderer Toolkit (e.g. "The Editor")
 Examples (just some high level keywords)
 ======
 - Microsoft Windows: "NVIDIA Optimus" and "AMD Dynamic Switchable Graphic" awareness to reduce the risk of getting the integrated graphics unit assigned when there's a dedicated graphics card as well
-- Memory leaks: On Microsoft Windows, "_CrtMemCheckpoint()" and "_CrtMemDumpAllObjectsSince()" is used by default to detect memory leaks while developing and not later on. In case something triggers, third parts tools to locate the memory leak in detail.
+- Memory leaks: On Microsoft Windows, "_CrtMemCheckpoint()" and "_CrtMemDumpAllObjectsSince()" is used by default to detect memory leaks while developing and not later on. In case something triggers, use third parts tools to locate the memory leak in detail.
 - Custom resolved MSAA for antialiased deferred rendering and temporal anti-aliasing
 - Gaussian blur, used to e.g. blur the transparent ImGui background
 - High dynamic range (HDR) rendering with adaptive luminance
@@ -236,7 +235,7 @@ Useful MS Windows Developer Tools
 	- Graphics
 		- Direct3D 11 graphics debugging can be done directly inside Visual Studio 2017
 		- [RenderDoc](https://renderdoc.org/) for other renderer APIs like Vulkan is working like a charme
-		- For CPU profiling the tool [Very Sleepy](http://www.codersnotes.com/sleepy/) is easy to use while provinding useful results
+		- For CPU profiling the tool [Very Sleepy](http://www.codersnotes.com/sleepy/) is easy to use while providing useful results
 - When there's need to figure out why the binaries are so large
 	- ["Sizer - executable size breakdown (2007)"](http://aras-p.info/projSizer.html): "Command line tool that reports size of things (functions, data, classes, templates, object files) in a Visual Studio compiled exe/dll. Extracts info from debug information (.pdb) file."
 		- As of October 14, 2017: Doesn't work with Visual Studio 2017 (v141), compile for Visual Studio 2015 (v140) if you want to analys the binaries using Sizer
@@ -246,15 +245,15 @@ Useful MS Windows Developer Tools
 
 Useful Asset Sources
 ======
-- Realtime ready meshes with textures and a web-browser relatime preview: [Sketchfab](https://sketchfab.com/), search for downloadable
-- Realtime ready shaders and a web-browser relatime preview: [Shadertoy](https://www.shadertoy.com/)
+- Realtime ready meshes with textures and a web-browser realtime preview: [Sketchfab](https://sketchfab.com/), search for downloadable
+- Realtime ready shaders and a web-browser realtime preview: [Shadertoy](https://www.shadertoy.com/)
 
 
 Hints
 ======
 - Assets are referenced by using
 	- Source asset ID naming scheme "<name>.asset"
-	- Compiled or runtime generated asset ID naming scheme "<project name>/<asset type>/<asset category>/<asset name>"
+	- Compiled or runtime generated asset ID naming scheme ```"<project name>/<asset type>/<asset category>/<asset name>"```
 - Error strategy
 	- Inside renderer toolkit: Exceptions in extreme, up to no error tolerance. If something smells odd, blame it to make it possible to detect problems as early as possible in the production pipeline.
 	- Inside renderer runtime: The show must go on. If the floor breaks, just keep smiling and continue dancing.
