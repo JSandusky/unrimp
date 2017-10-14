@@ -166,6 +166,9 @@ namespace RendererToolkit
 			delete pair.second;
 		}
 		clear();
+
+		// Destroy the cache manager
+		delete mCacheManager;
 	}
 
 	RendererRuntime::VirtualFilename ProjectImpl::tryGetVirtualFilenameByAssetId(RendererRuntime::AssetId assetId) const
