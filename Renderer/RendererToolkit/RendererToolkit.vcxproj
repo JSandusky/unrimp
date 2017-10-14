@@ -3183,6 +3183,7 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
 copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)d_dynamic\
 md "..\..\bin\$(PlatformTarget)d_dynamic\"
 copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)d_dynamic\
+copy $(OutDir)\$(TargetName).pdb ..\..\bin\$(PlatformTarget)d_dynamic\
 md "..\..\include\Renderer\"
 copy "include\RendererToolkit\Public\RendererToolkit.h" "..\..\include\Renderer\"
 copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\Renderer\"</Command>
@@ -3212,6 +3213,7 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
 copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)d_dynamic\
 md "..\..\bin\$(PlatformTarget)d_dynamic\"
 copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)d_dynamic\
+copy $(OutDir)\$(TargetName).pdb ..\..\bin\$(PlatformTarget)d_dynamic\
 md "..\..\include\Renderer\"
 copy "include\RendererToolkit\Public\RendererToolkit.h" "..\..\include\Renderer\"
 copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\Renderer\"</Command>
@@ -3342,6 +3344,7 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
 copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)_dynamic\
 md "..\..\bin\$(PlatformTarget)_dynamic\"
 copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)_dynamic\
+copy $(OutDir)\$(TargetName).pdb ..\..\bin\$(PlatformTarget)_dynamic\
 md "..\..\include\Renderer\"
 copy "include\RendererToolkit\Public\RendererToolkit.h" "..\..\include\Renderer\"
 copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\Renderer\"</Command>
@@ -3382,6 +3385,7 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
 copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)_dynamic\
 md "..\..\bin\$(PlatformTarget)_dynamic\"
 copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)_dynamic\
+copy $(OutDir)\$(TargetName).pdb ..\..\bin\$(PlatformTarget)_dynamic\
 md "..\..\include\Renderer\"
 copy "include\RendererToolkit\Public\RendererToolkit.h" "..\..\include\Renderer\"
 copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\Renderer\"</Command>

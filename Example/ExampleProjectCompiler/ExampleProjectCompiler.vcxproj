@@ -197,6 +197,7 @@
     <PostBuildEvent>
       <Command>md "..\..\bin\$(PlatformTarget)d_static\"
 copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_static\"
+copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)d_static\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -227,6 +228,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_static\"
     <PostBuildEvent>
       <Command>md "..\..\bin\$(PlatformTarget)d_static\"
 copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_static\"
+copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)d_static\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -258,6 +260,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_static\"
     <PostBuildEvent>
       <Command>md "..\..\bin\$(PlatformTarget)d_dynamic\"
 copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_dynamic\"
+copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)d_dynamic\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -289,6 +292,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_dynamic\"
     <PostBuildEvent>
       <Command>md "..\..\bin\$(PlatformTarget)d_dynamic\"
 copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_dynamic\"
+copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)d_dynamic\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -330,6 +334,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_dynamic\"
     <PostBuildEvent>
       <Command>md "..\..\bin\$(PlatformTarget)_static\"
 copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_static\"
+copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)_static\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -370,6 +375,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_static\"
     <PostBuildEvent>
       <Command>md "..\..\bin\$(PlatformTarget)_static\"
 copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_static\"
+copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)_static\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -412,6 +418,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_static\"
     <PostBuildEvent>
       <Command>md "..\..\bin\$(PlatformTarget)_dynamic\"
 copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
+copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)_dynamic\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -453,6 +460,7 @@ copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
     <PostBuildEvent>
       <Command>md "..\..\bin\$(PlatformTarget)_dynamic\"
 copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
+copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)_dynamic\"
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

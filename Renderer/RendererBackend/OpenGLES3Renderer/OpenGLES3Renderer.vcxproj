@@ -352,6 +352,7 @@ copy $(OutDir)\$(TargetName).lib ..\..\..\lib\$(PlatformTarget)d_static\
 copy $(OutDir)\$(TargetName).lib ..\..\..\lib\$(PlatformTarget)d_dynamic\
 md "..\..\..\bin\$(PlatformTarget)d_dynamic\"
 copy $(OutDir)\$(TargetName).dll ..\..\..\bin\$(PlatformTarget)d_dynamic\
+copy $(OutDir)\$(TargetName).pdb ..\..\..\bin\$(PlatformTarget)d_dynamic\
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -380,6 +381,7 @@ copy $(OutDir)\$(TargetName).dll ..\..\..\bin\$(PlatformTarget)d_dynamic\
 copy $(OutDir)\$(TargetName).lib ..\..\..\lib\$(PlatformTarget)d_dynamic\
 md "..\..\..\bin\$(PlatformTarget)d_dynamic\"
 copy $(OutDir)\$(TargetName).dll ..\..\..\bin\$(PlatformTarget)d_dynamic\
+copy $(OutDir)\$(TargetName).pdb ..\..\..\bin\$(PlatformTarget)d_dynamic\
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -487,6 +489,7 @@ copy $(OutDir)\$(TargetName).lib ..\..\..\lib\$(PlatformTarget)_static\
 copy $(OutDir)\$(TargetName).lib ..\..\..\lib\$(PlatformTarget)_dynamic\
 md "..\..\..\bin\$(PlatformTarget)_dynamic\"
 copy $(OutDir)\$(TargetName).dll ..\..\..\bin\$(PlatformTarget)_dynamic\
+copy $(OutDir)\$(TargetName).pdb ..\..\..\bin\$(PlatformTarget)_dynamic\
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -524,6 +527,7 @@ copy $(OutDir)\$(TargetName).dll ..\..\..\bin\$(PlatformTarget)_dynamic\
 copy $(OutDir)\$(TargetName).lib ..\..\..\lib\$(PlatformTarget)_dynamic\
 md "..\..\..\bin\$(PlatformTarget)_dynamic\"
 copy $(OutDir)\$(TargetName).dll ..\..\..\bin\$(PlatformTarget)_dynamic\
+copy $(OutDir)\$(TargetName).pdb ..\..\..\bin\$(PlatformTarget)_dynamic\
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

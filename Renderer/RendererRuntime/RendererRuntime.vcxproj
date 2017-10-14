@@ -981,6 +981,7 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
 copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)d_dynamic\
 md "..\..\bin\$(PlatformTarget)d_dynamic\"
 copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)d_dynamic\
+copy $(OutDir)\$(TargetName).pdb ..\..\bin\$(PlatformTarget)d_dynamic\
 md "..\..\include\Renderer\"
 copy "include\RendererRuntime\Public\RendererRuntime.h" "..\..\include\Renderer\"
 copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\Renderer\"
@@ -1014,6 +1015,7 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
 copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)d_dynamic\
 md "..\..\bin\$(PlatformTarget)d_dynamic\"
 copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)d_dynamic\
+copy $(OutDir)\$(TargetName).pdb ..\..\bin\$(PlatformTarget)d_dynamic\
 md "..\..\include\Renderer\"
 copy "include\RendererRuntime\Public\RendererRuntime.h" "..\..\include\Renderer\"
 copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\Renderer\"
@@ -1150,6 +1152,7 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
 copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)_dynamic\
 md "..\..\bin\$(PlatformTarget)_dynamic\"
 copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)_dynamic\
+copy $(OutDir)\$(TargetName).pdb ..\..\bin\$(PlatformTarget)_dynamic\
 md "..\..\include\Renderer\"
 copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\Renderer\"
 </Command>
@@ -1193,6 +1196,7 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
 copy $(OutDir)\$(TargetName).lib ..\..\lib\$(PlatformTarget)_dynamic\
 md "..\..\bin\$(PlatformTarget)_dynamic\"
 copy $(OutDir)\$(TargetName).dll ..\..\bin\$(PlatformTarget)_dynamic\
+copy $(OutDir)\$(TargetName).pdb ..\..\bin\$(PlatformTarget)_dynamic\
 md "..\..\include\Renderer\"
 copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\Renderer\"
 </Command>
