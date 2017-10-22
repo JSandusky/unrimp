@@ -37,7 +37,7 @@
 //[-------------------------------------------------------]
 //[ Platform independent program entry point              ]
 //[-------------------------------------------------------]
-int programEntryPoint(CommandLineArguments& commandLineArguments)
+int programEntryPoint(const CommandLineArguments& commandLineArguments)
 {
 	Renderer::StdLog stdLog;
 	RendererRuntime::StdFileManager stdFileManager(stdLog, "..");
@@ -73,6 +73,8 @@ int programEntryPoint(CommandLineArguments& commandLineArguments)
 		catch (const std::exception& e)
 		{
 			RENDERER_LOG(rendererToolkitContext, CRITICAL, "Project compilation failed: %s", e.what())
+			RENDERER_LOG(rendererToolkitContext, INFORMATION, "Press any key to continue")
+			getchar();
 		}
 		delete project;
 	}

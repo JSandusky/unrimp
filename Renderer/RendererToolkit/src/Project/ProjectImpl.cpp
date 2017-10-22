@@ -384,6 +384,8 @@ namespace RendererToolkit
 			const RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = mAssetPackage.getSortedAssetVector();
 			const size_t numberOfAssets = sortedAssetVector.size();
 			std::vector<RendererRuntime::AssetId> changedAssetIds;
+			changedAssetIds.reserve(numberOfAssets);
+			RENDERER_LOG(mContext, INFORMATION, "Checking %u assets for changes", numberOfAssets)
 			for (size_t i = 0; i < numberOfAssets; ++i)
 			{
 				const RendererRuntime::Asset& asset = sortedAssetVector[i];
@@ -392,8 +394,11 @@ namespace RendererToolkit
 					changedAssetIds.push_back(asset.assetId);
 				}
 			}
+			RENDERER_LOG(mContext, INFORMATION, "Found %u changed assets", changedAssetIds.size())
 			for (size_t i = 0; i < numberOfAssets; ++i)
 			{
+				// TODO(co) Only compile assets if a change has been detected
+				RENDERER_LOG(mContext, INFORMATION, "Compiling asset %u of %u", i + 1, numberOfAssets)
 				compileAsset(sortedAssetVector[i], rendererTarget, outputAssetPackage);
 			}
 			if (nullptr != mProjectAssetMonitor)

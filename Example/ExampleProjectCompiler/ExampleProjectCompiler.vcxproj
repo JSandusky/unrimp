@@ -175,7 +175,7 @@
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -193,6 +193,7 @@
       <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)d_static\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>RendererRuntimeStaticD.lib;RendererToolkitStaticD.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
+      <SubSystem>Console</SubSystem>
     </Link>
     <PostBuildEvent>
       <Command>md "..\..\bin\$(PlatformTarget)d_static\"
@@ -206,7 +207,7 @@ copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)d_static\"
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;X64_ARCHITECTURE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_CONSOLE;X64_ARCHITECTURE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -224,6 +225,7 @@ copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)d_static\"
       <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)d_static\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>RendererRuntimeStaticD.lib;RendererToolkitStaticD.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
+      <SubSystem>Console</SubSystem>
     </Link>
     <PostBuildEvent>
       <Command>md "..\..\bin\$(PlatformTarget)d_static\"
@@ -237,7 +239,7 @@ copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)d_static\"
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;SHARED_LIBRARIES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_CONSOLE;_CRT_SECURE_NO_WARNINGS;SHARED_LIBRARIES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -256,6 +258,7 @@ copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)d_static\"
       </AdditionalLibraryDirectories>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
+      <SubSystem>Console</SubSystem>
     </Link>
     <PostBuildEvent>
       <Command>md "..\..\bin\$(PlatformTarget)d_dynamic\"
@@ -269,7 +272,7 @@ copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)d_dynamic\"
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;X64_ARCHITECTURE;_CRT_SECURE_NO_WARNINGS;SHARED_LIBRARIES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_CONSOLE;X64_ARCHITECTURE;_CRT_SECURE_NO_WARNINGS;SHARED_LIBRARIES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -288,6 +291,7 @@ copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)d_dynamic\"
       </AdditionalLibraryDirectories>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
+      <SubSystem>Console</SubSystem>
     </Link>
     <PostBuildEvent>
       <Command>md "..\..\bin\$(PlatformTarget)d_dynamic\"
@@ -303,7 +307,7 @@ copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)d_dynamic\"
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -330,6 +334,7 @@ copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)d_dynamic\"
       <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)_static\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>RendererRuntimeStatic.lib;RendererToolkitStatic.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
+      <SubSystem>Console</SubSystem>
     </Link>
     <PostBuildEvent>
       <Command>md "..\..\bin\$(PlatformTarget)_static\"
@@ -345,7 +350,7 @@ copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)_static\"
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;X64_ARCHITECTURE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_CONSOLE;X64_ARCHITECTURE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -371,6 +376,7 @@ copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)_static\"
       <AdditionalLibraryDirectories>..\..\lib\$(PlatformTarget)_static\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>RendererRuntimeStatic.lib;RendererToolkitStatic.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
+      <SubSystem>Console</SubSystem>
     </Link>
     <PostBuildEvent>
       <Command>md "..\..\bin\$(PlatformTarget)_static\"
@@ -386,7 +392,7 @@ copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)_static\"
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;_CRT_SECURE_NO_WARNINGS;SHARED_LIBRARIES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_CONSOLE;_CRT_SECURE_NO_WARNINGS;SHARED_LIBRARIES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -414,6 +420,7 @@ copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)_static\"
       </AdditionalLibraryDirectories>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
+      <SubSystem>Console</SubSystem>
     </Link>
     <PostBuildEvent>
       <Command>md "..\..\bin\$(PlatformTarget)_dynamic\"
@@ -429,7 +436,7 @@ copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)_dynamic\"
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;X64_ARCHITECTURE;_CRT_SECURE_NO_WARNINGS;SHARED_LIBRARIES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_CONSOLE;X64_ARCHITECTURE;_CRT_SECURE_NO_WARNINGS;SHARED_LIBRARIES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -456,6 +463,7 @@ copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)_dynamic\"
       </AdditionalLibraryDirectories>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <LargeAddressAware>true</LargeAddressAware>
+      <SubSystem>Console</SubSystem>
     </Link>
     <PostBuildEvent>
       <Command>md "..\..\bin\$(PlatformTarget)_dynamic\"

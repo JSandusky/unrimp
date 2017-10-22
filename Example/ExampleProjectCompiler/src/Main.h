@@ -33,7 +33,7 @@
 //[-------------------------------------------------------]
 //[ Platform independent program entry point              ]
 //[-------------------------------------------------------]
-int programEntryPoint(CommandLineArguments& commandLineArguments);
+int programEntryPoint(const CommandLineArguments& commandLineArguments);
 
 
 //[-------------------------------------------------------]
@@ -51,19 +51,14 @@ int programEntryPoint(CommandLineArguments& commandLineArguments);
 
 	#ifdef _CONSOLE
 		#ifdef UNICODE
-			int wmain(int argc, wchar_t **argv)
+			int wmain(int, wchar_t**)
 		#else
-			int main(int argc, char **argv)
+			int main(int, char**)
 		#endif
 			{
-				int result;
-				{
-					// Uses internally GetCommandline to fetch the command line arguments
-					CommandLineArguments arguments;
-
-					// Call the platform independent program entry point
-					result = programEntryPoint(arguments);
-				}
+				// Call the platform independent program entry point
+				// -> Uses internally "GetCommandLine()" to fetch the command line arguments
+				const int result = programEntryPoint(CommandLineArguments());
 
 				// For memory leak detection
 				#ifdef _DEBUG
@@ -81,14 +76,9 @@ int programEntryPoint(CommandLineArguments& commandLineArguments);
 			int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		#endif
 			{
-				int result = 0;
-				{
-					// Uses internally GetCommandline to fetch the command line arguments
-					CommandLineArguments arguments;
-
-					// Call the platform independent program entry point
-					result = programEntryPoint(arguments);
-				}
+				// Call the platform independent program entry point
+				// -> Uses internally "GetCommandLine()" to fetch the command line arguments
+				const int result = programEntryPoint(CommandLineArguments());
 
 				// For memory leak detection
 				#ifdef _DEBUG
@@ -102,11 +92,9 @@ int programEntryPoint(CommandLineArguments& commandLineArguments);
 
 // Linux implementation
 #elif LINUX
-	int main(int argc, char **argv)
+	int main(int argc, char** argv)
 	{
-		CommandLineArguments arguments(argc, argv);
-
 		// Call the platform independent program entry point
-		return programEntryPoint(arguments);
+		return programEntryPoint(CommandLineArguments(argc, argv));
 	}
 #endif

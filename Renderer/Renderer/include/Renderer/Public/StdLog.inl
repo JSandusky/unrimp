@@ -22,6 +22,15 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include <cstdarg>
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: '=': conversion from 'int' to '::size_t', signed/unsigned mismatch
+	PRAGMA_WARNING_DISABLE_MSVC(4571)	// warning C4571: Informational: catch(...) semantics changed since Visual C++ 7.1; structured exceptions (SEH) are no longer caught
+	PRAGMA_WARNING_DISABLE_MSVC(4625)	// warning C4625: 'std::codecvt_base': copy constructor was implicitly defined as deleted
+	PRAGMA_WARNING_DISABLE_MSVC(4626)	// warning C4626: 'std::codecvt_base': assignment operator was implicitly defined as deleted
+	PRAGMA_WARNING_DISABLE_MSVC(4774)	// warning C4774: 'sprintf_s' : format string expected in argument 3 is not a string literal
+	#include <iostream>
+PRAGMA_WARNING_POP
 
 #ifdef WIN32
 	// Disable warnings in external headers, we can't fix them
@@ -30,7 +39,7 @@
 		#include <windows.h>
 	PRAGMA_WARNING_POP
 #elif LINUX
-	#include <iostream>
+	// Nothing here
 #else
 	#error "Unsupported platform"
 #endif
@@ -133,13 +142,23 @@ namespace Renderer
 		}
 	}
 
-	inline void StdLog::printInternal(Type type, const char* message, uint32_t numberOfCharacters)
+	inline void StdLog::printInternal(Type type, const char* message, uint32_t)
 	{
 		std::lock_guard<std::mutex> mutexLock(mMutex);
 
+		// Write into standard output stream
+		if (Type::CRITICAL == type)
+		{
+			std::cerr << typeToString(type) << message << '\n';
+		}
+		else
+		{
+			std::cout << typeToString(type) << message << '\n';
+		}
+
 		// Platform specific handling
 		#ifdef WIN32
-			std::ignore = numberOfCharacters;
+			// On MS Windows, ensure the output can be seen inside the Visual Studio output window as well
 			::OutputDebugString(typeToString(type));
 			::OutputDebugString(message);
 			::OutputDebugString("\n");
@@ -148,15 +167,7 @@ namespace Renderer
 				::__debugbreak();
 			}
 		#elif LINUX
-			std::ignore = numberOfCharacters;
-			if (Type::CRITICAL == type)
-			{
-				std::cerr << typeToString(type) << message << '\n';
-			}
-			else
-			{
-				std::cout << typeToString(type) << message << '\n';
-			}
+			// Nothing here
 		#else
 			#error "Unsupported platform"
 		#endif
