@@ -307,6 +307,7 @@ namespace RendererRuntime
 		}
 		mAbsoluteBaseDirectory.push_back(absoluteDirectoryName.generic_string());
 		absoluteDirectoryName /= ::detail::STD_LOCAL_DATA_MOUNT_POINT;
+		createDirectories(::detail::STD_LOCAL_DATA_MOUNT_POINT);
 		mountDirectory(absoluteDirectoryName.generic_string().c_str(), ::detail::STD_LOCAL_DATA_MOUNT_POINT);
 	}
 

@@ -351,6 +351,7 @@ namespace RendererRuntime
 			const std::string absoluteLocalDataDirectoryName = absoluteDirectoryName.generic_string();
 
 			// Setup local data mount point
+			createDirectories(::detail::PHYSICSFS_LOCAL_DATA_MOUNT_POINT);
 			mountDirectory(absoluteLocalDataDirectoryName.c_str(), ::detail::PHYSICSFS_LOCAL_DATA_MOUNT_POINT);
 		}
 		else
