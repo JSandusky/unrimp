@@ -85,8 +85,7 @@ namespace
 			std::string virtualFilename;
 			const RendererRuntime::IFileManager& fileManager = context.getFileManager();
 			getRendererToolkitCacheFilename(fileManager, projectName, virtualDirectoryName, virtualFilename);
-			if ((fileManager.doesFileExist(virtualDirectoryName.c_str()) || fileManager.createDirectories(virtualDirectoryName.c_str())) &&
-				!memoryFile.writeLz4CompressedDataToFile(RendererToolkitCache::FORMAT_TYPE, RendererToolkitCache::FORMAT_VERSION, virtualFilename, fileManager))
+			if (fileManager.createDirectories(virtualDirectoryName.c_str()) && !memoryFile.writeLz4CompressedDataToFile(RendererToolkitCache::FORMAT_TYPE, RendererToolkitCache::FORMAT_VERSION, virtualFilename, fileManager))
 			{
 				RENDERER_LOG(context, CRITICAL, "The renderer toolkit failed to save the cache to \"%s\"", virtualFilename.c_str())
 			}

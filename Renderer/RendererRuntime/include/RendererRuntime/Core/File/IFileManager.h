@@ -218,7 +218,7 @@ namespace RendererRuntime
 		*    Virtual UTF-8 name of the directory to create, including all parent directories if necessary
 		*
 		*  @return
-		*    "true" if all went fine, else "false"
+		*    "true" if all went fine or the directories already exist, else "false"
 		*/
 		virtual bool createDirectories(VirtualDirectoryName virtualDirectoryName) const = 0;
 

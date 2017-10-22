@@ -368,12 +368,10 @@ namespace RendererToolkit
 			const std::string& relativeRootDirectory = fileManager.getRelativeRootDirectory();
 			for (const std::string& renderTargetDataRootDirectory : renderTargetDataRootDirectories)
 			{
-				const std::string absoluteDirectory = (relativeRootDirectory + '/' + renderTargetDataRootDirectory);
-				if (!std_filesystem::exists(absoluteDirectory))
+				if (fileManager.createDirectories(renderTargetDataRootDirectory.c_str()))
 				{
-					std_filesystem::create_directories(absoluteDirectory);
+					fileManager.mountDirectory((relativeRootDirectory + '/' + renderTargetDataRootDirectory).c_str(), renderTargetDataRootDirectory.c_str());
 				}
-				fileManager.mountDirectory(absoluteDirectory.c_str(), renderTargetDataRootDirectory.c_str());
 			}
 		}
 

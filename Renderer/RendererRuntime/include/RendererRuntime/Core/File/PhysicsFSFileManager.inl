@@ -342,13 +342,13 @@ namespace RendererRuntime
 			{
 				absoluteDirectoryName /= relativeRootDirectory;
 			}
-			absoluteDirectoryName /= ::detail::PHYSICSFS_LOCAL_DATA_MOUNT_POINT;
-			const std::string absoluteLocalDataDirectoryName = absoluteDirectoryName.generic_string();
-			if (mOwnsPhysicsFSInstance && 0 == PHYSFS_setWriteDir(absoluteLocalDataDirectoryName.c_str()))
+			if (mOwnsPhysicsFSInstance && 0 == PHYSFS_setWriteDir(absoluteDirectoryName.generic_string().c_str()))
 			{
 				// Error!
 				::detail::writePhysicsFSErrorToLog(mLog);
 			}
+			absoluteDirectoryName /= ::detail::PHYSICSFS_LOCAL_DATA_MOUNT_POINT;
+			const std::string absoluteLocalDataDirectoryName = absoluteDirectoryName.generic_string();
 
 			// Setup local data mount point
 			mountDirectory(absoluteLocalDataDirectoryName.c_str(), ::detail::PHYSICSFS_LOCAL_DATA_MOUNT_POINT);

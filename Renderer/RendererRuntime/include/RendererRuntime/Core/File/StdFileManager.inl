@@ -305,6 +305,7 @@ namespace RendererRuntime
 		{
 			absoluteDirectoryName /= relativeRootDirectory;
 		}
+		mAbsoluteBaseDirectory.push_back(absoluteDirectoryName.generic_string());
 		absoluteDirectoryName /= ::detail::STD_LOCAL_DATA_MOUNT_POINT;
 		mountDirectory(absoluteDirectoryName.generic_string().c_str(), ::detail::STD_LOCAL_DATA_MOUNT_POINT);
 	}
@@ -442,7 +443,8 @@ namespace RendererRuntime
 		{
 			for (const std::string& absoluteDirectoryName : *absoluteDirectoryNames)
 			{
-				if (!std_filesystem::create_directories(absoluteDirectoryName + '/' + relativeFilename))
+				const std::string absoluteFilename = absoluteDirectoryName + '/' + relativeFilename;
+				if (!std_filesystem::exists(absoluteFilename) && !std_filesystem::create_directories(absoluteFilename))
 				{
 					// Failed to create the directories
 					return false;
@@ -518,9 +520,12 @@ namespace RendererRuntime
 		}
 		else
 		{
-			// Error!
-			assert(false && "Failed to find the STD mount point inside the virtual filename");
-			return false;
+			// Use base directory
+			*absoluteDirectoryNames = &mAbsoluteBaseDirectory;
+			relativeFilename = virtualFilename;
+
+			// Done
+			return true;
 		}
 	}
 

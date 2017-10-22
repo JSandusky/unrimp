@@ -117,8 +117,7 @@ namespace
 			std::string virtualFilename;
 			getPipelineStateObjectCacheFilename(rendererRuntime, virtualDirectoryName, virtualFilename);
 			RendererRuntime::IFileManager& fileManager = rendererRuntime.getFileManager();
-			if ((fileManager.doesFileExist(virtualDirectoryName.c_str()) || fileManager.createDirectories(virtualDirectoryName.c_str())) &&
-				!memoryFile.writeLz4CompressedDataToFile(PipelineStateCache::FORMAT_TYPE, PipelineStateCache::FORMAT_VERSION, virtualFilename, fileManager))
+			if (fileManager.createDirectories(virtualDirectoryName.c_str()) && !memoryFile.writeLz4CompressedDataToFile(PipelineStateCache::FORMAT_TYPE, PipelineStateCache::FORMAT_VERSION, virtualFilename, fileManager))
 			{
 				RENDERER_LOG(rendererRuntime.getContext(), CRITICAL, "The renderer runtime failed to save the pipeline state object cache to \"%s\"", virtualFilename.c_str())
 			}

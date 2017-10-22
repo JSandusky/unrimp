@@ -70,6 +70,7 @@ namespace RendererRuntime
 	*
 	*  @note
 	*    - Designed to be instanced and used inside a single C++ file
+	*    - Primarily for renderer toolkit with more relaxed write access
 	*/
 	class StdFileManager : public IFileManager
 	{
@@ -125,8 +126,9 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Renderer::ILog&    mLog;
-		MountedDirectories mMountedDirectories;
+		Renderer::ILog&		   mLog;
+		AbsoluteDirectoryNames mAbsoluteBaseDirectory;	///< Absolute UTF-8 base directory, without "/" at the end
+		MountedDirectories	   mMountedDirectories;
 
 
 	};
