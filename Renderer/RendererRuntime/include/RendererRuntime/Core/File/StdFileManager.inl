@@ -76,7 +76,7 @@ namespace
 
 
 		//[-------------------------------------------------------]
-		//[ Definitions                                           ]
+		//[ Global definitions                                    ]
 		//[-------------------------------------------------------]
 		static const char* STD_LOCAL_DATA_MOUNT_POINT = "LocalData";
 
@@ -131,7 +131,7 @@ namespace
 			explicit StdReadFile(const std::string& absoluteFilename) :
 				mFileStream(absoluteFilename, std::ios::binary)
 			{
-				// Nothing here
+				assert(mFileStream && "Failed to open STD file for reading");
 			}
 
 			virtual ~StdReadFile() override
@@ -156,6 +156,7 @@ namespace
 		public:
 			virtual size_t getNumberOfBytes() override
 			{
+				assert(mFileStream && "Invalid STD file access");
 				size_t numberOfBytes = 0;
 				mFileStream.seekg(0, std::istream::end);
 				numberOfBytes = static_cast<size_t>(mFileStream.tellg());
@@ -165,17 +166,20 @@ namespace
 
 			virtual void read(void* destinationBuffer, size_t numberOfBytes) override
 			{
+				assert(mFileStream && "Invalid STD file access");
 				mFileStream.read(reinterpret_cast<char*>(destinationBuffer), static_cast<std::streamsize>(numberOfBytes));
 			}
 
 			virtual void skip(size_t numberOfBytes) override
 			{
+				assert(mFileStream && "Invalid STD file access");
 				mFileStream.ignore(static_cast<std::streamsize>(numberOfBytes));
 			}
 
 			virtual void write(const void*, size_t) override
 			{
-				assert(false && "File write method not supported by the implementation");
+				assert(mFileStream && "Invalid STD file access");
+				assert(false && "File write method not supported by the STD implementation");
 			}
 
 
@@ -207,7 +211,7 @@ namespace
 			explicit StdWriteFile(const std::string& absoluteFilename) :
 				mFileStream(absoluteFilename, std::ios::binary)
 			{
-				// Nothing here
+				assert(mFileStream && "Failed to open STD file for writing");
 			}
 
 			virtual ~StdWriteFile() override
@@ -232,22 +236,26 @@ namespace
 		public:
 			virtual size_t getNumberOfBytes() override
 			{
-				assert(false && "File get number of bytes method not supported by the implementation");
+				assert(mFileStream && "Invalid STD file access");
+				assert(false && "File get number of bytes method not supported by the STD implementation");
 				return 0;
 			}
 
 			virtual void read(void*, size_t) override
 			{
-				assert(false && "File read method not supported by the implementation");
+				assert(mFileStream && "Invalid STD file access");
+				assert(false && "File read method not supported by the STD implementation");
 			}
 
 			virtual void skip(size_t) override
 			{
-				assert(false && "File skip method not supported by the implementation");
+				assert(mFileStream && "Invalid STD file access");
+				assert(false && "File skip method not supported by the STD implementation");
 			}
 
 			virtual void write(const void* sourceBuffer, size_t numberOfBytes) override
 			{
+				assert(mFileStream && "Invalid STD file access");
 				mFileStream.write(reinterpret_cast<const char*>(sourceBuffer), static_cast<std::streamsize>(numberOfBytes));
 			}
 
@@ -327,7 +335,7 @@ namespace RendererRuntime
 				if (pair.first != mountPoint)
 				{
 					const AbsoluteDirectoryNames& absoluteDirectoryNames = pair.second;
-					assert(absoluteDirectoryNames.cend() == std::find(absoluteDirectoryNames.begin(), absoluteDirectoryNames.end(), absoluteDirectoryName) && "The same absolute directory name shouldn't be added to too different mount points");
+					assert(absoluteDirectoryNames.cend() == std::find(absoluteDirectoryNames.begin(), absoluteDirectoryNames.end(), absoluteDirectoryName) && "The same absolute directory name shouldn't be added to too different STD mount points");
 				}
 			}
 		#endif
@@ -359,7 +367,7 @@ namespace RendererRuntime
 			}
 			else
 			{
-				assert(false && "Duplicate absolute directory name detected, this situation should be avoided by the caller");
+				assert(false && "Duplicate absolute STD directory name detected, this situation should be avoided by the caller");
 			}
 		}
 
@@ -398,7 +406,8 @@ namespace RendererRuntime
 			}
 		}
 
-		// Failed to map
+		// Error!
+		assert(false && "Failed to map virtual to STD absolute filename");
 		return "";
 	}
 
@@ -503,14 +512,14 @@ namespace RendererRuntime
 			else
 			{
 				// Error!
-				assert(false && "Unknown mount point inside the virtual filename");
+				assert(false && "Unknown STD mount point inside the virtual filename");
 				return false;
 			}
 		}
 		else
 		{
 			// Error!
-			assert(false && "Failed to find the mount point inside the virtual filename");
+			assert(false && "Failed to find the STD mount point inside the virtual filename");
 			return false;
 		}
 	}

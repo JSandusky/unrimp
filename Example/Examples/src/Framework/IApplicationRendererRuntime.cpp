@@ -44,7 +44,6 @@
 
 #include <RendererRuntime/Public/RendererRuntimeInstance.h>
 #include <RendererRuntime/Core/File/PhysicsFSFileManager.h>
-#include <RendererRuntime/Core/File/StdFileManager.h>
 #include <RendererRuntime/Asset/AssetManager.h>
 #include <RendererRuntime/Context.h>
 
@@ -115,8 +114,7 @@ void IApplicationRendererRuntime::onInitialization()
 	if (nullptr != renderer)
 	{
 		// Create the renderer runtime instance
-		mFileManager = new RendererRuntime::StdFileManager(renderer->getContext().getLog(), "..");
-//		mFileManager = new RendererRuntime::PhysicsFSFileManager(renderer->getContext().getLog(), "..");	// TODO(co) Use PhysicsFS
+		mFileManager = new RendererRuntime::PhysicsFSFileManager(renderer->getContext().getLog(), "..");
 		mRendererRuntimeContext = new RendererRuntime::Context(*renderer, *mFileManager);
 		mRendererRuntimeInstance = new RendererRuntime::RendererRuntimeInstance(*mRendererRuntimeContext);
 
@@ -171,8 +169,7 @@ void IApplicationRendererRuntime::onDeinitialization()
 	mRendererRuntimeInstance = nullptr;
 	delete mRendererRuntimeContext;
 	mRendererRuntimeContext = nullptr;
-	delete static_cast<RendererRuntime::StdFileManager*>(mFileManager);
-//	delete static_cast<RendererRuntime::PhysicsFSFileManager*>(mFileManager);	// TODO(co) Use PhysicsFS
+	delete static_cast<RendererRuntime::PhysicsFSFileManager*>(mFileManager);
 	mFileManager = nullptr;
 	#ifdef SHARED_LIBRARIES
 		if (nullptr != mProject)

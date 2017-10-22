@@ -30,12 +30,6 @@ extern "C"
 	#include <physicsfs/physfs.h>
 }
 
-// Disable warnings in external headers, we can't fix them
-PRAGMA_WARNING_PUSH
-	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'argument': conversion from 'long' to 'unsigned int', signed/unsigned mismatch
-	#include <fstream>
-	#include <cassert>
-PRAGMA_WARNING_POP
 #ifdef WIN32
 	// Disable warnings in external headers, we can't fix them
 	__pragma(warning(push))
@@ -55,6 +49,8 @@ PRAGMA_WARNING_POP
 		#include <experimental/filesystem>
 	#endif
 #endif
+
+#include <tuple>	// For "std::ignore"
 
 
 //[-------------------------------------------------------]
@@ -81,9 +77,26 @@ namespace
 
 
 		//[-------------------------------------------------------]
-		//[ Definitions                                           ]
+		//[ Global definitions                                    ]
 		//[-------------------------------------------------------]
 		static const char* PHYSICSFS_LOCAL_DATA_MOUNT_POINT = "LocalData";
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		void writePhysicsFSErrorToLog(Renderer::ILog& log)
+		{
+			const char* errorAsString = PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode());
+			if (nullptr != errorAsString)
+			{
+				log.print(Renderer::ILog::Type::CRITICAL, "PhysicsFS error: %s", errorAsString);
+			}
+			else
+			{
+				assert(false && "Failed to map PhysicsFS error code to error as string");
+			}
+		}
 
 
 		//[-------------------------------------------------------]
@@ -134,14 +147,19 @@ namespace
 		//[-------------------------------------------------------]
 		public:
 			explicit PhysicsFSReadFile(const char* virtualFilename) :
-				mFileStream(virtualFilename, std::ios::binary)
+				mPhysicsFSFile(PHYSFS_openRead(virtualFilename))
 			{
-				// Nothing here
+				assert(nullptr != mPhysicsFSFile && "Failed to open PhysicsFS file for reading");
 			}
 
 			virtual ~PhysicsFSReadFile() override
 			{
-				// Nothing here
+				if (nullptr != mPhysicsFSFile)
+				{
+					const int result = PHYSFS_close(mPhysicsFSFile);
+					std::ignore = result;
+					assert(0 != result && "Failed to close read PhysicsFS file");
+				}
 			}
 
 
@@ -151,7 +169,7 @@ namespace
 		public:
 			virtual bool isInvalid() const override
 			{
-				return !mFileStream;
+				return (nullptr == mPhysicsFSFile);
 			}
 
 
@@ -161,26 +179,34 @@ namespace
 		public:
 			virtual size_t getNumberOfBytes() override
 			{
-				size_t numberOfBytes = 0;
-				mFileStream.seekg(0, std::istream::end);
-				numberOfBytes = static_cast<size_t>(mFileStream.tellg());
-				mFileStream.seekg(0, std::istream::beg);
-				return numberOfBytes;
+				assert(nullptr != mPhysicsFSFile && "Invalid PhysicsFS file access");
+				const PHYSFS_sint64 fileLength = PHYSFS_fileLength(mPhysicsFSFile);
+				assert(-1 != fileLength && "PhysicsFS failed to determine the file size");
+				return static_cast<size_t>(fileLength);
 			}
 
 			virtual void read(void* destinationBuffer, size_t numberOfBytes) override
 			{
-				mFileStream.read(reinterpret_cast<char*>(destinationBuffer), static_cast<std::streamsize>(numberOfBytes));
+				assert(nullptr != mPhysicsFSFile && "Invalid PhysicsFS file access");
+				const PHYSFS_sint64 numberOfReadBytes = PHYSFS_readBytes(mPhysicsFSFile, destinationBuffer, numberOfBytes);
+				std::ignore = numberOfReadBytes;
+				assert(numberOfReadBytes == numberOfBytes && "PhysicsFS failed to read all requested bytes");	// We're restrictive by intent
 			}
 
 			virtual void skip(size_t numberOfBytes) override
 			{
-				mFileStream.ignore(static_cast<std::streamsize>(numberOfBytes));
+				assert(nullptr != mPhysicsFSFile && "Invalid PhysicsFS file access");
+				const PHYSFS_sint64 currentOffset = PHYSFS_tell(mPhysicsFSFile);
+				assert(-1 != currentOffset && "PhysicsFS failed to retrieve the current file offset");
+				const int result = PHYSFS_seek(mPhysicsFSFile, static_cast<PHYSFS_uint64>(currentOffset + numberOfBytes));
+				std::ignore = result;
+				assert(0 != result && "PhysicsFS failed seek file");
 			}
 
 			virtual void write(const void*, size_t) override
 			{
-				assert(false && "File write method not supported by the implementation");
+				assert(nullptr != mPhysicsFSFile && "Invalid PhysicsFS file access");
+				assert(false && "File write method not supported by the PhysicsFS implementation");
 			}
 
 
@@ -196,7 +222,7 @@ namespace
 		//[ Private data                                          ]
 		//[-------------------------------------------------------]
 		private:
-			std::ifstream mFileStream;
+			PHYSFS_File* mPhysicsFSFile;
 
 
 		};
@@ -210,14 +236,19 @@ namespace
 		//[-------------------------------------------------------]
 		public:
 			explicit PhysicsFSWriteFile(const char* virtualFilename) :
-				mFileStream(virtualFilename, std::ios::binary)
+				mPhysicsFSFile(PHYSFS_openWrite(virtualFilename))
 			{
-				// Nothing here
+				assert(nullptr != mPhysicsFSFile && "Failed to open PhysicsFS file for writing");
 			}
 
 			virtual ~PhysicsFSWriteFile() override
 			{
-				// Nothing here
+				if (nullptr != mPhysicsFSFile)
+				{
+					const int result = PHYSFS_close(mPhysicsFSFile);
+					std::ignore = result;
+					assert(0 != result && "Failed to close written PhysicsFS file");
+				}
 			}
 
 
@@ -227,7 +258,7 @@ namespace
 		public:
 			virtual bool isInvalid() const override
 			{
-				return !mFileStream;
+				return (nullptr == mPhysicsFSFile);
 			}
 
 
@@ -237,23 +268,29 @@ namespace
 		public:
 			virtual size_t getNumberOfBytes() override
 			{
-				assert(false && "File get number of bytes method not supported by the implementation");
+				assert(nullptr != mPhysicsFSFile && "Invalid PhysicsFS file access");
+				assert(false && "File get number of bytes method not supported by the PhysicsFS implementation");
 				return 0;
 			}
 
 			virtual void read(void*, size_t) override
 			{
-				assert(false && "File read method not supported by the implementation");
+				assert(nullptr != mPhysicsFSFile && "Invalid PhysicsFS file access");
+				assert(false && "File read method not supported by the PhysicsFS implementation");
 			}
 
 			virtual void skip(size_t) override
 			{
-				assert(false && "File skip method not supported by the implementation");
+				assert(nullptr != mPhysicsFSFile && "Invalid PhysicsFS file access");
+				assert(false && "File skip method not supported by the PhysicsFS implementation");
 			}
 
 			virtual void write(const void* sourceBuffer, size_t numberOfBytes) override
 			{
-				mFileStream.write(reinterpret_cast<const char*>(sourceBuffer), static_cast<std::streamsize>(numberOfBytes));
+				assert(nullptr != mPhysicsFSFile && "Invalid PhysicsFS file access");
+				const PHYSFS_sint64 numberOfWrittenBytes = PHYSFS_writeBytes(mPhysicsFSFile, sourceBuffer, numberOfBytes);
+				std::ignore = numberOfWrittenBytes;
+				assert(numberOfWrittenBytes == numberOfBytes && "PhysicsFS failed to write all requested bytes");	// We're restrictive by intent
 			}
 
 
@@ -269,7 +306,7 @@ namespace
 		//[ Private data                                          ]
 		//[-------------------------------------------------------]
 		private:
-			std::ofstream mFileStream;
+			PHYSFS_File* mPhysicsFSFile;
 
 
 		};
@@ -306,18 +343,20 @@ namespace RendererRuntime
 				absoluteDirectoryName /= relativeRootDirectory;
 			}
 			absoluteDirectoryName /= ::detail::PHYSICSFS_LOCAL_DATA_MOUNT_POINT;
-			const char* absoluteLocalDataDirectoryName = absoluteDirectoryName.generic_string().c_str();
-			if (mOwnsPhysicsFSInstance && 0 == PHYSFS_setWriteDir(absoluteLocalDataDirectoryName))
+			const std::string absoluteLocalDataDirectoryName = absoluteDirectoryName.generic_string();
+			if (mOwnsPhysicsFSInstance && 0 == PHYSFS_setWriteDir(absoluteLocalDataDirectoryName.c_str()))
 			{
-				// TODO(co) Error: Use PHYSFS_getLastErrorCode() and PHYSFS_getErrorByCode() instead.
+				// Error!
+				::detail::writePhysicsFSErrorToLog(mLog);
 			}
 
 			// Setup local data mount point
-			mountDirectory(absoluteLocalDataDirectoryName, ::detail::PHYSICSFS_LOCAL_DATA_MOUNT_POINT);
+			mountDirectory(absoluteLocalDataDirectoryName.c_str(), ::detail::PHYSICSFS_LOCAL_DATA_MOUNT_POINT);
 		}
 		else
 		{
-			// TODO(co) Error: Use PHYSFS_getLastErrorCode() and PHYSFS_getErrorByCode() instead.
+			// Error!
+			::detail::writePhysicsFSErrorToLog(mLog);
 		}
 	}
 
@@ -326,7 +365,8 @@ namespace RendererRuntime
 		// Deinitialize the PhysicsFS library
 		if (mOwnsPhysicsFSInstance && 0 == PHYSFS_deinit())
 		{
-			// TODO(co) Error: Use PHYSFS_getLastErrorCode() and PHYSFS_getErrorByCode() instead.
+			// Error!
+			::detail::writePhysicsFSErrorToLog(mLog);
 		}
 	}
 
@@ -349,7 +389,7 @@ namespace RendererRuntime
 		if (0 == PHYSFS_mount(absoluteDirectoryName, mountPoint, appendToPath))
 		{
 			// Error!
-			assert(false && "Failed to mount the new directory");
+			::detail::writePhysicsFSErrorToLog(mLog);
 			return false;
 		}
 
@@ -366,9 +406,54 @@ namespace RendererRuntime
 		return (0 != PHYSFS_exists(virtualFilename));
 	}
 
-	inline std::string PhysicsFSFileManager::mapVirtualToAbsoluteFilename(FileMode, VirtualFilename) const
+	inline std::string PhysicsFSFileManager::mapVirtualToAbsoluteFilename(FileMode fileMode, VirtualFilename virtualFilename) const
 	{
-		// TODO(co) Implement me
+		// Figure out where in the search path a file resides (e.g. "LocalData/DebugGui/UnrimpDebugGuiLayout.ini" -> "c:/MyProject/bin/LocalData")
+		const char* realDirectory = PHYSFS_getRealDir(virtualFilename);
+		if (nullptr != realDirectory)
+		{
+			// Determine a mounted archive mount point (e.g. "c:/MyProject/bin/LocalData" -> "LocalData")
+			const char* mountPoint = PHYSFS_getMountPoint(realDirectory);
+			if (nullptr == mountPoint)
+			{
+				// The mount point is the root, so, determining the absolute filename is trivial
+				return std::string(realDirectory) + '/' + virtualFilename;
+			}
+			else
+			{
+				// Find the mount point part inside the given virtual filename
+				// TODO(co) Use "std::string_view" as soon as its available
+				const size_t index = std::string(virtualFilename).find_first_of(mountPoint);
+				if (std::string::npos != index)
+				{
+					// Now that we have all information we need, transform the given virtual filename into an absolute filename
+					// -> Example: The virtual filename "LocalData/DebugGui/UnrimpDebugGuiLayout.ini" will result in the absolute filename "c:/MyProject/bin/LocalData/DebugGui/UnrimpDebugGuiLayout.ini"
+					std::string absoluteFilename = virtualFilename;
+					absoluteFilename.erase(index, strlen(mountPoint));	// Example: "LocalData/DebugGui/UnrimpDebugGuiLayout.ini" to "DebugGui/UnrimpDebugGuiLayout.ini"
+					absoluteFilename = std::string(realDirectory) + '/' + absoluteFilename;
+
+					// Done
+					return absoluteFilename;
+				}
+			}
+		}
+
+		// File not found, guess location of a newly created file?
+		else if (FileMode::WRITE == fileMode)
+		{
+			// Get the absolute filename of the directory a newly created file would be in
+			// -> Example: The virtual filename "LocalData/DebugGui/UnrimpDebugGuiLayout.ini" will result in the absolute directory name "c:/MyProject/bin/LocalData/DebugGui"
+			const std_filesystem::path path(virtualFilename);
+			const std::string absoluteDirectoryName = mapVirtualToAbsoluteFilename(fileMode, path.parent_path().generic_string().c_str());
+			if (!absoluteDirectoryName.empty())
+			{
+				// Construct the absolute filename
+				return absoluteDirectoryName + '/' + path.filename().string();
+			}
+		}
+
+		// Error!
+		assert(false && "Failed to map virtual to PhysicsFS absolute filename");
 		return "";
 	}
 
@@ -378,7 +463,18 @@ namespace RendererRuntime
 		assert(nullptr != virtualFilename);
 
 		// Ask PhysicsFS
-		return PHYSFS_getLastModTime(virtualFilename);
+		PHYSFS_Stat physicsFSStat = {};
+		if (0 == PHYSFS_stat(virtualFilename, &physicsFSStat))
+		{
+			// Error!
+			assert(false && "Failed to get PhysicsFS last file modification time");
+			::detail::writePhysicsFSErrorToLog(mLog);
+			return 0;
+		}
+		else
+		{
+			return physicsFSStat.modtime;
+		}
 	}
 
 	inline int64_t PhysicsFSFileManager::getFileSize(VirtualFilename virtualFilename) const
@@ -387,16 +483,18 @@ namespace RendererRuntime
 		assert(nullptr != virtualFilename);
 
 		// Ask PhysicsFS
-		int64_t fileSize = -1;	// Error by default
-		PHYSFS_file* physicsFSFile = PHYSFS_openRead(virtualFilename);
-		if (nullptr != physicsFSFile)
+		PHYSFS_Stat physicsFSStat = {};
+		if (0 == PHYSFS_stat(virtualFilename, &physicsFSStat))
 		{
-			fileSize = PHYSFS_fileLength(physicsFSFile);
-			PHYSFS_close(physicsFSFile);
+			// Error!
+			assert(false && "Failed to get PhysicsFS file size");
+			::detail::writePhysicsFSErrorToLog(mLog);
+			return 0;
 		}
-
-		// Done
-		return fileSize;
+		else
+		{
+			return physicsFSStat.filesize;
+		}
 	}
 
 	inline bool PhysicsFSFileManager::createDirectories(VirtualDirectoryName virtualDirectoryName) const
@@ -405,15 +503,15 @@ namespace RendererRuntime
 		assert(nullptr != virtualDirectoryName);
 
 		// Create directories
-		return (PHYSFS_mkdir(virtualDirectoryName) != 0);
+		const int result = PHYSFS_mkdir(virtualDirectoryName);
+		assert(0 != result && "PhysicsFS failed to create the directories");
+		return (result != 0);
 	}
 
 	inline IFile* PhysicsFSFileManager::openFile(FileMode fileMode, VirtualFilename virtualFilename) const
 	{
 		// Sanity check
 		assert(nullptr != virtualFilename);
-
-		// TODO(co) Implement me
 
 		// Open file
 		::detail::PhysicsFSFile* file = nullptr;
@@ -436,7 +534,6 @@ namespace RendererRuntime
 
 	inline void PhysicsFSFileManager::closeFile(IFile& file) const
 	{
-		// TODO(co) Implement me
 		delete static_cast< ::detail::PhysicsFSFile*>(&file);
 	}
 
