@@ -345,12 +345,13 @@ namespace RendererRuntime
 			// TODO(sw) These files don't get read/written via an file interface -> can break on mobile devices
 			// TODO(co) The file manager now works with virtual filenames, this might resolve the issue since the local data mount point is considered to map to a file location were the application is allowed to write
 			const std::string virtualDebugGuiDirectoryName = std::string(localDataMountPoint) + "/DebugGui";
-			mIniFilename = virtualDebugGuiDirectoryName + "/UnrimpDebugGuiLayout.ini";
-			mLogFilename = virtualDebugGuiDirectoryName + "/UnrimpDebugGuiLog.txt";
 			if (fileManager.doesFileExist(virtualDebugGuiDirectoryName.c_str()) || fileManager.createDirectories(virtualDebugGuiDirectoryName.c_str()))
 			{
-				imGuiIo.IniFilename = mIniFilename.c_str();
-				imGuiIo.LogFilename = mLogFilename.c_str();
+				// ImGui has no file system abstraction and needs absolute filenames
+				mAbsoluteIniFilename = fileManager.mapVirtualToAbsoluteFilename(IFileManager::FileMode::WRITE, (virtualDebugGuiDirectoryName + "/UnrimpDebugGuiLayout.ini").c_str());
+				mAbsoluteLogFilename = fileManager.mapVirtualToAbsoluteFilename(IFileManager::FileMode::WRITE, (virtualDebugGuiDirectoryName + "/UnrimpDebugGuiLog.txt").c_str());
+				imGuiIo.IniFilename = mAbsoluteIniFilename.c_str();
+				imGuiIo.LogFilename = mAbsoluteLogFilename.c_str();
 			}
 		}
 

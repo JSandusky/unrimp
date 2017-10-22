@@ -120,10 +120,10 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime&			mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
-		std::string					mIniFilename;
-		std::string					mLogFilename;
-		bool						mIsRunning;			///< The debug GUI manager will be initialized lazy when "RendererRuntime::DebugGuiManager::newFrame()" is called for the first time
+		IRendererRuntime&			mRendererRuntime;		///< Renderer runtime instance, do not destroy the instance
+		std::string					mAbsoluteIniFilename;	///< Absolute UTF-8 ImGui ini-filename, class member since ImGui just keeps a pointer to this string instance
+		std::string					mAbsoluteLogFilename;	///< Absolute UTF-8 ImGui log-filename, class member since ImGui just keeps a pointer to this string instance
+		bool						mIsRunning;				///< The debug GUI manager will be initialized lazy when "RendererRuntime::DebugGuiManager::newFrame()" is called for the first time
 		Renderer::ITexture2DPtr		mTexture2D;
 		// Fixed build in renderer configuration resources
 		Renderer::IRootSignaturePtr	mRootSignature;
