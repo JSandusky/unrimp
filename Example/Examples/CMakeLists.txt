@@ -80,7 +80,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/PhysicsFS/include
 set(SOURCE_CODES
 	# PhysicsFS external library
 	${CMAKE_CURRENT_SOURCE_DIR}/../../External/PhysicsFS/src/physfs.c
-	${CMAKE_CURRENT_SOURCE_DIR}/../../External/PhysicsFS/src/physfs_archiver_7z.c
+	${CMAKE_CURRENT_SOURCE_DIR}/../../External/PhysicsFS/src/physfs_archiver_zip.c
 	${CMAKE_CURRENT_SOURCE_DIR}/../../External/PhysicsFS/src/physfs_archiver_dir.c
 	${CMAKE_CURRENT_SOURCE_DIR}/../../External/PhysicsFS/src/physfs_archiver_unpacked.c
 	${CMAKE_CURRENT_SOURCE_DIR}/../../External/PhysicsFS/src/physfs_byteorder.c

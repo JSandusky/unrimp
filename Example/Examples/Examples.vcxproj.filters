@@ -611,7 +611,7 @@
     <ClCompile Include="..\..\External\PhysicsFS\src\physfs.c">
       <Filter>External\PhysicsFS</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\External\PhysicsFS\src\physfs_archiver_7z.c">
+    <ClCompile Include="..\..\External\PhysicsFS\src\physfs_archiver_zip.c">
       <Filter>External\PhysicsFS</Filter>
     </ClCompile>
     <ClCompile Include="..\..\External\PhysicsFS\src\physfs_archiver_dir.c">

@@ -233,6 +233,11 @@ namespace RendererRuntime
 		*
 		*  @return
 		*    The file interface, can be a null pointer if horrible things are happening (total failure)
+		*
+		*  @note
+		*    - ZIP files may be password-protected and each file may have a different password provided
+		*      with the virtual filename syntax "<filename>$<password>" (e.g. "myfile$mypassword"); due
+		*      to the negative loading time impact password secured asset packages are not supported
 		*/
 		virtual IFile* openFile(FileMode fileMode, VirtualFilename virtualFilename) const = 0;
 

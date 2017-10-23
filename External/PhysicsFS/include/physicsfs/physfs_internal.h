@@ -164,10 +164,10 @@ void __PHYSFS_smallFree(void *ptr);
 
 // TODO(co) Disabled unused formats
 #ifndef PHYSFS_SUPPORTS_ZIP
-#define PHYSFS_SUPPORTS_ZIP 0
+#define PHYSFS_SUPPORTS_ZIP 1
 #endif
 #ifndef PHYSFS_SUPPORTS_7Z
-#define PHYSFS_SUPPORTS_7Z 1
+#define PHYSFS_SUPPORTS_7Z 0
 #endif
 #ifndef PHYSFS_SUPPORTS_GRP
 #define PHYSFS_SUPPORTS_GRP 0
