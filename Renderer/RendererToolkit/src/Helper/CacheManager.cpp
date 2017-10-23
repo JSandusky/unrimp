@@ -22,13 +22,13 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/Helper/CacheManager.h"
-#include "RendererToolkit/Helper/FileSystemHelper.h"
 #include "RendererToolkit/Context.h"
 
 #include <RendererRuntime/IRendererRuntime.h>
 #include <RendererRuntime/Core/Math/Math.h>
 #include <RendererRuntime/Core/File/MemoryFile.h>
 #include <RendererRuntime/Core/File/IFileManager.h>
+#include <RendererRuntime/Core/File/FileSystemHelper.h>
 
 
 //[-------------------------------------------------------]
@@ -66,7 +66,7 @@ namespace
 			std::string virtualDirectoryName;
 			std::string virtualFilename;
 			getRendererToolkitCacheFilename(fileManager, projectName, virtualDirectoryName, virtualFilename);
-			if (fileManager.doesFileExist(virtualFilename.c_str()) && memoryFile.loadLz4CompressedDataFromFile(RendererToolkitCache::FORMAT_TYPE, RendererToolkitCache::FORMAT_VERSION, virtualFilename, fileManager))
+			if (fileManager.doesFileExist(virtualFilename.c_str()) && memoryFile.loadLz4CompressedDataByVirtualFilename(RendererToolkitCache::FORMAT_TYPE, RendererToolkitCache::FORMAT_VERSION, virtualFilename.c_str(), fileManager))
 			{
 				memoryFile.decompress();
 
@@ -85,7 +85,7 @@ namespace
 			std::string virtualFilename;
 			const RendererRuntime::IFileManager& fileManager = context.getFileManager();
 			getRendererToolkitCacheFilename(fileManager, projectName, virtualDirectoryName, virtualFilename);
-			if (fileManager.createDirectories(virtualDirectoryName.c_str()) && !memoryFile.writeLz4CompressedDataToFile(RendererToolkitCache::FORMAT_TYPE, RendererToolkitCache::FORMAT_VERSION, virtualFilename, fileManager))
+			if (fileManager.createDirectories(virtualDirectoryName.c_str()) && !memoryFile.writeLz4CompressedDataByVirtualFilename(RendererToolkitCache::FORMAT_TYPE, RendererToolkitCache::FORMAT_VERSION, virtualFilename.c_str(), fileManager))
 			{
 				RENDERER_LOG(context, CRITICAL, "The renderer toolkit failed to save the cache to \"%s\"", virtualFilename.c_str())
 			}

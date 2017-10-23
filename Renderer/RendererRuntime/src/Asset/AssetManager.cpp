@@ -26,6 +26,7 @@
 #include "RendererRuntime/Asset/AssetPackage.h"
 #include "RendererRuntime/Asset/Loader/AssetPackageLoader.h"
 #include "RendererRuntime/Core/File/IFileManager.h"
+#include "RendererRuntime/Core/File/FileSystemHelper.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <cassert>
@@ -60,25 +61,20 @@ namespace RendererRuntime
 		return *assetPackage;
 	}
 
-	AssetPackage* AssetManager::addAssetPackageByFilename(AssetPackageId assetPackageId, const char* filename)
+	AssetPackage* AssetManager::mountAssetPackage(AbsoluteDirectoryName absoluteDirectoryName, const char* projectName)
 	{
-		assert(nullptr == tryGetAssetPackageById(assetPackageId) && "Asset package ID is already used");
-		IFileManager& fileManager = mRendererRuntime.getFileManager();
-		IFile* file = fileManager.openFile(IFileManager::FileMode::READ, filename);
-		if (nullptr != file)
+		// Mount the asset package into the file system
+		if (mRendererRuntime.getFileManager().mountDirectory(absoluteDirectoryName, projectName))
 		{
-			AssetPackage* assetPackage = new AssetPackage(assetPackageId);
-			AssetPackageLoader().loadAssetPackage(*assetPackage, *file);
-			mAssetPackageVector.push_back(assetPackage);
-			fileManager.closeFile(*file);
-
-			// Done
-			return assetPackage;
+			// Generate the asset package ID using the naming scheme "<project name>/<asset package name>" and load the asset package
+			const std::string assetPackageName = std_filesystem::path(absoluteDirectoryName).stem().generic_string();
+			const std::string projectNameWithSlash = std::string(projectName) + '/';
+			return addAssetPackageByVirtualFilename(StringId((projectNameWithSlash + assetPackageName).c_str()), (projectNameWithSlash + assetPackageName + ".assets").c_str());
 		}
 		else
 		{
-			// Error! This is horrible. No assets.
-			assert(false);
+			// Error!
+			assert(false && "Failed to mount the asset package");
 			return nullptr;
 		}
 	}
@@ -125,6 +121,33 @@ namespace RendererRuntime
 
 		// Sorry, the given asset ID is unknown
 		return nullptr;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	AssetPackage* AssetManager::addAssetPackageByVirtualFilename(AssetPackageId assetPackageId, VirtualFilename virtualFilename)
+	{
+		assert(nullptr == tryGetAssetPackageById(assetPackageId) && "Asset package ID is already used");
+		IFileManager& fileManager = mRendererRuntime.getFileManager();
+		IFile* file = fileManager.openFile(IFileManager::FileMode::READ, virtualFilename);
+		if (nullptr != file)
+		{
+			AssetPackage* assetPackage = new AssetPackage(assetPackageId);
+			AssetPackageLoader().loadAssetPackage(*assetPackage, *file);
+			mAssetPackageVector.push_back(assetPackage);
+			fileManager.closeFile(*file);
+
+			// Done
+			return assetPackage;
+		}
+		else
+		{
+			// Error! This is horrible. No assets.
+			assert(false);
+			return nullptr;
+		}
 	}
 
 

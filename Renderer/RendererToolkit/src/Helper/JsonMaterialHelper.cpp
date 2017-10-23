@@ -23,10 +23,11 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/Helper/JsonMaterialHelper.h"
 #include "RendererToolkit/Helper/JsonMaterialBlueprintHelper.h"
-#include "RendererToolkit/Helper/FileSystemHelper.h"
 #include "RendererToolkit/Helper/StringHelper.h"
 #include "RendererToolkit/Helper/JsonHelper.h"
 #include "RendererToolkit/Context.h"
+
+#include <RendererRuntime/Core/File/FileSystemHelper.h>
 
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH

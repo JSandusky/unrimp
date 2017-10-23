@@ -21,10 +21,14 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <cassert>
-#include <cstring>		// For "memcpy()"
-#include <iterator>		// For "std::back_inserter()"
-#include <algorithm>	// For "std::copy()"
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'return': conversion from 'int' to 'std::_Rand_urng_from_func::result_type', signed/unsigned mismatch
+	#include <cassert>
+	#include <cstring>		// For "memcpy()"
+	#include <iterator>		// For "std::back_inserter()"
+	#include <algorithm>	// For "std::copy()"
+PRAGMA_WARNING_POP
 
 
 //[-------------------------------------------------------]

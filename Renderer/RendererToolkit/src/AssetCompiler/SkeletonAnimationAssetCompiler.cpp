@@ -22,7 +22,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/SkeletonAnimationAssetCompiler.h"
-#include "RendererToolkit/Helper/FileSystemHelper.h"
 #include "RendererToolkit/Helper/AssimpLogStream.h"
 #include "RendererToolkit/Helper/AssimpHelper.h"
 #include "RendererToolkit/Helper/CacheManager.h"
@@ -34,6 +33,7 @@
 #include <RendererRuntime/Core/File/IFile.h>
 #include <RendererRuntime/Core/File/MemoryFile.h>
 #include <RendererRuntime/Core/File/IFileManager.h>
+#include <RendererRuntime/Core/File/FileSystemHelper.h>
 #include <RendererRuntime/Core/GetUninitialized.h>
 #include <RendererRuntime/Resource/SkeletonAnimation/SkeletonAnimationResource.h>
 #include <RendererRuntime/Resource/SkeletonAnimation/Loader/SkeletonAnimationFileFormat.h>
@@ -296,7 +296,7 @@ namespace RendererToolkit
 			}
 
 			// Write LZ4 compressed output
-			memoryFile.writeLz4CompressedDataToFile(RendererRuntime::v1SkeletonAnimation::FORMAT_TYPE, RendererRuntime::v1SkeletonAnimation::FORMAT_VERSION, virtualOutputAssetFilename, input.context.getFileManager());
+			memoryFile.writeLz4CompressedDataByVirtualFilename(RendererRuntime::v1SkeletonAnimation::FORMAT_TYPE, RendererRuntime::v1SkeletonAnimation::FORMAT_VERSION, virtualOutputAssetFilename.c_str(), input.context.getFileManager());
 
 			// Store new cache entries or update existing ones
 			input.cacheManager.storeOrUpdateCacheEntries(cacheEntries);

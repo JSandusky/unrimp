@@ -22,7 +22,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/CompositorWorkspaceAssetCompiler.h"
-#include "RendererToolkit/Helper/FileSystemHelper.h"
 #include "RendererToolkit/Helper/CacheManager.h"
 #include "RendererToolkit/Helper/StringHelper.h"
 #include "RendererToolkit/Helper/JsonHelper.h"
@@ -30,6 +29,7 @@
 
 #include <RendererRuntime/Asset/AssetPackage.h>
 #include <RendererRuntime/Core/File/MemoryFile.h>
+#include <RendererRuntime/Core/File/FileSystemHelper.h>
 #include <RendererRuntime/Resource/CompositorWorkspace/Loader/CompositorWorkspaceFileFormat.h>
 #include <RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceResource.h>
 
@@ -138,7 +138,7 @@ namespace RendererToolkit
 			}
 
 			// Write LZ4 compressed output
-			memoryFile.writeLz4CompressedDataToFile(RendererRuntime::v1CompositorWorkspace::FORMAT_TYPE, RendererRuntime::v1CompositorWorkspace::FORMAT_VERSION, virtualOutputAssetFilename, input.context.getFileManager());
+			memoryFile.writeLz4CompressedDataByVirtualFilename(RendererRuntime::v1CompositorWorkspace::FORMAT_TYPE, RendererRuntime::v1CompositorWorkspace::FORMAT_VERSION, virtualOutputAssetFilename.c_str(), input.context.getFileManager());
 
 			// Store new cache entries or update existing ones
 			input.cacheManager.storeOrUpdateCacheEntries(cacheEntries);

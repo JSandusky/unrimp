@@ -375,7 +375,6 @@
     <ClInclude Include="include\RendererToolkit\Helper\AssimpHelper.h" />
     <ClInclude Include="include\RendererToolkit\Helper\AssimpLogStream.h" />
     <ClInclude Include="include\RendererToolkit\Helper\CacheManager.h" />
-    <ClInclude Include="include\RendererToolkit\Helper\FileSystemHelper.h" />
     <ClInclude Include="include\RendererToolkit\Helper\JsonHelper.h" />
     <ClInclude Include="include\RendererToolkit\Helper\JsonMaterialBlueprintHelper.h" />
     <ClInclude Include="include\RendererToolkit\Helper\JsonMaterialHelper.h" />

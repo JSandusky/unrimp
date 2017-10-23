@@ -22,10 +22,10 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/Helper/StringHelper.h"
-#include "RendererToolkit/Helper/FileSystemHelper.h"
 
 #include <RendererRuntime/Core/File/IFile.h>
 #include <RendererRuntime/Core/File/IFileManager.h>
+#include <RendererRuntime/Core/File/FileSystemHelper.h>
 
 PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'initializing': conversion from 'int' to '::size_t', signed/unsigned mismatch
@@ -228,37 +228,37 @@ namespace
 			// Copied from boost: https://github.com/boostorg/filesystem/blob/a682eaa476cf0b4e992884d32dd2ddcfb0b6b1aa/src/path.cpp
 			// Implement lexically_normal used when std::filesystem::path implementation of the c++ runtime doesn't provide this as member method
 			// std::filesystem::path::lexically_normal is part of the filesystem TS which is part of C++17
-			const RendererToolkit::std_filesystem::path&  dot_path()
+			const std_filesystem::path&  dot_path()
 			{
 				#   ifdef WIN32
-				static const RendererToolkit::std_filesystem::path dot_pth(L".");
+				static const std_filesystem::path dot_pth(L".");
 				#   else
-				static const RendererToolkit::std_filesystem::path dot_pth(".");
+				static const std_filesystem::path dot_pth(".");
 				#   endif
 				return dot_pth;
 			}
 		
 			# ifdef WIN32
-				const RendererToolkit::std_filesystem::path::value_type      separator = L'/';
-				const RendererToolkit::std_filesystem::path::value_type      preferred_separator = L'\\';
-				const RendererToolkit::std_filesystem::path::value_type      dot = L'.';
-				const RendererToolkit::std_filesystem::path::value_type      colon = L':';
+				const std_filesystem::path::value_type      separator = L'/';
+				const std_filesystem::path::value_type      preferred_separator = L'\\';
+				const std_filesystem::path::value_type      dot = L'.';
+				const std_filesystem::path::value_type      colon = L':';
 			# else 
-				const RendererToolkit::std_filesystem::path::value_type      separator = '/';
-				const RendererToolkit::std_filesystem::path::value_type      preferred_separator = '/';
-				const RendererToolkit::std_filesystem::path::value_type      dot = '.';
+				const std_filesystem::path::value_type      separator = '/';
+				const std_filesystem::path::value_type      preferred_separator = '/';
+				const std_filesystem::path::value_type      dot = '.';
 			# endif
 		
-			RendererToolkit::std_filesystem::path lexically_normal(const RendererToolkit::std_filesystem::path& path)
+			std_filesystem::path lexically_normal(const std_filesystem::path& path)
 			{
 				if (path.empty())
 					return path;
 
-				RendererToolkit::std_filesystem::path temp;
-				RendererToolkit::std_filesystem::path::iterator start(path.begin());
-				RendererToolkit::std_filesystem::path::iterator last(path.end());
-				RendererToolkit::std_filesystem::path::iterator stop(last--);
-				for (RendererToolkit::std_filesystem::path::iterator itr(start); itr != stop; ++itr)
+				std_filesystem::path temp;
+				std_filesystem::path::iterator start(path.begin());
+				std_filesystem::path::iterator last(path.end());
+				std_filesystem::path::iterator stop(last--);
+				for (std_filesystem::path::iterator itr(start); itr != stop; ++itr)
 				{
 					// ignore "." except at start and last
 					if (itr->native().size() == 1
@@ -272,7 +272,7 @@ namespace
 						&& (itr->native())[0] == detail::dot
 						&& (itr->native())[1] == detail::dot) // dot dot
 					{
-						RendererToolkit::std_filesystem::path::string_type lf(temp.filename().native());  
+						std_filesystem::path::string_type lf(temp.filename().native());  
 						if (lf.size() > 0  
 						&& (lf.size() != 1
 							|| (lf[0] != detail::dot
@@ -302,7 +302,7 @@ namespace
 							//  }
 							//}
 
-							RendererToolkit::std_filesystem::path::iterator next(itr);
+							std_filesystem::path::iterator next(itr);
 							if (temp.empty() && ++next != stop
 							&& next == last && *last == detail::dot_path())
 							{
@@ -321,7 +321,7 @@ namespace
 			}
 		#endif
 
-		RendererToolkit::std_filesystem::path path_lexically_normal(const RendererToolkit::std_filesystem::path& path)
+		std_filesystem::path path_lexically_normal(const std_filesystem::path& path)
 		{
 			#ifdef UNRIMP_USE_BOOST_FILESYSTEM
 				// boost itself has this implemented

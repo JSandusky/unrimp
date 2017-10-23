@@ -23,7 +23,6 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/Project/ProjectImpl.h"
 #include "RendererToolkit/Project/ProjectAssetMonitor.h"
-#include "RendererToolkit/Helper/FileSystemHelper.h"
 #include "RendererToolkit/Helper/JsonHelper.h"
 #include "RendererToolkit/Helper/StringHelper.h"
 #include "RendererToolkit/Helper/CacheManager.h"
@@ -44,6 +43,7 @@
 #include <RendererRuntime/IRendererRuntime.h>
 #include <RendererRuntime/Core/File/MemoryFile.h>
 #include <RendererRuntime/Core/File/IFileManager.h>
+#include <RendererRuntime/Core/File/FileSystemHelper.h>
 #include <RendererRuntime/Core/Platform/PlatformManager.h>
 #include <RendererRuntime/Asset/Loader/AssetPackageFileFormat.h>
 
@@ -437,7 +437,7 @@ namespace RendererToolkit
 			memoryFile.write(sortedAssetVector.data(), sizeof(RendererRuntime::Asset) * sortedAssetVector.size());
 
 			// Write LZ4 compressed output
-			memoryFile.writeLz4CompressedDataToFile(RendererRuntime::StringId("AssetPackage"), RendererRuntime::v1AssetPackage::FORMAT_VERSION, getRenderTargetDataRootDirectory(rendererTarget) + '/' + mAssetPackageDirectoryName + "/AssetPackage.assets", mContext.getFileManager());
+			memoryFile.writeLz4CompressedDataByVirtualFilename(RendererRuntime::StringId("AssetPackage"), RendererRuntime::v1AssetPackage::FORMAT_VERSION, (getRenderTargetDataRootDirectory(rendererTarget) + '/' + mAssetPackageDirectoryName + '/' + mAssetPackageDirectoryName + ".assets").c_str(), mContext.getFileManager());
 		}
 
 		// Compilation run finished clear internal caches/states

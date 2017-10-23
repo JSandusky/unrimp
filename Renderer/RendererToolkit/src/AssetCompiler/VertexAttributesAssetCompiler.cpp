@@ -22,7 +22,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/VertexAttributesAssetCompiler.h"
-#include "RendererToolkit/Helper/FileSystemHelper.h"
 #include "RendererToolkit/Helper/CacheManager.h"
 #include "RendererToolkit/Helper/StringHelper.h"
 #include "RendererToolkit/Helper/JsonHelper.h"
@@ -30,6 +29,7 @@
 
 #include <RendererRuntime/Asset/AssetPackage.h>
 #include <RendererRuntime/Core/File/MemoryFile.h>
+#include <RendererRuntime/Core/File/FileSystemHelper.h>
 #include <RendererRuntime/Resource/VertexAttributes/VertexAttributesResource.h>
 #include <RendererRuntime/Resource/VertexAttributes/Loader/VertexAttributesFileFormat.h>
 
@@ -119,7 +119,7 @@ namespace RendererToolkit
 			}
 
 			// Write LZ4 compressed output
-			memoryFile.writeLz4CompressedDataToFile(RendererRuntime::v1VertexAttributes::FORMAT_TYPE, RendererRuntime::v1VertexAttributes::FORMAT_VERSION, virtualOutputAssetFilename, input.context.getFileManager());
+			memoryFile.writeLz4CompressedDataByVirtualFilename(RendererRuntime::v1VertexAttributes::FORMAT_TYPE, RendererRuntime::v1VertexAttributes::FORMAT_VERSION, virtualOutputAssetFilename.c_str(), input.context.getFileManager());
 
 			// Store new cache entries or update existing ones
 			input.cacheManager.storeOrUpdateCacheEntries(cacheEntries);

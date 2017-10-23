@@ -1247,6 +1247,9 @@
     <ClInclude Include="include\RendererRuntime\Core\File\PhysicsFSFileManager.h">
       <Filter>Source Files\Core\File</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\File\FileSystemHelper.h">
+      <Filter>Source Files\Core\File</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">

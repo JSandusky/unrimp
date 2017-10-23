@@ -124,13 +124,12 @@ void IApplicationRendererRuntime::onInitialization()
 			{
 				// Add used asset package
 				const bool rendererIsOpenGLES = (0 == strcmp(renderer->getName(), "OpenGLES3"));
-				mFileManager->mountDirectory(rendererIsOpenGLES ? "../DataMobile/Content" : "../DataPc/Content", "Example");
-				rendererRuntime->getAssetManager().addAssetPackageByFilename("Example/Content", "Example/AssetPackage.assets");
+				rendererRuntime->getAssetManager().mountAssetPackage(rendererIsOpenGLES ? "../DataMobile/Content" : "../DataPc/Content", "Example");
 				rendererRuntime->loadPipelineStateObjectCache();
 
+				// Load renderer toolkit project to enable hot-reloading in case of asset changes
 				#ifdef SHARED_LIBRARIES
 				{
-					// Load renderer toolkit project to enable hot-reloading in case of asset changes
 					RendererToolkit::IRendererToolkit* rendererToolkit = getRendererToolkit();
 					if (nullptr != rendererToolkit)
 					{

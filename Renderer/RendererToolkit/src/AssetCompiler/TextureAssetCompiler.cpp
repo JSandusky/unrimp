@@ -22,7 +22,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/TextureAssetCompiler.h"
-#include "RendererToolkit/Helper/FileSystemHelper.h"
 #include "RendererToolkit/Helper/StringHelper.h"
 #include "RendererToolkit/Helper/CacheManager.h"
 #include "RendererToolkit/Helper/JsonHelper.h"
@@ -31,6 +30,7 @@
 #include <RendererRuntime/Asset/AssetPackage.h>
 #include <RendererRuntime/Core/File/IFile.h>
 #include <RendererRuntime/Core/File/IFileManager.h>
+#include <RendererRuntime/Core/File/FileSystemHelper.h>
 
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH

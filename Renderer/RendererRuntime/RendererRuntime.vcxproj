@@ -195,6 +195,7 @@
     <ClInclude Include="include\RendererRuntime\Backend\RendererBackendManager.h" />
     <ClInclude Include="include\RendererRuntime\Backend\RendererRuntimeImpl.h" />
     <ClInclude Include="include\RendererRuntime\Context.h" />
+    <ClInclude Include="include\RendererRuntime\Core\File\FileSystemHelper.h" />
     <ClInclude Include="include\RendererRuntime\Core\File\IFile.h" />
     <ClInclude Include="include\RendererRuntime\Core\File\IFileManager.h" />
     <ClInclude Include="include\RendererRuntime\Core\File\MemoryFile.h" />

@@ -52,27 +52,14 @@
 
 
 //[-------------------------------------------------------]
-//[ Namespace                                             ]
+//[ Global definitions                                    ]
 //[-------------------------------------------------------]
-namespace RendererToolkit
-{
-
-
-	//[-------------------------------------------------------]
-	//[ Global definitions                                    ]
-	//[-------------------------------------------------------]
-	#ifdef WIN32
-		namespace std_filesystem = std::tr2::sys;
+#ifdef WIN32
+	namespace std_filesystem = std::tr2::sys;
+#else
+	#ifdef UNRIMP_USE_BOOST_FILESYSTEM
+		namespace std_filesystem = boost::filesystem;
 	#else
-		#ifdef UNRIMP_USE_BOOST_FILESYSTEM
-			namespace std_filesystem = boost::filesystem;
-		#else
-			namespace std_filesystem = std::experimental::filesystem;
-		#endif
+		namespace std_filesystem = std::experimental::filesystem;
 	#endif
-
-
-//[-------------------------------------------------------]
-//[ Namespace                                             ]
-//[-------------------------------------------------------]
-} // RendererToolkit
+#endif

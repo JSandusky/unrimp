@@ -60,8 +60,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef StringId AssetPackageId;		///< Resource loader type identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset package name>"
-	typedef const char* VirtualFilename;	///< UTF-8 virtual filename, the virtual filename scheme is "<mount point = project name>/<asset type>/<asset category>/<asset name>.<file extension>" (example "Example/Mesh/Monster/Squirrel.mesh"), never ever a null pointer and always finished by a terminating zero
+	typedef StringId AssetPackageId;			///< Resource loader type identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset package name>"
+	typedef const char* VirtualFilename;		///< UTF-8 virtual filename, the virtual filename scheme is "<mount point = project name>/<asset type>/<asset category>/<asset name>.<file extension>" (example "Example/Mesh/Monster/Squirrel.mesh"), never ever a null pointer and always finished by a terminating zero
+	typedef const char* AbsoluteDirectoryName;	///< UTF-8 absolute directory name (example: "c:/MyProject"), without "/" at the end, never ever a null pointer and always finished by a terminating zero
 
 
 	//[-------------------------------------------------------]
@@ -93,7 +94,7 @@ namespace RendererRuntime
 		//[-------------------------------------------------------]
 		void clear();
 		RENDERERRUNTIME_API_EXPORT AssetPackage& addAssetPackage(AssetPackageId assetPackageId);
-		RENDERERRUNTIME_API_EXPORT AssetPackage* addAssetPackageByFilename(AssetPackageId assetPackageId, const char* filename);
+		RENDERERRUNTIME_API_EXPORT AssetPackage* mountAssetPackage(AbsoluteDirectoryName absoluteDirectoryName, const char* projectName);
 		RENDERERRUNTIME_API_EXPORT AssetPackage& getAssetPackageById(AssetPackageId assetPackageId) const;
 		RENDERERRUNTIME_API_EXPORT AssetPackage* tryGetAssetPackageById(AssetPackageId assetPackageId) const;
 		RENDERERRUNTIME_API_EXPORT void removeAssetPackage(AssetPackageId assetPackageId);
@@ -114,6 +115,7 @@ namespace RendererRuntime
 		inline ~AssetManager();
 		explicit AssetManager(const AssetManager&) = delete;
 		AssetManager& operator=(const AssetManager&) = delete;
+		AssetPackage* addAssetPackageByVirtualFilename(AssetPackageId assetPackageId, VirtualFilename virtualFilename);
 
 
 	//[-------------------------------------------------------]

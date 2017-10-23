@@ -278,9 +278,6 @@
     <ClInclude Include="include\RendererToolkit\AssetCompiler\CompositorNodeAssetCompiler.h">
       <Filter>Source Files\AssetCompiler</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererToolkit\Helper\FileSystemHelper.h">
-      <Filter>Source Files\Helper</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererToolkit\AssetCompiler\SkeletonAnimationAssetCompiler.h">
       <Filter>Source Files\AssetCompiler</Filter>
     </ClInclude>

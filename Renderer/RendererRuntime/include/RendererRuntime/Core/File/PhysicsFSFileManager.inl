@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Core/File/IFile.h"
+#include "RendererRuntime/Core/File/FileSystemHelper.h"
 
 #include <Renderer/Public/Renderer.h>
 
@@ -30,41 +31,7 @@ extern "C"
 	#include <physicsfs/physfs.h>
 }
 
-#ifdef WIN32
-	// Disable warnings in external headers, we can't fix them
-	__pragma(warning(push))
-		__pragma(warning(disable: 4365))	// warning C4365: 'return': conversion from 'int' to 'std::_Rand_urng_from_func::result_type', signed/unsigned mismatch
-		__pragma(warning(disable: 4548))	// warning C4548: expression before comma has no effect; expected expression with side-effect
-		__pragma(warning(disable: 4571))	// warning C4571: Informational: catch(...) semantics changed since Visual C++ 7.1; structured exceptions (SEH) are no longer caught
-		__pragma(warning(disable: 4625))	// warning C4625: 'std::messages_base': copy constructor was implicitly defined as deleted
-		__pragma(warning(disable: 4626))	// warning C4626: 'std::messages<char>': assignment operator was implicitly defined as deleted
-		__pragma(warning(disable: 5026))	// warning C5026: 'std::messages_base': move constructor was implicitly defined as deleted
-		__pragma(warning(disable: 5027))	// warning C5027: 'std::messages_base': move assignment operator was implicitly defined as deleted
-		#include <filesystem>
-	__pragma(warning(pop))
-#else
-	#ifdef UNRIMP_USE_BOOST_FILESYSTEM
-		#include <boost/filesystem.hpp>
-	#else
-		#include <experimental/filesystem>
-	#endif
-#endif
-
 #include <tuple>	// For "std::ignore"
-
-
-//[-------------------------------------------------------]
-//[ Global definitions                                    ]
-//[-------------------------------------------------------]
-#ifdef WIN32
-	namespace std_filesystem = std::tr2::sys;
-#else
-	#ifdef UNRIMP_USE_BOOST_FILESYSTEM
-		namespace std_filesystem = boost::filesystem;
-	#else
-		namespace std_filesystem = std::experimental::filesystem;
-	#endif
-#endif
 
 
 //[-------------------------------------------------------]
