@@ -398,27 +398,30 @@ namespace RendererToolkit
 			}
 		}
 		RENDERER_LOG(mContext, INFORMATION, "Found %u changed assets", changedAssetIds.size())
+
+		// Compile all changed assets
 		if (!changedAssetIds.empty())
 		{
-			// Compile all changed assets
 			for (size_t i = 0; i < numberOfAssets; ++i)
 			{
 				// TODO(co) Only compile assets if a change has been detected
 				RENDERER_LOG(mContext, INFORMATION, "Compiling asset %u of %u", i + 1, numberOfAssets)
-				compileAsset(sortedAssetVector[i], rendererTarget, outputAssetPackage);
-			}
-			if (nullptr != mProjectAssetMonitor)
-			{
-				// TODO(co) Call "RendererRuntime::IRendererRuntime::reloadResourceByAssetId()" directly after an asset has been compiled to see changes as early as possible.
-				//          Need to do some refactoring for this like calling asset compilers only in case of a change while still creating/updating valid asset packages.
-				for (RendererRuntime::AssetId sourceAssetId : changedAssetIds)
+				const RendererRuntime::Asset& asset = sortedAssetVector[i];
+				compileAsset(asset, rendererTarget, outputAssetPackage);
+
+				// Call "RendererRuntime::IRendererRuntime::reloadResourceByAssetId()" directly after an asset has been compiled to see changes as early as possible
+				if (nullptr != mProjectAssetMonitor)
 				{
-					SourceAssetIdToCompiledAssetId::const_iterator iterator = mSourceAssetIdToCompiledAssetId.find(sourceAssetId);
-					if (iterator == mSourceAssetIdToCompiledAssetId.cend())
+					RendererRuntime::AssetId sourceAssetId = asset.assetId;
+					if (std::find(changedAssetIds.cbegin(), changedAssetIds.cend(), sourceAssetId) != changedAssetIds.cend())
 					{
-						throw std::runtime_error(std::string("Source asset ID ") + std::to_string(sourceAssetId) + " is unknown");
+						SourceAssetIdToCompiledAssetId::const_iterator iterator = mSourceAssetIdToCompiledAssetId.find(sourceAssetId);
+						if (iterator == mSourceAssetIdToCompiledAssetId.cend())
+						{
+							throw std::runtime_error(std::string("Source asset ID ") + std::to_string(sourceAssetId) + " is unknown");
+						}
+						mProjectAssetMonitor->mRendererRuntime.reloadResourceByAssetId(iterator->second);
 					}
-					mProjectAssetMonitor->mRendererRuntime.reloadResourceByAssetId(iterator->second);
 				}
 			}
 
