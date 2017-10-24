@@ -137,7 +137,7 @@ Renderer Runtime (e.g. "The Game")
 	- Animated controller visualization supported
 	- Hidden area mesh supported
 - Abstract file interface so the Unrimp user has control over the file handling
-	- Optional header-only standard implementations for STD file streams as well as [PhysicsFS](https://icculus.org/physfs/) for shipping packed asset packages are provided
+	- Optional header-only standard implementations for UTF-8 STD file streams as well as [PhysicsFS](https://icculus.org/physfs/) for shipping packed asset packages are provided
 - Texture top mipmap removal support while loading textures for efficient texture quality reduction
 - Light
 	- Types: Directional, point and spot

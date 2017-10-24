@@ -97,7 +97,7 @@ namespace
 		//[-------------------------------------------------------]
 		public:
 			explicit StdReadFile(const std::string& absoluteFilename) :
-				mFileStream(absoluteFilename, std::ios::binary)
+				mFileStream(std_filesystem::u8path(absoluteFilename), std::ios::binary)
 			{
 				assert(mFileStream && "Failed to open STD file for reading");
 			}
@@ -177,7 +177,7 @@ namespace
 		//[-------------------------------------------------------]
 		public:
 			explicit StdWriteFile(const std::string& absoluteFilename) :
-				mFileStream(absoluteFilename, std::ios::binary)
+				mFileStream(std_filesystem::u8path(absoluteFilename), std::ios::binary)
 			{
 				assert(mFileStream && "Failed to open STD file for writing");
 			}
@@ -363,7 +363,7 @@ namespace RendererRuntime
 			for (const std::string& absoluteDirectoryName : *absoluteDirectoryNames)
 			{
 				const std::string absoluteFilename = absoluteDirectoryName + '/' + relativeFilename;
-				if (std_filesystem::exists(absoluteFilename))
+				if (std_filesystem::exists(std_filesystem::u8path(absoluteFilename)))
 				{
 					return absoluteFilename;
 				}
@@ -386,7 +386,7 @@ namespace RendererRuntime
 		const std::string absoluteFilename = mapVirtualToAbsoluteFilename(FileMode::READ, virtualFilename);
 		if (!absoluteFilename.empty())
 		{
-			const std_filesystem::file_time_type lastWriteTime = std_filesystem::last_write_time(absoluteFilename);
+			const std_filesystem::file_time_type lastWriteTime = std_filesystem::last_write_time(std_filesystem::u8path(absoluteFilename));
 			return static_cast<int64_t>(decltype(lastWriteTime)::clock::to_time_t(lastWriteTime));
 		}
 
@@ -397,7 +397,7 @@ namespace RendererRuntime
 	inline int64_t StdFileManager::getFileSize(VirtualFilename virtualFilename) const
 	{
 		const std::string absoluteFilename = mapVirtualToAbsoluteFilename(FileMode::READ, virtualFilename);
-		return absoluteFilename.empty() ? -1 : static_cast<int64_t>(std_filesystem::file_size(absoluteFilename));
+		return absoluteFilename.empty() ? -1 : static_cast<int64_t>(std_filesystem::file_size(std_filesystem::u8path(absoluteFilename)));
 	}
 
 	inline bool StdFileManager::createDirectories(VirtualDirectoryName virtualDirectoryName) const
@@ -412,7 +412,7 @@ namespace RendererRuntime
 		{
 			for (const std::string& absoluteDirectoryName : *absoluteDirectoryNames)
 			{
-				const std::string absoluteFilename = absoluteDirectoryName + '/' + relativeFilename;
+				const std_filesystem::path absoluteFilename = std_filesystem::u8path(absoluteDirectoryName + '/' + relativeFilename);
 				if (!std_filesystem::exists(absoluteFilename) && !std_filesystem::create_directories(absoluteFilename))
 				{
 					// Failed to create the directories
