@@ -66,7 +66,7 @@ namespace
 			std::string virtualDirectoryName;
 			std::string virtualFilename;
 			getRendererToolkitCacheFilename(fileManager, projectName, virtualDirectoryName, virtualFilename);
-			if (fileManager.doesFileExist(virtualFilename.c_str()) && memoryFile.loadLz4CompressedDataByVirtualFilename(RendererToolkitCache::FORMAT_TYPE, RendererToolkitCache::FORMAT_VERSION, virtualFilename.c_str(), fileManager))
+			if (fileManager.doesFileExist(virtualFilename.c_str()) && memoryFile.loadLz4CompressedDataByVirtualFilename(RendererToolkitCache::FORMAT_TYPE, RendererToolkitCache::FORMAT_VERSION, fileManager, virtualFilename.c_str()))
 			{
 				memoryFile.decompress();
 
@@ -85,7 +85,7 @@ namespace
 			std::string virtualFilename;
 			const RendererRuntime::IFileManager& fileManager = context.getFileManager();
 			getRendererToolkitCacheFilename(fileManager, projectName, virtualDirectoryName, virtualFilename);
-			if (fileManager.createDirectories(virtualDirectoryName.c_str()) && !memoryFile.writeLz4CompressedDataByVirtualFilename(RendererToolkitCache::FORMAT_TYPE, RendererToolkitCache::FORMAT_VERSION, virtualFilename.c_str(), fileManager))
+			if (fileManager.createDirectories(virtualDirectoryName.c_str()) && !memoryFile.writeLz4CompressedDataByVirtualFilename(RendererToolkitCache::FORMAT_TYPE, RendererToolkitCache::FORMAT_VERSION, fileManager, virtualFilename.c_str()))
 			{
 				RENDERER_LOG(context, CRITICAL, "The renderer toolkit failed to save the cache to \"%s\"", virtualFilename.c_str())
 			}

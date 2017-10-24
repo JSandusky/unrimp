@@ -439,7 +439,7 @@ namespace RendererToolkit
 				memoryFile.write(sortedOutputAssetVector.data(), sizeof(RendererRuntime::Asset) * sortedOutputAssetVector.size());
 
 				// Write LZ4 compressed output
-				memoryFile.writeLz4CompressedDataByVirtualFilename(RendererRuntime::StringId("AssetPackage"), RendererRuntime::v1AssetPackage::FORMAT_VERSION, (getRenderTargetDataRootDirectory(rendererTarget) + '/' + mAssetPackageDirectoryName + '/' + mAssetPackageDirectoryName + ".assets").c_str(), mContext.getFileManager());
+				memoryFile.writeLz4CompressedDataByVirtualFilename(RendererRuntime::StringId("AssetPackage"), RendererRuntime::v1AssetPackage::FORMAT_VERSION, mContext.getFileManager(), (getRenderTargetDataRootDirectory(rendererTarget) + '/' + mAssetPackageDirectoryName + '/' + mAssetPackageDirectoryName + ".assets").c_str());
 			}
 
 			// Compilation run finished clear internal caches/states

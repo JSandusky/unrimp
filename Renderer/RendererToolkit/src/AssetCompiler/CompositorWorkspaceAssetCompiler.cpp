@@ -138,7 +138,7 @@ namespace RendererToolkit
 			}
 
 			// Write LZ4 compressed output
-			memoryFile.writeLz4CompressedDataByVirtualFilename(RendererRuntime::v1CompositorWorkspace::FORMAT_TYPE, RendererRuntime::v1CompositorWorkspace::FORMAT_VERSION, virtualOutputAssetFilename.c_str(), input.context.getFileManager());
+			memoryFile.writeLz4CompressedDataByVirtualFilename(RendererRuntime::v1CompositorWorkspace::FORMAT_TYPE, RendererRuntime::v1CompositorWorkspace::FORMAT_VERSION, input.context.getFileManager(), virtualOutputAssetFilename.c_str());
 
 			// Store new cache entries or update existing ones
 			input.cacheManager.storeOrUpdateCacheEntries(cacheEntries);

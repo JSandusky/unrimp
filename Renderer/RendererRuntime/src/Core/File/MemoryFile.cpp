@@ -74,7 +74,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	bool MemoryFile::loadLz4CompressedDataByVirtualFilename(uint32_t formatType, uint32_t formatVersion, VirtualFilename virtualFilename, const IFileManager& fileManager)
+	bool MemoryFile::loadLz4CompressedDataByVirtualFilename(uint32_t formatType, uint32_t formatVersion, const IFileManager& fileManager, VirtualFilename virtualFilename)
 	{
 		bool result = false;
 		IFile* file = fileManager.openFile(IFileManager::FileMode::READ, virtualFilename);
@@ -129,7 +129,7 @@ namespace RendererRuntime
 		mCurrentDataPointer = mDecompressedData.data();
 	}
 
-	bool MemoryFile::writeLz4CompressedDataByVirtualFilename(uint32_t formatType, uint32_t formatVersion, VirtualFilename virtualFilename, const IFileManager& fileManager) const
+	bool MemoryFile::writeLz4CompressedDataByVirtualFilename(uint32_t formatType, uint32_t formatVersion, const IFileManager& fileManager, VirtualFilename virtualFilename) const
 	{
 		// Open file
 		IFile* file = fileManager.openFile(IFileManager::FileMode::WRITE, virtualFilename);

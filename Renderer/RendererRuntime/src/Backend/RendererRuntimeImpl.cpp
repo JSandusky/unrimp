@@ -98,7 +98,7 @@ namespace
 			std::string virtualFilename;
 			getPipelineStateObjectCacheFilename(rendererRuntime, virtualDirectoryName, virtualFilename);
 			const RendererRuntime::IFileManager& fileManager = rendererRuntime.getFileManager();
-			if (fileManager.doesFileExist(virtualFilename.c_str()) && memoryFile.loadLz4CompressedDataByVirtualFilename(PipelineStateCache::FORMAT_TYPE, PipelineStateCache::FORMAT_VERSION, virtualFilename.c_str(), fileManager))
+			if (fileManager.doesFileExist(virtualFilename.c_str()) && memoryFile.loadLz4CompressedDataByVirtualFilename(PipelineStateCache::FORMAT_TYPE, PipelineStateCache::FORMAT_VERSION, fileManager, virtualFilename.c_str()))
 			{
 				memoryFile.decompress();
 
@@ -117,7 +117,7 @@ namespace
 			std::string virtualFilename;
 			getPipelineStateObjectCacheFilename(rendererRuntime, virtualDirectoryName, virtualFilename);
 			RendererRuntime::IFileManager& fileManager = rendererRuntime.getFileManager();
-			if (fileManager.createDirectories(virtualDirectoryName.c_str()) && !memoryFile.writeLz4CompressedDataByVirtualFilename(PipelineStateCache::FORMAT_TYPE, PipelineStateCache::FORMAT_VERSION, virtualFilename.c_str(), fileManager))
+			if (fileManager.createDirectories(virtualDirectoryName.c_str()) && !memoryFile.writeLz4CompressedDataByVirtualFilename(PipelineStateCache::FORMAT_TYPE, PipelineStateCache::FORMAT_VERSION, fileManager, virtualFilename.c_str()))
 			{
 				RENDERER_LOG(rendererRuntime.getContext(), CRITICAL, "The renderer runtime failed to save the pipeline state object cache to \"%s\"", virtualFilename.c_str())
 			}
