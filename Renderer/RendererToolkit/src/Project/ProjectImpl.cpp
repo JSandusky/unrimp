@@ -383,21 +383,24 @@ namespace RendererToolkit
 	{
 		RendererRuntime::AssetPackage outputAssetPackage;
 
-		{ // Compile all assets
-			const RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = mAssetPackage.getSortedAssetVector();
-			const size_t numberOfAssets = sortedAssetVector.size();
-			std::vector<RendererRuntime::AssetId> changedAssetIds;
-			changedAssetIds.reserve(numberOfAssets);
-			RENDERER_LOG(mContext, INFORMATION, "Checking %u assets for changes", numberOfAssets)
-			for (size_t i = 0; i < numberOfAssets; ++i)
+		// Discover changed assets
+		const RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = mAssetPackage.getSortedAssetVector();
+		const size_t numberOfAssets = sortedAssetVector.size();
+		std::vector<RendererRuntime::AssetId> changedAssetIds;
+		changedAssetIds.reserve(numberOfAssets);
+		RENDERER_LOG(mContext, INFORMATION, "Checking %u assets for changes", numberOfAssets)
+		for (size_t i = 0; i < numberOfAssets; ++i)
+		{
+			const RendererRuntime::Asset& asset = sortedAssetVector[i];
+			if (checkAssetIsChanged(asset, rendererTarget))
 			{
-				const RendererRuntime::Asset& asset = sortedAssetVector[i];
-				if (checkAssetIsChanged(asset, rendererTarget))
-				{
-					changedAssetIds.push_back(asset.assetId);
-				}
+				changedAssetIds.push_back(asset.assetId);
 			}
-			RENDERER_LOG(mContext, INFORMATION, "Found %u changed assets", changedAssetIds.size())
+		}
+		RENDERER_LOG(mContext, INFORMATION, "Found %u changed assets", changedAssetIds.size())
+		if (!changedAssetIds.empty())
+		{
+			// Compile all changed assets
 			for (size_t i = 0; i < numberOfAssets; ++i)
 			{
 				// TODO(co) Only compile assets if a change has been detected
@@ -418,30 +421,30 @@ namespace RendererToolkit
 					mProjectAssetMonitor->mRendererRuntime.reloadResourceByAssetId(iterator->second);
 				}
 			}
-		}
 
-		{ // Write runtime asset package
-			RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = outputAssetPackage.getWritableSortedAssetVector();
-			RendererRuntime::MemoryFile memoryFile(0, 4096);
+			{ // Write runtime asset package
+				RendererRuntime::AssetPackage::SortedAssetVector& sortedOutputAssetVector = outputAssetPackage.getWritableSortedAssetVector();
+				RendererRuntime::MemoryFile memoryFile(0, 4096);
 
-			// Ensure the asset package is sorted
-			std::sort(sortedAssetVector.begin(), sortedAssetVector.end(), ::detail::orderByAssetId);
+				// Ensure the asset package is sorted
+				std::sort(sortedOutputAssetVector.begin(), sortedOutputAssetVector.end(), ::detail::orderByAssetId);
 
-			{ // Write down the asset package header
-				RendererRuntime::v1AssetPackage::AssetPackageHeader assetPackageHeader;
-				assetPackageHeader.numberOfAssets = static_cast<uint32_t>(sortedAssetVector.size());
-				memoryFile.write(&assetPackageHeader, sizeof(RendererRuntime::v1AssetPackage::AssetPackageHeader));
+				{ // Write down the asset package header
+					RendererRuntime::v1AssetPackage::AssetPackageHeader assetPackageHeader;
+					assetPackageHeader.numberOfAssets = static_cast<uint32_t>(sortedOutputAssetVector.size());
+					memoryFile.write(&assetPackageHeader, sizeof(RendererRuntime::v1AssetPackage::AssetPackageHeader));
+				}
+
+				// Write down the asset package content in one single burst
+				memoryFile.write(sortedOutputAssetVector.data(), sizeof(RendererRuntime::Asset) * sortedOutputAssetVector.size());
+
+				// Write LZ4 compressed output
+				memoryFile.writeLz4CompressedDataByVirtualFilename(RendererRuntime::StringId("AssetPackage"), RendererRuntime::v1AssetPackage::FORMAT_VERSION, (getRenderTargetDataRootDirectory(rendererTarget) + '/' + mAssetPackageDirectoryName + '/' + mAssetPackageDirectoryName + ".assets").c_str(), mContext.getFileManager());
 			}
 
-			// Write down the asset package content in one single burst
-			memoryFile.write(sortedAssetVector.data(), sizeof(RendererRuntime::Asset) * sortedAssetVector.size());
-
-			// Write LZ4 compressed output
-			memoryFile.writeLz4CompressedDataByVirtualFilename(RendererRuntime::StringId("AssetPackage"), RendererRuntime::v1AssetPackage::FORMAT_VERSION, (getRenderTargetDataRootDirectory(rendererTarget) + '/' + mAssetPackageDirectoryName + '/' + mAssetPackageDirectoryName + ".assets").c_str(), mContext.getFileManager());
+			// Compilation run finished clear internal caches/states
+			onCompilationRunFinished();
 		}
-
-		// Compilation run finished clear internal caches/states
-		onCompilationRunFinished();
 	}
 
 	void ProjectImpl::startupAssetMonitor(RendererRuntime::IRendererRuntime& rendererRuntime, const char* rendererTarget)
