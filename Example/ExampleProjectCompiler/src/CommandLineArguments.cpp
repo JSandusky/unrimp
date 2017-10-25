@@ -25,7 +25,7 @@
 #ifdef WIN32
 	#include "WindowsHeader.h"
 	#ifdef UNICODE
-		#include "utf8/utf8.h"	// To convert utf16 strings to utf8
+		#include <utf8/utf8.h>	// To convert UTF-16 strings to UTF-8
 	#else
 		PRAGMA_WARNING_PUSH
 			PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'initializing': conversion from 'int' to '::size_t', signed/unsigned mismatch
@@ -55,9 +55,9 @@ CommandLineArguments::CommandLineArguments()
 			std::vector<std::wstring> lines(wargv + 1, wargv + wargc);
 			for (std::vector<std::wstring>::iterator iterator = lines.begin(); iterator != lines.end(); ++iterator)
 			{
-				std::string utf8line;
-				utf8::utf16to8((*iterator).begin(), (*iterator).end(), std::back_inserter(utf8line));
-				mArguments.push_back(utf8line);
+				std::string utf8Line;
+				utf8::utf16to8((*iterator).begin(), (*iterator).end(), std::back_inserter(utf8Line));
+				mArguments.push_back(utf8Line);
 			}
 			
 		}

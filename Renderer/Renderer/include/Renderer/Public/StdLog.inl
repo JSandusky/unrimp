@@ -35,7 +35,10 @@ PRAGMA_WARNING_POP
 #ifdef WIN32
 	// Disable warnings in external headers, we can't fix them
 	PRAGMA_WARNING_PUSH
+		PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'argument': conversion from 'const char' to 'utf8::uint8_t', signed/unsigned mismatch
 		PRAGMA_WARNING_DISABLE_MSVC(4668)	// warning C4668: '_M_HYBRID_X86_ARM64' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+		#include <utf8/utf8.h>	// To convert UTF-8 strings to UTF-16
+
 		#include <windows.h>
 	PRAGMA_WARNING_POP
 #elif LINUX
@@ -146,28 +149,43 @@ namespace Renderer
 	{
 		std::lock_guard<std::mutex> mutexLock(mMutex);
 
-		// Write into standard output stream
-		if (Type::CRITICAL == type)
-		{
-			std::cerr << typeToString(type) << message << '\n';
-		}
-		else
-		{
-			std::cout << typeToString(type) << message << '\n';
-		}
+		// Construct the full UTF-8 message text
+		const std::string fullMessage = std::string(typeToString(type)) + message + '\n';
 
 		// Platform specific handling
 		#ifdef WIN32
+		{
+			// Convert UTF-8 string to UTF-16
+			std::wstring utf16Line;
+			utf8::utf8to16(fullMessage.begin(), fullMessage.end(), std::back_inserter(utf16Line));
+
+			// Write into standard output stream
+			if (Type::CRITICAL == type)
+			{
+				std::wcerr << utf16Line.c_str();
+			}
+			else
+			{
+				std::wcout << utf16Line.c_str();
+			}
+
 			// On MS Windows, ensure the output can be seen inside the Visual Studio output window as well
-			::OutputDebugString(typeToString(type));
-			::OutputDebugString(message);
-			::OutputDebugString("\n");
+			::OutputDebugStringW(utf16Line.c_str());
 			if (Type::CRITICAL == type && ::IsDebuggerPresent())
 			{
 				::__debugbreak();
 			}
+		}
 		#elif LINUX
-			// Nothing here
+			// Write into standard output stream
+			if (Type::CRITICAL == type)
+			{
+				std::cerr << fullMessage.c_str();
+			}
+			else
+			{
+				std::cout << fullMessage.c_str();
+			}
 		#else
 			#error "Unsupported platform"
 		#endif
