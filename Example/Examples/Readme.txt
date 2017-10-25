@@ -184,6 +184,7 @@ For disabling supporting a particular renderer:
 
 Other
 - "WIN32":					Set as preprocessor definition when building for MS Windows
+- "UNICODE":				Enable MS Windows command line Unicode support
 - "LINUX":					Set as preprocessor definition when building for Linux or similar platforms
 - "X64_ARCHITECTURE":		Set this as preprocessor definition when building for x64 instead of x86
 - "SHARED_LIBRARIES":		Use renderers via shared libraries, if this is not defined, the renderers are statically linked

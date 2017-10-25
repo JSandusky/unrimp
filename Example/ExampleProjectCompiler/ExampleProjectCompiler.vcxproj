@@ -175,7 +175,7 @@
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\;..\..\External\utf8cpp\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;UNICODE;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -207,7 +207,7 @@ copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)d_static\"
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\;..\..\External\utf8cpp\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_CONSOLE;X64_ARCHITECTURE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;X64_ARCHITECTURE;UNICODE;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -239,7 +239,7 @@ copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)d_static\"
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\;..\..\External\utf8cpp\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_CONSOLE;_CRT_SECURE_NO_WARNINGS;SHARED_LIBRARIES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;UNICODE;_CONSOLE;_CRT_SECURE_NO_WARNINGS;SHARED_LIBRARIES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -272,7 +272,7 @@ copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)d_dynamic\"
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\;..\..\External\utf8cpp\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_CONSOLE;X64_ARCHITECTURE;_CRT_SECURE_NO_WARNINGS;SHARED_LIBRARIES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;X64_ARCHITECTURE;UNICODE;_CONSOLE;_CRT_SECURE_NO_WARNINGS;SHARED_LIBRARIES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -307,7 +307,7 @@ copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)d_dynamic\"
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\;..\..\External\utf8cpp\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;UNICODE;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -350,7 +350,7 @@ copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)_static\"
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\;..\..\External\utf8cpp\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;_CONSOLE;X64_ARCHITECTURE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;X64_ARCHITECTURE;UNICODE;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -392,7 +392,7 @@ copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)_static\"
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\;..\..\External\utf8cpp\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;_CONSOLE;_CRT_SECURE_NO_WARNINGS;SHARED_LIBRARIES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;UNICODE;_CONSOLE;_CRT_SECURE_NO_WARNINGS;SHARED_LIBRARIES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -436,7 +436,7 @@ copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)_dynamic\"
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\;..\..\External\utf8cpp\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;_CONSOLE;X64_ARCHITECTURE;_CRT_SECURE_NO_WARNINGS;SHARED_LIBRARIES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;X64_ARCHITECTURE;UNICODE;_CONSOLE;_CRT_SECURE_NO_WARNINGS;SHARED_LIBRARIES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>

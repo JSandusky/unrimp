@@ -25,7 +25,11 @@
 #ifdef WIN32
 	#include "WindowsHeader.h"
 	#ifdef UNICODE
-		#include <utf8/utf8.h>	// To convert UTF-16 strings to UTF-8
+		// Disable warnings in external headers, we can't fix them
+		PRAGMA_WARNING_PUSH
+			PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'argument': conversion from 'const char' to 'utf8::uint8_t', signed/unsigned mismatch
+			#include <utf8/utf8.h>	// To convert UTF-8 strings to UTF-16
+		PRAGMA_WARNING_POP
 	#else
 		PRAGMA_WARNING_PUSH
 			PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'initializing': conversion from 'int' to '::size_t', signed/unsigned mismatch
@@ -51,7 +55,7 @@ CommandLineArguments::CommandLineArguments()
 		{
 			// argv[0] is the path+name of the program
 			// -> Ignore it
-			mArguments.reserve(wargc - 1);
+			mArguments.reserve(static_cast<size_t>(wargc - 1));
 			std::vector<std::wstring> lines(wargv + 1, wargv + wargc);
 			for (std::vector<std::wstring>::iterator iterator = lines.begin(); iterator != lines.end(); ++iterator)
 			{
@@ -59,9 +63,8 @@ CommandLineArguments::CommandLineArguments()
 				utf8::utf16to8((*iterator).begin(), (*iterator).end(), std::back_inserter(utf8Line));
 				mArguments.push_back(utf8Line);
 			}
-			
 		}
-		LocalFree(wargv);
+		::LocalFree(wargv);
 	#else
 		std::string cmdLine(::GetCommandLineA());
 		std::istringstream ss(cmdLine);
