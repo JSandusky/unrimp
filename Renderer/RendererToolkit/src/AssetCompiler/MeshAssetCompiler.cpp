@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/MeshAssetCompiler.h"
 #include "RendererToolkit/Helper/AssimpLogStream.h"
+#include "RendererToolkit/Helper/AssimpIOSystem.h"
 #include "RendererToolkit/Helper/AssimpHelper.h"
 #include "RendererToolkit/Helper/CacheManager.h"
 #include "RendererToolkit/Helper/StringHelper.h"
@@ -756,20 +757,13 @@ namespace RendererToolkit
 			// Create an instance of the Assimp importer class
 			AssimpLogStream assimpLogStream;
 			Assimp::Importer assimpImporter;
+			assimpImporter.SetIOHandler(new AssimpIOSystem(input.context.getFileManager()));
 			// assimpImporter.SetPropertyInteger(AI_CONFIG_PP_LBW_MAX_WEIGHTS, 4);	// We're using the "aiProcess_LimitBoneWeights"-flag, 4 is already the default value (don't delete this reminder comment)
-
-			// TODO(co) Implement own "Assimp::IOSystem" for file manager mapping
-			// Get absolute destination filename
-			const std::string absoluteDestinationFilename = input.context.getFileManager().mapVirtualToAbsoluteFilename(RendererRuntime::IFileManager::FileMode::READ, virtualInputFilename.c_str());
-			if (absoluteDestinationFilename.empty())
-			{
-				throw std::runtime_error("Failed determine the absolute destination filename of the virtual destination filename \"" + std::string(virtualInputFilename) + '\"');
-			}
 
 			// Load the given mesh
 			// -> We're using "mikktspace" by Morten S. Mikkelsen for semi-standard tangent space generation (see e.g. https://wiki.blender.org/index.php/Dev:Shading/Tangent_Space_Normal_Maps for background information)
 			// -> "aiProcess_CalcTangentSpace" from Assimp is still used to allocate internal memory and enable Assimp to perform work regarding e.g. shared vertices
-			const aiScene* assimpScene = assimpImporter.ReadFile(absoluteDestinationFilename, AssimpHelper::getAssimpFlagsByRapidJsonValue(rapidJsonValueMeshAssetCompiler, "ImportFlags"));
+			const aiScene* assimpScene = assimpImporter.ReadFile(virtualInputFilename.c_str(), AssimpHelper::getAssimpFlagsByRapidJsonValue(rapidJsonValueMeshAssetCompiler, "ImportFlags"));
 			if (nullptr != assimpScene && nullptr != assimpScene->mRootNode)
 			{
 				// Get the optional material name to asset ID mapping information

@@ -49,6 +49,7 @@
     <None Include="..\..\External\Assimp\include\assimp\vector3.inl" />
     <None Include="CMakeLists.txt" />
     <None Include="include\RendererToolkit\Context.inl" />
+    <None Include="include\RendererToolkit\Helper\AssimpIOSystem.inl" />
     <None Include="include\RendererToolkit\Helper\AssimpLogStream.inl" />
     <None Include="include\RendererToolkit\IRendererToolkit.inl" />
     <None Include="include\RendererToolkit\Project\IProject.inl" />
@@ -373,6 +374,7 @@
     <ClInclude Include="include\RendererToolkit\AssetImporter\SketchfabAssetImporter.h" />
     <ClInclude Include="include\RendererToolkit\Context.h" />
     <ClInclude Include="include\RendererToolkit\Helper\AssimpHelper.h" />
+    <ClInclude Include="include\RendererToolkit\Helper\AssimpIOSystem.h" />
     <ClInclude Include="include\RendererToolkit\Helper\AssimpLogStream.h" />
     <ClInclude Include="include\RendererToolkit\Helper\CacheManager.h" />
     <ClInclude Include="include\RendererToolkit\Helper\JsonHelper.h" />
@@ -2950,6 +2952,7 @@
     <ClCompile Include="src\AssetImporter\OgreAssetImporter.cpp" />
     <ClCompile Include="src\AssetImporter\SketchfabAssetImporter.cpp" />
     <ClCompile Include="src\Helper\AssimpHelper.cpp" />
+    <ClCompile Include="src\Helper\AssimpIOSystem.cpp" />
     <ClCompile Include="src\Helper\AssimpLogStream.cpp" />
     <ClCompile Include="src\Helper\CacheManager.cpp" />
     <ClCompile Include="src\Helper\JsonHelper.cpp" />

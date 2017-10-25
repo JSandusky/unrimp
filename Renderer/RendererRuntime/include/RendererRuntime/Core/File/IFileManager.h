@@ -78,6 +78,7 @@ namespace RendererRuntime
 	*    Conventions:
 	*    - File and directory names are UTF-8 encoded
 	*    - Directory names have no "/"-slash at the end
+	*    - "/"-slash is used as separator
 	*    - The file manager interface works with virtual filenames to be compatible to libraries like PhysicsFS ( https://icculus.org/physfs/ ) by design
 	*    - Virtual filenames are constructed in way which is compatible to asset IDs and supports modding: "<mount point = project name>/<asset type>/<asset category>/<asset name>.<file extension>"
 	*

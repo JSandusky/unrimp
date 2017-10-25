@@ -377,7 +377,6 @@ namespace RendererRuntime
 		}
 
 		// Error!
-		assert(false && "Failed to map virtual to STD absolute filename");
 		return "";
 	}
 
@@ -483,7 +482,6 @@ namespace RendererRuntime
 			else
 			{
 				// Error!
-				assert(false && "Unknown STD mount point inside the virtual filename");
 				return false;
 			}
 		}

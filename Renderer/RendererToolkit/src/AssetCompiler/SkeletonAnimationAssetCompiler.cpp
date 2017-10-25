@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/SkeletonAnimationAssetCompiler.h"
 #include "RendererToolkit/Helper/AssimpLogStream.h"
+#include "RendererToolkit/Helper/AssimpIOSystem.h"
 #include "RendererToolkit/Helper/AssimpHelper.h"
 #include "RendererToolkit/Helper/CacheManager.h"
 #include "RendererToolkit/Helper/StringHelper.h"
@@ -120,17 +121,10 @@ namespace RendererToolkit
 			// Create an instance of the Assimp importer class
 			AssimpLogStream assimpLogStream;
 			Assimp::Importer assimpImporter;
-
-			// TODO(co) Implement own "Assimp::IOSystem" for file manager mapping
-			// Get absolute destination filename
-			const std::string absoluteDestinationFilename = input.context.getFileManager().mapVirtualToAbsoluteFilename(RendererRuntime::IFileManager::FileMode::READ, virtualInputFilename.c_str());
-			if (absoluteDestinationFilename.empty())
-			{
-				throw std::runtime_error("Failed determine the absolute destination filename of the virtual destination filename \"" + std::string(virtualInputFilename) + '\"');
-			}
+			assimpImporter.SetIOHandler(new AssimpIOSystem(input.context.getFileManager()));
 
 			// Load the given mesh
-			const aiScene* assimpScene = assimpImporter.ReadFile(absoluteDestinationFilename, AssimpHelper::getAssimpFlagsByRapidJsonValue(rapidJsonValueSkeletonAnimationAssetCompiler, "ImportFlags"));
+			const aiScene* assimpScene = assimpImporter.ReadFile(virtualInputFilename.c_str(), AssimpHelper::getAssimpFlagsByRapidJsonValue(rapidJsonValueSkeletonAnimationAssetCompiler, "ImportFlags"));
 			if (nullptr != assimpScene && nullptr != assimpScene->mRootNode)
 			{
 				// Read skeleton animation asset compiler configuration

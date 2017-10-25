@@ -295,6 +295,7 @@ set(SOURCE_CODES
 	src/Helper/JsonMaterialHelper.cpp
 	src/Helper/StringHelper.cpp
 	src/Helper/AssimpHelper.cpp
+	src/Helper/AssimpIOSystem.cpp
 	src/Helper/AssimpLogStream.cpp
 	src/Helper/CacheManager.cpp
 	src/Project/ProjectAssetMonitor.cpp

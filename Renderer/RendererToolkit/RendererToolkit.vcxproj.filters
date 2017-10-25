@@ -192,6 +192,9 @@
     <None Include="..\..\External\Assimp\code\glTFAssetWriter.inl">
       <Filter>External\Assimp\GLTF</Filter>
     </None>
+    <None Include="include\RendererToolkit\Helper\AssimpIOSystem.inl">
+      <Filter>Source Files\Helper</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererToolkit\RendererToolkitImpl.h">
@@ -1187,6 +1190,9 @@
     <ClInclude Include="..\..\External\utf8cpp\utf8\utf8\unchecked.h">
       <Filter>External\Assimp\contrib\utf8cpp</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererToolkit\Helper\AssimpIOSystem.h">
+      <Filter>Source Files\Helper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RendererToolkitImpl.cpp">
@@ -1836,6 +1842,9 @@
     </ClCompile>
     <ClCompile Include="..\..\External\Assimp\code\glTFImporter.cpp">
       <Filter>External\Assimp\GLTF</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Helper\AssimpIOSystem.cpp">
+      <Filter>Source Files\Helper</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
