@@ -223,7 +223,7 @@ Microsoft Windows: First Example Kickoff
 ======
 - Build "Release_Dynamic" target with Visual Studio
 - Compile the runtime assets by starting "bin\x86_dynamic\ExampleProjectCompiler.exe"
-- Use command line arguments to start the example application, e.g. "bin\x86_dynamic\Examples.exe FirstScene -r Direct3D11"
+- Run "bin\x86_dynamic\Examples.exe" (is using default command line arguments "bin\x86_dynamic\Examples.exe FirstScene -r Direct3D11")
 
 
 Useful MS Windows Developer Tools
@@ -235,7 +235,9 @@ Useful MS Windows Developer Tools
 	- Graphics
 		- Direct3D 11 graphics debugging can be done directly inside Visual Studio 2017
 		- [RenderDoc](https://renderdoc.org/) for other renderer APIs like Vulkan is working like a charme
+	- CPU
 		- For CPU profiling the tool [Very Sleepy](http://www.codersnotes.com/sleepy/) is easy to use while providing useful results
+- Checking external dependencies of exe and dll: [Dependency Walker](http://www.dependencywalker.com/)
 - When there's need to figure out why the binaries are so large
 	- ["Sizer - executable size breakdown (2007)"](http://aras-p.info/projSizer.html): "Command line tool that reports size of things (functions, data, classes, templates, object files) in a Visual Studio compiled exe/dll. Extracts info from debug information (.pdb) file."
 		- As of October 14, 2017: Doesn't work with Visual Studio 2017 (v141), compile for Visual Studio 2015 (v140) if you want to analys the binaries using Sizer
