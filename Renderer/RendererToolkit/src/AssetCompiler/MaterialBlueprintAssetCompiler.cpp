@@ -219,7 +219,7 @@ namespace RendererToolkit
 				const RendererRuntime::ShaderProperties::SortedPropertyVector& maximumIntegerValueOfShaderPropertiesVector = maximumIntegerValueOfShaderProperties.getSortedPropertyVector();
 				if (rapidJsonValueProperties.IsObject())
 				{
-					JsonMaterialBlueprintHelper::readProperties(input, rapidJsonValueProperties, sortedMaterialPropertyVector, visualImportanceOfShaderProperties, maximumIntegerValueOfShaderProperties, false, true);
+					JsonMaterialBlueprintHelper::readProperties(input, rapidJsonValueProperties, sortedMaterialPropertyVector, visualImportanceOfShaderProperties, maximumIntegerValueOfShaderProperties, false, true, false);
 
 					// Child protection: Throw an exception if there are too many shader combination properties to protect the material blueprint designer of over-engineering material blueprints
 					if (!allowCrazyNumberOfShaderCombinations)

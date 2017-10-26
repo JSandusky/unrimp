@@ -25,11 +25,11 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributes": "VertexAttributes/Default/DebugGui.asset",
+			"VertexAttributes": "$ProjectName/VertexAttributes/Default/DebugGui.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprint": "ShaderBlueprint/Debug/GuiVertex.asset",
-				"FragmentShaderBlueprint": "ShaderBlueprint/Debug/GuiFragment.asset"
+				"VertexShaderBlueprint": "$ProjectName/ShaderBlueprint/Debug/GuiVertex.asset",
+				"FragmentShaderBlueprint": "$ProjectName/ShaderBlueprint/Debug/GuiFragment.asset"
 			},
 			"RasterizerState":
 			{

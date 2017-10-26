@@ -6,11 +6,11 @@
 	},
 	"MaterialAsset":
 	{
-		"BaseMaterial": "Material/Base/Mesh.asset",
+		"BaseMaterial": "$ProjectName/Material/Base/Mesh.asset",
 		"Properties":
 		{
-			"_drgb_nxa": "Texture/Sponza/sponza_details_drgb_nxa.asset",
-			"_hr_rg_mb_nya": "Texture/Sponza/sponza_details_hr_rg_mb_nya.asset"
+			"_drgb_nxa": "$ProjectName/Texture/Sponza/sponza_details_drgb_nxa.asset",
+			"_hr_rg_mb_nya": "$ProjectName/Texture/Sponza/sponza_details_hr_rg_mb_nya.asset"
 		}
 	}
 }

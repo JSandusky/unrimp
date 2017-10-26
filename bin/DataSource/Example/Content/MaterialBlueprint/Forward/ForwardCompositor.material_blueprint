@@ -66,11 +66,11 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributes": "VertexAttributes/Default/Compositor.asset",
+			"VertexAttributes": "$ProjectName/VertexAttributes/Default/Compositor.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprint": "ShaderBlueprint/Compositor/PositionTextureCoordinateVertexRay.asset",
-				"FragmentShaderBlueprint": "ShaderBlueprint/Forward/ForwardCompositorFragment.asset"
+				"VertexShaderBlueprint": "$ProjectName/ShaderBlueprint/Compositor/PositionTextureCoordinateVertexRay.asset",
+				"FragmentShaderBlueprint": "$ProjectName/ShaderBlueprint/Forward/ForwardCompositorFragment.asset"
 			},
 			"RasterizerState":
 			{

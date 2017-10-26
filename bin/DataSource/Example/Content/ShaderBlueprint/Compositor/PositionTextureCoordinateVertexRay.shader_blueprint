@@ -53,7 +53,7 @@ For more background formation regarding reconstructing position from depth pleas
 //[-------------------------------------------------------]
 //[ Definitions                                           ]
 //[-------------------------------------------------------]
-@includepiece(ShaderPiece/Core.asset)
+@includepiece($ProjectName/ShaderPiece/Core.asset)
 	@insertpiece(SetCrossPlatformSettings)
 
 

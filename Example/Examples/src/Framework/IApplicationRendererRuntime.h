@@ -157,9 +157,10 @@ private:
 	RendererRuntime::Context*				  mRendererRuntimeContext;	///< Renderer runtime context instance, can be a null pointer
 	RendererRuntime::RendererRuntimeInstance* mRendererRuntimeInstance;	///< Renderer runtime instance, can be a null pointer
 	#ifdef SHARED_LIBRARIES
-		RendererToolkit::Context*				  mRendererToolkitContext;	///< Renderer toolkit context instance, can be a null pointer
-		RendererToolkit::RendererToolkitInstance* mRendererToolkitInstance;	///< Renderer toolkit instance, can be a null pointer
-		RendererToolkit::IProject*				  mProject;	// TODO(co) First asset hot-reloading test
+		RendererRuntime::IFileManager*			  mRendererToolkitFileManager;	///< Renderer toolkit file manager instance to avoid intermixing virtual filenames with the renderer runtime, can be a null pointer
+		RendererToolkit::Context*				  mRendererToolkitContext;		///< Renderer toolkit context instance, can be a null pointer
+		RendererToolkit::RendererToolkitInstance* mRendererToolkitInstance;		///< Renderer toolkit instance, can be a null pointer
+		RendererToolkit::IProject*				  mProject;
 	#endif
 
 

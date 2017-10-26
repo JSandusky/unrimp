@@ -442,7 +442,7 @@ namespace RendererToolkit
 				memoryFile.write(sortedOutputAssetVector.data(), sizeof(RendererRuntime::Asset) * sortedOutputAssetVector.size());
 
 				// Write LZ4 compressed output
-				memoryFile.writeLz4CompressedDataByVirtualFilename(RendererRuntime::StringId("AssetPackage"), RendererRuntime::v1AssetPackage::FORMAT_VERSION, mContext.getFileManager(), (getRenderTargetDataRootDirectory(rendererTarget) + '/' + mAssetPackageDirectoryName + '/' + mAssetPackageDirectoryName + ".assets").c_str());
+				memoryFile.writeLz4CompressedDataByVirtualFilename(RendererRuntime::StringId("AssetPackage"), RendererRuntime::v1AssetPackage::FORMAT_VERSION, mContext.getFileManager(), (getRenderTargetDataRootDirectory(rendererTarget) + '/' + mProjectName + '/' + mAssetPackageDirectoryName + '/' + mAssetPackageDirectoryName + ".assets").c_str());
 			}
 
 			// Compilation run finished clear internal caches/states
@@ -515,7 +515,7 @@ namespace RendererToolkit
 
 				// Copy asset data
 				RendererRuntime::Asset asset;
-				asset.assetId = StringHelper::getSourceAssetIdByString(virtualFilename.c_str());
+				asset.assetId = RendererRuntime::StringId(virtualFilename.c_str());
 				RendererRuntime::setUninitialized(asset.fileHash);
 				strcpy(asset.virtualFilename, virtualFilename.c_str());
 				sortedAssetVector.push_back(asset);

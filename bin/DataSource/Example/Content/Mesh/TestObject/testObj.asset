@@ -17,11 +17,11 @@
 			"InputFile": "testObj.obj",
 			"MaterialNameToAssetId":
 			{
-				"BackGroundMat": "Material/TestObject/InnerMat.asset",
-				"InnerMat": "Material/TestObject/InnerMat.asset",
-				"LTELogo": "Material/TestObject/LTELogo.asset",
-				"Material": "Material/TestObject/OuterMat.asset",
-				"OuterMat": "Material/TestObject/OuterMat.asset"
+				"BackGroundMat": "$ProjectName/Material/TestObject/InnerMat.asset",
+				"InnerMat": "$ProjectName/Material/TestObject/InnerMat.asset",
+				"LTELogo": "$ProjectName/Material/TestObject/LTELogo.asset",
+				"Material": "$ProjectName/Material/TestObject/OuterMat.asset",
+				"OuterMat": "$ProjectName/Material/TestObject/OuterMat.asset"
 			}
 		}
 	}

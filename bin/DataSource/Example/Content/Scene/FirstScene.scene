@@ -26,7 +26,7 @@
 					},
 					"SkyboxSceneItem":
 					{
-						"MaterialBlueprint": "MaterialBlueprint/Scene/Skybox.asset",
+						"MaterialBlueprint": "$ProjectName/MaterialBlueprint/Scene/Skybox.asset",
 						"SetMaterialProperties":
 						{
 							"UseProceduralSky": "TRUE"
@@ -44,7 +44,7 @@
 				{
 					"MeshSceneItem":
 					{
-						"Mesh": "Mesh/Imrod/Imrod.asset"
+						"Mesh": "$ProjectName/Mesh/Imrod/Imrod.asset"
 					}
 				}
 			},
@@ -58,8 +58,8 @@
 				{
 					"MeshSceneItem":
 					{
-						"Mesh": "Mesh/Imrod/Imrod.asset",
-						"SubMeshMaterials": [ "Material/Sponza/bricks.asset", "Material/Imrod/TransparentImrod.asset" ]
+						"Mesh": "$ProjectName/Mesh/Imrod/Imrod.asset",
+						"SubMeshMaterials": [ "$ProjectName/Material/Sponza/bricks.asset", "$ProjectName/Material/Imrod/TransparentImrod.asset" ]
 					}
 				}
 			},
@@ -73,7 +73,7 @@
 				{
 					"MeshSceneItem":
 					{
-						"Mesh": "Mesh/Imrod/Imrod.asset"
+						"Mesh": "$ProjectName/Mesh/Imrod/Imrod.asset"
 					}
 				}
 			},
@@ -88,7 +88,7 @@
 				{
 					"MeshSceneItem":
 					{
-						"Mesh": "Mesh/Imrod/Imrod.asset"
+						"Mesh": "$ProjectName/Mesh/Imrod/Imrod.asset"
 					}
 				}
 			},
@@ -101,7 +101,7 @@
 				{
 					"MeshSceneItem":
 					{
-						"Mesh": "Mesh/Sponza/sponza.asset"
+						"Mesh": "$ProjectName/Mesh/Sponza/sponza.asset"
 					}
 				}
 			},
@@ -190,8 +190,8 @@
 				{
 					"SkeletonMeshSceneItem":
 					{
-						"Mesh": "Mesh/Bob/Bob.asset",
-						"SkeletonAnimation": "SkeletonAnimation/Bob/Bob.asset"
+						"Mesh": "$ProjectName/Mesh/Bob/Bob.asset",
+						"SkeletonAnimation": "$ProjectName/SkeletonAnimation/Bob/Bob.asset"
 					}
 				}
 			},
@@ -237,7 +237,7 @@
 				{
 					"MeshSceneItem":
 					{
-						"Mesh": "Mesh/TestObject/testObj.asset"
+						"Mesh": "$ProjectName/Mesh/TestObject/testObj.asset"
 					}
 				}
 			}

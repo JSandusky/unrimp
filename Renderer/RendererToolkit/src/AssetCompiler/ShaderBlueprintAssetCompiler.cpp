@@ -209,7 +209,7 @@ namespace RendererToolkit
 						const size_t closingPosition = sourceCode.find(")", openingPosition);
 						const size_t numberOfCharacters = closingPosition - openingPosition - 1;
 						const std::string assetIdAsString = sourceCode.substr(openingPosition + 1, numberOfCharacters);
-						const RendererRuntime::AssetId assetId = StringHelper::getSourceAssetIdByString(assetIdAsString.c_str());
+						const RendererRuntime::AssetId assetId = StringHelper::getSourceAssetIdByString(assetIdAsString.c_str(), input);
 						includeShaderPieceAssetIds.push_back(assetId);
 						assetIdToString.emplace(assetId, assetIdAsString);
 						for (size_t i = includePiecePosition; i < closingPosition + 1; ++i)

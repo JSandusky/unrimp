@@ -6,14 +6,14 @@
 	},
 	"MaterialAsset":
 	{
-		"BaseMaterial": "Material/Base/Mesh.asset",
+		"BaseMaterial": "$ProjectName/Material/Base/Mesh.asset",
 		"Properties":
 		{
 			"CullMode": "NONE",
-			"_drgb_nxa": "Texture/Sponza/chain_texture_drgb_nxa.asset",
-			"_hr_rg_mb_nya": "Texture/Sponza/chain_texture_hr_rg_mb_nya.asset",
+			"_drgb_nxa": "$ProjectName/Texture/Sponza/chain_texture_drgb_nxa.asset",
+			"_hr_rg_mb_nya": "$ProjectName/Texture/Sponza/chain_texture_hr_rg_mb_nya.asset",
 			"UseAlphaMap": "TRUE",
-			"AlphaMap": "Texture/Sponza/chain_texture_mask.asset"
+			"AlphaMap": "$ProjectName/Texture/Sponza/chain_texture_mask.asset"
 		}
 	}
 }

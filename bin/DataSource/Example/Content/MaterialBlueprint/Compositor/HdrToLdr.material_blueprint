@@ -53,7 +53,7 @@
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Texture/Compositor/DirtyLens.asset",
+				"Value": "$ProjectName/Texture/Compositor/DirtyLens.asset",
 				"Description": "2D dirty lens map"
 			},
 			"UseLensFlareMap":
@@ -74,17 +74,17 @@
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Texture/Compositor/LensStar.asset",
+				"Value": "$ProjectName/Texture/Compositor/LensStar.asset",
 				"Description": "2D lens star map for diffraction starburst, only used of the lens flare map is used"
 			}
 		},
 		"PipelineState":
 		{
-			"VertexAttributes": "VertexAttributes/Default/Compositor.asset",
+			"VertexAttributes": "$ProjectName/VertexAttributes/Default/Compositor.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprint": "ShaderBlueprint/Compositor/PositionTextureCoordinateVertex.asset",
-				"FragmentShaderBlueprint": "ShaderBlueprint/Compositor/HdrToLdrFragment.asset"
+				"VertexShaderBlueprint": "$ProjectName/ShaderBlueprint/Compositor/PositionTextureCoordinateVertex.asset",
+				"FragmentShaderBlueprint": "$ProjectName/ShaderBlueprint/Compositor/HdrToLdrFragment.asset"
 			},
 			"RasterizerState":
 			{

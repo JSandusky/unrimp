@@ -940,9 +940,7 @@ namespace RendererToolkit
 		}
 		else
 		{
-			// TODO(co) Error handling: Compiled asset ID not found (meaning invalid source asset ID given)
-			static const std::string EMPTY_STRING;
-			return EMPTY_STRING;
+			throw std::runtime_error("Failed to map source asset ID " + std::to_string(sourceAssetId) + " to virtual asset filename");
 		}
 	}
 

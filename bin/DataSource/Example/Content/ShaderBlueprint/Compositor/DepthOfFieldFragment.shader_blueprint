@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Definitions                                           ]
 //[-------------------------------------------------------]
-@includepiece(ShaderPiece/Core.asset)
+@includepiece($ProjectName/ShaderPiece/Core.asset)
 	@insertpiece(SetCrossPlatformSettings)
 
 
@@ -68,7 +68,7 @@ SAMPLER_STATE(2, 1, SamplerLinear, 1)
 //[-------------------------------------------------------]
 //[ Functions                                             ]
 //[-------------------------------------------------------]
-@includepiece(ShaderPiece/Depth.asset)
+@includepiece($ProjectName/ShaderPiece/Depth.asset)
 	@insertpiece(DefineGetLinearDepth)
 	@insertpiece(DefineGetDepthFromDepthMap)
 	@insertpiece(DefineGetLinearDepthFromDepthMap)

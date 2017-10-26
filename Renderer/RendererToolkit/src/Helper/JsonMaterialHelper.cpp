@@ -514,7 +514,7 @@ namespace RendererToolkit
 			}
 
 			// Get material techniques and properties from the base material
-			getPropertiesByMaterialAssetId(input, StringHelper::getSourceAssetIdByString(rapidJsonValueMaterialAsset["BaseMaterial"].GetString()), sortedMaterialPropertyVector, &techniques);
+			getPropertiesByMaterialAssetId(input, StringHelper::getSourceAssetIdByString(rapidJsonValueMaterialAsset["BaseMaterial"].GetString(), input), sortedMaterialPropertyVector, &techniques);
 		}
 		else
 		{
@@ -527,7 +527,7 @@ namespace RendererToolkit
 				// Add technique
 				RendererRuntime::v1Material::Technique technique;
 				technique.materialTechniqueId	   = RendererRuntime::StringId(rapidJsonMemberIteratorTechniques->name.GetString());
-				technique.materialBlueprintAssetId = StringHelper::getSourceAssetIdByString(rapidJsonMemberIteratorTechniques->value.GetString());
+				technique.materialBlueprintAssetId = StringHelper::getSourceAssetIdByString(rapidJsonMemberIteratorTechniques->value.GetString(), input);
 				techniques.push_back(technique);
 				materialTechniqueIdToName.emplace(technique.materialTechniqueId, rapidJsonMemberIteratorTechniques->name.GetString());
 			}
@@ -618,7 +618,7 @@ namespace RendererToolkit
 			}
 
 			// Get base material asset ID
-			const RendererRuntime::AssetId materialAssetId = StringHelper::getSourceAssetIdByString(rapidJsonValueMaterialAsset["BaseMaterial"].GetString());
+			const RendererRuntime::AssetId materialAssetId = StringHelper::getSourceAssetIdByString(rapidJsonValueMaterialAsset["BaseMaterial"].GetString(), input);
 			virtualDependencyFilenames.emplace_back(JsonHelper::getVirtualAssetFilename(input, materialAssetId));
 		}
 		else
@@ -626,7 +626,7 @@ namespace RendererToolkit
 			const rapidjson::Value& rapidJsonValueTechniques = rapidJsonValueMaterialAsset["Techniques"];
 			for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorTechniques = rapidJsonValueTechniques.MemberBegin(); rapidJsonMemberIteratorTechniques != rapidJsonValueTechniques.MemberEnd(); ++rapidJsonMemberIteratorTechniques)
 			{
-				const RendererRuntime::AssetId materialBlueprintAssetId = StringHelper::getSourceAssetIdByString(rapidJsonMemberIteratorTechniques->value.GetString());
+				const RendererRuntime::AssetId materialBlueprintAssetId = StringHelper::getSourceAssetIdByString(rapidJsonMemberIteratorTechniques->value.GetString(), input);
 				virtualDependencyFilenames.emplace_back(JsonHelper::getVirtualAssetFilename(input, materialBlueprintAssetId));
 			}
 		}

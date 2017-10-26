@@ -49,11 +49,11 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributes": "VertexAttributes/Default/Compositor.asset",
+			"VertexAttributes": "$ProjectName/VertexAttributes/Default/Compositor.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprint": "ShaderBlueprint/Compositor/PositionTextureCoordinateVertex.asset",
-				"FragmentShaderBlueprint": "ShaderBlueprint/Compositor/MsaaResolveFragment.asset"
+				"VertexShaderBlueprint": "$ProjectName/ShaderBlueprint/Compositor/PositionTextureCoordinateVertex.asset",
+				"FragmentShaderBlueprint": "$ProjectName/ShaderBlueprint/Compositor/MsaaResolveFragment.asset"
 			},
 			"RasterizerState":
 			{

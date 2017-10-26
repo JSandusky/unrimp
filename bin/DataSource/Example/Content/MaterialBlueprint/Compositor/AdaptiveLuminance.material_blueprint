@@ -43,11 +43,11 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributes": "VertexAttributes/Default/Compositor.asset",
+			"VertexAttributes": "$ProjectName/VertexAttributes/Default/Compositor.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprint": "ShaderBlueprint/Compositor/PositionVertex.asset",
-				"FragmentShaderBlueprint": "ShaderBlueprint/Compositor/AdaptiveLuminanceFragment.asset"
+				"VertexShaderBlueprint": "$ProjectName/ShaderBlueprint/Compositor/PositionVertex.asset",
+				"FragmentShaderBlueprint": "$ProjectName/ShaderBlueprint/Compositor/AdaptiveLuminanceFragment.asset"
 			},
 			"RasterizerState":
 			{

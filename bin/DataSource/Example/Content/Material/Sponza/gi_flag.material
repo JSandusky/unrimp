@@ -6,10 +6,10 @@
 	},
 	"MaterialAsset":
 	{
-		"BaseMaterial": "Material/Base/Mesh.asset",
+		"BaseMaterial": "$ProjectName/Material/Base/Mesh.asset",
 		"Properties":
 		{
-			"_drgb_nxa": "Texture/Sponza/gi_flag_drgb_nxa.asset"
+			"_drgb_nxa": "$ProjectName/Texture/Sponza/gi_flag_drgb_nxa.asset"
 		}
 	}
 }

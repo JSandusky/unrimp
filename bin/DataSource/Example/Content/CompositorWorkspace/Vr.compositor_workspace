@@ -8,7 +8,7 @@
 	{
 		"Nodes":
 		{
-			"CompositorNode/Vr.asset":
+			"$ProjectName/CompositorNode/Vr.asset":
 			{
 			}
 		}

@@ -59,17 +59,17 @@
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Texture/Compositor/LensColor.asset",
+				"Value": "$ProjectName/Texture/Compositor/LensColor.asset",
 				"Description": "1D lens color map"
 			}
 		},
 		"PipelineState":
 		{
-			"VertexAttributes": "VertexAttributes/Default/Compositor.asset",
+			"VertexAttributes": "$ProjectName/VertexAttributes/Default/Compositor.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprint": "ShaderBlueprint/Compositor/PositionTextureCoordinateVertex.asset",
-				"FragmentShaderBlueprint": "ShaderBlueprint/Compositor/LensFlareFeatureGenerationFragment.asset"
+				"VertexShaderBlueprint": "$ProjectName/ShaderBlueprint/Compositor/PositionTextureCoordinateVertex.asset",
+				"FragmentShaderBlueprint": "$ProjectName/ShaderBlueprint/Compositor/LensFlareFeatureGenerationFragment.asset"
 			},
 			"RasterizerState":
 			{

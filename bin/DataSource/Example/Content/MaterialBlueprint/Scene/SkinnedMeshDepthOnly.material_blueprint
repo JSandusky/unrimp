@@ -60,11 +60,11 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributes": "VertexAttributes/Default/SkinnedMesh.asset",
+			"VertexAttributes": "$ProjectName/VertexAttributes/Default/SkinnedMesh.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprint": "ShaderBlueprint/Scene/MeshDepthOnlyVertex.asset",
-				"FragmentShaderBlueprint": "ShaderBlueprint/Scene/MeshDepthOnlyFragment.asset"
+				"VertexShaderBlueprint": "$ProjectName/ShaderBlueprint/Scene/MeshDepthOnlyVertex.asset",
+				"FragmentShaderBlueprint": "$ProjectName/ShaderBlueprint/Scene/MeshDepthOnlyFragment.asset"
 			},
 			"RasterizerState":
 			{

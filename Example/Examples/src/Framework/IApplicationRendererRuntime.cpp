@@ -43,6 +43,7 @@
 #endif
 
 #include <RendererRuntime/Public/RendererRuntimeInstance.h>
+#include <RendererRuntime/Core/File/StdFileManager.h>
 #include <RendererRuntime/Core/File/PhysicsFSFileManager.h>
 #include <RendererRuntime/Asset/AssetManager.h>
 #include <RendererRuntime/Context.h>
@@ -57,6 +58,7 @@ IApplicationRendererRuntime::IApplicationRendererRuntime(const char* rendererNam
 	mRendererRuntimeContext(nullptr),
 	mRendererRuntimeInstance(nullptr)
 	#ifdef SHARED_LIBRARIES
+		, mRendererToolkitFileManager(nullptr)
 		, mRendererToolkitContext(nullptr)
 		, mRendererToolkitInstance(nullptr)
 		, mProject(nullptr)
@@ -89,7 +91,9 @@ RendererToolkit::IRendererToolkit* IApplicationRendererRuntime::getRendererToolk
 		{
 			assert(nullptr != mRendererRuntimeInstance && "The renderer runtime instance must be valid");
 			const RendererRuntime::IRendererRuntime* rendererRuntime = mRendererRuntimeInstance->getRendererRuntime();
-			mRendererToolkitContext = new RendererToolkit::Context(rendererRuntime->getRenderer().getContext().getLog(), rendererRuntime->getFileManager());
+			Renderer::ILog& log = rendererRuntime->getRenderer().getContext().getLog();
+			mRendererToolkitFileManager = new RendererRuntime::StdFileManager(log, mFileManager->getRelativeRootDirectory());
+			mRendererToolkitContext = new RendererToolkit::Context(log, *mRendererToolkitFileManager);
 			mRendererToolkitInstance = new RendererToolkit::RendererToolkitInstance(*mRendererToolkitContext);
 		}
 		return (nullptr != mRendererToolkitInstance) ? mRendererToolkitInstance->getRendererToolkit() : nullptr;
@@ -185,6 +189,11 @@ void IApplicationRendererRuntime::onDeinitialization()
 		{
 			delete mRendererToolkitContext;
 			mRendererToolkitContext = nullptr;
+		}
+		if (nullptr != mRendererToolkitFileManager)
+		{
+			delete static_cast<RendererRuntime::StdFileManager*>(mRendererToolkitFileManager);
+			mRendererToolkitFileManager = nullptr;
 		}
 	#endif
 

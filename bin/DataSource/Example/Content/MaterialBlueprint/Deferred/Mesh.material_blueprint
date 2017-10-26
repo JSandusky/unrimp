@@ -116,11 +116,11 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributes": "VertexAttributes/Default/Mesh.asset",
+			"VertexAttributes": "$ProjectName/VertexAttributes/Default/Mesh.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprint": "ShaderBlueprint/Deferred/MeshVertex.asset",
-				"FragmentShaderBlueprint": "ShaderBlueprint/Deferred/MeshFragment.asset"
+				"VertexShaderBlueprint": "$ProjectName/ShaderBlueprint/Deferred/MeshVertex.asset",
+				"FragmentShaderBlueprint": "$ProjectName/ShaderBlueprint/Deferred/MeshFragment.asset"
 			},
 			"RasterizerState":
 			{

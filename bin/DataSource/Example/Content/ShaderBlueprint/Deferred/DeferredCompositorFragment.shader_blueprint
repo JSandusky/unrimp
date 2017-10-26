@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Definitions                                           ]
 //[-------------------------------------------------------]
-@includepiece(ShaderPiece/Core.asset)
+@includepiece($ProjectName/ShaderPiece/Core.asset)
 	@insertpiece(SetCrossPlatformSettings)
 
 
@@ -93,22 +93,22 @@ SAMPLER_STATE(2, 1, SamplerLinear, 1)
 //[-------------------------------------------------------]
 //[ Functions                                             ]
 //[-------------------------------------------------------]
-@includepiece(ShaderPiece/Color.asset)
+@includepiece($ProjectName/ShaderPiece/Color.asset)
 	@insertpiece(DefineCalculateFoggedColor)
-@includepiece(ShaderPiece/TangentFrame.asset)
+@includepiece($ProjectName/ShaderPiece/TangentFrame.asset)
 	@insertpiece(DefineGetTangentFrame)
-@includepiece(ShaderPiece/PhysicallyBasedShading.asset)
+@includepiece($ProjectName/ShaderPiece/PhysicallyBasedShading.asset)
 	@property(HighQualityLighting)
 		@insertpiece(DefinePhysicallyBasedShading)
 	@end
 	@property(!HighQualityLighting)
 		@insertpiece(DefineBlinnPhongBasedShading)
 	@end
-@includepiece(ShaderPiece/Depth.asset)
+@includepiece($ProjectName/ShaderPiece/Depth.asset)
 	@insertpiece(DefineGetLinearDepth)
-@includepiece(ShaderPiece/ExponentialShadow.asset)
+@includepiece($ProjectName/ShaderPiece/ExponentialShadow.asset)
 	@insertpiece(DefineExponentialShadow)
-@includepiece(ShaderPiece/Shadow.asset)
+@includepiece($ProjectName/ShaderPiece/Shadow.asset)
 	@insertpiece(DefineCalculateShadowVisibility)
 
 float3 CalculateColorByGBuffer(float3 viewRay, float2 screenSpacePosition, float4 gbuffer0Value, float4 gbuffer1Value, float4 gbuffer2Value, float depth, float screenSpaceAmbientOcclusion)

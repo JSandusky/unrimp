@@ -6,14 +6,14 @@
 	},
 	"MaterialAsset":
 	{
-		"BaseMaterial": "Material/Base/TransparentMesh.asset",
+		"BaseMaterial": "$ProjectName/Material/Base/TransparentMesh.asset",
 		"Properties":
 		{
 			"Opacity": "0.6",
-			"_drgb_nxa": "Texture/Imrod/Imrod_drgb_nxa.asset",
-			"_hr_rg_mb_nya": "Texture/Imrod/Imrod_hr_rg_mb_nya.asset",
+			"_drgb_nxa": "$ProjectName/Texture/Imrod/Imrod_drgb_nxa.asset",
+			"_hr_rg_mb_nya": "$ProjectName/Texture/Imrod/Imrod_hr_rg_mb_nya.asset",
 			"UseEmissiveMap": "TRUE",
-			"EmissiveMap": "Texture/Imrod/Imrod_e.asset",
+			"EmissiveMap": "$ProjectName/Texture/Imrod/Imrod_e.asset",
 			"EmissiveIntensity": "10.0"
 		}
 	}

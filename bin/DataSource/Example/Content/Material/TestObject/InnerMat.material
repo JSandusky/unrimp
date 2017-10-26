@@ -6,7 +6,7 @@
 	},
 	"MaterialAsset":
 	{
-		"BaseMaterial": "Material/Base/Mesh.asset",
+		"BaseMaterial": "$ProjectName/Material/Base/Mesh.asset",
 		"Properties":
 		{
 			"DiffuseColor": "0.2 0.2 0.2",

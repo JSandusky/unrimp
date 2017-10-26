@@ -8,7 +8,7 @@
 	{
 		"Nodes":
 		{
-			"CompositorNode/Deferred.asset":
+			"$ProjectName/CompositorNode/Deferred.asset":
 			{
 			}
 		}

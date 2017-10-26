@@ -55,11 +55,11 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributes": "VertexAttributes/Default/Compositor.asset",
+			"VertexAttributes": "$ProjectName/VertexAttributes/Default/Compositor.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprint": "ShaderBlueprint/Compositor/PositionTextureCoordinateVertex.asset",
-				"FragmentShaderBlueprint": "ShaderBlueprint/Compositor/MotionBlurFragment.asset"
+				"VertexShaderBlueprint": "$ProjectName/ShaderBlueprint/Compositor/PositionTextureCoordinateVertex.asset",
+				"FragmentShaderBlueprint": "$ProjectName/ShaderBlueprint/Compositor/MotionBlurFragment.asset"
 			},
 			"RasterizerState":
 			{

@@ -306,7 +306,7 @@ namespace RendererToolkit
 		JsonHelper::loadDocumentByFilename(input.context.getFileManager(), virtualMaterialBlueprintFilename, "MaterialBlueprintAsset", "2", rapidJsonDocument);
 		RendererRuntime::ShaderProperties visualImportanceOfShaderProperties;
 		RendererRuntime::ShaderProperties maximumIntegerValueOfShaderProperties;
-		readProperties(input, rapidJsonDocument["MaterialBlueprintAsset"]["Properties"], sortedMaterialPropertyVector, visualImportanceOfShaderProperties, maximumIntegerValueOfShaderProperties, true, true, materialPropertyIdToName);
+		readProperties(input, rapidJsonDocument["MaterialBlueprintAsset"]["Properties"], sortedMaterialPropertyVector, visualImportanceOfShaderProperties, maximumIntegerValueOfShaderProperties, true, true, false, materialPropertyIdToName);
 	}
 
 	RendererRuntime::MaterialPropertyValue JsonMaterialBlueprintHelper::mandatoryMaterialPropertyValue(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValue, const char* propertyName, const RendererRuntime::MaterialProperty::ValueType valueType)
@@ -653,7 +653,7 @@ namespace RendererToolkit
 		file.write(descriptorRanges.data(), sizeof(Renderer::DescriptorRange) * descriptorRanges.size());
 	}
 
-	void JsonMaterialBlueprintHelper::readProperties(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValueProperties, RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, RendererRuntime::ShaderProperties& visualImportanceOfShaderProperties, RendererRuntime::ShaderProperties& maximumIntegerValueOfShaderProperties, bool ignoreGlobalReferenceFallback, bool sort, MaterialPropertyIdToName* materialPropertyIdToName)
+	void JsonMaterialBlueprintHelper::readProperties(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValueProperties, RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, RendererRuntime::ShaderProperties& visualImportanceOfShaderProperties, RendererRuntime::ShaderProperties& maximumIntegerValueOfShaderProperties, bool ignoreGlobalReferenceFallback, bool sort, bool referencesAllowed, MaterialPropertyIdToName* materialPropertyIdToName)
 	{
 		for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIterator = rapidJsonValueProperties.MemberBegin(); rapidJsonMemberIterator != rapidJsonValueProperties.MemberEnd(); ++rapidJsonMemberIterator)
 		{
@@ -683,6 +683,12 @@ namespace RendererToolkit
 					// The character "@" is used to reference e.g. a material property value
 					if (referenceAsString[0] == '@')
 					{
+						// Sanity check
+						if (!referencesAllowed)
+						{
+							throw std::runtime_error("Material property \"" + std::string(rapidJsonMemberIterator->name.GetString()) + "\" with value \"" + std::string(referenceAsString) + "\" is using \"@\" to reference e.g. a material property value, but references aren't allowed in the current use-case");
+						}
+
 						// Write down the material property
 						const RendererRuntime::StringId referenceAsInteger(&referenceAsString[1]);
 						sortedMaterialPropertyVector.emplace_back(RendererRuntime::MaterialProperty(materialPropertyId, usage, RendererRuntime::MaterialProperty::materialPropertyValueFromReference(valueType, referenceAsInteger)));
@@ -915,7 +921,7 @@ namespace RendererToolkit
 					RendererRuntime::MaterialProperties::SortedPropertyVector elementProperties;
 					RendererRuntime::ShaderProperties visualImportanceOfShaderProperties;
 					RendererRuntime::ShaderProperties maximumIntegerValueOfShaderProperties;
-					readProperties(input, rapidJsonValueElementProperties, elementProperties, visualImportanceOfShaderProperties, maximumIntegerValueOfShaderProperties, true, false);
+					readProperties(input, rapidJsonValueElementProperties, elementProperties, visualImportanceOfShaderProperties, maximumIntegerValueOfShaderProperties, true, false, true);
 
 					// Calculate the uniform buffer size, including handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
 					// -> Sum up the number of bytes required by all uniform buffer element properties

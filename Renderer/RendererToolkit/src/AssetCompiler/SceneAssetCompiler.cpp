@@ -102,11 +102,11 @@ namespace
 			{
 				if (rapidJsonValueSceneItem.HasMember("MaterialAssetId"))
 				{
-					RendererToolkit::JsonMaterialHelper::getPropertiesByMaterialAssetId(input, RendererToolkit::StringHelper::getSourceAssetIdByString(rapidJsonValueSceneItem["MaterialAssetId"].GetString()), sortedMaterialPropertyVector);
+					RendererToolkit::JsonMaterialHelper::getPropertiesByMaterialAssetId(input, RendererToolkit::StringHelper::getSourceAssetIdByString(rapidJsonValueSceneItem["MaterialAssetId"].GetString(), input), sortedMaterialPropertyVector);
 				}
 				else if (rapidJsonValueSceneItem.HasMember("MaterialBlueprint"))
 				{
-					RendererToolkit::JsonMaterialBlueprintHelper::getPropertiesByMaterialBlueprintAssetId(input, RendererToolkit::StringHelper::getSourceAssetIdByString(rapidJsonValueSceneItem["MaterialBlueprint"].GetString()), sortedMaterialPropertyVector);
+					RendererToolkit::JsonMaterialBlueprintHelper::getPropertiesByMaterialBlueprintAssetId(input, RendererToolkit::StringHelper::getSourceAssetIdByString(rapidJsonValueSceneItem["MaterialBlueprint"].GetString(), input), sortedMaterialPropertyVector);
 				}
 				if (!sortedMaterialPropertyVector.empty())
 				{

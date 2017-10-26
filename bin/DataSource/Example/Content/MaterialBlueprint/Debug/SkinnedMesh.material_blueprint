@@ -56,11 +56,11 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributes": "VertexAttributes/Default/SkinnedMesh.asset",
+			"VertexAttributes": "$ProjectName/VertexAttributes/Default/SkinnedMesh.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprint": "ShaderBlueprint/Debug/MeshVertex.asset",
-				"FragmentShaderBlueprint": "ShaderBlueprint/Debug/MeshFragment.asset"
+				"VertexShaderBlueprint": "$ProjectName/ShaderBlueprint/Debug/MeshVertex.asset",
+				"FragmentShaderBlueprint": "$ProjectName/ShaderBlueprint/Debug/MeshFragment.asset"
 			},
 			"RasterizerState":
 			{

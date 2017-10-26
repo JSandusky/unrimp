@@ -21,9 +21,9 @@
 //[-------------------------------------------------------]
 //[ Definitions                                           ]
 //[-------------------------------------------------------]
-@includepiece(ShaderPiece/Core.asset)
+@includepiece($ProjectName/ShaderPiece/Core.asset)
 	@insertpiece(SetCrossPlatformSettings)
-@includepiece(ShaderPiece/MotionBlur.asset)
+@includepiece($ProjectName/ShaderPiece/MotionBlur.asset)
 
 
 //[-------------------------------------------------------]
@@ -116,20 +116,20 @@ SAMPLER_STATE(5, 1, SamplerLinear, 1)
 //[-------------------------------------------------------]
 //[ Functions                                             ]
 //[-------------------------------------------------------]
-@includepiece(ShaderPiece/TangentFrame.asset)
+@includepiece($ProjectName/ShaderPiece/TangentFrame.asset)
 	@insertpiece(DefineGetTangentFrame)
-@includepiece(ShaderPiece/PhysicallyBasedShading.asset)
+@includepiece($ProjectName/ShaderPiece/PhysicallyBasedShading.asset)
 	@property(HighQualityLighting)
 		@insertpiece(DefinePhysicallyBasedShading)
 	@end
 	@property(!HighQualityLighting)
 		@insertpiece(DefineBlinnPhongBasedShading)
 	@end
-@includepiece(ShaderPiece/Depth.asset)
+@includepiece($ProjectName/ShaderPiece/Depth.asset)
 	@insertpiece(DefineGetLinearDepthByFragmentDepth)
-@includepiece(ShaderPiece/ExponentialShadow.asset)
+@includepiece($ProjectName/ShaderPiece/ExponentialShadow.asset)
 	@insertpiece(DefineExponentialShadow)
-@includepiece(ShaderPiece/Shadow.asset)
+@includepiece($ProjectName/ShaderPiece/Shadow.asset)
 	@insertpiece(DefineCalculateShadowVisibility)
 	@insertpiece(DefineShadowDebugging)
 

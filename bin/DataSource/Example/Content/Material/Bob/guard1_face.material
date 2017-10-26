@@ -6,10 +6,10 @@
 	},
 	"MaterialAsset":
 	{
-		"BaseMaterial": "Material/Base/SkinnedMesh.asset",
+		"BaseMaterial": "$ProjectName/Material/Base/SkinnedMesh.asset",
 		"Properties":
 		{
-			"_drgb_nxa": "Texture/Bob/guard1_face_drgb_nxa.asset"
+			"_drgb_nxa": "$ProjectName/Texture/Bob/guard1_face_drgb_nxa.asset"
 		}
 	}
 }

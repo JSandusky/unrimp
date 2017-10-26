@@ -6,14 +6,14 @@
 	},
 	"MaterialAsset":
 	{
-		"BaseMaterial": "Material/Base/Mesh.asset",
+		"BaseMaterial": "$ProjectName/Material/Base/Mesh.asset",
 		"Properties":
 		{
 			"CullMode": "NONE",
-			"_drgb_nxa": "Texture/Sponza/vase_plant_drgb_nxa.asset",
-			"_hr_rg_mb_nya": "Texture/Sponza/vase_plant_hr_rg_mb_nya.asset",
+			"_drgb_nxa": "$ProjectName/Texture/Sponza/vase_plant_drgb_nxa.asset",
+			"_hr_rg_mb_nya": "$ProjectName/Texture/Sponza/vase_plant_hr_rg_mb_nya.asset",
 			"UseAlphaMap": "TRUE",
-			"AlphaMap": "Texture/Sponza/vase_plant_mask.asset",
+			"AlphaMap": "$ProjectName/Texture/Sponza/vase_plant_mask.asset",
 			"AlphaReference": "0.2"
 		}
 	}

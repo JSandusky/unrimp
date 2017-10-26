@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Definitions                                           ]
 //[-------------------------------------------------------]
-@includepiece(ShaderPiece/Core.asset)
+@includepiece($ProjectName/ShaderPiece/Core.asset)
 	@insertpiece(SetCrossPlatformSettings)
 
 
@@ -60,7 +60,7 @@ SAMPLER_STATE(2, 0, SamplerPoint, 0)
 //[-------------------------------------------------------]
 //[ Functions                                             ]
 //[-------------------------------------------------------]
-@includepiece(ShaderPiece/ExponentialShadow.asset)
+@includepiece($ProjectName/ShaderPiece/ExponentialShadow.asset)
 	@insertpiece(DefineExponentialShadow)
 
 

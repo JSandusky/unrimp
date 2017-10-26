@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Definitions                                           ]
 //[-------------------------------------------------------]
-@includepiece(ShaderPiece/Core.asset)
+@includepiece($ProjectName/ShaderPiece/Core.asset)
 	@insertpiece(SetCrossPlatformSettings)
 
 
@@ -71,9 +71,9 @@ SAMPLER_STATE(2, 0, SamplerPointClamp, 0)
 //[-------------------------------------------------------]
 //[ Functions                                             ]
 //[-------------------------------------------------------]
-@includepiece(ShaderPiece/Color.asset)
+@includepiece($ProjectName/ShaderPiece/Color.asset)
 	@insertpiece(DefineCalculateFoggedColor)
-@includepiece(ShaderPiece/Depth.asset)
+@includepiece($ProjectName/ShaderPiece/Depth.asset)
 	@insertpiece(DefineGetLinearDepth)
 	@insertpiece(DefineGetDepthFromDepthMap)
 

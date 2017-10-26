@@ -21,9 +21,9 @@
 //[-------------------------------------------------------]
 //[ Definitions                                           ]
 //[-------------------------------------------------------]
-@includepiece(ShaderPiece/Core.asset)
+@includepiece($ProjectName/ShaderPiece/Core.asset)
 	@insertpiece(SetCrossPlatformSettings)
-@includepiece(ShaderPiece/Fxaa.asset) 
+@includepiece($ProjectName/ShaderPiece/Fxaa.asset) 
 	@property(Fxaa)
 		#define FXAA_PC				 1
 		@property(HLSL)

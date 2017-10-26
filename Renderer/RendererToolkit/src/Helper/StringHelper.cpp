@@ -409,9 +409,49 @@ namespace RendererToolkit
 		return (sourceAssetIdAsString.length() > 6 && sourceAssetIdAsString.substr(sourceAssetIdAsString.length() - 6) == ".asset");
 	}
 
-	RendererRuntime::AssetId StringHelper::getSourceAssetIdByString(const char* sourceAssetIdAsString)
+	RendererRuntime::AssetId StringHelper::getSourceAssetIdByString(const std::string& sourceAssetIdAsString, const RendererToolkit::IAssetCompiler::Input& input)
 	{
-		return RendererRuntime::StringId(sourceAssetIdAsString);
+		// Sanity check
+		if (sourceAssetIdAsString.empty())
+		{
+			throw std::runtime_error("Empty strings can't be translated into source asset IDs");
+		}
+
+		// There are two kind of source asset IDs
+		// - Source asset ID naming scheme "<name>.asset"
+		// - Compiled or runtime generated asset ID naming scheme "<project name>/<asset type>/<asset category>/<asset name>"
+		if (isSourceAssetIdAsString(sourceAssetIdAsString))
+		{
+			// Source asset ID naming scheme "<name>.asset": Handle relative source asset references
+			if (sourceAssetIdAsString.length() >= 2 && sourceAssetIdAsString.substr(0, 2) == "./")
+			{
+				// "./" = This directory
+				return RendererRuntime::StringId((input.virtualAssetInputDirectory + '/' + sourceAssetIdAsString.substr(2)).c_str());
+			}
+			else if (sourceAssetIdAsString.length() >= 3 && sourceAssetIdAsString.substr(0, 3) == "../")
+			{
+				// "../" = Parent directory
+				const std_filesystem::path resolvedAssetId = std_filesystem::path(input.virtualAssetInputDirectory + '/' + sourceAssetIdAsString);
+				const std_filesystem::path currentResolvedAssetId = ::detail::path_lexically_normal(resolvedAssetId);
+				return RendererRuntime::StringId(currentResolvedAssetId.generic_string().c_str());
+			}
+			else
+			{
+				// If there's a "$ProjectName", resolve it by the project name
+				std::string resolvedSourceAssetIdAsString = sourceAssetIdAsString;
+				const size_t startIndex = resolvedSourceAssetIdAsString.find("$ProjectName");
+				if (std::string::npos != startIndex)
+				{
+					resolvedSourceAssetIdAsString.replace(startIndex, 12, input.projectName);
+				}
+				return RendererRuntime::StringId(resolvedSourceAssetIdAsString.c_str());
+			}
+		}
+		else
+		{
+			// Error!
+			throw std::runtime_error("Compiled or runtime generated asset ID naming scheme \"<project name>/<asset type>/<asset category>/<asset name>\" isn't supported for source asset IDs: \"" + sourceAssetIdAsString + '\"');
+		}
 	}
 
 	RendererRuntime::AssetId StringHelper::getAssetIdByString(const std::string& assetIdAsString)
@@ -443,19 +483,27 @@ namespace RendererToolkit
 			if (assetIdAsString.length() >= 2 && assetIdAsString.substr(0, 2) == "./")
 			{
 				// "./" = This directory
-				return input.getCompiledAssetIdBySourceAssetIdAsString((input.virtualAssetInputDirectory + '/' + assetIdAsString.substr(2)).substr(input.virtualAssetPackageInputDirectory.length() + 1));
+				return input.getCompiledAssetIdBySourceAssetIdAsString((input.virtualAssetInputDirectory + '/' + assetIdAsString.substr(2)));
 			}
 			else if (assetIdAsString.length() >= 3 && assetIdAsString.substr(0, 3) == "../")
 			{
 				// "../" = Parent directory
-				const std_filesystem::path resolvedAssetId = std_filesystem::path((input.virtualAssetInputDirectory + '/' + assetIdAsString).substr(input.virtualAssetPackageInputDirectory.length() + 1));
+				const std_filesystem::path resolvedAssetId = std_filesystem::path((input.virtualAssetInputDirectory + '/' + assetIdAsString));
 				const std_filesystem::path currentResolvedAssetId = ::detail::path_lexically_normal(resolvedAssetId);
 				return input.getCompiledAssetIdBySourceAssetIdAsString(currentResolvedAssetId.generic_string());
 			}
 			else
 			{
+				// If there's a "$ProjectName", resolve it by the project name
+				std::string resolvedAssetIdAsString = assetIdAsString;
+				const size_t startIndex = resolvedAssetIdAsString.find("$ProjectName");
+				if (std::string::npos != startIndex)
+				{
+					resolvedAssetIdAsString.replace(startIndex, 12, input.projectName);
+				}
+
 				// Relative to the asset package the asset is in
-				return input.getCompiledAssetIdBySourceAssetIdAsString(assetIdAsString);
+				return input.getCompiledAssetIdBySourceAssetIdAsString(resolvedAssetIdAsString);
 			}
 		}
 		else

@@ -21,7 +21,7 @@
 //[-------------------------------------------------------]
 //[ Definitions                                           ]
 //[-------------------------------------------------------]
-@includepiece(ShaderPiece/Core.asset)
+@includepiece($ProjectName/ShaderPiece/Core.asset)
 	@insertpiece(SetCrossPlatformSettings)
 
 
@@ -46,7 +46,7 @@ SAMPLER_STATE(1, 0, SamplerLinear, 0)
 //[-------------------------------------------------------]
 //[ Functions                                             ]
 //[-------------------------------------------------------]
-@includepiece(ShaderPiece/Color.asset)
+@includepiece($ProjectName/ShaderPiece/Color.asset)
 	@insertpiece(DefineColorToLuminance)
 
 

@@ -35,11 +35,11 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributes": "VertexAttributes/Default/Position.asset",
+			"VertexAttributes": "$ProjectName/VertexAttributes/Default/Position.asset",
 			"ShaderBlueprints":
 			{
-				"VertexShaderBlueprint": "ShaderBlueprint/Scene/SkyboxVertex.asset",
-				"FragmentShaderBlueprint": "ShaderBlueprint/Scene/SkyboxFragment.asset"
+				"VertexShaderBlueprint": "$ProjectName/ShaderBlueprint/Scene/SkyboxVertex.asset",
+				"FragmentShaderBlueprint": "$ProjectName/ShaderBlueprint/Scene/SkyboxFragment.asset"
 			},
 			"RasterizerState":
 			{

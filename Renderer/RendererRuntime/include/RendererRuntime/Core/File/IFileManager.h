@@ -86,6 +86,7 @@ namespace RendererRuntime
 	*    For the Unrimp examples were using the following directory structure
 	*    - "<root directory>/bin/x64_static"
 	*    - "<root directory>/bin/DataPc"
+	*      - "<root directory>/bin/DataPc/<Project>/<Asset Package>/<Asset Type>/<Asset Category>/<Asset Filename>"
 	*    - "<root directory>/bin/LocalData"
 	*    -> For end-user products, you might want to choose a local user data directory
 	*    -> In here we assume that the current directory has not been changed and still points to the directory the running executable is in (e.g. "<root directory>/bin/x64_static")
