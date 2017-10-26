@@ -124,7 +124,7 @@ void IApplicationRendererRuntime::onInitialization()
 			{
 				// Add used asset package
 				const bool rendererIsOpenGLES = (0 == strcmp(renderer->getName(), "OpenGLES3"));
-				rendererRuntime->getAssetManager().mountAssetPackage(rendererIsOpenGLES ? "../DataMobile/Content" : "../DataPc/Content", "Example");
+				rendererRuntime->getAssetManager().mountAssetPackage(rendererIsOpenGLES ? "../DataMobile/Example/Content" : "../DataPc/Example/Content", "Example");
 				rendererRuntime->loadPipelineStateObjectCache();
 
 				// Load renderer toolkit project to enable hot-reloading in case of asset changes

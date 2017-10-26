@@ -196,7 +196,7 @@ namespace RendererToolkit
 		const std::string virtualAssetInputDirectory = std_filesystem::path(virtualAssetFilename).parent_path().generic_string();
 		const std::string assetType = rapidJsonValueAssetMetadata["AssetType"].GetString();
 		const std::string assetCategory = rapidJsonValueAssetMetadata["AssetCategory"].GetString();
-		const std::string virtualAssetOutputDirectory = getRenderTargetDataRootDirectory(rendererTarget) + '/' + mAssetPackageDirectoryName + '/' + assetType + '/' + assetCategory;
+		const std::string virtualAssetOutputDirectory = getRenderTargetDataRootDirectory(rendererTarget) + '/' + mProjectName + '/' + mAssetPackageDirectoryName + '/' + assetType + '/' + assetCategory;
 
 		// Asset compiler input
 		IAssetCompiler::Input input(mContext, mProjectName, *mCacheManager, virtualAssetPackageInputDirectory, virtualAssetFilename, virtualAssetInputDirectory, virtualAssetOutputDirectory, mSourceAssetIdToCompiledAssetId, mSourceAssetIdToVirtualFilename);
@@ -236,7 +236,7 @@ namespace RendererToolkit
 		const std::string virtualAssetInputDirectory = std_filesystem::path(virtualAssetFilename).parent_path().generic_string();
 		const std::string assetType = rapidJsonValueAssetMetadata["AssetType"].GetString();
 		const std::string assetCategory = rapidJsonValueAssetMetadata["AssetCategory"].GetString();
-		const std::string virtualAssetOutputDirectory = getRenderTargetDataRootDirectory(rendererTarget) + '/' + mAssetPackageDirectoryName + '/' + assetType + '/' + assetCategory;
+		const std::string virtualAssetOutputDirectory = getRenderTargetDataRootDirectory(rendererTarget) + '/' + mProjectName + '/' + mAssetPackageDirectoryName + '/' + assetType + '/' + assetCategory;
 
 		// Ensure that the asset output directory exists, else creating output file streams will fail
 		fileManager.createDirectories(virtualAssetOutputDirectory.c_str());
