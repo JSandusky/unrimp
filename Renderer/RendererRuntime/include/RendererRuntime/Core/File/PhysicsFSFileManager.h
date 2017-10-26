@@ -90,6 +90,7 @@ namespace RendererRuntime
 		inline virtual const char* getLocalDataMountPoint() const override;
 		inline virtual bool mountDirectory(AbsoluteDirectoryName absoluteDirectoryName, const char* mountPoint, bool appendToPath = false) override;
 		inline virtual bool doesFileExist(VirtualFilename virtualFilename) const override;
+		inline virtual void enumerateFiles(VirtualDirectoryName virtualDirectoryName, EnumerationMode enumerationMode, std::vector<std::string>& virtualFilenames) const override;
 		inline virtual std::string mapVirtualToAbsoluteFilename(FileMode fileMode, VirtualFilename virtualFilename) const override;
 		inline virtual int64_t getLastModificationTime(VirtualFilename virtualFilename) const override;
 		inline virtual int64_t getFileSize(VirtualFilename virtualFilename) const override;

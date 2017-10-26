@@ -374,6 +374,49 @@ namespace RendererRuntime
 		return (0 != PHYSFS_exists(virtualFilename));
 	}
 
+	inline void PhysicsFSFileManager::enumerateFiles(VirtualDirectoryName virtualDirectoryName, EnumerationMode enumerationMode, std::vector<std::string>& virtualFilenames) const
+	{
+		char** physicsFsFilenames = PHYSFS_enumerateFiles(virtualDirectoryName);
+		switch (enumerationMode)
+		{
+			case EnumerationMode::ALL:
+			{
+				for (char** physicsFsFilename = physicsFsFilenames; nullptr != *physicsFsFilename; ++physicsFsFilename)
+				{
+					virtualFilenames.push_back(*physicsFsFilename);
+				}
+				break;
+			}
+
+			case EnumerationMode::FILES:
+			{
+				const std::string stdVirtualDirectoryName = virtualDirectoryName;
+				for (char** physicsFsFilename = physicsFsFilenames; nullptr != *physicsFsFilename; ++physicsFsFilename)
+				{
+					if (PHYSFS_isDirectory((stdVirtualDirectoryName + '/' + *physicsFsFilename).c_str()) == 0)
+					{
+						virtualFilenames.push_back(*physicsFsFilename);
+					}
+				}
+				break;
+			}
+
+			case EnumerationMode::DIRECTORIES:
+			{
+				const std::string stdVirtualDirectoryName = virtualDirectoryName;
+				for (char** physicsFsFilename = physicsFsFilenames; nullptr != *physicsFsFilename; ++physicsFsFilename)
+				{
+					if (PHYSFS_isDirectory((stdVirtualDirectoryName + '/' + *physicsFsFilename).c_str()) != 0)
+					{
+						virtualFilenames.push_back(*physicsFsFilename);
+					}
+				}
+				break;
+			}
+		}
+		PHYSFS_freeList(physicsFsFilenames);
+	}
+
 	inline std::string PhysicsFSFileManager::mapVirtualToAbsoluteFilename(FileMode fileMode, VirtualFilename virtualFilename) const
 	{
 		// Figure out where in the search path a file resides (e.g. "LocalData/DebugGui/UnrimpDebugGuiLayout.ini" -> "c:/MyProject/bin/LocalData")

@@ -494,31 +494,31 @@ namespace RendererToolkit
 		// Get the asset package name
 		mAssetPackageDirectoryName = directoryName;
 
+		// Mount project read-only data source file system directory
+		RendererRuntime::IFileManager& fileManager = mContext.getFileManager();
+		fileManager.mountDirectory((mAbsoluteProjectDirectory + '/' + mAssetPackageDirectoryName).c_str(), mProjectName.c_str());
+
 		// Discover assets
 		RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = mAssetPackage.getWritableSortedAssetVector();
-		const std::string absoluteDirectoryName = mAbsoluteProjectDirectory + '/' + directoryName;
-		for (auto& iterator: std_filesystem::recursive_directory_iterator(absoluteDirectoryName))
+		std::vector<std::string> virtualFilenames;
+		fileManager.enumerateFiles((mProjectName + '/' + mAssetPackageDirectoryName).c_str(), RendererRuntime::IFileManager::EnumerationMode::FILES, virtualFilenames);
+		for (const std::string& virtualFilename : virtualFilenames)
 		{
-			if (std_filesystem::is_regular_file(iterator))
+			if (StringHelper::isSourceAssetIdAsString(virtualFilename))
 			{
-				std::string assetIdAsString = iterator.path().generic_string();
-				if (StringHelper::isSourceAssetIdAsString(assetIdAsString))
+				// Sanity check
+				if (virtualFilename.length() > RendererRuntime::Asset::MAXIMUM_ASSET_FILENAME_LENGTH)
 				{
-					// Get asset data
-					assetIdAsString.erase(0, absoluteDirectoryName.length() + 1);
-					const std::string virtualAssetFilename = mProjectName + '/' + mAssetPackageDirectoryName + '/' + assetIdAsString;
-					if (virtualAssetFilename.length() > RendererRuntime::Asset::MAXIMUM_ASSET_FILENAME_LENGTH)
-					{
-						const std::string message = "Asset filename \"" + virtualAssetFilename + "\" is too long. Maximum allowed asset filename number of bytes is " + std::to_string(RendererRuntime::Asset::MAXIMUM_ASSET_FILENAME_LENGTH);
-						throw std::runtime_error(message);
-					}
-
-					// Copy asset data
-					RendererRuntime::Asset asset;
-					asset.assetId = StringHelper::getSourceAssetIdByString(assetIdAsString.c_str());
-					strcpy(asset.virtualFilename, virtualAssetFilename.c_str());
-					sortedAssetVector.push_back(asset);
+					const std::string message = "Asset filename \"" + virtualFilename + "\" is too long. Maximum allowed asset filename number of bytes is " + std::to_string(RendererRuntime::Asset::MAXIMUM_ASSET_FILENAME_LENGTH);
+					throw std::runtime_error(message);
 				}
+
+				// Copy asset data
+				RendererRuntime::Asset asset;
+				asset.assetId = StringHelper::getSourceAssetIdByString(virtualFilename.c_str());
+				RendererRuntime::setUninitialized(asset.fileHash);
+				strcpy(asset.virtualFilename, virtualFilename.c_str());
+				sortedAssetVector.push_back(asset);
 			}
 		}
 		std::sort(sortedAssetVector.begin(), sortedAssetVector.end(), ::detail::orderByAssetId);

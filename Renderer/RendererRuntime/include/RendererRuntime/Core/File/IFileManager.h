@@ -40,6 +40,7 @@ PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4668)	// warning C4668: '_M_HYBRID_X86_ARM64' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
 	PRAGMA_WARNING_DISABLE_MSVC(4774)	// warning C4774: 'sprintf_s' : format string expected in argument 3 is not a string literal
 	#include <string>
+	#include <vector>
 PRAGMA_WARNING_POP
 
 
@@ -88,6 +89,9 @@ namespace RendererRuntime
 	*    - "<root directory>/bin/LocalData"
 	*    -> For end-user products, you might want to choose a local user data directory
 	*    -> In here we assume that the current directory has not been changed and still points to the directory the running executable is in (e.g. "<root directory>/bin/x64_static")
+	*
+	*  @note
+	*    - Also known as virtual file system (VFS)
 	*/
 	class IFileManager : public Manager
 	{
@@ -101,6 +105,12 @@ namespace RendererRuntime
 		{
 			READ,	///< File read access
 			WRITE	///< File write access
+		};
+		enum class EnumerationMode
+		{
+			ALL,		///< Enumerate files as well as directories
+			FILES,		///< Do only enumerate files
+			DIRECTORIES	///< Do only enumerate directories
 		};
 
 
@@ -165,6 +175,19 @@ namespace RendererRuntime
 		*    "true" if the file does exist, else "false"
 		*/
 		virtual bool doesFileExist(VirtualFilename virtualFilename) const = 0;
+
+		/**
+		*  @brief
+		*    Enumerate files of a specified directory
+		*
+		*  @param[in] virtualDirectoryName
+		*    Virtual UTF-8 name of the directory to enumerate the files of
+		*  @param[in] enumerationMode
+		*    Enumeration mode
+		*  @param[out] virtualFilenames
+		*    Receives the enumerated virtual UTF-8 filenames
+		*/
+		virtual void enumerateFiles(VirtualDirectoryName virtualDirectoryName, EnumerationMode enumerationMode, std::vector<std::string>& virtualFilenames) const = 0;
 
 		/**
 		*  @brief

@@ -350,34 +350,49 @@ namespace RendererRuntime
 		return !mapVirtualToAbsoluteFilename(FileMode::READ, virtualFilename).empty();
 	}
 
-	inline std::string StdFileManager::mapVirtualToAbsoluteFilename(FileMode fileMode, VirtualFilename virtualFilename) const
+	inline void StdFileManager::enumerateFiles(VirtualDirectoryName virtualDirectoryName, EnumerationMode enumerationMode, std::vector<std::string>& virtualFilenames) const
 	{
-		// Sanity check
-		assert(nullptr != virtualFilename);
-
-		// Get absolute directory names
-		const AbsoluteDirectoryNames* absoluteDirectoryNames = nullptr;
-		std::string relativeFilename;
-		if (getAbsoluteDirectoryNamesByMountPoint(virtualFilename, &absoluteDirectoryNames, relativeFilename) && absoluteDirectoryNames != nullptr)
+		std::string mountPoint;
+		const std::string absoluteDirectoryName = mapVirtualToAbsoluteFilenameAndMountPoint(FileMode::READ, virtualDirectoryName, mountPoint);
+		if (!absoluteDirectoryName.empty())
 		{
-			for (const std::string& absoluteDirectoryName : *absoluteDirectoryNames)
+			const size_t numberOfSkippedBytes = absoluteDirectoryName.length() + 1;	// +1 for '/'-slash at the end of the absolute directory name
+			switch (enumerationMode)
 			{
-				const std::string absoluteFilename = absoluteDirectoryName + '/' + relativeFilename;
-				if (std_filesystem::exists(std_filesystem::u8path(absoluteFilename)))
-				{
-					return absoluteFilename;
-				}
-			}
+				case EnumerationMode::ALL:
+					for (const std_filesystem::directory_entry& iterator: std_filesystem::recursive_directory_iterator(absoluteDirectoryName))
+					{
+						virtualFilenames.push_back(mountPoint + '/' + iterator.path().generic_string().erase(0, numberOfSkippedBytes));
+					}
+					break;
 
-			// Still here and writing a file?
-			if (FileMode::WRITE == fileMode && !absoluteDirectoryNames->empty())
-			{
-				return (*absoluteDirectoryNames)[0] + '/' + relativeFilename;
+				case EnumerationMode::FILES:
+					for (const std_filesystem::directory_entry& iterator: std_filesystem::recursive_directory_iterator(absoluteDirectoryName))
+					{
+						if (std_filesystem::is_regular_file(iterator))
+						{
+							virtualFilenames.push_back(mountPoint + '/' + iterator.path().generic_string().erase(0, numberOfSkippedBytes));
+						}
+					}
+					break;
+
+				case EnumerationMode::DIRECTORIES:
+					for (const std_filesystem::directory_entry& iterator: std_filesystem::recursive_directory_iterator(absoluteDirectoryName))
+					{
+						if (std_filesystem::is_directory(iterator))
+						{
+							virtualFilenames.push_back(mountPoint + '/' + iterator.path().generic_string().erase(0, numberOfSkippedBytes));
+						}
+					}
+					break;
 			}
 		}
+	}
 
-		// Error!
-		return "";
+	inline std::string StdFileManager::mapVirtualToAbsoluteFilename(FileMode fileMode, VirtualFilename virtualFilename) const
+	{
+		std::string mountPoint;
+		return mapVirtualToAbsoluteFilenameAndMountPoint(fileMode, virtualFilename, mountPoint);
 	}
 
 	inline int64_t StdFileManager::getLastModificationTime(VirtualFilename virtualFilename) const
@@ -407,7 +422,8 @@ namespace RendererRuntime
 		// Create directories
 		const AbsoluteDirectoryNames* absoluteDirectoryNames = nullptr;
 		std::string relativeFilename;
-		if (getAbsoluteDirectoryNamesByMountPoint(virtualDirectoryName, &absoluteDirectoryNames, relativeFilename) && absoluteDirectoryNames != nullptr)
+		std::string mountPoint;
+		if (getAbsoluteDirectoryNamesByMountPoint(virtualDirectoryName, &absoluteDirectoryNames, relativeFilename, mountPoint) && absoluteDirectoryNames != nullptr)
 		{
 			for (const std::string& absoluteDirectoryName : *absoluteDirectoryNames)
 			{
@@ -459,7 +475,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	inline bool StdFileManager::getAbsoluteDirectoryNamesByMountPoint(VirtualFilename virtualFilename, const AbsoluteDirectoryNames** absoluteDirectoryNames, std::string& relativeFilename) const
+	inline bool StdFileManager::getAbsoluteDirectoryNamesByMountPoint(VirtualFilename virtualFilename, const AbsoluteDirectoryNames** absoluteDirectoryNames, std::string& relativeFilename, std::string& mountPoint) const
 	{
 		assert(nullptr != absoluteDirectoryNames);
 
@@ -469,7 +485,7 @@ namespace RendererRuntime
 		const size_t slashIndex = stdVirtualFilename.find("/");
 		if (std::string::npos != slashIndex)
 		{
-			const std::string mountPoint = stdVirtualFilename.substr(0, slashIndex);
+			mountPoint = stdVirtualFilename.substr(0, slashIndex);
 			MountedDirectories::const_iterator iterator = mMountedDirectories.find(mountPoint);
 			if (mMountedDirectories.cend() != iterator)
 			{
@@ -490,10 +506,41 @@ namespace RendererRuntime
 			// Use base directory
 			*absoluteDirectoryNames = &mAbsoluteBaseDirectory;
 			relativeFilename = virtualFilename;
+			mountPoint.clear();
 
 			// Done
 			return true;
 		}
+	}
+
+	inline std::string StdFileManager::mapVirtualToAbsoluteFilenameAndMountPoint(FileMode fileMode, VirtualFilename virtualFilename, std::string& mountPoint) const
+	{
+		// Sanity check
+		assert(nullptr != virtualFilename);
+
+		// Get absolute directory names
+		const AbsoluteDirectoryNames* absoluteDirectoryNames = nullptr;
+		std::string relativeFilename;
+		if (getAbsoluteDirectoryNamesByMountPoint(virtualFilename, &absoluteDirectoryNames, relativeFilename, mountPoint) && absoluteDirectoryNames != nullptr)
+		{
+			for (const std::string& absoluteDirectoryName : *absoluteDirectoryNames)
+			{
+				const std::string absoluteFilename = absoluteDirectoryName + '/' + relativeFilename;
+				if (std_filesystem::exists(std_filesystem::u8path(absoluteFilename)))
+				{
+					return absoluteFilename;
+				}
+			}
+
+			// Still here and writing a file?
+			if (FileMode::WRITE == fileMode && !absoluteDirectoryNames->empty())
+			{
+				return (*absoluteDirectoryNames)[0] + '/' + relativeFilename;
+			}
+		}
+
+		// Error!
+		return "";
 	}
 
 
