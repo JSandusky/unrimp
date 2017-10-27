@@ -50,18 +50,18 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SwapChain::SwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowInfo windowInfo, bool useExternalContext) :
+	SwapChain::SwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowHandle windowHandle, bool useExternalContext) :
 		ISwapChain(renderPass),
-		mNativeWindowHandle(windowInfo.nativeWindowHandle),
+		mNativeWindowHandle(windowHandle.nativeWindowHandle),
 		#ifdef WIN32
-			mOpenGLContext(new OpenGLContextWindows(static_cast<const RenderPass&>(renderPass), windowInfo.nativeWindowHandle, static_cast<const OpenGLContextWindows*>(&static_cast<OpenGLRenderer&>(renderPass.getRenderer()).getOpenGLContext()))),
+			mOpenGLContext(new OpenGLContextWindows(static_cast<const RenderPass&>(renderPass), windowHandle.nativeWindowHandle, static_cast<const OpenGLContextWindows*>(&static_cast<OpenGLRenderer&>(renderPass.getRenderer()).getOpenGLContext()))),
 		#elif defined LINUX
-			mOpenGLContext(new OpenGLContextLinux(static_cast<OpenGLRenderer&>(renderPass.getRenderer()), static_cast<const RenderPass&>(renderPass), windowInfo.nativeWindowHandle, useExternalContext, static_cast<const OpenGLContextLinux*>(&static_cast<OpenGLRenderer&>(renderPass.getRenderer()).getOpenGLContext()))),
+			mOpenGLContext(new OpenGLContextLinux(static_cast<OpenGLRenderer&>(renderPass.getRenderer()), static_cast<const RenderPass&>(renderPass), windowHandle.nativeWindowHandle, useExternalContext, static_cast<const OpenGLContextLinux*>(&static_cast<OpenGLRenderer&>(renderPass.getRenderer()).getOpenGLContext()))),
 		#else
 			#error "Unsupported platform"
 		#endif
 		mOwnsOpenGLContext(true),
-		mRenderWindow(windowInfo.renderWindow)
+		mRenderWindow(windowHandle.renderWindow)
 	{
 		#ifdef WIN32
 			std::ignore = useExternalContext;

@@ -281,7 +281,7 @@ namespace Renderer
 		*
 		*  @param[in] renderPass
 		*    Render pass to use, the swap chain keeps a reference to the render pass
-		*  @param[in] windowInfo
+		*  @param[in] windowHandle
 		*    Information about the window to render into
 		*  @param[in] useExternalContext
 		*    Indicates if an external renderer context is used; in this case the renderer itself has nothing to do with the creation/managing of an renderer context
@@ -289,7 +289,7 @@ namespace Renderer
 		*  @return
 		*    The created swap chain instance, null pointer on error. Release the returned instance if you no longer need it.
 		*/
-		virtual ISwapChain* createSwapChain(IRenderPass& renderPass, WindowInfo windowInfo, bool useExternalContext = false) = 0;
+		virtual ISwapChain* createSwapChain(IRenderPass& renderPass, WindowHandle windowHandle, bool useExternalContext = false) = 0;
 
 		/**
 		*  @brief

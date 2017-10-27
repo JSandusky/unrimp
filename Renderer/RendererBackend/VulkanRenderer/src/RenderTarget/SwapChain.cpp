@@ -58,7 +58,7 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
-		VkSurfaceKHR createPresentationSurface(const VulkanRenderer::VulkanContext& vulkanContext, VkInstance vkInstance, VkPhysicalDevice vkPhysicalDevice, Renderer::WindowInfo windoInfo)
+		VkSurfaceKHR createPresentationSurface(const VulkanRenderer::VulkanContext& vulkanContext, VkInstance vkInstance, VkPhysicalDevice vkPhysicalDevice, Renderer::WindowHandle windoInfo)
 		{
 			VkSurfaceKHR vkSurfaceKHR = VK_NULL_HANDLE;
 
@@ -444,7 +444,7 @@ namespace VulkanRenderer
 	VkFormat SwapChain::findColorVkFormat(const Renderer::Context& context, VkInstance vkInstance, const VulkanContext& vulkanContext)
 	{
 		const VkPhysicalDevice vkPhysicalDevice = vulkanContext.getVkPhysicalDevice();
-		const VkSurfaceKHR vkSurfaceKHR = detail::createPresentationSurface(vulkanContext, vkInstance, vkPhysicalDevice, Renderer::WindowInfo{context.getNativeWindowHandle(), nullptr, nullptr});
+		const VkSurfaceKHR vkSurfaceKHR = detail::createPresentationSurface(vulkanContext, vkInstance, vkPhysicalDevice, Renderer::WindowHandle{context.getNativeWindowHandle(), nullptr, nullptr});
 		const VkSurfaceFormatKHR desiredVkSurfaceFormatKHR = ::detail::getSwapChainFormat(context, vkPhysicalDevice, vkSurfaceKHR);
 		vkDestroySurfaceKHR(vkInstance, vkSurfaceKHR, nullptr);
 		return desiredVkSurfaceFormatKHR.format;
@@ -459,11 +459,11 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SwapChain::SwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowInfo windowInfo) :
+	SwapChain::SwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowHandle windowHandle) :
 		ISwapChain(renderPass),
 		// Operation system window
-		mNativeWindowHandle(windowInfo.nativeWindowHandle),
-		mRenderWindow(windowInfo.renderWindow),
+		mNativeWindowHandle(windowHandle.nativeWindowHandle),
+		mRenderWindow(windowHandle.renderWindow),
 		// Vulkan presentation surface
 		mVkSurfaceKHR(VK_NULL_HANDLE),
 		// Vulkan swap chain and color render target related
@@ -483,7 +483,7 @@ namespace VulkanRenderer
 		const VulkanContext&   vulkanContext	= vulkanRenderer.getVulkanContext();
 		const VkInstance	   vkInstance		= vulkanRenderer.getVulkanRuntimeLinking().getVkInstance();
 		const VkPhysicalDevice vkPhysicalDevice	= vulkanContext.getVkPhysicalDevice();
-		mVkSurfaceKHR = detail::createPresentationSurface(vulkanContext, vkInstance, vkPhysicalDevice, windowInfo);
+		mVkSurfaceKHR = detail::createPresentationSurface(vulkanContext, vkInstance, vkPhysicalDevice, windowHandle);
 		if (VK_NULL_HANDLE != mVkSurfaceKHR)
 		{
 			// Create the Vulkan swap chain

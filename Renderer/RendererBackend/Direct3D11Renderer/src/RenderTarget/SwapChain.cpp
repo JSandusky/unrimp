@@ -39,7 +39,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SwapChain::SwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowInfo windowInfo) :
+	SwapChain::SwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowHandle windowHandle) :
 		ISwapChain(renderPass),
 		mDxgiSwapChain(nullptr),
 		mD3D11RenderTargetView(nullptr),
@@ -54,7 +54,7 @@ namespace Direct3D11Renderer
 		ID3D11Device* d3d11Device = static_cast<Direct3D11Renderer&>(renderPass.getRenderer()).getD3D11Device();
 
 		// Get the native window handle
-		const HWND hWnd = reinterpret_cast<HWND>(windowInfo.nativeWindowHandle);
+		const HWND hWnd = reinterpret_cast<HWND>(windowHandle.nativeWindowHandle);
 
 		// Get a DXGI factory instance
 		IDXGIFactory1* dxgiFactory1 = nullptr;

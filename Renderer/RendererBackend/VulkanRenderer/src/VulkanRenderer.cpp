@@ -912,14 +912,14 @@ namespace VulkanRenderer
 		return new RenderPass(*this, numberOfColorAttachments, colorAttachmentTextureFormats, depthStencilAttachmentTextureFormat, numberOfMultisamples);
 	}
 
-	Renderer::ISwapChain* VulkanRenderer::createSwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowInfo windowInfo, bool)
+	Renderer::ISwapChain* VulkanRenderer::createSwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowHandle windowHandle, bool)
 	{
 		// Sanity checks
 		VULKANRENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
-		assert((NULL_HANDLE != windowInfo.nativeWindowHandle || nullptr != windowInfo.renderWindow) && "The provided native window handle or render window must not be a null handle / null pointer");
+		assert((NULL_HANDLE != windowHandle.nativeWindowHandle || nullptr != windowHandle.renderWindow) && "The provided native window handle or render window must not be a null handle / null pointer");
 
 		// Create the swap chain
-		return new SwapChain(renderPass, windowInfo);
+		return new SwapChain(renderPass, windowHandle);
 	}
 
 	Renderer::IFramebuffer* VulkanRenderer::createFramebuffer(Renderer::IRenderPass& renderPass, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment)

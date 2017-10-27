@@ -61,14 +61,14 @@ namespace Renderer
 	*  @note
 	*    - One of those members must be valid
 	*/
-	struct WindowInfo
+	struct WindowHandle
 	{
 		handle			nativeWindowHandle;	///< The native window handle
 		IRenderWindow*	renderWindow;		///< A pointer to an "Renderer::IRenderWindow"-instance, can be a null pointer
 		#ifdef LINUX
 			wl_surface*	waylandSurface;		///< A Wayland surface can't be put into a handle type, so we store a pointer to the Wayland surface here
 		#else
-			void*		unused;				///< For writing e.g. "Renderer::WindowInfo{nativeWindowHandle, nullptr, nullptr}" for all platforms // TODO(co) We might want to implement another solution like "WindowInfo::fromNativeWindowHandle()", "WindowInfo::fromRenderWindow()", "WindowInfo::fromWaylandSurface()", while there we could add a type and then using a data-union and directly renaming "WindowInfo" into "WindowHandle" to not having to use abbreviations like "info", wow, super long line, I wonder were I'll end up if I continue to wander this line along
+			void*		unused;				///< For writing e.g. "Renderer::WindowHandle{nativeWindowHandle, nullptr, nullptr}" for all platforms // TODO(co) We might want to implement another solution like "WindowHandle::fromNativeWindowHandle()", "WindowHandle::fromRenderWindow()", "WindowHandle::fromWaylandSurface()", while there we could add a type and then using a data-union
 		#endif
 	};
 

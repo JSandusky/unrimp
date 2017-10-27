@@ -43,10 +43,10 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	SwapChain::SwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowInfo windowInfo) :
+	SwapChain::SwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowHandle windowHandle) :
 		ISwapChain(renderPass),
-		mNativeWindowHandle(windowInfo.nativeWindowHandle),
-		mRenderWindow(windowInfo.renderWindow)
+		mNativeWindowHandle(windowHandle.nativeWindowHandle),
+		mRenderWindow(windowHandle.renderWindow)
 	{
 		// Nothing here
 	}

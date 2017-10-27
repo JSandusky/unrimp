@@ -93,10 +93,10 @@ namespace VulkanRenderer
 		*
 		*  @param[in] renderPass
 		*    Render pass to use, the swap chain keeps a reference to the render pass
-		*  @param[in] windowInfo
+		*  @param[in] windowHandle
 		*    Information about the window to render into
 		*/
-		SwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowInfo windowInfo);
+		SwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowHandle windowHandle);
 
 		/**
 		*  @brief
