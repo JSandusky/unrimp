@@ -44,6 +44,9 @@ namespace RendererToolkit
 	*  @brief
 	*    Sketchfab ( https://sketchfab.com/ ) asset importer
 	*
+	*  @note
+	*    - Has build-in support for texture channel packing "_drgb_nxa" and "_hr_rg_mb_nya"
+	*
 	*  @todo
 	*    - TODO(co) Under construction
 	*/

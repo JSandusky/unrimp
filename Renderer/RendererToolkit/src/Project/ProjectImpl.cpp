@@ -26,6 +26,7 @@
 #include "RendererToolkit/Helper/JsonHelper.h"
 #include "RendererToolkit/Helper/StringHelper.h"
 #include "RendererToolkit/Helper/CacheManager.h"
+#include "RendererToolkit/AssetImporter/SketchfabAssetImporter.h"
 #include "RendererToolkit/AssetCompiler/MeshAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/SceneAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/TextureAssetCompiler.h"
@@ -377,6 +378,32 @@ namespace RendererToolkit
 
 		// Setup project folder for cache manager, it will store there its data
 		mCacheManager = new CacheManager(mContext, mProjectName);
+	}
+
+	void ProjectImpl::importAssets(const AbsoluteFilenames& absoluteSourceFilenames, const std::string& targetAssetPackageName)
+	{
+		// Sanity check
+		// TODO(co) Add support for multiple asset packages
+		if (mAssetPackageDirectoryName != targetAssetPackageName)
+		{
+			throw std::runtime_error("The asset import target asset package name must be \"" + mAssetPackageDirectoryName + '\"');
+		}
+
+		// Import all assets
+		const size_t numberOfSourceAssets = absoluteSourceFilenames.size();
+		size_t currentSourceAsset = 0;
+		RENDERER_LOG(mContext, INFORMATION, "Starting import of %u assets", numberOfSourceAssets)
+		for (const std::string& absoluteSourceFilename : absoluteSourceFilenames)
+		{
+			RENDERER_LOG(mContext, INFORMATION, "Importing asset %u of %u: \"%s\"", currentSourceAsset + 1, absoluteSourceFilenames.size(), absoluteSourceFilename.c_str())
+			IAssetImporter::Input input(mContext, mProjectName, absoluteSourceFilename, mProjectName + "/Imported/" + std_filesystem::path(absoluteSourceFilename).stem().generic_string());
+
+			// TODO(co) Implement automatic asset importer selection
+			SketchfabAssetImporter().import(input);
+
+			++currentSourceAsset;
+		}
+		RENDERER_LOG(mContext, INFORMATION, "Finished import of %u assets", numberOfSourceAssets)
 	}
 
 	void ProjectImpl::compileAllAssets(const char* rendererTarget)

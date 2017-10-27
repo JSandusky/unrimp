@@ -523,19 +523,27 @@ namespace RendererRuntime
 		std::string relativeFilename;
 		if (getAbsoluteDirectoryNamesByMountPoint(virtualFilename, &absoluteDirectoryNames, relativeFilename, mountPoint) && absoluteDirectoryNames != nullptr)
 		{
-			for (const std::string& absoluteDirectoryName : *absoluteDirectoryNames)
+			if (mountPoint.empty())
 			{
-				const std::string absoluteFilename = absoluteDirectoryName + '/' + relativeFilename;
-				if (std_filesystem::exists(std_filesystem::u8path(absoluteFilename)))
-				{
-					return absoluteFilename;
-				}
+				// Support for absolute filenames
+				return virtualFilename;
 			}
-
-			// Still here and writing a file?
-			if (FileMode::WRITE == fileMode && !absoluteDirectoryNames->empty())
+			else
 			{
-				return (*absoluteDirectoryNames)[0] + '/' + relativeFilename;
+				for (const std::string& absoluteDirectoryName : *absoluteDirectoryNames)
+				{
+					const std::string absoluteFilename = absoluteDirectoryName + '/' + relativeFilename;
+					if (std_filesystem::exists(std_filesystem::u8path(absoluteFilename)))
+					{
+						return absoluteFilename;
+					}
+				}
+
+				// Still here and writing a file?
+				if (FileMode::WRITE == fileMode && !absoluteDirectoryNames->empty())
+				{
+					return (*absoluteDirectoryNames)[0] + '/' + relativeFilename;
+				}
 			}
 		}
 

@@ -275,3 +275,4 @@ The unified renderer interface can't unify some graphics API behaviour differenc
 	- ["Physically-Based Rendering, And You Can Too!"](https://www.marmoset.co/posts/physically-based-rendering-and-you-can-too/) - By Joe "EarthQuake" Wilson
 	- ["Moving Frostbite to PBR"](https://www.ea.com/frostbite/news/moving-frostbite-to-pb)
 	- ["Physically Based Shading and Image Based Lighting"](http://www.trentreed.net/blog/physically-based-shading-and-image-based-lighting/)
+	- ["The comprehensive PBR guide"](https://www.allegorithmic.com/pbr-guide)

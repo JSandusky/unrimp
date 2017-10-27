@@ -76,10 +76,7 @@ namespace RendererToolkit
 	*
 	*  @note
 	*    - Asset importers won't manipulate the given source assets to not risk introducing any errors
-	*    - The imported assets will be categories by asset type into different directories and decorated with additional asset metadata for asset compilers
-	*
-	*  @todo
-	*    - TODO(co) Under construction
+	*    - The imported assets will be categorized by asset type into different directories and decorated with additional asset metadata for asset compilers
 	*/
 	class IAssetImporter : public Renderer::RefCount<IAssetImporter>
 	{
@@ -93,16 +90,14 @@ namespace RendererToolkit
 		{
 			const Context&	  context;
 			const std::string projectName;
-			const std::string virtualAssetFilename;
-			const std::string virtualAssetInputDirectory;	///< Without "/" at the end
+			const std::string absoluteSourceFilename;
 			const std::string virtualAssetOutputDirectory;	///< Without "/" at the end
 
 			Input() = delete;
-			Input(const Context& _context, const std::string& _projectName, const std::string& _virtualAssetFilename, const std::string& _virtualAssetInputDirectory, const std::string& _virtualAssetOutputDirectory) :
+			Input(const Context& _context, const std::string& _projectName, const std::string& _absoluteSourceFilename, const std::string& _virtualAssetOutputDirectory) :
 				context(_context),
 				projectName(_projectName),
-				virtualAssetFilename(_virtualAssetFilename),
-				virtualAssetInputDirectory(_virtualAssetInputDirectory),
+				absoluteSourceFilename(_absoluteSourceFilename),
 				virtualAssetOutputDirectory(_virtualAssetOutputDirectory)
 			{
 				// Nothing here

@@ -60,8 +60,8 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef std::unordered_map<uint32_t, std::string> MaterialPropertyIdToName;				// Key = "RendererRuntime::MaterialPropertyId"
-	typedef std::unordered_map<uint32_t, uint32_t> SamplerBaseShaderRegisterNameToIndex;	// Key = "RendererRuntime::StringId(<Base Shader Register Name>)", value = index of the material blueprint sampler state resource to use
+	typedef std::unordered_map<uint32_t, std::string> MaterialPropertyIdToName;				///< Key = "RendererRuntime::MaterialPropertyId"
+	typedef std::unordered_map<uint32_t, uint32_t> SamplerBaseShaderRegisterNameToIndex;	///< Key = "RendererRuntime::StringId(<Base Shader Register Name>)", value = index of the material blueprint sampler state resource to use
 
 
 	//[-------------------------------------------------------]

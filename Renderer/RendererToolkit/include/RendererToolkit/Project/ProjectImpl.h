@@ -69,8 +69,8 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef std::unordered_map<uint32_t, uint32_t> SourceAssetIdToCompiledAssetId;		// Key = source asset ID, value = compiled asset ID ("AssetId"-type not used directly or we would need to define a hash-function for it)
-	typedef std::unordered_map<uint32_t, std::string> SourceAssetIdToVirtualFilename;	// Key = source asset ID, virtual asset filename
+	typedef std::unordered_map<uint32_t, uint32_t> SourceAssetIdToCompiledAssetId;		///< Key = source asset ID, value = compiled asset ID ("AssetId"-type not used directly or we would need to define a hash-function for it)
+	typedef std::unordered_map<uint32_t, std::string> SourceAssetIdToVirtualFilename;	///< Key = source asset ID, virtual asset filename
 
 
 	//[-------------------------------------------------------]
@@ -127,6 +127,7 @@ namespace RendererToolkit
 	public:
 		virtual void load(RendererRuntime::AbsoluteDirectoryName absoluteProjectDirectoryName) override;
 		virtual void compileAllAssets(const char* rendererTarget) override;
+		virtual void importAssets(const AbsoluteFilenames& absoluteSourceFilenames, const std::string& targetAssetPackageName) override;
 		virtual void startupAssetMonitor(RendererRuntime::IRendererRuntime& rendererRuntime, const char* rendererTarget) override;
 		virtual void shutdownAssetMonitor() override;
 
