@@ -27,12 +27,21 @@ PRAGMA_WARNING_DISABLE_MSVC(4242)	// warning C4242: '=': conversion from 'int' t
 PRAGMA_WARNING_DISABLE_MSVC(4244)	// warning C4244: '=': conversion from 'int' to 'char', possible loss of data
 
 #include "RendererToolkit/AssetImporter/SketchfabAssetImporter.h"
+#include "RendererToolkit/Helper/AssimpLogStream.h"
+#include "RendererToolkit/Helper/AssimpIOSystem.h"
 #include "RendererToolkit/Helper/JsonHelper.h"
 #include "RendererToolkit/Context.h"
 
 #include <RendererRuntime/Core/File/IFile.h>
 #include <RendererRuntime/Core/File/IFileManager.h>
 #include <RendererRuntime/Core/File/FileSystemHelper.h>
+
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4061)	// warning C4061: enumerator 'FORCE_32BIT' in switch of enum 'aiMetadataType' is not explicitly handled by a case label
+	#include <assimp/scene.h>
+	#include <assimp/Importer.hpp>
+PRAGMA_WARNING_POP
 
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
@@ -577,14 +586,70 @@ namespace
 		}
 
 		// Due to many artist asset variations, the material name to asset ID is a tricky and error prone mapping
+		void createMaterialNameToAssetIdForMaterial(const RendererToolkit::IAssetImporter::Input& input, const MaterialTextureFilenames& materialTextureFilenames, const std::string& assimpMaterialName, MaterialNameToAssetId& materialNameToAssetId)
+		{
+			// First, maybe we're in luck and we have a nice and clean exact match
+			MaterialTextureFilenames::const_iterator iterator = materialTextureFilenames.find(assimpMaterialName);
+			if (iterator != materialTextureFilenames.cend())
+			{
+				// We have a nice and clean exact match
+				materialNameToAssetId.emplace(assimpMaterialName, "../" + MATERIAL_TYPE + '/' + assimpMaterialName + ".asset");
+			}
+			else
+			{
+				// How unexpected, the downloaded Sketchfab mesh is violating the Sketchfab texture naming conventions: https://help.sketchfab.com/hc/en-us/articles/202600873-Materials-and-Textures#textures-auto-pbr
+				std::string materialName = assimpMaterialName;
+
+				// Remove odd characters found in at least one downloaded Sketchfab mesh
+				materialName.erase(std::remove(materialName.begin(), materialName.end(), '/'), materialName.end());
+
+				// Try to find a material which might match
+				for (const auto& pair : materialTextureFilenames)
+				{
+					const std::string& currentMaterialName = pair.first;
+					if (currentMaterialName.find(materialName) != std::string::npos)
+					{
+						materialNameToAssetId.emplace(assimpMaterialName, "../" + MATERIAL_TYPE + '/' + currentMaterialName + ".asset");
+						return;
+					}
+				}
+
+				// Add an empty entry so the user knowns which materials need to be assigned manually
+				materialNameToAssetId.emplace(assimpMaterialName, "");
+				RENDERER_LOG(input.context, WARNING, "The Sketchfab asset importer failed to automatically find a material name to asset ID mapping of mesh material \"%s\" from the ZIP-archive \"%s\"", assimpMaterialName.c_str(), input.absoluteSourceFilename.c_str())
+			}
+		}
+
 		void createMaterialNameToAssetId(const RendererToolkit::IAssetImporter::Input& input, const std::string& meshFilename, const MaterialTextureFilenames& materialTextureFilenames, MaterialNameToAssetId& materialNameToAssetId)
 		{
-			// TODO(co) Implement me
-			materialNameToAssetId.emplace("/Head", "../Material/Spino_Head.asset");
-			materialNameToAssetId.emplace("/Body", "../Material/Spino_Body.asset");
-			std::ignore = input;
-			std::ignore = meshFilename;
-			std::ignore = materialTextureFilenames;
+			// Create an instance of the Assimp importer class
+			RendererToolkit::AssimpLogStream assimpLogStream;
+			Assimp::Importer assimpImporter;
+			assimpImporter.SetIOHandler(new RendererToolkit::AssimpIOSystem(input.context.getFileManager()));
+
+			// Load the given mesh so we can figure out which materials are referenced
+			// -> Since we're only interesting in referenced materials, Assimp doesn't need to perform any additional mesh processing
+			const std::string virtualFilename = input.virtualAssetOutputDirectory + '/' + MESH_TYPE + '/' + meshFilename;
+			const aiScene* assimpScene = assimpImporter.ReadFile(virtualFilename.c_str(), 0);
+			if (nullptr != assimpScene && nullptr != assimpScene->mRootNode)
+			{
+				for (unsigned int materialIndex = 0; materialIndex < assimpScene->mNumMaterials; ++materialIndex)
+				{
+					const aiMaterial* assimpMaterial = assimpScene->mMaterials[materialIndex];
+					aiString assimpMaterialName;
+					assimpMaterial->Get(AI_MATKEY_NAME, assimpMaterialName);
+					if (assimpMaterialName.length > 0 && nullptr == strstr(assimpMaterialName.C_Str(), AI_DEFAULT_MATERIAL_NAME))
+					{
+						// Let the guesswork begin
+						createMaterialNameToAssetIdForMaterial(input, materialTextureFilenames, assimpMaterialName.C_Str(), materialNameToAssetId);
+					}
+				}
+			}
+			else
+			{
+				// Error!
+				throw std::runtime_error("Assimp failed to load the mesh \"" + virtualFilename + "\" from the ZIP-archive \"" + input.absoluteSourceFilename + "\": " + assimpLogStream.getLastErrorMessage());
+			}
 		}
 
 		/*

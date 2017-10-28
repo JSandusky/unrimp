@@ -203,7 +203,11 @@ namespace RendererToolkit
 		}
 		
 		// Check the asset file
-		if (!checkIfFileChanged(rendererTarget, virtualAssetFilename.c_str(), ::detail::ASSET_FORMAT_VERSION, dummyEntry))
+		if (checkIfFileChanged(rendererTarget, virtualAssetFilename.c_str(), ::detail::ASSET_FORMAT_VERSION, dummyEntry))
+		{
+			result = true;
+		}
+		else
 		{
 			// We don't include this check in the above if to make sure that the function is always called
 			if (result)

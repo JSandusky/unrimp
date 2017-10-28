@@ -166,6 +166,7 @@ Renderer Toolkit (e.g. "The Editor")
 	- Support for 2D-LUT to 3D-LUT conversion
 	- Support for texture channel packing
 	- Toksvig specular anti-aliasing to reduce shimmering/sparkling via texture modifiations during texture asset compilation
+- [Sketchfab](https://sketchfab.com/) asset importer without the need to unzip the downloaded meshes first
 
 
 Examples (just some high level keywords)

@@ -775,7 +775,12 @@ namespace RendererToolkit
 					{
 						if (materialNameToAssetId.find(rapidJsonMemberIterator->name.GetString()) == materialNameToAssetId.cend())
 						{
-							materialNameToAssetId.emplace(rapidJsonMemberIterator->name.GetString(), StringHelper::getAssetIdByString(rapidJsonMemberIterator->value.GetString(), input));
+							const std::string assetIdAsString = rapidJsonMemberIterator->value.GetString();
+							if (assetIdAsString.empty())
+							{
+								throw std::runtime_error("Mesh asset material name to asset ID mapping entry \"" + std::string(rapidJsonMemberIterator->name.GetString()) + "\" has no material asset ID assigned");
+							}
+							materialNameToAssetId.emplace(rapidJsonMemberIterator->name.GetString(), StringHelper::getAssetIdByString(assetIdAsString, input));
 						}
 						else
 						{
@@ -884,7 +889,7 @@ namespace RendererToolkit
 			}
 			else
 			{
-				throw std::runtime_error("Assimp failed to load in the given mesh: " + assimpLogStream.getLastErrorMessage());
+				throw std::runtime_error("Assimp failed to load in the given mesh \"" + virtualInputFilename + "\": " + assimpLogStream.getLastErrorMessage());
 			}
 
 			// Write LZ4 compressed output

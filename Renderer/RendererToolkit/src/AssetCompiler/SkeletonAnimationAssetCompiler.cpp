@@ -286,7 +286,7 @@ namespace RendererToolkit
 			}
 			else
 			{
-				throw std::runtime_error("Assimp failed to load in the given skeleton: " + assimpLogStream.getLastErrorMessage());
+				throw std::runtime_error("Assimp failed to load in the given skeleton \"" + virtualInputFilename + "\": " + assimpLogStream.getLastErrorMessage());
 			}
 
 			// Write LZ4 compressed output
