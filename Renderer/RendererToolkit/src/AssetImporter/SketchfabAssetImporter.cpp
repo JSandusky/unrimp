@@ -49,6 +49,7 @@ PRAGMA_WARNING_POP
 PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
 	PRAGMA_WARNING_DISABLE_MSVC(4668)	// warning C4668: '__BYTE_ORDER__' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+	// For ZIP-archive extraction we're using miniz which comes with Crunch
 	#include <../src/crn_miniz.h>
 PRAGMA_WARNING_POP
 
@@ -72,6 +73,7 @@ namespace
 		typedef std::vector<uint8_t> FileData;
 		typedef std::vector<std::string> TextureFilenames;
 		typedef std::unordered_map<std::string, TextureFilenames> MaterialTextureFilenames;	// Key = material name
+		typedef std::unordered_map<std::string, std::string> MaterialNameToAssetId;	// Key = source material name (e.g. "/Head"), value = imported material filename (e.g. "../Material/SpinosaurusHead.asset")
 		static const std::string TEXTURE_TYPE = "Texture";
 		static const std::string MATERIAL_TYPE = "Material";
 		static const std::string MESH_TYPE = "Mesh";
@@ -207,47 +209,53 @@ namespace
 			}
 		}
 
-		void importTexture(const RendererToolkit::IAssetImporter::Input& input, mz_zip_archive& zipArchive, mz_uint fileIndex, const char* filename, TextureFilenames& textureFilenames)
+		void extractFromZipToFile(const RendererToolkit::IAssetImporter::Input& input, mz_zip_archive& zipArchive, mz_uint fileIndex, const char* filename, const std::string& assetType)
 		{
-			// Ensure the texture directory exists
+			// Ensure the directory exists
 			RendererRuntime::IFileManager& fileManager = input.context.getFileManager();
-			const std::string virtualTextureDirectoryName = input.virtualAssetOutputDirectory + '/' + TEXTURE_TYPE;
-			fileManager.createDirectories(virtualTextureDirectoryName.c_str());
+			const std::string virtualDirectoryName = input.virtualAssetOutputDirectory + '/' + assetType;
+			fileManager.createDirectories(virtualDirectoryName.c_str());
 
-			// Write down the uncompressed texture file
+			// Write down the uncompressed file
 			// -> Silently ignore and overwrite already existing files (might be a re-import)
-			const std::string textureFilename = std_filesystem::path(filename).filename().generic_string();
-			const std::string virtualTextureFilename = virtualTextureDirectoryName + '/' + textureFilename;
-			RendererRuntime::IFile* file = fileManager.openFile(RendererRuntime::IFileManager::FileMode::WRITE, virtualTextureFilename.c_str());
+			const std::string virtualFilename = virtualDirectoryName + '/' + std_filesystem::path(filename).filename().generic_string();
+			RendererRuntime::IFile* file = fileManager.openFile(RendererRuntime::IFileManager::FileMode::WRITE, virtualFilename.c_str());
 			if (nullptr != file)
 			{
-				// Write down the decompress texture file
+				// Write down the decompress file
 				size_t uncompressedFileSize = 0;
 				void* fileData = mz_zip_reader_extract_to_heap(&zipArchive, fileIndex, &uncompressedFileSize, 0);
 				if (0 == uncompressedFileSize || nullptr == fileData)
 				{
 					// Error!
-					throw std::runtime_error("Failed to extract the texture file \"" + std::string(filename) + "\" from ZIP-archive \"" + input.absoluteSourceFilename + '\"');
+					throw std::runtime_error("Failed to extract the file \"" + std::string(filename) + "\" from ZIP-archive \"" + input.absoluteSourceFilename + '\"');
 				}
 				file->write(fileData, uncompressedFileSize);
 				mz_free(fileData);
 
 				// Close file
 				fileManager.closeFile(*file);
-
-				// Remember the texture filename for creating the texture asset files later on
-				if (std::find(textureFilenames.cbegin(), textureFilenames.cend(), textureFilename) != textureFilenames.cend())
-				{
-					// Error!
-					throw std::runtime_error("The ZIP-archive \"" + input.absoluteSourceFilename + "\" contains multiple texture files named \"" + textureFilename + '\"');
-				}
-				textureFilenames.push_back(textureFilename);
 			}
 			else
 			{
 				// Error!
-				throw std::runtime_error("Failed to open the file \"" + virtualTextureFilename + "\" for writing");
+				throw std::runtime_error("Failed to open the file \"" + virtualFilename + "\" for writing");
 			}
+		}
+
+		void importTexture(const RendererToolkit::IAssetImporter::Input& input, mz_zip_archive& zipArchive, mz_uint fileIndex, const char* filename, TextureFilenames& textureFilenames)
+		{
+			// Extract texture from ZIP-archive to file
+			extractFromZipToFile(input, zipArchive, fileIndex, filename, TEXTURE_TYPE);
+
+			// Remember the texture filename for creating the texture asset files later on
+			const std::string textureFilename = std_filesystem::path(filename).filename().generic_string();
+			if (std::find(textureFilenames.cbegin(), textureFilenames.cend(), textureFilename) != textureFilenames.cend())
+			{
+				// Error!
+				throw std::runtime_error("The ZIP-archive \"" + input.absoluteSourceFilename + "\" contains multiple texture files named \"" + textureFilename + '\"');
+			}
+			textureFilenames.push_back(textureFilename);
 		}
 
 		void gatherMaterialTextureFilenames(const RendererToolkit::IAssetImporter::Input& input, const TextureFilenames& textureFilenames, MaterialTextureFilenames& materialTextureFilenames)
@@ -535,7 +543,7 @@ namespace
 				rapidJsonValueAsset.AddMember("AssetMetadata", rapidJsonValueAssetMetadata, rapidJsonAllocatorType);
 			}
 
-			{ // Material compiler
+			{ // Material asset compiler
 				rapidjson::Value rapidJsonValueMaterialAssetCompiler(rapidjson::kObjectType);
 				rapidJsonValueMaterialAssetCompiler.AddMember("InputFile", rapidjson::StringRef(filename.c_str()), rapidJsonAllocatorType);
 				rapidJsonValueAsset.AddMember("MaterialAssetCompiler", rapidJsonValueMaterialAssetCompiler, rapidJsonAllocatorType);
@@ -562,6 +570,23 @@ namespace
 			}
 		}
 
+		void importMeshMtl(const RendererToolkit::IAssetImporter::Input& input, mz_zip_archive& zipArchive, mz_uint fileIndex, const char* filename)
+		{
+			// Extract mtl-file of OBJ mesh format from ZIP-archive to file
+			extractFromZipToFile(input, zipArchive, fileIndex, filename, MESH_TYPE);
+		}
+
+		// Due to many artist asset variations, the material name to asset ID is a tricky and error prone mapping
+		void createMaterialNameToAssetId(const RendererToolkit::IAssetImporter::Input& input, const std::string& meshFilename, const MaterialTextureFilenames& materialTextureFilenames, MaterialNameToAssetId& materialNameToAssetId)
+		{
+			// TODO(co) Implement me
+			materialNameToAssetId.emplace("/Head", "../Material/Spino_Head.asset");
+			materialNameToAssetId.emplace("/Body", "../Material/Spino_Body.asset");
+			std::ignore = input;
+			std::ignore = meshFilename;
+			std::ignore = materialTextureFilenames;
+		}
+
 		/*
 		Sketchfab merging conventions: https://help.sketchfab.com/hc/en-us/articles/201766675-Viewer-Performance
 		"
@@ -573,17 +598,149 @@ namespace
 		- Geometries are not merged for animated objects or objects with transparency!
 		"
 		*/
-		void importMesh(const RendererToolkit::IAssetImporter::Input& input, mz_zip_archive& zipArchive, mz_uint fileIndex, const char* filename)
+		void createMeshAssetFile(const RendererToolkit::IAssetImporter::Input& input, const std::string& meshFilename, const MaterialNameToAssetId& materialNameToAssetId)
 		{
-			// Ensure the mesh directory exists
-			RendererRuntime::IFileManager& fileManager = input.context.getFileManager();
-			fileManager.createDirectories((input.virtualAssetOutputDirectory + '/' + MESH_TYPE).c_str());
+			/* Example for a resulting mesh asset JSON file
+			{
+				"Format": {
+					"Type": "Asset",
+					"Version": "1"
+				},
+				"Asset": {
+					"AssetMetadata": {
+						"AssetType": "Mesh",
+						"AssetCategory": "Imported"
+					},
+					"MeshAssetCompiler": {
+						"InputFile": "SpinosaurusAeg.obj",
+						"MaterialNameToAssetId": {
+							"/Head": "../Material/SpinosaurusHead.asset",
+							"/Body": "../Material/SpinosaurusBody.asset"
+						}
+					}
+				}
+			}
+			*/
+			rapidjson::Document rapidJsonDocumentAsset(rapidjson::kObjectType);
+			rapidjson::Document::AllocatorType& rapidJsonAllocatorType = rapidJsonDocumentAsset.GetAllocator();
+			rapidjson::Value rapidJsonValueAsset(rapidjson::kObjectType);
 
-			// TODO(co) Implement me
-			std::ignore = zipArchive;
-			std::ignore = fileIndex;
-			std::ignore = filename;
-			NOP;
+			{ // Asset metadata
+				rapidjson::Value rapidJsonValueAssetMetadata(rapidjson::kObjectType);
+				rapidJsonValueAssetMetadata.AddMember("AssetType", "Mesh", rapidJsonAllocatorType);
+				rapidJsonValueAssetMetadata.AddMember("AssetCategory", rapidjson::StringRef(input.assetCategory.c_str()), rapidJsonAllocatorType);
+				rapidJsonValueAsset.AddMember("AssetMetadata", rapidJsonValueAssetMetadata, rapidJsonAllocatorType);
+			}
+
+			{ // Mesh asset compiler
+				rapidjson::Value rapidJsonValueMeshAssetCompiler(rapidjson::kObjectType);
+				rapidJsonValueMeshAssetCompiler.AddMember("InputFile", rapidjson::StringRef(meshFilename.c_str()), rapidJsonAllocatorType);
+				if (!materialNameToAssetId.empty())
+				{
+					rapidjson::Value rapidJsonValueMaterialNameToAssetId(rapidjson::kObjectType);
+					for (const auto& pair : materialNameToAssetId)
+					{
+						rapidJsonValueMaterialNameToAssetId.AddMember(rapidjson::StringRef(pair.first.c_str()), rapidjson::StringRef(pair.second.c_str()), rapidJsonAllocatorType);
+					}
+					rapidJsonValueMeshAssetCompiler.AddMember("MaterialNameToAssetId", rapidJsonValueMaterialNameToAssetId, rapidJsonAllocatorType);
+				}
+				rapidJsonValueAsset.AddMember("MeshAssetCompiler", rapidJsonValueMeshAssetCompiler, rapidJsonAllocatorType);
+			}
+
+			// Write down the mesh asset JSON file
+			// -> Silently ignore and overwrite already existing files (might be a re-import)
+			const std::string virtualFilename = input.virtualAssetOutputDirectory + '/' + MESH_TYPE + '/' + std_filesystem::path(meshFilename).stem().generic_string() + ".asset";
+			RendererToolkit::JsonHelper::saveDocumentByFilename(input.context.getFileManager(), virtualFilename, "Asset", "1", rapidJsonValueAsset);
+		}
+
+		void importMesh(const RendererToolkit::IAssetImporter::Input& input, mz_zip_archive& zipArchive, mz_uint fileIndex, const char* filename, std::string& meshFilename)
+		{
+			// Sanity check
+			if (!meshFilename.empty())
+			{
+				// Error!
+				throw std::runtime_error("Failed to import ZIP-archive \"" + input.absoluteSourceFilename + "\" since it contains multiple mesh files");
+			}
+
+			// Extract mesh from ZIP-archive to file
+			extractFromZipToFile(input, zipArchive, fileIndex, filename, MESH_TYPE);
+			meshFilename = std_filesystem::path(filename).filename().generic_string();
+		}
+
+		void importByZipArchive(const RendererToolkit::IAssetImporter::Input& input, const FileData& fileData, std::string& meshFilename, TextureFilenames& textureFilenames)
+		{
+			// Initialize the ZIP-archive
+			mz_zip_archive zipArchive = {};
+			if (!mz_zip_reader_init_mem(&zipArchive, static_cast<const void*>(fileData.data()), fileData.size(), MZ_ZIP_FLAG_CASE_SENSITIVE | MZ_ZIP_FLAG_DO_NOT_SORT_CENTRAL_DIRECTORY))
+			{
+				// Error!
+				throw std::runtime_error("Failed to initialize opened ZIP-archive \"" + input.absoluteSourceFilename + "\" for reading");
+			}
+
+			// Iterate through the ZIP-archive files
+			const mz_uint numberOfFiles = mz_zip_reader_get_num_files(&zipArchive);
+			for (mz_uint fileIndex = 0; fileIndex < numberOfFiles; ++fileIndex)
+			{
+				// Get filename and file extension
+				const mz_uint FILENAME_BUFFER_SIZE = 256;
+				char filename[FILENAME_BUFFER_SIZE];
+				const mz_uint filenameSize = mz_zip_reader_get_filename(&zipArchive, fileIndex, filename, FILENAME_BUFFER_SIZE);
+				if (0 == filenameSize)
+				{
+					// Error!
+					throw std::runtime_error("Failed to get filename at index " + std::to_string(fileIndex) + " while reading the ZIP-archive \"" + input.absoluteSourceFilename + '\"');
+				}
+				const std::string extension = std_filesystem::path(filename).extension().generic_string();
+
+				// Evaluate the file extension and proceed accordantly
+				// -> Silently ignore unknown files
+
+				// Texture: Sketchfab supported texture formats: https://help.sketchfab.com/hc/en-us/articles/202600873-Materials-and-Textures#textures-file-formats
+				// -> "Anything that is not .JPG or .PNG is converted to .PNG."
+				if (".jpg" == extension || ".png" == extension)
+				{
+					importTexture(input, zipArchive, fileIndex, filename, textureFilenames);
+				}
+
+				// Mesh
+				else if (".zip" == extension)
+				{
+					// Import by ZIP in ZIP-archive
+					mz_zip_archive_file_stat zipArchiveFileStat = {};
+					if (!mz_zip_reader_file_stat(&zipArchive, fileIndex, &zipArchiveFileStat))
+					{
+						// Error!
+						throw std::runtime_error("Failed to get information about the ZIP-file \"" + std::string(filename) + "\" from ZIP-archive \"" + input.absoluteSourceFilename + '\"');
+					}
+					FileData zipFileData(zipArchiveFileStat.m_uncomp_size);
+					if (!mz_zip_reader_extract_to_mem(&zipArchive, fileIndex, zipFileData.data(), zipArchiveFileStat.m_uncomp_size, 0))
+					{
+						// Error!
+						throw std::runtime_error("Failed to extract the ZIP-file \"" + std::string(filename) + "\" from ZIP-archive \"" + input.absoluteSourceFilename + '\"');
+					}
+					importByZipArchive(input, zipFileData, meshFilename, textureFilenames);
+				}
+				else if (std::find(g_SupportedMeshFormats.cbegin(), g_SupportedMeshFormats.cend(), extension) != g_SupportedMeshFormats.cend())
+				{
+					importMesh(input, zipArchive, fileIndex, filename, meshFilename);
+				}
+				else if (".mtl" == extension)
+				{
+					importMeshMtl(input, zipArchive, fileIndex, filename);
+				}
+				else if (std::find(g_SketchfabMeshFormats.cbegin(), g_SketchfabMeshFormats.cend(), extension) != g_SketchfabMeshFormats.cend())
+				{
+					// Error!
+					throw std::runtime_error("Failed to import mesh asset \"" + std::string(filename) + "\" while reading the ZIP-archive \"" + input.absoluteSourceFilename + "\": Mesh format \"" + extension + "\" isn't supported");
+				}
+			}
+
+			// End the ZIP-archive
+			if (!mz_zip_reader_end(&zipArchive))
+			{
+				// Error!
+				throw std::runtime_error("Failed to close the read ZIP-archive \"" + input.absoluteSourceFilename + '\"');
+			}
 		}
 
 
@@ -635,75 +792,28 @@ namespace RendererToolkit
 		::detail::FileData fileData;
 		::detail::readFileIntoMemory(input, fileData);
 
-		// Initialize the ZIP-archive
-		mz_zip_archive zipArchive = {};
-		if (!mz_zip_reader_init_mem(&zipArchive, static_cast<const void*>(fileData.data()), fileData.size(), MZ_ZIP_FLAG_CASE_SENSITIVE | MZ_ZIP_FLAG_DO_NOT_SORT_CENTRAL_DIRECTORY))
-		{
-			// Error!
-			throw std::runtime_error("Failed to initialize opened ZIP-archive \"" + input.absoluteSourceFilename + "\" for reading");
-		}
-
-		// Iterate through the ZIP-archive files
+		// Import by ZIP-archive
+		std::string meshFilename;
 		::detail::TextureFilenames textureFilenames;
-		const mz_uint numberOfFiles = mz_zip_reader_get_num_files(&zipArchive);
-		for (mz_uint fileIndex = 0; fileIndex < numberOfFiles; ++fileIndex)
-		{
-			// Get filename and file extension
-			const mz_uint FILENAME_BUFFER_SIZE = 256;
-			char filename[FILENAME_BUFFER_SIZE];
-			const mz_uint filenameSize = mz_zip_reader_get_filename(&zipArchive, fileIndex, filename, FILENAME_BUFFER_SIZE);
-			if (0 == filenameSize)
-			{
-				// Error!
-				throw std::runtime_error("Failed to get filename at index " + std::to_string(fileIndex) + " while reading the ZIP-archive \"" + input.absoluteSourceFilename + '\"');
-			}
-			const std::string extension = std_filesystem::path(filename).extension().generic_string();
-
-			// Evaluate the file extension and proceed accordantly
-			// -> Silently ignore unknown files
-
-			// Texture: Sketchfab supported texture formats: https://help.sketchfab.com/hc/en-us/articles/202600873-Materials-and-Textures#textures-file-formats
-			// -> "Anything that is not .JPG or .PNG is converted to .PNG."
-			if (".jpg" == extension || ".png" == extension)
-			{
-				::detail::importTexture(input, zipArchive, fileIndex, filename, textureFilenames);
-			}
-
-			// Mesh
-			else if (".zip" == extension)
-			{
-				// TODO(co) Implement me
-				NOP;
-			}
-			else if (std::find(::detail::g_SupportedMeshFormats.cbegin(), ::detail::g_SupportedMeshFormats.cend(), extension) != ::detail::g_SupportedMeshFormats.cend())
-			{
-				::detail::importMesh(input, zipArchive, fileIndex, filename);
-			}
-			else if (std::find(::detail::g_SketchfabMeshFormats.cbegin(), ::detail::g_SketchfabMeshFormats.cend(), extension) != ::detail::g_SketchfabMeshFormats.cend())
-			{
-				// Error!
-				throw std::runtime_error("Failed to import mesh asset \"" + std::string(filename) + "\" while reading the ZIP-archive \"" + input.absoluteSourceFilename + "\": Mesh format \"" + extension + "\" isn't supported");
-			}
-		}
-
-		// End the ZIP-archive
-		if (!mz_zip_reader_end(&zipArchive))
-		{
-			// Error!
-			throw std::runtime_error("Failed to close the read ZIP-archive \"" + input.absoluteSourceFilename + '\"');
-		}
+		::detail::importByZipArchive(input, fileData, meshFilename, textureFilenames);
 
 		// Create texture and material asset files
 		if (!textureFilenames.empty())
 		{
+			// Gather as much information as possible
 			::detail::MaterialTextureFilenames materialTextureFilenames;
 			::detail::gatherMaterialTextureFilenames(input, textureFilenames, materialTextureFilenames);
 			if (materialTextureFilenames.empty())
 			{
 				throw std::runtime_error("Failed to gather material texture filenames for ZIP-archive \"" + input.absoluteSourceFilename + '\"');
 			}
+			::detail::MaterialNameToAssetId materialNameToAssetId;
+			::detail::createMaterialNameToAssetId(input, meshFilename, materialTextureFilenames, materialNameToAssetId);
+
+			// Write asset files
 			::detail::createTextureChannelPackingAssetFiles(input, materialTextureFilenames);
 			::detail::createMaterialAssetFiles(input, materialTextureFilenames);
+			::detail::createMeshAssetFile(input, meshFilename, materialNameToAssetId);
 		}
 	}
 
