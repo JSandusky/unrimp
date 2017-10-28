@@ -24,6 +24,9 @@
 #include "RendererToolkit/Helper/JsonHelper.h"
 #include "RendererToolkit/Helper/StringHelper.h"
 
+#include <RendererRuntime/Core/File/IFile.h>
+#include <RendererRuntime/Core/File/IFileManager.h>
+
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4061)	// warning C4061: enumerator 'rapidjson::GenericReader<rapidjson::UTF8<char>,rapidjson::UTF8<char>,rapidjson::CrtAllocator>::IterativeParsingStartState' in switch of enum 'rapidjson::GenericReader<rapidjson::UTF8<char>,rapidjson::UTF8<char>,rapidjson::CrtAllocator>::IterativeParsingState' is not explicitly handled by a case label
@@ -39,6 +42,8 @@ PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(5026)	// warning C5026: 'std::_Generic_error_category': move constructor was implicitly defined as deleted
 	#include <rapidjson/document.h>
 	#include <rapidjson/error/en.h>
+	#include <rapidjson/prettywriter.h>
+	#include <rapidjson/ostreamwrapper.h>
 PRAGMA_WARNING_POP
 
 // Disable warnings in external headers, we can't fix them
@@ -52,6 +57,7 @@ PRAGMA_WARNING_POP
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'return': conversion from 'int' to 'std::_Rand_urng_from_func::result_type', signed/unsigned mismatch
+	#include <sstream>
 	#include <algorithm> // For "std::count()"
 PRAGMA_WARNING_POP
 
@@ -320,6 +326,46 @@ namespace RendererToolkit
 			{
 				throw std::runtime_error("Invalid JSON format version, must be " + formatVersion);
 			}
+		}
+	}
+
+	void JsonHelper::saveDocumentByFilename(const RendererRuntime::IFileManager& fileManager, const std::string& virtualFilename, const std::string& formatType, const std::string& formatVersion, rapidjson::Value& rapidJsonValue)
+	{
+		rapidjson::Document rapidJsonDocument(rapidjson::kObjectType);
+		rapidjson::Document::AllocatorType& rapidJsonAllocatorType = rapidJsonDocument.GetAllocator();
+
+		{ // Format
+			rapidjson::Value rapidJsonValueFormat(rapidjson::kObjectType);
+			rapidJsonValueFormat.AddMember("Type", rapidjson::StringRef(formatType.c_str()), rapidJsonAllocatorType);
+			rapidJsonValueFormat.AddMember("Version", rapidjson::StringRef(formatVersion.c_str()), rapidJsonAllocatorType);
+			rapidJsonDocument.AddMember("Format", rapidJsonValueFormat, rapidJsonAllocatorType);
+		}
+
+		// Add asset format type member
+		rapidJsonDocument.AddMember(rapidjson::StringRef(formatType.c_str()), rapidJsonValue, rapidJsonAllocatorType);
+
+		// JSON document to pretty string
+		std::ostringstream outputStringStream;
+		{
+			rapidjson::OStreamWrapper outputStreamWrapper(outputStringStream);
+			rapidjson::PrettyWriter<rapidjson::OStreamWrapper> rapidJsonWriter(outputStreamWrapper);
+			rapidJsonDocument.Accept(rapidJsonWriter);
+		}
+
+		// Write down the texture asset JSON file
+		RendererRuntime::IFile* file = fileManager.openFile(RendererRuntime::IFileManager::FileMode::WRITE, virtualFilename.c_str());
+		if (nullptr != file)
+		{
+			const std::string jsonDocumentAsString = outputStringStream.str();
+			file->write(jsonDocumentAsString.data(), jsonDocumentAsString.size());
+
+			// Close file
+			fileManager.closeFile(*file);
+		}
+		else
+		{
+			// Error!
+			throw std::runtime_error("Failed to open the file \"" + virtualFilename + "\" for writing");
 		}
 	}
 

@@ -27,6 +27,7 @@ PRAGMA_WARNING_DISABLE_MSVC(4242)	// warning C4242: '=': conversion from 'int' t
 PRAGMA_WARNING_DISABLE_MSVC(4244)	// warning C4244: '=': conversion from 'int' to 'char', possible loss of data
 
 #include "RendererToolkit/AssetImporter/SketchfabAssetImporter.h"
+#include "RendererToolkit/Helper/JsonHelper.h"
 #include "RendererToolkit/Context.h"
 
 #include <RendererRuntime/Core/File/IFile.h>
@@ -38,16 +39,10 @@ PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4061)	// warning C4061: enumerator 'rapidjson::kNumberType' in switch of enum 'rapidjson::Type' is not explicitly handled by a case label
 	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: '=': conversion from 'int' to 'rapidjson::internal::BigInteger::Type', signed/unsigned mismatch
 	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
-	PRAGMA_WARNING_DISABLE_MSVC(4571)	// warning C4571: Informational: catch(...) semantics changed since Visual C++ 7.1; structured exceptions (SEH) are no longer caught
 	PRAGMA_WARNING_DISABLE_MSVC(4625)	// warning C4625: 'rapidjson::GenericMember<Encoding,Allocator>': copy constructor was implicitly defined as deleted
 	PRAGMA_WARNING_DISABLE_MSVC(4626)	// warning C4626: 'std::codecvt_base': assignment operator was implicitly defined as deleted
 	PRAGMA_WARNING_DISABLE_MSVC(4668)	// warning C4668: '__GNUC__' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
-	PRAGMA_WARNING_DISABLE_MSVC(4774)	// warning C4774: 'sprintf_s' : format string expected in argument 3 is not a string literal
-	PRAGMA_WARNING_DISABLE_MSVC(5026)	// warning C5026: 'std::_Generic_error_category': move constructor was implicitly defined as deleted
-	PRAGMA_WARNING_DISABLE_MSVC(5027)	// warning C5027: 'std::_Generic_error_category': move assignment operator was implicitly defined as deleted
 	#include <rapidjson/document.h>
-	#include <rapidjson/prettywriter.h>
-	#include <rapidjson/ostreamwrapper.h>
 PRAGMA_WARNING_POP
 
 // Disable warnings in external headers, we can't fix them
@@ -57,16 +52,9 @@ PRAGMA_WARNING_PUSH
 	#include <../src/crn_miniz.h>
 PRAGMA_WARNING_POP
 
-// Disable warnings in external headers, we can't fix them
-PRAGMA_WARNING_PUSH
-	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'initializing': conversion from 'int' to '::size_t', signed/unsigned mismatch
-	PRAGMA_WARNING_DISABLE_MSVC(4571)	// warning C4571: Informational: catch(...) semantics changed since Visual C++ 7.1; structured exceptions (SEH) are no longer caught
-	PRAGMA_WARNING_DISABLE_MSVC(4625)	// warning C4625: 'std::_Hash<std::_Umap_traits<_Kty,_Ty,std::_Uhash_compare<_Kty,_Hasher,_Keyeq>,_Alloc,false>>': copy constructor was implicitly defined as deleted
-	#include <tuple>	// For "std::ignore"
-	#include <array>
-	#include <sstream>
-	#include <unordered_map>
-PRAGMA_WARNING_POP
+#include <tuple>	// For "std::ignore"
+#include <array>
+#include <unordered_map>
 
 
 //[-------------------------------------------------------]
@@ -327,7 +315,7 @@ namespace
 			}
 		}
 
-		void createTextureChannelPackingAssetFile(const RendererToolkit::IAssetImporter::Input& input, const std::string& materialName, const TextureFilenames& textureFilenames, const std::string& assetCategory, const std::string& semantic)
+		void createTextureChannelPackingAssetFile(const RendererToolkit::IAssetImporter::Input& input, const std::string& materialName, const TextureFilenames& textureFilenames, const std::string& semantic)
 		{
 			/* Example for a resulting texture asset JSON file
 			{
@@ -353,115 +341,80 @@ namespace
 			*/
 			rapidjson::Document rapidJsonDocumentAsset(rapidjson::kObjectType);
 			rapidjson::Document::AllocatorType& rapidJsonAllocatorType = rapidJsonDocumentAsset.GetAllocator();
+			rapidjson::Value rapidJsonValueAsset(rapidjson::kObjectType);
 
-			{ // Format
-				rapidjson::Value rapidJsonValueFormat(rapidjson::kObjectType);
-				rapidJsonValueFormat.AddMember("Type", "Asset", rapidJsonAllocatorType);
-				rapidJsonValueFormat.AddMember("Version", "1", rapidJsonAllocatorType);
-				rapidJsonDocumentAsset.AddMember("Format", rapidJsonValueFormat, rapidJsonAllocatorType);
+			{ // Asset metadata
+				rapidjson::Value rapidJsonValueAssetMetadata(rapidjson::kObjectType);
+				rapidJsonValueAssetMetadata.AddMember("AssetType", "Texture", rapidJsonAllocatorType);
+				rapidJsonValueAssetMetadata.AddMember("AssetCategory", rapidjson::StringRef(input.assetCategory.c_str()), rapidJsonAllocatorType);
+				rapidJsonValueAsset.AddMember("AssetMetadata", rapidJsonValueAssetMetadata, rapidJsonAllocatorType);
 			}
 
-			{ // Asset
-				rapidjson::Value rapidJsonValueAsset(rapidjson::kObjectType);
+			{ // Texture asset compiler
+				rapidjson::Value rapidJsonValueTextureAssetCompiler(rapidjson::kObjectType);
 
-				{ // Asset metadata
-					rapidjson::Value rapidJsonValueAssetMetadata(rapidjson::kObjectType);
-					rapidJsonValueAssetMetadata.AddMember("AssetType", "Texture", rapidJsonAllocatorType);
-					rapidJsonValueAssetMetadata.AddMember("AssetCategory", rapidjson::StringRef(assetCategory.c_str()), rapidJsonAllocatorType);
-					rapidJsonValueAsset.AddMember("AssetMetadata", rapidJsonValueAssetMetadata, rapidJsonAllocatorType);
-				}
+				// Semantic dependent handling
+				if ("_drgb_nxa" == semantic || "_hr_rg_mb_nya" == semantic)
+				{
+					// Texture channel packing
+					rapidJsonValueTextureAssetCompiler.AddMember("TextureSemantic", "PACKED_CHANNELS", rapidJsonAllocatorType);
+					rapidJsonValueTextureAssetCompiler.AddMember("TextureChannelPacking", rapidjson::StringRef(semantic.c_str()), rapidJsonAllocatorType);
 
-				{ // Texture compiler
-					rapidjson::Value rapidJsonValueTextureAssetCompiler(rapidjson::kObjectType);
-
-					// Semantic dependent handling
-					if ("_drgb_nxa" == semantic || "_hr_rg_mb_nya" == semantic)
-					{
-						// Texture channel packing
-						rapidJsonValueTextureAssetCompiler.AddMember("TextureSemantic", "PACKED_CHANNELS", rapidJsonAllocatorType);
-						rapidJsonValueTextureAssetCompiler.AddMember("TextureChannelPacking", rapidjson::StringRef(semantic.c_str()), rapidJsonAllocatorType);
-
-						// Define helper macro
-						#define ADD_MEMBER(semanticType) \
-							if (!textureFilenames[SemanticType::semanticType].empty()) \
-							{ \
-								rapidJsonValueInputFiles.AddMember(#semanticType, rapidjson::StringRef(textureFilenames[SemanticType::semanticType].c_str()), rapidJsonAllocatorType); \
-							}
-
-						{ // Input files
-							rapidjson::Value rapidJsonValueInputFiles(rapidjson::kObjectType);
-							if ("_drgb_nxa" == semantic)
-							{
-								ADD_MEMBER(DIFFUSE_MAP)
-								ADD_MEMBER(NORMAL_MAP)
-							}
-							else if ("_hr_rg_mb_nya" == semantic)
-							{
-								ADD_MEMBER(HEIGHT_MAP)
-								ADD_MEMBER(ROUGHNESS_MAP)
-								ADD_MEMBER(METALLIC_MAP)
-								ADD_MEMBER(NORMAL_MAP)
-							}
-							else
-							{
-								// Error!
-								assert(false && "Broken implementation, we should never ever be in here");
-							}
-							rapidJsonValueTextureAssetCompiler.AddMember("InputFiles", rapidJsonValueInputFiles, rapidJsonAllocatorType);
+					// Define helper macro
+					#define ADD_MEMBER(semanticType) \
+						if (!textureFilenames[SemanticType::semanticType].empty()) \
+						{ \
+							rapidJsonValueInputFiles.AddMember(#semanticType, rapidjson::StringRef(textureFilenames[SemanticType::semanticType].c_str()), rapidJsonAllocatorType); \
 						}
 
-						// Undefine helper macro
-						#undef ADD_MEMBER
-					}
-					else if ("_e" == semantic)
-					{
-						// No texture channel packing
-						rapidJsonValueTextureAssetCompiler.AddMember("TextureSemantic", "EMISSIVE_MAP", rapidJsonAllocatorType);
-						rapidJsonValueTextureAssetCompiler.AddMember("InputFile", rapidjson::StringRef(textureFilenames[SemanticType::EMISSIVE_MAP].c_str()), rapidJsonAllocatorType);
-					}
-					else
-					{
-						// Error!
-						assert(false && "Broken implementation, we should never ever be in here");
+					{ // Input files
+						rapidjson::Value rapidJsonValueInputFiles(rapidjson::kObjectType);
+						if ("_drgb_nxa" == semantic)
+						{
+							ADD_MEMBER(DIFFUSE_MAP)
+							ADD_MEMBER(NORMAL_MAP)
+						}
+						else if ("_hr_rg_mb_nya" == semantic)
+						{
+							ADD_MEMBER(HEIGHT_MAP)
+							ADD_MEMBER(ROUGHNESS_MAP)
+							ADD_MEMBER(METALLIC_MAP)
+							ADD_MEMBER(NORMAL_MAP)
+						}
+						else
+						{
+							// Error!
+							assert(false && "Broken implementation, we should never ever be in here");
+						}
+						rapidJsonValueTextureAssetCompiler.AddMember("InputFiles", rapidJsonValueInputFiles, rapidJsonAllocatorType);
 					}
 
-					// Add texture compiler member
-					rapidJsonValueAsset.AddMember("TextureAssetCompiler", rapidJsonValueTextureAssetCompiler, rapidJsonAllocatorType);
+					// Undefine helper macro
+					#undef ADD_MEMBER
+				}
+				else if ("_e" == semantic)
+				{
+					// No texture channel packing
+					rapidJsonValueTextureAssetCompiler.AddMember("TextureSemantic", "EMISSIVE_MAP", rapidJsonAllocatorType);
+					rapidJsonValueTextureAssetCompiler.AddMember("InputFile", rapidjson::StringRef(textureFilenames[SemanticType::EMISSIVE_MAP].c_str()), rapidJsonAllocatorType);
+				}
+				else
+				{
+					// Error!
+					assert(false && "Broken implementation, we should never ever be in here");
 				}
 
-				// Add asset compiler member
-				rapidJsonDocumentAsset.AddMember("Asset", rapidJsonValueAsset, rapidJsonAllocatorType);
-			}
-
-			// JSON document to pretty string
-			std::ostringstream outputStringStream;
-			{
-				rapidjson::OStreamWrapper outputStreamWrapper(outputStringStream);
-				rapidjson::PrettyWriter<rapidjson::OStreamWrapper> rapidJsonWriter(outputStreamWrapper);
-				rapidJsonDocumentAsset.Accept(rapidJsonWriter);
+				// Add texture asset compiler member
+				rapidJsonValueAsset.AddMember("TextureAssetCompiler", rapidJsonValueTextureAssetCompiler, rapidJsonAllocatorType);
 			}
 
 			// Write down the texture asset JSON file
 			// -> Silently ignore and overwrite already existing files (might be a re-import)
 			const std::string virtualFilename = input.virtualAssetOutputDirectory + '/' + TEXTURE_TYPE + '/' + materialName + semantic + ".asset";
-			RendererRuntime::IFileManager& fileManager = input.context.getFileManager();
-			RendererRuntime::IFile* file = fileManager.openFile(RendererRuntime::IFileManager::FileMode::WRITE, virtualFilename.c_str());
-			if (nullptr != file)
-			{
-				const std::string jsonDocumentAsString = outputStringStream.str();
-				file->write(jsonDocumentAsString.data(), jsonDocumentAsString.size());
-
-				// Close file
-				fileManager.closeFile(*file);
-			}
-			else
-			{
-				// Error!
-				throw std::runtime_error("Failed to open the file \"" + virtualFilename + "\" for writing");
-			}
+			RendererToolkit::JsonHelper::saveDocumentByFilename(input.context.getFileManager(), virtualFilename, "Asset", "1", rapidJsonValueAsset);
 		}
 
-		void createTextureChannelPackingAssetFiles(const RendererToolkit::IAssetImporter::Input& input, const MaterialTextureFilenames& materialTextureFilenames, const std::string& assetCategory)
+		void createTextureChannelPackingAssetFiles(const RendererToolkit::IAssetImporter::Input& input, const MaterialTextureFilenames& materialTextureFilenames)
 		{
 			// Iterate through the materials
 			for (const auto& pair : materialTextureFilenames)
@@ -472,41 +425,141 @@ namespace
 				// Texture channel packing "_drgb_nxa"
 				if (!textureFilenames[SemanticType::DIFFUSE_MAP].empty() || !textureFilenames[SemanticType::NORMAL_MAP].empty())
 				{
-					createTextureChannelPackingAssetFile(input, materialName, textureFilenames, assetCategory, "_drgb_nxa");
+					createTextureChannelPackingAssetFile(input, materialName, textureFilenames, "_drgb_nxa");
 				}
 
 				// Texture channel packing "_hr_rg_mb_nya"
 				if (!textureFilenames[SemanticType::HEIGHT_MAP].empty() || !textureFilenames[SemanticType::ROUGHNESS_MAP].empty() ||
 					!textureFilenames[SemanticType::METALLIC_MAP].empty() || !textureFilenames[SemanticType::NORMAL_MAP].empty())
 				{
-					createTextureChannelPackingAssetFile(input, materialName, textureFilenames, assetCategory, "_hr_rg_mb_nya");
+					createTextureChannelPackingAssetFile(input, materialName, textureFilenames, "_hr_rg_mb_nya");
 				}
 
 				// Emissive map "_e"
 				if (!textureFilenames[SemanticType::EMISSIVE_MAP].empty())
 				{
-					createTextureChannelPackingAssetFile(input, materialName, textureFilenames, assetCategory, "_e");
+					createTextureChannelPackingAssetFile(input, materialName, textureFilenames, "_e");
 				}
 			}
+		}
+
+		void createMaterialFile(const RendererToolkit::IAssetImporter::Input& input, const std::string& materialName, const TextureFilenames& textureFilenames)
+		{
+			/* Example for a resulting material JSON file
+			{
+				"Format": {
+					"Type": "MaterialAsset",
+					"Version": "1"
+				},
+				"MaterialAsset": {
+					"BaseMaterial": "$ProjectName/Material/Base/Mesh.asset",
+					"Properties": {
+						"_drgb_nxa": "../Texture/Spino_Body_drgb_nxa.asset",
+						"_hr_rg_mb_nya": "../Texture/Spino_Body_hr_rg_mb_nya.asset"
+					}
+				}
+			}
+			*/
+			rapidjson::Document rapidJsonDocumentAsset(rapidjson::kObjectType);
+			rapidjson::Document::AllocatorType& rapidJsonAllocatorType = rapidJsonDocumentAsset.GetAllocator();
+			rapidjson::Value rapidJsonValueMaterialAsset(rapidjson::kObjectType);
+			const std::string relativeFilename_drgb_nxa = "../" + TEXTURE_TYPE + '/' + materialName + "_drgb_nxa" + ".asset";
+			const std::string relativeFilename_hr_rg_mb_nya = "../" + TEXTURE_TYPE + '/' + materialName + "_hr_rg_mb_nya" + ".asset";
+			const std::string relativeFilenameEmissiveMap = "../" + TEXTURE_TYPE + '/' + materialName + "_e" + ".asset";
+
+			// Base material
+			// TODO(co) Use "$ProjectName/Material/Base/SkinnedMesh.asset" if there's a skeleton
+			rapidJsonValueMaterialAsset.AddMember("BaseMaterial", "$ProjectName/Material/Base/Mesh.asset", rapidJsonAllocatorType);
+
+			{ // Properties
+				rapidjson::Value rapidJsonValueProperties(rapidjson::kObjectType);
+
+				// Texture channel packing "_drgb_nxa"
+				if (!textureFilenames[SemanticType::DIFFUSE_MAP].empty() || !textureFilenames[SemanticType::NORMAL_MAP].empty())
+				{
+					rapidJsonValueProperties.AddMember("_drgb_nxa", rapidjson::StringRef(relativeFilename_drgb_nxa.c_str()), rapidJsonAllocatorType);
+				}
+
+				// Texture channel packing "_hr_rg_mb_nya"
+				if (!textureFilenames[SemanticType::HEIGHT_MAP].empty() || !textureFilenames[SemanticType::ROUGHNESS_MAP].empty() ||
+					!textureFilenames[SemanticType::METALLIC_MAP].empty() || !textureFilenames[SemanticType::NORMAL_MAP].empty())
+				{
+					rapidJsonValueProperties.AddMember("_hr_rg_mb_nya", rapidjson::StringRef(relativeFilename_hr_rg_mb_nya.c_str()), rapidJsonAllocatorType);
+				}
+
+				// Emissive map "_e"
+				if (!textureFilenames[SemanticType::EMISSIVE_MAP].empty())
+				{
+					rapidJsonValueProperties.AddMember("UseEmissiveMap", "TRUE", rapidJsonAllocatorType);
+					rapidJsonValueProperties.AddMember("EmissiveMap", rapidjson::StringRef(relativeFilenameEmissiveMap.c_str()), rapidJsonAllocatorType);
+				}
+
+				// Add properties member
+				rapidJsonValueMaterialAsset.AddMember("Properties", rapidJsonValueProperties, rapidJsonAllocatorType);
+			}
+
+			// Write down the material JSON file
+			// -> Silently ignore and overwrite already existing files (might be a re-import)
+			const std::string virtualFilename = input.virtualAssetOutputDirectory + '/' + MATERIAL_TYPE + '/' + materialName + ".material";
+			RendererToolkit::JsonHelper::saveDocumentByFilename(input.context.getFileManager(), virtualFilename, "MaterialAsset", "1", rapidJsonValueMaterialAsset);
+		}
+
+		void createMaterialAssetFile(const RendererToolkit::IAssetImporter::Input& input, const std::string& materialName)
+		{
+			/* Example for a resulting material asset JSON file
+			{
+				"Format": {
+					"Type": "Asset",
+					"Version": "1"
+				},
+				"Asset": {
+					"AssetMetadata": {
+						"AssetType": "Material",
+						"AssetCategory": "Imported"
+					},
+					"MaterialAssetCompiler": {
+						"InputFile": "SpinosaurusBody.material"
+					}
+				}
+			}
+			*/
+			rapidjson::Document rapidJsonDocumentAsset(rapidjson::kObjectType);
+			rapidjson::Document::AllocatorType& rapidJsonAllocatorType = rapidJsonDocumentAsset.GetAllocator();
+			rapidjson::Value rapidJsonValueAsset(rapidjson::kObjectType);
+			const std::string filename = materialName + ".material";
+
+			{ // Asset metadata
+				rapidjson::Value rapidJsonValueAssetMetadata(rapidjson::kObjectType);
+				rapidJsonValueAssetMetadata.AddMember("AssetType", "Material", rapidJsonAllocatorType);
+				rapidJsonValueAssetMetadata.AddMember("AssetCategory", rapidjson::StringRef(input.assetCategory.c_str()), rapidJsonAllocatorType);
+				rapidJsonValueAsset.AddMember("AssetMetadata", rapidJsonValueAssetMetadata, rapidJsonAllocatorType);
+			}
+
+			{ // Material compiler
+				rapidjson::Value rapidJsonValueMaterialAssetCompiler(rapidjson::kObjectType);
+				rapidJsonValueMaterialAssetCompiler.AddMember("InputFile", rapidjson::StringRef(filename.c_str()), rapidJsonAllocatorType);
+				rapidJsonValueAsset.AddMember("MaterialAssetCompiler", rapidJsonValueMaterialAssetCompiler, rapidJsonAllocatorType);
+			}
+
+			// Write down the material asset JSON file
+			// -> Silently ignore and overwrite already existing files (might be a re-import)
+			const std::string virtualFilename = input.virtualAssetOutputDirectory + '/' + MATERIAL_TYPE + '/' + materialName + ".asset";
+			RendererToolkit::JsonHelper::saveDocumentByFilename(input.context.getFileManager(), virtualFilename, "Asset", "1", rapidJsonValueAsset);
 		}
 
 		void createMaterialAssetFiles(const RendererToolkit::IAssetImporter::Input& input, const MaterialTextureFilenames& materialTextureFilenames)
 		{
 			// Ensure the material directory exists
-			RendererRuntime::IFileManager& fileManager = input.context.getFileManager();
-			const std::string virtualMaterialDirectoryName = input.virtualAssetOutputDirectory + '/' + MATERIAL_TYPE;
-			fileManager.createDirectories(virtualMaterialDirectoryName.c_str());
+			input.context.getFileManager().createDirectories((input.virtualAssetOutputDirectory + '/' + MATERIAL_TYPE).c_str());
 
-			/*
-			bool hasDiffuseMap = false;		// DIFFUSE_MAP
-			bool hasNormalMap = false;		// NORMAL_MAP
-			bool hasHeightMap = false;		// HEIGHT_MAP
-			bool hasRoughnessMap = false;	// ROUGHNESS_MAP
-			bool hasMetallicMap = false;	// METALLIC_MAP
-			bool hasEmissiveMap = false;	// EMISSIVE_MAP
-			*/
-			std::ignore = input;
-			std::ignore = materialTextureFilenames;
+			// Iterate through the materials
+			for (const auto& pair : materialTextureFilenames)
+			{
+				const std::string& materialName = pair.first;
+				const TextureFilenames& textureFilenames = pair.second;
+				createMaterialFile(input, materialName, textureFilenames);
+				createMaterialAssetFile(input, materialName);
+			}
 		}
 
 		/*
@@ -649,7 +702,7 @@ namespace RendererToolkit
 			{
 				throw std::runtime_error("Failed to gather material texture filenames for ZIP-archive \"" + input.absoluteSourceFilename + '\"');
 			}
-			::detail::createTextureChannelPackingAssetFiles(input, materialTextureFilenames, "Imported");
+			::detail::createTextureChannelPackingAssetFiles(input, materialTextureFilenames);
 			::detail::createMaterialAssetFiles(input, materialTextureFilenames);
 		}
 	}

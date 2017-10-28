@@ -396,7 +396,7 @@ namespace RendererToolkit
 		for (const std::string& absoluteSourceFilename : absoluteSourceFilenames)
 		{
 			RENDERER_LOG(mContext, INFORMATION, "Importing asset %u of %u: \"%s\"", currentSourceAsset + 1, absoluteSourceFilenames.size(), absoluteSourceFilename.c_str())
-			IAssetImporter::Input input(mContext, mProjectName, absoluteSourceFilename, mProjectName + "/Imported/" + std_filesystem::path(absoluteSourceFilename).stem().generic_string());
+			IAssetImporter::Input input(mContext, mProjectName, "Imported", absoluteSourceFilename, mProjectName + "/Imported/" + std_filesystem::path(absoluteSourceFilename).stem().generic_string());
 
 			// TODO(co) Implement automatic asset importer selection
 			SketchfabAssetImporter().import(input);
