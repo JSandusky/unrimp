@@ -28,6 +28,7 @@
 PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4061)	// warning C4061: enumerator 'FORCE_32BIT' in switch of enum 'aiMetadataType' is not explicitly handled by a case label
 	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'return': conversion from 'int' to 'std::_Rand_urng_from_func::result_type', signed/unsigned mismatch
+	#include <assimp/scene.h>
 	#include <assimp/postprocess.h>
 PRAGMA_WARNING_POP
 
@@ -112,6 +113,29 @@ namespace
 			#undef ELSE_IF_VALUE
 		}
 
+		/**
+		*  @brief
+		*    Get the number of bones recursive
+		*
+		*  @param[in] assimpNode
+		*    Assimp node to gather the data from
+		*
+		*  @return
+		*    The number of bones
+		*/
+		uint32_t getNumberOfBonesRecursive(const aiNode& assimpNode)
+		{
+			// Loop through all child nodes recursively
+			uint32_t numberOfBones = assimpNode.mNumChildren;
+			for (uint32_t i = 0; i < assimpNode.mNumChildren; ++i)
+			{
+				numberOfBones += getNumberOfBonesRecursive(*assimpNode.mChildren[i]);
+			}
+
+			// Done
+			return numberOfBones;
+		}
+
 
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]
@@ -167,6 +191,45 @@ namespace RendererToolkit
 			// Return default Assimp flags
 			return ::detail::DefaultFlags;
 		}
+	}
+
+	uint32_t AssimpHelper::getNumberOfBones(const aiNode& assimpNode)
+	{
+		uint32_t numberOfBones = 0;
+
+		// OGRE: The scene root node has no name
+		if (0 == assimpNode.mName.length)
+		{
+			if (1 != assimpNode.mNumChildren)
+			{
+				throw std::runtime_error("There can be only single root bone");
+			}
+			numberOfBones = ::detail::getNumberOfBonesRecursive(assimpNode);
+		}
+
+		// FBX: The scene root node name is "RootNode"
+		else if (assimpNode.mName == aiString("RootNode"))
+		{
+			// TODO(co) Skeleton support is under construction
+			NOP;
+		}
+
+		// MD5: The MD5 bones hierarchy is stored inside an Assimp node names "<MD5_Hierarchy>"
+		else if (assimpNode.mName == aiString("<MD5_Root>"))
+		{
+			for (uint32_t i = 0; i < assimpNode.mNumChildren; ++i)
+			{
+				const aiNode* assimpChildNode = assimpNode.mChildren[i];
+				if (assimpChildNode->mName == aiString("<MD5_Hierarchy>"))
+				{
+					numberOfBones = ::detail::getNumberOfBonesRecursive(*assimpChildNode);
+					break;
+				}
+			}
+		}
+
+		// Done
+		return numberOfBones;
 	}
 
 

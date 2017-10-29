@@ -211,6 +211,13 @@ namespace
 						localBoneMatrices[0] = assimpNode.mTransformation * localBoneMatrices[0];
 					}
 
+					// FBX: The scene root node name is "RootNode"
+					else if (assimpNode.mName == aiString("RootNode"))
+					{
+						// TODO(co) Skeleton support is under construction
+						NOP;
+					}
+
 					// MD5: The MD5 bones hierarchy is stored inside an Assimp node names "<MD5_Hierarchy>"
 					else if (assimpNode.mName == aiString("<MD5_Root>"))
 					{
@@ -300,71 +307,6 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
-		/**
-		*  @brief
-		*    Get the number of bones recursive
-		*
-		*  @param[in] assimpNode
-		*    Assimp node to gather the data from
-		*
-		*  @return
-		*    The number of bones
-		*/
-		uint32_t getNumberOfBonesRecursive(const aiNode& assimpNode)
-		{
-			// Loop through all child nodes recursively
-			uint32_t numberOfBones = assimpNode.mNumChildren;
-			for (uint32_t i = 0; i < assimpNode.mNumChildren; ++i)
-			{
-				numberOfBones += getNumberOfBonesRecursive(*assimpNode.mChildren[i]);
-			}
-
-			// Done
-			return numberOfBones;
-		}
-
-		/**
-		*  @brief
-		*    Get the number of bones
-		*
-		*  @param[in] assimpNode
-		*    Assimp node to gather the data from
-		*
-		*  @return
-		*    The number of bones
-		*/
-		uint32_t getNumberOfBones(const aiNode& assimpNode)
-		{
-			uint32_t numberOfBones = 0;
-
-			// OGRE: The scene root node has no name
-			if (0 == assimpNode.mName.length)
-			{
-				if (1 != assimpNode.mNumChildren)
-				{
-					throw std::runtime_error("There can be only single root bone");
-				}
-				numberOfBones = getNumberOfBonesRecursive(assimpNode);
-			}
-
-			// MD5: The MD5 bones hierarchy is stored inside an Assimp node names "<MD5_Hierarchy>"
-			else if (assimpNode.mName == aiString("<MD5_Root>"))
-			{
-				for (uint32_t i = 0; i < assimpNode.mNumChildren; ++i)
-				{
-					const aiNode* assimpChildNode = assimpNode.mChildren[i];
-					if (assimpChildNode->mName == aiString("<MD5_Hierarchy>"))
-					{
-						numberOfBones = getNumberOfBonesRecursive(*assimpChildNode);
-						break;
-					}
-				}
-			}
-
-			// Done
-			return numberOfBones;
-		}
-
 		/**
 		*  @brief
 		*    Get the total number of vertices and indices by using a given Assimp node
@@ -598,7 +540,7 @@ namespace
 				}
 
 				// Process the Assimp bones, if there are any to start with
-				if (assimpMesh.mNumBones > 0)
+				if (assimpMesh.mNumBones > 0 && skeleton.numberOfBones > 0)
 				{
 					std::vector<uint8_t> numberOfWeightsPerVertex;
 					numberOfWeightsPerVertex.resize(assimpMesh.mNumVertices);
@@ -790,7 +732,7 @@ namespace RendererToolkit
 				}
 
 				// Get the number of bones and skeleton
-				const uint32_t numberOfBones = ::detail::getNumberOfBones(*assimpScene->mRootNode);
+				const uint32_t numberOfBones = AssimpHelper::getNumberOfBones(*assimpScene->mRootNode);
 				if (numberOfBones > 255)
 				{
 					throw std::runtime_error("Maximum number of supported bones is 255");

@@ -21,6 +21,11 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+// Disable some warnings for "std::transform()"-usage
+#include <RendererRuntime/Core/Platform/PlatformTypes.h>
+PRAGMA_WARNING_DISABLE_MSVC(4242)	// warning C4242: '=': conversion from 'int' to 'char', possible loss of data
+PRAGMA_WARNING_DISABLE_MSVC(4244)	// warning C4244: '=': conversion from 'int' to 'char', possible loss of data
+
 #include "RendererToolkit/Helper/StringHelper.h"
 
 #include <RendererRuntime/Core/File/IFile.h>
@@ -349,6 +354,11 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
+	void StringHelper::toLowerCase(std::string& strintToLower)
+	{
+		std::transform(strintToLower.begin(), strintToLower.end(), strintToLower.begin(), ::tolower);
+	}
+
 	void StringHelper::splitString(const std::string& stringToSplit, char separator, std::vector<std::string>& elements)
 	{
 		// Implementation from http://stackoverflow.com/a/236803

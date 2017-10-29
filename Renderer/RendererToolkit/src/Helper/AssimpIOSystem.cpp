@@ -180,8 +180,20 @@ namespace RendererToolkit
 		{
 			throw std::runtime_error("We only support read-only Assimp files");
 		}
-		RendererRuntime::IFile* file = mFileManager.openFile(RendererRuntime::IFileManager::FileMode::READ, pFile);
-		return (nullptr != file) ? new ::detail::AssimpIOStream(*file) : nullptr;
+
+		// First check whether or not the file exists, e.g. "Assimp::FileSystemFilter::Open()" tries multiple file variations until a match has been found
+		if (mFileManager.doesFileExist(pFile))
+		{
+			// Open file
+			RendererRuntime::IFile* file = mFileManager.openFile(RendererRuntime::IFileManager::FileMode::READ, pFile);
+			if (nullptr != file)
+			{
+				return new ::detail::AssimpIOStream(*file);
+			}
+		}
+
+		// Failed to open the file
+		return nullptr;
 	}
 
 	void AssimpIOSystem::Close(Assimp::IOStream* pFile)

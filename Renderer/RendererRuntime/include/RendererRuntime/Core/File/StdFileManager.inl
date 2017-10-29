@@ -524,7 +524,10 @@ namespace RendererRuntime
 			if (mountPoint.empty())
 			{
 				// Support for absolute filenames
-				return virtualFilename;
+				if (std_filesystem::exists(std_filesystem::u8path(virtualFilename)))
+				{
+					return virtualFilename;
+				}
 			}
 			else
 			{

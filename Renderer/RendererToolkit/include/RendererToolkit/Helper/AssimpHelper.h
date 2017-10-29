@@ -37,6 +37,12 @@ PRAGMA_WARNING_POP
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+struct aiNode;
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererToolkit
@@ -55,6 +61,18 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	public:
 		static uint32_t getAssimpFlagsByRapidJsonValue(const rapidjson::Value& rapidJsonValue, const char* propertyName);
+
+		/**
+		*  @brief
+		*    Get the number of bones
+		*
+		*  @param[in] assimpNode
+		*    Assimp node to gather the data from
+		*
+		*  @return
+		*    The number of bones
+		*/
+		static uint32_t getNumberOfBones(const aiNode& assimpNode);
 
 
 	//[-------------------------------------------------------]

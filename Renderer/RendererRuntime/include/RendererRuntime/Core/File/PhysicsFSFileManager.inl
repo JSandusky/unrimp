@@ -116,7 +116,7 @@ namespace
 			explicit PhysicsFSReadFile(const char* virtualFilename) :
 				mPhysicsFSFile(PHYSFS_openRead(virtualFilename))
 			{
-				// Nothing here
+				assert(nullptr != mPhysicsFSFile && "Failed to open PhysicsFS file for reading");
 			}
 
 			virtual ~PhysicsFSReadFile() override
