@@ -423,16 +423,14 @@ namespace RendererRuntime
 		const AbsoluteDirectoryNames* absoluteDirectoryNames = nullptr;
 		std::string relativeFilename;
 		std::string mountPoint;
-		if (getAbsoluteDirectoryNamesByMountPoint(virtualDirectoryName, &absoluteDirectoryNames, relativeFilename, mountPoint) && absoluteDirectoryNames != nullptr)
+		if (getAbsoluteDirectoryNamesByMountPoint(virtualDirectoryName, &absoluteDirectoryNames, relativeFilename, mountPoint) && absoluteDirectoryNames != nullptr && !absoluteDirectoryNames->empty())
 		{
-			for (const std::string& absoluteDirectoryName : *absoluteDirectoryNames)
+			// Do only care about the first hit mount point
+			const std_filesystem::path absoluteFilename = std_filesystem::u8path(absoluteDirectoryNames->at(0) + '/' + relativeFilename);
+			if (!std_filesystem::exists(absoluteFilename) && !std_filesystem::create_directories(absoluteFilename))
 			{
-				const std_filesystem::path absoluteFilename = std_filesystem::u8path(absoluteDirectoryName + '/' + relativeFilename);
-				if (!std_filesystem::exists(absoluteFilename) && !std_filesystem::create_directories(absoluteFilename))
-				{
-					// Failed to create the directories
-					return false;
-				}
+				// Failed to create the directories
+				return false;
 			}
 		}
 
