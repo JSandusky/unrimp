@@ -50,9 +50,10 @@ namespace RendererToolkit
 	*    additional manual asset file adjustments after the import.
 	*
 	*    The Sketchfab asset importer was tested with the following downloadable Sketchfab meshes
-	*    - "Spinosaurus" (".obj"): https://sketchfab.com/models/c230edf4a5cf4a1ab9e34a4a4a04e013
-	*    - "Centaur" (".obj"):     https://sketchfab.com/models/0d3f1b4a51144b7fbc4e2ff64d858413
-	*    - "Mech Drone" (".fbx"):  https://sketchfab.com/models/8d06874aac5246c59edb4adbe3606e0e
+	*    - "Spinosaurus" (".obj"):      https://sketchfab.com/models/c230edf4a5cf4a1ab9e34a4a4a04e013
+	*    - "Centaur" (".obj"):          https://sketchfab.com/models/0d3f1b4a51144b7fbc4e2ff64d858413
+	*    - "Mech Drone" (".fbx"):       https://sketchfab.com/models/8d06874aac5246c59edb4adbe3606e0e
+	*    - "Knight Artorias" (".gltf"): https://sketchfab.com/models/0affb3436519401db2bad31cfced95c1
 	*
 	*  @note
 	*    - Has build-in support for texture channel packing "_drgb_nxa" and "_hr_rg_mb_nya"

@@ -83,13 +83,14 @@ namespace
 					const size_t numberOfOverflowBytes = (newCurrentPosition - mNumberOfBytes);
 					numberOfBytes -= numberOfOverflowBytes;
 					newCurrentPosition -= numberOfOverflowBytes;
+					pCount = numberOfBytes / pSize;
 				}
 				if (0 != numberOfBytes)
 				{
 					mFile.read(pvBuffer, numberOfBytes);
 					mCurrentPosition = newCurrentPosition;
 				}
-				return numberOfBytes;
+				return pCount;
 			}
 
 			inline virtual size_t Write(const void*, size_t, size_t) override
