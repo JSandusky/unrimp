@@ -62,7 +62,7 @@ namespace RendererRuntime
 *    - Root signature
 *    - Pipeline state object (PSO)
 *    - Blinn-Phong shading
-*    - Diffuse, normal, roughness and emissive mapping
+*    - Albedo, normal, roughness and emissive mapping
 *    - Optimization: Cache data to not bother the renderer API to much
 *    - Compact vertex format (32 bit texture coordinate, QTangent, 56 bytes vs. 28 bytes per vertex)
 */
@@ -122,7 +122,7 @@ private:
 	Renderer::IPipelineStatePtr			  mPipelineState;			///< Pipeline state object (PSO), can be a null pointer
 	Renderer::IProgramPtr				  mProgram;					///< Program, can be a null pointer
 	RendererRuntime::MeshResourceId		  mMeshResourceId;			///< Mesh resource ID, can be set to uninitialized value
-	RendererRuntime::TextureResourceId	  m_drgb_nxaTextureResourceId;
+	RendererRuntime::TextureResourceId	  m_argb_nxaTextureResourceId;
 	RendererRuntime::TextureResourceId	  m_hr_rg_mb_nyaTextureResourceId;
 	RendererRuntime::TextureResourceId	  mEmissiveTextureResourceId;
 	Renderer::IResourceGroupPtr			  mResourceGroup;			///< Resource group, can be a null pointer

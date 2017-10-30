@@ -8,12 +8,12 @@
 	{
 		"TextureChannelPackings":
 		{
-			"_drgb_nxa":
+			"_argb_nxa":
 			{
 				"Sources":
 				[
 					{
-						"TextureSemantic": "DIFFUSE_MAP",
+						"TextureSemantic": "ALBEDO_MAP",
 						"NumberOfChannels": 3,
 						"DefaultColor": "1.0 1.0 1.0"
 					},
@@ -26,15 +26,15 @@
 				"Destinations":
 				[
 					{
-						"TextureSemantic": "DIFFUSE_MAP",
+						"TextureSemantic": "ALBEDO_MAP",
 						"SourceChannel": 0
 					},
 					{
-						"TextureSemantic": "DIFFUSE_MAP",
+						"TextureSemantic": "ALBEDO_MAP",
 						"SourceChannel": 1
 					},
 					{
-						"TextureSemantic": "DIFFUSE_MAP",
+						"TextureSemantic": "ALBEDO_MAP",
 						"SourceChannel": 2
 					},
 					{
@@ -98,7 +98,7 @@
 				"FileFormat": "dds",
 				"TextureSemantic":
 				{
-					"DiffuseMap":
+					"AlbedoMap":
 					{
 						"Compression": "BC1"
 					},
@@ -121,7 +121,7 @@
 				"FileFormat": "crn",
 				"TextureSemantic":
 				{
-					"DiffuseMap":
+					"AlbedoMap":
 					{
 						"Compression": "BC1"
 					},
@@ -144,7 +144,7 @@
 				"FileFormat": "ktx",
 				"TextureSemantic":
 				{
-					"DiffuseMap":
+					"AlbedoMap":
 					{
 						"Compression": "ETC1"
 					},

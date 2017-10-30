@@ -58,13 +58,13 @@ out highp vec4 FragmentColor;	// Output variable for fragment color
 
 // Uniforms
 uniform mediump sampler2D GradientMap;	// OpenGL ES 3 has no 1D textures, just use a 2D texture with a height of one
-uniform mediump sampler2D DiffuseMap;
+uniform mediump sampler2D AlbedoMap;
 
 // Programs
 void main()
 {
-	// Fetch the texel at the given texture coordinate and return it's color
-	FragmentColor = texture(GradientMap, vec2(TexCoord.y, 0.0f)).r * texture(DiffuseMap, TexCoord);
+	// Fetch the texel at the given texture coordinate and return its color
+	FragmentColor = texture(GradientMap, vec2(TexCoord.y, 0.0f)).r * texture(AlbedoMap, TexCoord);
 }
 )";
 

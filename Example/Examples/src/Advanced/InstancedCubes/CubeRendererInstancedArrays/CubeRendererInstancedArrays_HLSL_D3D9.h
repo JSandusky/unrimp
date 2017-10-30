@@ -175,7 +175,7 @@ struct VS_OUTPUT
 };
 
 // Uniforms
-uniform sampler2D DiffuseMap : register(s0);
+uniform sampler2D AlbedoMap : register(s0);
 uniform float3 LightPosition;	// World space light position
 
 // Programs
@@ -186,7 +186,7 @@ float4 main(VS_OUTPUT Input) : SV_TARGET
 
 	// Calculate the final fragment color
 	// -> Direct3D 9 is using BGR, the world is using RGB
-	float4 color = (float4(0.2f, 0.2f, 0.2f, 1.0f) + lighting) * tex2D(DiffuseMap, Input.TexCoord).bgra;
+	float4 color = (float4(0.2f, 0.2f, 0.2f, 1.0f) + lighting) * tex2D(AlbedoMap, Input.TexCoord).bgra;
 	color.a = 0.8f;
 
 	// Done

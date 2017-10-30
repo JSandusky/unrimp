@@ -41,7 +41,7 @@
 //[-------------------------------------------------------]
 FirstMesh::FirstMesh() :
 	mMeshResourceId(RendererRuntime::getUninitialized<RendererRuntime::MeshResourceId>()),
-	m_drgb_nxaTextureResourceId(RendererRuntime::getUninitialized<RendererRuntime::TextureResourceId>()),
+	m_argb_nxaTextureResourceId(RendererRuntime::getUninitialized<RendererRuntime::TextureResourceId>()),
 	m_hr_rg_mb_nyaTextureResourceId(RendererRuntime::getUninitialized<RendererRuntime::TextureResourceId>()),
 	mEmissiveTextureResourceId(RendererRuntime::getUninitialized<RendererRuntime::TextureResourceId>()),
 	mObjectSpaceToClipSpaceMatrixUniformHandle(NULL_HANDLE),
@@ -82,7 +82,7 @@ void FirstMesh::onInitialization()
 			{ // Create the root signature
 				Renderer::DescriptorRangeBuilder ranges[5];
 				ranges[0].initialize(Renderer::DescriptorRangeType::UBV, 1, 0, "UniformBlockDynamicVs", Renderer::ShaderVisibility::VERTEX);
-				ranges[1].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "_drgb_nxa", Renderer::ShaderVisibility::FRAGMENT);
+				ranges[1].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "_argb_nxa", Renderer::ShaderVisibility::FRAGMENT);
 				ranges[2].initialize(Renderer::DescriptorRangeType::SRV, 1, 1, "_hr_rg_mb_nya", Renderer::ShaderVisibility::FRAGMENT);
 				ranges[3].initialize(Renderer::DescriptorRangeType::SRV, 1, 2, "EmissiveMap", Renderer::ShaderVisibility::FRAGMENT);
 				ranges[4].initializeSampler(1, 0, Renderer::ShaderVisibility::FRAGMENT);
@@ -194,9 +194,9 @@ void FirstMesh::onInitialization()
 			// Create mesh instance
 			rendererRuntime->getMeshResourceManager().loadMeshResourceByAssetId("Example/Mesh/Character/Imrod", mMeshResourceId);
 
-			{ // Load in the diffuse, emissive, normal and roughness texture
+			{ // Load in the albedo, emissive, normal and roughness texture
 				RendererRuntime::TextureResourceManager& textureResourceManager = rendererRuntime->getTextureResourceManager();
-				textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_drgb_nxa",     "Unrimp/Texture/DynamicByCode/Identity_drgb_nxa2D",     m_drgb_nxaTextureResourceId, this);
+				textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_argb_nxa",     "Unrimp/Texture/DynamicByCode/Identity_argb_nxa2D",     m_argb_nxaTextureResourceId, this);
 				textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_hr_rg_mb_nya", "Unrimp/Texture/DynamicByCode/Identity_hr_rg_mb_nya2D", m_hr_rg_mb_nyaTextureResourceId, this);
 				textureResourceManager.loadTextureResourceByAssetId("Example/Texture/Character/Imrod_e",            "Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D",   mEmissiveTextureResourceId, this);
 			}
@@ -214,7 +214,7 @@ void FirstMesh::onDeinitialization()
 	mResourceGroup = nullptr;
 	RendererRuntime::setUninitialized(mEmissiveTextureResourceId);
 	RendererRuntime::setUninitialized(m_hr_rg_mb_nyaTextureResourceId);
-	RendererRuntime::setUninitialized(m_drgb_nxaTextureResourceId);
+	RendererRuntime::setUninitialized(m_argb_nxaTextureResourceId);
 	RendererRuntime::setUninitialized(mMeshResourceId);
 	mProgram	   = nullptr;
 	mPipelineState = nullptr;
@@ -251,10 +251,10 @@ void FirstMesh::onDraw()
 
 	// Due to background texture loading, some textures might not be ready, yet
 	const RendererRuntime::TextureResourceManager& textureResourceManager = rendererRuntime->getTextureResourceManager();
-	const RendererRuntime::TextureResource* _drgb_nxaTextureResource = textureResourceManager.tryGetById(m_drgb_nxaTextureResourceId);
+	const RendererRuntime::TextureResource* _argb_nxaTextureResource = textureResourceManager.tryGetById(m_argb_nxaTextureResourceId);
 	const RendererRuntime::TextureResource* _hr_rg_mb_nyaTextureResource = textureResourceManager.tryGetById(m_hr_rg_mb_nyaTextureResourceId);
 	const RendererRuntime::TextureResource* emissiveTextureResource = textureResourceManager.tryGetById(mEmissiveTextureResourceId);
-	if (nullptr == _drgb_nxaTextureResource || nullptr == _drgb_nxaTextureResource->getTexture() ||
+	if (nullptr == _argb_nxaTextureResource || nullptr == _argb_nxaTextureResource->getTexture() ||
 		nullptr == _hr_rg_mb_nyaTextureResource || nullptr == _hr_rg_mb_nyaTextureResource->getTexture() ||
 		nullptr == emissiveTextureResource || nullptr == emissiveTextureResource->getTexture())
 	{
@@ -263,7 +263,7 @@ void FirstMesh::onDraw()
 	if (nullptr == mResourceGroup)
 	{
 		// Create resource group
-		Renderer::IResource* resources[4] = { mUniformBuffer, _drgb_nxaTextureResource->getTexture(), _hr_rg_mb_nyaTextureResource->getTexture(), emissiveTextureResource->getTexture() };
+		Renderer::IResource* resources[4] = { mUniformBuffer, _argb_nxaTextureResource->getTexture(), _hr_rg_mb_nyaTextureResource->getTexture(), emissiveTextureResource->getTexture() };
 		Renderer::ISamplerState* samplerStates[4] = { nullptr, mSamplerStatePtr, mSamplerStatePtr, mSamplerStatePtr };
 		mResourceGroup = mRootSignature->createResourceGroup(0, static_cast<uint32_t>(glm::countof(resources)), resources, samplerStates);
 	}

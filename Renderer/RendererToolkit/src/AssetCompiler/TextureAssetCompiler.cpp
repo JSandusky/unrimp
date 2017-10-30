@@ -186,7 +186,7 @@ namespace
 		*/
 		enum class TextureSemantic
 		{
-			DIFFUSE_MAP,
+			ALBEDO_MAP,
 			ALPHA_MAP,
 			NORMAL_MAP,
 			ROUGHNESS_MAP,
@@ -415,7 +415,7 @@ namespace
 			#define ELSE_IF_VALUE(name) else if (strncmp(valueAsString, #name, valueStringLength) == 0) return TextureSemantic::name;
 
 			// Evaluate value
-			IF_VALUE(DIFFUSE_MAP)
+			IF_VALUE(ALBEDO_MAP)
 			ELSE_IF_VALUE(ALPHA_MAP)
 			ELSE_IF_VALUE(NORMAL_MAP)
 			ELSE_IF_VALUE(ROUGHNESS_MAP)
@@ -1162,7 +1162,7 @@ namespace
 			bool dxtCompressed = (crnlib::pixel_format::PIXEL_FMT_INVALID == crunchConvertParams.m_dst_format) ? true : crnlib::pixel_format_helpers::is_dxt(crunchConvertParams.m_dst_format);
 			switch (textureSemantic)
 			{
-				case TextureSemantic::DIFFUSE_MAP:
+				case TextureSemantic::ALBEDO_MAP:
 				case TextureSemantic::REFLECTION_2D_MAP:
 					// Nothing here, just a regular texture
 					break;

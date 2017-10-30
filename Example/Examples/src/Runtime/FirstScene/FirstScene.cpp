@@ -104,7 +104,7 @@ FirstScene::FirstScene() :
 	mHighQualityLighting(true),
 	mWetness(0.0f),
 	mUseEmissiveMap(true),
-	mDiffuseColor{1.0f, 1.0f, 1.0f},
+	mAlbedoColor{1.0f, 1.0f, 1.0f},
 	// Scene hot-reloading memory
 	mHasCameraTransformBackup(false)
 {
@@ -488,7 +488,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				// Material properties
 				ImGui::Separator();
 				ImGui::Checkbox("Use Emissive Map", &mUseEmissiveMap);
-				ImGui::ColorEdit3("Diffuse Color", mDiffuseColor);
+				ImGui::ColorEdit3("Albedo Color", mAlbedoColor);
 
 				// Scene visualizations
 				if (nullptr != mCameraSceneItem)
@@ -592,7 +592,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 			if (nullptr != materialResource)
 			{
 				materialResource->setPropertyById("UseEmissiveMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseEmissiveMap));
-				materialResource->setPropertyById("DiffuseColor", RendererRuntime::MaterialPropertyValue::fromFloat3(mDiffuseColor));
+				materialResource->setPropertyById("AlbedoColor", RendererRuntime::MaterialPropertyValue::fromFloat3(mAlbedoColor));
 			}
 		}
 	}

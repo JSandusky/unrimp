@@ -15,11 +15,11 @@
 		"TextureAssetCompiler":
 		{
 			"TextureSemantic": "PACKED_CHANNELS",
-			"TextureChannelPacking": "_drgb_nxa",
+			"TextureChannelPacking": "_argb_nxa",
 			"InputFiles":
 			{
-				"DIFFUSE_MAP": "ChainTexture_Albedo.png",
-				"NORMAL_MAP": "ChainTexture_Normal.png"
+				"ALBEDO_MAP": "Background_Albedo.png",
+				"NORMAL_MAP": "Background_Normal.png"
 			}
 		}
 	}

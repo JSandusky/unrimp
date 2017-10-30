@@ -10,7 +10,7 @@
 		"Properties":
 		{
 			"CullMode": "NONE",
-			"_drgb_nxa": "$ProjectName/Texture/Sponza/sponza_thorn_drgb_nxa.asset",
+			"_argb_nxa": "$ProjectName/Texture/Sponza/sponza_thorn_argb_nxa.asset",
 			"_hr_rg_mb_nya": "$ProjectName/Texture/Sponza/sponza_thorn_hr_rg_mb_nya.asset",
 			"UseAlphaMap": "TRUE",
 			"AlphaMap": "$ProjectName/Texture/Sponza/sponza_thorn_mask.asset",

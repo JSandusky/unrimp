@@ -31,40 +31,40 @@
 				"Value": "BACK",
 				"Description": "Cull mode rasterizer state"
 			},
-			"DiffuseColor":
+			"AlbedoColor":
 			{
 				"Usage": "SHADER_UNIFORM",
 				"ValueType": "FLOAT_3",
 				"Value": "1.0 1.0 1.0",
-				"Description": "Material diffuse color"
+				"Description": "Material albedo color"
 			},
 			"Roughness":
 			{
 				"Usage": "SHADER_UNIFORM",
 				"ValueType": "FLOAT",
 				"Value": "1.0",
-				"Description": "Metal-rough-worfkow: Roughness describes the microsurface of the object. Roughness = 1 - glossiness. White 1.0 is rough and black 0.0 is smooth. The microsurface if rough can cause the light rays to scatter and make the highlight appear dimmer and more broad. The same amount of light energy is reflected going out as coming into the surface. This map has the most artistic freedom. There is no wrong answers here. This map gives the asset the most character as it truly describes the surface e.g. scratches, fingerprints, smudges, grime etc."
+				"Description": "Metallic worfkow: Roughness describes the microsurface of the object. Aka specular F0. Roughness = 1 - glossiness (= smoothness). White 1.0 is rough and black 0.0 is smooth. The microsurface if rough can cause the light rays to scatter and make the highlight appear dimmer and more broad. The same amount of light energy is reflected going out as coming into the surface. This map has the most artistic freedom. There is no wrong answers here. This map gives the asset the most character as it truly describes the surface e.g. scratches, fingerprints, smudges, grime etc."
 			},
 			"Metallic":
 			{
 				"Usage": "SHADER_UNIFORM",
 				"ValueType": "FLOAT",
 				"Value": "0.0",
-				"Description": "Metal-rough-worfkow: Metallic tells the shader if something is metal or not. Raw Metal = 1.0 white and non metal = 0.0 black. There can be transitional gray values that indicate something covering the raw metal such as dirt. With metal/rough, you only have control over metal reflectance values. The dielectric values are set to 0.04 or 4% which is most dielectric materials."
+				"Description": "Metallic worfkow: Metallic tells the shader if something is metal or not. Raw Metal = 1.0 white and non metal = 0.0 black. There can be transitional gray values that indicate something covering the raw metal such as dirt. With metal/rough, you only have control over metal reflectance values. The dielectric values are set to 0.04 or 4% which is most dielectric materials."
 			},
-			"_drgb_nxa":
+			"_argb_nxa":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/DynamicByCode/Identity_drgb_nxa2D",
-				"Description": "RGB channel = Diffuse map ('_d'-postfix), A channel = x component of normal map ('_n'-postfix)"
+				"Value": "Unrimp/Texture/DynamicByCode/Identity_argb_nxa2D",
+				"Description": "RGB channel = Albedo map ('_a'-postfix), A channel = x component of normal map ('_n'-postfix)"
 			},
 			"_hr_rg_mb_nya":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "Unrimp/Texture/DynamicByCode/Identity_hr_rg_mb_nya2D",
-				"Description": "R channel = Height map ('_h'-postfix), G channel = Roughness map ('_r'-postfix, roughness = 1 - glossiness), B channel = Metallic map ('_m'-postfix), A channel = y component of normal map ('_n'-postfix)"
+				"Description": "R channel = Height map ('_h'-postfix), G channel = Roughness map ('_r'-postfix, aka specular F0, roughness = 1 - glossiness (= smoothness)), B channel = Metallic map ('_m'-postfix), A channel = y component of normal map ('_n'-postfix)"
 			},
 			"UseAlphaMap":
 			{
@@ -193,11 +193,11 @@
 					"NumberOfElements": "2",
 					"ElementProperties":
 					{
-						"DiffuseColor":
+						"AlbedoColor":
 						{
 							"Usage": "MATERIAL_REFERENCE",
 							"ValueType": "FLOAT_3",
-							"Value": "@DiffuseColor"
+							"Value": "@AlbedoColor"
 						},
 						"Roughness":
 						{
@@ -261,14 +261,14 @@
 			{
 				"0":
 				{
-					"BaseShaderRegisterName": "_drgb_nxa",
+					"BaseShaderRegisterName": "_argb_nxa",
 					"BaseShaderRegister": "1",
 					"ShaderVisibility": "FRAGMENT",
 					"ResourceType": "TEXTURE",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@_drgb_nxa",
-					"FallbackTexture": "Unrimp/Texture/DynamicByCode/Identity_drgb_nxa2D",
+					"Value": "@_argb_nxa",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/Identity_argb_nxa2D",
 					"RgbHardwareGammaCorrection": "TRUE",
 					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
 				},

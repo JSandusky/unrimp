@@ -10,7 +10,7 @@
 		"Properties":
 		{
 			"CullMode": "NONE",
-			"_drgb_nxa": "$ProjectName/Texture/Bob/guard1_helmet_drgb_nxa.asset"
+			"_argb_nxa": "$ProjectName/Texture/Bob/guard1_helmet_argb_nxa.asset"
 		}
 	}
 }

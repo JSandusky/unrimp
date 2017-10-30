@@ -48,7 +48,7 @@
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "Unrimp/Texture/DynamicByCode/BlackMap2D",
-				"Description": "2D GBuffer 0: rgb = diffuse color, a = alpha unused (required for blend operations)"
+				"Description": "2D GBuffer 0: rgb = albedo color, a = alpha unused (required for blend operations)"
 			},
 			"GBufferMap1":
 			{

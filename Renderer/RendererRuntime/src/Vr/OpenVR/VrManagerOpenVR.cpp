@@ -346,10 +346,10 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	AssetId VrManagerOpenVR::diffuseTextureIdToAssetId(vr::TextureID_t diffuseTextureId)
+	AssetId VrManagerOpenVR::albedoTextureIdToAssetId(vr::TextureID_t albedoTextureId)
 	{
-		const std::string diffuseTextureName = "OpenVR_" + std::to_string(diffuseTextureId);
-		return StringId(diffuseTextureName.c_str());
+		const std::string albedoTextureName = "OpenVR_" + std::to_string(albedoTextureId);
+		return StringId(albedoTextureName.c_str());
 	}
 
 
@@ -508,11 +508,11 @@ namespace RendererRuntime
 				assert(assetPackage.getSortedAssetVector().size() == mRenderModelNames.size());
 
 				// Register render model textures
-				// -> Sadly, there's no way to determine all available diffuse texture IDs upfront without loading the render models
-				// -> We assume, that diffuse texture IDs are linear
+				// -> Sadly, there's no way to determine all available albedo texture IDs upfront without loading the render models
+				// -> We assume, that albedo texture IDs are linear
 				for (uint32_t renderModelIndex = 0; renderModelIndex < renderModelCount; ++renderModelIndex)
 				{
-					assetPackage.addAsset(VrManagerOpenVR::diffuseTextureIdToAssetId(static_cast<vr::TextureID_t>(renderModelIndex)), std::to_string(renderModelIndex).c_str());
+					assetPackage.addAsset(VrManagerOpenVR::albedoTextureIdToAssetId(static_cast<vr::TextureID_t>(renderModelIndex)), std::to_string(renderModelIndex).c_str());
 				}
 			}
 

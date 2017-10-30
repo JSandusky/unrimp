@@ -553,7 +553,7 @@ namespace RendererToolkit
 					else
 					{
 						// Sanity checks
-						// -> Do not check for usage since some material properties like "UseDiffuseMap" might be defined inside some material blueprints just for consistency using an unknown usage
+						// -> Do not check for usage since some material properties like "UseAlbedoMap" might be defined inside some material blueprints just for consistency using an unknown usage
 						const RendererRuntime::MaterialProperty& otherMaterialProperty = *iterator;
 						if (materialProperty.getValueType() != otherMaterialProperty.getValueType())
 						{

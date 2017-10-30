@@ -87,17 +87,17 @@ layout(location = 1) in vec2 TexCoord;	// Normalized texture coordinate as input
 layout(location = 0) out vec4 OutputColor;
 
 // Uniforms
-layout(set = 0, binding = 0) uniform sampler2D DiffuseMap0;
-layout(set = 0, binding = 1) uniform sampler2D DiffuseMap1;
+layout(set = 0, binding = 0) uniform sampler2D AlbedoMap0;
+layout(set = 0, binding = 1) uniform sampler2D AlbedoMap1;
 
 // Programs
 void main()
 {
 	// Fetch the texel at the given texture coordinate from render target 0 (which should contain a red triangle)
-	vec4 color0 = texture(DiffuseMap0, TexCoord);
+	vec4 color0 = texture(AlbedoMap0, TexCoord);
 
 	// Fetch the texel at the given texture coordinate from render target 1 (which should contain a blue triangle)
-	vec4 color1 = texture(DiffuseMap1, TexCoord);
+	vec4 color1 = texture(AlbedoMap1, TexCoord);
 
 	// Calculate the final color by subtracting the colors of the both render targets from white
 	// -> The result should be white or green

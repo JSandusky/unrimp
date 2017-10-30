@@ -69,13 +69,13 @@ TEXTURE_BUFFER(1, 0, float4, LightTextureBuffer, 0)	// "LIGHT"
 
 // Textures
 @property(NumberOfMultisamples)
-	TEXTURE_2D_MS(2, 0, GBufferMap0, @value(NumberOfMultisamples), 1)	// GBuffer 0: rgb = diffuse color, a = alpha unused (required for blend operations)
+	TEXTURE_2D_MS(2, 0, GBufferMap0, @value(NumberOfMultisamples), 1)	// GBuffer 0: rgb = albedo color, a = alpha unused (required for blend operations)
 	TEXTURE_2D_MS(2, 1, GBufferMap1, @value(NumberOfMultisamples), 2)	// GBuffer 1: rgb = view space normal, a = roughness
 	TEXTURE_2D_MS(2, 2, GBufferMap2, @value(NumberOfMultisamples), 3)	// GBuffer 2: rgb = emissive color, a = metallic
 	TEXTURE_2D_MS(2, 3, DepthMap, @value(NumberOfMultisamples), 4)
 @end
 @property(!NumberOfMultisamples)
-	TEXTURE_2D(2, 0, GBufferMap0, 1)	// GBuffer 0: rgb = diffuse color, a = alpha unused (required for blend operations)
+	TEXTURE_2D(2, 0, GBufferMap0, 1)	// GBuffer 0: rgb = albedo color, a = alpha unused (required for blend operations)
 	TEXTURE_2D(2, 1, GBufferMap1, 2)	// GBuffer 1: rgb = view space normal, a = roughness
 	TEXTURE_2D(2, 2, GBufferMap2, 3)	// GBuffer 2: rgb = emissive color, a = metallic
 	TEXTURE_2D(2, 3, DepthMap, 4)
@@ -114,7 +114,7 @@ SAMPLER_STATE(2, 1, SamplerLinear, 1)
 float3 CalculateColorByGBuffer(float3 viewRay, float2 screenSpacePosition, float4 gbuffer0Value, float4 gbuffer1Value, float4 gbuffer2Value, float depth, float screenSpaceAmbientOcclusion)
 {
 	// Gather GBuffer data
-	float3 diffuse		   = gbuffer0Value.rgb;
+	float3 albedo		   = gbuffer0Value.rgb;
 	float3 viewSpaceNormal = gbuffer1Value.rgb;
 	float  roughness	   = gbuffer1Value.a;
 	float3 emissive		   = gbuffer2Value.rgb;
@@ -135,13 +135,13 @@ float3 CalculateColorByGBuffer(float3 viewRay, float2 screenSpacePosition, float
 	@insertpiece(CalculateReflectionColor)
 
 	// Ambient term
-	float3 color = (reflectionColor * metallic + diffuse) * (PassData.AmbientColor.rgb + CalculateHemisphereLighting(worldSpaceNormal.xyz, PassData.AmbientColor.rgb * 0.7f, PassData.AmbientColor.rgb * 0.2f));
+	float3 color = (reflectionColor * metallic + albedo) * (PassData.AmbientColor.rgb + CalculateHemisphereLighting(worldSpaceNormal.xyz, PassData.AmbientColor.rgb * 0.7f, PassData.AmbientColor.rgb * 0.2f));
 
 	// Directional sunlight, our primary light
 	float shadowVisibility = CalculateShadowVisibility(worldSpacePosition, linearDepth);
 	if (shadowVisibility > 0.0f)
 	{
-		color += shadowVisibility * CalculateLighting(diffuse, roughness, metallic, viewSpaceNormal, viewSpaceIncident, reflectionColor, PassData.ViewSpaceSunlightDirection, PassData.SunlightColor);
+		color += shadowVisibility * CalculateLighting(albedo, roughness, metallic, viewSpaceNormal, viewSpaceIncident, reflectionColor, PassData.ViewSpaceSunlightDirection, PassData.SunlightColor);
 	}
 
 	// Perform clustered shading

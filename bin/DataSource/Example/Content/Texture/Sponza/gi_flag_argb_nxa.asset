@@ -9,16 +9,16 @@
 		"AssetMetadata":
 		{
 			"AssetType": "Texture",
-			"AssetCategory": "Character",
-			"Copyright": "Copyright © 2009 KatsBits - Ken Beyer (kat) - http://www.katsbits.com"
+			"AssetCategory": "Scene",
+			"Copyright": "Sponza model downloaded from http://www.crytek.com/cryengine/cryengine3/downloads"
 		},
 		"TextureAssetCompiler":
 		{
 			"TextureSemantic": "PACKED_CHANNELS",
-			"TextureChannelPacking": "_drgb_nxa",
+			"TextureChannelPacking": "_argb_nxa",
 			"InputFiles":
 			{
-				"DIFFUSE_MAP": "guard1_face_d.png"
+				"ALBEDO_MAP": "gi_flag.png"
 			}
 		}
 	}

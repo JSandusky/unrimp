@@ -83,17 +83,17 @@ fragmentShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
 in vec2 TexCoord;	// Normalized texture coordinate as input
 
 // Uniforms
-uniform sampler2D DiffuseMap0;
-uniform sampler2D DiffuseMap1;
+uniform sampler2D AlbedoMap0;
+uniform sampler2D AlbedoMap1;
 
 // Programs
 void main()
 {
 	// Fetch the texel at the given texture coordinate from render target 0 (which should contain a red triangle)
-	vec4 color0 = texture2D(DiffuseMap0, TexCoord);
+	vec4 color0 = texture2D(AlbedoMap0, TexCoord);
 
 	// Fetch the texel at the given texture coordinate from render target 1 (which should contain a blue triangle)
-	vec4 color1 = texture2D(DiffuseMap1, TexCoord);
+	vec4 color1 = texture2D(AlbedoMap1, TexCoord);
 
 	// Calculate the final color by subtracting the colors of the both render targets from white
 	// -> The result should be white or green

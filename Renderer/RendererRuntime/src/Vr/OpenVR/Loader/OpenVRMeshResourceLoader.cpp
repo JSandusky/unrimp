@@ -143,19 +143,19 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
-		RendererRuntime::AssetId setupRenderModelDiffuseTexture(const RendererRuntime::IRendererRuntime& rendererRuntime, const vr::RenderModel_t& vrRenderModel)
+		RendererRuntime::AssetId setupRenderModelAlbedoTexture(const RendererRuntime::IRendererRuntime& rendererRuntime, const vr::RenderModel_t& vrRenderModel)
 		{
 			// Check whether or not we need to generate the runtime mesh asset right now
-			RendererRuntime::AssetId assetId = RendererRuntime::VrManagerOpenVR::diffuseTextureIdToAssetId(vrRenderModel.diffuseTextureId);
+			RendererRuntime::AssetId assetId = RendererRuntime::VrManagerOpenVR::albedoTextureIdToAssetId(vrRenderModel.diffuseTextureId);
 			RendererRuntime::TextureResourceId textureResourceId = RendererRuntime::getUninitialized<RendererRuntime::TextureResourceId>();
 			const bool rgbHardwareGammaCorrection = true;	// TODO(co) It must be possible to set the property name from the outside: Ask the material blueprint whether or not hardware gamma correction should be used
-			rendererRuntime.getTextureResourceManager().loadTextureResourceByAssetId(assetId, "Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D", textureResourceId, nullptr, rgbHardwareGammaCorrection, false, RendererRuntime::OpenVRTextureResourceLoader::TYPE_ID);
+			rendererRuntime.getTextureResourceManager().loadTextureResourceByAssetId(assetId, "Unrimp/Texture/DynamicByCode/IdentityAlbedoMap2D", textureResourceId, nullptr, rgbHardwareGammaCorrection, false, RendererRuntime::OpenVRTextureResourceLoader::TYPE_ID);
 
 			// Done
 			return assetId;
 		}
 
-		RendererRuntime::MaterialResourceId setupRenderModelMaterial(const RendererRuntime::IRendererRuntime& rendererRuntime, RendererRuntime::MaterialResourceId vrDeviceMaterialResourceId, vr::TextureID_t vrTextureId, RendererRuntime::AssetId diffuseTextureAssetId)
+		RendererRuntime::MaterialResourceId setupRenderModelMaterial(const RendererRuntime::IRendererRuntime& rendererRuntime, RendererRuntime::MaterialResourceId vrDeviceMaterialResourceId, vr::TextureID_t vrTextureId, RendererRuntime::AssetId albedoTextureAssetId)
 		{
 			// Get the texture name and convert it into an runtime material asset ID
 			const std::string materialName = "OpenVR_" + std::to_string(vrTextureId);
@@ -174,7 +174,7 @@ namespace
 					if (nullptr != materialResource)
 					{
 						// TODO(co) It must be possible to set the property name from the outside
-						materialResource->setPropertyById("_drgb_nxa", RendererRuntime::MaterialPropertyValue::fromTextureAssetId(diffuseTextureAssetId));
+						materialResource->setPropertyById("_argb_nxa", RendererRuntime::MaterialPropertyValue::fromTextureAssetId(albedoTextureAssetId));
 					}
 				}
 			}
@@ -331,9 +331,9 @@ namespace RendererRuntime
 
 		{ // Create sub-meshes
 			// Load the render model texture and setup the material asset
-			// -> We don't care if loading of the diffuse texture fails in here, isn't that important and the show must go on
-			const AssetId diffuseTextureAssetId = ::detail::setupRenderModelDiffuseTexture(mRendererRuntime, *mVrRenderModel);
-			const MaterialResourceId materialResourceId = ::detail::setupRenderModelMaterial(mRendererRuntime, static_cast<const VrManagerOpenVR&>(mRendererRuntime.getVrManager()).getVrDeviceMaterialResourceId(), mVrRenderModel->diffuseTextureId, diffuseTextureAssetId);
+			// -> We don't care if loading of the albedo texture fails in here, isn't that important and the show must go on
+			const AssetId albedoTextureAssetId = ::detail::setupRenderModelAlbedoTexture(mRendererRuntime, *mVrRenderModel);
+			const MaterialResourceId materialResourceId = ::detail::setupRenderModelMaterial(mRendererRuntime, static_cast<const VrManagerOpenVR&>(mRendererRuntime.getVrManager()).getVrDeviceMaterialResourceId(), mVrRenderModel->diffuseTextureId, albedoTextureAssetId);
 
 			// Tell the mesh resource about the sub-mesh
 			mMeshResource->getSubMeshes().push_back(SubMesh(materialResourceId, Renderer::PrimitiveTopology::TRIANGLE_LIST, 0, mMeshResource->getNumberOfIndices()));

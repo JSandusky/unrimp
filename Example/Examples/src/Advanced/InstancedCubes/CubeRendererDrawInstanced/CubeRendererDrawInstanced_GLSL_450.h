@@ -178,7 +178,7 @@ layout(location = 3) in vec3 NormalVs;
 layout(location = 0, index = 0) out vec4 Color0;
 
 // Uniforms
-layout(set = 0, binding = 2) uniform sampler2DArray DiffuseMap;
+layout(set = 0, binding = 2) uniform sampler2DArray AlbedoMap;
 layout(std140, set = 0, binding = 3) uniform UniformBlockDynamicFs
 {
 	vec3 LightPosition;	// World space light position
@@ -191,7 +191,7 @@ void main()
 	float lighting = clamp(dot(NormalVs, normalize(LightPosition - WorldPositionVs)), 0.0, 0.8);
 
 	// Calculate the final fragment color
-	Color0 = (vec4(0.2, 0.2, 0.2, 1.0) + lighting) * texture(DiffuseMap, TexCoordVs);
+	Color0 = (vec4(0.2, 0.2, 0.2, 1.0) + lighting) * texture(AlbedoMap, TexCoordVs);
 	Color0.a = 0.8;
 }
 )";

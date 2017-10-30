@@ -15,7 +15,7 @@
 		{
 			"Example/Texture/Dynamic/MultisampleGBufferRenderTarget0":
 			{
-				"Description": "GBuffer 0: rgb = diffuse color, a = alpha unused (required for blend operations)",
+				"Description": "GBuffer 0: rgb = albedo color, a = alpha unused (required for blend operations)",
 				"TextureFormat": "R8G8B8A8",
 				"AllowMultisample": "TRUE"
 			},

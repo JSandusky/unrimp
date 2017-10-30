@@ -15,10 +15,10 @@
 		"TextureAssetCompiler":
 		{
 			"TextureSemantic": "PACKED_CHANNELS",
-			"TextureChannelPacking": "_drgb_nxa",
+			"TextureChannelPacking": "_argb_nxa",
 			"InputFiles":
 			{
-				"DIFFUSE_MAP": "round_grill_d.png"
+				"ALBEDO_MAP": "guard1_face_d.png"
 			}
 		}
 	}

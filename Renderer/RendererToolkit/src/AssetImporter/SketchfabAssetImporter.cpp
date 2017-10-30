@@ -179,7 +179,7 @@ namespace
 		*/
 		enum SemanticType
 		{
-			DIFFUSE_MAP,
+			ALBEDO_MAP,
 			NORMAL_MAP,
 			HEIGHT_MAP,
 			ROUGHNESS_MAP,
@@ -190,7 +190,7 @@ namespace
 		typedef std::vector<const char*> SemanticStrings;
 		typedef std::array<SemanticStrings, SemanticType::NUMBER_OF_SEMANTICS> Semantics;
 		const Semantics g_Semantics = {{
-			// DIFFUSE_MAP
+			// ALBEDO_MAP
 			{ "diffuse", "albedo", "basecolor", "", "d", "diff", "dif" },
 			// NORMAL_MAP
 			{ "normal", "nrm", "normalmap", "n", "norm" },
@@ -367,9 +367,9 @@ namespace
 					},
 					"TextureAssetCompiler": {
 						"TextureSemantic": "PACKED_CHANNELS",
-						"TextureChannelPacking": "_drgb_nxa",
+						"TextureChannelPacking": "_argb_nxa",
 						"InputFiles": {
-							"DIFFUSE_MAP": "Spino_Body_D.tga.png",
+							"ALBEDO_MAP": "Spino_Body_D.tga.png",
 							"NORMAL_MAP": "Spino_Body_N.tga.png"
 						}
 					}
@@ -391,7 +391,7 @@ namespace
 				rapidjson::Value rapidJsonValueTextureAssetCompiler(rapidjson::kObjectType);
 
 				// Semantic dependent handling
-				if ("_drgb_nxa" == semantic || "_hr_rg_mb_nya" == semantic)
+				if ("_argb_nxa" == semantic || "_hr_rg_mb_nya" == semantic)
 				{
 					// Texture channel packing
 					rapidJsonValueTextureAssetCompiler.AddMember("TextureSemantic", "PACKED_CHANNELS", rapidJsonAllocatorType);
@@ -406,9 +406,9 @@ namespace
 
 					{ // Input files
 						rapidjson::Value rapidJsonValueInputFiles(rapidjson::kObjectType);
-						if ("_drgb_nxa" == semantic)
+						if ("_argb_nxa" == semantic)
 						{
-							ADD_MEMBER(DIFFUSE_MAP)
+							ADD_MEMBER(ALBEDO_MAP)
 							ADD_MEMBER(NORMAL_MAP)
 						}
 						else if ("_hr_rg_mb_nya" == semantic)
@@ -459,10 +459,10 @@ namespace
 				const std::string& materialName = pair.first;
 				const TextureFilenames& textureFilenames = pair.second;
 
-				// Texture channel packing "_drgb_nxa"
-				if (!textureFilenames[SemanticType::DIFFUSE_MAP].empty() || !textureFilenames[SemanticType::NORMAL_MAP].empty())
+				// Texture channel packing "_argb_nxa"
+				if (!textureFilenames[SemanticType::ALBEDO_MAP].empty() || !textureFilenames[SemanticType::NORMAL_MAP].empty())
 				{
-					createTextureChannelPackingAssetFile(input, materialName, textureFilenames, "_drgb_nxa");
+					createTextureChannelPackingAssetFile(input, materialName, textureFilenames, "_argb_nxa");
 				}
 
 				// Texture channel packing "_hr_rg_mb_nya"
@@ -491,7 +491,7 @@ namespace
 				"MaterialAsset": {
 					"BaseMaterial": "$ProjectName/Material/Base/Mesh.asset",
 					"Properties": {
-						"_drgb_nxa": "../Texture/Spino_Body_drgb_nxa.asset",
+						"_argb_nxa": "../Texture/Spino_Body_argb_nxa.asset",
 						"_hr_rg_mb_nya": "../Texture/Spino_Body_hr_rg_mb_nya.asset"
 					}
 				}
@@ -501,7 +501,7 @@ namespace
 			rapidjson::Document::AllocatorType& rapidJsonAllocatorType = rapidJsonDocumentAsset.GetAllocator();
 			rapidjson::Value rapidJsonValueMaterialAsset(rapidjson::kObjectType);
 			const std::string baseMaterial = importerContext.hasSkeleton ? "$ProjectName/Material/Base/SkinnedMesh.asset" : "$ProjectName/Material/Base/Mesh.asset";
-			const std::string relativeFilename_drgb_nxa = "../" + TEXTURE_TYPE + '/' + materialName + "_drgb_nxa" + ".asset";
+			const std::string relativeFilename_argb_nxa = "../" + TEXTURE_TYPE + '/' + materialName + "_argb_nxa" + ".asset";
 			const std::string relativeFilename_hr_rg_mb_nya = "../" + TEXTURE_TYPE + '/' + materialName + "_hr_rg_mb_nya" + ".asset";
 			const std::string relativeFilenameEmissiveMap = "../" + TEXTURE_TYPE + '/' + materialName + "_e" + ".asset";
 
@@ -511,10 +511,10 @@ namespace
 			{ // Properties
 				rapidjson::Value rapidJsonValueProperties(rapidjson::kObjectType);
 
-				// Texture channel packing "_drgb_nxa"
-				if (!textureFilenames[SemanticType::DIFFUSE_MAP].empty() || !textureFilenames[SemanticType::NORMAL_MAP].empty())
+				// Texture channel packing "_argb_nxa"
+				if (!textureFilenames[SemanticType::ALBEDO_MAP].empty() || !textureFilenames[SemanticType::NORMAL_MAP].empty())
 				{
-					rapidJsonValueProperties.AddMember("_drgb_nxa", rapidjson::StringRef(relativeFilename_drgb_nxa.c_str()), rapidJsonAllocatorType);
+					rapidJsonValueProperties.AddMember("_argb_nxa", rapidjson::StringRef(relativeFilename_argb_nxa.c_str()), rapidJsonAllocatorType);
 				}
 
 				// Texture channel packing "_hr_rg_mb_nya"

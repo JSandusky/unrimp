@@ -31,19 +31,19 @@
 				"Value": "BACK",
 				"Description": "Cull mode rasterizer state"
 			},
-			"DiffuseColor":
+			"AlbedoColor":
 			{
 				"Usage": "SHADER_UNIFORM",
 				"ValueType": "FLOAT_3",
 				"Value": "1.0 1.0 1.0",
-				"Description": "Material diffuse color"
+				"Description": "Material albedo color"
 			},
-			"_drgb_nxa":
+			"_argb_nxa":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/DynamicByCode/Identity_drgb_nxa2D",
-				"Description": "RGB channel = Diffuse map ('_d'-postfix), A channel = x component of normal map ('_n'-postfix)"
+				"Value": "Unrimp/Texture/DynamicByCode/Identity_argb_nxa2D",
+				"Description": "RGB channel = Albedo map ('_a'-postfix), A channel = x component of normal map ('_n'-postfix)"
 			},
 			"UseGpuSkinning":
 			{
@@ -102,11 +102,11 @@
 					"NumberOfElements": "2",
 					"ElementProperties":
 					{
-						"DiffuseColor":
+						"AlbedoColor":
 						{
 							"Usage": "MATERIAL_REFERENCE",
 							"ValueType": "FLOAT_3",
-							"Value": "@DiffuseColor"
+							"Value": "@AlbedoColor"
 						}
 					}
 				}
@@ -146,14 +146,14 @@
 			{
 				"0":
 				{
-					"BaseShaderRegisterName": "_drgb_nxa",
+					"BaseShaderRegisterName": "_argb_nxa",
 					"BaseShaderRegister": "1",
 					"ShaderVisibility": "FRAGMENT",
 					"ResourceType": "TEXTURE",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@_drgb_nxa",
-					"FallbackTexture": "Unrimp/Texture/DynamicByCode/Identity_drgb_nxa2D",
+					"Value": "@_argb_nxa",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/Identity_argb_nxa2D",
 					"RgbHardwareGammaCorrection": "TRUE",
 					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
 				}

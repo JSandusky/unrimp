@@ -61,13 +61,13 @@ in vec2 TexCoord;	// Normalized texture coordinate as input
 
 // Uniforms
 uniform sampler1D GradientMap;
-uniform sampler2D DiffuseMap;
+uniform sampler2D AlbedoMap;
 
 // Programs
 void main()
 {
-	// Fetch the texel at the given texture coordinate and return it's color
-	gl_FragColor = texture1D(GradientMap, TexCoord.y).r * texture2D(DiffuseMap, TexCoord);
+	// Fetch the texel at the given texture coordinate and return its color
+	gl_FragColor = texture1D(GradientMap, TexCoord.y).r * texture2D(AlbedoMap, TexCoord);
 }
 )";
 

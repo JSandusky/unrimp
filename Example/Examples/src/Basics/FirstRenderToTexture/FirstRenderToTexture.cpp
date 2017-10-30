@@ -61,7 +61,7 @@ void FirstRenderToTexture::onInitialization()
 
 		{ // Create the root signature
 			Renderer::DescriptorRangeBuilder ranges[2];
-			ranges[0].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap", Renderer::ShaderVisibility::FRAGMENT);
+			ranges[0].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "AlbedoMap", Renderer::ShaderVisibility::FRAGMENT);
 			ranges[1].initializeSampler(1, 0, Renderer::ShaderVisibility::FRAGMENT);
 
 			Renderer::RootParameterBuilder rootParameters[2];

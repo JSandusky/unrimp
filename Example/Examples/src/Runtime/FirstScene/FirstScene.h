@@ -189,7 +189,7 @@ private:
 	bool	   mHighQualityLighting;
 	float	   mWetness;
 	bool	   mUseEmissiveMap;
-	float	   mDiffuseColor[3];
+	float	   mAlbedoColor[3];
 	// Scene hot-reloading memory
 	bool					   mHasCameraTransformBackup;
 	RendererRuntime::Transform mCameraTransformBackup;

@@ -103,7 +103,7 @@ layout(location = 4) in vec3 NormalVs;		// Tangent space to view space, z-axis
 layout(location = 0) out vec4 OutputColor;
 
 // Uniforms
-layout(set = 0, binding = 1) uniform sampler2D _drgb_nxa;
+layout(set = 0, binding = 1) uniform sampler2D _argb_nxa;
 layout(set = 0, binding = 2) uniform sampler2D _hr_rg_mb_nya;
 layout(set = 0, binding = 3) uniform sampler2D EmissiveMap;
 
@@ -115,15 +115,15 @@ void main()
 	vec3 ViewSpaceViewVector     = vec3(0.0, 0.0, -1.0);			// In view space, we always look along the negative z-axis
 
 	// Read channel packed texture data
-	// -> "_drgb_nxa" = RGB channel = Diffuse map ("_d"-postfix), A channel = x component of normal map ("_n"-postfix)
+	// -> "_argb_nxa" = RGB channel = Albedo map ("_a"-postfix), A channel = x component of normal map ("_n"-postfix)
 	// -> "_hr_rg_mb_nya" = R channel = Height map ("_h"-postfix), G channel = Roughness map ("_r"-postfix), B channel = Metallic map ("_m"-postfix), A channel = y component of normal map ("_n"-postfix)
-	vec4 value_drgb_nxa = texture(_drgb_nxa, TexCoordVs);
+	vec4 value_argb_nxa = texture(_argb_nxa, TexCoordVs);
 	vec4 value_hr_rg_mb_nya = texture(_hr_rg_mb_nya, TexCoordVs);
 
 	// Get the per fragment normal [0..1] by using a tangent space BC5/3DC/ATI2N stored normal map
 	// -> See "Real-Time Normal Map DXT Compression" -> "3.3 Tangent-Space 3Dc" - http://www.nvidia.com/object/real-time-normal-map-dxt-compression.html
 	vec3 normal;
-	normal.x = value_drgb_nxa.a * 2.0f - 1.0f;
+	normal.x = value_argb_nxa.a * 2.0f - 1.0f;
 	normal.y = value_hr_rg_mb_nya.a * 2.0f - 1.0f;
 	normal.z = sqrt(1.0f - dot(normal.xy, normal.xy));
 
@@ -140,7 +140,7 @@ void main()
 	float specularLight = (diffuseLight > 0.0) ? pow(max(dot(normal, viewSpaceHalfVector), 0.0), 128.0) : 0.0;
 
 	// Calculate the fragment color
-	vec4 color = diffuseLight * vec4(value_drgb_nxa.rgb, 1.0f);	// Diffuse term
+	vec4 color = diffuseLight * vec4(value_argb_nxa.rgb, 1.0f);	// Diffuse term
 	color.rgb += specularLight * value_hr_rg_mb_nya.g;			// Specular term
 	color.rgb += texture(EmissiveMap, TexCoordVs).rgb;			// Emissive term
 

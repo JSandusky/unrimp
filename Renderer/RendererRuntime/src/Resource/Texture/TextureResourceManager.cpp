@@ -96,11 +96,11 @@ namespace
 			Renderer::ITexturePtr blackA2DTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::R8, blackAData));
 			RENDERER_SET_RESOURCE_DEBUG_NAME(blackA2DTexturePtr, "Black 2D alpha texture")
 
-			// "_drgb_nxa"-texture
-			// -> Must be white so e.g. diffuse color can be multiplied in
-			const uint8_t _drgb_nxaIdentityData[] = { 255, 255, 255, 128 };
-			Renderer::ITexturePtr _drgb_nxaIdentity2DTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::R8G8B8A8, _drgb_nxaIdentityData));
-			RENDERER_SET_RESOURCE_DEBUG_NAME(_drgb_nxaIdentity2DTexturePtr, "2D _drgb_nxa identity texture")
+			// "_argb_nxa"-texture
+			// -> Must be white so e.g. albedo color can be multiplied in
+			const uint8_t _argb_nxaIdentityData[] = { 255, 255, 255, 128 };
+			Renderer::ITexturePtr _argb_nxaIdentity2DTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::R8G8B8A8, _argb_nxaIdentityData));
+			RENDERER_SET_RESOURCE_DEBUG_NAME(_argb_nxaIdentity2DTexturePtr, "2D _argb_nxa identity texture")
 
 			// "_hr_rg_mb_nya"-texture
 			const uint8_t _hr_rg_mb_nyaIdentityData[] = { 0, 255, 0, 128 };
@@ -114,13 +114,13 @@ namespace
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/BlackMap1D",			  *blackRgb1DTexturePtr);
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/BlackMap2D",			  *blackRgb2DTexturePtr);
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/BlackMapCube",			  *blackRgbCubeTexturePtr);
-			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D",	  *whiteRgb2DTexturePtr);	// Must be white so e.g. diffuse color can be multiplied in
+			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityAlbedoMap2D",	  *whiteRgb2DTexturePtr);	// Must be white so e.g. albedo color can be multiplied in
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityAlphaMap2D",	  *whiteA2DTexturePtr);
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityNormalMap2D",	  *normalMapIdentity2DTexturePtr);
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityRoughnessMap2D",  *whiteA2DTexturePtr);
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/DielectricMetallicMap2D", *blackA2DTexturePtr);
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D",	  *blackRgb2DTexturePtr);
-			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/Identity_drgb_nxa2D",	  *_drgb_nxaIdentity2DTexturePtr);
+			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/Identity_argb_nxa2D",	  *_argb_nxaIdentity2DTexturePtr);
 			textureResourceManager.createTextureResourceByAssetId("Unrimp/Texture/DynamicByCode/Identity_hr_rg_mb_nya2D", *_hr_rg_mb_nyaIdentity2DTexturePtr);
 		}
 

@@ -77,9 +77,9 @@ namespace RendererRuntime
 	*
 	*  @remarks
 	*    == Regarding shader combination explosion ==
-	*    The texture manager automatically generates some dynamic default texture assets like "Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D" or
+	*    The texture manager automatically generates some dynamic default texture assets like "Unrimp/Texture/DynamicByCode/IdentityAlbedoMap2D" or
 	*    "Unrimp/Texture/DynamicByCode/IdentityNormalMap2D" one can reference e.g. inside material blueprint resources. Especially the identity texture maps
-	*    can be used as default material property value. While it's tempting to add shader combination material properties like "UseDiffuseMap",
+	*    can be used as default material property value. While it's tempting to add shader combination material properties like "UseAlbedoMap",
 	*    "UseNormalMap" etc. one has to keep the problem of shader combination explosion in mind. Especially in more complex material blueprints the
 	*    number of shader combinations can quickly reach a point were it's practically impossible to e.g. generate a shader cache for shipped products
 	*    or in case of Mac OS X (no OpenGL binary shader support) generate the required shaders during program start. The problem can be fought with
@@ -434,7 +434,7 @@ namespace RendererRuntime
 		*    -> Without this, we'll end up with runtime hiccups for pipeline state cache misses
 		*    In order to reduce visual artifacts, a material blueprint can define a set of shader combination properties for which pipeline
 		*    state caches must also be created. Inside the JSON material blueprint files, those properties are marked by
-		*    "VisualImportance": "MANDATORY". Good examples for such shader properties are diffuse map or GPU skinning. It's the responsibility
+		*    "VisualImportance": "MANDATORY". Good examples for such shader properties are albedo map or GPU skinning. It's the responsibility
 		*    of the material blueprint author to keep the number of such shader properties to a bare minimum.
 		*
 		*    When setting mandatory only to "false", all possible combinations will be created. This might take a while, depending on the number of

@@ -68,9 +68,9 @@
 	//[ Fresnel                                               ]
 	//[-------------------------------------------------------]
 	// Schlick 1994, "An Inexpensive BRDF Model for Physically-Based Rendering"
-	float fresnelSchlick(float ct, float F0)
+	float3 fresnelSchlick(float ct, float3 F0)
 	{
-		return F0 + (1.0f - F0) * pow(1.0f - ct, 5.0f);
+		return F0 + (float3(1.0f, 1.0f, 1.0f) - F0) * pow(1.0f - ct, 5.0f);
 	}
 
 
@@ -120,7 +120,7 @@
 	// N = Surface normalize
 	// V = Camera direction
 	// L = Light direction
-	float PBS_Specular(float3 N, float3 V, float3 L, float roughness, float F0)
+	float3 PBS_Specular(float3 N, float3 V, float3 L, float roughness, float3 F0)
 	{
 		float alpha = roughness * roughness;
 		float alphaSqr = alpha * alpha;
@@ -135,7 +135,7 @@
 		float Di = NDF_GGX(dotNH, alphaSqr);
 
 		// Fresnel
-		float Fs = fresnelSchlick(dotNV, F0);
+		float3 Fs = fresnelSchlick(dotNV, F0);
 
 		// Visibility term
 		float Vs = GEOM_SchlickSmith(dotNL, dotNV, alpha);
@@ -149,9 +149,9 @@
 	*    Calculate lighting
 	*
 	*  @param[in] albedo
-	*    Albedo = diffuse = base color
+	*    Albedo = base color
 	*  @param[in] roughness
-	*    Roughness = 1 - glossiness
+	*    Roughness = 1 - glossiness (= smoothness)
 	*  @param[in] metallic
 	*    Metallic
 	*  @param[in] N
@@ -180,13 +180,14 @@
 		horiz *= horiz;
 
 		// Diffuse part
-		float3 diffuseColor = lightColor * diffuseBurley(albedo, roughness, dotNV, dotNL, dotVH);
+		float3 albedoReduced = albedo * (1.0f - metallic);
+		float3 diffuseColor = lightColor * diffuseBurley(albedoReduced, roughness, dotNV, dotNL, dotVH);
 
 		// Specular part
 		// -> F0 based on metallic factor of material
-		float3 F0 = float3(0.04f, 0.04f, 0.04f);
-		F0 = LERP(F0, diffuseColor, metallic);
-		float3 specularColor = horiz * lightColor * PBS_Specular(N, V, L, roughness, 0.2f);
+		float3 dielectricColor = float3(0.04f, 0.04f, 0.04f);
+		float3 F0 = LERP(dielectricColor, albedo, metallic);
+		float3 specularColor = horiz * lightColor * PBS_Specular(N, V, L, roughness, F0);
 		reflectionColor -= specularColor;
 
 		// Final output mixes based on material metalness
@@ -229,9 +230,9 @@
 	*    Calculate lighting
 	*
 	*  @param[in] albedo
-	*    Albedo = diffuse = base color
+	*    Albedo = base color
 	*  @param[in] roughness
-	*    Roughness = 1 - glossiness
+	*    Roughness = 1 - glossiness (= smoothness)
 	*  @param[in] metallic
 	*    Metallic
 	*  @param[in] N
@@ -341,7 +342,7 @@
 			// Calculate lighting
 			if (lightIntensity > 0.0f && dot(worldSpaceNormal, lightDirection) > 0.0f)
 			{
-				color += CalculateLighting(diffuse, roughness, metallic, worldSpaceNormal, worldSpaceIncident, reflectionColor, lightDirection, lightColorType.rgb * lightIntensity);
+				color += CalculateLighting(albedo, roughness, metallic, worldSpaceNormal, worldSpaceIncident, reflectionColor, lightDirection, lightColorType.rgb * lightIntensity);
 			}
 		}
 	}

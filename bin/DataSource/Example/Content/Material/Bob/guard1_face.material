@@ -9,7 +9,7 @@
 		"BaseMaterial": "$ProjectName/Material/Base/SkinnedMesh.asset",
 		"Properties":
 		{
-			"_drgb_nxa": "$ProjectName/Texture/Bob/guard1_face_drgb_nxa.asset"
+			"_argb_nxa": "$ProjectName/Texture/Bob/guard1_face_argb_nxa.asset"
 		}
 	}
 }

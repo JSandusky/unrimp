@@ -67,8 +67,8 @@ void FirstMultipleRenderTargets::onInitialization()
 		{
 			{ // Create the root signature
 				Renderer::DescriptorRangeBuilder ranges[3];
-				ranges[0].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "DiffuseMap0", Renderer::ShaderVisibility::FRAGMENT);
-				ranges[1].initialize(Renderer::DescriptorRangeType::SRV, 1, 1, "DiffuseMap1", Renderer::ShaderVisibility::FRAGMENT);
+				ranges[0].initialize(Renderer::DescriptorRangeType::SRV, 1, 0, "AlbedoMap0", Renderer::ShaderVisibility::FRAGMENT);
+				ranges[1].initialize(Renderer::DescriptorRangeType::SRV, 1, 1, "AlbedoMap1", Renderer::ShaderVisibility::FRAGMENT);
 				ranges[2].initializeSampler(1, 0, Renderer::ShaderVisibility::FRAGMENT);
 
 				Renderer::RootParameterBuilder rootParameters[2];

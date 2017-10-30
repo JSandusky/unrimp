@@ -90,17 +90,17 @@ FS_OUTPUT main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0)
 fragmentShaderSourceCode = R"(
 // Uniforms
 SamplerState SamplerLinear : register(s0);
-Texture2D DiffuseMap0 : register(t0);
-Texture2D DiffuseMap1 : register(t1);
+Texture2D AlbedoMap0 : register(t0);
+Texture2D AlbedoMap1 : register(t1);
 
 // Programs
 float4 main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0) : SV_TARGET
 {
 	// Fetch the texel at the given texture coordinate from render target 0 (which should contain a red triangle)
-	float4 color0 = DiffuseMap0.Sample(SamplerLinear, TexCoord);
+	float4 color0 = AlbedoMap0.Sample(SamplerLinear, TexCoord);
 
 	// Fetch the texel at the given texture coordinate from render target 1 (which should contain a blue triangle)
-	float4 color1 = DiffuseMap1.Sample(SamplerLinear, TexCoord);
+	float4 color1 = AlbedoMap1.Sample(SamplerLinear, TexCoord);
 
 	// Calculate the final color by subtracting the colors of the both render targets from white
 	// -> The result should be white or green

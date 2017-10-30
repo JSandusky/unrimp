@@ -54,10 +54,10 @@ namespace RendererRuntime
 		// Load the render model texture
 		vr::IVRRenderModels* vrRenderModels = vr::VRRenderModels();
 		vr::EVRRenderModelError vrRenderModelError = vr::VRRenderModelError_Loading;
-		const vr::TextureID_t diffuseTextureId = static_cast<vr::TextureID_t>(std::atoi(getAsset().virtualFilename));
+		const vr::TextureID_t albedoTextureId = static_cast<vr::TextureID_t>(std::atoi(getAsset().virtualFilename));
 		while (vrRenderModelError == vr::VRRenderModelError_Loading)
 		{
-			vrRenderModelError = vrRenderModels->LoadTexture_Async(diffuseTextureId, &mVrRenderModelTextureMap);
+			vrRenderModelError = vrRenderModels->LoadTexture_Async(albedoTextureId, &mVrRenderModelTextureMap);
 			if (vrRenderModelError == vr::VRRenderModelError_Loading)
 			{
 				using namespace std::chrono_literals;
@@ -66,11 +66,11 @@ namespace RendererRuntime
 		}
 		if (vr::VRRenderModelError_None != vrRenderModelError)
 		{
-			RENDERER_LOG(mRendererRuntime.getContext(), CRITICAL, "The renderer runtime was unable to load OpenVR diffuse texture %d: %s", diffuseTextureId, vrRenderModels->GetRenderModelErrorNameFromEnum(vrRenderModelError))
+			RENDERER_LOG(mRendererRuntime.getContext(), CRITICAL, "The renderer runtime was unable to load OpenVR albedo texture %d: %s", albedoTextureId, vrRenderModels->GetRenderModelErrorNameFromEnum(vrRenderModelError))
 			return;
 		}
 
-		{ // The "_drgb_nxa" texture channel packing stores the x channel of a normal map inside the alpha channel, set identity normal map x value
+		{ // The "_argb_nxa" texture channel packing stores the x channel of a normal map inside the alpha channel, set identity normal map x value
 			uint8_t* rubTextureMapData = const_cast<uint8_t*>(mVrRenderModelTextureMap->rubTextureMapData);	// Evil const-cast since I don't want to copy the data
 			const uint8_t* rubTextureMapDataEnd = rubTextureMapData + mVrRenderModelTextureMap->unWidth * mVrRenderModelTextureMap->unHeight * 4;
 			for (; rubTextureMapData < rubTextureMapDataEnd; rubTextureMapData += 4)

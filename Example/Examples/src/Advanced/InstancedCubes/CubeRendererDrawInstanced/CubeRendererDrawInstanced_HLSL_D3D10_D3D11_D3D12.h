@@ -194,7 +194,7 @@ struct VS_OUTPUT
 
 // Uniforms
 SamplerState SamplerLinear : register(s0);
-Texture2DArray DiffuseMap : register(t0);
+Texture2DArray AlbedoMap : register(t0);
 cbuffer UniformBlockDynamicFs : register(b0)
 {
 	float3 LightPosition;	// World space light position
@@ -207,7 +207,7 @@ float4 main(VS_OUTPUT Input) : SV_TARGET
 	float lighting = clamp(dot(Input.Normal, normalize(LightPosition - Input.WorldPosition)), 0.0f, 0.8f);
 
 	// Calculate the final fragment color
-	float4 color = (float4(0.2f, 0.2f, 0.2f, 1.0f) + lighting) * DiffuseMap.Sample(SamplerLinear, Input.TexCoord);
+	float4 color = (float4(0.2f, 0.2f, 0.2f, 1.0f) + lighting) * AlbedoMap.Sample(SamplerLinear, Input.TexCoord);
 	color.a = 0.8f;
 
 	// Done

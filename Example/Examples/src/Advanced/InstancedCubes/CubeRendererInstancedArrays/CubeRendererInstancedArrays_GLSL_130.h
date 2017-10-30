@@ -162,7 +162,7 @@ in vec2 TexCoordVs;
 in vec3 NormalVs;
 
 // Uniforms
-uniform sampler2D DiffuseMap;		// Usage of 'layout(binding = 1)' would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
+uniform sampler2D AlbedoMap;		// Usage of 'layout(binding = 1)' would be nice, but requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 uniform vec3      LightPosition;	// World space light position
 
 // Programs
@@ -172,7 +172,7 @@ void main()
 	float lighting = clamp(dot(NormalVs, normalize(LightPosition - WorldPositionVs)), 0.0, 0.8);
 
 	// Calculate the final fragment color
-	gl_FragColor = (vec4(0.2, 0.2, 0.2, 1.0) + lighting) * texture2D(DiffuseMap, TexCoordVs);
+	gl_FragColor = (vec4(0.2, 0.2, 0.2, 1.0) + lighting) * texture2D(AlbedoMap, TexCoordVs);
 	gl_FragColor.a = 0.8;
 }
 )";

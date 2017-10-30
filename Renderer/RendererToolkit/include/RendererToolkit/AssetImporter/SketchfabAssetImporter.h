@@ -56,7 +56,7 @@ namespace RendererToolkit
 	*    - "Knight Artorias" (".gltf"): https://sketchfab.com/models/0affb3436519401db2bad31cfced95c1
 	*
 	*  @note
-	*    - Has build-in support for texture channel packing "_drgb_nxa" and "_hr_rg_mb_nya"
+	*    - Has build-in support for texture channel packing "_argb_nxa" and "_hr_rg_mb_nya"
 	*/
 	class SketchfabAssetImporter : public IAssetImporter
 	{

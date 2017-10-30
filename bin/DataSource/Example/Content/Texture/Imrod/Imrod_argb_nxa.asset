@@ -10,15 +10,16 @@
 		{
 			"AssetType": "Texture",
 			"AssetCategory": "Character",
-			"Copyright": "Copyright © 2009 KatsBits - Ken Beyer (kat) - http://www.katsbits.com"
+			"Copyright": "Imrod model and Imrod textures ( http://www.parkparkin.com/gallery/imrod_dw.html ) by Dmitry Parkin: http://www.parkparkin.com"
 		},
 		"TextureAssetCompiler":
 		{
 			"TextureSemantic": "PACKED_CHANNELS",
-			"TextureChannelPacking": "_drgb_nxa",
+			"TextureChannelPacking": "_argb_nxa",
 			"InputFiles":
 			{
-				"DIFFUSE_MAP": "iron_grill_d.png"
+				"ALBEDO_MAP": "Imrod_d.tga",
+				"NORMAL_MAP": "Imrod_n.tga"
 			}
 		}
 	}

@@ -9,7 +9,7 @@
 		"BaseMaterial": "$ProjectName/Material/Base/Mesh.asset",
 		"Properties":
 		{
-			"DiffuseColor": "0.0 0.05 0.05",
+			"AlbedoColor": "0.0 0.05 0.05",
 			"Roughness": "0.5",
 			"Metallic": "0.05"
 		}

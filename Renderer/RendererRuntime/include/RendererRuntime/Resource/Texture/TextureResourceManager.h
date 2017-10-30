@@ -74,13 +74,13 @@ namespace RendererRuntime
 	*    - "Unrimp/Texture/DynamicByCode/BlackMap1D"
 	*    - "Unrimp/Texture/DynamicByCode/BlackMap2D"
 	*    - "Unrimp/Texture/DynamicByCode/BlackMapCube"
-	*    - "Unrimp/Texture/DynamicByCode/IdentityDiffuseMap2D"
+	*    - "Unrimp/Texture/DynamicByCode/IdentityAlbedoMap2D"
 	*    - "Unrimp/Texture/DynamicByCode/IdentityAlphaMap2D"
 	*    - "Unrimp/Texture/DynamicByCode/IdentityNormalMap2D"
 	*    - "Unrimp/Texture/DynamicByCode/IdentityRoughnessMap2D"
 	*    - "Unrimp/Texture/DynamicByCode/DielectricMetallicMap2D"
 	*    - "Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D"
-	*    - "Unrimp/Texture/DynamicByCode/Identity_drgb_nxa2D"
+	*    - "Unrimp/Texture/DynamicByCode/Identity_argb_nxa2D"
 	*    - "Unrimp/Texture/DynamicByCode/Identity_hr_rg_mb_nya2D"
 	*/
 	class TextureResourceManager : public ResourceManager<TextureResource>

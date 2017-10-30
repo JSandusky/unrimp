@@ -15,11 +15,11 @@
 		"TextureAssetCompiler":
 		{
 			"TextureSemantic": "PACKED_CHANNELS",
-			"TextureChannelPacking": "_drgb_nxa",
+			"TextureChannelPacking": "_argb_nxa",
 			"InputFiles":
 			{
-				"DIFFUSE_MAP": "Sponza_Curtain_Blue_diffuse.png",
-				"NORMAL_MAP": "Sponza_Curtain_normal.png"
+				"ALBEDO_MAP": "Sponza_Floor_diffuse.png",
+				"NORMAL_MAP": "Sponza_Floor_normal.png"
 			}
 		}
 	}

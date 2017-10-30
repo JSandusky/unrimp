@@ -47,14 +47,14 @@ OUTPUT_END
 // Uniform buffers
 struct Material
 {
-	float3 DiffuseColor;
+	float3 AlbedoColor;
 };
 UNIFORM_BUFFER_BEGIN(1, 0, MaterialUniformBuffer, 1)
 	Material Materials[FAST_SHADER_BUILD_HACK(@insertpiece(MaximumNumberOfMaterials))];
 UNIFORM_BUFFER_END
 
 // Textures: We need to start at texture unit 1 instead of texture unit 0 because the vertex shader has an instance texture buffer bound at texture unit 0 (OpenGL shares those bindings accros all shader stages while Direct3D doesn't)
-TEXTURE_2D(3, 0, _drgb_nxa, 1)	// RGB channel = Diffuse map ("_d"-postfix), A channel = x component of normal map ("_n"-postfix)
+TEXTURE_2D(3, 0, _argb_nxa, 1)	// RGB channel = Albedo map ("_a"-postfix), A channel = x component of normal map ("_n"-postfix)
 
 // Samplers
 SAMPLER_STATE(4, 0, SamplerLinear, 0)
@@ -76,7 +76,7 @@ MAIN_BEGIN
 
 	// Diffuse term
 	// -> Usually we're using sRGB textures, so textures might already be loaded in this format when switching to the debug compositor, convert back from linear space to gamma space
-	float3 color = material.DiffuseColor * LinearSpaceToGammaSpace3(SAMPLE_2D(_drgb_nxa, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb);
+	float3 color = material.AlbedoColor * LinearSpaceToGammaSpace3(SAMPLE_2D(_argb_nxa, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb);
 
 	// Done
 	MAIN_OUTPUT_COLOR(0) = min(float4(color, 1.0f), float4(1.0f, 1.0f, 1.0f, 1.0f));

@@ -15,11 +15,11 @@
 		"TextureAssetCompiler":
 		{
 			"TextureSemantic": "PACKED_CHANNELS",
-			"TextureChannelPacking": "_drgb_nxa",
+			"TextureChannelPacking": "_argb_nxa",
 			"InputFiles":
 			{
-				"DIFFUSE_MAP": "Vase_diffuse.png",
-				"NORMAL_MAP": "Vase_normal.png"
+				"ALBEDO_MAP": "Lion_Albedo.png",
+				"NORMAL_MAP": "Lion_Normal.png"
 			}
 		}
 	}

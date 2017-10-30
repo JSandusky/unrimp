@@ -15,11 +15,11 @@
 		"TextureAssetCompiler":
 		{
 			"TextureSemantic": "PACKED_CHANNELS",
-			"TextureChannelPacking": "_drgb_nxa",
+			"TextureChannelPacking": "_argb_nxa",
 			"InputFiles":
 			{
-				"DIFFUSE_MAP": "VaseHanging_diffuse.png",
-				"NORMAL_MAP": "VaseHanging_normal.png"
+				"ALBEDO_MAP": "Sponza_Arch_diffuse.png",
+				"NORMAL_MAP": "Sponza_Arch_normal.png"
 			}
 		}
 	}

@@ -36,7 +36,7 @@ INPUT_BEGIN
 	DECLARE_FRAGMENT_POSITION
 INPUT_END
 OUTPUT_BEGIN
-	OUTPUT_COLOR(0)	// rgb = diffuse color, a = alpha
+	OUTPUT_COLOR(0)	// rgb = albedo color, a = alpha
 	OUTPUT_COLOR(1)	// rg  = screen space velocity
 OUTPUT_END
 

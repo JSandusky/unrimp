@@ -89,17 +89,17 @@ FS_OUTPUT main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0)
 // "pixel shader" in Direct3D terminology
 fragmentShaderSourceCode = R"(
 // Uniforms
-uniform sampler2D DiffuseMap0 : register(s0);
-uniform sampler2D DiffuseMap1 : register(s1);
+uniform sampler2D AlbedoMap0 : register(s0);
+uniform sampler2D AlbedoMap1 : register(s1);
 
 // Programs
 float4 main(float4 Position : SV_POSITION, float2 TexCoord : TEXCOORD0) : SV_TARGET
 {
 	// Fetch the texel at the given texture coordinate from render target 0 (which should contain a red triangle)
-	float4 color0 = tex2D(DiffuseMap0, TexCoord);
+	float4 color0 = tex2D(AlbedoMap0, TexCoord);
 
 	// Fetch the texel at the given texture coordinate from render target 1 (which should contain a blue triangle)
-	float4 color1 = tex2D(DiffuseMap1, TexCoord);
+	float4 color1 = tex2D(AlbedoMap1, TexCoord);
 
 	// Calculate the final color by subtracting the colors of the both render targets from white
 	// -> The result should be white or green

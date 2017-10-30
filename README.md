@@ -171,8 +171,9 @@ Renderer Toolkit (e.g. "The Editor")
 
 Examples (just some high level keywords)
 ======
-- Microsoft Windows: "NVIDIA Optimus" and "AMD Dynamic Switchable Graphic" awareness to reduce the risk of getting the integrated graphics unit assigned when there's a dedicated graphics card as well
 - Memory leaks: On Microsoft Windows, "_CrtMemCheckpoint()" and "_CrtMemDumpAllObjectsSince()" is used by default to detect memory leaks while developing and not later on. In case something triggers, use third parts tools to locate the memory leak in detail.
+- Physically based shading (PBS) using "metallic workflow" (aka "metal-rough-workflow" aka "Albedo/Metallic/Roughness") instead of "specular workflow" (aka "specular-gloss-workflow" aka "Diffuse/Specular/Glossines")
+- Microsoft Windows: "NVIDIA Optimus" and "AMD Dynamic Switchable Graphic" awareness to reduce the risk of getting the integrated graphics unit assigned when there's a dedicated graphics card as well
 - Custom resolved MSAA for antialiased deferred rendering and temporal anti-aliasing
 - Gaussian blur, used to e.g. blur the transparent ImGui background
 - High dynamic range (HDR) rendering with adaptive luminance
@@ -180,7 +181,6 @@ Examples (just some high level keywords)
 - Color correction via 3D lookup table (LUT)
 - Fast Approximate Anti-Aliasing (FXAA)
 - Screen space ambient occlusion (SSAO)
-- Physically based shading (PBS)
 - Gamma correct rendering
 - Bloom with dirty lens
 - Clustered shading
