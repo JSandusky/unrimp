@@ -369,7 +369,41 @@ namespace RendererToolkit
 		}
 	}
 
-	void JsonHelper::optionalBooleanProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, bool& value)
+	const RendererRuntime::MaterialProperty* JsonHelper::getMaterialPropertyOfUsageAndValueType(const RendererRuntime::MaterialProperties::SortedPropertyVector* sortedMaterialPropertyVector, const std::string& valueAsString, RendererRuntime::MaterialProperty::Usage usage, RendererRuntime::MaterialPropertyValue::ValueType valueType)
+	{
+		// The character "@" is used to reference a material property value
+		if (nullptr != sortedMaterialPropertyVector && !valueAsString.empty() && valueAsString[0] == '@')
+		{
+			// Reference a material property value
+			const std::string materialPropertyName = valueAsString.substr(1);
+			const RendererRuntime::MaterialPropertyId materialPropertyId(materialPropertyName.c_str());
+
+			// Figure out the material property value
+			RendererRuntime::MaterialProperties::SortedPropertyVector::const_iterator iterator = std::lower_bound(sortedMaterialPropertyVector->cbegin(), sortedMaterialPropertyVector->cend(), materialPropertyId, RendererRuntime::detail::OrderByMaterialPropertyId());
+			if (iterator != sortedMaterialPropertyVector->end() && iterator->getMaterialPropertyId() == materialPropertyId)
+			{
+				const RendererRuntime::MaterialProperty& materialProperty = *iterator;
+				if (materialProperty.getUsage() == usage && materialProperty.getValueType() == valueType)
+				{
+					return &materialProperty;
+				}
+				else
+				{
+					throw std::runtime_error("Material property \"" + materialPropertyName + "\" value type mismatch");
+				}
+			}
+			else
+			{
+				throw std::runtime_error("Unknown material property name \"" + materialPropertyName + '\"');
+			}
+		}
+		else
+		{
+			throw std::runtime_error("Invalid material property value reference \"" + valueAsString + "\", first character must be @ if you intended to reference a material property");
+		}
+	}
+
+	void JsonHelper::optionalBooleanProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, bool& value, RendererRuntime::MaterialProperty::Usage usage, const RendererRuntime::MaterialProperties::SortedPropertyVector* sortedMaterialPropertyVector)
 	{
 		if (rapidJsonValue.HasMember(propertyName))
 		{
@@ -387,15 +421,20 @@ namespace RendererToolkit
 			}
 			else
 			{
-				throw std::runtime_error(std::string("The value of property \"") + propertyName + "\" is \"" + valueAsString + "\", but it must be \"FALSE\" or \"TRUE\"");
+				// Might be a material property reference, the called method automatically throws an exception if something looks odd
+				const RendererRuntime::MaterialProperty* materialProperty = getMaterialPropertyOfUsageAndValueType(sortedMaterialPropertyVector, valueAsString, usage, RendererRuntime::MaterialPropertyValue::ValueType::BOOLEAN);
+				if (nullptr != materialProperty)
+				{
+					value = materialProperty->getBooleanValue();
+				}
 			}
 		}
 	}
 
-	void JsonHelper::optionalBooleanProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, int& value)
+	void JsonHelper::optionalBooleanProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, int& value, RendererRuntime::MaterialProperty::Usage usage, const RendererRuntime::MaterialProperties::SortedPropertyVector* sortedMaterialPropertyVector)
 	{
 		bool booleanValue = (0 != value);
-		optionalBooleanProperty(rapidJsonValue, propertyName, booleanValue);
+		optionalBooleanProperty(rapidJsonValue, propertyName, booleanValue, usage, sortedMaterialPropertyVector);
 		value = booleanValue;
 	}
 

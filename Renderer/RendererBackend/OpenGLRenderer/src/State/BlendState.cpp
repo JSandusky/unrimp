@@ -46,6 +46,16 @@ namespace OpenGLRenderer
 
 	void BlendState::setOpenGLBlendStates() const
 	{
+		// "GL_ARB_multisample"-extension
+		if (mBlendState.alphaToCoverageEnable)
+		{
+			glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE_ARB);
+		}
+		else
+		{
+			glDisable(GL_SAMPLE_ALPHA_TO_COVERAGE_ARB);
+		}
+
 		// TODO(co) Add support for blend state per render target
 		if (mBlendState.renderTarget[0].blendEnable)
 		{

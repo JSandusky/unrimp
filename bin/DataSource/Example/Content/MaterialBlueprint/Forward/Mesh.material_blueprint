@@ -82,6 +82,13 @@
 				"Description": "Use alpha map?",
 				"VisualImportance": "100"
 			},
+			"AlphaToCoverageEnable":
+			{
+				"Usage": "BLEND_STATE",
+				"ValueType": "BOOLEAN",
+				"Value": "FALSE",
+				"Description": "Alpha to coverage enabled?"
+			},
 			"AlphaMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
@@ -161,6 +168,10 @@
 			"RasterizerState":
 			{
 				"CullMode": "@CullMode"
+			},
+			"BlendState":
+			{
+				"AlphaToCoverageEnable": "@AlphaToCoverageEnable"
 			}
 		},
 		"ResourceGroups":

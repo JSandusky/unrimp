@@ -173,22 +173,23 @@ Examples (just some high level keywords)
 ======
 - Memory leaks: On Microsoft Windows, "_CrtMemCheckpoint()" and "_CrtMemDumpAllObjectsSince()" is used by default to detect memory leaks while developing and not later on. In case something triggers, use third parts tools to locate the memory leak in detail.
 - Physically based shading (PBS) using "metallic workflow" (aka "metal-rough-workflow" aka "Albedo/Metallic/Roughness") instead of "specular workflow" (aka "specular-gloss-workflow" aka "Diffuse/Specular/Glossines")
-- Microsoft Windows: "NVIDIA Optimus" and "AMD Dynamic Switchable Graphic" awareness to reduce the risk of getting the integrated graphics unit assigned when there's a dedicated graphics card as well
-- Custom resolved MSAA for antialiased deferred rendering and temporal anti-aliasing
+- Microsoft Windows: ["NVIDIA Optimus"](http://developer.download.nvidia.com/devzone/devcenter/gamegraphics/files/OptimusRenderingPolicies.pdf) and ["AMD Dynamic Switchable Graphic"](https://community.amd.com/message/1307599#comment-1307599) awareness to reduce the risk of getting the integrated graphics unit assigned when there's a dedicated graphics card as well
+- [Custom resolved MSAA for antialiased deferred rendering and temporal anti-aliasing](https://mynameismjp.wordpress.com/2012/10/28/msaa-resolve-filters/)
 - Gaussian blur, used to e.g. blur the transparent ImGui background
 - High dynamic range (HDR) rendering with adaptive luminance
 - Tangent space BC5/3DC/ATI2N stored normal maps
-- Color correction via 3D lookup table (LUT)
-- Fast Approximate Anti-Aliasing (FXAA)
-- Screen space ambient occlusion (SSAO)
-- Gamma correct rendering
+- [Color correction via 3D lookup table (LUT)](http://http.developer.nvidia.com/GPUGems2/gpugems2_chapter24.html)
+- [Fast Approximate Anti-Aliasing (FXAA)](http://developer.download.nvidia.com/assets/gamedev/files/sdk/11/FXAA_WhitePaper.pdf)
+- [Screen space ambient occlusion (SSAO)](http://john-chapman-graphics.blogspot.de/2013/01/ssao-tutorial.html)
+- [Gamma correct rendering](https://developer.nvidia.com/gpugems/GPUGems3/gpugems3_ch24.html)
 - Bloom with dirty lens
 - Clustered shading
-- Pseudo lens flare
+- [Pseudo lens flare](http://john-chapman-graphics.blogspot.de/2013/02/pseudo-lens-flare.html)
+- [Alpha to coverage](https://medium.com/@bgolus/anti-aliased-alpha-test-the-esoteric-alpha-to-coverage-8b177335ae4f)
 - Depth of field
 - GPU skinning
 - Motion blur
-- RGB dither
+- [RGB dither](http://media.steampowered.com/apps/valve/2015/Alex_Vlachos_Advanced_VR_Rendering_GDC2015.pdf)
 - Depth fog
 
 

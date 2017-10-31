@@ -63,40 +63,6 @@ namespace
 			return (left.materialTechniqueId < right.materialTechniqueId);
 		}
 
-		const RendererRuntime::MaterialProperty* getMaterialPropertyOfUsageAndValueType(const RendererRuntime::MaterialProperties::SortedPropertyVector* sortedMaterialPropertyVector, const std::string& valueAsString, RendererRuntime::MaterialProperty::Usage usage, RendererRuntime::MaterialPropertyValue::ValueType valueType)
-		{
-			// The character "@" is used to reference a material property value
-			if (nullptr != sortedMaterialPropertyVector && !valueAsString.empty() && valueAsString[0] == '@')
-			{
-				// Reference a material property value
-				const std::string materialPropertyName = valueAsString.substr(1);
-				const RendererRuntime::MaterialPropertyId materialPropertyId(materialPropertyName.c_str());
-
-				// Figure out the material property value
-				RendererRuntime::MaterialProperties::SortedPropertyVector::const_iterator iterator = std::lower_bound(sortedMaterialPropertyVector->cbegin(), sortedMaterialPropertyVector->cend(), materialPropertyId, RendererRuntime::detail::OrderByMaterialPropertyId());
-				if (iterator != sortedMaterialPropertyVector->end() && iterator->getMaterialPropertyId() == materialPropertyId)
-				{
-					const RendererRuntime::MaterialProperty& materialProperty = *iterator;
-					if (materialProperty.getUsage() == usage && materialProperty.getValueType() == valueType)
-					{
-						return &materialProperty;
-					}
-					else
-					{
-						throw std::runtime_error("Material property \"" + materialPropertyName + "\" value type mismatch");
-					}
-				}
-				else
-				{
-					throw std::runtime_error("Unknown material property name \"" + materialPropertyName + '\"');
-				}
-			}
-			else
-			{
-				throw std::runtime_error("Invalid material property value reference \"" + valueAsString + "\", first character must be @ if you intended to reference a material property");
-			}
-		}
-
 
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]
@@ -133,7 +99,7 @@ namespace RendererToolkit
 			else
 			{
 				// Might be a material property reference, the called method automatically throws an exception if something looks odd
-				const RendererRuntime::MaterialProperty* materialProperty = ::detail::getMaterialPropertyOfUsageAndValueType(sortedMaterialPropertyVector, valueAsString, RendererRuntime::MaterialProperty::Usage::RASTERIZER_STATE, RendererRuntime::MaterialPropertyValue::ValueType::FILL_MODE);
+				const RendererRuntime::MaterialProperty* materialProperty = JsonHelper::getMaterialPropertyOfUsageAndValueType(sortedMaterialPropertyVector, valueAsString, RendererRuntime::MaterialProperty::Usage::RASTERIZER_STATE, RendererRuntime::MaterialPropertyValue::ValueType::FILL_MODE);
 				if (nullptr != materialProperty)
 				{
 					value = materialProperty->getFillModeValue();
@@ -165,7 +131,7 @@ namespace RendererToolkit
 			else
 			{
 				// Might be a material property reference, the called method automatically throws an exception if something looks odd
-				const RendererRuntime::MaterialProperty* materialProperty = ::detail::getMaterialPropertyOfUsageAndValueType(sortedMaterialPropertyVector, valueAsString, RendererRuntime::MaterialProperty::Usage::RASTERIZER_STATE, RendererRuntime::MaterialPropertyValue::ValueType::CULL_MODE);
+				const RendererRuntime::MaterialProperty* materialProperty = JsonHelper::getMaterialPropertyOfUsageAndValueType(sortedMaterialPropertyVector, valueAsString, RendererRuntime::MaterialProperty::Usage::RASTERIZER_STATE, RendererRuntime::MaterialPropertyValue::ValueType::CULL_MODE);
 				if (nullptr != materialProperty)
 				{
 					value = materialProperty->getCullModeValue();
@@ -196,7 +162,7 @@ namespace RendererToolkit
 			else
 			{
 				// Might be a material property reference, the called method automatically throws an exception if something looks odd
-				const RendererRuntime::MaterialProperty* materialProperty = ::detail::getMaterialPropertyOfUsageAndValueType(sortedMaterialPropertyVector, valueAsString, RendererRuntime::MaterialProperty::Usage::RASTERIZER_STATE, RendererRuntime::MaterialPropertyValue::ValueType::CONSERVATIVE_RASTERIZATION_MODE);
+				const RendererRuntime::MaterialProperty* materialProperty = JsonHelper::getMaterialPropertyOfUsageAndValueType(sortedMaterialPropertyVector, valueAsString, RendererRuntime::MaterialProperty::Usage::RASTERIZER_STATE, RendererRuntime::MaterialPropertyValue::ValueType::CONSERVATIVE_RASTERIZATION_MODE);
 				if (nullptr != materialProperty)
 				{
 					value = materialProperty->getConservativeRasterizationModeValue();
@@ -227,7 +193,7 @@ namespace RendererToolkit
 			else
 			{
 				// Might be a material property reference, the called method automatically throws an exception if something looks odd
-				const RendererRuntime::MaterialProperty* materialProperty = ::detail::getMaterialPropertyOfUsageAndValueType(sortedMaterialPropertyVector, valueAsString, RendererRuntime::MaterialProperty::Usage::DEPTH_STENCIL_STATE, RendererRuntime::MaterialPropertyValue::ValueType::DEPTH_WRITE_MASK);
+				const RendererRuntime::MaterialProperty* materialProperty = JsonHelper::getMaterialPropertyOfUsageAndValueType(sortedMaterialPropertyVector, valueAsString, RendererRuntime::MaterialProperty::Usage::DEPTH_STENCIL_STATE, RendererRuntime::MaterialPropertyValue::ValueType::DEPTH_WRITE_MASK);
 				if (nullptr != materialProperty)
 				{
 					value = materialProperty->getDepthWriteMaskValue();
@@ -264,7 +230,7 @@ namespace RendererToolkit
 			else
 			{
 				// Might be a material property reference, the called method automatically throws an exception if something looks odd
-				const RendererRuntime::MaterialProperty* materialProperty = ::detail::getMaterialPropertyOfUsageAndValueType(sortedMaterialPropertyVector, valueAsString, RendererRuntime::MaterialProperty::Usage::DEPTH_STENCIL_STATE, RendererRuntime::MaterialPropertyValue::ValueType::STENCIL_OP);
+				const RendererRuntime::MaterialProperty* materialProperty = JsonHelper::getMaterialPropertyOfUsageAndValueType(sortedMaterialPropertyVector, valueAsString, RendererRuntime::MaterialProperty::Usage::DEPTH_STENCIL_STATE, RendererRuntime::MaterialPropertyValue::ValueType::STENCIL_OP);
 				if (nullptr != materialProperty)
 				{
 					value = materialProperty->getStencilOpValue();
@@ -310,7 +276,7 @@ namespace RendererToolkit
 			else
 			{
 				// Might be a material property reference, the called method automatically throws an exception if something looks odd
-				const RendererRuntime::MaterialProperty* materialProperty = ::detail::getMaterialPropertyOfUsageAndValueType(sortedMaterialPropertyVector, valueAsString, RendererRuntime::MaterialProperty::Usage::BLEND_STATE, RendererRuntime::MaterialPropertyValue::ValueType::BLEND);
+				const RendererRuntime::MaterialProperty* materialProperty = JsonHelper::getMaterialPropertyOfUsageAndValueType(sortedMaterialPropertyVector, valueAsString, RendererRuntime::MaterialProperty::Usage::BLEND_STATE, RendererRuntime::MaterialPropertyValue::ValueType::BLEND);
 				if (nullptr != materialProperty)
 				{
 					value = materialProperty->getBlendValue();
@@ -344,7 +310,7 @@ namespace RendererToolkit
 			else
 			{
 				// Might be a material property reference, the called method automatically throws an exception if something looks odd
-				const RendererRuntime::MaterialProperty* materialProperty = ::detail::getMaterialPropertyOfUsageAndValueType(sortedMaterialPropertyVector, valueAsString, RendererRuntime::MaterialProperty::Usage::BLEND_STATE, RendererRuntime::MaterialPropertyValue::ValueType::BLEND_OP);
+				const RendererRuntime::MaterialProperty* materialProperty = JsonHelper::getMaterialPropertyOfUsageAndValueType(sortedMaterialPropertyVector, valueAsString, RendererRuntime::MaterialProperty::Usage::BLEND_STATE, RendererRuntime::MaterialPropertyValue::ValueType::BLEND_OP);
 				if (nullptr != materialProperty)
 				{
 					value = materialProperty->getBlendOpValue();
@@ -392,7 +358,7 @@ namespace RendererToolkit
 			else
 			{
 				// Might be a material property reference, the called method automatically throws an exception if something looks odd
-				const RendererRuntime::MaterialProperty* materialProperty = ::detail::getMaterialPropertyOfUsageAndValueType(sortedMaterialPropertyVector, valueAsString, RendererRuntime::MaterialProperty::Usage::SAMPLER_STATE, RendererRuntime::MaterialPropertyValue::ValueType::FILTER_MODE);
+				const RendererRuntime::MaterialProperty* materialProperty = JsonHelper::getMaterialPropertyOfUsageAndValueType(sortedMaterialPropertyVector, valueAsString, RendererRuntime::MaterialProperty::Usage::SAMPLER_STATE, RendererRuntime::MaterialPropertyValue::ValueType::FILTER_MODE);
 				if (nullptr != materialProperty)
 				{
 					value = materialProperty->getFilterMode();
@@ -426,7 +392,7 @@ namespace RendererToolkit
 			else
 			{
 				// Might be a material property reference, the called method automatically throws an exception if something looks odd
-				const RendererRuntime::MaterialProperty* materialProperty = ::detail::getMaterialPropertyOfUsageAndValueType(sortedMaterialPropertyVector, valueAsString, RendererRuntime::MaterialProperty::Usage::SAMPLER_STATE, RendererRuntime::MaterialPropertyValue::ValueType::TEXTURE_ADDRESS_MODE);
+				const RendererRuntime::MaterialProperty* materialProperty = JsonHelper::getMaterialPropertyOfUsageAndValueType(sortedMaterialPropertyVector, valueAsString, RendererRuntime::MaterialProperty::Usage::SAMPLER_STATE, RendererRuntime::MaterialPropertyValue::ValueType::TEXTURE_ADDRESS_MODE);
 				if (nullptr != materialProperty)
 				{
 					value = materialProperty->getTextureAddressModeValue();
@@ -463,7 +429,7 @@ namespace RendererToolkit
 			else
 			{
 				// Might be a material property reference, the called method automatically throws an exception if something looks odd
-				const RendererRuntime::MaterialProperty* materialProperty = ::detail::getMaterialPropertyOfUsageAndValueType(sortedMaterialPropertyVector, valueAsString, RendererRuntime::MaterialProperty::Usage::SAMPLER_STATE, RendererRuntime::MaterialPropertyValue::ValueType::COMPARISON_FUNC);
+				const RendererRuntime::MaterialProperty* materialProperty = JsonHelper::getMaterialPropertyOfUsageAndValueType(sortedMaterialPropertyVector, valueAsString, RendererRuntime::MaterialProperty::Usage::SAMPLER_STATE, RendererRuntime::MaterialPropertyValue::ValueType::COMPARISON_FUNC);
 				if (nullptr != materialProperty)
 				{
 					value = materialProperty->getComparisonFuncValue();

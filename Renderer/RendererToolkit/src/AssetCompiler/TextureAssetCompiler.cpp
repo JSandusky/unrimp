@@ -1168,6 +1168,9 @@ namespace
 					break;
 
 				case TextureSemantic::ALPHA_MAP:
+					// Those settings avoid the visual alpha test problems described at
+					// "The Witness - Explore an abandoned island." - "Computing Alpha Mipmaps" - http://the-witness.net/news/2010/09/computing-alpha-mipmaps/
+					// -> The topic is also mentioned at "Anti-aliased Alpha Test: The Esoteric Alpha To Coverage" - https://medium.com/@bgolus/anti-aliased-alpha-test-the-esoteric-alpha-to-coverage-8b177335ae4f
 					crunchConvertParams.m_comp_params.set_flag(cCRNCompFlagPerceptual, false);
 					crunchConvertParams.m_mipmap_params.m_gamma_filtering = false;
 					crunchConvertParams.m_mipmap_params.m_gamma = 1.0f;	// Mipmap gamma correction value, default=2.2, use 1.0 for linear

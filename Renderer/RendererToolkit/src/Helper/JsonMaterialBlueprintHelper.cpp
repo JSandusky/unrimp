@@ -847,7 +847,7 @@ namespace RendererToolkit
 			Renderer::BlendState& blendState = pipelineState.blendState;
 
 			// The optional properties
-			JsonHelper::optionalBooleanProperty(rapidJsonValueBlendState, "AlphaToCoverageEnable", blendState.alphaToCoverageEnable);
+			JsonHelper::optionalBooleanProperty(rapidJsonValueBlendState, "AlphaToCoverageEnable", blendState.alphaToCoverageEnable, RendererRuntime::MaterialProperty::Usage::BLEND_STATE, &sortedMaterialPropertyVector);
 			JsonHelper::optionalBooleanProperty(rapidJsonValueBlendState, "IndependentBlendEnable", blendState.independentBlendEnable);
 
 			// The optional render target properties

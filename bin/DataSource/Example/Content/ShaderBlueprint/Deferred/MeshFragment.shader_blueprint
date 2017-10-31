@@ -24,6 +24,7 @@
 @includepiece($ProjectName/ShaderPiece/Core.asset)
 	@insertpiece(SetCrossPlatformSettings)
 @includepiece($ProjectName/ShaderPiece/MotionBlur.asset)
+@includepiece($ProjectName/ShaderPiece/ComplexPixel.asset)
 
 
 //[-------------------------------------------------------]
@@ -100,14 +101,6 @@ MAIN_BEGIN
 	// Get the used material
 	Material material = Materials[MAIN_INPUT(AssignedMaterialSlotVS)];
 
-	// Perform alpha map based fragment rejection
-	@property(UseAlphaMap)
-		if (material.AlphaReference >= SAMPLE_2D(AlphaMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).r)
-		{
-			discard;
-		}
-	@end
-
 	// Read channel packed texture data
 	// -> "_argb_nxa" = RGB channel = Albedo map ("_a"-postfix), A channel = x component of normal map ("_n"-postfix)
 	// -> "_hr_rg_mb_nya" = R channel = Height map ("_h"-postfix), G channel = Roughness map ("_r"-postfix), B channel = Metallic map ("_m"-postfix), A channel = y component of normal map ("_n"-postfix)
@@ -146,9 +139,8 @@ MAIN_BEGIN
 		emissive = SAMPLE_2D(EmissiveMap, SamplerLinear, MAIN_INPUT(TexCoordVS)).rgb * material.EmissiveIntensity;
 	@end
 
-	// Complex pixel detection
-	// -> "Antialiased Deferred Rendering" - https://docs.nvidia.com/gameworks/content/gameworkslibrary/graphicssamples/d3d_samples/antialiaseddeferredrendering.htm
-	float edgePixel = (COVERAGE_MASK != PassData.FullCoverageMask) ? 1.0f : 0.0f;
+	// Complex pixel detection and alpha test using alpha to coverage
+	@insertpiece(PerformComplexPixelDetection)
 
 	// Calculate screen space velocity
 	@insertpiece(DefineCalculateScreenSpaceVelocity)

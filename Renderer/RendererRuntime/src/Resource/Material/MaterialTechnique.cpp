@@ -35,6 +35,31 @@
 
 
 //[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global definitions                                    ]
+		//[-------------------------------------------------------]
+		#define DEFINE_CONSTANT(name) static const RendererRuntime::StringId name(#name);
+			DEFINE_CONSTANT(CullMode)
+			DEFINE_CONSTANT(AlphaToCoverageEnable)
+		#undef DEFINE_CONSTANT
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -235,46 +260,55 @@ namespace RendererRuntime
 
 			// Apply material properties
 			// -> Renderer toolkit counterpart is "RendererToolkit::JsonMaterialBlueprintHelper::readPipelineStateObject()"
+			const MaterialProperties& materialBlueprintMaterialProperties = materialBlueprintResource->getMaterialProperties();
 			const MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector = getMaterialResource().getSortedPropertyVector();
 			const size_t numberOfMaterialProperties = sortedMaterialPropertyVector.size();
 			for (size_t i = 0; i < numberOfMaterialProperties; ++i)
 			{
+				// A material can have multiple material techniques, do only apply material properties which are known to the material blueprint resource
 				const MaterialProperty& materialProperty = sortedMaterialPropertyVector[i];
-				switch (materialProperty.getUsage())
+				if (nullptr != materialBlueprintMaterialProperties.getPropertyById(materialProperty.getMaterialPropertyId()))
 				{
-					case MaterialProperty::Usage::UNKNOWN:
-					case MaterialProperty::Usage::STATIC:
-					case MaterialProperty::Usage::SHADER_UNIFORM:
-					case MaterialProperty::Usage::SHADER_COMBINATION:
-						// Nothing here
-						break;
+					switch (materialProperty.getUsage())
+					{
+						case MaterialProperty::Usage::UNKNOWN:
+						case MaterialProperty::Usage::STATIC:
+						case MaterialProperty::Usage::SHADER_UNIFORM:
+						case MaterialProperty::Usage::SHADER_COMBINATION:
+							// Nothing here
+							break;
 
-					case MaterialProperty::Usage::RASTERIZER_STATE:
-						// TODO(co) Implement all rasterizer state properties
-						if (materialProperty.getValueType() == MaterialPropertyValue::ValueType::CULL_MODE)
-						{
-							serializedPipelineState.rasterizerState.cullMode = materialProperty.getCullModeValue();
-						}
-						break;
+						case MaterialProperty::Usage::RASTERIZER_STATE:
+							// TODO(co) Implement all rasterizer state properties
+							if (materialProperty.getMaterialPropertyId() == ::detail::CullMode)
+							{
+								serializedPipelineState.rasterizerState.cullMode = materialProperty.getCullModeValue();
+							}
+							break;
 
-					case MaterialProperty::Usage::DEPTH_STENCIL_STATE:
-						// TODO(co) Implement all depth stencil state properties
-						break;
+						case MaterialProperty::Usage::DEPTH_STENCIL_STATE:
+							// TODO(co) Implement all depth stencil state properties
+							break;
 
-					case MaterialProperty::Usage::BLEND_STATE:
-						// TODO(co) Implement all blend state properties
-						break;
+						case MaterialProperty::Usage::BLEND_STATE:
+							// TODO(co) Implement all blend state properties
+							if (materialProperty.getMaterialPropertyId() == ::detail::AlphaToCoverageEnable)
+							{
+								serializedPipelineState.blendState.alphaToCoverageEnable = materialProperty.getBooleanValue();
+							}
+							break;
 
-					case MaterialProperty::Usage::SAMPLER_STATE:
-					case MaterialProperty::Usage::TEXTURE_REFERENCE:
-					case MaterialProperty::Usage::GLOBAL_REFERENCE:
-					case MaterialProperty::Usage::UNKNOWN_REFERENCE:
-					case MaterialProperty::Usage::PASS_REFERENCE:
-					case MaterialProperty::Usage::MATERIAL_REFERENCE:
-					case MaterialProperty::Usage::INSTANCE_REFERENCE:
-					case MaterialProperty::Usage::GLOBAL_REFERENCE_FALLBACK:
-						// Nothing here
-						break;
+						case MaterialProperty::Usage::SAMPLER_STATE:
+						case MaterialProperty::Usage::TEXTURE_REFERENCE:
+						case MaterialProperty::Usage::GLOBAL_REFERENCE:
+						case MaterialProperty::Usage::UNKNOWN_REFERENCE:
+						case MaterialProperty::Usage::PASS_REFERENCE:
+						case MaterialProperty::Usage::MATERIAL_REFERENCE:
+						case MaterialProperty::Usage::INSTANCE_REFERENCE:
+						case MaterialProperty::Usage::GLOBAL_REFERENCE_FALLBACK:
+							// Nothing here
+							break;
+					}
 				}
 			}
 

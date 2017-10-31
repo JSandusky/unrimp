@@ -13,6 +13,7 @@
 			"_argb_nxa": "$ProjectName/Texture/Sponza/vase_plant_argb_nxa.asset",
 			"_hr_rg_mb_nya": "$ProjectName/Texture/Sponza/vase_plant_hr_rg_mb_nya.asset",
 			"UseAlphaMap": "TRUE",
+			"AlphaToCoverageEnable": "TRUE",
 			"AlphaMap": "$ProjectName/Texture/Sponza/vase_plant_mask.asset",
 			"AlphaReference": "0.2"
 		}

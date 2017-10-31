@@ -29,6 +29,8 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/AssetCompiler/IAssetCompiler.h"
 
+#include <RendererRuntime/Resource/Material/MaterialProperties.h>
+
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4668)	// warning C4668: '_M_HYBRID_X86_ARM64' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
@@ -71,8 +73,9 @@ namespace RendererToolkit
 	public:
 		static void loadDocumentByFilename(const RendererRuntime::IFileManager& fileManager, const std::string& virtualFilename, const std::string& formatType, const std::string& formatVersion, rapidjson::Document& rapidJsonDocument);
 		static void saveDocumentByFilename(const RendererRuntime::IFileManager& fileManager, const std::string& virtualFilename, const std::string& formatType, const std::string& formatVersion, rapidjson::Value& rapidJsonValue);
-		static void optionalBooleanProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, bool& value);
-		static void optionalBooleanProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, int& value);
+		static const RendererRuntime::MaterialProperty* getMaterialPropertyOfUsageAndValueType(const RendererRuntime::MaterialProperties::SortedPropertyVector* sortedMaterialPropertyVector, const std::string& valueAsString, RendererRuntime::MaterialProperty::Usage usage, RendererRuntime::MaterialPropertyValue::ValueType valueType);
+		static void optionalBooleanProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, bool& value, RendererRuntime::MaterialProperty::Usage usage = RendererRuntime::MaterialProperty::Usage::UNKNOWN, const RendererRuntime::MaterialProperties::SortedPropertyVector* sortedMaterialPropertyVector = nullptr);
+		static void optionalBooleanProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, int& value, RendererRuntime::MaterialProperty::Usage usage = RendererRuntime::MaterialProperty::Usage::UNKNOWN, const RendererRuntime::MaterialProperties::SortedPropertyVector* sortedMaterialPropertyVector = nullptr);
 		static void optionalByteProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, uint8_t& value);
 		static void optionalIntegerProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, int& value);
 		static void optionalIntegerProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, unsigned int& value);

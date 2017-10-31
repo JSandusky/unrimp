@@ -47,6 +47,15 @@ namespace OpenGLES3Renderer
 
 	void BlendState::setOpenGLES3BlendStates() const
 	{
+		if (mBlendState.alphaToCoverageEnable)
+		{
+			glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+		}
+		else
+		{
+			glDisable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+		}
+
 		if (mBlendState.renderTarget[0].blendEnable)
 		{
 			glEnable(GL_BLEND);
