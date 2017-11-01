@@ -54,6 +54,7 @@ OUTPUT_END
 struct PassDataStruct
 {
 	float2 InverseViewportSize;
+	float2 ContrastBrightness;
 	float  GlobalTimeInSeconds;
 };
 UNIFORM_BUFFER_BEGIN(0, 0, PassUniformBuffer, 0)
@@ -157,6 +158,6 @@ MAIN_BEGIN
 		@insertpiece(ApplyOldCrtEffect)
 	@end
 
-	// Done
-	MAIN_OUTPUT_COLOR(0) = color;
+	// Apply contrast and brightness to the final color, leave alpha value unchanged
+	MAIN_OUTPUT_COLOR(0) = float4(pow(abs(color.rgb), float3(PassData.ContrastBrightness.x, PassData.ContrastBrightness.x, PassData.ContrastBrightness.x)) * float3(PassData.ContrastBrightness.y, PassData.ContrastBrightness.y, PassData.ContrastBrightness.y), color.a);
 MAIN_END
