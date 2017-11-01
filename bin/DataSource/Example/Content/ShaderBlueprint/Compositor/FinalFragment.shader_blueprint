@@ -92,41 +92,48 @@ SAMPLER_STATE(2, 0, SamplerLinear, 0)
 MAIN_BEGIN
 	float4 color = float4(0.0f, 0.0f, 0.0f, 1.0f);
 
-	// Fast Approximate Anti-Aliasing (FXAA)
-	@property(Fxaa)
-		// Shader language dependent texture handling
-		@property(HLSL)
-			FxaaTex fxaaTex;
-			fxaaTex.smpl = SamplerLinear;
-			fxaaTex.tex = ColorMap;
-		@end
-		@property(GLSL || GLSLES)
-			#define fxaaTex ColorMap
-		@end
-
-		// Set values to calculate the amount of anti aliasing applied
-		color = FxaaPixelShader(
-			MAIN_INPUT(TexCoordVS),				// pos
-			float4(0.0f, 0.0f, 0.0f, 0.0f),		// fxaaConsolePosPos (?)
-			fxaaTex,							// tex
-			fxaaTex,							// fxaaConsole360TexExpBiasNegOne
-			fxaaTex,							// fxaaConsole360TexExpBiasNegTwo
-			float2(PassData.InverseViewportSize.x, PassData.InverseViewportSize.y),	// fxaaQualityRcpFrame
-			float4(0.0f, 0.0f, 0.0f, 0.0f),		// fxaaConsoleRcpFrameOpt
-			float4(0.0f, 0.0f, 0.0f, 0.0f),		// fxaaConsoleRcpFrameOpt2
-			float4(0.0f, 0.0f, 0.0f, 0.0f),		// fxaaConsole360RcpFrameOpt2
-			0.75f,								// fxaaQualitySubpix
-			0.166f,								// fxaaQualityEdgeThreshold
-			0.0833f,							// fxaaQualityEdgeThresholdMin
-			0.0f,								// fxaaConsoleEdgeSharpness
-			0.0f,								// fxaaConsoleEdgeThreshold
-			0.0f,								// fxaaConsoleEdgeThresholdMin
-			float4(0.0f, 0.0f, 0.0f, 0.0f)		// fxaaConsole360ConstDir
-		);
-		color.w = 1.0f;
+	// Old CRT effect
+	// -> This effect needs to gather multiple color map samples, meaning FXAA will have no effect (no problem, image quality is trashed down anyway :)
+	@property(OldCrtEffect)
+		@insertpiece(ApplyOldCrtEffect)
 	@end
-	@property(!Fxaa)
-		color = SAMPLE_2D_LOD(ColorMap, SamplerLinear, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f));
+	@property(!OldCrtEffect)
+		// Fast Approximate Anti-Aliasing (FXAA)
+		@property(Fxaa)
+			// Shader language dependent texture handling
+			@property(HLSL)
+				FxaaTex fxaaTex;
+				fxaaTex.smpl = SamplerLinear;
+				fxaaTex.tex = ColorMap;
+			@end
+			@property(GLSL || GLSLES)
+				#define fxaaTex ColorMap
+			@end
+
+			// Set values to calculate the amount of anti aliasing applied
+			color = FxaaPixelShader(
+				MAIN_INPUT(TexCoordVS),				// pos
+				float4(0.0f, 0.0f, 0.0f, 0.0f),		// fxaaConsolePosPos (?)
+				fxaaTex,							// tex
+				fxaaTex,							// fxaaConsole360TexExpBiasNegOne
+				fxaaTex,							// fxaaConsole360TexExpBiasNegTwo
+				float2(PassData.InverseViewportSize.x, PassData.InverseViewportSize.y),	// fxaaQualityRcpFrame
+				float4(0.0f, 0.0f, 0.0f, 0.0f),		// fxaaConsoleRcpFrameOpt
+				float4(0.0f, 0.0f, 0.0f, 0.0f),		// fxaaConsoleRcpFrameOpt2
+				float4(0.0f, 0.0f, 0.0f, 0.0f),		// fxaaConsole360RcpFrameOpt2
+				0.75f,								// fxaaQualitySubpix
+				0.166f,								// fxaaQualityEdgeThreshold
+				0.0833f,							// fxaaQualityEdgeThresholdMin
+				0.0f,								// fxaaConsoleEdgeSharpness
+				0.0f,								// fxaaConsoleEdgeThreshold
+				0.0f,								// fxaaConsoleEdgeThresholdMin
+				float4(0.0f, 0.0f, 0.0f, 0.0f)		// fxaaConsole360ConstDir
+			);
+			color.w = 1.0f;
+		@end
+		@property(!Fxaa)
+			color = SAMPLE_2D_LOD(ColorMap, SamplerLinear, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f));
+		@end
 	@end
 
 	// Apply film grain
@@ -152,11 +159,6 @@ MAIN_BEGIN
 		float3 LUT_OFFSET = 1.0f / (2.0f * LUT_SIZE);
 		color.rgb = SAMPLE_3D_LOD(ColorCorrectionLookupTableMap, SamplerLinear, float4(color.rgb + LUT_OFFSET, 0.0f)).rgb;
 	}
-
-	// Old CRT effect
-	@property(OldCrtEffect)
-		@insertpiece(ApplyOldCrtEffect)
-	@end
 
 	// Apply contrast and brightness to the final color, leave alpha value unchanged
 	MAIN_OUTPUT_COLOR(0) = float4(pow(abs(color.rgb), float3(PassData.ContrastBrightness.x, PassData.ContrastBrightness.x, PassData.ContrastBrightness.x)) * float3(PassData.ContrastBrightness.y, PassData.ContrastBrightness.y, PassData.ContrastBrightness.y), color.a);
