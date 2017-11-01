@@ -82,7 +82,6 @@ float3 ToneMapFilmicAlu(float3 color)
 // Apply exposure and tone mapping to the specific color, apply the threshold to the exposure value
 float3 ToneMap(float3 color, float averageLuminance, float threshold, out float exposure)
 {
-	float pixelLuminance = ColorToLuminance(color);
 	color = CalculateExposedColor(color, averageLuminance, threshold, exposure);
 	color = ToneMapFilmicAlu(color);
 	return color;
