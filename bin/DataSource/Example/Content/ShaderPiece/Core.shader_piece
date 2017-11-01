@@ -72,7 +72,7 @@
 		#define ROW_MATRIX_3x3(r0, r1, r2) float3x3(r0, r1, r2)
 		#define ROW_MATRIX_4x4(r0, r1, r2, r3) float4x4(r0, r1, r2, r3)
 		#define MATRIX_MUL(m, v) mul(m, v)
-		#define CAST_TO(a, b) (b)(a)
+		#define CAST_TO(a, b) ((b)(a))
 		#define DDX(x) ddx(x)
 		#define DDY(x) ddy(x)
 

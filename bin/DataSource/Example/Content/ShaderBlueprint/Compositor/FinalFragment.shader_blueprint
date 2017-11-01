@@ -82,6 +82,13 @@ float3 ScreenSpaceDither(float2 screenPosition)
 	return (dither.rgb / 255.0f) * 0.375f;
 }
 
+@property(OldCrtEffect)
+	@includepiece($ProjectName/ShaderPiece/Noise2D.asset)
+		@insertpiece(DefineNoise2D)
+	@includepiece($ProjectName/ShaderPiece/OldCrtEffect.asset)
+		@insertpiece(DefineOldCrtEffect)
+@end
+
 
 //[-------------------------------------------------------]
 //[ Main                                                  ]
@@ -141,7 +148,12 @@ MAIN_BEGIN
 		float3 LUT_OFFSET = 1.0f / (2.0f * LUT_SIZE);
 		color.rgb = SAMPLE_3D_LOD(ColorCorrectionLookupTableMap, SamplerLinear, float4(color.rgb + LUT_OFFSET, 0.0f)).rgb;
 	}
-	
+
+	// Old CRT effect
+	@property(OldCrtEffect)
+		@insertpiece(ApplyOldCrtEffect)
+	@end
+
 	// Done
 	MAIN_OUTPUT_COLOR(0) = color;
 MAIN_END

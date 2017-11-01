@@ -98,6 +98,7 @@ FirstScene::FirstScene() :
 	mNumberOfTopTextureMipmapsToRemove(0),
 	mPerformFxaa(false),
 	mPerformSepiaColorCorrection(false),
+	mPerformOldCrtEffect(false),
 	mDepthOfFieldBlurrinessCutoff(0.0f),
 	mRotationSpeed(0.0f),
 	mShowSkeleton(false),
@@ -467,6 +468,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				ImGui::SliderInt("Mipmaps to Remove", &mNumberOfTopTextureMipmapsToRemove, 0, 8);
 				ImGui::Checkbox("Perform FXAA", &mPerformFxaa);
 				ImGui::Checkbox("Perform Sepia Color Correction", &mPerformSepiaColorCorrection);
+				ImGui::Checkbox("Perform Old CRT Effect", &mPerformOldCrtEffect);
 				ImGui::SliderFloat("Depth of Field", &mDepthOfFieldBlurrinessCutoff, 0.0f, 1.0f, "%.3f");
 
 				// Scene
@@ -585,6 +587,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				static const RendererRuntime::AssetId SEPIA_TEXTURE_ASSET_ID("Example/Texture/Compositor/SepiaColorCorrectionLookupTable16x1");
 				materialResource->setPropertyById("ColorCorrectionLookupTableMap", RendererRuntime::MaterialPropertyValue::fromTextureAssetId(mPerformSepiaColorCorrection ? SEPIA_TEXTURE_ASSET_ID : IDENTITY_TEXTURE_ASSET_ID));
 				materialResource->setPropertyById("Fxaa", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformFxaa));
+				materialResource->setPropertyById("OldCrtEffect", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformOldCrtEffect));
 			}
 
 			// Imrod material clone
