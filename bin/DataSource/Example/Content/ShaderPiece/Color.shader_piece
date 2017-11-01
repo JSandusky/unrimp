@@ -50,6 +50,44 @@
 	}
 @end
 
+@piece(DefineFilmGrain)
+	// The implementation is basing on https://github.com/thefranke/dirtchamber/blob/master/shader/pp_film_grain.hlsl
+	float3 ApplyFilmGrain(float3 color, float2 uv, float intensity)
+	{
+		// Calculate the grain
+		float grain = 0.0f;
+		{
+			float l = ColorToLuminance(color);
+
+			// Add noise
+			float x = uv.x * uv.y * PassData.GlobalTimeInSeconds *  1000.0f;
+			x = fmod(x, 13.0f) * fmod(x, 123.0f);
+			float dx = fmod(x, 0.01f);
+			float y = clamp(0.1f + dx * 100.0f, 0.0f, 1.0f) * intensity;
+			float r = 0.5f * intensity - y;
+
+			grain = 1.0f + r;
+		}
+
+		// Done
+		return color * grain;
+	}
+@end
+
+@piece(DefineScreenSpaceDither)
+	// Iestyn's RGB dither (7 asm instructions) from Portal2 X360, slightly modified for VR
+	// -> See "Iestyn's RGB dither" - https://www.shadertoy.com/view/MtBGDD
+	// -> See "Advanced VR Rendering" - http://media.steampowered.com/apps/valve/2015/Alex_Vlachos_Advanced_VR_Rendering_GDC2015.pdf - page 49
+	// -> "Valve's screen space dither" https://www.shadertoy.com/view/4dcSRX - shows the effect nicely
+	float3 ScreenSpaceDither(float2 screenPosition)
+	{
+		float ditherFactor = dot(float2(171.0f, 231.0f), screenPosition.xy + PassData.GlobalTimeInSeconds);
+		float3 dither = float3(ditherFactor, ditherFactor, ditherFactor);
+		dither.rgb = frac(dither.rgb / float3(103.0f, 71.0f, 97.0f)) - float3(0.5f, 0.5f, 0.5f);
+		return (dither.rgb / 255.0f) * 0.375f;
+	}
+@end
+
 // Fog
 @piece(DefineCalculateFoggedColor)
 	float3 CalculateFoggedColor(float3 viewSpacePosition, float3 color)

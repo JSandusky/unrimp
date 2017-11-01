@@ -174,23 +174,28 @@ private:
 	RendererRuntime::SceneNode*				mSceneNode;
 	// States for runtime-editing
 	RendererRuntime::DebugGuiHelper::GizmoSettings mGizmoSettings;
-	// States for runtime-fun
+	// Global
 	Compositor mInstancedCompositor;
 	int		   mCurrentCompositor;
+	bool	   mHighQualityLighting;
 	int		   mCurrentMsaa;
 	float	   mResolutionScale;
 	int		   mCurrentTextureFiltering;
 	int		   mNumberOfTopTextureMipmapsToRemove;
+	// Environment
+	float	   mWetness;
+	// Post processing
 	bool	   mPerformFxaa;
 	bool	   mPerformSepiaColorCorrection;
+	bool	   mPerformFilmGrain;
 	bool	   mPerformOldCrtEffect;
 	float	   mDepthOfFieldBlurrinessCutoff;
-	float	   mRotationSpeed;
-	bool	   mShowSkeleton;
-	bool	   mHighQualityLighting;
-	float	   mWetness;
+	// Selected material properties
 	bool	   mUseEmissiveMap;
 	float	   mAlbedoColor[3];
+	// Selected scene item
+	float	   mRotationSpeed;
+	bool	   mShowSkeleton;
 	// Scene hot-reloading memory
 	bool					   mHasCameraTransformBackup;
 	RendererRuntime::Transform mCameraTransformBackup;

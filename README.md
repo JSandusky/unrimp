@@ -190,6 +190,7 @@ Examples (just some high level keywords)
 - Depth of field
 - GPU skinning
 - Motion blur
+- Film grain
 - [RGB dither](http://media.steampowered.com/apps/valve/2015/Alex_Vlachos_Advanced_VR_Rendering_GDC2015.pdf)
 - Depth fog
 

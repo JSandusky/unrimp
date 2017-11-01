@@ -299,6 +299,7 @@
 		#define rsqrt(x) inversesqrt(x)
 		#define frac(x) fract(x)
 		#define rcp(x) (1.0f / x)
+		#define fmod(x, y) (x - y * trunc(x / y))
 
 		// HLSL bit functions
 		#define firstbitlow(x) findLSB(x)
@@ -437,6 +438,7 @@
 		#define rsqrt(x) inversesqrt(x)
 		#define frac(x) fract(x)
 		#define rcp(x) (1.0f / x)
+		#define fmod(x, y) (x - y * trunc(x / y))
 
 		// HLSL bit functions
 		#define firstbitlow(x) findLSB(x)

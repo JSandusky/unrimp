@@ -89,23 +89,28 @@ FirstScene::FirstScene() :
 	mSunlightSceneItem(nullptr),
 	mSkeletonMeshSceneItem(nullptr),
 	mSceneNode(nullptr),
-	// States for runtime-fun
+	// Global
 	mInstancedCompositor(Compositor::FORWARD),
 	mCurrentCompositor(mInstancedCompositor),
+	mHighQualityLighting(true),
 	mCurrentMsaa(Msaa::FOUR),
 	mResolutionScale(1.0f),
 	mCurrentTextureFiltering(TextureFiltering::ANISOTROPIC_4),
 	mNumberOfTopTextureMipmapsToRemove(0),
+	// Environment
+	mWetness(0.0f),
+	// Post processing
 	mPerformFxaa(false),
 	mPerformSepiaColorCorrection(false),
+	mPerformFilmGrain(false),
 	mPerformOldCrtEffect(false),
 	mDepthOfFieldBlurrinessCutoff(0.0f),
-	mRotationSpeed(0.0f),
-	mShowSkeleton(false),
-	mHighQualityLighting(true),
-	mWetness(0.0f),
+	// Selected material properties
 	mUseEmissiveMap(true),
 	mAlbedoColor{1.0f, 1.0f, 1.0f},
+	// Selected scene item
+	mRotationSpeed(0.0f),
+	mShowSkeleton(false),
 	// Scene hot-reloading memory
 	mHasCameraTransformBackup(false)
 {
@@ -447,52 +452,70 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 			// Setup GUI
 			rendererRuntime->getDebugGuiManager().newFrame(nullptr != compositorInstancePass->getRenderTarget() ? *compositorInstancePass->getRenderTarget() : mainRenderTarget);
 			ImGui::Begin("Options");
-				// Compositing
+				// Global
+				if (ImGui::BeginMenu("Global"))
 				{
-					const char* items[] = { "Debug", "Forward", "Deferred", "VR" };
-					ImGui::Combo("Compositor", &mCurrentCompositor, items, static_cast<int>(glm::countof(items)));
-				}
-				{
-					const Renderer::Capabilities& capabilities = rendererRuntime->getRenderer().getCapabilities();
-					if (capabilities.maximumNumberOfMultisamples > 1)
 					{
-						const char* items[] = { "None", "2x", "4x", "8x" };
-						ImGui::Combo("MSAA", &mCurrentMsaa, items, static_cast<int>(glm::countof(items)));
+						const char* items[] = { "Debug", "Forward", "Deferred", "VR" };
+						ImGui::Combo("Compositor", &mCurrentCompositor, items, static_cast<int>(glm::countof(items)));
 					}
+					ImGui::Checkbox("High Quality Lighting", &mHighQualityLighting);
+					{
+						const Renderer::Capabilities& capabilities = rendererRuntime->getRenderer().getCapabilities();
+						if (capabilities.maximumNumberOfMultisamples > 1)
+						{
+							const char* items[] = { "None", "2x", "4x", "8x" };
+							ImGui::Combo("MSAA", &mCurrentMsaa, items, static_cast<int>(glm::countof(items)));
+						}
+					}
+					ImGui::SliderFloat("Resolution Scale", &mResolutionScale, 0.05f, 4.0f, "%.3f");
+					{
+						const char* items[] = { "Point", "Bilinear", "Trilinear", "2x Anisotropic", "4x Anisotropic", "8x Anisotropic", "16x Anisotropic" };
+						ImGui::Combo("Texture filtering", &mCurrentTextureFiltering, items, static_cast<int>(glm::countof(items)));
+					}
+					ImGui::SliderInt("Mipmaps to Remove", &mNumberOfTopTextureMipmapsToRemove, 0, 8);
+					ImGui::EndMenu();
 				}
-				ImGui::SliderFloat("Resolution Scale", &mResolutionScale, 0.05f, 4.0f, "%.3f");
+
+				// Environment
+				if (ImGui::BeginMenu("Environment"))
 				{
-					const char* items[] = { "Point", "Bilinear", "Trilinear", "2x Anisotropic", "4x Anisotropic", "8x Anisotropic", "16x Anisotropic" };
-					ImGui::Combo("Texture filtering", &mCurrentTextureFiltering, items, static_cast<int>(glm::countof(items)));
+					if (nullptr != mSunlightSceneItem)
+					{
+						float timeOfDay = mSunlightSceneItem->getTimeOfDay();
+						ImGui::SliderFloat("Time of Day", &timeOfDay, 0.0f, 23.59f, "%.2f");
+						mSunlightSceneItem->setTimeOfDay(timeOfDay);
+					}
+					ImGui::SliderFloat("Wetness", &mWetness, 0.0f, 2.0f, "%.3f");
+					ImGui::EndMenu();
 				}
-				ImGui::SliderInt("Mipmaps to Remove", &mNumberOfTopTextureMipmapsToRemove, 0, 8);
-				ImGui::Checkbox("Perform FXAA", &mPerformFxaa);
-				ImGui::Checkbox("Perform Sepia Color Correction", &mPerformSepiaColorCorrection);
-				ImGui::Checkbox("Perform Old CRT Effect", &mPerformOldCrtEffect);
-				ImGui::SliderFloat("Depth of Field", &mDepthOfFieldBlurrinessCutoff, 0.0f, 1.0f, "%.3f");
 
-				// Scene
-				ImGui::Separator();
-				ImGui::SliderFloat("Rotation Speed", &mRotationSpeed, 0.0f, 2.0f, "%.3f");
-				ImGui::Checkbox("Show Skeleton", &mShowSkeleton);
-
-				// Global material properties
-				ImGui::Separator();
-				ImGui::Checkbox("High Quality Lighting", &mHighQualityLighting);
-				if (nullptr != mSunlightSceneItem)
+				// Post processing
+				if (ImGui::BeginMenu("Post Processing"))
 				{
-					float timeOfDay = mSunlightSceneItem->getTimeOfDay();
-					ImGui::SliderFloat("Time of Day", &timeOfDay, 0.0f, 23.59f, "%.2f");
-					mSunlightSceneItem->setTimeOfDay(timeOfDay);
+					ImGui::Checkbox("Perform FXAA", &mPerformFxaa);
+					ImGui::Checkbox("Perform Sepia Color Correction", &mPerformSepiaColorCorrection);
+					ImGui::Checkbox("Perform Film Grain Effect", &mPerformFilmGrain);
+					ImGui::Checkbox("Perform Old CRT Effect", &mPerformOldCrtEffect);
+					ImGui::SliderFloat("Depth of Field", &mDepthOfFieldBlurrinessCutoff, 0.0f, 1.0f, "%.3f");
+					ImGui::EndMenu();
 				}
-				ImGui::SliderFloat("Wetness", &mWetness, 0.0f, 2.0f, "%.3f");
 
-				// Material properties
-				ImGui::Separator();
-				ImGui::Checkbox("Use Emissive Map", &mUseEmissiveMap);
-				ImGui::ColorEdit3("Albedo Color", mAlbedoColor);
+				// Selected material properties
+				if (ImGui::BeginMenu("Selected Material"))
+				{
+					ImGui::Checkbox("Use Emissive Map", &mUseEmissiveMap);
+					ImGui::ColorEdit3("Albedo Color", mAlbedoColor);
+					ImGui::EndMenu();
+				}
 
-				// Scene visualizations
+				// Selected scene item
+				if (ImGui::BeginMenu("Selected Scene Item"))
+				{
+					ImGui::SliderFloat("Rotation Speed", &mRotationSpeed, 0.0f, 2.0f, "%.3f");
+					ImGui::Checkbox("Show Skeleton", &mShowSkeleton);
+					ImGui::EndMenu();
+				}
 				if (nullptr != mCameraSceneItem)
 				{
 					// Draw skeleton
@@ -587,6 +610,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				static const RendererRuntime::AssetId SEPIA_TEXTURE_ASSET_ID("Example/Texture/Compositor/SepiaColorCorrectionLookupTable16x1");
 				materialResource->setPropertyById("ColorCorrectionLookupTableMap", RendererRuntime::MaterialPropertyValue::fromTextureAssetId(mPerformSepiaColorCorrection ? SEPIA_TEXTURE_ASSET_ID : IDENTITY_TEXTURE_ASSET_ID));
 				materialResource->setPropertyById("Fxaa", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformFxaa));
+				materialResource->setPropertyById("FilmGrain", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformFilmGrain));
 				materialResource->setPropertyById("OldCrtEffect", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformOldCrtEffect));
 			}
 

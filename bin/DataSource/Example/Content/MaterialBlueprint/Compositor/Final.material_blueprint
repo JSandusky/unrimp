@@ -16,6 +16,14 @@
 				"Description": "Enable Fast Approximate Anti-Aliasing (FXAA)?",
 				"VisualImportance": "100"
 			},
+			"FilmGrain":
+			{
+				"Usage": "SHADER_COMBINATION",
+				"ValueType": "BOOLEAN",
+				"Value": "FALSE",
+				"Description": "Enable film grain effect?",
+				"VisualImportance": "100"
+			},
 			"OldCrtEffect":
 			{
 				"Usage": "SHADER_COMBINATION",
