@@ -8,12 +8,55 @@
 	{
 		"Properties":
 		{
+			"ColorMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
+				"Description": "2D color map"
+			},
 			"Fxaa":
 			{
 				"Usage": "SHADER_COMBINATION",
 				"ValueType": "BOOLEAN",
 				"Value": "FALSE",
 				"Description": "Enable Fast Approximate Anti-Aliasing (FXAA)?",
+				"VisualImportance": "100"
+			},
+			"ChromaticAberration":
+			{
+				"Usage": "SHADER_COMBINATION",
+				"ValueType": "BOOLEAN",
+				"Value": "FALSE",
+				"Description": "Enable chromatic aberration effect?",
+				"VisualImportance": "100"
+			},
+			"ChromaticAberrationMaximumDistort":
+			{
+				"Usage": "SHADER_UNIFORM",
+				"ValueType": "FLOAT",
+				"Value": "0.1",
+				"MinimumValue": "0.0",
+				"MaximumValue": "2.0",
+				"StepSize": "0.01",
+				"Description": "Chromatic aberration maximum distort"
+			},
+			"ChromaticAberrationIterations":
+			{
+				"Usage": "SHADER_UNIFORM",
+				"ValueType": "INTEGER",
+				"Value": "4",
+				"MinimumValue": "1",
+				"MaximumValue": "16",
+				"StepSize": "1",
+				"Description": "Number of chromatic aberration iterations"
+			},
+			"OldCrtEffect":
+			{
+				"Usage": "SHADER_COMBINATION",
+				"ValueType": "BOOLEAN",
+				"Value": "FALSE",
+				"Description": "Enable old CRT effect?",
 				"VisualImportance": "100"
 			},
 			"FilmGrain":
@@ -24,20 +67,15 @@
 				"Description": "Enable film grain effect?",
 				"VisualImportance": "100"
 			},
-			"OldCrtEffect":
+			"FilmGrainIntensity":
 			{
-				"Usage": "SHADER_COMBINATION",
-				"ValueType": "BOOLEAN",
-				"Value": "FALSE",
-				"Description": "Enable old CRT effect?",
-				"VisualImportance": "100"
-			},
-			"ColorMap":
-			{
-				"Usage": "TEXTURE_REFERENCE",
-				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
-				"Description": "2D color map"
+				"Usage": "SHADER_UNIFORM",
+				"ValueType": "FLOAT",
+				"Value": "0.1",
+				"MinimumValue": "0.0",
+				"MaximumValue": "2.0",
+				"StepSize": "0.01",
+				"Description": "Film grain intensity"
 			},
 			"ColorCorrectionLookupTableMap":
 			{
@@ -100,6 +138,24 @@
 							"Usage": "MATERIAL_REFERENCE",
 							"ValueType": "FLOAT_2",
 							"Value": "@ContrastBrightness"
+						},
+						"FilmGrainIntensity":
+						{
+							"Usage": "MATERIAL_REFERENCE",
+							"ValueType": "FLOAT",
+							"Value": "@FilmGrainIntensity"
+						},
+						"ChromaticAberrationMaximumDistort":
+						{
+							"Usage": "MATERIAL_REFERENCE",
+							"ValueType": "FLOAT",
+							"Value": "@ChromaticAberrationMaximumDistort"
+						},
+						"ChromaticAberrationIterations":
+						{
+							"Usage": "MATERIAL_REFERENCE",
+							"ValueType": "INTEGER",
+							"Value": "@ChromaticAberrationIterations"
 						},
 						"GlobalTimeInSeconds":
 						{

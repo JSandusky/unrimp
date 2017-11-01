@@ -186,9 +186,10 @@ private:
 	float	   mWetness;
 	// Post processing
 	bool	   mPerformFxaa;
-	bool	   mPerformSepiaColorCorrection;
-	bool	   mPerformFilmGrain;
+	bool	   mPerformChromaticAberration;
 	bool	   mPerformOldCrtEffect;
+	bool	   mPerformFilmGrain;
+	bool	   mPerformSepiaColorCorrection;
 	float	   mDepthOfFieldBlurrinessCutoff;
 	// Selected material properties
 	bool	   mUseEmissiveMap;

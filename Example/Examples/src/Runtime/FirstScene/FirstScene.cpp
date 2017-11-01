@@ -101,9 +101,10 @@ FirstScene::FirstScene() :
 	mWetness(0.0f),
 	// Post processing
 	mPerformFxaa(false),
-	mPerformSepiaColorCorrection(false),
-	mPerformFilmGrain(false),
+	mPerformChromaticAberration(false),
 	mPerformOldCrtEffect(false),
+	mPerformFilmGrain(false),
+	mPerformSepiaColorCorrection(false),
 	mDepthOfFieldBlurrinessCutoff(0.0f),
 	// Selected material properties
 	mUseEmissiveMap(true),
@@ -493,10 +494,11 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				// Post processing
 				if (ImGui::BeginMenu("Post Processing"))
 				{
-					ImGui::Checkbox("Perform FXAA", &mPerformFxaa);
-					ImGui::Checkbox("Perform Sepia Color Correction", &mPerformSepiaColorCorrection);
-					ImGui::Checkbox("Perform Film Grain Effect", &mPerformFilmGrain);
-					ImGui::Checkbox("Perform Old CRT Effect", &mPerformOldCrtEffect);
+					ImGui::Checkbox("FXAA", &mPerformFxaa);
+					ImGui::Checkbox("Chromatic Aberration", &mPerformChromaticAberration);
+					ImGui::Checkbox("Old CRT", &mPerformOldCrtEffect);
+					ImGui::Checkbox("Film Grain", &mPerformFilmGrain);
+					ImGui::Checkbox("Sepia Color Correction", &mPerformSepiaColorCorrection);
 					ImGui::SliderFloat("Depth of Field", &mDepthOfFieldBlurrinessCutoff, 0.0f, 1.0f, "%.3f");
 					ImGui::EndMenu();
 				}
@@ -610,8 +612,9 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				static const RendererRuntime::AssetId SEPIA_TEXTURE_ASSET_ID("Example/Texture/Compositor/SepiaColorCorrectionLookupTable16x1");
 				materialResource->setPropertyById("ColorCorrectionLookupTableMap", RendererRuntime::MaterialPropertyValue::fromTextureAssetId(mPerformSepiaColorCorrection ? SEPIA_TEXTURE_ASSET_ID : IDENTITY_TEXTURE_ASSET_ID));
 				materialResource->setPropertyById("Fxaa", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformFxaa));
-				materialResource->setPropertyById("FilmGrain", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformFilmGrain));
+				materialResource->setPropertyById("ChromaticAberration", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformChromaticAberration));
 				materialResource->setPropertyById("OldCrtEffect", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformOldCrtEffect));
+				materialResource->setPropertyById("FilmGrain", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformFilmGrain));
 			}
 
 			// Imrod material clone

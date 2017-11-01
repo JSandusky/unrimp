@@ -24,7 +24,7 @@
 @includepiece($ProjectName/ShaderPiece/Core.asset)
 	@insertpiece(SetCrossPlatformSettings)
 @includepiece($ProjectName/ShaderPiece/Color.asset)
-@includepiece($ProjectName/ShaderPiece/Fxaa.asset) 
+@includepiece($ProjectName/ShaderPiece/Fxaa.asset)
 	@property(Fxaa)
 		#define FXAA_PC				 1
 		@property(HLSL)
@@ -55,6 +55,9 @@ struct PassDataStruct
 {
 	float2 InverseViewportSize;
 	float2 ContrastBrightness;
+	float  FilmGrainIntensity;
+	float  ChromaticAberrationMaximumDistort;
+	int    ChromaticAberrationIterations;
 	float  GlobalTimeInSeconds;
 };
 UNIFORM_BUFFER_BEGIN(0, 0, PassUniformBuffer, 0)
@@ -77,12 +80,17 @@ SAMPLER_STATE(2, 0, SamplerLinear, 0)
 	@insertpiece(DefineFilmGrain)
 @end
 @insertpiece(DefineScreenSpaceDither)
+@insertpiece(DefineGetBayerScreenSpaceDitherValue)
 
 @property(OldCrtEffect)
 	@includepiece($ProjectName/ShaderPiece/Noise2D.asset)
 		@insertpiece(DefineNoise2D)
 	@includepiece($ProjectName/ShaderPiece/OldCrtEffect.asset)
 		@insertpiece(DefineOldCrtEffect)
+@end
+
+@property(ChromaticAberration)
+	@insertpiece(DefineChromaticAberrationEffect)
 @end
 
 
@@ -134,14 +142,16 @@ MAIN_BEGIN
 		@property(!Fxaa)
 			color = SAMPLE_2D_LOD(ColorMap, SamplerLinear, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f));
 		@end
+
+		// Chromatic aberration
+		@property(ChromaticAberration)
+			@insertpiece(ApplyChromaticAberration)
+		@end
 	@end
 
 	// Apply film grain
 	@property(FilmGrain)
-	{
-		const float FILM_GRAIN_INTENSITY = 0.1f;
-		color.rgb = ApplyFilmGrain(color.rgb, MAIN_INPUT(TexCoordVS), FILM_GRAIN_INTENSITY);
-	}
+		color.rgb = ApplyFilmGrain(color.rgb, MAIN_INPUT(TexCoordVS), PassData.FilmGrainIntensity);
 	@end
 
 	// Apply screen space dither
