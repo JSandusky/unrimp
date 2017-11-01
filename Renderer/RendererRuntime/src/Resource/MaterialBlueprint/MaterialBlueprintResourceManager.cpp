@@ -253,13 +253,30 @@ namespace RendererRuntime
 					MaterialBufferManager* materialBufferManager = materialBlueprintResource.mMaterialBufferManager;
 					const MaterialResourceManager& materialResourceManager = mRendererRuntime.getMaterialResourceManager();
 					const uint32_t numberOfMaterials = materialResourceManager.getNumberOfResources();
+
+					// Loop through all materials
 					for (uint32_t materialIndex = 0; materialIndex < numberOfMaterials; ++materialIndex)
 					{
-						for (MaterialTechnique* materialTechnique : materialResourceManager.getByIndex(materialIndex).getSortedMaterialTechniqueVector())
+						// Loop through all material techniques of the current material
+						MaterialResource& materialResource = materialResourceManager.getByIndex(materialIndex);
+						for (MaterialTechnique* materialTechnique : materialResource.getSortedMaterialTechniqueVector())
 						{
 							if (materialTechnique->getMaterialBlueprintResourceId() == materialBlueprintResource.getId())
 							{
 								materialTechnique->makeTextureResourceGroupDirty();
+								for (const MaterialProperty& materialProperty : materialResource.getSortedPropertyVector())
+								{
+									// Update material property values as long as a material property was not explicitly overwritten inside a material
+									if (!materialProperty.isOverwritten())
+									{
+										const MaterialPropertyId materialPropertyId = materialProperty.getMaterialPropertyId();
+										const MaterialProperty* blueprintMaterialProperty = materialBlueprintResource.getMaterialProperties().getPropertyById(materialPropertyId);
+										if (nullptr != blueprintMaterialProperty)
+										{
+											materialResource.setPropertyByIdInternal(materialPropertyId, *blueprintMaterialProperty, materialProperty.getUsage(), false);
+										}
+									}
+								}
 								if (nullptr != materialBufferManager)
 								{
 									materialBufferManager->requestSlot(*materialTechnique);

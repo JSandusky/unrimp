@@ -75,6 +75,7 @@ namespace RendererRuntime
 		friend class Renderable;																			// Must be able to attach/detach itself from the material resource
 		friend class MaterialResourceLoader;
 		friend class MaterialResourceManager;
+		friend class MaterialBlueprintResourceManager;
 		friend ResourceManagerTemplate<MaterialResource, MaterialResourceLoader, MaterialResourceId, 4096>;	// Type definition of template class
 		friend PackedElementManager<MaterialResource, MaterialResourceId, 4096>;							// Type definition of template class
 
