@@ -498,13 +498,17 @@ namespace RendererRuntime
 				uint32_t height = mHeight;
 				uint32_t depth = mDepth;
 				mNumberOfUsedImageDataBytes = 0;
-				while (width > 1 && height > 1 && depth > 1)
+				if (numberOfMipmaps > 1)
 				{
-					mNumberOfUsedImageDataBytes += Renderer::TextureFormat::getNumberOfBytesPerSlice(static_cast<Renderer::TextureFormat::Enum>(mTextureFormat), width, height) * depth;
+					// Take mipmaps into account
+					while (width > 1 && height > 1 && depth > 1)
+					{
+						mNumberOfUsedImageDataBytes += Renderer::TextureFormat::getNumberOfBytesPerSlice(static_cast<Renderer::TextureFormat::Enum>(mTextureFormat), width, height) * depth;
 
-					width /= 2;
-					height /= 2;
-					depth /= 2;
+						width /= 2;
+						height /= 2;
+						depth /= 2;
+					}
 				}
 				mNumberOfUsedImageDataBytes += Renderer::TextureFormat::getNumberOfBytesPerSlice(static_cast<Renderer::TextureFormat::Enum>(mTextureFormat), width, height) * depth;
 
