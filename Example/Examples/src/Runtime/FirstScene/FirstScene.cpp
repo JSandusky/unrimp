@@ -284,6 +284,14 @@ void FirstScene::onUpdate()
 		{
 			mHasCameraTransformBackup = true;
 			mCameraTransformBackup = mCameraSceneItem->getParentSceneNodeSafe().getGlobalTransform();
+			{ // Backup camera position and rotation for a following session
+				RendererRuntime::DebugGuiManager& debugGuiManager = mCompositorWorkspaceInstance->getRendererRuntime().getDebugGuiManager();
+				{
+					const float value[4] = { mCameraTransformBackup.position.x, mCameraTransformBackup.position.y, mCameraTransformBackup.position.z, 0.0f };
+					debugGuiManager.setIniSetting("CameraPosition", value);
+				}
+				debugGuiManager.setIniSetting("CameraRotation", glm::value_ptr(mCameraTransformBackup.rotation));
+			}
 		}
 	}
 
@@ -384,18 +392,30 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 					if (mCompositorWorkspaceInstance->getRendererRuntime().getVrManager().isRunning())
 					{
 						mController = new VrController(*mCameraSceneItem);
+
+						// For VR, set camera to origin
+						RendererRuntime::SceneNode* sceneNode = mCameraSceneItem->getParentSceneNode();
+						sceneNode->setPosition(RendererRuntime::Math::VEC3_ZERO);
+						sceneNode->setRotation(RendererRuntime::Math::QUAT_IDENTITY);
 					}
 					else
 				#endif
 				{
 					mController = new FreeCameraController(*mCameraSceneItem);
 
-					// Set initial camera position if virtual reality is disabled
+					// Restore camera position and rotation from a previous session if virtual reality is disabled
 					if (!mHasCameraTransformBackup)
 					{
-						RendererRuntime::SceneNode* sceneNode = mCameraSceneItem->getParentSceneNode();
-						sceneNode->setPosition(glm::vec3(-3.12873816f, 0.6473912f, 2.20889306f));
-						sceneNode->setRotation(glm::quat(0.412612021f, -0.0201802868f, 0.909596086f, 0.0444870926f));
+						float value[4] = {};
+						RendererRuntime::DebugGuiManager& debugGuiManager = mCompositorWorkspaceInstance->getRendererRuntime().getDebugGuiManager();
+						if (debugGuiManager.getIniSetting("CameraPosition", value))
+						{
+							mCameraSceneItem->getParentSceneNode()->setPosition(glm::vec3(value[0], value[1], value[2]));
+						}
+						if (debugGuiManager.getIniSetting("CameraRotation", value))
+						{
+							mCameraSceneItem->getParentSceneNode()->setRotation(glm::quat(value[3], value[0], value[1], value[2]));
+						}
 					}
 				}
 			}

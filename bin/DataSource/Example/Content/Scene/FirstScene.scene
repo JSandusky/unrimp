@@ -9,6 +9,11 @@
 		"Nodes":
 		[
 			{
+				"Properties":
+				{
+					"Position": "-3.12873816 0.6473912 2.20889306 METER",
+					"Rotation": "-0.0201802868 0.909596086 0.0444870926 0.412612021 QUATERNION"
+				},
 				"Items":
 				{
 					"CameraSceneItem":

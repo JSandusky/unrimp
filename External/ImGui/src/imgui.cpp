@@ -2586,8 +2586,8 @@ static void SaveIniSettingsToDisk(const char* ini_filename)
         if (const char* p = strstr(name, "###"))  // Skip to the "###" marker if any. We don't skip past to match the behavior of GetID()
             name = p;
         fprintf(f, "[%s]\n", name);
-        fprintf(f, "Pos=%d,%d\n", (int)settings->Pos.x, (int)settings->Pos.y);
-        fprintf(f, "Size=%d,%d\n", (int)settings->Size.x, (int)settings->Size.y);
+        fprintf(f, "Pos=%f,%f\n", settings->Pos.x, settings->Pos.y);	// TODO(co) Changed this from integer to float since "LoadIniSettingsFromDisk()" is reading floats
+        fprintf(f, "Size=%f,%f\n", settings->Size.x, settings->Size.y);	// TODO(co) Changed this from integer to float since "LoadIniSettingsFromDisk()" is reading floats
         fprintf(f, "Collapsed=%d\n", settings->Collapsed);
         fprintf(f, "\n");
     }

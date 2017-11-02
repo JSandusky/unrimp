@@ -96,6 +96,45 @@ namespace
 		const Renderer::VertexAttributes VertexAttributes(static_cast<uint32_t>(glm::countof(VertexAttributesLayout)), VertexAttributesLayout);
 
 
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		// From "imgui.cpp"
+		ImGuiIniData* FindWindowSettings(const char* name)
+		{
+			ImGuiContext& g = *GImGui;
+			ImGuiID id = ImHash(name, 0);
+			for (int i = 0; i != g.Settings.Size; i++)
+			{
+				ImGuiIniData* ini = &g.Settings[i];
+				if (ini->Id == id)
+					return ini;
+			}
+			return NULL;
+		}
+
+		// From "imgui.cpp"
+		ImGuiIniData* AddWindowSettings(const char* name)
+		{
+			GImGui->Settings.resize(GImGui->Settings.Size + 1);
+			ImGuiIniData* ini = &GImGui->Settings.back();
+			ini->Name = ImStrdup(name);
+			ini->Id = ImHash(name, 0);
+			ini->Collapsed = false;
+			ini->Pos = ImVec2(FLT_MAX,FLT_MAX);
+			ini->Size = ImVec2(0,0);
+			return ini;
+		}
+
+		// From "imgui.cpp"
+		void MarkIniSettingsDirty()
+		{
+			ImGuiContext& g = *GImGui;
+			if (g.SettingsDirtyTimer <= 0.0f)
+				g.SettingsDirtyTimer = g.IO.IniSavingRate;
+		}
+
+
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]
 //[-------------------------------------------------------]
@@ -299,6 +338,42 @@ namespace RendererRuntime
 		}
 	}
 
+	bool DebugGuiManager::getIniSetting(const char* name, float value[4])
+	{
+		ImGuiIniData* settings = ::detail::FindWindowSettings(name);
+		if (nullptr != settings)
+		{
+			value[0] = settings->Pos.x;
+			value[1] = settings->Pos.y;
+			value[2] = settings->Size.x;
+			value[3] = settings->Size.y;
+
+			// Done
+			return true;
+		}
+
+		// Ini setting not found
+		return false;
+	}
+
+	void DebugGuiManager::setIniSetting(const char* name, const float value[4])
+	{
+		ImGuiIniData* settings = ::detail::FindWindowSettings(name);
+		if (nullptr == settings)
+		{
+			settings = ::detail::AddWindowSettings(name);
+		}
+		if (settings->Pos.x != value[0] || settings->Pos.y != value[1] ||
+			settings->Size.x != value[2] || settings->Size.y != value[3])
+		{
+			settings->Pos.x = value[0];
+			settings->Pos.y = value[1];
+			settings->Size.x = value[2];
+			settings->Size.y = value[3];
+			::detail::MarkIniSettingsDirty();
+		}
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::DebugGuiManager methods ]
@@ -361,7 +436,17 @@ namespace RendererRuntime
 		//          shapes or window rounding this artifact is gone. Decided to disable window rounding to keep the
 		//          nicely blurred GUI background without the visual artifact. Might be worth digging into
 		//          "ImDrawList::AddConvexPolyFilled()" in detail so see whether or not we can change something inside ImGui.
-		ImGui::GetStyle().WindowRounding = 0.0f;
+		ImGuiStyle& imGuiStyle = ImGui::GetStyle();
+		imGuiStyle.WindowRounding = 0.0f;
+
+		// Initialize ImGui at once and not delayed
+		// -> "imgui.cpp" -> "LoadIniSettingsFromDisk()" will clamp values, we don't want this
+		{
+			const ImVec2 windowMinSizeBackup = imGuiStyle.WindowMinSize;
+			imGuiStyle.WindowMinSize.x = imGuiStyle.WindowMinSize.y = std::numeric_limits<float>::lowest();
+			ImGui::Initialize();
+			imGuiStyle.WindowMinSize = windowMinSizeBackup;
+		}
 	}
 
 	DebugGuiManager::~DebugGuiManager()

@@ -96,6 +96,10 @@ namespace RendererRuntime
 		RENDERERRUNTIME_API_EXPORT void fillCommandBuffer(Renderer::CommandBuffer& commandBuffer);
 		RENDERERRUNTIME_API_EXPORT void fillCommandBufferUsingFixedBuildInRendererConfiguration(Renderer::CommandBuffer& commandBuffer);
 
+		// Ini-settings
+		RENDERERRUNTIME_API_EXPORT bool getIniSetting(const char* name, float value[4]);
+		RENDERERRUNTIME_API_EXPORT void setIniSetting(const char* name, const float value[4]);
+
 
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::DebugGuiManager methods ]
