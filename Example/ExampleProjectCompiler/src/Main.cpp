@@ -23,8 +23,6 @@
 //[-------------------------------------------------------]
 #include "Main.h"
 
-#include <RendererToolkit/Context.h>
-#include <RendererToolkit/Public/RendererToolkit.h>
 #include <RendererToolkit/Public/RendererToolkitInstance.h>
 
 #include <RendererRuntime/Core/File/StdFileManager.h>

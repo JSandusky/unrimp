@@ -38,7 +38,6 @@
 #include "Framework/IApplicationRendererRuntime.h"
 
 #ifdef SHARED_LIBRARIES
-	#include <RendererToolkit/Context.h>
 	#include <RendererToolkit/Public/RendererToolkitInstance.h>
 #endif
 

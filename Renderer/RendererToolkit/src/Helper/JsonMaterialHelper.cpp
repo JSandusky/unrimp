@@ -457,6 +457,7 @@ namespace RendererToolkit
 				// Set the material own property value
 				RendererRuntime::MaterialProperty& materialProperty = *iterator;
 				static_cast<RendererRuntime::MaterialPropertyValue&>(materialProperty) = JsonMaterialBlueprintHelper::mandatoryMaterialPropertyValue(input, rapidJsonValueProperties, propertyName, materialProperty.getValueType());
+				materialProperty.setOverwritten(true);
 			}
 			else
 			{

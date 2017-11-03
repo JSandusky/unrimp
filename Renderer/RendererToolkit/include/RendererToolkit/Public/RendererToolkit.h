@@ -75,9 +75,16 @@ namespace RendererToolkit
 	class IRendererToolkit : public Renderer::RefCount<IRendererToolkit>
 	{
 	public:
+		enum class State
+		{
+			IDLE,
+			BUSY
+		};
+	public:
 		virtual ~IRendererToolkit() override;
 	public:
 		virtual IProject* createProject() = 0;
+		virtual State getState() const = 0;
 	protected:
 		IRendererToolkit();
 		explicit IRendererToolkit(const IRendererToolkit& source) = delete;

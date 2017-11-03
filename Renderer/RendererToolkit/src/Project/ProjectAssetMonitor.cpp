@@ -94,6 +94,9 @@ namespace RendererToolkit
 								{
 									mProjectAssetMonitor.mRendererRuntime.reloadResourceByAssetId(sortedOutputAssetVector[outputAssetIndex].assetId);
 								}
+
+								// A compilation run has been finished do cleanup
+								mProjectAssetMonitor.mProjectImpl.onCompilationRunFinished();
 								break;
 							}
 

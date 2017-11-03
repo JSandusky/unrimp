@@ -19,30 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererToolkit/RendererToolkitImpl.h"
-#include "RendererToolkit/Project/ProjectImpl.h"
-#include "RendererToolkit/Context.h"
-
-
-//[-------------------------------------------------------]
-//[ Global functions                                      ]
-//[-------------------------------------------------------]
-// Export the instance creation function
-#ifdef RENDERERTOOLKIT_EXPORTS
-	#define RENDERERTOOLKIT_API_EXPORT GENERIC_FUNCTION_EXPORT
-#else
-	#define RENDERERTOOLKIT_API_EXPORT
-#endif
-RENDERERTOOLKIT_API_EXPORT RendererToolkit::IRendererToolkit* createRendererToolkitInstance(RendererToolkit::Context& context)
-{
-	return new RendererToolkit::RendererToolkitImpl(context);
-}
-#undef RENDERERTOOLKIT_API_EXPORT
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererToolkit
@@ -50,11 +26,32 @@ namespace RendererToolkit
 
 
 	//[-------------------------------------------------------]
+	//[ Public methods                                        ]
+	//[-------------------------------------------------------]
+	inline RendererToolkitImpl::RendererToolkitImpl(Context& context) :
+		IRendererToolkit(context),
+		mState(State::IDLE)
+	{
+		// Nothing here
+	}
+
+	inline RendererToolkitImpl::~RendererToolkitImpl()
+	{
+		// Nothing here
+	}
+
+	inline void RendererToolkitImpl::setState(State state)
+	{
+		mState = state;
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual RendererToolkit::IRendererToolkit methods ]
 	//[-------------------------------------------------------]
-	IProject* RendererToolkitImpl::createProject()
+	inline RendererToolkitImpl::State RendererToolkitImpl::getState() const
 	{
-		return new ProjectImpl(*this);
+		return mState;
 	}
 
 

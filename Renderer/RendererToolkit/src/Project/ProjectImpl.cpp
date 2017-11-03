@@ -39,6 +39,7 @@
 #include "RendererToolkit/AssetCompiler/SkeletonAnimationAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/MaterialBlueprintAssetCompiler.h"
 #include "RendererToolkit/AssetCompiler/CompositorWorkspaceAssetCompiler.h"
+#include "RendererToolkit/RendererToolkitImpl.h"
 #include "RendererToolkit/Context.h"
 
 #include <RendererRuntime/IRendererRuntime.h>
@@ -129,8 +130,9 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	ProjectImpl::ProjectImpl(const Context& context) :
-		mContext(context),
+	ProjectImpl::ProjectImpl(RendererToolkitImpl& rendererToolkitImpl) :
+		mRendererToolkitImpl(rendererToolkitImpl),
+		mContext(rendererToolkitImpl.getContext()),
 		mQualityStrategy(QualityStrategy::PRODUCTION),
 		mRapidJsonDocument(nullptr),
 		mProjectAssetMonitor(nullptr),
@@ -181,6 +183,9 @@ namespace RendererToolkit
 	{
 		const std::string& virtualAssetFilename = asset.virtualFilename;
 
+		// The renderer toolkit is now considered to be busy
+		mRendererToolkitImpl.setState(IRendererToolkit::State::BUSY);
+
 		// Parse JSON
 		rapidjson::Document rapidJsonDocument;
 		JsonHelper::loadDocumentByFilename(mContext.getFileManager(), virtualAssetFilename, "Asset", "1", rapidJsonDocument);
@@ -217,6 +222,9 @@ namespace RendererToolkit
 
 	void ProjectImpl::compileAsset(const RendererRuntime::Asset& asset, const char* rendererTarget, RendererRuntime::AssetPackage& outputAssetPackage)
 	{
+		// The renderer toolkit is now considered to be busy
+		mRendererToolkitImpl.setState(IRendererToolkit::State::BUSY);
+
 		// Open the input stream
 		const std::string& virtualAssetFilename = asset.virtualFilename;
 
@@ -313,6 +321,9 @@ namespace RendererToolkit
 		// Compilation run finished clear internal cache of cache manager
 		mCacheManager->saveCache();
 		mCacheManager->clearInternalCache();
+
+		// The renderer toolkit is now considered to be idle
+		mRendererToolkitImpl.setState(IRendererToolkit::State::IDLE);
 	}
 
 
@@ -321,6 +332,9 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	void ProjectImpl::load(RendererRuntime::AbsoluteDirectoryName absoluteProjectDirectoryName)
 	{
+		// The renderer toolkit is now considered to be busy
+		mRendererToolkitImpl.setState(IRendererToolkit::State::BUSY);
+
 		// Clear the previous project
 		clear();
 
@@ -378,6 +392,9 @@ namespace RendererToolkit
 
 		// Setup project folder for cache manager, it will store there its data
 		mCacheManager = new CacheManager(mContext, mProjectName);
+
+		// The renderer toolkit is now considered to be idle
+		mRendererToolkitImpl.setState(IRendererToolkit::State::IDLE);
 	}
 
 	void ProjectImpl::importAssets(const AbsoluteFilenames& absoluteSourceFilenames, const std::string& targetAssetPackageName)
@@ -471,10 +488,10 @@ namespace RendererToolkit
 				// Write LZ4 compressed output
 				memoryFile.writeLz4CompressedDataByVirtualFilename(RendererRuntime::StringId("AssetPackage"), RendererRuntime::v1AssetPackage::FORMAT_VERSION, mContext.getFileManager(), (getRenderTargetDataRootDirectory(rendererTarget) + '/' + mProjectName + '/' + mAssetPackageDirectoryName + '/' + mAssetPackageDirectoryName + ".assets").c_str());
 			}
-
-			// Compilation run finished clear internal caches/states
-			onCompilationRunFinished();
 		}
+
+		// Compilation run finished clear internal caches/states
+		onCompilationRunFinished();
 	}
 
 	void ProjectImpl::startupAssetMonitor(RendererRuntime::IRendererRuntime& rendererRuntime, const char* rendererTarget)

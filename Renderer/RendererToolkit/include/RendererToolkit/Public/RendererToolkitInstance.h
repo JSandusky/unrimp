@@ -48,6 +48,10 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class IFileManager;
+}
 namespace RendererToolkit
 {
 	class Context;
@@ -77,6 +81,32 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
+	// RendererToolkit/Context.h
+	class Context
+	{
+	public:
+		inline Context::Context(Renderer::ILog& log, RendererRuntime::IFileManager& fileManager) :
+			mLog(log),
+			mFileManager(fileManager)
+		{ }
+		inline Context::~Context()
+		{ }
+		inline Renderer::ILog& Context::getLog() const
+		{
+			return mLog;
+		}
+		inline RendererRuntime::IFileManager& Context::getFileManager() const
+		{
+			return mFileManager;
+		}
+	private:
+		explicit Context(const Context&) = delete;
+		Context& operator=(const Context&) = delete;
+	private:
+		Renderer::ILog&				   mLog;
+		RendererRuntime::IFileManager& mFileManager;
+	};
+
 	/**
 	*  @brief
 	*    Renderer toolkit instance using runtime linking

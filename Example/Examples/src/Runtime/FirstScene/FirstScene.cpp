@@ -28,6 +28,8 @@
 	#include "Runtime/FirstScene/VrController.h"
 #endif
 
+#include <RendererToolkit/Public/RendererToolkit.h>
+
 #include <RendererRuntime/IRendererRuntime.h>
 #include <RendererRuntime/Vr/IVrManager.h>
 #include <RendererRuntime/Core/Math/EulerAngles.h>
@@ -474,6 +476,15 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 			// Setup GUI
 			rendererRuntime->getDebugGuiManager().newFrame(nullptr != compositorInstancePass->getRenderTarget() ? *compositorInstancePass->getRenderTarget() : mainRenderTarget);
 			ImGui::Begin("Options");
+				{ // Renderer toolkit
+					const RendererToolkit::IRendererToolkit* rendererToolkit = getRendererToolkit();
+					if (nullptr != rendererToolkit)
+					{
+						ImGui::Text("Renderer Toolkit: %s", (RendererToolkit::IRendererToolkit::State::IDLE == rendererToolkit->getState()) ? "Idle" : "Busy");
+						ImGui::Separator();
+					}
+				}
+
 				// Global
 				if (ImGui::BeginMenu("Global"))
 				{

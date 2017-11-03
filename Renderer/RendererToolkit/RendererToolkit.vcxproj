@@ -54,6 +54,7 @@
     <None Include="include\RendererToolkit\IRendererToolkit.inl" />
     <None Include="include\RendererToolkit\Project\IProject.inl" />
     <None Include="include\RendererToolkit\Project\ProjectImpl.inl" />
+    <None Include="include\RendererToolkit\RendererToolkitImpl.inl" />
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>

@@ -59,6 +59,21 @@ namespace RendererToolkit
 
 
 	//[-------------------------------------------------------]
+	//[ Public definitions                                    ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Renderer toolkit state
+		*/
+		enum class State
+		{
+			IDLE,	///< Idle
+			BUSY	///< Busy
+		};
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
@@ -83,6 +98,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	public:
 		virtual IProject* createProject() = 0;
+		virtual State getState() const = 0;
 
 
 	//[-------------------------------------------------------]

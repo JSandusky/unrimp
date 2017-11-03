@@ -56,6 +56,7 @@ namespace RendererToolkit
 	class Context;
 	class CacheManager;
 	class ProjectAssetMonitor;
+	class RendererToolkitImpl;
 }
 
 
@@ -92,10 +93,10 @@ namespace RendererToolkit
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] context
-		*    The renderer toolkit context instance to use
+		*  @param[in] rendererToolkitImpl
+		*    The renderer toolkit implementation instance to use
 		*/
-		explicit ProjectImpl(const Context& context);
+		explicit ProjectImpl(RendererToolkitImpl& rendererToolkitImpl);
 
 		/**
 		*  @brief
@@ -157,6 +158,7 @@ namespace RendererToolkit
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		RendererToolkitImpl&			mRendererToolkitImpl;
 		const Context&					mContext;
 		std::string						mProjectName;				///< UTF-8 project name
 		std::string						mAbsoluteProjectDirectory;	///< UTF-8 project directory, Has no "/" at the end

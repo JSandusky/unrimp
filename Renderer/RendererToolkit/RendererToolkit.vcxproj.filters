@@ -195,6 +195,9 @@
     <None Include="include\RendererToolkit\Helper\AssimpIOSystem.inl">
       <Filter>Source Files\Helper</Filter>
     </None>
+    <None Include="include\RendererToolkit\RendererToolkitImpl.inl">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererToolkit\RendererToolkitImpl.h">
