@@ -55,6 +55,7 @@ namespace RendererRuntime
 	void ResourceStreamer::commitLoadRequest(const LoadRequest& loadRequest)
 	{
 		// The first thing we do: Update the resource loading state
+		++mNumberOfInFlightLoadRequests;
 		loadRequest.getResource().setLoadingState(IResource::LoadingState::LOADING);
 
 		// Push the load request into the queue of the first resource streamer pipeline stage
@@ -99,6 +100,9 @@ namespace RendererRuntime
 				std::this_thread::sleep_for(1ms);
 			}
 		} while (!everythingFlushed);
+
+		// Sanity check
+		assert(0 == mNumberOfInFlightLoadRequests);
 	}
 
 	void ResourceStreamer::dispatch()
@@ -158,6 +162,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	ResourceStreamer::ResourceStreamer(IRendererRuntime& rendererRuntime) :
 		mRendererRuntime(rendererRuntime),
+		mNumberOfInFlightLoadRequests(0),
 		mShutdownDeserializationThread(false),
 		mDeserializationWaitingQueueRequests(0),
 		mDeserializationThread(&ResourceStreamer::deserializationThreadWorker, this),
@@ -353,6 +358,8 @@ namespace RendererRuntime
 
 		// The last thing we do: Update the resource loading state
 		loadRequest.getResource().setLoadingState(IResource::LoadingState::LOADED);
+		assert(0 != mNumberOfInFlightLoadRequests);
+		--mNumberOfInFlightLoadRequests;
 	}
 
 

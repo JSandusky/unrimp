@@ -49,6 +49,7 @@
 #include <RendererRuntime/Resource/Material/MaterialResourceManager.h>
 #include <RendererRuntime/Resource/Material/MaterialResource.h>
 #include <RendererRuntime/Resource/Texture/TextureResourceManager.h>
+#include <RendererRuntime/Resource/Detail/ResourceStreamer.h>
 
 #include <imgui/imgui.h>
 
@@ -481,6 +482,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 					if (nullptr != rendererToolkit)
 					{
 						ImGui::Text("Renderer Toolkit: %s", (RendererToolkit::IRendererToolkit::State::IDLE == rendererToolkit->getState()) ? "Idle" : "Busy");
+						ImGui::Text("Resource Streamer: %s", (0 == rendererRuntime->getResourceStreamer().getNumberOfInFlightLoadRequests()) ? "Idle" : "Busy");
 						ImGui::Separator();
 					}
 				}

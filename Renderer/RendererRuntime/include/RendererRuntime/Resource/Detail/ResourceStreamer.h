@@ -134,6 +134,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
+		inline uint32_t getNumberOfInFlightLoadRequests() const;
 		void commitLoadRequest(const LoadRequest& loadRequest);
 		void flushAllQueues();
 
@@ -179,8 +180,9 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
-		std::mutex		  mResourceManagerMutex;
+		IRendererRuntime&	  mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+		std::mutex			  mResourceManagerMutex;
+		std::atomic<uint32_t> mNumberOfInFlightLoadRequests;
 		// Resource streamer stage: 1. Asynchronous deserialization
 		std::atomic<bool>		    mShutdownDeserializationThread;
 		std::mutex					mDeserializationMutex;
@@ -208,3 +210,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/Resource/Detail/ResourceStreamer.inl"

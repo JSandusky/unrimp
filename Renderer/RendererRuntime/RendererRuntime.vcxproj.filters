@@ -627,6 +627,9 @@
     <None Include="include\RendererRuntime\Core\File\PhysicsFSFileManager.inl">
       <Filter>Source Files\Core\File</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\Detail\ResourceStreamer.inl">
+      <Filter>Source Files\Resource\Detail</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
