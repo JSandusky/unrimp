@@ -174,6 +174,7 @@ Examples (just some high level keywords)
 - Film grain
 - [RGB dither](http://media.steampowered.com/apps/valve/2015/Alex_Vlachos_Advanced_VR_Rendering_GDC2015.pdf)
 - Depth fog
+- Vignette
 
 
 Terminology and Acronyms
@@ -234,6 +235,7 @@ Useful Asset Sources
 ======
 - Realtime ready meshes with textures and a web-browser realtime preview: [Sketchfab](https://sketchfab.com/), search for downloadable
 - Realtime ready shaders and a web-browser realtime preview: [Shadertoy](https://www.shadertoy.com/)
+- Realtime ready post-processing shaders: [reshade-shaders](https://github.com/crosire/reshade-shaders/tree/master/Shaders)
 
 
 Hints

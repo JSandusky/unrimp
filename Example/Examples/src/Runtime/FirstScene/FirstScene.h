@@ -190,6 +190,7 @@ private:
 	bool	   mPerformOldCrtEffect;
 	bool	   mPerformFilmGrain;
 	bool	   mPerformSepiaColorCorrection;
+	bool	   mPerformVignette;
 	float	   mDepthOfFieldBlurrinessCutoff;
 	// Selected material properties
 	bool	   mUseEmissiveMap;

@@ -105,6 +105,7 @@ FirstScene::FirstScene() :
 	mPerformOldCrtEffect(false),
 	mPerformFilmGrain(false),
 	mPerformSepiaColorCorrection(false),
+	mPerformVignette(false),
 	mDepthOfFieldBlurrinessCutoff(0.0f),
 	// Selected material properties
 	mUseEmissiveMap(true),
@@ -519,6 +520,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 					ImGui::Checkbox("Old CRT", &mPerformOldCrtEffect);
 					ImGui::Checkbox("Film Grain", &mPerformFilmGrain);
 					ImGui::Checkbox("Sepia Color Correction", &mPerformSepiaColorCorrection);
+					ImGui::Checkbox("Vignette", &mPerformVignette);
 					ImGui::SliderFloat("Depth of Field", &mDepthOfFieldBlurrinessCutoff, 0.0f, 1.0f, "%.3f");
 					ImGui::EndMenu();
 				}
@@ -635,6 +637,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				materialResource->setPropertyById("ChromaticAberration", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformChromaticAberration));
 				materialResource->setPropertyById("OldCrtEffect", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformOldCrtEffect));
 				materialResource->setPropertyById("FilmGrain", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformFilmGrain));
+				materialResource->setPropertyById("Vignette", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformVignette));
 			}
 
 			// Imrod material clone

@@ -84,6 +84,24 @@
 				"Value": "Unrimp/Texture/DynamicByCode/IdentityColorCorrectionLookupTable3D",
 				"Description": "3D color correction lookup table"
 			},
+			"Vignette":
+			{
+				"Usage": "SHADER_COMBINATION",
+				"ValueType": "BOOLEAN",
+				"Value": "FALSE",
+				"Description": "Enable vignette effect?",
+				"VisualImportance": "100"
+			},
+			"VignetteFalloffAmount":
+			{
+				"Usage": "SHADER_UNIFORM",
+				"ValueType": "FLOAT_2",
+				"Value": "0.5 0.4",
+				"MinimumValue": "0.0 0.0",
+				"MaximumValue": "2.0 2.0",
+				"StepSize": "0.01 0.01",
+				"Description": "Vignette falloff (x-value) and vignette amount (y-value)"
+			},
 			"ContrastBrightness":
 			{
 				"Usage": "SHADER_UNIFORM",
@@ -132,6 +150,12 @@
 							"Usage": "PASS_REFERENCE",
 							"ValueType": "FLOAT_2",
 							"Value": "@INVERSE_VIEWPORT_SIZE"
+						},
+						"VignetteFalloffAmount":
+						{
+							"Usage": "MATERIAL_REFERENCE",
+							"ValueType": "FLOAT_2",
+							"Value": "@VignetteFalloffAmount"
 						},
 						"ContrastBrightness":
 						{

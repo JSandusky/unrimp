@@ -14,7 +14,8 @@
 		},
 		"MaterialBlueprintAssetCompiler":
 		{
-			"InputFile": "Final.material_blueprint"
+			"InputFile": "Final.material_blueprint",
+			"AllowCrazyNumberOfShaderCombinations": "TRUE"
 		}
 	}
 }

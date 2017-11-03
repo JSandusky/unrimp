@@ -54,7 +54,8 @@ OUTPUT_END
 struct PassDataStruct
 {
 	float2 InverseViewportSize;
-	float2 ContrastBrightness;
+	float2 VignetteFalloffAmount;	// Vignette falloff (x-value) and vignette amount (y-value)
+	float2 ContrastBrightness;		// Contrast (x-value) and brightness (y-value)
 	float  FilmGrainIntensity;
 	float  ChromaticAberrationMaximumDistort;
 	int    ChromaticAberrationIterations;
@@ -169,6 +170,11 @@ MAIN_BEGIN
 		float3 LUT_OFFSET = 1.0f / (2.0f * LUT_SIZE);
 		color.rgb = SAMPLE_3D_LOD(ColorCorrectionLookupTableMap, SamplerLinear, float4(color.rgb + LUT_OFFSET, 0.0f)).rgb;
 	}
+
+	// Apply vignette
+	@property(Vignette)
+		color.rgb *= smoothstep(0.8f, PassData.VignetteFalloffAmount.x * 0.799f, distance(MAIN_INPUT(TexCoordVS), float2(0.5f, 0.5f)) * (PassData.VignetteFalloffAmount.y + PassData.VignetteFalloffAmount.x));
+	@end
 
 	// Apply contrast and brightness to the final color, leave alpha value unchanged
 	MAIN_OUTPUT_COLOR(0) = float4(pow(abs(color.rgb), float3(PassData.ContrastBrightness.x, PassData.ContrastBrightness.x, PassData.ContrastBrightness.x)) * float3(PassData.ContrastBrightness.y, PassData.ContrastBrightness.y, PassData.ContrastBrightness.y), color.a);
