@@ -441,7 +441,7 @@ namespace RendererRuntime
 					// -> Example: The virtual filename "LocalData/DebugGui/UnrimpDebugGuiLayout.ini" will result in the absolute filename "c:/MyProject/bin/LocalData/DebugGui/UnrimpDebugGuiLayout.ini"
 					std::string absoluteFilename = virtualFilename;
 					absoluteFilename.erase(index, strlen(mountPoint));	// Example: "LocalData/DebugGui/UnrimpDebugGuiLayout.ini" to "DebugGui/UnrimpDebugGuiLayout.ini"
-					absoluteFilename = std::string(realDirectory) + '/' + absoluteFilename;
+					absoluteFilename = FileSystemHelper::lexicallyNormal(std::string(realDirectory) + '/' + absoluteFilename).generic_string();
 
 					// Done
 					return absoluteFilename;

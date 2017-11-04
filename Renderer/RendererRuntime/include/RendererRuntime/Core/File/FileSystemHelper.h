@@ -30,6 +30,12 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Export.h"
+
+
+//[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
 #ifdef WIN32
 	// Disable warnings in external headers, we can't fix them
 	__pragma(warning(push))
@@ -63,3 +69,41 @@
 		namespace std_filesystem = std::experimental::filesystem;
 	#endif
 #endif
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+
+
+	//[-------------------------------------------------------]
+	//[ Classes                                               ]
+	//[-------------------------------------------------------]
+	class FileSystemHelper
+	{
+
+
+	//[-------------------------------------------------------]
+	//[ Public static methods                                 ]
+	//[-------------------------------------------------------]
+	public:
+		RENDERERRUNTIME_API_EXPORT static std_filesystem::path lexicallyNormal(const std_filesystem::path& path);
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	private:
+		FileSystemHelper(const FileSystemHelper&) = delete;
+		FileSystemHelper& operator=(const FileSystemHelper&) = delete;
+
+
+	};
+
+
+//[-------------------------------------------------------]
+//[ Namespace                                             ]
+//[-------------------------------------------------------]
+} // RendererRuntime

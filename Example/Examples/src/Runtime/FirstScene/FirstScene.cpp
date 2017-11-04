@@ -52,6 +52,7 @@
 #include <RendererRuntime/Resource/Material/MaterialResource.h>
 #include <RendererRuntime/Resource/Texture/TextureResourceManager.h>
 #include <RendererRuntime/Resource/Detail/ResourceStreamer.h>
+#include <RendererRuntime/Context.h>
 
 #include <imgui/imgui.h>
 
@@ -485,7 +486,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 		{
 			// Setup GUI
 			rendererRuntime->getDebugGuiManager().newFrame(nullptr != compositorInstancePass->getRenderTarget() ? *compositorInstancePass->getRenderTarget() : mainRenderTarget);
-			::detail::g_ImGuiLog.draw();
+			::detail::g_ImGuiLog.draw(rendererRuntime->getContext().getFileManager());
 			if (ImGui::Begin("Options"))
 			{
 				// Status

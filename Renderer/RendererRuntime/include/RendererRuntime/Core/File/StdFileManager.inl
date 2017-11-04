@@ -533,7 +533,7 @@ namespace RendererRuntime
 			{
 				for (const std::string& absoluteDirectoryName : *absoluteDirectoryNames)
 				{
-					const std::string absoluteFilename = absoluteDirectoryName + '/' + relativeFilename;
+					const std::string absoluteFilename = FileSystemHelper::lexicallyNormal(absoluteDirectoryName + '/' + relativeFilename).generic_string();
 					if (std_filesystem::exists(std_filesystem::u8path(absoluteFilename)))
 					{
 						return absoluteFilename;
@@ -543,7 +543,7 @@ namespace RendererRuntime
 				// Still here and writing a file?
 				if (FileMode::WRITE == fileMode && !absoluteDirectoryNames->empty())
 				{
-					return (*absoluteDirectoryNames)[0] + '/' + relativeFilename;
+					return FileSystemHelper::lexicallyNormal((*absoluteDirectoryNames)[0] + '/' + relativeFilename).generic_string();
 				}
 			}
 		}

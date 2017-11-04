@@ -35,6 +35,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace RendererRuntime
+{
+	class IFileManager;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -64,7 +73,7 @@ namespace RendererRuntime
 		inline virtual ~ImGuiLog() override;
 		inline void open();
 		inline void clear();
-		inline void draw();
+		inline void draw(IFileManager& fileManager);
 
 
 	//[-------------------------------------------------------]
@@ -90,7 +99,7 @@ namespace RendererRuntime
 		{
 			int			lineOffsets;	///< Index to lines offset
 			Type		type;
-			std::string attachment;		///< Optional attachment (for example build shader source code)
+			std::string	attachment;		///< Optional attachment (for example build shader source code)
 		};
 
 

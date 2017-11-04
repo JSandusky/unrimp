@@ -19,6 +19,14 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include <RendererRuntime/Core/File/IFile.h>
+#include <RendererRuntime/Core/File/IFileManager.h>
+#include <RendererRuntime/Core/Platform/PlatformManager.h>
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -52,7 +60,7 @@ namespace RendererRuntime
 		mEntries.clear();
 	}
 
-	inline void ImGuiLog::draw()
+	inline void ImGuiLog::draw(IFileManager& fileManager)
 	{
 		if (mOpen)
 		{
@@ -116,13 +124,40 @@ namespace RendererRuntime
 								color = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
 								if (!entry.attachment.empty())
 								{
-									if (ImGui::Button("!"))
+									if (ImGui::Button(("!" + std::to_string(lineNumber)).c_str()))
 									{
+										// Copy log entry attachment to operation system clipboard
 										ImGui::SetClipboardText(entry.attachment.c_str());
+
+										// Try to open the content as file in e.g. inside a text editor to make it possible to review e.g. shader issues as fast as possible
+										if (nullptr != fileManager.getLocalDataMountPoint())
+										{
+											const std::string virtualDirectoryName = std::string(fileManager.getLocalDataMountPoint()) + "/DebugGui";
+											if (fileManager.createDirectories(virtualDirectoryName.c_str()))
+											{
+												const std::string virtualFilename = virtualDirectoryName + "/TemporaryLogAttachment.txt";
+												IFile* file = fileManager.openFile(IFileManager::FileMode::WRITE, virtualFilename.c_str());
+												if (nullptr != file)
+												{
+													file->write(entry.attachment.data(), entry.attachment.size());
+
+													// Close file
+													fileManager.closeFile(*file);
+
+													// Try to open the content as file in e.g. inside a text editor
+													PlatformManager::openUrlExternal(("file://" + fileManager.mapVirtualToAbsoluteFilename(IFileManager::FileMode::READ, virtualFilename.c_str())).c_str());
+												}
+												else
+												{
+													// Error!
+													print(Renderer::ILog::Type::CRITICAL, nullptr, "Failed to open the file \"%s\" for writing", virtualFilename.c_str());
+												}
+											}
+										}
 									}
 									if (ImGui::IsItemHovered())
 									{
-										ImGui::SetTooltip("Copy log entry attachment to operation system clipboard");
+										ImGui::SetTooltip("Copy log entry attachment to operation system clipboard and try to open the content as file in e.g. inside a text editor");
 									}
 									ImGui::SameLine();
 								}

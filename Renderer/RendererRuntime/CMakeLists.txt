@@ -71,6 +71,7 @@ set(SOURCE_CODES
 	src/Core/Math/Transform.cpp
 	src/Core/Platform/PlatformManager.cpp
 	src/Core/File/MemoryFile.cpp
+	src/Core/File/FileSystemHelper.cpp
 	src/Core/Time/TimeManager.cpp
 	src/Core/Time/Stopwatch.cpp
 	src/Core/Renderer/RenderPassManager.cpp

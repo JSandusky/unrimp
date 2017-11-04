@@ -542,6 +542,7 @@
     <ClCompile Include="src\Asset\Loader\AssetPackageLoader.cpp" />
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp" />
     <ClCompile Include="src\Context.cpp" />
+    <ClCompile Include="src\Core\File\FileSystemHelper.cpp" />
     <ClCompile Include="src\Core\File\MemoryFile.cpp" />
     <ClCompile Include="src\Core\Math\EulerAngles.cpp" />
     <ClCompile Include="src\Core\Math\Math.cpp" />
@@ -896,7 +897,7 @@
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\inc\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\;..\..\External\lz4\include\;..\..\External\mikktspace\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\inc\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\;..\..\External\lz4\include\;..\..\External\mikktspace\include\;..\..\External\utf8cpp\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;GLM_ENABLE_EXPERIMENTAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -929,7 +930,7 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\inc\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\;..\..\External\lz4\include\;..\..\External\mikktspace\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\inc\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\;..\..\External\lz4\include\;..\..\External\mikktspace\include\;..\..\External\utf8cpp\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;X64_ARCHITECTURE;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;GLM_ENABLE_EXPERIMENTAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -962,7 +963,7 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\inc\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\;..\..\External\lz4\include\;..\..\External\mikktspace\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\inc\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\;..\..\External\lz4\include\;..\..\External\mikktspace\include\;..\..\External\utf8cpp\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;SHARED_LIBRARIES;RENDERERRUNTIME_EXPORTS;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;GLM_ENABLE_EXPERIMENTAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -996,7 +997,7 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\inc\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\;..\..\External\lz4\include\;..\..\External\mikktspace\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\inc\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\;..\..\External\lz4\include\;..\..\External\mikktspace\include\;..\..\External\utf8cpp\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;X64_ARCHITECTURE;SHARED_LIBRARIES;RENDERERRUNTIME_EXPORTS;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;GLM_ENABLE_EXPERIMENTAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -1032,7 +1033,7 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\inc\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\;..\..\External\lz4\include\;..\..\External\mikktspace\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\inc\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\;..\..\External\lz4\include\;..\..\External\mikktspace\include\;..\..\External\utf8cpp\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;RENDERERRUNTIME_NO_RENDERERMATCHCHECK;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;GLM_ENABLE_EXPERIMENTAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -1078,7 +1079,7 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\inc\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\;..\..\External\lz4\include\;..\..\External\mikktspace\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\inc\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\;..\..\External\lz4\include\;..\..\External\mikktspace\include\;..\..\External\utf8cpp\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;X64_ARCHITECTURE;RENDERERRUNTIME_NO_RENDERERMATCHCHECK;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;GLM_ENABLE_EXPERIMENTAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -1123,7 +1124,7 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\inc\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\;..\..\External\lz4\include\;..\..\External\mikktspace\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\inc\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\;..\..\External\lz4\include\;..\..\External\mikktspace\include\;..\..\External\utf8cpp\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;SHARED_LIBRARIES;RENDERERRUNTIME_EXPORTS;RENDERERRUNTIME_NO_RENDERERMATCHCHECK;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;GLM_ENABLE_EXPERIMENTAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -1168,7 +1169,7 @@ copy "include\RendererRuntime\Public\RendererRuntimeInstance.h" "..\..\include\R
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\inc\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\;..\..\External\lz4\include\;..\..\External\mikktspace\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\..\External\crunch\inc\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\imguizmo\include\;..\..\External\openvr\include\;..\..\External\lz4\include\;..\..\External\mikktspace\include\;..\..\External\utf8cpp\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;X64_ARCHITECTURE;SHARED_LIBRARIES;RENDERERRUNTIME_EXPORTS;RENDERERRUNTIME_NO_RENDERERMATCHCHECK;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;GLM_ENABLE_EXPERIMENTAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
