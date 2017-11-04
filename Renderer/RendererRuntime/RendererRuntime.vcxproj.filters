@@ -630,6 +630,9 @@
     <None Include="include\RendererRuntime\Resource\Detail\ResourceStreamer.inl">
       <Filter>Source Files\Resource\Detail</Filter>
     </None>
+    <None Include="include\RendererRuntime\DebugGui\ImGuiLog.inl">
+      <Filter>Source Files\DebugGui</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -1252,6 +1255,9 @@
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Core\File\FileSystemHelper.h">
       <Filter>Source Files\Core\File</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\DebugGui\ImGuiLog.h">
+      <Filter>Source Files\DebugGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

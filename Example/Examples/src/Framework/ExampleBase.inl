@@ -21,6 +21,11 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
+inline Renderer::ILog* ExampleBase::getCustomLog() const
+{
+	return mCustomLog;
+}
+
 inline Renderer::IRenderer* ExampleBase::getRenderer() const
 {
 	return (nullptr != mApplicationFrontend) ? mApplicationFrontend->getRenderer() : nullptr;

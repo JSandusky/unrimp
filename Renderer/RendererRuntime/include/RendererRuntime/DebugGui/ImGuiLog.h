@@ -27,23 +27,15 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/Public/Renderer.h>
+#include <Renderer/Public/StdLog.h>
 
-// Disable warnings in external headers, we can't fix them
-PRAGMA_WARNING_PUSH
-	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'argument': conversion from 'long' to 'unsigned int', signed/unsigned mismatch
-	PRAGMA_WARNING_DISABLE_MSVC(4625)	// warning C4625: 'std::_Generic_error_category': copy constructor was implicitly defined as deleted
-	PRAGMA_WARNING_DISABLE_MSVC(4626)	// warning C4626: 'std::_Generic_error_category': assignment operator was implicitly defined as deleted
-	PRAGMA_WARNING_DISABLE_MSVC(5026)	// warning C5026: 'std::_Generic_error_category': move constructor was implicitly defined as deleted
-	PRAGMA_WARNING_DISABLE_MSVC(5027)	// warning C5027: 'std::_Generic_error_category': move assignment operator was implicitly defined as deleted
-	#include <mutex>
-PRAGMA_WARNING_POP
+#include <imgui/imgui.h>
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace Renderer
+namespace RendererRuntime
 {
 
 
@@ -52,14 +44,13 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    STD log implementation class one can use
+	*    ImGui log implementation class one can use
 	*
 	*  @note
 	*    - Designed to be instanced and used inside a single C++ file
-	*    - On MS Windows it will print to the Visual Studio output console, on critical message the debugger will break
-	*    - On Linux it will print on the console
+	*    - Basing on "Tip/Demo: Log example as helper class. #300" - https://github.com/ocornut/imgui/issues/300
 	*/
-	class StdLog : public ILog
+	class ImGuiLog : public Renderer::StdLog
 	{
 
 
@@ -67,55 +58,48 @@ namespace Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline StdLog();
-		inline virtual ~StdLog() override;
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::ILog methods                 ]
-	//[-------------------------------------------------------]
-	public:
-		inline virtual void print(Type type, const char* format, ...) override;
+		inline ImGuiLog();
+		inline virtual ~ImGuiLog() override;
+		inline void open();
+		inline void clear();
+		inline void draw(const char* title);
 
 
 	//[-------------------------------------------------------]
 	//[ Protected virtual Renderer::StdLog methods            ]
 	//[-------------------------------------------------------]
 	protected:
-		/*
-		*  @brief
-		*    Receives an already formatted message for further processing
-		*
-		*  @param[in] type
-		*    Log message type
-		*  @param[in] message
-		*    Message
-		*  @param[in] numberOfCharacters
-		*    Number of characters inside the message, does not include the terminating zero character
-		*/
-		inline virtual void printInternal(Type type, const char* message, uint32_t numberOfCharacters);
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	protected:
-		inline const char* typeToString(Type type) const;
-
-
-	//[-------------------------------------------------------]
-	//[ Protected data                                        ]
-	//[-------------------------------------------------------]
-	protected:
-		std::mutex mMutex;
+		inline virtual void printInternal(Type type, const char* message, uint32_t numberOfCharacters) override;
 
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		explicit StdLog(const StdLog&) = delete;
-		StdLog& operator=(const StdLog&) = delete;
+		explicit ImGuiLog(const ImGuiLog&) = delete;
+		ImGuiLog& operator=(const ImGuiLog&) = delete;
+
+
+	//[-------------------------------------------------------]
+	//[ Private definitions                                   ]
+	//[-------------------------------------------------------]
+	private:
+		struct Entry
+		{
+			int  lineOffsets;	///< Index to lines offset
+			Type type;
+		};
+
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		ImGuiTextBuffer mImGuiTextBuffer;
+		ImGuiTextFilter mImGuiTextFilter;
+		ImVector<Entry> mEntries;
+		bool			mScrollToBottom;
+		bool			mOpen;
 
 
 	};
@@ -124,10 +108,10 @@ namespace Renderer
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // Renderer
+} // RendererRuntime
 
 
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include <Renderer/Public/StdLog.inl>
+#include <RendererRuntime/DebugGui/ImGuiLog.inl>

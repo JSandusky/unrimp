@@ -34,6 +34,7 @@
 #include <RendererRuntime/Vr/IVrManager.h>
 #include <RendererRuntime/Core/Math/EulerAngles.h>
 #include <RendererRuntime/Core/Time/TimeManager.h>
+#include <RendererRuntime/DebugGui/ImGuiLog.h>
 #include <RendererRuntime/DebugGui/DebugGuiManager.h>
 #include <RendererRuntime/Resource/Scene/SceneNode.h>
 #include <RendererRuntime/Resource/Scene/SceneResource.h>
@@ -70,6 +71,12 @@ namespace
 		static const RendererRuntime::AssetId IMROD_MATERIAL_ASSET_ID("Example/Material/Character/Imrod");
 
 
+		//[-------------------------------------------------------]
+		//[ Global variables                                      ]
+		//[-------------------------------------------------------]
+		RendererRuntime::ImGuiLog g_ImGuiLog;
+
+
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]
 //[-------------------------------------------------------]
@@ -81,6 +88,7 @@ namespace
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
 FirstScene::FirstScene() :
+	ExampleBase(&::detail::g_ImGuiLog),
 	mCompositorWorkspaceInstance(nullptr),
 	mSceneResourceId(RendererRuntime::getUninitialized<RendererRuntime::SceneResourceId>()),
 	mMaterialResourceId(RendererRuntime::getUninitialized<RendererRuntime::MaterialResourceId>()),
@@ -209,7 +217,7 @@ void FirstScene::onDeinitialization()
 
 void FirstScene::onKeyDown(uint32_t key)
 {
-	if (nullptr != mController)
+	if (isControllerValid())
 	{
 		mController->onKeyDown(key);
 	}
@@ -225,7 +233,7 @@ void FirstScene::onKeyUp(uint32_t key)
 
 void FirstScene::onMouseButtonDown(uint32_t button)
 {
-	if (nullptr != mController)
+	if (isControllerValid())
 	{
 		mController->onMouseButtonDown(button);
 	}
@@ -241,7 +249,7 @@ void FirstScene::onMouseButtonUp(uint32_t button)
 
 void FirstScene::onMouseWheel(float delta)
 {
-	if (nullptr != mController)
+	if (isControllerValid())
 	{
 		mController->onMouseWheel(delta);
 	}
@@ -249,7 +257,7 @@ void FirstScene::onMouseWheel(float delta)
 
 void FirstScene::onMouseMove(int x, int y)
 {
-	if (nullptr != mController)
+	if (isControllerValid())
 	{
 		mController->onMouseMove(x, y);
 	}
@@ -476,16 +484,22 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 		{
 			// Setup GUI
 			rendererRuntime->getDebugGuiManager().newFrame(nullptr != compositorInstancePass->getRenderTarget() ? *compositorInstancePass->getRenderTarget() : mainRenderTarget);
+			::detail::g_ImGuiLog.draw("Log");
 			ImGui::Begin("Options");
-				{ // Renderer toolkit
+				// General
+				{
 					const RendererToolkit::IRendererToolkit* rendererToolkit = getRendererToolkit();
 					if (nullptr != rendererToolkit)
 					{
 						ImGui::Text("Renderer Toolkit: %s", (RendererToolkit::IRendererToolkit::State::IDLE == rendererToolkit->getState()) ? "Idle" : "Busy");
-						ImGui::Text("Resource Streamer: %s", (0 == rendererRuntime->getResourceStreamer().getNumberOfInFlightLoadRequests()) ? "Idle" : "Busy");
-						ImGui::Separator();
 					}
 				}
+				ImGui::Text("Resource Streamer: %s", (0 == rendererRuntime->getResourceStreamer().getNumberOfInFlightLoadRequests()) ? "Idle" : "Busy");
+				if (ImGui::Button("Log"))
+				{
+					::detail::g_ImGuiLog.open();
+				}
+				ImGui::Separator();
 
 				// Global
 				if (ImGui::BeginMenu("Global"))
@@ -686,4 +700,9 @@ void FirstScene::trySetCustomMaterialResource()
 			}
 		}
 	}
+}
+
+bool FirstScene::isControllerValid() const
+{
+	return (nullptr != mController && !ImGui::IsAnyWindowHovered());
 }

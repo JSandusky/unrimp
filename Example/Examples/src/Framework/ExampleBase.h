@@ -140,6 +140,15 @@ public:
 
 	/**
 	*  @brief
+	*    Return the custom log instance
+	*
+	*  @return
+	*    Custom log instance, can be a null pointer, don't destroy the instance
+	*/
+	inline Renderer::ILog* getCustomLog() const;
+
+	/**
+	*  @brief
 	*    Initializes the example; does nothing when already initialized
 	*/
 	void initialize();
@@ -240,14 +249,18 @@ protected:
 	/**
 	*  @brief
 	*    Constructor
+	*
+	*  @param[in] customLog
+	*    Optional custom log instance, can be a null pointer, the instance must be valid as long as the example base instance exists
 	*/
-	ExampleBase();
+	explicit ExampleBase(Renderer::ILog* customLog = nullptr);
 
 
 //[-------------------------------------------------------]
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
+	Renderer::ILog*		  mCustomLog;			///< Optional custom log instance, can be a null pointer, don't destroy the instance
 	bool				  mInitialized;
 	IApplicationFrontend* mApplicationFrontend;	///< Renderer instance, can be a null pointer, do not destroy the instance
 

@@ -119,7 +119,8 @@ void ExampleBase::onDraw()
 //[-------------------------------------------------------]
 //[ Protected methods                                     ]
 //[-------------------------------------------------------]
-ExampleBase::ExampleBase() :
+ExampleBase::ExampleBase(Renderer::ILog* customLog) :
+	mCustomLog(customLog),
 	mInitialized(false),
 	mApplicationFrontend(nullptr)
 {

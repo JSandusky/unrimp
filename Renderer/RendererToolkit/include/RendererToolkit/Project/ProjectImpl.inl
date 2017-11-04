@@ -28,6 +28,11 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
+	inline const Context& ProjectImpl::getContext() const
+	{
+		return mContext;
+	}
+
 	inline const std::string& ProjectImpl::getProjectName() const
 	{
 		return mProjectName;

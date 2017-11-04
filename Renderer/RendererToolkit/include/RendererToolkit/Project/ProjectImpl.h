@@ -104,13 +104,14 @@ namespace RendererToolkit
 		*/
 		virtual ~ProjectImpl() override;
 
+		inline const Context& getContext() const;
 		inline const std::string& getProjectName() const;
 		inline const std::string& getAbsoluteProjectDirectory() const;	// Has no "/" at the end
 		inline const RendererRuntime::AssetPackage& getAssetPackage() const;
 		RendererRuntime::VirtualFilename tryGetVirtualFilenameByAssetId(RendererRuntime::AssetId assetId) const;
 		bool checkAssetIsChanged(const RendererRuntime::Asset& asset, const char* rendererTarget);
 		void compileAsset(const RendererRuntime::Asset& asset, const char* rendererTarget, RendererRuntime::AssetPackage& outputAssetPackage);
-		void tryCompileAssetIncludingDependencies(const RendererRuntime::Asset& asset, const char* rendererTarget, RendererRuntime::AssetPackage& outputAssetPackage) noexcept;
+		void compileAssetIncludingDependencies(const RendererRuntime::Asset& asset, const char* rendererTarget, RendererRuntime::AssetPackage& outputAssetPackage) noexcept;
 
 		/**
 		*  @brief

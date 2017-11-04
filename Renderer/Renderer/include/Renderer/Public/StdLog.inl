@@ -40,6 +40,9 @@ PRAGMA_WARNING_POP
 		#include <utf8/utf8.h>	// To convert UTF-8 strings to UTF-16
 
 		#include <windows.h>
+
+		// Get rid of some nasty OS macros
+		#undef max
 	PRAGMA_WARNING_POP
 #elif LINUX
 	// Nothing here
@@ -113,38 +116,8 @@ namespace Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Protected virtual Renderer::StdLog methods            ]
 	//[-------------------------------------------------------]
-	inline const char* StdLog::typeToString(Type type) const
-	{
-		switch (type)
-		{
-			case Type::TRACE:
-				return "Trace: ";
-
-			case Type::DEBUG:
-				return "Debug: ";
-
-			case Type::INFORMATION:
-				return "Information: ";
-
-			case Type::WARNING:
-				return "Warning: ";
-
-			case Type::PERFORMANCE_WARNING:
-				return "Performance warning: ";
-
-			case Type::COMPATIBILITY_WARNING:
-				return "Compatibility warning: ";
-
-			case Type::CRITICAL:
-				return "Critical: ";
-
-			default:
-				return "Unknown: ";
-		}
-	}
-
 	inline void StdLog::printInternal(Type type, const char* message, uint32_t)
 	{
 		std::lock_guard<std::mutex> mutexLock(mMutex);
@@ -189,6 +162,40 @@ namespace Renderer
 		#else
 			#error "Unsupported platform"
 		#endif
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected methods                                     ]
+	//[-------------------------------------------------------]
+	inline const char* StdLog::typeToString(Type type) const
+	{
+		switch (type)
+		{
+			case Type::TRACE:
+				return "Trace: ";
+
+			case Type::DEBUG:
+				return "Debug: ";
+
+			case Type::INFORMATION:
+				return "Information: ";
+
+			case Type::WARNING:
+				return "Warning: ";
+
+			case Type::PERFORMANCE_WARNING:
+				return "Performance warning: ";
+
+			case Type::COMPATIBILITY_WARNING:
+				return "Compatibility warning: ";
+
+			case Type::CRITICAL:
+				return "Critical: ";
+
+			default:
+				return "Unknown: ";
+		}
 	}
 
 

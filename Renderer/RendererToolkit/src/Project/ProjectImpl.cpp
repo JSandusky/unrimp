@@ -284,35 +284,21 @@ namespace RendererToolkit
 		mCacheManager->saveCache();
 	}
 
-	void ProjectImpl::tryCompileAssetIncludingDependencies(const RendererRuntime::Asset& asset, const char* rendererTarget, RendererRuntime::AssetPackage& outputAssetPackage) noexcept
+	void ProjectImpl::compileAssetIncludingDependencies(const RendererRuntime::Asset& asset, const char* rendererTarget, RendererRuntime::AssetPackage& outputAssetPackage) noexcept
 	{
-		try
-		{
-			// Compile the given asset
-			compileAsset(asset, rendererTarget, outputAssetPackage);
+		// Compile the given asset
+		compileAsset(asset, rendererTarget, outputAssetPackage);
 
-			// Compile other assets depending on the given asset, if necessary
-			const RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = mAssetPackage.getSortedAssetVector();
-			const size_t numberOfAssets = sortedAssetVector.size();
-			for (size_t i = 0; i < numberOfAssets; ++i)
-			{
-				const RendererRuntime::Asset& dependedAsset = sortedAssetVector[i];
-				if (checkAssetIsChanged(dependedAsset, rendererTarget) && &dependedAsset != &asset)
-				{
-					try
-					{
-						compileAsset(dependedAsset, rendererTarget, outputAssetPackage);
-					}
-					catch (const std::exception& e)
-					{
-						RENDERER_LOG(mContext, CRITICAL, e.what())
-					}
-				}
-			}
-		}
-		catch (const std::exception& e)
+		// Compile other assets depending on the given asset, if necessary
+		const RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = mAssetPackage.getSortedAssetVector();
+		const size_t numberOfAssets = sortedAssetVector.size();
+		for (size_t i = 0; i < numberOfAssets; ++i)
 		{
-			RENDERER_LOG(mContext, CRITICAL, e.what())
+			const RendererRuntime::Asset& dependedAsset = sortedAssetVector[i];
+			if (checkAssetIsChanged(dependedAsset, rendererTarget) && &dependedAsset != &asset)
+			{
+				compileAsset(dependedAsset, rendererTarget, outputAssetPackage);
+			}
 		}
 	}
 

@@ -116,7 +116,7 @@ namespace
 			explicit PhysicsFSReadFile(const char* virtualFilename) :
 				mPhysicsFSFile(PHYSFS_openRead(virtualFilename))
 			{
-				assert(nullptr != mPhysicsFSFile && "Failed to open PhysicsFS file for reading");
+				assert((nullptr != mPhysicsFSFile) && "Failed to open PhysicsFS file for reading");
 			}
 
 			virtual ~PhysicsFSReadFile() override
@@ -125,7 +125,7 @@ namespace
 				{
 					const int result = PHYSFS_close(mPhysicsFSFile);
 					std::ignore = result;
-					assert(0 != result && "Failed to close read PhysicsFS file");
+					assert((0 != result) && "Failed to close read PhysicsFS file");
 				}
 			}
 
@@ -148,7 +148,7 @@ namespace
 			{
 				assert(nullptr != mPhysicsFSFile && "Invalid PhysicsFS file access");
 				const PHYSFS_sint64 fileLength = PHYSFS_fileLength(mPhysicsFSFile);
-				assert(-1 != fileLength && "PhysicsFS failed to determine the file size");
+				assert((-1 != fileLength) && "PhysicsFS failed to determine the file size");
 				return static_cast<size_t>(fileLength);
 			}
 
@@ -157,7 +157,7 @@ namespace
 				assert(nullptr != mPhysicsFSFile && "Invalid PhysicsFS file access");
 				const PHYSFS_sint64 numberOfReadBytes = PHYSFS_readBytes(mPhysicsFSFile, destinationBuffer, numberOfBytes);
 				std::ignore = numberOfReadBytes;
-				assert(numberOfReadBytes == numberOfBytes && "PhysicsFS failed to read all requested bytes");	// We're restrictive by intent
+				assert((static_cast<size_t>(numberOfReadBytes) == numberOfBytes) && "PhysicsFS failed to read all requested bytes");	// We're restrictive by intent
 			}
 
 			virtual void skip(size_t numberOfBytes) override
@@ -167,7 +167,7 @@ namespace
 				assert(-1 != currentOffset && "PhysicsFS failed to retrieve the current file offset");
 				const int result = PHYSFS_seek(mPhysicsFSFile, static_cast<PHYSFS_uint64>(currentOffset + numberOfBytes));
 				std::ignore = result;
-				assert(0 != result && "PhysicsFS failed seek file");
+				assert((0 != result) && "PhysicsFS failed seek file");
 			}
 
 			virtual void write(const void*, size_t) override
@@ -205,7 +205,7 @@ namespace
 			explicit PhysicsFSWriteFile(const char* virtualFilename) :
 				mPhysicsFSFile(PHYSFS_openWrite(virtualFilename))
 			{
-				assert(nullptr != mPhysicsFSFile && "Failed to open PhysicsFS file for writing");
+				assert((nullptr != mPhysicsFSFile) && "Failed to open PhysicsFS file for writing");
 			}
 
 			virtual ~PhysicsFSWriteFile() override
@@ -214,7 +214,7 @@ namespace
 				{
 					const int result = PHYSFS_close(mPhysicsFSFile);
 					std::ignore = result;
-					assert(0 != result && "Failed to close written PhysicsFS file");
+					assert((0 != result) && "Failed to close written PhysicsFS file");
 				}
 			}
 
@@ -257,7 +257,7 @@ namespace
 				assert(nullptr != mPhysicsFSFile && "Invalid PhysicsFS file access");
 				const PHYSFS_sint64 numberOfWrittenBytes = PHYSFS_writeBytes(mPhysicsFSFile, sourceBuffer, numberOfBytes);
 				std::ignore = numberOfWrittenBytes;
-				assert(numberOfWrittenBytes == numberOfBytes && "PhysicsFS failed to write all requested bytes");	// We're restrictive by intent
+				assert((static_cast<size_t>(numberOfWrittenBytes) == numberOfBytes) && "PhysicsFS failed to write all requested bytes");	// We're restrictive by intent
 			}
 
 

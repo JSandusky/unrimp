@@ -58,6 +58,7 @@
     <None Include="include\RendererRuntime\Core\Thread\ThreadPool.inl" />
     <None Include="include\RendererRuntime\Core\Time\Stopwatch.inl" />
     <None Include="include\RendererRuntime\Core\Time\TimeManager.inl" />
+    <None Include="include\RendererRuntime\DebugGui\ImGuiLog.inl" />
     <None Include="include\RendererRuntime\IRendererRuntime.inl" />
     <None Include="include\RendererRuntime\RenderQueue\Renderable.inl" />
     <None Include="include\RendererRuntime\RenderQueue\RenderableManager.inl" />
@@ -229,6 +230,7 @@
     <ClInclude Include="include\RendererRuntime\DebugGui\DebugGuiManager.h" />
     <ClInclude Include="include\RendererRuntime\DebugGui\Detail\DebugGuiManagerLinux.h" />
     <ClInclude Include="include\RendererRuntime\DebugGui\Detail\DebugGuiManagerWindows.h" />
+    <ClInclude Include="include\RendererRuntime\DebugGui\ImGuiLog.h" />
     <ClInclude Include="include\RendererRuntime\Export.h" />
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h" />
     <ClInclude Include="include\RendererRuntime\PrecompiledHeader.h" />

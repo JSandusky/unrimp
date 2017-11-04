@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererToolkit/Project/ProjectAssetMonitor.h"
 #include "RendererToolkit/Project/ProjectImpl.h"
+#include "RendererToolkit/Context.h"
 
 #include <RendererRuntime/IRendererRuntime.h>
 #include <RendererRuntime/Core/Platform/PlatformManager.h>
@@ -80,24 +81,31 @@ namespace RendererToolkit
 						for (size_t i = 0; i < numberOfAssets; ++i)
 						{
 							const RendererRuntime::Asset& asset = sortedAssetVector[i];
-							if (mProjectAssetMonitor.mProjectImpl.checkAssetIsChanged(asset, mProjectAssetMonitor.mRendererTarget.c_str()))
+							try
 							{
-								// TODO(co) Performance: Add asset compiler queue so we can compile more then one asset at a time in background
-								// TODO(co) At the moment, we only support modifying already existing asset data, we should add support for changes inside the runtime asset package as well
-								RendererRuntime::AssetPackage outputAssetPackage;
-								mProjectAssetMonitor.mProjectImpl.tryCompileAssetIncludingDependencies(asset, mProjectAssetMonitor.mRendererTarget.c_str(), outputAssetPackage);
-
-								// Inform the asset manager about the modified assets (just pass them individually, there's no real benefit in trying to apply "were's one, there are many" in this situation)
-								const RendererRuntime::AssetPackage::SortedAssetVector& sortedOutputAssetVector = outputAssetPackage.getSortedAssetVector();
-								const size_t numberOfOutputAssets = sortedOutputAssetVector.size();
-								for (size_t outputAssetIndex = 0; outputAssetIndex < numberOfOutputAssets; ++outputAssetIndex)
+								if (mProjectAssetMonitor.mProjectImpl.checkAssetIsChanged(asset, mProjectAssetMonitor.mRendererTarget.c_str()))
 								{
-									mProjectAssetMonitor.mRendererRuntime.reloadResourceByAssetId(sortedOutputAssetVector[outputAssetIndex].assetId);
-								}
+									// TODO(co) Performance: Add asset compiler queue so we can compile more then one asset at a time in background
+									// TODO(co) At the moment, we only support modifying already existing asset data, we should add support for changes inside the runtime asset package as well
+									RendererRuntime::AssetPackage outputAssetPackage;
+									mProjectAssetMonitor.mProjectImpl.compileAssetIncludingDependencies(asset, mProjectAssetMonitor.mRendererTarget.c_str(), outputAssetPackage);
 
-								// A compilation run has been finished do cleanup
-								mProjectAssetMonitor.mProjectImpl.onCompilationRunFinished();
-								break;
+									// Inform the asset manager about the modified assets (just pass them individually, there's no real benefit in trying to apply "were's one, there are many" in this situation)
+									const RendererRuntime::AssetPackage::SortedAssetVector& sortedOutputAssetVector = outputAssetPackage.getSortedAssetVector();
+									const size_t numberOfOutputAssets = sortedOutputAssetVector.size();
+									for (size_t outputAssetIndex = 0; outputAssetIndex < numberOfOutputAssets; ++outputAssetIndex)
+									{
+										mProjectAssetMonitor.mRendererRuntime.reloadResourceByAssetId(sortedOutputAssetVector[outputAssetIndex].assetId);
+									}
+
+									// A compilation run has been finished do cleanup
+									mProjectAssetMonitor.mProjectImpl.onCompilationRunFinished();
+									break;
+								}
+							}
+							catch (const std::exception& e)
+							{
+								RENDERER_LOG(mProjectAssetMonitor.mProjectImpl.getContext(), CRITICAL, e.what())
 							}
 
 							// A compilation run has been finished do cleanup
