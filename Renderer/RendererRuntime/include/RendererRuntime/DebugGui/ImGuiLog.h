@@ -62,7 +62,7 @@ namespace RendererRuntime
 		inline virtual ~ImGuiLog() override;
 		inline void open();
 		inline void clear();
-		inline void draw(const char* title);
+		inline void draw();
 
 
 	//[-------------------------------------------------------]

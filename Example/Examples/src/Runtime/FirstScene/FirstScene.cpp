@@ -46,6 +46,7 @@
 #include <RendererRuntime/Resource/CompositorNode/Pass/ICompositorInstancePass.h>
 #include <RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceInstance.h>
 #include <RendererRuntime/Resource/CompositorNode/Pass/DebugGui/CompositorResourcePassDebugGui.h>
+#include <RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateCompiler.h>
 #include <RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h>
 #include <RendererRuntime/Resource/Material/MaterialResourceManager.h>
 #include <RendererRuntime/Resource/Material/MaterialResource.h>
@@ -484,9 +485,10 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 		{
 			// Setup GUI
 			rendererRuntime->getDebugGuiManager().newFrame(nullptr != compositorInstancePass->getRenderTarget() ? *compositorInstancePass->getRenderTarget() : mainRenderTarget);
-			::detail::g_ImGuiLog.draw("Log");
-			ImGui::Begin("Options");
-				// General
+			::detail::g_ImGuiLog.draw();
+			if (ImGui::Begin("Options"))
+			{
+				// Status
 				{
 					const RendererToolkit::IRendererToolkit* rendererToolkit = getRendererToolkit();
 					if (nullptr != rendererToolkit)
@@ -495,6 +497,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 					}
 				}
 				ImGui::Text("Resource Streamer: %s", (0 == rendererRuntime->getResourceStreamer().getNumberOfInFlightLoadRequests()) ? "Idle" : "Busy");
+				ImGui::Text("Pipeline State Compiler: %s", (0 == rendererRuntime->getPipelineStateCompiler().getNumberOfInFlightCompilerRequests()) ? "Idle" : "Busy");
 				if (ImGui::Button("Log"))
 				{
 					::detail::g_ImGuiLog.open();
@@ -584,6 +587,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 						mSceneNode->setTransform(transform);
 					}
 				}
+			}
 			ImGui::End();
 		}
 

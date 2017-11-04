@@ -108,6 +108,7 @@ namespace RendererRuntime
 		void setAsynchronousCompilationEnabled(bool enabled);
 		inline uint32_t getNumberOfCompilerThreads() const;
 		void setNumberOfCompilerThreads(uint32_t numberOfCompilerThreads);
+		inline uint32_t getNumberOfInFlightCompilerRequests() const;
 		inline void flushBuilderQueue();
 		inline void flushCompilerQueue();
 		inline void flushAllQueues();
@@ -173,9 +174,10 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
-		bool			  mAsynchronousCompilationEnabled;
-		uint32_t		  mNumberOfCompilerThreads;
+		IRendererRuntime&	  mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+		bool				  mAsynchronousCompilationEnabled;
+		uint32_t			  mNumberOfCompilerThreads;
+		std::atomic<uint32_t> mNumberOfInFlightCompilerRequests;
 
 		// Asynchronous building (moderate cost)
 		std::atomic<bool>		mShutdownBuilderThread;

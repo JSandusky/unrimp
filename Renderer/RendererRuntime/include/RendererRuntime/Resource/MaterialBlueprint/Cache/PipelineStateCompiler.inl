@@ -38,6 +38,11 @@ namespace RendererRuntime
 		return mNumberOfCompilerThreads;
 	}
 
+	inline uint32_t PipelineStateCompiler::getNumberOfInFlightCompilerRequests() const
+	{
+		return mNumberOfInFlightCompilerRequests;
+	}
+
 	inline void PipelineStateCompiler::flushBuilderQueue()
 	{
 		flushQueue(mBuilderMutex, mBuilderQueue);

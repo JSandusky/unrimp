@@ -43,6 +43,7 @@ namespace RendererRuntime
 	inline void ImGuiLog::open()
 	{
 		mOpen = true;
+		ImGui::SetWindowCollapsed("Log", false);
 	}
 
 	inline void ImGuiLog::clear()
@@ -51,12 +52,12 @@ namespace RendererRuntime
 		mEntries.clear();
 	}
 
-	inline void ImGuiLog::draw(const char* title)
+	inline void ImGuiLog::draw()
 	{
 		if (mOpen)
 		{
 			ImGui::SetNextWindowSize(ImVec2(500.0f, 400.0f), ImGuiSetCond_FirstUseEver);
-			ImGui::Begin(title, &mOpen);
+			ImGui::Begin("Log", &mOpen);
 			if (ImGui::Button("Clear"))
 			{
 				clear();

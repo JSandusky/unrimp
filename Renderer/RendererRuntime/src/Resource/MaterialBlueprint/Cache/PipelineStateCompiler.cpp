@@ -108,6 +108,8 @@ namespace RendererRuntime
 			PipelineStateCache& pipelineStateCache = compilerRequest.pipelineStateCache;
 			pipelineStateCache.mPipelineStateObjectPtr = compilerRequest.pipelineStateObject;
 			pipelineStateCache.mIsUsingFallback = false;
+			assert(0 != mNumberOfInFlightCompilerRequests);
+			--mNumberOfInFlightCompilerRequests;
 		}
 	}
 
@@ -119,6 +121,7 @@ namespace RendererRuntime
 		mRendererRuntime(rendererRuntime),
 		mAsynchronousCompilationEnabled(false),
 		mNumberOfCompilerThreads(0),
+		mNumberOfInFlightCompilerRequests(0),
 		mShutdownBuilderThread(false),
 		mBuilderThread(&PipelineStateCompiler::builderThreadWorker, this),
 		mShutdownCompilerThread(false)
@@ -141,6 +144,7 @@ namespace RendererRuntime
 	void PipelineStateCompiler::addAsynchronousCompilerRequest(PipelineStateCache& pipelineStateCache)
 	{
 		// Push the load request into the builder queue
+		++mNumberOfInFlightCompilerRequests;
 		std::unique_lock<std::mutex> builderMutexLock(mBuilderMutex);
 		mBuilderQueue.emplace_back(CompilerRequest(pipelineStateCache));
 		builderMutexLock.unlock();
