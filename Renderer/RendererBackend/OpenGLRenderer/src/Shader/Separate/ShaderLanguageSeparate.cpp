@@ -177,7 +177,7 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
-		void printOpenGLShaderProgramInformationIntoLog(OpenGLRenderer::OpenGLRenderer& openGLRenderer, GLuint openGLObject)
+		void printOpenGLShaderProgramInformationIntoLog(OpenGLRenderer::OpenGLRenderer& openGLRenderer, GLuint openGLObject, const char* sourceCode)
 		{
 			// Get the length of the information (including a null termination)
 			GLint informationLength = 0;
@@ -191,7 +191,7 @@ namespace
 				OpenGLRenderer::glGetInfoLogARB(openGLObject, informationLength, nullptr, informationLog);
 
 				// Output the debug string
-				RENDERER_LOG(openGLRenderer.getContext(), CRITICAL, informationLog)
+				openGLRenderer.getContext().getLog().print(Renderer::ILog::Type::CRITICAL, sourceCode, informationLog);
 
 				// Cleanup information memory
 				delete [] informationLog;
@@ -272,7 +272,7 @@ namespace OpenGLRenderer
 			if (GL_TRUE != linked)
 			{
 				// Error, program link failed!
-				::detail::printOpenGLShaderProgramInformationIntoLog(openGLRenderer, openGLProgram);
+				::detail::printOpenGLShaderProgramInformationIntoLog(openGLRenderer, openGLProgram, nullptr);
 			}
 
 			// Done
@@ -281,7 +281,7 @@ namespace OpenGLRenderer
 		else
 		{
 			// Error, failed to compile the shader!
-			::detail::printOpenGLShaderProgramInformationIntoLog(openGLRenderer, openGLShader);
+			::detail::printOpenGLShaderProgramInformationIntoLog(openGLRenderer, openGLShader, nullptr);
 
 			// Destroy the OpenGL shader
 			// -> A value of 0 for shader will be silently ignored
@@ -308,7 +308,7 @@ namespace OpenGLRenderer
 		else
 		{
 			// Error, failed to compile the shader!
-			::detail::printOpenGLShaderProgramInformationIntoLog(openGLRenderer, openGLProgram);
+			::detail::printOpenGLShaderProgramInformationIntoLog(openGLRenderer, openGLProgram, sourceCode);
 
 			// Destroy the program
 			// -> A value of 0 for shader will be silently ignored
@@ -390,13 +390,13 @@ namespace OpenGLRenderer
 				else
 				{
 					// Failed to link the program
-					RENDERER_LOG(openGLRenderer.getContext(), CRITICAL, "Failed to link the GLSL program: %s", program.getInfoLog())
+					openGLRenderer.getContext().getLog().print(Renderer::ILog::Type::CRITICAL, sourceCode, "Failed to link the GLSL program: %s", program.getInfoLog());
 				}
 			}
 			else
 			{
 				// Failed to parse the shader source code
-				RENDERER_LOG(openGLRenderer.getContext(), CRITICAL, "Failed to parse the GLSL shader source code: %s", shader.getInfoLog())
+				openGLRenderer.getContext().getLog().print(Renderer::ILog::Type::CRITICAL, sourceCode, "Failed to parse the GLSL shader source code: %s", shader.getInfoLog());
 			}
 		#else
 			std::ignore = shaderType;

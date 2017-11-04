@@ -82,7 +82,7 @@ namespace OpenGLES3Renderer
 					glGetShaderInfoLog(openGLES3Shader, informationLength, nullptr, informationLog);
 
 					// Output the debug string
-					RENDERER_LOG(openGLES3Renderer.getContext(), CRITICAL, informationLog)
+					openGLES3Renderer.getContext().getLog().print(Renderer::ILog::Type::CRITICAL, sourceCode, informationLog);
 
 					// Cleanup information memory
 					delete [] informationLog;

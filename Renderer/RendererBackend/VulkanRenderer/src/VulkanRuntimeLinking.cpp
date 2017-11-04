@@ -191,7 +191,7 @@ namespace
 			message << "Message: \"" << pMessage << "\" ";
 
 			// Print log message
-			context->getLog().print(type, message.str().c_str());
+			context->getLog().print(type, nullptr, message.str().c_str());
 
 			// The Vulkan call should not be aborted to have the same behavior with and without validation layers enabled
 			return VK_FALSE;

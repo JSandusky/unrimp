@@ -75,7 +75,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ILog methods                 ]
 	//[-------------------------------------------------------]
-	inline void StdLog::print(Type type, const char* format, ...)
+	inline void StdLog::print(Type type, const char* attachment, const char* format, ...)
 	{
 		// Get the required buffer length, does not include the terminating zero character
 		va_list vaList;
@@ -93,7 +93,7 @@ namespace Renderer
 			va_end(vaList);
 
 			// Internal processing
-			printInternal(type, formattedText, textLength);
+			printInternal(type, attachment, formattedText, textLength);
 		}
 		else
 		{
@@ -107,7 +107,7 @@ namespace Renderer
 			va_end(vaList);
 
 			// Internal processing
-			printInternal(type, formattedText, textLength);
+			printInternal(type, attachment, formattedText, textLength);
 
 			// Cleanup
 			delete [] formattedText;
@@ -118,12 +118,16 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected virtual Renderer::StdLog methods            ]
 	//[-------------------------------------------------------]
-	inline void StdLog::printInternal(Type type, const char* message, uint32_t)
+	inline void StdLog::printInternal(Type type, const char*, const char* message, uint32_t)
 	{
 		std::lock_guard<std::mutex> mutexLock(mMutex);
 
 		// Construct the full UTF-8 message text
-		const std::string fullMessage = std::string(typeToString(type)) + message + '\n';
+		std::string fullMessage = std::string(typeToString(type)) + message;
+		if ('\n' != fullMessage.back())
+		{
+			fullMessage += '\n';
+		}
 
 		// Platform specific handling
 		#ifdef WIN32

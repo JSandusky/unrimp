@@ -75,10 +75,12 @@ namespace Renderer
 		*
 		*  @param[in] type
 		*    Log message type
+		*  @param[in] attachment
+		*    Optional attachment (for example build shader source code), can be a null pointer
 		*  @param[in] format
 		*    "sprintf"-style formatted log message
 		*/
-		virtual void print(Type type, const char* format, ...) = 0;
+		virtual void print(Type type, const char* attachment, const char* format, ...) = 0;
 
 
 	//[-------------------------------------------------------]
@@ -117,7 +119,7 @@ namespace Renderer
 *  @note
 *    - Example: RENDERER_LOG(mContext, DEBUG, "Direct3D 11 renderer backend startup")
 */
-#define RENDERER_LOG(context, type, format, ...) (context).getLog().print(Renderer::ILog::Type::type, format, ##__VA_ARGS__);
+#define RENDERER_LOG(context, type, format, ...) (context).getLog().print(Renderer::ILog::Type::type, nullptr, format, ##__VA_ARGS__);
 
 
 //[-------------------------------------------------------]

@@ -62,8 +62,16 @@ namespace RendererRuntime
 			{
 				clear();
 			}
+			if (ImGui::IsItemHovered())
+			{
+				ImGui::SetTooltip("Clear log");
+			}
 			ImGui::SameLine();
 			const bool copy = ImGui::Button("Copy");
+			if (ImGui::IsItemHovered())
+			{
+				ImGui::SetTooltip("Copy log to operation system clipboard");
+			}
 			ImGui::SameLine();
 			mImGuiTextFilter.Draw("Filter", -100.0f);
 			ImGui::Separator();
@@ -80,13 +88,14 @@ namespace RendererRuntime
 				// TODO(co) Optimization: With huge logs the current trivial implementation will certainly become a bottleneck
 				const char* bufferBegin = mImGuiTextBuffer.begin();
 				const char* line = bufferBegin;
-				for (int lineNumber = 0; nullptr != line; ++lineNumber)
+				for (size_t lineNumber = 0; nullptr != line; ++lineNumber)
 				{
-					const char* lineEnd = (lineNumber < mEntries.Size) ? (bufferBegin + mEntries[lineNumber].lineOffsets) : nullptr;
+					const char* lineEnd = (lineNumber < mEntries.size()) ? (bufferBegin + mEntries[lineNumber].lineOffsets) : nullptr;
 					if (!mImGuiTextFilter.IsActive() || mImGuiTextFilter.PassFilter(line, lineEnd))
 					{
 						ImVec4 color(1.0f, 1.0f, 1.0f, 1.0f);
-						switch (mEntries[lineNumber].type)
+						const Entry& entry = mEntries[lineNumber];
+						switch (entry.type)
 						{
 							case Renderer::ILog::Type::TRACE:
 							case Renderer::ILog::Type::DEBUG:
@@ -105,6 +114,18 @@ namespace RendererRuntime
 
 							case Renderer::ILog::Type::CRITICAL:
 								color = ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
+								if (!entry.attachment.empty())
+								{
+									if (ImGui::Button("!"))
+									{
+										ImGui::SetClipboardText(entry.attachment.c_str());
+									}
+									if (ImGui::IsItemHovered())
+									{
+										ImGui::SetTooltip("Copy log entry attachment to operation system clipboard");
+									}
+									ImGui::SameLine();
+								}
 								break;
 						}
 						ImGui::PushStyleColor(ImGuiCol_Text, color);
@@ -130,13 +151,17 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected virtual Renderer::StdLog methods            ]
 	//[-------------------------------------------------------]
-	inline void ImGuiLog::printInternal(Type type, const char* message, uint32_t numberOfCharacters)
+	inline void ImGuiLog::printInternal(Type type, const char* attachment, const char* message, uint32_t numberOfCharacters)
 	{
 		// Call the base implementation
-		StdLog::printInternal(type, message, numberOfCharacters);
+		StdLog::printInternal(type, attachment, message, numberOfCharacters);
 
 		// Construct the full UTF-8 message text
-		const std::string fullMessage = std::string(typeToString(type)) + message + '\n';
+		std::string fullMessage = std::string(typeToString(type)) + message;
+		if ('\n' != fullMessage.back())
+		{
+			fullMessage += '\n';
+		}
 
 		// Add to ImGui log
 		int previousSize = mImGuiTextBuffer.size();
@@ -148,6 +173,13 @@ namespace RendererRuntime
 				Entry entry;
 				entry.lineOffsets = previousSize;
 				entry.type = type;
+				if (nullptr != attachment)
+				{
+					entry.attachment = attachment;
+
+					// Show attachment only once per log entry
+					attachment = nullptr;
+				}
 				mEntries.push_back(entry);
 			}
 		}

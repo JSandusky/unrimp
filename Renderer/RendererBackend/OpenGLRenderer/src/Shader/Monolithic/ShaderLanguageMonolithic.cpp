@@ -86,7 +86,7 @@ namespace OpenGLRenderer
 					glGetInfoLogARB(openGLShader, informationLength, nullptr, informationLog);
 
 					// Output the debug string
-					RENDERER_LOG(openGLRenderer.getContext(), CRITICAL, informationLog)
+					openGLRenderer.getContext().getLog().print(Renderer::ILog::Type::CRITICAL, sourceCode, informationLog);
 
 					// Cleanup information memory
 					delete [] informationLog;

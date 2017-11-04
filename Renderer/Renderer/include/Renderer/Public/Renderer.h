@@ -281,7 +281,7 @@ namespace Renderer
 			wl_surface*	mSurface;
 		};
 	#endif
-		#define RENDERER_LOG(context, type, format, ...) (context).getLog().print(Renderer::ILog::Type::type, format, ##__VA_ARGS__);
+		#define RENDERER_LOG(context, type, format, ...) (context).getLog().print(Renderer::ILog::Type::type, nullptr, format, ##__VA_ARGS__);
 	#endif
 
 	// Renderer/Log/ILog.h
@@ -301,7 +301,7 @@ namespace Renderer
 				CRITICAL
 			};
 		public:
-			virtual void print(Type type, const char* format, ...) = 0;
+			virtual void print(Type type, const char* attachment, const char* format, ...) = 0;
 		protected:
 			inline ILog()
 			{}

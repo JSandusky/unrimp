@@ -108,7 +108,7 @@ namespace Direct3D11Renderer
 		{
 			if (nullptr != errorD3dBlob)
 			{
-				RENDERER_LOG(static_cast<Direct3D11Renderer&>(getRenderer()).getContext(), CRITICAL, static_cast<char*>(errorD3dBlob->GetBufferPointer()))
+				static_cast<Direct3D11Renderer&>(getRenderer()).getContext().getLog().print(Renderer::ILog::Type::CRITICAL, sourceCode, static_cast<char*>(errorD3dBlob->GetBufferPointer()));
 				errorD3dBlob->Release();
 			}
 			return nullptr;

@@ -31,6 +31,8 @@
 
 #include <imgui/imgui.h>
 
+#include <vector>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -69,7 +71,7 @@ namespace RendererRuntime
 	//[ Protected virtual Renderer::StdLog methods            ]
 	//[-------------------------------------------------------]
 	protected:
-		inline virtual void printInternal(Type type, const char* message, uint32_t numberOfCharacters) override;
+		inline virtual void printInternal(Type type, const char* attachment, const char* message, uint32_t numberOfCharacters) override;
 
 
 	//[-------------------------------------------------------]
@@ -86,8 +88,9 @@ namespace RendererRuntime
 	private:
 		struct Entry
 		{
-			int  lineOffsets;	///< Index to lines offset
-			Type type;
+			int			lineOffsets;	///< Index to lines offset
+			Type		type;
+			std::string attachment;		///< Optional attachment (for example build shader source code)
 		};
 
 
@@ -95,11 +98,11 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ImGuiTextBuffer mImGuiTextBuffer;
-		ImGuiTextFilter mImGuiTextFilter;
-		ImVector<Entry> mEntries;
-		bool			mScrollToBottom;
-		bool			mOpen;
+		ImGuiTextBuffer	   mImGuiTextBuffer;
+		ImGuiTextFilter	   mImGuiTextFilter;
+		std::vector<Entry> mEntries;
+		bool			   mScrollToBottom;
+		bool			   mOpen;
 
 
 	};
