@@ -57,9 +57,9 @@ namespace RendererRuntime
 		mStencil = passVrHiddenAreaMesh->stencil;
 
 		// Sanity checks
-		assert(0 != mFlags && "The VR hidden area mesh compositor resource pass flags must not be null");
-		assert((mFlags & Renderer::ClearFlag::COLOR) == 0 && "The VR hidden area mesh compositor resource pass doesn't support the color flag");
-		assert((mFlags & Renderer::ClearFlag::STENCIL) == 0 && "TODO(co) The VR hidden area mesh compositor resource pass doesn't support the stencil flag, yet");
+		assert((0 != mFlags) && "The VR hidden area mesh compositor resource pass flags must not be null");
+		assert(((mFlags & Renderer::ClearFlag::COLOR) == 0) && "The VR hidden area mesh compositor resource pass doesn't support the color flag");
+		assert(((mFlags & Renderer::ClearFlag::STENCIL) == 0) && "TODO(co) The VR hidden area mesh compositor resource pass doesn't support the stencil flag, yet");
 	}
 
 

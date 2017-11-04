@@ -148,7 +148,7 @@ namespace
 			}
 
 			// Done
-			assert(nullptr != mappedSubresource.data && "Mapping of OpenGL buffer failed");
+			assert((nullptr != mappedSubresource.data) && "Mapping of OpenGL buffer failed");
 			return (nullptr != mappedSubresource.data);
 		}
 
@@ -1475,7 +1475,7 @@ namespace OpenGLRenderer
 	void OpenGLRenderer::draw(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
 		// Sanity check
-		assert(numberOfDraws > 0 && "Number of draws must not be zero");
+		assert((numberOfDraws > 0) && "Number of draws must not be zero");
 		// It's possible to draw without "mVertexArray"
 
 		// Tessellation support: "glPatchParameteri()" is called within "OpenGLRenderer::iaSetPrimitiveTopology()"
@@ -1526,7 +1526,7 @@ namespace OpenGLRenderer
 	{
 		// Sanity checks
 		assert(nullptr != emulationData);
-		assert(numberOfDraws > 0 && "Number of draws must not be zero");
+		assert((numberOfDraws > 0) && "Number of draws must not be zero");
 		// It's possible to draw without "mVertexArray"
 
 		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
@@ -1564,9 +1564,9 @@ namespace OpenGLRenderer
 	void OpenGLRenderer::drawIndexed(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
 		// Sanity checks
-		assert(numberOfDraws > 0 && "Number of draws must not be zero");
-		assert(nullptr != mVertexArray && "Draw indexed needs a set vertex array");
-		assert(nullptr != mVertexArray->getIndexBuffer() && "Draw indexed needs a set vertex array which contains an index buffer");
+		assert((numberOfDraws > 0) && "Number of draws must not be zero");
+		assert((nullptr != mVertexArray) && "Draw indexed needs a set vertex array");
+		assert((nullptr != mVertexArray->getIndexBuffer()) && "Draw indexed needs a set vertex array which contains an index buffer");
 
 		// Tessellation support: "glPatchParameteri()" is called within "OpenGLRenderer::iaSetPrimitiveTopology()"
 
@@ -1616,9 +1616,9 @@ namespace OpenGLRenderer
 	{
 		// Sanity checks
 		assert(nullptr != emulationData);
-		assert(numberOfDraws > 0 && "Number of draws must not be zero");
-		assert(nullptr != mVertexArray && "Draw indexed needs a set vertex array");
-		assert(nullptr != mVertexArray->getIndexBuffer() && "Draw indexed needs a set vertex array which contains an index buffer");
+		assert((numberOfDraws > 0) && "Number of draws must not be zero");
+		assert((nullptr != mVertexArray) && "Draw indexed needs a set vertex array");
+		assert((nullptr != mVertexArray->getIndexBuffer()) && "Draw indexed needs a set vertex array which contains an index buffer");
 
 		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
 		emulationData += indirectBufferOffset;

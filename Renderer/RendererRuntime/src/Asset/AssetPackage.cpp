@@ -74,7 +74,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void AssetPackage::addAsset(AssetId assetId, VirtualFilename virtualFilename)
 	{
-		assert(nullptr == tryGetAssetByAssetId(assetId) && "Asset ID is already used");
+		assert((nullptr == tryGetAssetByAssetId(assetId)) && "Asset ID is already used");
 		assert((strlen(virtualFilename) <= Asset::MAXIMUM_ASSET_FILENAME_LENGTH) && "The asset filename is too long");
 		SortedAssetVector::const_iterator iterator = std::lower_bound(mSortedAssetVector.cbegin(), mSortedAssetVector.cend(), assetId, ::detail::OrderByAssetId());
 		Asset& asset = *mSortedAssetVector.insert(iterator, Asset());

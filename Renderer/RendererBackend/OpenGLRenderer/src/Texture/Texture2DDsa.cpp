@@ -48,7 +48,7 @@ namespace OpenGLRenderer
 		assert(numberOfMultisamples == 1 || 0 == (flags & Renderer::TextureFlag::GENERATE_MIPMAPS));
 		assert(numberOfMultisamples == 1 || 0 != (flags & Renderer::TextureFlag::RENDER_TARGET));
 		assert(0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data);
-		assert((flags & Renderer::TextureFlag::RENDER_TARGET) == 0 || nullptr == data && "Render target textures can't be filled using provided data");
+		assert(((flags & Renderer::TextureFlag::RENDER_TARGET) == 0 || nullptr == data) && "Render target textures can't be filled using provided data");
 
 		// Multisample texture?
 		const bool isArbDsa = openGLRenderer.getExtensions().isGL_ARB_direct_state_access();

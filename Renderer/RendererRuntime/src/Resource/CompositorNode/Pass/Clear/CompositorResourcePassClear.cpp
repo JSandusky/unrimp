@@ -66,7 +66,7 @@ namespace RendererRuntime
 		mStencil = passClear->stencil;
 
 		// Sanity check
-		assert(0 != mFlags && "The clear compositor resource pass flags must not be null");
+		assert((0 != mFlags) && "The clear compositor resource pass flags must not be null");
 	}
 
 

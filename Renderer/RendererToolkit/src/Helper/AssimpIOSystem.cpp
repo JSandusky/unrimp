@@ -101,10 +101,10 @@ namespace
 
 			virtual aiReturn Seek(size_t pOffset, aiOrigin pOrigin) override
 			{
-				assert(aiOrigin_END != pOrigin && "We don't support \"aiOrigin_END\" in read-only Assimp files");
+				assert((aiOrigin_END != pOrigin) && "We don't support \"aiOrigin_END\" in read-only Assimp files");
 				if (aiOrigin_SET == pOrigin)
 				{
-					assert(pOffset >= mCurrentPosition && "We only support unidirectional sequential byte skipping");
+					assert((pOffset >= mCurrentPosition) && "We only support unidirectional sequential byte skipping");
 					pOffset = pOffset - mCurrentPosition;
 				}
 				if (0 != pOffset)

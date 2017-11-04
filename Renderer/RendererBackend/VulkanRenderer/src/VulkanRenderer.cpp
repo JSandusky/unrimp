@@ -639,7 +639,7 @@ namespace VulkanRenderer
 	void VulkanRenderer::clear(uint32_t flags, const float color[4], float z, uint32_t stencil)
 	{
 		// Sanity check
-		assert(nullptr != mRenderTarget && "Can't execute clear command without a render target set");
+		assert((nullptr != mRenderTarget) && "Can't execute clear command without a render target set");
 		assert(!mInsideVulkanRenderPass && "Can't execute clear command inside a Vulkan render pass");
 
 		// Clear color
@@ -678,7 +678,7 @@ namespace VulkanRenderer
 	void VulkanRenderer::draw(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
 		// Sanity check
-		assert(numberOfDraws > 0 && "Number of draws must not be zero");
+		assert((numberOfDraws > 0) && "Number of draws must not be zero");
 		// It's possible to draw without "mVertexArray"
 
 		// Before doing anything else: If there's emulation data, use it (for example "Renderer::IndirectBuffer" might have been used to generate the data)
@@ -707,7 +707,7 @@ namespace VulkanRenderer
 	{
 		// Sanity checks
 		assert(nullptr != emulationData);
-		assert(numberOfDraws > 0 && "Number of draws must not be zero");
+		assert((numberOfDraws > 0) && "Number of draws must not be zero");
 		// It's possible to draw without "mVertexArray"
 
 		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
@@ -733,9 +733,9 @@ namespace VulkanRenderer
 	void VulkanRenderer::drawIndexed(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
 		// Sanity checks
-		assert(numberOfDraws > 0 && "Number of draws must not be zero");
-		assert(nullptr != mVertexArray && "Draw indexed needs a set vertex array");
-		assert(nullptr != mVertexArray->getIndexBuffer() && "Draw indexed needs a set vertex array which contains an index buffer");
+		assert((numberOfDraws > 0) && "Number of draws must not be zero");
+		assert((nullptr != mVertexArray) && "Draw indexed needs a set vertex array");
+		assert((nullptr != mVertexArray->getIndexBuffer()) && "Draw indexed needs a set vertex array which contains an index buffer");
 
 		// Before doing anything else: If there's emulation data, use it (for example "Renderer::IndirectBuffer" might have been used to generate the data)
 		const uint8_t* emulationData = indirectBuffer.getEmulationData();
@@ -763,9 +763,9 @@ namespace VulkanRenderer
 	{
 		// Sanity checks
 		assert(nullptr != emulationData);
-		assert(numberOfDraws > 0 && "Number of draws must not be zero");
-		assert(nullptr != mVertexArray && "Draw indexed needs a set vertex array");
-		assert(nullptr != mVertexArray->getIndexBuffer() && "Draw indexed needs a set vertex array which contains an index buffer");
+		assert((numberOfDraws > 0) && "Number of draws must not be zero");
+		assert((nullptr != mVertexArray) && "Draw indexed needs a set vertex array");
+		assert((nullptr != mVertexArray->getIndexBuffer()) && "Draw indexed needs a set vertex array which contains an index buffer");
 
 		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
 		emulationData += indirectBufferOffset;
@@ -1370,7 +1370,7 @@ namespace VulkanRenderer
 	{
 		// Sanity checks
 		assert(!mInsideVulkanRenderPass && "We're already inside a Vulkan render pass");
-		assert(nullptr != mRenderTarget && "Can't begin a Vulkan render pass without a render target set");
+		assert((nullptr != mRenderTarget) && "Can't begin a Vulkan render pass without a render target set");
 
 		// Start Vulkan render pass
 		const uint32_t numberOfAttachments = static_cast<const RenderPass&>(mRenderTarget->getRenderPass()).getNumberOfAttachments();

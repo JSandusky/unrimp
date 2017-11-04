@@ -216,7 +216,7 @@ namespace RendererRuntime
 	void RenderQueue::fillCommandBuffer(const Renderer::IRenderTarget& renderTarget, MaterialTechniqueId materialTechniqueId, const CompositorContextData& compositorContextData, Renderer::CommandBuffer& commandBuffer)
 	{
 		// Sanity check
-		assert(getNumberOfDrawCalls() > 0 && "Don't call the fill command buffer method if there's no work to be done");
+		assert((getNumberOfDrawCalls() > 0) && "Don't call the fill command buffer method if there's no work to be done");
 
 		// Begin debug event
 		COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)

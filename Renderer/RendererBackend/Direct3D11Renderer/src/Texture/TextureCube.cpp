@@ -48,7 +48,7 @@ namespace Direct3D11Renderer
 		static const uint32_t NUMBER_OF_SLICES = 6;	// In Direct3D 11, a cube map is a 2D array texture with six slices
 
 		// Sanity checks
-		assert((flags & Renderer::TextureFlag::RENDER_TARGET) == 0 || nullptr == data && "Render target textures can't be filled using provided data");
+		assert(((flags & Renderer::TextureFlag::RENDER_TARGET) == 0 || nullptr == data) && "Render target textures can't be filled using provided data");
 
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D11Renderer)

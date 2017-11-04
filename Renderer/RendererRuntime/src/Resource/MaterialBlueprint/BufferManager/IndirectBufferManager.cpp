@@ -87,7 +87,7 @@ namespace RendererRuntime
 	IndirectBufferManager::IndirectBuffer* IndirectBufferManager::getIndirectBuffer(uint32_t numberOfBytes)
 	{
 		// Sanity check
-		assert(numberOfBytes > 0 && "Don't call this method if there's no work to be done");
+		assert((numberOfBytes > 0) && "Don't call this method if there's no work to be done");
 
 		// Is there enough space left inside the current indirect buffer?
 		if (nullptr != mCurrentIndirectBuffer)

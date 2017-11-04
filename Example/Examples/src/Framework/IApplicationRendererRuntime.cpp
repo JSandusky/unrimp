@@ -88,7 +88,7 @@ RendererToolkit::IRendererToolkit* IApplicationRendererRuntime::getRendererToolk
 		// Create the renderer toolkit instance, if required
 		if (nullptr == mRendererToolkitInstance)
 		{
-			assert(nullptr != mRendererRuntimeInstance && "The renderer runtime instance must be valid");
+			assert((nullptr != mRendererRuntimeInstance) && "The renderer runtime instance must be valid");
 			const RendererRuntime::IRendererRuntime* rendererRuntime = mRendererRuntimeInstance->getRendererRuntime();
 			Renderer::ILog& log = rendererRuntime->getRenderer().getContext().getLog();
 			mRendererToolkitFileManager = new RendererRuntime::StdFileManager(log, mFileManager->getRelativeRootDirectory());

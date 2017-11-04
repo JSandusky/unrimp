@@ -359,10 +359,10 @@ namespace VulkanRenderer
 	Renderer::IResourceGroup* RootSignature::createResourceGroup(uint32_t rootParameterIndex, uint32_t numberOfResources, Renderer::IResource** resources, Renderer::ISamplerState** samplerStates)
 	{
 		// Sanity checks
-		assert(VK_NULL_HANDLE != mVkDescriptorPool && "The Vulkan descriptor pool instance must be valid");
-		assert(rootParameterIndex < mVkDescriptorSetLayouts.size() && "The root parameter index is out-of-bounds");
-		assert(numberOfResources > 0 && "The number of resources must not be zero");
-		assert(nullptr != resources && "The resource pointers must be valid");
+		assert((VK_NULL_HANDLE != mVkDescriptorPool) && "The Vulkan descriptor pool instance must be valid");
+		assert((rootParameterIndex < mVkDescriptorSetLayouts.size()) && "The root parameter index is out-of-bounds");
+		assert((numberOfResources > 0) && "The number of resources must not be zero");
+		assert((nullptr != resources) && "The resource pointers must be valid");
 
 		// Allocate Vulkan descriptor set
 		VkDescriptorSet vkDescriptorSet = VK_NULL_HANDLE;

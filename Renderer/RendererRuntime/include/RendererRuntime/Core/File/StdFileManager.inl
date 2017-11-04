@@ -305,7 +305,7 @@ namespace RendererRuntime
 				if (pair.first != mountPoint)
 				{
 					const AbsoluteDirectoryNames& absoluteDirectoryNames = pair.second;
-					assert(absoluteDirectoryNames.cend() == std::find(absoluteDirectoryNames.begin(), absoluteDirectoryNames.end(), absoluteDirectoryName) && "The same absolute directory name shouldn't be added to too different STD mount points");
+					assert((absoluteDirectoryNames.cend() == std::find(absoluteDirectoryNames.begin(), absoluteDirectoryNames.end(), absoluteDirectoryName)) && "The same absolute directory name shouldn't be added to too different STD mount points");
 				}
 			}
 		#endif

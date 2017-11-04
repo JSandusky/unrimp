@@ -40,7 +40,7 @@ namespace OpenGLRenderer
 		mSamplerState(samplerState)
 	{
 		// Sanity check
-		assert(samplerState.maxAnisotropy <= openGLRenderer.getCapabilities().maximumAnisotropy && "Maximum anisotropy value violated");
+		assert((samplerState.maxAnisotropy <= openGLRenderer.getCapabilities().maximumAnisotropy) && "Maximum anisotropy value violated");
 	}
 
 	SamplerStateDsa::~SamplerStateDsa()

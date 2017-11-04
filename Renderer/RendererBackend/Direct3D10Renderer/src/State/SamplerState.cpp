@@ -42,8 +42,8 @@ namespace Direct3D10Renderer
 		mD3D10SamplerState(nullptr)
 	{
 		// Sanity checks
-		assert(samplerState.filter != Renderer::FilterMode::UNKNOWN && "Filter mode must not be unknown");
-		assert(samplerState.maxAnisotropy <= direct3D10Renderer.getCapabilities().maximumAnisotropy && "Maximum anisotropy value violated");
+		assert((samplerState.filter != Renderer::FilterMode::UNKNOWN) && "Filter mode must not be unknown");
+		assert((samplerState.maxAnisotropy <= direct3D10Renderer.getCapabilities().maximumAnisotropy) && "Maximum anisotropy value violated");
 
 		// Create the Direct3D 10 sampler state
 		// -> "Renderer::SamplerState" maps directly to Direct3D 10 & 11, do not change it

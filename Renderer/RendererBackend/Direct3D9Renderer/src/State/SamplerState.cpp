@@ -53,7 +53,7 @@ namespace Direct3D9Renderer
 		mDirect3DMaxMipLevel((samplerState.minLOD > 0.0f) ? static_cast<unsigned long>(samplerState.minLOD) : 0)	// Direct3D 9 type is unsigned long, lookout the Direct3D 9 name is twisted and implies "Renderer::SamplerState::maxLOD" but it's really "Renderer::SamplerState::minLOD"
 	{
 		// Sanity check
-		assert(samplerState.maxAnisotropy <= direct3D9Renderer.getCapabilities().maximumAnisotropy && "Maximum anisotropy value violated");
+		assert((samplerState.maxAnisotropy <= direct3D9Renderer.getCapabilities().maximumAnisotropy) && "Maximum anisotropy value violated");
 
 		{ // Renderer::SamplerState::borderColor[4]
 			// For Direct3D 9, the clear color must be between [0..1]

@@ -323,7 +323,7 @@ namespace VulkanRenderer
 
 	VkIndexType Mapping::getVulkanType(Renderer::IndexBufferFormat::Enum indexBufferFormat)
 	{
-		assert(Renderer::IndexBufferFormat::UNSIGNED_CHAR != indexBufferFormat && "One byte per element index buffer format isn't supported by Vulkan");
+		assert((Renderer::IndexBufferFormat::UNSIGNED_CHAR != indexBufferFormat) && "One byte per element index buffer format isn't supported by Vulkan");
 		static const VkIndexType MAPPING[] =
 		{
 			VK_INDEX_TYPE_MAX_ENUM,	// Renderer::IndexBufferFormat::UNSIGNED_CHAR  - One byte per element, uint8_t (may not be supported by each API) - Not supported by Vulkan

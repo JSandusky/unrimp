@@ -148,7 +148,7 @@ namespace RendererRuntime
 		assert(nullptr != mStartTextureBufferPointer);
 		assert(nullptr != mCurrentTextureBufferPointer);
 		// assert(0 == mStartInstanceLocation); -> Not done by intent
-		assert(MaterialBlueprintResource::BufferUsage::INSTANCE == instanceUniformBuffer.bufferUsage && "Currently only the uniform buffer instance buffer usage is supported");
+		assert((MaterialBlueprintResource::BufferUsage::INSTANCE == instanceUniformBuffer.bufferUsage) && "Currently only the uniform buffer instance buffer usage is supported");
 
 		// Get relevant data
 		const Transform& objectSpaceToWorldSpaceTransform = renderable.getRenderableManager().getTransform();
@@ -190,9 +190,9 @@ namespace RendererRuntime
 			if (nullptr != skeletonResource)
 			{
 				const uint8_t numberOfBones = skeletonResource->getNumberOfBones();
-				assert(0 != numberOfBones && "Each skeleton must have at least one bone");
+				assert((0 != numberOfBones) && "Each skeleton must have at least one bone");
 				const uint32_t numberOfBytes = sizeof(glm::mat3x4) * numberOfBones;
-				assert(numberOfBytes <= mMaximumTextureBufferSize && "The skeleton has too many bones for the available maximum texture buffer size");
+				assert((numberOfBytes <= mMaximumTextureBufferSize) && "The skeleton has too many bones for the available maximum texture buffer size");
 				newNeededTextureBufferSize += numberOfBytes;
 			}
 
@@ -299,11 +299,11 @@ namespace RendererRuntime
 			if (nullptr != skeletonResource)
 			{
 				const uint8_t numberOfBones = skeletonResource->getNumberOfBones();
-				assert(0 != numberOfBones && "Each skeleton must have at least one bone");
+				assert((0 != numberOfBones) && "Each skeleton must have at least one bone");
 				const glm::mat3x4* boneSpaceMatrices = skeletonResource->getBoneSpaceMatrices();
 				assert(nullptr != boneSpaceMatrices);
 				const size_t numberOfBytes = sizeof(glm::mat3x4) * numberOfBones;
-				assert(numberOfBytes <= mMaximumTextureBufferSize && "The skeleton has too many bones for the available maximum texture buffer size");
+				assert((numberOfBytes <= mMaximumTextureBufferSize) && "The skeleton has too many bones for the available maximum texture buffer size");
 				memcpy(mCurrentTextureBufferPointer, boneSpaceMatrices, numberOfBytes);
 				mCurrentTextureBufferPointer += numberOfBytes / sizeof(float);
 			}

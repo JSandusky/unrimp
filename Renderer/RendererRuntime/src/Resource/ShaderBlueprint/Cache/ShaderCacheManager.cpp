@@ -71,7 +71,7 @@ namespace RendererRuntime
 				// Create renderer shader instance using the shader bytecode, if necessary
 				if (nullptr == shaderCache->mShaderPtr.getPointer())
 				{
-					assert(0 != shaderCache->mShaderBytecode.getNumberOfBytes() && "A shader cache must always have a valid shader bytecode, else it's a pointless shader cache");
+					assert((0 != shaderCache->mShaderBytecode.getNumberOfBytes()) && "A shader cache must always have a valid shader bytecode, else it's a pointless shader cache");
 					switch (shaderType)
 					{
 						case ShaderType::Vertex:
@@ -346,7 +346,7 @@ namespace RendererRuntime
 					// Master shader cache
 					const Renderer::ShaderBytecode& shaderBytecode = shaderCache->mShaderBytecode;
 					const uint32_t numberOfBytes = shaderBytecode.getNumberOfBytes();
-					assert(0 != numberOfBytes && "A shader cache must always have a valid shader bytecode, else it's a pointless shader cache");
+					assert((0 != numberOfBytes) && "A shader cache must always have a valid shader bytecode, else it's a pointless shader cache");
 					if (0 != numberOfBytes)
 					{
 						file.write(&shaderCache->mShaderCacheId, sizeof(ShaderCacheId));
@@ -371,7 +371,7 @@ namespace RendererRuntime
 			for (const ShaderCache* shaderCache : shaderCachesWithMaster)
 			{
 				const ShaderCache* masterShaderCache = shaderCache->getMasterShaderCache();
-				assert(nullptr != masterShaderCache->getShaderPtr().getPointer() && "A shader cache must always have a valid shader instance, else it's a pointless shader cache");
+				assert((nullptr != masterShaderCache->getShaderPtr().getPointer()) && "A shader cache must always have a valid shader instance, else it's a pointless shader cache");
 				file.write(&shaderCache->mShaderCacheId, sizeof(ShaderCacheId));
 				const uint32_t numberOfBytes = getUninitialized<uint32_t>();
 				file.write(&numberOfBytes, sizeof(uint32_t));

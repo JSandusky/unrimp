@@ -111,7 +111,7 @@ namespace
 			#endif
 
 			// Done
-			assert(nullptr != mappedSubresource.data && "Mapping of OpenGL ES 3 buffer failed");
+			assert((nullptr != mappedSubresource.data) && "Mapping of OpenGL ES 3 buffer failed");
 			return (nullptr != mappedSubresource.data);
 		}
 
@@ -1118,7 +1118,7 @@ namespace OpenGLES3Renderer
 	{
 		// Sanity checks
 		assert(nullptr != emulationData);
-		assert(numberOfDraws > 0 && "Number of draws must not be zero");
+		assert((numberOfDraws > 0) && "Number of draws must not be zero");
 		// It's possible to draw without "mVertexArray"
 
 		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
@@ -1157,9 +1157,9 @@ namespace OpenGLES3Renderer
 	{
 		// Sanity checks
 		assert(nullptr != emulationData);
-		assert(numberOfDraws > 0 && "Number of draws must not be zero");
-		assert(nullptr != mVertexArray && "Draw indexed needs a set vertex array");
-		assert(nullptr != mVertexArray->getIndexBuffer() && "Draw indexed needs a set vertex array which contains an index buffer");
+		assert((numberOfDraws > 0) && "Number of draws must not be zero");
+		assert((nullptr != mVertexArray) && "Draw indexed needs a set vertex array");
+		assert((nullptr != mVertexArray->getIndexBuffer()) && "Draw indexed needs a set vertex array which contains an index buffer");
 
 		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
 		emulationData += indirectBufferOffset;

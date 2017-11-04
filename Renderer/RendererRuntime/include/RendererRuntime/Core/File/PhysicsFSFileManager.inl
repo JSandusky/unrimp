@@ -146,7 +146,7 @@ namespace
 		public:
 			virtual size_t getNumberOfBytes() override
 			{
-				assert(nullptr != mPhysicsFSFile && "Invalid PhysicsFS file access");
+				assert((nullptr != mPhysicsFSFile) && "Invalid PhysicsFS file access");
 				const PHYSFS_sint64 fileLength = PHYSFS_fileLength(mPhysicsFSFile);
 				assert((-1 != fileLength) && "PhysicsFS failed to determine the file size");
 				return static_cast<size_t>(fileLength);
@@ -154,7 +154,7 @@ namespace
 
 			virtual void read(void* destinationBuffer, size_t numberOfBytes) override
 			{
-				assert(nullptr != mPhysicsFSFile && "Invalid PhysicsFS file access");
+				assert((nullptr != mPhysicsFSFile) && "Invalid PhysicsFS file access");
 				const PHYSFS_sint64 numberOfReadBytes = PHYSFS_readBytes(mPhysicsFSFile, destinationBuffer, numberOfBytes);
 				std::ignore = numberOfReadBytes;
 				assert((static_cast<size_t>(numberOfReadBytes) == numberOfBytes) && "PhysicsFS failed to read all requested bytes");	// We're restrictive by intent
@@ -162,9 +162,9 @@ namespace
 
 			virtual void skip(size_t numberOfBytes) override
 			{
-				assert(nullptr != mPhysicsFSFile && "Invalid PhysicsFS file access");
+				assert((nullptr != mPhysicsFSFile) && "Invalid PhysicsFS file access");
 				const PHYSFS_sint64 currentOffset = PHYSFS_tell(mPhysicsFSFile);
-				assert(-1 != currentOffset && "PhysicsFS failed to retrieve the current file offset");
+				assert((-1 != currentOffset) && "PhysicsFS failed to retrieve the current file offset");
 				const int result = PHYSFS_seek(mPhysicsFSFile, static_cast<PHYSFS_uint64>(currentOffset + numberOfBytes));
 				std::ignore = result;
 				assert((0 != result) && "PhysicsFS failed seek file");
@@ -172,7 +172,7 @@ namespace
 
 			virtual void write(const void*, size_t) override
 			{
-				assert(nullptr != mPhysicsFSFile && "Invalid PhysicsFS file access");
+				assert((nullptr != mPhysicsFSFile) && "Invalid PhysicsFS file access");
 				assert(false && "File write method not supported by the PhysicsFS implementation");
 			}
 
@@ -235,26 +235,26 @@ namespace
 		public:
 			virtual size_t getNumberOfBytes() override
 			{
-				assert(nullptr != mPhysicsFSFile && "Invalid PhysicsFS file access");
+				assert((nullptr != mPhysicsFSFile) && "Invalid PhysicsFS file access");
 				assert(false && "File get number of bytes method not supported by the PhysicsFS implementation");
 				return 0;
 			}
 
 			virtual void read(void*, size_t) override
 			{
-				assert(nullptr != mPhysicsFSFile && "Invalid PhysicsFS file access");
+				assert((nullptr != mPhysicsFSFile) && "Invalid PhysicsFS file access");
 				assert(false && "File read method not supported by the PhysicsFS implementation");
 			}
 
 			virtual void skip(size_t) override
 			{
-				assert(nullptr != mPhysicsFSFile && "Invalid PhysicsFS file access");
+				assert((nullptr != mPhysicsFSFile) && "Invalid PhysicsFS file access");
 				assert(false && "File skip method not supported by the PhysicsFS implementation");
 			}
 
 			virtual void write(const void* sourceBuffer, size_t numberOfBytes) override
 			{
-				assert(nullptr != mPhysicsFSFile && "Invalid PhysicsFS file access");
+				assert((nullptr != mPhysicsFSFile) && "Invalid PhysicsFS file access");
 				const PHYSFS_sint64 numberOfWrittenBytes = PHYSFS_writeBytes(mPhysicsFSFile, sourceBuffer, numberOfBytes);
 				std::ignore = numberOfWrittenBytes;
 				assert((static_cast<size_t>(numberOfWrittenBytes) == numberOfBytes) && "PhysicsFS failed to write all requested bytes");	// We're restrictive by intent
@@ -515,7 +515,7 @@ namespace RendererRuntime
 
 		// Create directories
 		const int result = PHYSFS_mkdir(virtualDirectoryName);
-		assert(0 != result && "PhysicsFS failed to create the directories");
+		assert((0 != result) && "PhysicsFS failed to create the directories");
 		return (result != 0);
 	}
 

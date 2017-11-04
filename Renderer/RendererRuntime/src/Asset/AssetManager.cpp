@@ -55,7 +55,7 @@ namespace RendererRuntime
 
 	AssetPackage& AssetManager::addAssetPackage(AssetPackageId assetPackageId)
 	{
-		assert(nullptr == tryGetAssetPackageById(assetPackageId) && "Asset package ID is already used");
+		assert((nullptr == tryGetAssetPackageById(assetPackageId)) && "Asset package ID is already used");
 		AssetPackage* assetPackage = new AssetPackage(assetPackageId);
 		mAssetPackageVector.push_back(assetPackage);
 		return *assetPackage;
@@ -92,7 +92,7 @@ namespace RendererRuntime
 		AssetPackageVector::const_iterator iterator = std::find_if(mAssetPackageVector.cbegin(), mAssetPackageVector.cend(),
 			[assetPackageId](const AssetPackage* assetPackage) { return (assetPackage->getAssetPackageId() == assetPackageId); }
 			);
-		assert(iterator != mAssetPackageVector.cend() && "Unknown asset package ID");
+		assert((iterator != mAssetPackageVector.cend()) && "Unknown asset package ID");
 		return **iterator;
 	}
 
@@ -101,7 +101,7 @@ namespace RendererRuntime
 		AssetPackageVector::const_iterator iterator = std::find_if(mAssetPackageVector.cbegin(), mAssetPackageVector.cend(),
 			[assetPackageId](const AssetPackage* assetPackage) { return (assetPackage->getAssetPackageId() == assetPackageId); }
 			);
-		assert(iterator != mAssetPackageVector.cend() && "Unknown asset package ID");
+		assert((iterator != mAssetPackageVector.cend()) && "Unknown asset package ID");
 		delete *iterator;
 		mAssetPackageVector.erase(iterator);
 	}
@@ -129,7 +129,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	AssetPackage* AssetManager::addAssetPackageByVirtualFilename(AssetPackageId assetPackageId, VirtualFilename virtualFilename)
 	{
-		assert(nullptr == tryGetAssetPackageById(assetPackageId) && "Asset package ID is already used");
+		assert((nullptr == tryGetAssetPackageById(assetPackageId)) && "Asset package ID is already used");
 		IFileManager& fileManager = mRendererRuntime.getFileManager();
 		IFile* file = fileManager.openFile(IFileManager::FileMode::READ, virtualFilename);
 		if (nullptr != file)

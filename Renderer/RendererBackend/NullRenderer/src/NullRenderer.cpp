@@ -524,7 +524,7 @@ namespace NullRenderer
 	{
 		// Sanity checks
 		assert(nullptr != emulationData);
-		assert(numberOfDraws > 0 && "Number of draws must not be zero");
+		assert((numberOfDraws > 0) && "Number of draws must not be zero");
 		std::ignore = emulationData;
 		std::ignore = numberOfDraws;
 	}
@@ -533,7 +533,7 @@ namespace NullRenderer
 	{
 		// Sanity checks
 		assert(nullptr != emulationData);
-		assert(numberOfDraws > 0 && "Number of draws must not be zero");
+		assert((numberOfDraws > 0) && "Number of draws must not be zero");
 		std::ignore = emulationData;
 		std::ignore = numberOfDraws;
 	}
@@ -644,7 +644,7 @@ namespace NullRenderer
 	{
 		// Sanity checks
 		NULLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
-		assert(NULL_HANDLE != windowHandle.nativeWindowHandle && "The provided native window handle must not be a null handle");
+		assert((NULL_HANDLE != windowHandle.nativeWindowHandle) && "The provided native window handle must not be a null handle");
 
 		// Create the swap chain
 		return new SwapChain(renderPass, windowHandle);

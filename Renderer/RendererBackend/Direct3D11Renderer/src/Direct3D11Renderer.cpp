@@ -1243,7 +1243,7 @@ namespace Direct3D11Renderer
 	{
 		// Sanity checks
 		assert(nullptr != emulationData);
-		assert(numberOfDraws > 0 && "Number of draws must not be zero");
+		assert((numberOfDraws > 0) && "Number of draws must not be zero");
 
 		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
 		emulationData += indirectBufferOffset;
@@ -1282,7 +1282,7 @@ namespace Direct3D11Renderer
 	{
 		// Sanity checks
 		assert(nullptr != emulationData);
-		assert(numberOfDraws > 0 && "Number of draws must not be zero");
+		assert((numberOfDraws > 0) && "Number of draws must not be zero");
 
 		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
 		emulationData += indirectBufferOffset;
@@ -1437,7 +1437,7 @@ namespace Direct3D11Renderer
 	{
 		// Sanity checks
 		DIRECT3D11RENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
-		assert(NULL_HANDLE != windowHandle.nativeWindowHandle && "The provided native window handle must not be a null handle");
+		assert((NULL_HANDLE != windowHandle.nativeWindowHandle) && "The provided native window handle must not be a null handle");
 
 		// Create the swap chain
 		return new SwapChain(renderPass, windowHandle);
