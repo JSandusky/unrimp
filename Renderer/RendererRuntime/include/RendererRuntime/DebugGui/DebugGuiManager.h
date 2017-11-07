@@ -100,6 +100,9 @@ namespace RendererRuntime
 		RENDERERRUNTIME_API_EXPORT bool getIniSetting(const char* name, float value[4]);
 		RENDERERRUNTIME_API_EXPORT void setIniSetting(const char* name, const float value[4]);
 
+		// Helper
+		inline void openMetricsWindow();
+
 
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::DebugGuiManager methods ]
@@ -118,6 +121,7 @@ namespace RendererRuntime
 		explicit DebugGuiManager(const DebugGuiManager&) = delete;
 		DebugGuiManager& operator=(const DebugGuiManager&) = delete;
 		void createFixedBuildInRendererConfigurationResources();
+		RENDERERRUNTIME_API_EXPORT void setOpenMetricsWindowIniSetting();
 
 
 	//[-------------------------------------------------------]
@@ -143,6 +147,8 @@ namespace RendererRuntime
 		Renderer::IIndexBufferPtr	mIndexBufferPtr;
 		uint32_t					mNumberOfAllocatedIndices;
 		Renderer::IVertexArrayPtr	mVertexArrayPtr;
+		// Helper
+		bool mOpenMetricsWindow;
 
 
 	};
@@ -152,3 +158,9 @@ namespace RendererRuntime
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include "RendererRuntime/DebugGui/DebugGuiManager.inl"

@@ -71,6 +71,14 @@ namespace
 
 
 		//[-------------------------------------------------------]
+		//[ Global definitions                                    ]
+		//[-------------------------------------------------------]
+		static const ImVec4 GREEN_COLOR(0.0f, 1.0f, 0.0f, 1.0f);
+		static const ImVec4 YELLOW_COLOR(1.0f, 1.0f, 0.0f, 1.0f);
+		static const ImVec4 RED_COLOR(1.0f, 0.0f, 0.0f, 1.0f);
+
+
+		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
 		std::string own_to_string(uint32_t value)
@@ -258,6 +266,28 @@ namespace RendererRuntime
 	{
 		// Reset the draw text counter
 		mDrawTextCounter = 0;
+	}
+
+	void DebugGuiHelper::drawMetricsWindow(bool& open)
+	{
+		if (ImGui::Begin("Metrics", &open))
+		{
+			// Frames per second (FPS)
+			const float framesPerSecond = ImGui::GetIO().Framerate;
+			ImVec4 color = ::detail::GREEN_COLOR;
+			if (framesPerSecond < 60.0f)
+			{
+				color = ::detail::RED_COLOR;
+			}
+			else if (framesPerSecond < 90.0f)
+			{
+				color = ::detail::YELLOW_COLOR;
+			}
+			ImGui::PushStyleColor(ImGuiCol_Text, color);
+			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / framesPerSecond, framesPerSecond);
+			ImGui::PopStyleColor();
+		}
+		ImGui::End();
 	}
 
 

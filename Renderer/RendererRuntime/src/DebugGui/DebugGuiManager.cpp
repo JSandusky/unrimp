@@ -168,6 +168,15 @@ namespace RendererRuntime
 		ImGui::NewFrame();
 		ImGuizmo::BeginFrame();
 		DebugGuiHelper::beginFrame();
+		if (mOpenMetricsWindow)
+		{
+			const bool previousOpenMetricsWindow = mOpenMetricsWindow;
+			DebugGuiHelper::drawMetricsWindow(mOpenMetricsWindow);
+			if (previousOpenMetricsWindow != mOpenMetricsWindow)
+			{
+				setOpenMetricsWindowIniSetting();
+			}
+		}
 	}
 
 	Renderer::IVertexArrayPtr DebugGuiManager::getFillVertexArrayPtr()
@@ -407,7 +416,8 @@ namespace RendererRuntime
 		mIsRunning(false),
 		mObjectSpaceToClipSpaceMatrixUniformHandle(NULL_HANDLE),
 		mNumberOfAllocatedVertices(0),
-		mNumberOfAllocatedIndices(0)
+		mNumberOfAllocatedIndices(0),
+		mOpenMetricsWindow(false)
 	{
 		// Change ImGui filenames so one is able to guess where those files come from when using Unrimp
 		const IFileManager& fileManager = rendererRuntime.getFileManager();
@@ -446,6 +456,14 @@ namespace RendererRuntime
 			imGuiStyle.WindowMinSize.x = imGuiStyle.WindowMinSize.y = std::numeric_limits<float>::lowest();
 			ImGui::Initialize();
 			imGuiStyle.WindowMinSize = windowMinSizeBackup;
+		}
+
+		{ // Read ini-settings
+			float value[4] = {};
+			if (getIniSetting("OpenMetricsWindow", value))
+			{
+				mOpenMetricsWindow = (0 != value[0]);
+			}
 		}
 	}
 
@@ -558,6 +576,13 @@ namespace RendererRuntime
 			Renderer::ISamplerState* samplerStates[2] = { nullptr, static_cast<Renderer::ISamplerState*>(samplerStateResource) };
 			mResourceGroup = mRootSignature->createResourceGroup(0, static_cast<uint32_t>(glm::countof(resources)), resources, samplerStates);
 		}
+	}
+
+	void DebugGuiManager::setOpenMetricsWindowIniSetting()
+	{
+		// Update ini-settings
+		const float value[4] = { mOpenMetricsWindow ? 1.0f : 0.0f, 0.0f, 0.0f, 0.0f };
+		setIniSetting("OpenMetricsWindow", value);
 	}
 
 

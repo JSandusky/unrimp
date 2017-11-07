@@ -485,7 +485,8 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 		if (nullptr != compositorInstancePass)
 		{
 			// Setup GUI
-			rendererRuntime->getDebugGuiManager().newFrame(nullptr != compositorInstancePass->getRenderTarget() ? *compositorInstancePass->getRenderTarget() : mainRenderTarget);
+			RendererRuntime::DebugGuiManager& debugGuiManager = rendererRuntime->getDebugGuiManager();
+			debugGuiManager.newFrame(nullptr != compositorInstancePass->getRenderTarget() ? *compositorInstancePass->getRenderTarget() : mainRenderTarget);
 			::detail::g_ImGuiLog.draw(rendererRuntime->getContext().getFileManager());
 			if (ImGui::Begin("Options"))
 			{
@@ -502,6 +503,11 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				if (ImGui::Button("Log"))
 				{
 					::detail::g_ImGuiLog.open();
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Metrics"))
+				{
+					debugGuiManager.openMetricsWindow();
 				}
 				ImGui::Separator();
 

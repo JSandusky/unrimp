@@ -109,6 +109,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		static void beginFrame();
+		static void drawMetricsWindow(bool& open);
 
 
 	//[-------------------------------------------------------]

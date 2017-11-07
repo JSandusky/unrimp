@@ -633,6 +633,9 @@
     <None Include="include\RendererRuntime\DebugGui\ImGuiLog.inl">
       <Filter>Source Files\DebugGui</Filter>
     </None>
+    <None Include="include\RendererRuntime\DebugGui\DebugGuiManager.inl">
+      <Filter>Source Files\DebugGui</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">

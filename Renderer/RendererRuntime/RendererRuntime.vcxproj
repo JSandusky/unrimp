@@ -58,6 +58,7 @@
     <None Include="include\RendererRuntime\Core\Thread\ThreadPool.inl" />
     <None Include="include\RendererRuntime\Core\Time\Stopwatch.inl" />
     <None Include="include\RendererRuntime\Core\Time\TimeManager.inl" />
+    <None Include="include\RendererRuntime\DebugGui\DebugGuiManager.inl" />
     <None Include="include\RendererRuntime\DebugGui\ImGuiLog.inl" />
     <None Include="include\RendererRuntime\IRendererRuntime.inl" />
     <None Include="include\RendererRuntime\RenderQueue\Renderable.inl" />
