@@ -56,8 +56,10 @@ namespace RendererRuntime
 
 	inline void ImGuiLog::clear()
 	{
-		mImGuiTextBuffer.clear();
+		// Since it should be possible to use this class via static global instances, ensure that clear frees allocated memory to not cause false-positive memory leaks being detected
+		mImGuiTextBuffer.Buf.clear();	// "mImGuiTextBuffer.clear();" will add a zero after clearing, so don't use it
 		mEntries.clear();
+		mEntries.shrink_to_fit();	// At least when using Visual Studio, this will also free allocated memory
 	}
 
 	inline void ImGuiLog::draw(IFileManager& fileManager)

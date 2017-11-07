@@ -27,6 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "Framework/PlatformTypes.h"
 #include "Framework/ExampleBase.h"
 
 #include <RendererRuntime/Core/Time/Stopwatch.h>

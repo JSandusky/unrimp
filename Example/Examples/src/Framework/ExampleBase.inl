@@ -21,37 +21,117 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
+inline ExampleBase::~ExampleBase()
+{
+	// Nothing here
+}
+
 inline Renderer::ILog* ExampleBase::getCustomLog() const
 {
 	return mCustomLog;
 }
 
-inline Renderer::IRenderer* ExampleBase::getRenderer() const
+inline void ExampleBase::initialize()
 {
-	return (nullptr != mApplicationFrontend) ? mApplicationFrontend->getRenderer() : nullptr;
+	if (!mInitialized)
+	{
+		onInitialization();
+		mInitialized = true;
+	}
 }
 
-inline Renderer::IRenderTarget* ExampleBase::getMainRenderTarget() const
+inline void ExampleBase::deinitialize()
 {
-	return (nullptr != mApplicationFrontend) ? mApplicationFrontend->getMainRenderTarget() : nullptr;
+	if (mInitialized)
+	{
+		onDeinitialization();
+		mInitialized = false;
+	}
 }
 
-inline RendererRuntime::IRendererRuntime* ExampleBase::getRendererRuntime() const
+inline void ExampleBase::draw()
 {
-	return (nullptr != mApplicationFrontend) ? mApplicationFrontend->getRendererRuntime() : nullptr;
+	onDraw();
 }
 
-inline RendererToolkit::IRendererToolkit* ExampleBase::getRendererToolkit()
+inline void ExampleBase::setApplicationFrontend(IApplicationFrontend* applicationFrontend)
 {
-	return (nullptr != mApplicationFrontend) ? mApplicationFrontend->getRendererToolkit() : nullptr;
+	mApplicationFrontend = applicationFrontend;
 }
 
 
 //[-------------------------------------------------------]
 //[ Public virtual ExampleBase methods                    ]
 //[-------------------------------------------------------]
+inline void ExampleBase::onInitialization()
+{
+	// Base does nothing
+}
+
+inline void ExampleBase::onDeinitialization()
+{
+	// Base does nothing
+}
+
+inline void ExampleBase::onKeyDown(uint32_t)
+{
+	// Base does nothing
+}
+
+inline void ExampleBase::onKeyUp(uint32_t)
+{
+	// Base does nothing
+}
+
+inline void ExampleBase::onMouseButtonDown(uint32_t)
+{
+	// Base does nothing
+}
+
+inline void ExampleBase::onMouseButtonUp(uint32_t)
+{
+	// Base does nothing
+}
+
+inline void ExampleBase::onMouseWheel(float)
+{
+	// Base does nothing
+}
+
+inline void ExampleBase::onMouseMove(int, int)
+{
+	// Base does nothing
+}
+
+inline void ExampleBase::onUpdate()
+{
+	// Base does nothing
+}
+
+inline void ExampleBase::onDraw()
+{
+	// Base does nothing
+}
+
 inline bool ExampleBase::doesCompleteOwnDrawing() const
 {
 	// Default implementation does not complete own drawing
 	return false;
+}
+
+
+//[-------------------------------------------------------]
+//[ Protected methods                                     ]
+//[-------------------------------------------------------]
+inline ExampleBase::ExampleBase() :
+	mCustomLog(nullptr),
+	mInitialized(false),
+	mApplicationFrontend(nullptr)
+{
+	// Nothing here
+}
+
+inline void ExampleBase::setCustomLog(Renderer::ILog* customLog)
+{
+	mCustomLog = customLog;
 }

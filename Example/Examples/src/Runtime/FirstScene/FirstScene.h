@@ -40,6 +40,7 @@
 class IController;
 namespace RendererRuntime
 {
+	class ImGuiLog;
 	class SceneNode;
 	class CameraSceneItem;
 	class SunlightSceneItem;
@@ -162,6 +163,7 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
+	RendererRuntime::ImGuiLog*					  mImGuiLog;
 	RendererRuntime::CompositorWorkspaceInstance* mCompositorWorkspaceInstance;
 	RendererRuntime::SceneResourceId			  mSceneResourceId;
 	RendererRuntime::MaterialResourceId			  mMaterialResourceId;

@@ -25,15 +25,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "Framework/IApplicationFrontend.h"
-
-// TODO(sw) To make the example agnostic from Unrimp internal headers is should reference the header in <unrimp source dir>/include
-#include <Renderer/Public/Renderer.h>
-
-
-//[-------------------------------------------------------]
 //[ Definitions                                           ]
 //[-------------------------------------------------------]
 // TODO(co) "ExampleBase.h" and "IApplicationRenderer.h" use the same definitions
@@ -109,12 +100,19 @@
 //[-------------------------------------------------------]
 namespace Renderer
 {
-	class RendererInstance;
+	class ILog;
+	class IRenderer;
+	class IRenderTarget;
 }
 namespace RendererRuntime
 {
 	class IRendererRuntime;
 }
+namespace RendererToolkit
+{
+	class IRendererToolkit;
+}
+class IApplicationFrontend;
 
 
 //[-------------------------------------------------------]
@@ -136,7 +134,7 @@ public:
 	*  @brief
 	*    Destructor
 	*/
-	virtual ~ExampleBase();
+	inline virtual ~ExampleBase();
 
 	/**
 	*  @brief
@@ -151,25 +149,25 @@ public:
 	*  @brief
 	*    Initializes the example; does nothing when already initialized
 	*/
-	void initialize();
+	inline void initialize();
 
 	/**
 	*  @brief
 	*    Deinitialize the example; does nothing when already deinitialized
 	*/
-	void deinitialize();
+	inline void deinitialize();
 
 	/**
 	*  @brief
 	*    Let the example draw one frame
 	*/
-	void draw();
+	inline void draw();
 
 	/**
 	*  @brief
 	*    Set the application frontend to be used by the example
 	*/
-	void setApplicationFrontend(IApplicationFrontend* applicationFrontend);
+	inline void setApplicationFrontend(IApplicationFrontend* applicationFrontend);
 
 	/**
 	*  @brief
@@ -178,7 +176,7 @@ public:
 	*  @return
 	*    The renderer instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
 	*/
-	inline Renderer::IRenderer* getRenderer() const;
+	Renderer::IRenderer* getRenderer() const;
 
 	/**
 	*  @brief
@@ -187,7 +185,7 @@ public:
 	*  @return
 	*    The main renderer target instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
 	*/
-	inline Renderer::IRenderTarget* getMainRenderTarget() const;
+	Renderer::IRenderTarget* getMainRenderTarget() const;
 
 	/**
 	*  @brief
@@ -196,7 +194,7 @@ public:
 	*  @return
 	*    The renderer runtime instance, can be a null pointer
 	*/
-	inline RendererRuntime::IRendererRuntime* getRendererRuntime() const;
+	RendererRuntime::IRendererRuntime* getRendererRuntime() const;
 
 	/**
 	*  @brief
@@ -214,7 +212,7 @@ public:
 	*    the renderer toolkit shared library is not there, this method will return a null pointer. This is a developer-feature
 	*    and as such, it's not available in static builds which are meant for the end-user who e.g. just want to "play the game".
 	*/
-	inline RendererToolkit::IRendererToolkit* getRendererToolkit();
+	RendererToolkit::IRendererToolkit* getRendererToolkit();
 
 
 //[-------------------------------------------------------]
@@ -248,12 +246,18 @@ public:
 protected:
 	/**
 	*  @brief
-	*    Constructor
+	*    Default constructor
+	*/
+	inline ExampleBase();
+
+	/**
+	*  @brief
+	*    Set custom log instance
 	*
 	*  @param[in] customLog
 	*    Optional custom log instance, can be a null pointer, the instance must be valid as long as the example base instance exists
 	*/
-	explicit ExampleBase(Renderer::ILog* customLog = nullptr);
+	inline void setCustomLog(Renderer::ILog* customLog = nullptr);
 
 
 //[-------------------------------------------------------]

@@ -73,12 +73,6 @@ namespace
 		static const RendererRuntime::AssetId IMROD_MATERIAL_ASSET_ID("Example/Material/Character/Imrod");
 
 
-		//[-------------------------------------------------------]
-		//[ Global variables                                      ]
-		//[-------------------------------------------------------]
-		RendererRuntime::ImGuiLog g_ImGuiLog;
-
-
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]
 //[-------------------------------------------------------]
@@ -90,7 +84,7 @@ namespace
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
 FirstScene::FirstScene() :
-	ExampleBase(&::detail::g_ImGuiLog),
+	mImGuiLog(new RendererRuntime::ImGuiLog()),
 	mCompositorWorkspaceInstance(nullptr),
 	mSceneResourceId(RendererRuntime::getUninitialized<RendererRuntime::SceneResourceId>()),
 	mMaterialResourceId(RendererRuntime::getUninitialized<RendererRuntime::MaterialResourceId>()),
@@ -129,12 +123,15 @@ FirstScene::FirstScene() :
 	// Scene hot-reloading memory
 	mHasCameraTransformBackup(false)
 {
-	// Nothing here
+	setCustomLog(mImGuiLog);
 }
 
 FirstScene::~FirstScene()
 {
-	// Nothing here, the resources are released within "onDeinitialization()"
+	// The resources are released within "onDeinitialization()"
+
+	// Destroy our ImGui log instance
+	delete mImGuiLog;
 }
 
 
@@ -487,7 +484,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 			// Setup GUI
 			RendererRuntime::DebugGuiManager& debugGuiManager = rendererRuntime->getDebugGuiManager();
 			debugGuiManager.newFrame(nullptr != compositorInstancePass->getRenderTarget() ? *compositorInstancePass->getRenderTarget() : mainRenderTarget);
-			::detail::g_ImGuiLog.draw(rendererRuntime->getContext().getFileManager());
+			mImGuiLog->draw(rendererRuntime->getContext().getFileManager());
 			if (ImGui::Begin("Options"))
 			{
 				// Status
@@ -502,7 +499,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				ImGui::Text("Pipeline State Compiler: %s", (0 == rendererRuntime->getPipelineStateCompiler().getNumberOfInFlightCompilerRequests()) ? "Idle" : "Busy");
 				if (ImGui::Button("Log"))
 				{
-					::detail::g_ImGuiLog.open();
+					mImGuiLog->open();
 				}
 				ImGui::SameLine();
 				if (ImGui::Button("Metrics"))

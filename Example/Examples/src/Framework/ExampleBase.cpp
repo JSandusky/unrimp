@@ -23,106 +23,28 @@
 //[-------------------------------------------------------]
 #include "PrecompiledHeader.h"
 #include "Framework/ExampleBase.h"
+#include "Framework/IApplicationFrontend.h"
 
 
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-ExampleBase::~ExampleBase()
+Renderer::IRenderer* ExampleBase::getRenderer() const
 {
-	// Nothing here
+	return (nullptr != mApplicationFrontend) ? mApplicationFrontend->getRenderer() : nullptr;
 }
 
-void ExampleBase::initialize()
+Renderer::IRenderTarget* ExampleBase::getMainRenderTarget() const
 {
-	if (!mInitialized)
-	{
-		onInitialization();
-		mInitialized = true;
-	}
+	return (nullptr != mApplicationFrontend) ? mApplicationFrontend->getMainRenderTarget() : nullptr;
 }
 
-void ExampleBase::deinitialize()
+RendererRuntime::IRendererRuntime* ExampleBase::getRendererRuntime() const
 {
-	if (mInitialized)
-	{
-		onDeinitialization();
-		mInitialized = false;
-	}
+	return (nullptr != mApplicationFrontend) ? mApplicationFrontend->getRendererRuntime() : nullptr;
 }
 
-void ExampleBase::draw()
+RendererToolkit::IRendererToolkit* ExampleBase::getRendererToolkit()
 {
-	onDraw();
-}
-
-void ExampleBase::setApplicationFrontend(IApplicationFrontend* applicationFrontend)
-{
-	mApplicationFrontend = applicationFrontend;
-}
-
-
-//[-------------------------------------------------------]
-//[ Public virtual ExampleBase methods                    ]
-//[-------------------------------------------------------]
-void ExampleBase::onInitialization()
-{
-	// Base does nothing
-}
-
-void ExampleBase::onDeinitialization()
-{
-	// Base does nothing
-}
-
-void ExampleBase::onKeyDown(uint32_t)
-{
-	// Base does nothing
-}
-
-void ExampleBase::onKeyUp(uint32_t)
-{
-	// Base does nothing
-}
-
-void ExampleBase::onMouseButtonDown(uint32_t)
-{
-	// Base does nothing
-}
-
-void ExampleBase::onMouseButtonUp(uint32_t)
-{
-	// Base does nothing
-}
-
-void ExampleBase::onMouseWheel(float)
-{
-	// Base does nothing
-}
-
-void ExampleBase::onMouseMove(int, int)
-{
-	// Base does nothing
-}
-
-void ExampleBase::onUpdate()
-{
-	// Base does nothing
-}
-
-void ExampleBase::onDraw()
-{
-	// Base does nothing
-}
-
-
-//[-------------------------------------------------------]
-//[ Protected methods                                     ]
-//[-------------------------------------------------------]
-ExampleBase::ExampleBase(Renderer::ILog* customLog) :
-	mCustomLog(customLog),
-	mInitialized(false),
-	mApplicationFrontend(nullptr)
-{
-	// Nothing here
+	return (nullptr != mApplicationFrontend) ? mApplicationFrontend->getRendererToolkit() : nullptr;
 }
