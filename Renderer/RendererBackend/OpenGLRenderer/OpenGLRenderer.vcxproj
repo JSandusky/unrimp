@@ -668,7 +668,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{47156869-4788-4729-9B24-6B883DA2EB24}</ProjectGuid>
     <RootNamespace>OpenGLRenderer</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'" Label="Configuration">

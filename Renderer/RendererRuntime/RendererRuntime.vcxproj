@@ -762,7 +762,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{BC90A670-6608-479F-88A4-3F64CE7823E1}</ProjectGuid>
     <RootNamespace>NullRenderer</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'" Label="Configuration">

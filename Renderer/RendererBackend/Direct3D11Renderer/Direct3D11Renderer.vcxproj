@@ -146,7 +146,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{0B573645-7F00-43D8-B109-07BFA0E56155}</ProjectGuid>
     <RootNamespace>Direct3D11Renderer</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'" Label="Configuration">
