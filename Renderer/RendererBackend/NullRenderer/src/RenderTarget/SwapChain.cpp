@@ -134,6 +134,11 @@ namespace NullRenderer
 		return mNativeWindowHandle;
 	}
 
+	void SwapChain::setVerticalSynchronizationInterval(uint32_t)
+	{
+		// Nothing here
+	}
+
 	void SwapChain::present()
 	{
 		// Nothing here

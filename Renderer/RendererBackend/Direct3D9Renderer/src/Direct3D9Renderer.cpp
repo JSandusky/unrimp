@@ -18,6 +18,9 @@
 \*********************************************************/
 
 
+// TODO(co) Add device lost handling if needed. Probably more complex to recreate all device resources.
+
+
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
@@ -1781,7 +1784,8 @@ namespace Direct3D9Renderer
 		mCapabilities.nativeMultiThreading = false;
 
 		// Direct3D 9 has shader bytecode support
-		mCapabilities.shaderBytecode = true;
+		// TODO(co) Direct3D 9 shader bytecode support is under construction
+		mCapabilities.shaderBytecode = false;
 
 		// Is there support for vertex shaders (VS)?
 		mCapabilities.vertexShader = true;

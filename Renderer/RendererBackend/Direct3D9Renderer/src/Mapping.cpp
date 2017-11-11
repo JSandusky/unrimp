@@ -416,6 +416,20 @@ namespace Direct3D9Renderer
 		return MAPPING[textureFormat];
 	}
 
+	uint32_t Mapping::getDirect3D9PresentationInterval(uint32_t synchronizationInterval)
+	{
+		assert(synchronizationInterval <= 4 && "Direct3D 9 supports a maximum synchronization interval of four");
+		static const uint32_t MAPPING[] =
+		{
+			D3DPRESENT_INTERVAL_IMMEDIATE,
+			D3DPRESENT_INTERVAL_ONE,
+			D3DPRESENT_INTERVAL_TWO,
+			D3DPRESENT_INTERVAL_THREE,
+			D3DPRESENT_INTERVAL_FOUR
+		};
+		return MAPPING[synchronizationInterval];
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

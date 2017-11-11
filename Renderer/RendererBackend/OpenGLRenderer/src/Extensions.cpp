@@ -68,6 +68,8 @@ namespace OpenGLRenderer
 	///////////////////////////////////////////////////////////
 	// WGL (Windows only)
 	bool Extensions::isWGL_ARB_extensions_string()			const { return mWGL_ARB_extensions_string;			}
+	bool Extensions::isWGL_EXT_swap_control()				const { return mWGL_EXT_swap_control;				}
+	bool Extensions::isWGL_EXT_swap_control_tear()			const { return mWGL_EXT_swap_control_tear;			}
 	// EXT
 	bool Extensions::isGL_EXT_texture_lod_bias()			const { return mGL_EXT_texture_lod_bias;			}
 	bool Extensions::isGL_EXT_texture_filter_anisotropic()	const { return mGL_EXT_texture_filter_anisotropic;	}
@@ -237,6 +239,8 @@ namespace OpenGLRenderer
 		// Extensions
 		// WGL (Windows only)
 		mWGL_ARB_extensions_string			= false;
+		mWGL_EXT_swap_control				= false;
+		mWGL_EXT_swap_control_tear			= false;
 		// EXT
 		mGL_EXT_texture_lod_bias			= false;
 		mGL_EXT_texture_filter_anisotropic	= false;

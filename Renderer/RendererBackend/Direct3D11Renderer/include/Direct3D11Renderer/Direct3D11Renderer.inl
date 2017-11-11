@@ -38,6 +38,11 @@ namespace Direct3D11Renderer
 		return mD3D11DeviceContext;
 	}
 
+	inline D3D_FEATURE_LEVEL Direct3D11Renderer::getD3DFeatureLevel() const
+	{
+		return mD3DFeatureLevel;
+	}
+
 	inline Renderer::IRenderTarget* Direct3D11Renderer::omGetRenderTarget() const
 	{
 		return mRenderTarget;

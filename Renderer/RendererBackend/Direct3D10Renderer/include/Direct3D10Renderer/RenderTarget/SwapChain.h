@@ -131,6 +131,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	public:
 		virtual handle getNativeWindowHandle() const override;
+		virtual void setVerticalSynchronizationInterval(uint32_t synchronizationInterval) override;
 		virtual void present() override;
 		virtual void resizeBuffers() override;
 		virtual bool getFullscreenState() const override;
@@ -183,6 +184,8 @@ namespace Direct3D10Renderer
 		IDXGISwapChain*			mDxgiSwapChain;			///< The DXGI swap chain instance, null pointer on error
 		ID3D10RenderTargetView*	mD3D10RenderTargetView;	///< The Direct3D 10 render target view instance, null pointer on error
 		ID3D10DepthStencilView*	mD3D10DepthStencilView;	///< The Direct3D 10 depth stencil view instance, null pointer on error
+		uint32_t				mSynchronizationInterval;
+		bool					mAllowTearing;
 
 
 	};

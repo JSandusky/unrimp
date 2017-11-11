@@ -59,6 +59,7 @@ __pragma(warning(pop))
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+struct ID3D11View;
 struct IDXGIOutput;
 struct ID3D11Query;
 struct IDXGIDevice;
@@ -71,6 +72,7 @@ struct D3D11_FEATURE;
 struct ID3D11Counter;
 struct ID3D11Resource;
 struct IDXGISwapChain;
+struct IDXGISwapChain1;
 struct ID3D11Texture1D;
 struct ID3D11Texture2D;
 struct ID3D11Texture3D;
@@ -99,6 +101,7 @@ struct ID3D11ComputeShader;
 struct ID3D11GeometryShader;
 struct DXGI_FRAME_STATISTICS;
 struct ID3D11RasterizerState;
+struct ID3DDeviceContextState;
 struct D3D11_SUBRESOURCE_DATA;
 struct ID3D11RenderTargetView;
 struct ID3D11DepthStencilView;
@@ -157,6 +160,9 @@ typedef DWORD D3DCOLOR;
 // "Microsoft DirectX SDK (June 2010)" -> "DXGIType.h"
 #define DXGI_USAGE_RENDER_TARGET_OUTPUT	(1L << (1 + 4))
 
+// "Microsoft DirectX SDK (June 2010)" -> "DXGI.h"
+#define DXGI_PRESENT_ALLOW_TEARING	0x00000200UL
+
 // "Microsoft DirectX SDK (June 2010)" -> "D3Dcommon.h"
 enum D3D_DRIVER_TYPE
 {
@@ -176,7 +182,8 @@ enum D3D_FEATURE_LEVEL
 	D3D_FEATURE_LEVEL_9_3	= 0x9300,
 	D3D_FEATURE_LEVEL_10_0	= 0xa000,
 	D3D_FEATURE_LEVEL_10_1	= 0xa100,
-	D3D_FEATURE_LEVEL_11_0	= 0xb000
+	D3D_FEATURE_LEVEL_11_0	= 0xb000,
+	D3D_FEATURE_LEVEL_11_1	= 0xb100
 };
 
 // "Microsoft DirectX SDK (June 2010)" -> "D3Dcommon.h"
@@ -563,9 +570,29 @@ typedef UINT DXGI_USAGE;
 // "Microsoft DirectX SDK (June 2010)" -> "DXGI.h"
 enum DXGI_SWAP_EFFECT
 {
-	DXGI_SWAP_EFFECT_DISCARD	= 0,
-	DXGI_SWAP_EFFECT_SEQUENTIAL	= 1
+	DXGI_SWAP_EFFECT_DISCARD			= 0,
+	DXGI_SWAP_EFFECT_SEQUENTIAL			= 1,
+	DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL	= 3,
+	DXGI_SWAP_EFFECT_FLIP_DISCARD		= 4
 };
+
+// "Microsoft DirectX SDK (June 2010)" -> "DXGI.h"
+typedef enum DXGI_SWAP_CHAIN_FLAG
+{
+	DXGI_SWAP_CHAIN_FLAG_NONPREROTATED							= 1,
+	DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH						= 2,
+	DXGI_SWAP_CHAIN_FLAG_GDI_COMPATIBLE							= 4,
+	DXGI_SWAP_CHAIN_FLAG_RESTRICTED_CONTENT						= 8,
+	DXGI_SWAP_CHAIN_FLAG_RESTRICT_SHARED_RESOURCE_DRIVER		= 16,
+	DXGI_SWAP_CHAIN_FLAG_DISPLAY_ONLY							= 32,
+	DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT			= 64,
+	DXGI_SWAP_CHAIN_FLAG_FOREGROUND_LAYER						= 128,
+	DXGI_SWAP_CHAIN_FLAG_FULLSCREEN_VIDEO						= 256,
+	DXGI_SWAP_CHAIN_FLAG_YUV_VIDEO								= 512,
+	DXGI_SWAP_CHAIN_FLAG_HW_PROTECTED							= 1024,
+	DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING							= 2048,
+	DXGI_SWAP_CHAIN_FLAG_RESTRICTED_TO_ALL_HOLOGRAPHIC_DISPLAYS	= 4096
+} DXGI_SWAP_CHAIN_FLAG;
 
 // "Microsoft DirectX SDK (June 2010)" -> "DXGI.h"
 struct DXGI_SWAP_CHAIN_DESC
@@ -598,6 +625,98 @@ IDXGIFactory1 : public IDXGIFactory
 	public:
 		virtual HRESULT STDMETHODCALLTYPE EnumAdapters1(UINT Adapter, __out IDXGIAdapter1 **ppAdapter) = 0;
 		virtual BOOL STDMETHODCALLTYPE IsCurrent(void) = 0;
+};
+
+// "Windows 10 SDK" -> "dxgi1_2.h"
+typedef enum DXGI_SCALING
+{
+	DXGI_SCALING_STRETCH				= 0,
+	DXGI_SCALING_NONE					= 1,
+	DXGI_SCALING_ASPECT_RATIO_STRETCH	= 2
+} DXGI_SCALING;
+
+// "Windows 10 SDK" -> "dxgi1_2.h"
+typedef enum DXGI_ALPHA_MODE
+{
+	DXGI_ALPHA_MODE_UNSPECIFIED		= 0,
+	DXGI_ALPHA_MODE_PREMULTIPLIED	= 1,
+	DXGI_ALPHA_MODE_STRAIGHT		= 2,
+	DXGI_ALPHA_MODE_IGNORE			= 3,
+	DXGI_ALPHA_MODE_FORCE_DWORD		= 0xffffffff
+} DXGI_ALPHA_MODE;
+
+// "Windows 10 SDK" -> "dxgi1_2.h"
+typedef struct DXGI_SWAP_CHAIN_DESC1
+{
+	UINT Width;
+	UINT Height;
+	DXGI_FORMAT Format;
+	BOOL Stereo;
+	DXGI_SAMPLE_DESC SampleDesc;
+	DXGI_USAGE BufferUsage;
+	UINT BufferCount;
+	DXGI_SCALING Scaling;
+	DXGI_SWAP_EFFECT SwapEffect;
+	DXGI_ALPHA_MODE AlphaMode;
+	UINT Flags;
+} DXGI_SWAP_CHAIN_DESC1;
+
+// "Windows 10 SDK" -> "dxgi1_2.h"
+typedef struct DXGI_SWAP_CHAIN_FULLSCREEN_DESC
+{
+	DXGI_RATIONAL RefreshRate;
+	DXGI_MODE_SCANLINE_ORDER ScanlineOrdering;
+	DXGI_MODE_SCALING Scaling;
+	BOOL Windowed;
+} DXGI_SWAP_CHAIN_FULLSCREEN_DESC;
+
+// "Windows 10 SDK" -> "dxgi1_2.h"
+MIDL_INTERFACE("50c83a1c-e072-4c48-87b0-3630fa36a6d0")
+IDXGIFactory2 : public IDXGIFactory1
+{
+	public:
+		virtual BOOL STDMETHODCALLTYPE IsWindowedStereoEnabled(void) = 0;
+		virtual HRESULT STDMETHODCALLTYPE CreateSwapChainForHwnd(_In_ IUnknown *pDevice, _In_ HWND hWnd, _In_ const DXGI_SWAP_CHAIN_DESC1 *pDesc, _In_opt_ const DXGI_SWAP_CHAIN_FULLSCREEN_DESC *pFullscreenDesc, _In_opt_ IDXGIOutput *pRestrictToOutput, _COM_Outptr_ IDXGISwapChain1 **ppSwapChain) = 0;
+		virtual HRESULT STDMETHODCALLTYPE CreateSwapChainForCoreWindow(_In_ IUnknown *pDevice, _In_ IUnknown *pWindow, _In_ const DXGI_SWAP_CHAIN_DESC1 *pDesc, _In_opt_ IDXGIOutput *pRestrictToOutput, _COM_Outptr_ IDXGISwapChain1 **ppSwapChain) = 0;
+		virtual HRESULT STDMETHODCALLTYPE GetSharedResourceAdapterLuid(_In_ HANDLE hResource, _Out_ LUID *pLuid) = 0;
+		virtual HRESULT STDMETHODCALLTYPE RegisterStereoStatusWindow(_In_ HWND WindowHandle, _In_ UINT wMsg, _Out_ DWORD *pdwCookie) = 0;
+		virtual HRESULT STDMETHODCALLTYPE RegisterStereoStatusEvent(_In_ HANDLE hEvent, _Out_ DWORD *pdwCookie) = 0;
+		virtual void STDMETHODCALLTYPE UnregisterStereoStatus(_In_ DWORD dwCookie) = 0;
+		virtual HRESULT STDMETHODCALLTYPE RegisterOcclusionStatusWindow(_In_ HWND WindowHandle, _In_ UINT wMsg, _Out_ DWORD *pdwCookie) = 0;
+		virtual HRESULT STDMETHODCALLTYPE RegisterOcclusionStatusEvent(_In_ HANDLE hEvent, _Out_ DWORD *pdwCookie) = 0;
+		virtual void STDMETHODCALLTYPE UnregisterOcclusionStatus(_In_ DWORD dwCookie) = 0;
+		virtual HRESULT STDMETHODCALLTYPE CreateSwapChainForComposition(_In_ IUnknown *pDevice, _In_ const DXGI_SWAP_CHAIN_DESC1 *pDesc, _In_opt_ IDXGIOutput *pRestrictToOutput, _COM_Outptr_ IDXGISwapChain1 **ppSwapChain) = 0;
+};
+
+// "Windows 10 SDK" -> "dxgi1_3.h"
+MIDL_INTERFACE("25483823-cd46-4c7d-86ca-47aa95b837bd")
+IDXGIFactory3 : public IDXGIFactory2
+{
+	public:
+		virtual UINT STDMETHODCALLTYPE GetCreationFlags(void) = 0;
+};
+
+// "Windows 10 SDK" -> "dxgi1_4.h"
+MIDL_INTERFACE("1bc6ea02-ef36-464f-bf0c-21ca39e5168a")
+IDXGIFactory4 : public IDXGIFactory3
+{
+	public:
+		virtual HRESULT STDMETHODCALLTYPE EnumAdapterByLuid(_In_ LUID AdapterLuid, _In_ REFIID riid, _COM_Outptr_ void **ppvAdapter) = 0;
+		virtual HRESULT STDMETHODCALLTYPE EnumWarpAdapter(_In_ REFIID riid, _COM_Outptr_ void **ppvAdapter) = 0;
+};
+
+// "Windows 10 SDK" -> "dxgi1_5.h"
+typedef enum DXGI_FEATURE
+{
+	DXGI_FEATURE_PRESENT_ALLOW_TEARING = 0
+} DXGI_FEATURE;
+
+// "Windows 10 SDK" -> "dxgi1_5.h"
+MIDL_INTERFACE("7632e1f5-ee65-4dca-87fd-84cd75f8838d")
+IDXGIFactory5 : public IDXGIFactory4
+{
+	public:
+		virtual HRESULT STDMETHODCALLTYPE CheckFeatureSupport(DXGI_FEATURE Feature, _Inout_updates_bytes_(FeatureSupportDataSize) void *pFeatureSupportData, UINT FeatureSupportDataSize) = 0;
 };
 
 // "Microsoft DirectX SDK (June 2010)" -> "DXGI.h"
@@ -1297,6 +1416,32 @@ struct ID3D11DeviceContext : public ID3D11DeviceChild
 		virtual D3D11_DEVICE_CONTEXT_TYPE STDMETHODCALLTYPE GetType(void) = 0;
 		virtual UINT STDMETHODCALLTYPE GetContextFlags(void) = 0;
 		virtual HRESULT STDMETHODCALLTYPE FinishCommandList(BOOL RestoreDeferredContextState, __out_opt ID3D11CommandList **ppCommandList) = 0;
+};
+
+// "Windows 10 SDK" -> "d3d11_1.h"
+MIDL_INTERFACE("bb2c6faa-b5fb-4082-8e6b-388b8cfa90e1")
+ID3D11DeviceContext1 : public ID3D11DeviceContext
+{
+	public:
+		virtual void STDMETHODCALLTYPE CopySubresourceRegion1(_In_ ID3D11Resource *pDstResource, _In_ UINT DstSubresource, _In_ UINT DstX, _In_ UINT DstY, _In_ UINT DstZ, _In_ ID3D11Resource *pSrcResource, _In_ UINT SrcSubresource, _In_opt_ const D3D11_BOX *pSrcBox, _In_ UINT CopyFlags) = 0;
+		virtual void STDMETHODCALLTYPE UpdateSubresource1(_In_ ID3D11Resource *pDstResource, _In_ UINT DstSubresource, _In_opt_ const D3D11_BOX *pDstBox, _In_ const void *pSrcData, _In_ UINT SrcRowPitch, _In_ UINT SrcDepthPitch, _In_ UINT CopyFlags) = 0;
+		virtual void STDMETHODCALLTYPE DiscardResource(_In_ ID3D11Resource *pResource) = 0;
+		virtual void STDMETHODCALLTYPE DiscardView(_In_ ID3D11View *pResourceView) = 0;
+		virtual void STDMETHODCALLTYPE VSSetConstantBuffers1(_In_range_( 0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1 ) UINT StartSlot, _In_range_( 0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot ) UINT NumBuffers, _In_reads_opt_(NumBuffers) ID3D11Buffer *const *ppConstantBuffers, _In_reads_opt_(NumBuffers) const UINT *pFirstConstant, _In_reads_opt_(NumBuffers) const UINT *pNumConstants) = 0;
+		virtual void STDMETHODCALLTYPE HSSetConstantBuffers1(_In_range_( 0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1 ) UINT StartSlot, _In_range_( 0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot ) UINT NumBuffers, _In_reads_opt_(NumBuffers) ID3D11Buffer *const *ppConstantBuffers, _In_reads_opt_(NumBuffers) const UINT *pFirstConstant, _In_reads_opt_(NumBuffers) const UINT *pNumConstants) = 0;
+		virtual void STDMETHODCALLTYPE DSSetConstantBuffers1(_In_range_( 0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1 ) UINT StartSlot, _In_range_( 0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot ) UINT NumBuffers, _In_reads_opt_(NumBuffers) ID3D11Buffer *const *ppConstantBuffers, _In_reads_opt_(NumBuffers) const UINT *pFirstConstant, _In_reads_opt_(NumBuffers) const UINT *pNumConstants) = 0;
+		virtual void STDMETHODCALLTYPE GSSetConstantBuffers1(_In_range_( 0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1 ) UINT StartSlot, _In_range_( 0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot ) UINT NumBuffers, _In_reads_opt_(NumBuffers) ID3D11Buffer *const *ppConstantBuffers, _In_reads_opt_(NumBuffers) const UINT *pFirstConstant, _In_reads_opt_(NumBuffers) const UINT *pNumConstants) = 0;
+		virtual void STDMETHODCALLTYPE PSSetConstantBuffers1(_In_range_( 0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1 ) UINT StartSlot, _In_range_( 0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot ) UINT NumBuffers, _In_reads_opt_(NumBuffers) ID3D11Buffer *const *ppConstantBuffers, _In_reads_opt_(NumBuffers) const UINT *pFirstConstant, _In_reads_opt_(NumBuffers) const UINT *pNumConstants) = 0;
+		virtual void STDMETHODCALLTYPE CSSetConstantBuffers1(_In_range_( 0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1 ) UINT StartSlot, _In_range_( 0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot ) UINT NumBuffers, _In_reads_opt_(NumBuffers) ID3D11Buffer *const *ppConstantBuffers, _In_reads_opt_(NumBuffers) const UINT *pFirstConstant, _In_reads_opt_(NumBuffers) const UINT *pNumConstants) = 0;
+		virtual void STDMETHODCALLTYPE VSGetConstantBuffers1(_In_range_( 0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1 ) UINT StartSlot, _In_range_( 0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot ) UINT NumBuffers, _Out_writes_opt_(NumBuffers) ID3D11Buffer **ppConstantBuffers, _Out_writes_opt_(NumBuffers) UINT *pFirstConstant, _Out_writes_opt_(NumBuffers) UINT *pNumConstants) = 0;
+		virtual void STDMETHODCALLTYPE HSGetConstantBuffers1(_In_range_( 0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1 ) UINT StartSlot, _In_range_( 0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot ) UINT NumBuffers, _Out_writes_opt_(NumBuffers) ID3D11Buffer **ppConstantBuffers, _Out_writes_opt_(NumBuffers) UINT *pFirstConstant, _Out_writes_opt_(NumBuffers) UINT *pNumConstants) = 0;
+		virtual void STDMETHODCALLTYPE DSGetConstantBuffers1(_In_range_( 0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1 ) UINT StartSlot, _In_range_( 0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot ) UINT NumBuffers, _Out_writes_opt_(NumBuffers) ID3D11Buffer **ppConstantBuffers, _Out_writes_opt_(NumBuffers) UINT *pFirstConstant, _Out_writes_opt_(NumBuffers) UINT *pNumConstants) = 0;
+		virtual void STDMETHODCALLTYPE GSGetConstantBuffers1(_In_range_( 0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1 ) UINT StartSlot, _In_range_( 0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot ) UINT NumBuffers, _Out_writes_opt_(NumBuffers) ID3D11Buffer **ppConstantBuffers, _Out_writes_opt_(NumBuffers) UINT *pFirstConstant, _Out_writes_opt_(NumBuffers) UINT *pNumConstants) = 0;
+		virtual void STDMETHODCALLTYPE PSGetConstantBuffers1(_In_range_( 0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1 ) UINT StartSlot, _In_range_( 0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot ) UINT NumBuffers, _Out_writes_opt_(NumBuffers) ID3D11Buffer **ppConstantBuffers, _Out_writes_opt_(NumBuffers) UINT *pFirstConstant, _Out_writes_opt_(NumBuffers) UINT *pNumConstants) = 0;
+		virtual void STDMETHODCALLTYPE CSGetConstantBuffers1(_In_range_( 0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - 1 ) UINT StartSlot, _In_range_( 0, D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - StartSlot ) UINT NumBuffers, _Out_writes_opt_(NumBuffers) ID3D11Buffer **ppConstantBuffers, _Out_writes_opt_(NumBuffers) UINT *pFirstConstant, _Out_writes_opt_(NumBuffers) UINT *pNumConstants) = 0;
+		virtual void STDMETHODCALLTYPE SwapDeviceContextState(_In_ ID3DDeviceContextState *pState, _Outptr_opt_ ID3DDeviceContextState **ppPreviousState) = 0;
+		virtual void STDMETHODCALLTYPE ClearView(_In_ ID3D11View *pView, _In_ const FLOAT Color[ 4 ], _In_reads_opt_(NumRects) const D3D11_RECT *pRect, UINT NumRects) = 0;
+		virtual void STDMETHODCALLTYPE DiscardView1(_In_ ID3D11View *pResourceView, _In_reads_opt_(NumRects) const D3D11_RECT *pRects, UINT NumRects) = 0;
 };
 
 // "Microsoft DirectX SDK (June 2010)" -> "D3D11.h"

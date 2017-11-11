@@ -83,6 +83,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	public:
 		inline virtual handle getNativeWindowHandle() const override;
+		virtual void setVerticalSynchronizationInterval(uint32_t synchronizationInterval) override;
 		virtual void present() override;
 		virtual void resizeBuffers() override;
 		virtual bool getFullscreenState() const override;
@@ -104,6 +105,7 @@ namespace OpenGLES3Renderer
 	private:
 		handle					 mNativeWindowHandle;	///< Native window handle window, can be a null handle
 		Renderer::IRenderWindow* mRenderWindow;			///< Render window instance, can be a null pointer, don't destroy the instance since we don't own it
+		uint32_t				 mNewVerticalSynchronizationInterval;
 
 
 	};

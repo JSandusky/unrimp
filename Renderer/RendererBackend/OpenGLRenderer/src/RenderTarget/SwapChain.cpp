@@ -23,12 +23,13 @@
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/RenderTarget/SwapChain.h"
 #include "OpenGLRenderer/RenderTarget/RenderPass.h"
+#include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
+#include "OpenGLRenderer/Extensions.h"
 #ifdef WIN32
 	#include "OpenGLRenderer/Windows/OpenGLContextWindows.h"
 #elif defined LINUX
 	#include "OpenGLRenderer/Linux/OpenGLContextLinux.h"
-	#include "OpenGLRenderer/OpenGLRuntimeLinking.h" // For "glxSwapBuffers()"
 #endif
 
 // Disable warnings in external headers, we can't fix them
@@ -61,7 +62,9 @@ namespace OpenGLRenderer
 			#error "Unsupported platform"
 		#endif
 		mOwnsOpenGLContext(true),
-		mRenderWindow(windowHandle.renderWindow)
+		mRenderWindow(windowHandle.renderWindow),
+		mVerticalSynchronizationInterval(0),
+		mNewVerticalSynchronizationInterval(~0u)
 	{
 		#ifdef WIN32
 			std::ignore = useExternalContext;
@@ -166,6 +169,11 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ISwapChain methods           ]
 	//[-------------------------------------------------------]
+	void SwapChain::setVerticalSynchronizationInterval(uint32_t synchronizationInterval)
+	{
+		mNewVerticalSynchronizationInterval = synchronizationInterval;
+	}
+
 	void SwapChain::present()
 	{
 		if (nullptr != mRenderWindow)
@@ -174,10 +182,37 @@ namespace OpenGLRenderer
 			return;
 		}
 		#ifdef WIN32
-			HDC hDC = ::GetDC(reinterpret_cast<HWND>(mNativeWindowHandle));
+		{
+			// Set new vertical synchronization interval?
+			// -> We do this in here to avoid having to use "wglMakeCurrent()"/"glXMakeCurrent()" to often at multiple places
+			if (~0u != mNewVerticalSynchronizationInterval)
+			{
+				const Extensions& extensions = static_cast<OpenGLRenderer&>(getRenderer()).getExtensions();
+				if (extensions.isWGL_EXT_swap_control())
+				{
+					int setVerticalSynchronizationInterval = static_cast<int>(mNewVerticalSynchronizationInterval);
+					if (extensions.isWGL_EXT_swap_control_tear() && setVerticalSynchronizationInterval > 0)
+					{
+						// Use adaptive vertical synchronization
+						setVerticalSynchronizationInterval = -setVerticalSynchronizationInterval;
+					}
+					wglSwapIntervalEXT(setVerticalSynchronizationInterval);
+				}
+				mVerticalSynchronizationInterval = mNewVerticalSynchronizationInterval;
+				mNewVerticalSynchronizationInterval = ~0u;
+			}
+
+			// Swap buffers
+			const HDC hDC = ::GetDC(reinterpret_cast<HWND>(mNativeWindowHandle));
 			::SwapBuffers(hDC);
 			::ReleaseDC(reinterpret_cast<HWND>(mNativeWindowHandle), hDC);
+			if (mVerticalSynchronizationInterval > 0)
+			{
+				glFinish();
+			}
+		}
 		#elif defined LINUX
+			// TODO(co) Add support for vertical synchronization and adaptive vertical synchronization: "GLX_EXT_swap_control" and "GLX_EXT_swap_control_tear"
 			if (NULL_HANDLE != mNativeWindowHandle)
 			{
 				OpenGLRenderer& openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());

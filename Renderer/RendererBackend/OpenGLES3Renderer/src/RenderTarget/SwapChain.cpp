@@ -46,7 +46,8 @@ namespace OpenGLES3Renderer
 	SwapChain::SwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowHandle windowHandle) :
 		ISwapChain(renderPass),
 		mNativeWindowHandle(windowHandle.nativeWindowHandle),
-		mRenderWindow(windowHandle.renderWindow)
+		mRenderWindow(windowHandle.renderWindow),
+		mNewVerticalSynchronizationInterval(~0u)
 	{
 		// Nothing here
 	}
@@ -111,7 +112,7 @@ namespace OpenGLES3Renderer
 			{
 				IOpenGLES3Context& openGLES3Context = static_cast<OpenGLES3Renderer&>(getRenderer()).getOpenGLES3Context();
 
-				// TODO(sw) Resue X11 display from "Frontend" -> for now reuse it from the OpenGL ES 3 context
+				// TODO(sw) Reuse X11 display from "Frontend" -> for now reuse it from the OpenGL ES 3 context
 				Display* display = openGLES3Context.getX11Display();
 
 				// Get the width and height...
@@ -156,6 +157,11 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ISwapChain methods           ]
 	//[-------------------------------------------------------]
+	void SwapChain::setVerticalSynchronizationInterval(uint32_t synchronizationInterval)
+	{
+		mNewVerticalSynchronizationInterval = synchronizationInterval;
+	}
+
 	void SwapChain::present()
 	{
 		if (nullptr != mRenderWindow)
@@ -164,10 +170,19 @@ namespace OpenGLES3Renderer
 		}
 		else
 		{
-			// TODO(co) Correct implementation
-			// Swap buffers
 			const IOpenGLES3Context& openGLES3Context = static_cast<OpenGLES3Renderer&>(getRenderer()).getOpenGLES3Context();
-			eglSwapBuffers(openGLES3Context.getEGLDisplay(), openGLES3Context.getEGLDummySurface());
+			const EGLDisplay eglDisplay = openGLES3Context.getEGLDisplay();
+
+			// Set new vertical synchronization interval?
+			// -> We do this in here to avoid having to use "eglMakeCurrent()" to often at multiple places
+			if (~0u != mNewVerticalSynchronizationInterval)
+			{
+				eglSwapInterval(eglDisplay, static_cast<EGLint>(mNewVerticalSynchronizationInterval));
+				mNewVerticalSynchronizationInterval = ~0u;
+			}
+
+			// Swap buffers
+			eglSwapBuffers(eglDisplay, openGLES3Context.getEGLDummySurface());
 		}
 	}
 

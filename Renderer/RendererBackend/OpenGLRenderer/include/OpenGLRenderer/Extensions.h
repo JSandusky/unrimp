@@ -126,6 +126,8 @@ namespace OpenGLRenderer
 		///////////////////////////////////////////////////////////
 		// WGL (Windows only)
 		bool isWGL_ARB_extensions_string() const;
+		bool isWGL_EXT_swap_control() const;
+		bool isWGL_EXT_swap_control_tear() const;
 		// EXT
 		bool isGL_EXT_texture_lod_bias() const;
 		bool isGL_EXT_texture_filter_anisotropic() const;
@@ -241,6 +243,8 @@ namespace OpenGLRenderer
 		// Supported extensions
 		// WGL (Windows only)
 		bool mWGL_ARB_extensions_string;
+		bool mWGL_EXT_swap_control;
+		bool mWGL_EXT_swap_control_tear;
 		// EXT
 		bool mGL_EXT_texture_lod_bias;
 		bool mGL_EXT_texture_filter_anisotropic;
@@ -299,6 +303,9 @@ namespace OpenGLRenderer
 	#ifdef WIN32
 		// WGL_ARB_extensions_string
 		FNDEF_EX(wglGetExtensionsStringARB,	PFNWGLGETEXTENSIONSSTRINGARBPROC);
+
+		// WGL_EXT_swap_control
+		FNDEF_EX(wglSwapIntervalEXT,	PFNWGLSWAPINTERVALEXTPROC);
 	#endif
 
 

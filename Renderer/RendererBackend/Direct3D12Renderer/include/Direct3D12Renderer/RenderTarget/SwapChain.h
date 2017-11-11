@@ -169,6 +169,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	public:
 		virtual handle getNativeWindowHandle() const override;
+		virtual void setVerticalSynchronizationInterval(uint32_t synchronizationInterval) override;
 		virtual void present() override;
 		virtual void resizeBuffers() override;
 		virtual bool getFullscreenState() const override;
@@ -245,6 +246,7 @@ namespace Direct3D12Renderer
 		ID3D12Resource*		  mD3D12ResourceDepthStencil;						///< The Direct3D 12 depth stencil instance, null pointer on error
 
 		// Synchronization objects
+		uint32_t	 mSynchronizationInterval;
 		UINT		 mFrameIndex;
 		HANDLE		 mFenceEvent;
 		ID3D12Fence* mD3D12Fence;

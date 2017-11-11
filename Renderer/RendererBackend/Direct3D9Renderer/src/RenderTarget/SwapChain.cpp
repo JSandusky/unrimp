@@ -43,11 +43,12 @@ namespace Direct3D9Renderer
 		ISwapChain(renderPass),
 		mDirect3DSwapChain9(nullptr),
 		mDirect3DSurface9RenderTarget(nullptr),
-		mDirect3DSurface9DepthStencil(nullptr)
+		mDirect3DSurface9DepthStencil(nullptr),
+		mVerticalSynchronizationInterval(0)
 	{
 		const RenderPass& d3d9RenderPass = static_cast<RenderPass&>(renderPass);
 
-		// Sanity checks
+		// Sanity check
 		assert(1 == d3d9RenderPass.getNumberOfColorAttachments());
 
 		// Get the Direct3D 9 device instance
@@ -91,6 +92,7 @@ namespace Direct3D9Renderer
 		d3dPresentParameters.hDeviceWindow			= hWnd;
 		d3dPresentParameters.Windowed				= TRUE;
 		d3dPresentParameters.EnableAutoDepthStencil = FALSE;
+		d3dPresentParameters.PresentationInterval	= Mapping::getDirect3D9PresentationInterval(mVerticalSynchronizationInterval);
 
 		// Create the Direct3D 9 swap chain
 		// -> Direct3D 9 now also automatically fills the given present parameters instance with the chosen settings
@@ -121,17 +123,14 @@ namespace Direct3D9Renderer
 		if (nullptr != mDirect3DSurface9DepthStencil)
 		{
 			mDirect3DSurface9DepthStencil->Release();
-			mDirect3DSurface9DepthStencil = nullptr;
 		}
 		if (nullptr != mDirect3DSurface9RenderTarget)
 		{
 			mDirect3DSurface9RenderTarget->Release();
-			mDirect3DSurface9RenderTarget = nullptr;
 		}
 		if (nullptr != mDirect3DSwapChain9)
 		{
 			mDirect3DSwapChain9->Release();
-			mDirect3DSwapChain9 = nullptr;
 		}
 	}
 
@@ -235,6 +234,16 @@ namespace Direct3D9Renderer
 		return NULL_HANDLE;
 	}
 
+	void SwapChain::setVerticalSynchronizationInterval(uint32_t synchronizationInterval)
+	{
+		// TODO(co) Direct3D 9 supports a maximum synchronization interval of four. Need to add some security checks.
+		if (mVerticalSynchronizationInterval != synchronizationInterval)
+		{
+			mVerticalSynchronizationInterval = synchronizationInterval;
+			resizeBuffers();
+		}
+	}
+
 	void SwapChain::present()
 	{
 		// Is there a valid swap chain?
@@ -304,6 +313,7 @@ namespace Direct3D9Renderer
 			d3dPresentParameters.Windowed				= TRUE;
 			d3dPresentParameters.EnableAutoDepthStencil = TRUE;
 			d3dPresentParameters.AutoDepthStencilFormat = D3DFMT_D24X8;
+			d3dPresentParameters.PresentationInterval	= Mapping::getDirect3D9PresentationInterval(mVerticalSynchronizationInterval);
 
 			// Create the Direct3D 9 swap chain
 			// -> Direct3D 9 now also automatically fills the given present parameters instance with the chosen settings

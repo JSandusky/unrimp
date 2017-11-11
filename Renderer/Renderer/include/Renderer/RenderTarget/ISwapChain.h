@@ -134,6 +134,15 @@ namespace Renderer
 
 		/**
 		*  @brief
+		*    Set vertical synchronization interval
+		*
+		*  @param[in] synchronizationInterval
+		*    Synchronization interval, >0 if vertical synchronization should be used, else zero
+		*/
+		virtual void setVerticalSynchronizationInterval(uint32_t synchronizationInterval) = 0;
+
+		/**
+		*  @brief
 		*    Present the content of the current back buffer
 		*
 		*  @note

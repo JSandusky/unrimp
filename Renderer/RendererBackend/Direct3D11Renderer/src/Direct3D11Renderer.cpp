@@ -87,7 +87,7 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
-		bool createDevice(UINT flags, ID3D11Device** d3d11Device, ID3D11DeviceContext** d3d11DeviceContext)
+		bool createDevice(UINT flags, ID3D11Device** d3d11Device, ID3D11DeviceContext** d3d11DeviceContext, D3D_FEATURE_LEVEL& d3dFeatureLevel)
 		{
 			// Driver types
 			static const D3D_DRIVER_TYPE D3D_DRIVER_TYPES[] =
@@ -101,6 +101,7 @@ namespace
 			// Feature levels
 			static const D3D_FEATURE_LEVEL D3D_FEATURE_LEVELS[] =
 			{
+				D3D_FEATURE_LEVEL_11_1,
 				D3D_FEATURE_LEVEL_11_0,
 				D3D_FEATURE_LEVEL_10_1,
 				D3D_FEATURE_LEVEL_10_0,
@@ -110,11 +111,20 @@ namespace
 			// Create the Direct3D 11 device
 			for (UINT deviceType = 0; deviceType < NUMBER_OF_DRIVER_TYPES; ++deviceType)
 			{
-				D3D_FEATURE_LEVEL d3dFeatureLevel = D3D_FEATURE_LEVEL_11_0;
-				if (SUCCEEDED(Direct3D11Renderer::D3D11CreateDevice(nullptr, D3D_DRIVER_TYPES[deviceType], nullptr, flags, D3D_FEATURE_LEVELS, NUMBER_OF_FEATURE_LEVELS, D3D11_SDK_VERSION, d3d11Device, &d3dFeatureLevel, d3d11DeviceContext)))
+				const HRESULT result = Direct3D11Renderer::D3D11CreateDevice(nullptr, D3D_DRIVER_TYPES[deviceType], nullptr, flags, D3D_FEATURE_LEVELS, NUMBER_OF_FEATURE_LEVELS, D3D11_SDK_VERSION, d3d11Device, &d3dFeatureLevel, d3d11DeviceContext);
+				if (SUCCEEDED(result))
 				{
 					// Done
 					return true;
+				}
+				else if (E_INVALIDARG == result)
+				{
+					// Maybe the system doesn't support Direct3D 11.1, try again requesting Direct3D 11
+					if (SUCCEEDED(Direct3D11Renderer::D3D11CreateDevice(nullptr, D3D_DRIVER_TYPES[deviceType], nullptr, flags, &D3D_FEATURE_LEVELS[1], NUMBER_OF_FEATURE_LEVELS - 1, D3D11_SDK_VERSION, d3d11Device, &d3dFeatureLevel, d3d11DeviceContext)))
+					{
+						// Done
+						return true;
+					}
 				}
 			}
 
@@ -346,6 +356,7 @@ namespace Direct3D11Renderer
 		mDirect3D11RuntimeLinking(nullptr),
 		mD3D11Device(nullptr),
 		mD3D11DeviceContext(nullptr),
+		mD3DFeatureLevel(D3D_FEATURE_LEVEL_11_0),
 		mD3DUserDefinedAnnotation(nullptr),
 		mShaderLanguageHlsl(nullptr),
 		mD3D11QueryFlush(nullptr),
@@ -373,11 +384,11 @@ namespace Direct3D11Renderer
 			#endif
 
 			// Create the Direct3D 11 device
-			if (!detail::createDevice(flags, &mD3D11Device, &mD3D11DeviceContext) && (flags & D3D11_CREATE_DEVICE_DEBUG))
+			if (!detail::createDevice(flags, &mD3D11Device, &mD3D11DeviceContext, mD3DFeatureLevel) && (flags & D3D11_CREATE_DEVICE_DEBUG))
 			{
 				RENDERER_LOG(mContext, CRITICAL, "Failed to create the Direct3D 11 device instance, retrying without debug flag (maybe no Windows SDK is installed)")
 				flags &= ~D3D11_CREATE_DEVICE_DEBUG;
-				detail::createDevice(flags, &mD3D11Device, &mD3D11DeviceContext);
+				detail::createDevice(flags, &mD3D11Device, &mD3D11DeviceContext, mD3DFeatureLevel);
 			}
 
 			// Is there a valid Direct3D 11 device and device context?
@@ -1922,6 +1933,7 @@ namespace Direct3D11Renderer
 				break;
 
 			case D3D_FEATURE_LEVEL_11_0:
+			case D3D_FEATURE_LEVEL_11_1:
 				// Maximum number of viewports (always at least 1)
 				mCapabilities.maximumNumberOfViewports = D3D11_VIEWPORT_AND_SCISSORRECT_MAX_INDEX + 1;
 

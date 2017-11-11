@@ -28,6 +28,84 @@
 #include "Direct3D11Renderer/Mapping.h"
 #include "Direct3D11Renderer/Direct3D11Renderer.h"
 
+#include <Renderer/ILog.h>
+
+#include <VersionHelpers.h>
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global definitions                                    ]
+		//[-------------------------------------------------------]
+		typedef LONG NTSTATUS, *PNTSTATUS;
+		typedef NTSTATUS (WINAPI* RtlGetVersionPtr)(PRTL_OSVERSIONINFOW);
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		// From https://stackoverflow.com/a/36545162
+		RTL_OSVERSIONINFOW getRealOSVersion()
+		{
+			const HMODULE hModule = ::GetModuleHandleW(L"ntdll.dll");
+			if (hModule)
+			{
+				PRAGMA_WARNING_PUSH
+					PRAGMA_WARNING_DISABLE_MSVC(4191)	// warning C4191: 'reinterpret_cast': unsafe conversion from 'FARPROC' to '`anonymous-namespace'::detail::RtlGetVersionPtr'
+					const RtlGetVersionPtr functionPointer = reinterpret_cast<RtlGetVersionPtr>(::GetProcAddress(hModule, "RtlGetVersion"));
+				PRAGMA_WARNING_POP
+				if (nullptr != functionPointer)
+				{
+					RTL_OSVERSIONINFOW rovi = { 0 };
+					rovi.dwOSVersionInfoSize = sizeof(rovi);
+					if (0x00000000 == functionPointer(&rovi))
+					{
+						return rovi;
+					}
+				}
+			}
+			RTL_OSVERSIONINFOW rovi = { 0 };
+			return rovi;
+		}
+
+		// "IsWindows10OrGreater()" isn't practically usable
+		// - See "Windows Dev Center" -> "Version Helper functions" -> "IsWindows10OrGreater" at https://msdn.microsoft.com/en-us/library/windows/desktop/dn424972(v=vs.85).aspx
+		//   "For Windows 10, IsWindows10OrGreater returns false unless the application contains a manifest that includes a compatibility section that contains the GUID that designates Windows 10."
+		bool isWindows10OrGreater()
+		{
+			return (getRealOSVersion().dwMajorVersion >= 10);
+		}
+
+		void handleDeviceLost(const Direct3D11Renderer::Direct3D11Renderer& direct3D11Renderer, HRESULT result)
+		{
+			// If the device was removed either by a disconnection or a driver upgrade, we must recreate all device resources
+			if (DXGI_ERROR_DEVICE_REMOVED == result || DXGI_ERROR_DEVICE_RESET == result)
+			{
+				if (DXGI_ERROR_DEVICE_REMOVED == result)
+				{
+					result = direct3D11Renderer.getD3D11Device()->GetDeviceRemovedReason();
+				}
+				RENDERER_LOG(direct3D11Renderer.getContext(), CRITICAL, "Direct3D 11 device lost on present: Reason code 0x%08X", static_cast<unsigned int>(result))
+
+				// TODO(co) Add device lost handling if needed. Probably more complex to recreate all device resources.
+			}
+		}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -41,29 +119,57 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	SwapChain::SwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowHandle windowHandle) :
 		ISwapChain(renderPass),
+		mD3D11DeviceContext1(nullptr),
 		mDxgiSwapChain(nullptr),
 		mD3D11RenderTargetView(nullptr),
-		mD3D11DepthStencilView(nullptr)
+		mD3D11DepthStencilView(nullptr),
+		mSynchronizationInterval(0),
+		mAllowTearing(false)
 	{
 		const RenderPass& d3d11RenderPass = static_cast<RenderPass&>(renderPass);
+		const Direct3D11Renderer& direct3D11Renderer = static_cast<Direct3D11Renderer&>(d3d11RenderPass.getRenderer());
+		direct3D11Renderer.getD3D11DeviceContext()->QueryInterface(__uuidof(ID3D11DeviceContext1), reinterpret_cast<void**>(&mD3D11DeviceContext1));
 
-		// Sanity checks
+		// Sanity check
 		assert(1 == d3d11RenderPass.getNumberOfColorAttachments());
 
 		// Get the Direct3D 11 device instance
-		ID3D11Device* d3d11Device = static_cast<Direct3D11Renderer&>(renderPass.getRenderer()).getD3D11Device();
+		ID3D11Device* d3d11Device = direct3D11Renderer.getD3D11Device();
 
 		// Get the native window handle
 		const HWND hWnd = reinterpret_cast<HWND>(windowHandle.nativeWindowHandle);
 
 		// Get a DXGI factory instance
+		const bool isWindows10OrGreater = ::detail::isWindows10OrGreater();
 		IDXGIFactory1* dxgiFactory1 = nullptr;
+		IDXGIFactory2* dxgiFactory2 = nullptr;
 		{
 			IDXGIDevice* dxgiDevice = nullptr;
 			IDXGIAdapter* dxgiAdapter = nullptr;
 			d3d11Device->QueryInterface(IID_PPV_ARGS(&dxgiDevice));
 			dxgiDevice->GetAdapter(&dxgiAdapter);
 			dxgiAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory1));
+			dxgiAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory2));
+
+			// Determines whether tearing support is available for fullscreen borderless windows
+			// -> To unlock frame rates of UWP applications on the Windows Store and providing support for both AMD Freesync and NVIDIA's G-SYNC we must explicitly allow tearing
+			// -> See "Windows Dev Center" -> "Variable refresh rate displays": https://msdn.microsoft.com/en-us/library/windows/desktop/mt742104(v=vs.85).aspx
+			if (isWindows10OrGreater)
+			{
+				IDXGIFactory5* dxgiFactory5 = nullptr;
+				dxgiAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory5));
+				if (nullptr != dxgiFactory5)
+				{
+					BOOL allowTearing = FALSE;
+					if (SUCCEEDED(dxgiFactory5->CheckFeatureSupport(DXGI_FEATURE_PRESENT_ALLOW_TEARING, &allowTearing, sizeof(allowTearing))))
+					{
+						mAllowTearing = true;
+					}
+					dxgiFactory5->Release();
+				}
+			}
+
+			// Release references
 			dxgiAdapter->Release();
 			dxgiDevice->Release();
 		}
@@ -92,20 +198,71 @@ namespace Direct3D11Renderer
 			}
 		}
 
-		// Create the swap chain
-		DXGI_SWAP_CHAIN_DESC dxgiSwapChainDesc = {};
-		dxgiSwapChainDesc.BufferCount						 = 1;
-		dxgiSwapChainDesc.BufferDesc.Width					 = static_cast<UINT>(width);
-		dxgiSwapChainDesc.BufferDesc.Height					 = static_cast<UINT>(height);
-		dxgiSwapChainDesc.BufferDesc.Format					 = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(d3d11RenderPass.getColorAttachmentTextureFormat(0)));
-		dxgiSwapChainDesc.BufferDesc.RefreshRate.Numerator	 = 60;
-		dxgiSwapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
-		dxgiSwapChainDesc.BufferUsage						 = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-		dxgiSwapChainDesc.OutputWindow						 = hWnd;
-		dxgiSwapChainDesc.SampleDesc.Count					 = 1;
-		dxgiSwapChainDesc.SampleDesc.Quality				 = 0;
-		dxgiSwapChainDesc.Windowed							 = TRUE;
-		dxgiFactory1->CreateSwapChain(d3d11Device, &dxgiSwapChainDesc, &mDxgiSwapChain);
+		{ // Create the swap chain
+			UINT bufferCount = 1;
+			DXGI_SWAP_EFFECT swapEffect = DXGI_SWAP_EFFECT_DISCARD;
+			const bool isWindows8OrGreater = ::IsWindows8OrGreater();
+			if (isWindows10OrGreater)
+			{
+				assert((d3d11RenderPass.getNumberOfMultisamples() == 1) && "Direct3D 11 doesn't support multisampling if the flip model vertical synchronization is used");
+				bufferCount = 2;
+				swapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+			}
+			else if (isWindows8OrGreater)
+			{
+				assert((d3d11RenderPass.getNumberOfMultisamples() == 1) && "Direct3D 11 doesn't support multisampling if the flip model vertical synchronization is used");
+				bufferCount = 2;
+				swapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
+			}
+
+			// Quote from https://msdn.microsoft.com/de-de/library/windows/desktop/hh404557(v=vs.85).aspx : "Platform Update for Windows 7:  DXGI_SCALING_NONE is not supported on Windows 7 or Windows Server 2008 R2"
+			if (direct3D11Renderer.getD3DFeatureLevel() == D3D_FEATURE_LEVEL_11_1 && nullptr != dxgiFactory2 && isWindows8OrGreater)
+			{
+				// Fill DXGI swap chain description
+				DXGI_SWAP_CHAIN_DESC1 dxgiSwapChainDesc1 = {};
+				dxgiSwapChainDesc1.Width			  = static_cast<UINT>(width);
+				dxgiSwapChainDesc1.Height			  = static_cast<UINT>(height);
+				dxgiSwapChainDesc1.Format			  = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(d3d11RenderPass.getColorAttachmentTextureFormat(0)));
+				dxgiSwapChainDesc1.SampleDesc.Count	  = 1;
+				dxgiSwapChainDesc1.SampleDesc.Quality = 0;
+				dxgiSwapChainDesc1.BufferUsage		  = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+				dxgiSwapChainDesc1.BufferCount		  = bufferCount;
+				dxgiSwapChainDesc1.SwapEffect		  = swapEffect;
+				dxgiSwapChainDesc1.Flags			  = mAllowTearing ? DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING : 0u;
+
+				// Fill DXGI swap chain fullscreen description
+				DXGI_SWAP_CHAIN_FULLSCREEN_DESC dxgiSwapChainFullscreenDesc = {};
+				dxgiSwapChainFullscreenDesc.RefreshRate.Numerator	= 60;
+				dxgiSwapChainFullscreenDesc.RefreshRate.Denominator	= 1;
+				dxgiSwapChainFullscreenDesc.Windowed				= TRUE;
+
+				// Create swap chain
+				IDXGISwapChain1* dxgiSwapChain = nullptr;
+				dxgiFactory2->CreateSwapChainForHwnd(d3d11Device, hWnd, &dxgiSwapChainDesc1, &dxgiSwapChainFullscreenDesc, nullptr, &dxgiSwapChain);
+				mDxgiSwapChain = reinterpret_cast<IDXGISwapChain*>(dxgiSwapChain);
+			}
+			else
+			{
+				// Fill DXGI swap chain description
+				DXGI_SWAP_CHAIN_DESC dxgiSwapChainDesc = {};
+				dxgiSwapChainDesc.BufferCount						 = bufferCount;
+				dxgiSwapChainDesc.BufferDesc.Width					 = static_cast<UINT>(width);
+				dxgiSwapChainDesc.BufferDesc.Height					 = static_cast<UINT>(height);
+				dxgiSwapChainDesc.BufferDesc.Format					 = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(d3d11RenderPass.getColorAttachmentTextureFormat(0)));
+				dxgiSwapChainDesc.BufferDesc.RefreshRate.Numerator	 = 60;
+				dxgiSwapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
+				dxgiSwapChainDesc.BufferUsage						 = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+				dxgiSwapChainDesc.OutputWindow						 = hWnd;
+				dxgiSwapChainDesc.SampleDesc.Count					 = 1;
+				dxgiSwapChainDesc.SampleDesc.Quality				 = 0;
+				dxgiSwapChainDesc.Windowed							 = TRUE;
+				dxgiSwapChainDesc.SwapEffect						 = swapEffect;
+				dxgiSwapChainDesc.Flags								 = mAllowTearing ? DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING : 0u;
+
+				// Create swap chain
+				dxgiFactory1->CreateSwapChain(d3d11Device, &dxgiSwapChainDesc, &mDxgiSwapChain);
+			}
+		}
 
 		// Disable alt-return for automatic fullscreen state change
 		// -> We handle this manually to have more control over it
@@ -113,6 +270,7 @@ namespace Direct3D11Renderer
 
 		// Release our DXGI factory
 		dxgiFactory1->Release();
+		dxgiFactory2->Release();
 
 		// Create the Direct3D 11 views
 		if (nullptr != mDxgiSwapChain)
@@ -141,18 +299,22 @@ namespace Direct3D11Renderer
 		if (nullptr != mD3D11DepthStencilView)
 		{
 			mD3D11DepthStencilView->Release();
-			mD3D11DepthStencilView = nullptr;
 		}
 		if (nullptr != mD3D11RenderTargetView)
 		{
 			mD3D11RenderTargetView->Release();
-			mD3D11RenderTargetView = nullptr;
 		}
 		if (nullptr != mDxgiSwapChain)
 		{
 			mDxgiSwapChain->Release();
-			mDxgiSwapChain = nullptr;
 		}
+		if (nullptr != mD3D11DeviceContext1)
+		{
+			mD3D11DeviceContext1->Release();
+		}
+
+		// After releasing references to these resources, we need to call "Flush()" to ensure that Direct3D also releases any references it might still have to the same resources - such as pipeline bindings
+		static_cast<Direct3D11Renderer&>(getRenderer()).getD3D11DeviceContext()->Flush();
 	}
 
 
@@ -262,12 +424,32 @@ namespace Direct3D11Renderer
 		return NULL_HANDLE;
 	}
 
+	void SwapChain::setVerticalSynchronizationInterval(uint32_t synchronizationInterval)
+	{
+		mSynchronizationInterval = synchronizationInterval;
+	}
+
 	void SwapChain::present()
 	{
 		// Is there a valid swap chain?
 		if (nullptr != mDxgiSwapChain)
 		{
-			mDxgiSwapChain->Present(0, 0);
+			// TODO(co) "!getFullscreenState()": Add support for borderless window to get rid of this
+			const Direct3D11Renderer& direct3D11Renderer = static_cast<Direct3D11Renderer&>(getRenderPass().getRenderer());
+			const UINT flags = ((mAllowTearing && 0 == mSynchronizationInterval && !getFullscreenState()) ? DXGI_PRESENT_ALLOW_TEARING : 0);
+			::detail::handleDeviceLost(direct3D11Renderer, mDxgiSwapChain->Present(mSynchronizationInterval, flags));
+
+			// Discard the contents of the render target
+			// -> This is a valid operation only when the existing contents will be entirely overwritten. If dirty or scroll rectangles are used, this call should be removed.
+			if (nullptr != mD3D11DeviceContext1)
+			{
+				mD3D11DeviceContext1->DiscardView(mD3D11RenderTargetView);
+				if (nullptr != mD3D11DepthStencilView)
+				{
+					// Discard the contents of the depth stencil
+					mD3D11DeviceContext1->DiscardView(mD3D11DepthStencilView);
+				}
+			}
 		}
 	}
 
@@ -310,7 +492,8 @@ namespace Direct3D11Renderer
 
 			// Resize the Direct3D 11 swap chain
 			// -> Preserve the existing buffer count and format
-			if (SUCCEEDED(mDxgiSwapChain->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, 0)))
+			const HRESULT result = mDxgiSwapChain->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, mAllowTearing ? DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING : 0u);
+			if (SUCCEEDED(result))
 			{
 				// Create the Direct3D 11 views
 				createDirect3D11Views();
@@ -320,6 +503,10 @@ namespace Direct3D11Renderer
 				{
 					direct3D11Renderer.omSetRenderTarget(renderTargetBackup);
 				}
+			}
+			else
+			{
+				::detail::handleDeviceLost(direct3D11Renderer, result);
 			}
 		}
 	}

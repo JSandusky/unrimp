@@ -126,8 +126,20 @@ void IApplicationRendererRuntime::onInitialization()
 			if (nullptr != rendererRuntime)
 			{
 				// Add used asset package
-				const bool rendererIsOpenGLES = (0 == strcmp(renderer->getName(), "OpenGLES3"));
-				rendererRuntime->getAssetManager().mountAssetPackage(rendererIsOpenGLES ? "../DataMobile/Example/Content" : "../DataPc/Example/Content", "Example");
+				bool rendererIsOpenGLES = (0 == strcmp(renderer->getName(), "OpenGLES3"));
+				if (rendererIsOpenGLES)
+				{
+					if (nullptr == rendererRuntime->getAssetManager().mountAssetPackage("../DataMobile/Example/Content", "Example"))
+					{
+						// Handy fallback for development: If the mobile data isn't there, use the PC data
+						rendererRuntime->getAssetManager().mountAssetPackage("../DataPc/Example/Content", "Example");
+						rendererIsOpenGLES = false;
+					}
+				}
+				else
+				{
+					rendererRuntime->getAssetManager().mountAssetPackage("../DataPc/Example/Content", "Example");
+				}
 				rendererRuntime->loadPipelineStateObjectCache();
 
 				// Load renderer toolkit project to enable hot-reloading in case of asset changes

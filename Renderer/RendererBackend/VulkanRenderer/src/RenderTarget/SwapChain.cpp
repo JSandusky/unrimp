@@ -608,6 +608,11 @@ namespace VulkanRenderer
 		return mNativeWindowHandle;
 	}
 
+	void SwapChain::setVerticalSynchronizationInterval(uint32_t)
+	{
+		// TODO(co) Implement usage of "synchronizationInterval"
+	}
+
 	void SwapChain::present()
 	{
 		// TODO(co) "Renderer::IRenderWindow::present()" support

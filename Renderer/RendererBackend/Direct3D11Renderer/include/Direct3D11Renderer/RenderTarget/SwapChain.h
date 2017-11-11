@@ -35,6 +35,7 @@
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 struct IDXGISwapChain;
+struct ID3D11DeviceContext1;
 struct ID3D11RenderTargetView;
 struct ID3D11DepthStencilView;
 
@@ -131,6 +132,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	public:
 		virtual handle getNativeWindowHandle() const override;
+		virtual void setVerticalSynchronizationInterval(uint32_t synchronizationInterval) override;
 		virtual void present() override;
 		virtual void resizeBuffers() override;
 		virtual bool getFullscreenState() const override;
@@ -180,9 +182,12 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		ID3D11DeviceContext1*	mD3D11DeviceContext1;
 		IDXGISwapChain*			mDxgiSwapChain;			///< The DXGI swap chain instance, null pointer on error
 		ID3D11RenderTargetView* mD3D11RenderTargetView;	///< The Direct3D 11 render target view instance, null pointer on error
 		ID3D11DepthStencilView* mD3D11DepthStencilView;	///< The Direct3D 11 depth stencil view instance, null pointer on error
+		uint32_t				mSynchronizationInterval;
+		bool					mAllowTearing;
 
 
 	};

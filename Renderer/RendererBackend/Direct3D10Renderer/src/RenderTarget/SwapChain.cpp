@@ -28,6 +28,84 @@
 #include "Direct3D10Renderer/Mapping.h"
 #include "Direct3D10Renderer/Direct3D10Renderer.h"
 
+#include <Renderer/ILog.h>
+
+#include <VersionHelpers.h>
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global definitions                                    ]
+		//[-------------------------------------------------------]
+		typedef LONG NTSTATUS, *PNTSTATUS;
+		typedef NTSTATUS (WINAPI* RtlGetVersionPtr)(PRTL_OSVERSIONINFOW);
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		// From https://stackoverflow.com/a/36545162
+		RTL_OSVERSIONINFOW getRealOSVersion()
+		{
+			const HMODULE hModule = ::GetModuleHandleW(L"ntdll.dll");
+			if (hModule)
+			{
+				PRAGMA_WARNING_PUSH
+					PRAGMA_WARNING_DISABLE_MSVC(4191)	// warning C4191: 'reinterpret_cast': unsafe conversion from 'FARPROC' to '`anonymous-namespace'::detail::RtlGetVersionPtr'
+					const RtlGetVersionPtr functionPointer = reinterpret_cast<RtlGetVersionPtr>(::GetProcAddress(hModule, "RtlGetVersion"));
+				PRAGMA_WARNING_POP
+				if (nullptr != functionPointer)
+				{
+					RTL_OSVERSIONINFOW rovi = { 0 };
+					rovi.dwOSVersionInfoSize = sizeof(rovi);
+					if (0x00000000 == functionPointer(&rovi))
+					{
+						return rovi;
+					}
+				}
+			}
+			RTL_OSVERSIONINFOW rovi = { 0 };
+			return rovi;
+		}
+
+		// "IsWindows10OrGreater()" isn't practically usable
+		// - See "Windows Dev Center" -> "Version Helper functions" -> "IsWindows10OrGreater" at https://msdn.microsoft.com/en-us/library/windows/desktop/dn424972(v=vs.85).aspx
+		//   "For Windows 10, IsWindows10OrGreater returns false unless the application contains a manifest that includes a compatibility section that contains the GUID that designates Windows 10."
+		bool isWindows10OrGreater()
+		{
+			return (getRealOSVersion().dwMajorVersion >= 10);
+		}
+
+		void handleDeviceLost(const Direct3D10Renderer::Direct3D10Renderer& direct3D11Renderer, HRESULT result)
+		{
+			// If the device was removed either by a disconnection or a driver upgrade, we must recreate all device resources
+			if (DXGI_ERROR_DEVICE_REMOVED == result || DXGI_ERROR_DEVICE_RESET == result)
+			{
+				if (DXGI_ERROR_DEVICE_REMOVED == result)
+				{
+					result = direct3D11Renderer.getD3D10Device()->GetDeviceRemovedReason();
+				}
+				RENDERER_LOG(direct3D11Renderer.getContext(), CRITICAL, "Direct3D 10 device lost on present: Reason code 0x%08X", static_cast<unsigned int>(result))
+
+				// TODO(co) Add device lost handling if needed. Probably more complex to recreate all device resources.
+			}
+		}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -43,11 +121,13 @@ namespace Direct3D10Renderer
 		ISwapChain(renderPass),
 		mDxgiSwapChain(nullptr),
 		mD3D10RenderTargetView(nullptr),
-		mD3D10DepthStencilView(nullptr)
+		mD3D10DepthStencilView(nullptr),
+		mSynchronizationInterval(0),
+		mAllowTearing(false)
 	{
 		const RenderPass& d3d10RenderPass = static_cast<RenderPass&>(renderPass);
 
-		// Sanity checks
+		// Sanity check
 		assert(1 == d3d10RenderPass.getNumberOfColorAttachments());
 
 		// Get the Direct3D 10 device instance
@@ -57,14 +137,37 @@ namespace Direct3D10Renderer
 		const HWND hWnd = reinterpret_cast<HWND>(windowHandle.nativeWindowHandle);
 
 		// Get a DXGI factory instance
-		IDXGIDevice* dxgiDevice = nullptr;
-		IDXGIAdapter* dxgiAdapter = nullptr;
+		const bool isWindows10OrGreater = ::detail::isWindows10OrGreater();
 		IDXGIFactory* dxgiFactory = nullptr;
-		d3d10Device->QueryInterface(IID_PPV_ARGS(&dxgiDevice));
-		dxgiDevice->GetAdapter(&dxgiAdapter);
-		dxgiAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory));
-		dxgiAdapter->Release();
-		dxgiDevice->Release();
+		{
+			IDXGIDevice* dxgiDevice = nullptr;
+			IDXGIAdapter* dxgiAdapter = nullptr;
+			d3d10Device->QueryInterface(IID_PPV_ARGS(&dxgiDevice));
+			dxgiDevice->GetAdapter(&dxgiAdapter);
+			dxgiAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory));
+
+			// Determines whether tearing support is available for fullscreen borderless windows
+			// -> To unlock frame rates of UWP applications on the Windows Store and providing support for both AMD Freesync and NVIDIA's G-SYNC we must explicitly allow tearing
+			// -> See "Windows Dev Center" -> "Variable refresh rate displays": https://msdn.microsoft.com/en-us/library/windows/desktop/mt742104(v=vs.85).aspx
+			if (isWindows10OrGreater)
+			{
+				IDXGIFactory5* dxgiFactory5 = nullptr;
+				dxgiAdapter->GetParent(IID_PPV_ARGS(&dxgiFactory5));
+				if (nullptr != dxgiFactory5)
+				{
+					BOOL allowTearing = FALSE;
+					if (SUCCEEDED(dxgiFactory5->CheckFeatureSupport(DXGI_FEATURE_PRESENT_ALLOW_TEARING, &allowTearing, sizeof(allowTearing))))
+					{
+						mAllowTearing = true;
+					}
+					dxgiFactory5->Release();
+				}
+			}
+
+			// Release references
+			dxgiAdapter->Release();
+			dxgiDevice->Release();
+		}
 
 		// Get the width and height of the given native window and ensure they are never ever zero
 		// -> See "getSafeWidthAndHeight()"-method comments for details
@@ -103,6 +206,19 @@ namespace Direct3D10Renderer
 		dxgiSwapChainDesc.SampleDesc.Count					 = 1;
 		dxgiSwapChainDesc.SampleDesc.Quality				 = 0;
 		dxgiSwapChainDesc.Windowed							 = TRUE;
+		if (isWindows10OrGreater)
+		{
+			assert((d3d10RenderPass.getNumberOfMultisamples() == 1) && "Direct3D 10 doesn't support multisampling if the flip model vertical synchronization is used");
+			dxgiSwapChainDesc.BufferCount = 2;
+			dxgiSwapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+		}
+		else if (::IsWindows8OrGreater())
+		{
+			assert((d3d10RenderPass.getNumberOfMultisamples() == 1) && "Direct3D 10 doesn't support multisampling if the flip model vertical synchronization is used");
+			dxgiSwapChainDesc.BufferCount = 2;
+			dxgiSwapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
+		}
+		dxgiSwapChainDesc.Flags = mAllowTearing ? DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING : 0u;
 		dxgiFactory->CreateSwapChain(d3d10Device, &dxgiSwapChainDesc, &mDxgiSwapChain);
 
 		// Disable alt-return for automatic fullscreen state change
@@ -139,18 +255,18 @@ namespace Direct3D10Renderer
 		if (nullptr != mD3D10DepthStencilView)
 		{
 			mD3D10DepthStencilView->Release();
-			mD3D10DepthStencilView = nullptr;
 		}
 		if (nullptr != mD3D10RenderTargetView)
 		{
 			mD3D10RenderTargetView->Release();
-			mD3D10RenderTargetView = nullptr;
 		}
 		if (nullptr != mDxgiSwapChain)
 		{
 			mDxgiSwapChain->Release();
-			mDxgiSwapChain = nullptr;
 		}
+
+		// After releasing references to these resources, we need to call "Flush()" to ensure that Direct3D also releases any references it might still have to the same resources - such as pipeline bindings
+		static_cast<Direct3D10Renderer&>(getRenderer()).getD3D10Device()->Flush();
 	}
 
 
@@ -260,12 +376,20 @@ namespace Direct3D10Renderer
 		return NULL_HANDLE;
 	}
 
+	void SwapChain::setVerticalSynchronizationInterval(uint32_t synchronizationInterval)
+	{
+		mSynchronizationInterval = synchronizationInterval;
+	}
+
 	void SwapChain::present()
 	{
 		// Is there a valid swap chain?
 		if (nullptr != mDxgiSwapChain)
 		{
-			mDxgiSwapChain->Present(0, 0);
+			// TODO(co) "!getFullscreenState()": Add support for borderless window to get rid of this
+			const Direct3D10Renderer& direct3D10Renderer = static_cast<Direct3D10Renderer&>(getRenderPass().getRenderer());
+			const UINT flags = ((mAllowTearing && 0 == mSynchronizationInterval && !getFullscreenState()) ? DXGI_PRESENT_ALLOW_TEARING : 0);
+			::detail::handleDeviceLost(direct3D10Renderer, mDxgiSwapChain->Present(mSynchronizationInterval, flags));
 		}
 	}
 
@@ -309,7 +433,8 @@ namespace Direct3D10Renderer
 			// Resize the Direct3D 10 swap chain
 			// -> Preserve the existing buffer count and format
 			// -> Automatically choose the width and height to match the client rectangle of the native window
-			if (SUCCEEDED(mDxgiSwapChain->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, 0)))
+			const HRESULT result = mDxgiSwapChain->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, mAllowTearing ? DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING : 0u);
+			if (SUCCEEDED(result))
 			{
 				// Create the Direct3D 10 views
 				createDirect3D10Views();
@@ -319,6 +444,10 @@ namespace Direct3D10Renderer
 				{
 					direct3D10Renderer.omSetRenderTarget(renderTargetBackup);
 				}
+			}
+			else
+			{
+				::detail::handleDeviceLost(direct3D10Renderer, result);
 			}
 		}
 	}

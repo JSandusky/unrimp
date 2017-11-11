@@ -180,6 +180,8 @@ private:
 	// Global
 	Compositor mInstancedCompositor;
 	int		   mCurrentCompositor;
+	bool	   mUseVerticalSynchronization;
+	bool	   mCurrentUseVerticalSynchronization;
 	bool	   mHighQualityLighting;
 	int		   mCurrentMsaa;
 	float	   mResolutionScale;

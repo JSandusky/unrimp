@@ -153,8 +153,8 @@ public:
 //[ Public virtual IApplicationFrontend methods           ]
 //[-------------------------------------------------------]
 public:
-	inline Renderer::IRenderer* getRenderer() const override;
-	inline Renderer::IRenderTarget* getMainRenderTarget() const override;
+	inline virtual Renderer::IRenderer* getRenderer() const override;
+	inline virtual Renderer::IRenderTarget* getMainRenderTarget() const override;
 
 
 //[-------------------------------------------------------]

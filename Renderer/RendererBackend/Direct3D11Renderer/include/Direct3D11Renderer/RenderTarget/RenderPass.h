@@ -116,6 +116,15 @@ namespace Direct3D11Renderer
 		*/
 		inline Renderer::TextureFormat::Enum getDepthStencilAttachmentTextureFormat() const;
 
+		/**
+		*  @brief
+		*    Return the number of multisamples
+		*
+		*  @return
+		*    The number of multisamples
+		*/
+		inline uint8_t getNumberOfMultisamples() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]

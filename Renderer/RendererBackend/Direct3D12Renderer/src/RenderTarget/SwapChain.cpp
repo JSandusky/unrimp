@@ -32,6 +32,41 @@
 
 
 //[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		void handleDeviceLost(const Direct3D12Renderer::Direct3D12Renderer& direct3D12Renderer, HRESULT result)
+		{
+			// If the device was removed either by a disconnection or a driver upgrade, we must recreate all device resources
+			if (DXGI_ERROR_DEVICE_REMOVED == result || DXGI_ERROR_DEVICE_RESET == result)
+			{
+				if (DXGI_ERROR_DEVICE_REMOVED == result)
+				{
+					result = direct3D12Renderer.getD3D12Device()->GetDeviceRemovedReason();
+				}
+				RENDERER_LOG(direct3D12Renderer.getContext(), CRITICAL, "Direct3D 12 device lost on present: Reason code 0x%08X", static_cast<unsigned int>(result))
+
+				// TODO(co) Add device lost handling if needed. Probably more complex to recreate all device resources.
+			}
+		}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace Direct3D12Renderer
@@ -48,6 +83,7 @@ namespace Direct3D12Renderer
 		mD3D12DescriptorHeapDepthStencilView(nullptr),
 		mRenderTargetViewDescriptorSize(0),
 		mD3D12ResourceDepthStencil(nullptr),
+		mSynchronizationInterval(0),
 		mFrameIndex(0),
 		mFenceEvent(nullptr),
 		mD3D12Fence(nullptr),
@@ -57,7 +93,7 @@ namespace Direct3D12Renderer
 		memset(mD3D12ResourceRenderTargets, 0, sizeof(ID3D12Resource*) * NUMBER_OF_FRAMES);
 		const RenderPass& d3d12RenderPass = static_cast<RenderPass&>(renderPass);
 
-		// Sanity checks
+		// Sanity check
 		assert(1 == d3d12RenderPass.getNumberOfColorAttachments());
 
 		// Get the native window handle
@@ -89,6 +125,11 @@ namespace Direct3D12Renderer
 				height = 1;
 			}
 		}
+
+		// TODO(co) Add tearing support, see Direct3D 11 backend
+		// Determines whether tearing support is available for fullscreen borderless windows
+		// -> To unlock frame rates of UWP applications on the Windows Store and providing support for both AMD Freesync and NVIDIA's G-SYNC we must explicitly allow tearing
+		// -> See "Windows Dev Center" -> "Variable refresh rate displays": https://msdn.microsoft.com/en-us/library/windows/desktop/mt742104(v=vs.85).aspx
 
 		// Create the swap chain
 		DXGI_SWAP_CHAIN_DESC dxgiSwapChainDesc = {};
@@ -171,19 +212,16 @@ namespace Direct3D12Renderer
 		if (nullptr != mDxgiSwapChain3)
 		{
 			mDxgiSwapChain3->Release();
-			mDxgiSwapChain3 = nullptr;
 		}
 
 		// Destroy synchronization objects
 		if (nullptr != mFenceEvent)
 		{
 			::CloseHandle(mFenceEvent);
-			mFenceEvent = nullptr;
 		}
 		if (nullptr != mD3D12Fence)
 		{
 			mD3D12Fence->Release();
-			mD3D12Fence = nullptr;
 		}
 	}
 
@@ -311,12 +349,18 @@ namespace Direct3D12Renderer
 		return NULL_HANDLE;
 	}
 
+	void SwapChain::setVerticalSynchronizationInterval(uint32_t synchronizationInterval)
+	{
+		mSynchronizationInterval = synchronizationInterval;
+	}
+
 	void SwapChain::present()
 	{
 		// Is there a valid swap chain?
 		if (nullptr != mDxgiSwapChain3)
 		{
-			mDxgiSwapChain3->Present(0, 0);
+			const Direct3D12Renderer& direct3D12Renderer = static_cast<Direct3D12Renderer&>(getRenderPass().getRenderer());
+			::detail::handleDeviceLost(direct3D12Renderer, mDxgiSwapChain3->Present(mSynchronizationInterval, 0));
 
 			// Wait for the GPU to be done with all resources
 			waitForPreviousFrame();
@@ -353,7 +397,8 @@ namespace Direct3D12Renderer
 
 			// Resize the Direct3D 12 swap chain
 			// -> Preserve the existing buffer count and format
-			if (SUCCEEDED(mDxgiSwapChain3->ResizeBuffers(NUMBER_OF_FRAMES, width, height, static_cast<DXGI_FORMAT>(Mapping::getDirect3D12Format(static_cast<RenderPass&>(getRenderPass()).getColorAttachmentTextureFormat(0))), 0)))
+			const HRESULT result = mDxgiSwapChain3->ResizeBuffers(NUMBER_OF_FRAMES, width, height, static_cast<DXGI_FORMAT>(Mapping::getDirect3D12Format(static_cast<RenderPass&>(getRenderPass()).getColorAttachmentTextureFormat(0))), 0);
+			if (SUCCEEDED(result))
 			{
 				// Create the Direct3D 12 views
 				createDirect3D12Views();
@@ -363,6 +408,10 @@ namespace Direct3D12Renderer
 				{
 					direct3D12Renderer.omSetRenderTarget(renderTargetBackup);
 				}
+			}
+			else
+			{
+				::detail::handleDeviceLost(direct3D12Renderer, result);
 			}
 		}
 	}

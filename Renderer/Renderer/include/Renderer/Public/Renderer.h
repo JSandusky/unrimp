@@ -2281,6 +2281,7 @@ namespace Renderer
 			virtual ~ISwapChain() override;
 		public:
 			virtual handle getNativeWindowHandle() const = 0;
+			virtual void setVerticalSynchronizationInterval(uint32_t synchronizationInterval) = 0;
 			virtual void present() = 0;
 			virtual void resizeBuffers() = 0;
 			virtual bool getFullscreenState() const = 0;

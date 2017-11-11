@@ -153,6 +153,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	public:
 		virtual handle getNativeWindowHandle() const override;
+		virtual void setVerticalSynchronizationInterval(uint32_t synchronizationInterval) override;
 		virtual void present() override;
 		virtual void resizeBuffers() override;
 		virtual bool getFullscreenState() const override;

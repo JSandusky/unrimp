@@ -99,6 +99,8 @@ FirstScene::FirstScene() :
 	// Global
 	mInstancedCompositor(Compositor::FORWARD),
 	mCurrentCompositor(mInstancedCompositor),
+	mUseVerticalSynchronization(false),
+	mCurrentUseVerticalSynchronization(false),
 	mHighQualityLighting(true),
 	mCurrentMsaa(Msaa::FOUR),
 	mResolutionScale(1.0f),
@@ -118,7 +120,7 @@ FirstScene::FirstScene() :
 	mUseEmissiveMap(true),
 	mAlbedoColor{1.0f, 1.0f, 1.0f},
 	// Selected scene item
-	mRotationSpeed(0.0f),
+	mRotationSpeed(0.5f),
 	mShowSkeleton(false),
 	// Scene hot-reloading memory
 	mHasCameraTransformBackup(false)
@@ -515,6 +517,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 						const char* items[] = { "Debug", "Forward", "Deferred", "VR" };
 						ImGui::Combo("Compositor", &mCurrentCompositor, items, static_cast<int>(glm::countof(items)));
 					}
+					ImGui::Checkbox("Vertical Synchronization", &mUseVerticalSynchronization);
 					ImGui::Checkbox("High Quality Lighting", &mHighQualityLighting);
 					{
 						const Renderer::Capabilities& capabilities = rendererRuntime->getRenderer().getCapabilities();
@@ -593,6 +596,13 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				}
 			}
 			ImGui::End();
+		}
+
+		// Changes in main swap chain?
+		if (mCurrentUseVerticalSynchronization != mUseVerticalSynchronization)
+		{
+			mCurrentUseVerticalSynchronization = mUseVerticalSynchronization;
+			static_cast<Renderer::ISwapChain&>(mainRenderTarget).setVerticalSynchronizationInterval(mCurrentUseVerticalSynchronization ? 1u : 0u);
 		}
 
 		// Recreate the compositor workspace instance, if required

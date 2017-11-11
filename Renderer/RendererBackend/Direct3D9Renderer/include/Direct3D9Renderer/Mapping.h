@@ -199,6 +199,21 @@ namespace Direct3D9Renderer
 		*/
 		static uint32_t getDirect3D9Format(Renderer::TextureFormat::Enum textureFormat);
 
+		//[-------------------------------------------------------]
+		//[ Miscellaneous                                         ]
+		//[-------------------------------------------------------]
+		/**
+		*  @brief
+		*    Synchronization interval to Direct3D 9 presentation interval
+		*
+		*  @param[in] synchronizationInterval
+		*    Synchronization interval to map
+		*
+		*  @return
+		*    Direct3D 9 presentation interval
+		*/
+		static uint32_t getDirect3D9PresentationInterval(uint32_t synchronizationInterval);
+
 
 	};
 

@@ -316,7 +316,7 @@ void IApplicationRenderer::onDrawRequest()
 
 
 //[-------------------------------------------------------]
-//[ Public virtual Renderer::IRenderWindow methods      ]
+//[ Public virtual Renderer::IRenderWindow methods        ]
 //[-------------------------------------------------------]
 void IApplicationRenderer::getWidthAndHeight(uint32_t& width, uint32_t& height) const
 {

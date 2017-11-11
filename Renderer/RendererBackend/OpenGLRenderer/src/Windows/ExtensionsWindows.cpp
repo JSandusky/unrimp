@@ -63,6 +63,17 @@ namespace OpenGLRenderer
 		wglGetExtensionsStringARB = reinterpret_cast<PFNWGLGETEXTENSIONSSTRINGARBPROC>(wglGetProcAddress("wglGetExtensionsStringARB"));
 		mWGL_ARB_extensions_string = (nullptr != wglGetExtensionsStringARB);
 
+		// WGL_EXT_swap_control
+		mWGL_EXT_swap_control = isSupported("WGL_EXT_swap_control");
+		if (mWGL_EXT_swap_control)
+		{
+			wglSwapIntervalEXT = reinterpret_cast<PFNWGLSWAPINTERVALEXTPROC>(wglGetProcAddress("wglSwapIntervalEXT"));
+			mWGL_EXT_swap_control = (nullptr != wglGetExtensionsStringARB);
+		}
+
+		// WGL_EXT_swap_control_tear
+		mWGL_EXT_swap_control_tear = isSupported("WGL_EXT_swap_control_tear");
+
 
 		// Restore the previous warning configuration
 		__pragma(warning(pop))

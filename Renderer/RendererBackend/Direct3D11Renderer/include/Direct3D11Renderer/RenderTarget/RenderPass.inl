@@ -54,6 +54,11 @@ namespace Direct3D11Renderer
 		return mDepthStencilAttachmentTextureFormat;
 	}
 
+	inline uint8_t RenderPass::getNumberOfMultisamples() const
+	{
+		return mNumberOfMultisamples;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
