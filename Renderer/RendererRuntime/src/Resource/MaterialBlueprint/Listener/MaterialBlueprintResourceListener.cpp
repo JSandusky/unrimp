@@ -68,12 +68,13 @@ namespace
 		//[ Global definitions                                    ]
 		//[-------------------------------------------------------]
 		#define DEFINE_CONSTANT(name) static const RendererRuntime::StringId name(#name);
-			// Pass
+			// Pass data influenced by single pass stereo rendering via instancing as described in "High Performance Stereo Rendering For VR", Timothy Wilson, San Diego, Virtual Reality Meetup
 			DEFINE_CONSTANT(WORLD_SPACE_TO_VIEW_SPACE_MATRIX)
 			DEFINE_CONSTANT(VIEW_SPACE_TO_WORLD_SPACE_MATRIX)
 			DEFINE_CONSTANT(WORLD_SPACE_TO_VIEW_SPACE_QUATERNION)
 			DEFINE_CONSTANT(VIEW_SPACE_TO_WORLD_SPACE_QUATERNION)
 			DEFINE_CONSTANT(WORLD_SPACE_TO_CLIP_SPACE_MATRIX)
+			DEFINE_CONSTANT(WORLD_SPACE_TO_CLIP_SPACE_MATRIX_2)
 			DEFINE_CONSTANT(PREVIOUS_WORLD_SPACE_TO_CLIP_SPACE_MATRIX)
 			DEFINE_CONSTANT(PREVIOUS_WORLD_SPACE_TO_VIEW_SPACE_MATRIX)
 			DEFINE_CONSTANT(VIEW_SPACE_TO_CLIP_SPACE_MATRIX)
@@ -81,11 +82,13 @@ namespace
 			DEFINE_CONSTANT(CLIP_SPACE_TO_VIEW_SPACE_MATRIX)
 			DEFINE_CONSTANT(CLIP_SPACE_TO_WORLD_SPACE_MATRIX)
 			DEFINE_CONSTANT(CAMERA_WORLD_SPACE_POSITION)
-			DEFINE_CONSTANT(PROJECTION_PARAMETERS)
 			DEFINE_CONSTANT(VIEW_SPACE_FRUSTUM_CORNERS)
-			DEFINE_CONSTANT(IMGUI_OBJECT_SPACE_TO_CLIP_SPACE_MATRIX)
 			DEFINE_CONSTANT(VIEW_SPACE_SUNLIGHT_DIRECTION)
+
+			// Pass data not influenced by single pass stereo rendering via instancing as described in "High Performance Stereo Rendering For VR", Timothy Wilson, San Diego, Virtual Reality Meetup
+			DEFINE_CONSTANT(IMGUI_OBJECT_SPACE_TO_CLIP_SPACE_MATRIX)
 			DEFINE_CONSTANT(WORLD_SPACE_SUNLIGHT_DIRECTION)
+			DEFINE_CONSTANT(PROJECTION_PARAMETERS)
 			DEFINE_CONSTANT(SUNLIGHT_COLOR)
 			DEFINE_CONSTANT(VIEWPORT_SIZE)
 			DEFINE_CONSTANT(INVERSE_VIEWPORT_SIZE)
@@ -325,6 +328,11 @@ namespace RendererRuntime
 
 		// Get the render target with and height
 		renderTarget.getWidthAndHeight(mRenderTargetWidth, mRenderTargetHeight);
+		const bool singlePassStereoInstancing = mCompositorContextData->getSinglePassStereoInstancing();
+		if (singlePassStereoInstancing)
+		{
+			mRenderTargetWidth /= 2;
+		}
 
 		// Get camera settings
 		const CameraSceneItem* cameraSceneItem = compositorContextData.getCameraSceneItem();
@@ -335,49 +343,57 @@ namespace RendererRuntime
 		glm::mat4 viewSpaceToClipSpaceMatrix;
 		glm::mat4 previousWorldSpaceToViewSpaceMatrix;
 		const IVrManager& vrManager = rendererRuntime.getVrManager();
-		if (vrManager.isRunning() && VrEye::UNKNOWN != getCurrentRenderedVrEye() && (nullptr != cameraSceneItem) && !cameraSceneItem->hasCustomWorldSpaceToViewSpaceMatrix() && !cameraSceneItem->hasCustomViewSpaceToClipSpaceMatrix())
+		const bool vrRendering = (singlePassStereoInstancing && vrManager.isRunning() && !cameraSceneItem->hasCustomWorldSpaceToViewSpaceMatrix() && !cameraSceneItem->hasCustomViewSpaceToClipSpaceMatrix());
+		const uint32_t numberOfEyes = vrRendering ? 2u : 1u;
+		for (uint32_t eyeIndex = 0; eyeIndex < numberOfEyes; ++eyeIndex)
 		{
-			// Virtual reality rendering
+			if (nullptr != cameraSceneItem)
+			{
+				if (vrRendering)
+				{
+					// Virtual reality rendering
 
-			// Ask the virtual reality manager for the HMD transformation
-			const IVrManager::VrEye vrEye = static_cast<IVrManager::VrEye>(getCurrentRenderedVrEye());
-			viewSpaceToClipSpaceMatrix = vrManager.getHmdViewSpaceToClipSpaceMatrix(vrEye, mNearZ, mFarZ);
-			const glm::mat4& viewTranslateMatrix = glm::inverse(vrManager.getHmdEyeSpaceToHeadSpaceMatrix(vrEye)) * glm::inverse(vrManager.getHmdPoseMatrix());
+					// Ask the virtual reality manager for the HMD transformation
+					const IVrManager::VrEye vrEye = (0 == eyeIndex) ? IVrManager::VrEye::RIGHT : IVrManager::VrEye::LEFT;
+					viewSpaceToClipSpaceMatrix = vrManager.getHmdViewSpaceToClipSpaceMatrix(vrEye, mNearZ, mFarZ);
+					const glm::mat4& viewTranslateMatrix = glm::inverse(vrManager.getHmdEyeSpaceToHeadSpaceMatrix(vrEye)) * glm::inverse(vrManager.getHmdPoseMatrix());
 
-			// Calculate the world space to view space matrix (Aka "view matrix")
-			const Transform& worldSpaceToViewSpaceTransform = cameraSceneItem->getWorldSpaceToViewSpaceTransform();
-			mPassData->worldSpaceToViewSpaceMatrix = glm::translate(glm::mat4(1.0f), worldSpaceToViewSpaceTransform.position) * glm::toMat4(worldSpaceToViewSpaceTransform.rotation);
-			mPassData->worldSpaceToViewSpaceMatrix = viewTranslateMatrix * mPassData->worldSpaceToViewSpaceMatrix;
+					// Calculate the world space to view space matrix (Aka "view matrix")
+					const Transform& worldSpaceToViewSpaceTransform = cameraSceneItem->getWorldSpaceToViewSpaceTransform();
+					mPassData->worldSpaceToViewSpaceMatrix[eyeIndex] = glm::translate(glm::mat4(1.0f), worldSpaceToViewSpaceTransform.position) * glm::toMat4(worldSpaceToViewSpaceTransform.rotation);
+					mPassData->worldSpaceToViewSpaceMatrix[eyeIndex] = viewTranslateMatrix * mPassData->worldSpaceToViewSpaceMatrix[eyeIndex];
 
-			// TODO(co) Implement "previousWorldSpaceToViewSpaceMatrix"
-			previousWorldSpaceToViewSpaceMatrix = mPassData->worldSpaceToViewSpaceMatrix;
+					// TODO(co) Implement "previousWorldSpaceToViewSpaceMatrix"
+					previousWorldSpaceToViewSpaceMatrix = mPassData->worldSpaceToViewSpaceMatrix[eyeIndex];
+				}
+				else
+				{
+					// Standard rendering using a camera scene item
+
+					// Get world space to view space matrix (Aka "view matrix")
+					mPassData->worldSpaceToViewSpaceMatrix[eyeIndex] = cameraSceneItem->getWorldSpaceToViewSpaceMatrix();
+					cameraSceneItem->getPreviousWorldSpaceToViewSpaceMatrix(previousWorldSpaceToViewSpaceMatrix);
+
+					// Get view space to clip space matrix (aka "projection matrix")
+					viewSpaceToClipSpaceMatrix = cameraSceneItem->getViewSpaceToClipSpaceMatrix(static_cast<float>(mRenderTargetWidth) / mRenderTargetHeight);
+				}
+			}
+			else
+			{
+				// Standard rendering
+
+				// Get world space to view space matrix (Aka "view matrix")
+				mPassData->worldSpaceToViewSpaceMatrix[eyeIndex] = previousWorldSpaceToViewSpaceMatrix = glm::lookAt(Transform::IDENTITY.position, Transform::IDENTITY.position + Transform::IDENTITY.rotation * Math::VEC3_FORWARD, Math::VEC3_UP);
+
+				// Get view space to clip space matrix (aka "projection matrix")
+				viewSpaceToClipSpaceMatrix = glm::perspective(CameraSceneItem::DEFAULT_FOV_Y, static_cast<float>(mRenderTargetWidth) / mRenderTargetHeight, CameraSceneItem::DEFAULT_NEAR_Z, CameraSceneItem::DEFAULT_FAR_Z);
+			}
+			mPassData->worldSpaceToViewSpaceQuaternion[eyeIndex] = glm::quat(mPassData->worldSpaceToViewSpaceMatrix[eyeIndex]);
+			mPassData->worldSpaceToClipSpaceMatrix[eyeIndex] = viewSpaceToClipSpaceMatrix * mPassData->worldSpaceToViewSpaceMatrix[eyeIndex];
+			mPassData->previousWorldSpaceToClipSpaceMatrix[eyeIndex] = viewSpaceToClipSpaceMatrix * previousWorldSpaceToViewSpaceMatrix;	// TODO(co) Do also support the previous view space to clip space matrix so e.g. FOV changes have an influence?
+			mPassData->previousWorldSpaceToViewSpaceMatrix[eyeIndex] = previousWorldSpaceToViewSpaceMatrix;
+			mPassData->viewSpaceToClipSpaceMatrix[eyeIndex] = viewSpaceToClipSpaceMatrix;
 		}
-		else if (nullptr != cameraSceneItem)
-		{
-			// Standard rendering using a camera scene item
-
-			// Get world space to view space matrix (Aka "view matrix")
-			mPassData->worldSpaceToViewSpaceMatrix = cameraSceneItem->getWorldSpaceToViewSpaceMatrix();
-			cameraSceneItem->getPreviousWorldSpaceToViewSpaceMatrix(previousWorldSpaceToViewSpaceMatrix);
-
-			// Get view space to clip space matrix (aka "projection matrix")
-			viewSpaceToClipSpaceMatrix = cameraSceneItem->getViewSpaceToClipSpaceMatrix(static_cast<float>(mRenderTargetWidth) / mRenderTargetHeight);
-		}
-		else
-		{
-			// Standard rendering
-
-			// Get world space to view space matrix (Aka "view matrix")
-			mPassData->worldSpaceToViewSpaceMatrix = previousWorldSpaceToViewSpaceMatrix = glm::lookAt(Transform::IDENTITY.position, Transform::IDENTITY.position + Transform::IDENTITY.rotation * Math::VEC3_FORWARD, Math::VEC3_UP);
-
-			// Get view space to clip space matrix (aka "projection matrix")
-			viewSpaceToClipSpaceMatrix = glm::perspective(CameraSceneItem::DEFAULT_FOV_Y, static_cast<float>(mRenderTargetWidth) / mRenderTargetHeight, CameraSceneItem::DEFAULT_NEAR_Z, CameraSceneItem::DEFAULT_FAR_Z);
-		}
-		mPassData->worldSpaceToViewSpaceQuaternion = glm::quat(mPassData->worldSpaceToViewSpaceMatrix);
-		mPassData->worldSpaceToClipSpaceMatrix = viewSpaceToClipSpaceMatrix * mPassData->worldSpaceToViewSpaceMatrix;
-		mPassData->previousWorldSpaceToClipSpaceMatrix = viewSpaceToClipSpaceMatrix * previousWorldSpaceToViewSpaceMatrix;	// TODO(co) Do also support the previous view space to clip space matrix so e.g. FOV changes have an influence?
-		mPassData->previousWorldSpaceToViewSpaceMatrix = previousWorldSpaceToViewSpaceMatrix;
-		mPassData->viewSpaceToClipSpaceMatrix = viewSpaceToClipSpaceMatrix;
 	}
 
 	bool MaterialBlueprintResourceListener::fillPassValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes)
@@ -388,71 +404,69 @@ namespace RendererRuntime
 		if (::detail::WORLD_SPACE_TO_VIEW_SPACE_MATRIX == referenceValue)
 		{
 			assert(sizeof(float) * 4 * 4 == numberOfBytes);
-			memcpy(buffer, glm::value_ptr(mPassData->worldSpaceToViewSpaceMatrix), numberOfBytes);
+			memcpy(buffer, glm::value_ptr(mPassData->worldSpaceToViewSpaceMatrix[0]), numberOfBytes);
 		}
 		else if (::detail::VIEW_SPACE_TO_WORLD_SPACE_MATRIX == referenceValue)
 		{
 			assert(sizeof(float) * 4 * 4 == numberOfBytes);
-			memcpy(buffer, glm::value_ptr(glm::inverse(mPassData->worldSpaceToViewSpaceMatrix)), numberOfBytes);
+			memcpy(buffer, glm::value_ptr(glm::inverse(mPassData->worldSpaceToViewSpaceMatrix[0])), numberOfBytes);
 		}
 		else if (::detail::WORLD_SPACE_TO_VIEW_SPACE_QUATERNION == referenceValue)
 		{
 			assert(sizeof(float) * 4 == numberOfBytes);
-			memcpy(buffer, glm::value_ptr(mPassData->worldSpaceToViewSpaceQuaternion), numberOfBytes);
+			memcpy(buffer, glm::value_ptr(mPassData->worldSpaceToViewSpaceQuaternion[0]), numberOfBytes);
 		}
 		else if (::detail::VIEW_SPACE_TO_WORLD_SPACE_QUATERNION == referenceValue)
 		{
 			assert(sizeof(float) * 4 == numberOfBytes);
-			memcpy(buffer, glm::value_ptr(glm::inverse(mPassData->worldSpaceToViewSpaceQuaternion)), numberOfBytes);
+			memcpy(buffer, glm::value_ptr(glm::inverse(mPassData->worldSpaceToViewSpaceQuaternion[0])), numberOfBytes);
 		}
 		else if (::detail::WORLD_SPACE_TO_CLIP_SPACE_MATRIX == referenceValue)
 		{
 			assert(sizeof(float) * 4 * 4 == numberOfBytes);
-			memcpy(buffer, glm::value_ptr(mPassData->worldSpaceToClipSpaceMatrix), numberOfBytes);
+			memcpy(buffer, glm::value_ptr(mPassData->worldSpaceToClipSpaceMatrix[0]), numberOfBytes);
+		}
+		else if (::detail::WORLD_SPACE_TO_CLIP_SPACE_MATRIX_2 == referenceValue)
+		{
+			assert(sizeof(float) * 4 * 4 == numberOfBytes);
+			memcpy(buffer, glm::value_ptr(mPassData->worldSpaceToClipSpaceMatrix[1]), numberOfBytes);
 		}
 		else if (::detail::PREVIOUS_WORLD_SPACE_TO_CLIP_SPACE_MATRIX == referenceValue)
 		{
 			assert(sizeof(float) * 4 * 4 == numberOfBytes);
-			memcpy(buffer, glm::value_ptr(mPassData->previousWorldSpaceToClipSpaceMatrix), numberOfBytes);
+			memcpy(buffer, glm::value_ptr(mPassData->previousWorldSpaceToClipSpaceMatrix[0]), numberOfBytes);
 		}
 		else if (::detail::PREVIOUS_WORLD_SPACE_TO_VIEW_SPACE_MATRIX == referenceValue)
 		{
 			assert(sizeof(float) * 4 * 4 == numberOfBytes);
-			memcpy(buffer, glm::value_ptr(mPassData->previousWorldSpaceToViewSpaceMatrix), numberOfBytes);
+			memcpy(buffer, glm::value_ptr(mPassData->previousWorldSpaceToViewSpaceMatrix[0]), numberOfBytes);
 		}
 		else if (::detail::VIEW_SPACE_TO_CLIP_SPACE_MATRIX == referenceValue)
 		{
 			assert(sizeof(float) * 4 * 4 == numberOfBytes);
-			memcpy(buffer, glm::value_ptr(mPassData->viewSpaceToClipSpaceMatrix), numberOfBytes);
+			memcpy(buffer, glm::value_ptr(mPassData->viewSpaceToClipSpaceMatrix[0]), numberOfBytes);
 		}
 		else if (::detail::VIEW_SPACE_TO_TEXTURE_SPACE_MATRIX == referenceValue)
 		{
 			assert(sizeof(float) * 4 * 4 == numberOfBytes);
-			memcpy(buffer, glm::value_ptr(Math::getTextureScaleBiasMatrix(mRendererRuntime->getRenderer()) * mPassData->viewSpaceToClipSpaceMatrix), numberOfBytes);
+			memcpy(buffer, glm::value_ptr(Math::getTextureScaleBiasMatrix(mRendererRuntime->getRenderer()) * mPassData->viewSpaceToClipSpaceMatrix[0]), numberOfBytes);
 		}
 		else if (::detail::CLIP_SPACE_TO_VIEW_SPACE_MATRIX == referenceValue)
 		{
 			assert(sizeof(float) * 4 * 4 == numberOfBytes);
-			memcpy(buffer, glm::value_ptr(glm::inverse(mPassData->viewSpaceToClipSpaceMatrix)), numberOfBytes);
+			memcpy(buffer, glm::value_ptr(glm::inverse(mPassData->viewSpaceToClipSpaceMatrix[0])), numberOfBytes);
 		}
 		else if (::detail::CLIP_SPACE_TO_WORLD_SPACE_MATRIX == referenceValue)
 		{
 			assert(sizeof(float) * 4 * 4 == numberOfBytes);
-			memcpy(buffer, glm::value_ptr(glm::inverse(mPassData->worldSpaceToClipSpaceMatrix)), numberOfBytes);
+			memcpy(buffer, glm::value_ptr(glm::inverse(mPassData->worldSpaceToClipSpaceMatrix[0])), numberOfBytes);
 		}
 		else if (::detail::CAMERA_WORLD_SPACE_POSITION == referenceValue)
 		{
 			// In view space, the camera is located at the origin
 			// -> Please note that we can't just use the camera world space position since the coordinate system might get manipulated when using for example OpenVR
 			assert(sizeof(float) * 3 == numberOfBytes);
-			memcpy(buffer, glm::value_ptr(glm::inverse(mPassData->worldSpaceToViewSpaceMatrix) * glm::vec4(0.0f, 0.0f, 0.0f, 1.0)), numberOfBytes);
-		}
-		else if (::detail::PROJECTION_PARAMETERS == referenceValue)
-		{
-			// For details see "The Danger Zone" - "Position From Depth 3: Back In The Habit" - "Written by MJPSeptember 5, 2010" - https://mynameismjp.wordpress.com/2010/09/05/position-from-depth-3/
-			assert(sizeof(float) * 2 == numberOfBytes);
-			const float projectionParameters[2] = { mFarZ / (mFarZ - mNearZ), (-mFarZ * mNearZ) / (mFarZ - mNearZ) };
-			memcpy(buffer, &projectionParameters[0], numberOfBytes);
+			memcpy(buffer, glm::value_ptr(glm::inverse(mPassData->worldSpaceToViewSpaceMatrix[0]) * glm::vec4(0.0f, 0.0f, 0.0f, 1.0)), numberOfBytes);
 		}
 		else if (::detail::VIEW_SPACE_FRUSTUM_CORNERS == referenceValue)
 		{
@@ -479,7 +493,7 @@ namespace RendererRuntime
 				{-1.0f, -1.0f, 1.0f, 1.0f},		// 6: Far bottom left
 				{ 1.0f, -1.0f, 1.0f, 1.0f}		// 7: Far bottom right
 			};
-			const glm::mat4 clipSpaceToViewSpaceMatrix = glm::inverse(mPassData->viewSpaceToClipSpaceMatrix);
+			const glm::mat4 clipSpaceToViewSpaceMatrix = glm::inverse(mPassData->viewSpaceToClipSpaceMatrix[0]);
 			for (int i = 0; i < 8; ++i)
 			{
 				viewSpaceFrustumCorners[i] = clipSpaceToViewSpaceMatrix * viewSpaceFrustumCorners[i];
@@ -511,6 +525,12 @@ namespace RendererRuntime
 			// Copy over the data, we're using 4 * float4 by intent in order to avoid alignment problems, 3 * float3 would be sufficient for our full screen triangle
 			memcpy(buffer, glm::value_ptr(viewSpaceFrustumCorners[4]), numberOfBytes);
 		}
+		else if (::detail::VIEW_SPACE_SUNLIGHT_DIRECTION == referenceValue)
+		{
+			assert(sizeof(float) * 3 == numberOfBytes);
+			const glm::vec3 viewSpaceSunlightDirection = glm::normalize(mPassData->worldSpaceToViewSpaceQuaternion[0] * getWorldSpaceSunlightDirection());	// Normalize shouldn't be necessary, but last chance here to correct rounding errors before the shader is using the normalized direction vector
+			memcpy(buffer, glm::value_ptr(viewSpaceSunlightDirection), numberOfBytes);
+		}
 		else if (::detail::IMGUI_OBJECT_SPACE_TO_CLIP_SPACE_MATRIX == referenceValue)
 		{
 			assert(sizeof(float) * 4 * 4 == numberOfBytes);
@@ -524,16 +544,17 @@ namespace RendererRuntime
 			};
 			memcpy(buffer, objectSpaceToClipSpaceMatrix, numberOfBytes);
 		}
-		else if (::detail::VIEW_SPACE_SUNLIGHT_DIRECTION == referenceValue)
-		{
-			assert(sizeof(float) * 3 == numberOfBytes);
-			const glm::vec3 viewSpaceSunlightDirection = glm::normalize(mPassData->worldSpaceToViewSpaceQuaternion * getWorldSpaceSunlightDirection());	// Normalize shouldn't be necessary, but last chance here to correct rounding errors before the shader is using the normalized direction vector
-			memcpy(buffer, glm::value_ptr(viewSpaceSunlightDirection), numberOfBytes);
-		}
 		else if (::detail::WORLD_SPACE_SUNLIGHT_DIRECTION == referenceValue)
 		{
 			assert(sizeof(float) * 3 == numberOfBytes);
 			memcpy(buffer, glm::value_ptr(getWorldSpaceSunlightDirection()), numberOfBytes);
+		}
+		else if (::detail::PROJECTION_PARAMETERS == referenceValue)
+		{
+			// For details see "The Danger Zone" - "Position From Depth 3: Back In The Habit" - "Written by MJPSeptember 5, 2010" - https://mynameismjp.wordpress.com/2010/09/05/position-from-depth-3/
+			assert(sizeof(float) * 2 == numberOfBytes);
+			const float projectionParameters[2] = { mFarZ / (mFarZ - mNearZ), (-mFarZ * mNearZ) / (mFarZ - mNearZ) };
+			memcpy(buffer, &projectionParameters[0], numberOfBytes);
 		}
 		else if (::detail::SUNLIGHT_COLOR == referenceValue)
 		{
@@ -713,8 +734,9 @@ namespace RendererRuntime
 			// The following is basing on 'Pseudo Lens Flare' from John Chapman - http://john-chapman-graphics.blogspot.de/2013/02/pseudo-lens-flare.html
 
 			// Get the camera rotation; it just needs to change continuously as the camera rotates
-			const glm::vec3 cameraX = mPassData->worldSpaceToViewSpaceMatrix[0];	// Camera x (left) vector
-			const glm::vec3 cameraZ = mPassData->worldSpaceToViewSpaceMatrix[1];	// Camera z (forward) vector
+			const glm::mat4& worldSpaceToViewSpaceMatrix = mPassData->worldSpaceToViewSpaceMatrix[0];
+			const glm::vec3 cameraX = worldSpaceToViewSpaceMatrix[0];	// Camera x (left) vector
+			const glm::vec3 cameraZ = worldSpaceToViewSpaceMatrix[1];	// Camera z (forward) vector
 			const float cameraRotation = glm::dot(cameraX, Math::VEC3_UNIT_Z) + glm::dot(cameraZ, Math::VEC3_UNIT_Y);
 
 			// Calculate the lens star matrix

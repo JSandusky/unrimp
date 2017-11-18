@@ -34,8 +34,6 @@
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceInstance.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/Listener/IMaterialBlueprintResourceListener.h"
 #include "RendererRuntime/Asset/AssetPackage.h"
 #include "RendererRuntime/Asset/AssetManager.h"
 #include "RendererRuntime/Core/Math/Transform.h"
@@ -465,6 +463,7 @@ namespace RendererRuntime
 				uint32_t width = 0;
 				uint32_t height = 0;
 				mVrSystem->GetRecommendedRenderTargetSize(&width, &height);
+				width *= 2;	// Twice the width for single pass stereo rendering via instancing as described in "High Performance Stereo Rendering For VR", Timothy Wilson, San Diego, Virtual Reality Meetup
 				const Renderer::TextureFormat::Enum textureFormat = Renderer::TextureFormat::Enum::R8G8B8A8;
 				Renderer::ITexture* colorTexture2D = mColorTexture2D = mRendererRuntime.getTextureManager().createTexture2D(width, height, textureFormat, nullptr, Renderer::TextureFlag::RENDER_TARGET);
 				RENDERER_SET_RESOURCE_DEBUG_NAME(colorTexture2D, "OpenVR color render target texture")
@@ -696,18 +695,17 @@ namespace RendererRuntime
 	{
 		assert(nullptr != mVrSystem);
 
-		IMaterialBlueprintResourceListener& materialBlueprintResourceListener = mRendererRuntime.getMaterialBlueprintResourceManager().getMaterialBlueprintResourceListener();
-		for (int8_t eyeIndex = 0; eyeIndex < 2; ++eyeIndex)
-		{
-			// Execute the compositor workspace instance
-			materialBlueprintResourceListener.setCurrentRenderedVrEye(static_cast<IMaterialBlueprintResourceListener::VrEye>(eyeIndex));
-			compositorWorkspaceInstance.execute(*mFramebuffer, cameraSceneItem, lightSceneItem);
+		// Execute the compositor workspace instance
+		// -> Using single pass stereo rendering via instancing as described in "High Performance Stereo Rendering For VR", Timothy Wilson, San Diego, Virtual Reality Meetup
+		compositorWorkspaceInstance.execute(*mFramebuffer, cameraSceneItem, lightSceneItem, true);
 
-			// Submit the rendered texture to the OpenVR compositor
+		{ // Submit the rendered texture to the OpenVR compositor
 			const vr::Texture_t vrTexture = { mColorTexture2D->getInternalResourceHandle(), mVrTextureType, vr::ColorSpace_Auto };
-			vr::VRCompositor()->Submit(static_cast<vr::Hmd_Eye>(eyeIndex), &vrTexture);
+			static const vr::VRTextureBounds_t leftEyeVrTextureBounds{0.0f, 0.0f, 0.5f, 1.0f};
+			vr::VRCompositor()->Submit(vr::Eye_Left, &vrTexture, &leftEyeVrTextureBounds);
+			static const vr::VRTextureBounds_t rightEyeVrTextureBounds{0.5f, 0.0f, 1.0f, 1.0f};
+			vr::VRCompositor()->Submit(vr::Eye_Right, &vrTexture, &rightEyeVrTextureBounds);
 		}
-		materialBlueprintResourceListener.setCurrentRenderedVrEye(IMaterialBlueprintResourceListener::VrEye::UNKNOWN);
 
 		// Tell the compositor to begin work immediately instead of waiting for the next "vr::IVRCompositor::WaitGetPoses()" call
 		vr::VRCompositor()->PostPresentHandoff();

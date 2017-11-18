@@ -31,6 +31,7 @@ namespace RendererRuntime
 	inline CompositorContextData::CompositorContextData() :
 		mCompositorWorkspaceInstance(nullptr),
 		mCameraSceneItem(nullptr),
+		mSinglePassStereoInstancing(false),
 		mLightSceneItem(nullptr),
 		mCompositorInstancePassShadowMap(nullptr),
 		mCurrentlyBoundMaterialBlueprintResource(nullptr)
@@ -38,9 +39,10 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	inline CompositorContextData::CompositorContextData(const CompositorWorkspaceInstance* compositorWorkspaceInstance, const CameraSceneItem* cameraSceneItem, const LightSceneItem* lightSceneItem, const CompositorInstancePassShadowMap* compositorInstancePassShadowMap) :
+	inline CompositorContextData::CompositorContextData(const CompositorWorkspaceInstance* compositorWorkspaceInstance, const CameraSceneItem* cameraSceneItem, bool singlePassStereoInstancing, const LightSceneItem* lightSceneItem, const CompositorInstancePassShadowMap* compositorInstancePassShadowMap) :
 		mCompositorWorkspaceInstance(compositorWorkspaceInstance),
 		mCameraSceneItem(cameraSceneItem),
+		mSinglePassStereoInstancing(singlePassStereoInstancing),
 		mLightSceneItem(lightSceneItem),
 		mCompositorInstancePassShadowMap(compositorInstancePassShadowMap),
 		mCurrentlyBoundMaterialBlueprintResource(nullptr)
@@ -61,6 +63,11 @@ namespace RendererRuntime
 	inline const CameraSceneItem* CompositorContextData::getCameraSceneItem() const
 	{
 		return mCameraSceneItem;
+	}
+
+	inline bool CompositorContextData::getSinglePassStereoInstancing() const
+	{
+		return mSinglePassStereoInstancing;
 	}
 
 	inline const LightSceneItem* CompositorContextData::getLightSceneItem() const

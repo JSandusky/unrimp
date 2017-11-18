@@ -86,14 +86,18 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
+		/**
+		*  @brief
+		*    Pass data to each stereo rendering eye
+		*/
 		struct PassData
 		{
-			glm::mat4 worldSpaceToClipSpaceMatrix;
-			glm::mat4 previousWorldSpaceToClipSpaceMatrix;
-			glm::mat4 worldSpaceToViewSpaceMatrix;
-			glm::quat worldSpaceToViewSpaceQuaternion;
-			glm::mat4 previousWorldSpaceToViewSpaceMatrix;
-			glm::mat4 viewSpaceToClipSpaceMatrix;
+			glm::mat4 worldSpaceToClipSpaceMatrix[2];
+			glm::mat4 previousWorldSpaceToClipSpaceMatrix[2];
+			glm::mat4 worldSpaceToViewSpaceMatrix[2];
+			glm::quat worldSpaceToViewSpaceQuaternion[2];
+			glm::mat4 previousWorldSpaceToViewSpaceMatrix[2];
+			glm::mat4 viewSpaceToClipSpaceMatrix[2];
 		};
 
 

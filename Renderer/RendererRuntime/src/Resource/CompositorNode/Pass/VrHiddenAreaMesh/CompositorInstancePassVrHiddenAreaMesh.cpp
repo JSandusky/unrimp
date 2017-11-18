@@ -27,8 +27,6 @@
 #include "RendererRuntime/Resource/CompositorNode/CompositorNodeInstance.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorContextData.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceInstance.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
-#include "RendererRuntime/Resource/MaterialBlueprint/Listener/IMaterialBlueprintResourceListener.h"
 #include "RendererRuntime/Vr/OpenVR/VrManagerOpenVR.h"
 #include "RendererRuntime/IRendererRuntime.h"
 #include "RendererRuntime/Context.h"
@@ -59,7 +57,7 @@
 			//[-------------------------------------------------------]
 			public:
 				explicit Mesh(const RendererRuntime::IRendererRuntime& rendererRuntime) :
-					mNumberOfTriangles{ 0, 0 }
+					mNumberOfTriangles(0)
 				{
 					Renderer::IRenderer& renderer = rendererRuntime.getRenderer();
 
@@ -90,22 +88,54 @@
 					};
 					const Renderer::VertexAttributes vertexAttributes(static_cast<uint32_t>(glm::countof(vertexAttributesLayout)), vertexAttributesLayout);
 
-					{ // Create vertex arrays
+					{ // Create vertex array and merge both meshes into a single mesh since we're using single pass stereo rendering via instancing as described in "High Performance Stereo Rendering For VR", Timothy Wilson, San Diego, Virtual Reality Meetup
 						Renderer::IBufferManager& bufferManager = rendererRuntime.getBufferManager();
 						vr::IVRSystem* vrSystem = static_cast<RendererRuntime::VrManagerOpenVR&>(rendererRuntime.getVrManager()).getVrSystem();
-						for (int i = 0; i < 2; ++i)
+
+						// Get the combined number of vertex buffer bytes and triangles
+						uint32_t numberOfBytes = 0;
+						for (int vrEyeIndex = 0; vrEyeIndex < 2; ++vrEyeIndex)
 						{
-							const vr::HiddenAreaMesh_t vrHiddenAreaMesh = vrSystem->GetHiddenAreaMesh(static_cast<vr::EVREye>(i));
-							mNumberOfTriangles[i] = vrHiddenAreaMesh.unTriangleCount;
+							const vr::HiddenAreaMesh_t vrHiddenAreaMesh = vrSystem->GetHiddenAreaMesh(static_cast<vr::EVREye>(vrEyeIndex));
+							mNumberOfTriangles += vrHiddenAreaMesh.unTriangleCount;
+							numberOfBytes += sizeof(vr::HmdVector2_t) * 3 * vrHiddenAreaMesh.unTriangleCount;
+						}
+			
+						// Allocate temporary vertex buffer memory, if necessary
+						// -> For HTC Vive there are tiny 1248 bytes which can be easily put onto the C-runtime-stack to avoid a memory allocation
+						static const uint32_t STACK_NUMBER_OF_BYTES = 1248;
+						uint8_t stackMemory[STACK_NUMBER_OF_BYTES];
+						uint8_t* temporaryMemory = (numberOfBytes <= STACK_NUMBER_OF_BYTES) ? stackMemory : new uint8_t[numberOfBytes];
 
-							// Create the vertex buffer object (VBO)
-							Renderer::IVertexBufferPtr vertexBuffer(bufferManager.createVertexBuffer(sizeof(vr::HmdVector2_t) * 3 * vrHiddenAreaMesh.unTriangleCount, vrHiddenAreaMesh.pVertexData, Renderer::BufferUsage::STATIC_DRAW));
-							RENDERER_SET_RESOURCE_DEBUG_NAME(vertexBuffer, "Compositor instance pass VR hidden area mesh")
+						{ // Fill temporary vertex buffer memory
+							float* currentTemporaryMemory = reinterpret_cast<float*>(temporaryMemory);
+							for (int vrEyeIndex = 0; vrEyeIndex < 2; ++vrEyeIndex)
+							{
+								const vr::HiddenAreaMesh_t vrHiddenAreaMesh = vrSystem->GetHiddenAreaMesh(static_cast<vr::EVREye>(vrEyeIndex));
+								const float offset = (0 == vrEyeIndex) ? 0.0f : 0.5f;
+								const vr::HmdVector2_t* currentSourceVertexData = vrHiddenAreaMesh.pVertexData;
+								const vr::HmdVector2_t* sourceVertexDataEnd = currentSourceVertexData + 3 * vrHiddenAreaMesh.unTriangleCount;
+								for (; currentSourceVertexData < sourceVertexDataEnd; ++currentSourceVertexData, currentTemporaryMemory += 2)
+								{
+									currentTemporaryMemory[0] = currentSourceVertexData->v[0] * 0.5f + offset;
+									currentTemporaryMemory[1] = currentSourceVertexData->v[1];
+								}
+							}
+						}
 
-							// Create vertex array object (VAO)
-							const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] = { vertexBuffer };
-							mVertexArrayPtr[i] = bufferManager.createVertexArray(vertexAttributes, static_cast<uint32_t>(glm::countof(vertexArrayVertexBuffers)), vertexArrayVertexBuffers);
-							RENDERER_SET_RESOURCE_DEBUG_NAME(mVertexArrayPtr[i], "Compositor instance pass VR hidden area mesh")
+						// Create the vertex buffer object (VBO)
+						Renderer::IVertexBufferPtr vertexBuffer(bufferManager.createVertexBuffer(numberOfBytes, temporaryMemory, Renderer::BufferUsage::STATIC_DRAW));
+						RENDERER_SET_RESOURCE_DEBUG_NAME(vertexBuffer, "Compositor instance pass VR hidden area mesh")
+
+						// Create vertex array object (VAO)
+						const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] = { vertexBuffer };
+						mVertexArrayPtr = bufferManager.createVertexArray(vertexAttributes, static_cast<uint32_t>(glm::countof(vertexArrayVertexBuffers)), vertexArrayVertexBuffers);
+						RENDERER_SET_RESOURCE_DEBUG_NAME(mVertexArrayPtr, "Compositor instance pass VR hidden area mesh")
+
+						// Free allocated temporary vertex buffer memory, if necessary
+						if (temporaryMemory != stackMemory)
+						{
+							delete [] temporaryMemory;
 						}
 					}
 
@@ -155,12 +185,11 @@
 				~Mesh()
 				{
 					mRootSignature->releaseReference();
-					mVertexArrayPtr[0]->releaseReference();
-					mVertexArrayPtr[1]->releaseReference();
+					mVertexArrayPtr->releaseReference();
 					mPipelineState->releaseReference();
 				}
 
-				void onFillCommandBuffer(RendererRuntime::IMaterialBlueprintResourceListener::VrEye vrEye, Renderer::CommandBuffer& commandBuffer)
+				void onFillCommandBuffer(Renderer::CommandBuffer& commandBuffer)
 				{
 					// Set the used graphics root signature
 					Renderer::Command::SetGraphicsRootSignature::create(commandBuffer, mRootSignature);
@@ -168,11 +197,11 @@
 					// Set the used pipeline state object (PSO)
 					Renderer::Command::SetPipelineState::create(commandBuffer, mPipelineState);
 
-					// Setup input assembly (IA): // Set the used vertex array
-					Renderer::Command::SetVertexArray::create(commandBuffer, mVertexArrayPtr[static_cast<int>(vrEye)]);
+					// Setup input assembly (IA): Set the used vertex array
+					Renderer::Command::SetVertexArray::create(commandBuffer, mVertexArrayPtr);
 
 					// Render the specified geometric primitive, based on an array of vertices
-					Renderer::Command::Draw::create(commandBuffer, mNumberOfTriangles[static_cast<int>(vrEye)] * 3);
+					Renderer::Command::Draw::create(commandBuffer, mNumberOfTriangles * 3);
 				}
 
 
@@ -189,8 +218,8 @@
 			//[-------------------------------------------------------]
 			private:
 				Renderer::IRootSignaturePtr	mRootSignature;
-				Renderer::IVertexArrayPtr	mVertexArrayPtr[2];
-				uint32_t					mNumberOfTriangles[2];
+				Renderer::IVertexArrayPtr	mVertexArrayPtr;
+				uint32_t					mNumberOfTriangles;
 				Renderer::IPipelineStatePtr	mPipelineState;	// TODO(co) As soon as we support stencil in here, instance might need different pipeline states
 
 
@@ -233,7 +262,7 @@ namespace RendererRuntime
 
 				// Fill command buffer
 				compositorContextData.resetCurrentlyBoundMaterialBlueprintResource();
-				::detail::g_MeshPtr->onFillCommandBuffer(getCompositorNodeInstance().getCompositorWorkspaceInstance().getRendererRuntime().getMaterialBlueprintResourceManager().getMaterialBlueprintResourceListener().getCurrentRenderedVrEye(), commandBuffer);
+				::detail::g_MeshPtr->onFillCommandBuffer(commandBuffer);
 
 				// End debug event
 				COMMAND_END_DEBUG_EVENT(commandBuffer)

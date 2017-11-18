@@ -141,7 +141,7 @@ namespace RendererRuntime
 		}
 	}
 
-	void CompositorWorkspaceInstance::execute(Renderer::IRenderTarget& renderTarget, const CameraSceneItem* cameraSceneItem, const LightSceneItem* lightSceneItem)
+	void CompositorWorkspaceInstance::execute(Renderer::IRenderTarget& renderTarget, const CameraSceneItem* cameraSceneItem, const LightSceneItem* lightSceneItem, bool singlePassStereoInstancing)
 	{
 		// We could directly clear the render queue index ranges renderable managers as soon as the frame rendering has been finished to avoid evil dangling pointers,
 		// but on the other hand a responsible user might be interested in the potentially on-screen renderable managers to perform work which should only be performed
@@ -223,9 +223,10 @@ namespace RendererRuntime
 
 				{ // Fill command buffer
 					Renderer::IRenderTarget* currentRenderTarget = &renderTarget;
+					const CompositorContextData compositorContextData(this, cameraSceneItem, singlePassStereoInstancing, lightSceneItem, mCompositorInstancePassShadowMap);
 					for (const CompositorNodeInstance* compositorNodeInstance : mSequentialCompositorNodeInstances)
 					{
-						currentRenderTarget = &compositorNodeInstance->fillCommandBuffer(*currentRenderTarget, CompositorContextData(this, cameraSceneItem, lightSceneItem, mCompositorInstancePassShadowMap), mCommandBuffer);
+						currentRenderTarget = &compositorNodeInstance->fillCommandBuffer(*currentRenderTarget, compositorContextData, mCommandBuffer);
 					}
 				}
 

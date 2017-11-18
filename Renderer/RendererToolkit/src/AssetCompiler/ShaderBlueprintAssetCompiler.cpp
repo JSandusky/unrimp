@@ -241,6 +241,11 @@ namespace RendererToolkit
 				RendererRuntime::ShaderProperties referencedShaderProperties;
 				::detail::gatherReferencedShaderProperties(sourceCode, "@property", referencedShaderProperties);
 				::detail::gatherReferencedShaderProperties(sourceCode, "@foreach", referencedShaderProperties);
+				if (sourceCode.find("MAIN_BEGIN_VERTEX") != std::string::npos)
+				{
+					// Build in support for single pass stereo rendering via instancing as described in "High Performance Stereo Rendering For VR", Timothy Wilson, San Diego, Virtual Reality Meetup
+					referencedShaderProperties.setPropertyValue(RendererRuntime::StringId("SinglePassStereoInstancing"), 1);
+				}
 
 				{ // Write down the shader blueprint header
 					RendererRuntime::v1ShaderBlueprint::ShaderBlueprintHeader shaderBlueprintHeader;

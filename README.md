@@ -115,6 +115,7 @@ Renderer Runtime (e.g. "The Game")
 	- Usage of [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo) 3D gizmo extension
 - Virtual reality manager which is internally using [OpenVR](https://github.com/ValveSoftware/openvr) for head-mounted display support
 	- Animated controller visualization supported
+	- Single pass stereo rendering via instancing
 	- Hidden area mesh supported
 - Abstract file interface so the Unrimp user has control over the file handling
 	- Optional header-only standard implementations for UTF-8 STD file streams as well as [PhysicsFS](https://icculus.org/physfs/) for shipping packed asset packages are provided

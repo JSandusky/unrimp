@@ -227,6 +227,8 @@ namespace RendererRuntime
 		const MaterialProperties& globalMaterialProperties = materialBlueprintResourceManager.getGlobalMaterialProperties();
 		InstanceBufferManager& instanceBufferManager = materialBlueprintResourceManager.getInstanceBufferManager();
 		LightBufferManager& lightBufferManager = materialBlueprintResourceManager.getLightBufferManager();
+		const bool singlePassStereoInstancing = compositorContextData.getSinglePassStereoInstancing();
+		const uint32_t instanceCount = (singlePassStereoInstancing ? 2u : 1u);
 
 		// Track currently bound renderer resources and states to void generating redundant commands
 		Renderer::IVertexArray* currentVertexArray = nullptr;
@@ -380,6 +382,13 @@ namespace RendererRuntime
 
 									materialBlueprintResource->optimizeShaderProperties(mScratchShaderProperties);
 
+									// Automatic build-in "SinglePassStereoInstancing"-property setting
+									if (singlePassStereoInstancing)
+									{
+										static const StringId SINGLE_PASS_STEREO_INSTANCING("SinglePassStereoInstancing");
+										mScratchShaderProperties.setPropertyValue(SINGLE_PASS_STEREO_INSTANCING, 1);
+									}
+
 									Renderer::IPipelineStatePtr pipelineStatePtr = materialBlueprintResource->getPipelineStateCacheManager().getPipelineStateCacheByCombination(renderable.getPrimitiveTopology(), materialTechnique->getSerializedPipelineStateHash(), mScratchShaderProperties, mScratchDynamicShaderPieces, false);
 									if (nullptr != pipelineStatePtr)
 									{
@@ -459,7 +468,7 @@ namespace RendererRuntime
 												// Fill indirect buffer
 												Renderer::DrawIndexedInstancedArguments* drawIndexedInstancedArguments = reinterpret_cast<Renderer::DrawIndexedInstancedArguments*>(indirectBufferData + indirectBufferOffset);
 												drawIndexedInstancedArguments->indexCountPerInstance = renderable.getNumberOfIndices();
-												drawIndexedInstancedArguments->instanceCount		 = 1;
+												drawIndexedInstancedArguments->instanceCount		 = instanceCount;
 												drawIndexedInstancedArguments->startIndexLocation	 = renderable.getStartIndexLocation();
 												drawIndexedInstancedArguments->baseVertexLocation	 = 0;
 												drawIndexedInstancedArguments->startInstanceLocation = startInstanceLocation;
@@ -475,7 +484,7 @@ namespace RendererRuntime
 												// Fill indirect buffer
 												Renderer::DrawInstancedArguments* drawInstancedArguments = reinterpret_cast<Renderer::DrawInstancedArguments*>(indirectBufferData + indirectBufferOffset);
 												drawInstancedArguments->vertexCountPerInstance = renderable.getNumberOfIndices();
-												drawInstancedArguments->instanceCount		   = 1;
+												drawInstancedArguments->instanceCount		   = instanceCount;
 												drawInstancedArguments->startVertexLocation	   = renderable.getStartIndexLocation();
 												drawInstancedArguments->startInstanceLocation  = startInstanceLocation;
 

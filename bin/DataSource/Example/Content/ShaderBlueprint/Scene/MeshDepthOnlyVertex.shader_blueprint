@@ -18,6 +18,9 @@
 \*********************************************************/
 
 
+// For the shadow map depth-only use-case there's no need for single pass stereo rendering via instancing as described in "High Performance Stereo Rendering For VR", Timothy Wilson, San Diego, Virtual Reality Meetup
+
+
 //[-------------------------------------------------------]
 //[ Definitions                                           ]
 //[-------------------------------------------------------]

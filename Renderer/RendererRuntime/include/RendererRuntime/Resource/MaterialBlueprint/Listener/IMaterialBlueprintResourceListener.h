@@ -71,26 +71,6 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public definitions                                    ]
-	//[-------------------------------------------------------]
-	public:
-		enum class VrEye : int8_t
-		{
-			UNKNOWN = -1,
-			LEFT    =  0,
-			RIGHT   =  1
-		};
-
-
-	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	public:
-		inline VrEye getCurrentRenderedVrEye() const;
-		inline void setCurrentRenderedVrEye(VrEye vrEye);
-
-
-	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
@@ -116,13 +96,6 @@ namespace RendererRuntime
 		// TODO(co) It might make sense to remove those instance methods from the interface and directly hard-code them for performance reasons. Profiling later on with real world scenes will show.
 		virtual void beginFillInstance(const PassBufferManager::PassData& passData, const Transform& objectSpaceToWorldSpaceTransform, MaterialTechnique& materialTechnique) = 0;
 		virtual bool fillInstanceValue(uint32_t referenceValue, uint8_t* buffer, uint32_t numberOfBytes, uint32_t instanceTextureBufferStartIndex) = 0;
-
-
-	//[-------------------------------------------------------]
-	//[ Private data                                          ]
-	//[-------------------------------------------------------]
-	private:
-		VrEye mCurrentRenderedVrEye;
 
 
 	};

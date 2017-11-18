@@ -24,13 +24,13 @@
 @includepiece($ProjectName/ShaderPiece/Core.asset)
 	@insertpiece(SetCrossPlatformSettings)
 @includepiece($ProjectName/ShaderPiece/Skinning.asset)
-
+ 
 
 //[-------------------------------------------------------]
 //[ Input / output                                        ]
 //[-------------------------------------------------------]
 // Attribute input / output
-INPUT_BEGIN
+INPUT_BEGIN_VERTEX
 	INPUT_VERTEX_POSITION(0, float3, Position)				// Object space vertex position
 	INPUT_TEXTURE_COORDINATE(1, float2, TexCoord, 0)		// 32 bit texture coordinate
 	INPUT_TEXTURE_COORDINATE(2, int4, QTangent, 1)			// 16 bit QTangent, not needed but added to avoid Vulkan warning "Vertex attribute at location <x> not consumed by vertex shader"
@@ -39,17 +39,17 @@ INPUT_BEGIN
 		INPUT_VERTEX_BLEND_INDICES(4, uint4, BlendIndices)	// 8 bit bone indices
 		INPUT_VERTEX_BLEND_WEIGHTS(5, uint4, BlendWeights)	// 8 bit bone weights
 	@end
-INPUT_END
-OUTPUT_BEGIN
+INPUT_END_VERTEX
+OUTPUT_BEGIN_VERTEX
 	OUTPUT_TEXTURE_COORDINATE_NOINTERPOLATION(1, uint,   AssignedMaterialSlotVS, 0)	// The assigned material slot inside the material uniform buffer
 	OUTPUT_TEXTURE_COORDINATE				 (2, float2, TexCoordVS,			 1)	// Texture coordinate
 	OUTPUT_POSITION							 (0)									// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
-OUTPUT_END
+OUTPUT_END_VERTEX
 
 // Uniform buffers
 struct PassDataStruct
 {
-	float4x4 WorldSpaceToClipSpaceMatrix;
+	float4x4 WorldSpaceToClipSpaceMatrix[2];
 };
 UNIFORM_BUFFER_BEGIN(0, 0, PassUniformBuffer, 0)
 	PassDataStruct PassData;
@@ -77,9 +77,9 @@ TEXTURE_BUFFER(2, 1, float4, InstanceTextureBuffer, 3)	// "POSITION_ROTATION_SCA
 //[-------------------------------------------------------]
 //[ Main                                                  ]
 //[-------------------------------------------------------]
-MAIN_BEGIN
+MAIN_BEGIN_VERTEX
 	// Get object space to world space data
-	uint4  instanceIndices	  = InstanceIndicesArray[MAIN_INPUT_DRAW_ID];
+	uint4  instanceIndices	  = InstanceIndicesArray[MAIN_INPUT_DRAW_ID_VERTEX];
 	float3 position			  = TEXTURE_BUFFER_FETCH(InstanceTextureBuffer, instanceIndices.x).xyz;
 	float4 rotationQuaternion = TEXTURE_BUFFER_FETCH(InstanceTextureBuffer, instanceIndices.x + 1u);
 	float3 scale			  = TEXTURE_BUFFER_FETCH(InstanceTextureBuffer, instanceIndices.x + 2u).xyz;
@@ -98,11 +98,11 @@ MAIN_BEGIN
 	float3 worldSpacePosition = MultiplyQuaternionVector(rotationQuaternion, objectSpacePosition * scale) + position;
 
 	// Calculate the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
-	MAIN_OUTPUT_POSITION = MATRIX_MUL(PassData.WorldSpaceToClipSpaceMatrix, float4(worldSpacePosition, 1.0f));
+	MAIN_OUTPUT_POSITION = MATRIX_MUL(PassData.WorldSpaceToClipSpaceMatrix[MAIN_INPUT_STEREO_EYE_INDEX], float4(worldSpacePosition, 1.0f));
 
 	// Pass through the assigned material slot inside the material uniform buffer
 	MAIN_OUTPUT(AssignedMaterialSlotVS) = instanceIndices.y;
 
 	// Pass through the 32 bit texture coordinate
 	MAIN_OUTPUT(TexCoordVS) = MAIN_INPUT(TexCoord);
-MAIN_END
+MAIN_END_VERTEX

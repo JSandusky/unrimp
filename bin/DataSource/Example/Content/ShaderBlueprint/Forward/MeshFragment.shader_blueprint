@@ -59,7 +59,7 @@ OUTPUT_END
 // Uniform buffers
 struct PassDataStruct
 {
-	float4x4 WorldSpaceToClipSpaceMatrix;
+	float4x4 WorldSpaceToClipSpaceMatrix[2];
 	float4x4 PreviousWorldSpaceToClipSpaceMatrix;
 	float4x4 ShadowMatrix;
 	float4   ShadowCascadeOffsets[4];

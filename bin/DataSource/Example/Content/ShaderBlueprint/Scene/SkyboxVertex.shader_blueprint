@@ -29,14 +29,14 @@
 //[ Input / output                                        ]
 //[-------------------------------------------------------]
 // Attribute input / output
-INPUT_BEGIN
+INPUT_BEGIN_VERTEX
 	INPUT_VERTEX_POSITION(0, float3, Position)	// Object space vertex position
-INPUT_END
-OUTPUT_BEGIN
+INPUT_END_VERTEX
+OUTPUT_BEGIN_VERTEX
 	OUTPUT_TEXTURE_COORDINATE(1, float3, TexCoordVS,				  0)	// Texture coordinate
 	OUTPUT_TEXTURE_COORDINATE(2, float3, PreviousClipSpacePositionVS, 1)	// Previous clip space position
 	OUTPUT_POSITION			 (0)											// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
-OUTPUT_END
+OUTPUT_END_VERTEX
 
 // Uniform buffers
 struct PassDataStruct
@@ -57,7 +57,7 @@ UNIFORM_BUFFER_END
 //[-------------------------------------------------------]
 //[ Main                                                  ]
 //[-------------------------------------------------------]
-MAIN_BEGIN
+MAIN_BEGIN_VERTEX
 	// Rotate into view-space, centered on the camera
 	float3 viewSpacePosition = (MATRIX_MUL(CAST_TO(PassData.WorldSpaceToViewSpaceMatrix, float3x3), MAIN_INPUT(Position))).xyz;
 	float3 previousPiewSpacePosition = (MATRIX_MUL(CAST_TO(PassData.PreviousWorldSpaceToViewSpaceMatrix, float3x3), MAIN_INPUT(Position))).xyz;
@@ -68,4 +68,4 @@ MAIN_BEGIN
 
 	// Pass through the object space position as texture coordinate
 	MAIN_OUTPUT(TexCoordVS) = MAIN_INPUT(Position);
-MAIN_END
+MAIN_END_VERTEX

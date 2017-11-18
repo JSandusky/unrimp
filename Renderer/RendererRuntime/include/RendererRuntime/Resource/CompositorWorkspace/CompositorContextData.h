@@ -66,10 +66,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline CompositorContextData();
-		inline explicit CompositorContextData(const CompositorWorkspaceInstance* compositorWorkspaceInstance, const CameraSceneItem* cameraSceneItem, const LightSceneItem* lightSceneItem = nullptr, const CompositorInstancePassShadowMap* compositorInstancePassShadowMap = nullptr);
+		inline explicit CompositorContextData(const CompositorWorkspaceInstance* compositorWorkspaceInstance, const CameraSceneItem* cameraSceneItem, bool singlePassStereoInstancing = false, const LightSceneItem* lightSceneItem = nullptr, const CompositorInstancePassShadowMap* compositorInstancePassShadowMap = nullptr);
 		inline ~CompositorContextData();
 		inline const CompositorWorkspaceInstance* getCompositorWorkspaceInstance() const;
 		inline const CameraSceneItem* getCameraSceneItem() const;
+		inline bool getSinglePassStereoInstancing() const;
 		inline const LightSceneItem* getLightSceneItem() const;
 		inline const CompositorInstancePassShadowMap* getCompositorInstancePassShadowMap() const;
 		inline void resetCurrentlyBoundMaterialBlueprintResource() const;
@@ -89,6 +90,7 @@ namespace RendererRuntime
 	private:
 		const CompositorWorkspaceInstance*	   mCompositorWorkspaceInstance;
 		const CameraSceneItem*				   mCameraSceneItem;
+		bool								   mSinglePassStereoInstancing;
 		const LightSceneItem*				   mLightSceneItem;
 		const CompositorInstancePassShadowMap* mCompositorInstancePassShadowMap;
 		// Cached "RendererRuntime::RenderQueue" data to reduce the number of state changes across different render queue instances (beneficial for complex compositors with e.g. multiple Gaussian blur passes)

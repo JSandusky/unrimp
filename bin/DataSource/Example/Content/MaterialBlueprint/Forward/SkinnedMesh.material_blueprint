@@ -201,6 +201,12 @@
 							"ValueType": "FLOAT_4_4",
 							"Value": "@WORLD_SPACE_TO_CLIP_SPACE_MATRIX"
 						},
+						"WorldSpaceToClipSpaceMatrix2":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4_4",
+							"Value": "@WORLD_SPACE_TO_CLIP_SPACE_MATRIX_2"
+						},
 						"PreviousWorldSpaceToClipSpaceMatrix":
 						{
 							"Usage": "PASS_REFERENCE",
