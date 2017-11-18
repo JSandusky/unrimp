@@ -297,7 +297,10 @@ void FirstScene::onUpdate()
 		{
 			mHasCameraTransformBackup = true;
 			mCameraTransformBackup = mCameraSceneItem->getParentSceneNodeSafe().getGlobalTransform();
-			{ // Backup camera position and rotation for a following session
+
+			// Backup camera position and rotation for a following session, but only if VR isn't running right now
+			if (!rendererRuntime->getVrManager().isRunning())
+			{
 				RendererRuntime::DebugGuiManager& debugGuiManager = mCompositorWorkspaceInstance->getRendererRuntime().getDebugGuiManager();
 				{
 					const float value[4] = { mCameraTransformBackup.position.x, mCameraTransformBackup.position.y, mCameraTransformBackup.position.z, 0.0f };

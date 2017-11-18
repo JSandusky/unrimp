@@ -281,6 +281,7 @@ namespace RendererRuntime
 			}
 			else if (framesPerSecond < 90.0f)
 			{
+				// HTC Vive refresh rate: 90 Hz (11.11 ms per frame), everything below isn't OK
 				color = ::detail::YELLOW_COLOR;
 			}
 			ImGui::PushStyleColor(ImGuiCol_Text, color);
