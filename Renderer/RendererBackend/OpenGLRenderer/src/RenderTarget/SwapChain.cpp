@@ -203,9 +203,7 @@ namespace OpenGLRenderer
 			}
 
 			// Swap buffers
-			const HDC hDC = ::GetDC(reinterpret_cast<HWND>(mNativeWindowHandle));
-			::SwapBuffers(hDC);
-			::ReleaseDC(reinterpret_cast<HWND>(mNativeWindowHandle), hDC);
+			::SwapBuffers(static_cast<OpenGLContextWindows*>(mOpenGLContext)->getDeviceContext());
 			if (mVerticalSynchronizationInterval > 0)
 			{
 				glFinish();
