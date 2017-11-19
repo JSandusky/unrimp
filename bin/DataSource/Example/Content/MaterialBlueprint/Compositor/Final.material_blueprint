@@ -71,7 +71,7 @@
 			{
 				"Usage": "SHADER_UNIFORM",
 				"ValueType": "FLOAT",
-				"Value": "0.1",
+				"Value": "0.15",
 				"MinimumValue": "0.0",
 				"MaximumValue": "2.0",
 				"StepSize": "0.01",
