@@ -1730,6 +1730,27 @@ namespace Direct3D11Renderer
 		// -> Have a look at "Devices -> Direct3D 11 on Downlevel Hardware -> Introduction" at MSDN http://msdn.microsoft.com/en-us/library/ff476876%28v=vs.85%29.aspx
 		//    for a table with a list of the minimum resources supported by Direct3D 11 at the different feature levels
 
+		{ // Get device name
+			// Get DXGI adapter
+			IDXGIDevice* dxgiDevice = nullptr;
+			IDXGIAdapter* dxgiAdapter = nullptr;
+			mD3D11Device->QueryInterface(IID_PPV_ARGS(&dxgiDevice));
+			dxgiDevice->GetAdapter(&dxgiAdapter);
+
+			// The adapter contains a description like "AMD Radeon R9 200 Series"
+			DXGI_ADAPTER_DESC dxgiAdapterDesc = {};
+			dxgiAdapter->GetDesc(&dxgiAdapterDesc);
+
+			// Convert a wide Unicode string to an UTF-8 string without using additional external libraries like "utf8cpp" ( http://utfcpp.sourceforge.net/ ) to keep the dependencies low
+			const size_t numberOfCharacters = _countof(mCapabilities.deviceName) - 1;
+			::WideCharToMultiByte(CP_UTF8, 0, dxgiAdapterDesc.Description, static_cast<int>(wcslen(dxgiAdapterDesc.Description)), mCapabilities.deviceName, static_cast<int>(numberOfCharacters), nullptr, nullptr);
+			mCapabilities.deviceName[numberOfCharacters] = '\0';
+
+			// Release references
+			dxgiAdapter->Release();
+			dxgiDevice->Release();
+		}
+
 		// Preferred swap chain texture format
 		mCapabilities.preferredSwapChainColorTextureFormat		  = Renderer::TextureFormat::Enum::R8G8B8A8;
 		mCapabilities.preferredSwapChainDepthStencilTextureFormat = Renderer::TextureFormat::Enum::D32_FLOAT;

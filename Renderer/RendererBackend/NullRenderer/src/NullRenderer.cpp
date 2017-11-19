@@ -785,6 +785,8 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	void NullRenderer::initializeCapabilities()
 	{
+		strcpy(mCapabilities.deviceName, "Null");
+
 		// Preferred swap chain texture format
 		mCapabilities.preferredSwapChainColorTextureFormat		  = Renderer::TextureFormat::Enum::R8G8B8A8;
 		mCapabilities.preferredSwapChainDepthStencilTextureFormat = Renderer::TextureFormat::Enum::D32_FLOAT;

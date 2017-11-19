@@ -87,6 +87,13 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
+		// Implementation from "08/02/2015 Better array 'countof' implementation with C++ 11 (updated)" - https://www.g-truc.net/post-0708.html
+		template<typename T, std::size_t N>
+		constexpr std::size_t countof(T const (&)[N])
+		{
+			return N;
+		}
+
 		bool mapBuffer(GLenum target, GLenum bindingTarget, GLuint openGLES3Buffer, uint32_t bufferSize, Renderer::MapType mapType, Renderer::MappedSubresource& mappedSubresource)
 		{
 			// TODO(co) This buffer update isn't efficient, use e.g. persistent buffer mapping
@@ -1803,6 +1810,14 @@ namespace OpenGLES3Renderer
 	void OpenGLES3Renderer::initializeCapabilities()
 	{
 		GLint openGLValue = 0;
+
+		{ // Get device name
+		  // -> OpenGL ES Version 3.2 (November 3, 2016) Specification, section 20.2, page 440: "String queries return pointers to UTF-8 encoded, null-terminated static strings describing properties of the current GL context."
+		  // -> For example "PVRVFrame 10.6 - None (Host : AMD Radeon R9 200 Series) (SDK Build: 17.1@4673912)" (used PowerVR_SDK OpenGL ES emulator)
+			const size_t numberOfCharacters = ::detail::countof(mCapabilities.deviceName) - 1;
+			strncpy(mCapabilities.deviceName, reinterpret_cast<const char*>(glGetString(GL_RENDERER)), numberOfCharacters);
+			mCapabilities.deviceName[numberOfCharacters] = '\0';
+		}
 
 		// Preferred swap chain texture format
 		mCapabilities.preferredSwapChainColorTextureFormat		  = Renderer::TextureFormat::Enum::R8G8B8A8;

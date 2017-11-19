@@ -29,6 +29,7 @@ namespace Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	inline Capabilities::Capabilities() :
+		deviceName{},
 		preferredSwapChainColorTextureFormat(TextureFormat::Enum::UNKNOWN),
 		preferredSwapChainDepthStencilTextureFormat(TextureFormat::Enum::UNKNOWN),
 		maximumNumberOfViewports(0),

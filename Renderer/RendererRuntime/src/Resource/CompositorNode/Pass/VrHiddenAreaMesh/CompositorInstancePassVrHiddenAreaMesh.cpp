@@ -100,7 +100,7 @@
 							mNumberOfTriangles += vrHiddenAreaMesh.unTriangleCount;
 							numberOfBytes += sizeof(vr::HmdVector2_t) * 3 * vrHiddenAreaMesh.unTriangleCount;
 						}
-			
+
 						// Allocate temporary vertex buffer memory, if necessary
 						// -> For HTC Vive there are tiny 1248 bytes which can be easily put onto the C-runtime-stack to avoid a memory allocation
 						static const uint32_t STACK_NUMBER_OF_BYTES = 1248;

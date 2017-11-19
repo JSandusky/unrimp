@@ -101,6 +101,13 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
+		// Implementation from "08/02/2015 Better array 'countof' implementation with C++ 11 (updated)" - https://www.g-truc.net/post-0708.html
+		template<typename T, std::size_t N>
+		constexpr std::size_t countof(T const (&)[N])
+		{
+			return N;
+		}
+
 		bool mapBuffer(const OpenGLRenderer::Extensions& extensions, GLenum target, GLenum bindingTarget, GLuint openGLBuffer, Renderer::MapType mapType, Renderer::MappedSubresource& mappedSubresource)
 		{
 			// TODO(co) This buffer update isn't efficient, use e.g. persistent buffer mapping
@@ -2344,6 +2351,14 @@ namespace OpenGLRenderer
 	void OpenGLRenderer::initializeCapabilities()
 	{
 		GLint openGLValue = 0;
+
+		{ // Get device name
+		  // -> OpenGL 4.3 Compatibility Profile Specification, section 22.2, page 627: "String queries return pointers to UTF-8 encoded, null-terminated static strings describing properties of the current GL context."
+		  // -> For example "AMD Radeon R9 200 Series"
+			const size_t numberOfCharacters = ::detail::countof(mCapabilities.deviceName) - 1;
+			strncpy(mCapabilities.deviceName, reinterpret_cast<const char*>(glGetString(GL_RENDERER)), numberOfCharacters);
+			mCapabilities.deviceName[numberOfCharacters] = '\0';
+		}
 
 		// Preferred swap chain texture format
 		mCapabilities.preferredSwapChainColorTextureFormat		  = Renderer::TextureFormat::Enum::R8G8B8A8;

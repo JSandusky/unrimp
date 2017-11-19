@@ -86,7 +86,6 @@ struct D3DPRESENT_PARAMETERS;
 struct IDirect3DCubeTexture9;
 struct IDirect3DIndexBuffer9;
 struct IDirect3DPixelShader9;
-struct D3DADAPTER_IDENTIFIER9;
 struct D3DXCONSTANTTABLE_DESC;
 struct IDirect3DVertexBuffer9;
 struct IDirect3DVertexShader9;
@@ -134,6 +133,27 @@ typedef DWORD D3DCOLOR;
 #define D3DSTREAMSOURCE_INDEXEDDATA	(1 << 30)
 #define D3DISSUE_END				(1 << 0)
 #define D3DGETDATA_FLUSH			(1 << 0)
+
+// "Microsoft Direct3D SDK (June 2010)" -> "d3d9types.h"
+#define MAX_DEVICE_IDENTIFIER_STRING 512
+typedef struct _D3DADAPTER_IDENTIFIER9
+{
+	char				Driver[MAX_DEVICE_IDENTIFIER_STRING];
+	char				Description[MAX_DEVICE_IDENTIFIER_STRING];
+	char				DeviceName[32];
+	#ifdef _WIN32
+		LARGE_INTEGER	DriverVersion;
+	#else
+		DWORD			DriverVersionLowPart;
+		DWORD			DriverVersionHighPart;
+	#endif
+	DWORD				VendorId;
+	DWORD				DeviceId;
+	DWORD				SubSysId;
+	DWORD				Revision;
+	GUID				DeviceIdentifier;
+	DWORD				WHQLLevel;
+} D3DADAPTER_IDENTIFIER9;
 
 // "Microsoft Direct3D SDK (June 2010)" -> "d3dx9tex.h"
 #define D3DX_FILTER_NONE	(1 << 0)

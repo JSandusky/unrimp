@@ -56,6 +56,7 @@ namespace Renderer
 	//[ Public data                                           ]
 	//[-------------------------------------------------------]
 	public:
+		char				deviceName[128];								///< UTF-8 device name of the used graphics card (e.g. "AMD Radeon R9 200 Series")
 		TextureFormat::Enum preferredSwapChainColorTextureFormat;			///< Preferred swap chain color texture format
 		TextureFormat::Enum preferredSwapChainDepthStencilTextureFormat;	///< Preferred swap chain depth stencil texture format
 		uint32_t			maximumNumberOfViewports;						///< Maximum number of viewports (always at least 1)

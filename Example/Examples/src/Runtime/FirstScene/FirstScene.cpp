@@ -493,15 +493,19 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 			if (ImGui::Begin("Options"))
 			{
 				// Status
-				{
-					const RendererToolkit::IRendererToolkit* rendererToolkit = getRendererToolkit();
-					if (nullptr != rendererToolkit)
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.5f, 0.5f, 0.5f, 1.0f));
+					ImGui::Text("Renderer: %s", mainRenderTarget.getRenderer().getName());
+					ImGui::Text("GPU: %s", mainRenderTarget.getRenderer().getCapabilities().deviceName);
 					{
-						ImGui::Text("Renderer Toolkit: %s", (RendererToolkit::IRendererToolkit::State::IDLE == rendererToolkit->getState()) ? "Idle" : "Busy");
+						const RendererToolkit::IRendererToolkit* rendererToolkit = getRendererToolkit();
+						if (nullptr != rendererToolkit)
+						{
+							ImGui::Text("Renderer Toolkit: %s", (RendererToolkit::IRendererToolkit::State::IDLE == rendererToolkit->getState()) ? "Idle" : "Busy");
+						}
 					}
-				}
-				ImGui::Text("Resource Streamer: %s", (0 == rendererRuntime->getResourceStreamer().getNumberOfInFlightLoadRequests()) ? "Idle" : "Busy");
-				ImGui::Text("Pipeline State Compiler: %s", (0 == rendererRuntime->getPipelineStateCompiler().getNumberOfInFlightCompilerRequests()) ? "Idle" : "Busy");
+					ImGui::Text("Resource Streamer: %s", (0 == rendererRuntime->getResourceStreamer().getNumberOfInFlightLoadRequests()) ? "Idle" : "Busy");
+					ImGui::Text("Pipeline State Compiler: %s", (0 == rendererRuntime->getPipelineStateCompiler().getNumberOfInFlightCompilerRequests()) ? "Idle" : "Busy");
+				ImGui::PopStyleColor();
 				if (ImGui::Button("Log"))
 				{
 					mImGuiLog->open();

@@ -1732,13 +1732,22 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	void Direct3D9Renderer::initializeCapabilities()
 	{
-		// Preferred swap chain texture format
-		mCapabilities.preferredSwapChainColorTextureFormat		  = Renderer::TextureFormat::Enum::R8G8B8A8;
-		mCapabilities.preferredSwapChainDepthStencilTextureFormat = Renderer::TextureFormat::Enum::D32_FLOAT;
-
 		// Get Direct3D 9 device capabilities
 		D3DCAPS9 d3dCaps9;
 		mDirect3DDevice9->GetDeviceCaps(&d3dCaps9);
+
+		{ // Get device name
+		  // -> The adapter contains a description like "AMD Radeon R9 200 Series"
+			D3DADAPTER_IDENTIFIER9 d3dAdapterIdentifier9;
+			mDirect3D9->GetAdapterIdentifier(d3dCaps9.AdapterOrdinal, 0, &d3dAdapterIdentifier9);
+			const size_t numberOfCharacters = _countof(mCapabilities.deviceName) - 1;
+			strncpy(mCapabilities.deviceName, d3dAdapterIdentifier9.Description, numberOfCharacters);
+			mCapabilities.deviceName[numberOfCharacters] = '\0';
+		}
+
+		// Preferred swap chain texture format
+		mCapabilities.preferredSwapChainColorTextureFormat		  = Renderer::TextureFormat::Enum::R8G8B8A8;
+		mCapabilities.preferredSwapChainDepthStencilTextureFormat = Renderer::TextureFormat::Enum::D32_FLOAT;
 
 		// Maximum number of viewports (always at least 1)
 		mCapabilities.maximumNumberOfViewports = 1;	// Direct3D 9 only supports a single viewport

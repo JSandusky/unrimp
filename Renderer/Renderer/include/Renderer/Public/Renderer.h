@@ -1825,8 +1825,9 @@ namespace Renderer
 		class Capabilities
 		{
 		public:
-			TextureFormat::Enum preferredSwapChainColorTextureFormat;
-			TextureFormat::Enum preferredSwapChainDepthStencilTextureFormat;
+			char				deviceName[128];
+			TextureFormat::Enum	preferredSwapChainColorTextureFormat;
+			TextureFormat::Enum	preferredSwapChainDepthStencilTextureFormat;
 			uint32_t			maximumNumberOfViewports;
 			uint32_t			maximumNumberOfSimultaneousRenderTargets;
 			uint32_t			maximumTextureDimension;
@@ -1848,6 +1849,7 @@ namespace Renderer
 			bool				fragmentShader;
 		public:
 			inline Capabilities() :
+				deviceName{},
 				preferredSwapChainColorTextureFormat(TextureFormat::Enum::UNKNOWN),
 				preferredSwapChainDepthStencilTextureFormat(TextureFormat::Enum::UNKNOWN),
 				maximumNumberOfViewports(0),

@@ -83,6 +83,13 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
+		// Implementation from "08/02/2015 Better array 'countof' implementation with C++ 11 (updated)" - https://www.g-truc.net/post-0708.html
+		template<typename T, std::size_t N>
+		constexpr std::size_t countof(T const (&)[N])
+		{
+			return N;
+		}
+
 		namespace BackendDispatch
 		{
 
@@ -1269,6 +1276,14 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	void VulkanRenderer::initializeCapabilities()
 	{
+		{ // Get device name
+			VkPhysicalDeviceProperties vkPhysicalDeviceProperties;
+			vkGetPhysicalDeviceProperties(mVulkanContext->getVkPhysicalDevice(), &vkPhysicalDeviceProperties);
+			const size_t numberOfCharacters = ::detail::countof(mCapabilities.deviceName) - 1;
+			strncpy(mCapabilities.deviceName, vkPhysicalDeviceProperties.deviceName, numberOfCharacters);
+			mCapabilities.deviceName[numberOfCharacters] = '\0';
+		}
+
 		// Preferred swap chain texture format
 		mCapabilities.preferredSwapChainColorTextureFormat = (SwapChain::findColorVkFormat(getContext(), mVulkanRuntimeLinking->getVkInstance(), *mVulkanContext) == VK_FORMAT_R8G8B8A8_UNORM) ? Renderer::TextureFormat::Enum::R8G8B8A8 : Renderer::TextureFormat::Enum::B8G8R8A8;
 

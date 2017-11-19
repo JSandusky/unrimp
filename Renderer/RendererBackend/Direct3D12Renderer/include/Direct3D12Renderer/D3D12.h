@@ -1847,6 +1847,20 @@ IDXGIFactory4 : public IDXGIFactory3
 		virtual HRESULT STDMETHODCALLTYPE EnumWarpAdapter(_In_ REFIID riid, _COM_Outptr_ void **ppvAdapter) = 0;
 };
 
+// "Microsoft DirectX SDK (June 2010)" -> "DXGI.h"
+struct DXGI_ADAPTER_DESC
+{
+	WCHAR Description[128];
+	UINT VendorId;
+	UINT DeviceId;
+	UINT SubSysId;
+	UINT Revision;
+	SIZE_T DedicatedVideoMemory;
+	SIZE_T DedicatedSystemMemory;
+	SIZE_T SharedSystemMemory;
+	LUID AdapterLuid;
+};
+
 // "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "DXGI.h"
 MIDL_INTERFACE("2411e7e1-12ac-4ccf-bd14-9798e8534dc0")
 IDXGIAdapter : public IDXGIObject
