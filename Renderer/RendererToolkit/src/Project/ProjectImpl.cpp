@@ -164,11 +164,11 @@ namespace RendererToolkit
 		mThread.join();
 
 		// Clear
+		clear();
 		for (const auto& pair : mAssetCompilers)
 		{
 			delete pair.second;
 		}
-		clear();
 
 		// Destroy the cache manager
 		delete mCacheManager;
