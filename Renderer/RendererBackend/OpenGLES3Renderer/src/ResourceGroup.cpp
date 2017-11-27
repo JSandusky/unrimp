@@ -98,8 +98,7 @@ namespace OpenGLES3Renderer
 			{
 				if (nullptr == mResourceIndexToUniformBlockBindingIndex)
 				{
-					mResourceIndexToUniformBlockBindingIndex = new uint32_t[mNumberOfResources];
-					memset(mResourceIndexToUniformBlockBindingIndex, 0, sizeof(uint32_t) * mNumberOfResources);
+					mResourceIndexToUniformBlockBindingIndex = new uint32_t[mNumberOfResources]{};
 				}
 				mResourceIndexToUniformBlockBindingIndex[resourceIndex] = uniformBlockBindingIndex;
 				++uniformBlockBindingIndex;

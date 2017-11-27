@@ -64,11 +64,8 @@ namespace Direct3D10Renderer
 		{
 			mD3D10Buffers = new ID3D10Buffer*[mNumberOfSlots];
 			mStrides = new UINT[mNumberOfSlots];
-			mOffsets = new UINT[mNumberOfSlots];
+			mOffsets = new UINT[mNumberOfSlots]{};	// Vertex buffer offset is not supported by OpenGL, so our renderer API doesn't support it either, set everything to zero
 			mVertexBuffers = new VertexBuffer*[mNumberOfSlots];
-
-			// Vertex buffer offset is not supported by OpenGL, so our renderer API doesn't support it either
-			memset(mOffsets, 0, sizeof(uint32_t) * mNumberOfSlots);
 
 			{ // Loop through all vertex buffers
 				ID3D10Buffer** currentD3D10Buffer = mD3D10Buffers;

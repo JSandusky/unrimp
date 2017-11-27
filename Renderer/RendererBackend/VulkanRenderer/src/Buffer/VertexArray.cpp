@@ -28,7 +28,7 @@
 
 #include <Renderer/Buffer/VertexArrayTypes.h>
 
-#include <cstring>	// For "memset()" and "memcpy()"
+#include <cstring>	// For "memcpy()"
 
 
 //[-------------------------------------------------------]
@@ -61,11 +61,8 @@ namespace VulkanRenderer
 		{
 			mVertexVkBuffers = new VkBuffer[mNumberOfSlots];
 			mStrides = new uint32_t[mNumberOfSlots];
-			mOffsets = new VkDeviceSize[mNumberOfSlots];
+			mOffsets = new VkDeviceSize[mNumberOfSlots]{};	// Vertex buffer offset is not supported by OpenGL, so our renderer API doesn't support it either, set everything to zero
 			mVertexBuffers = new VertexBuffer*[mNumberOfSlots];
-
-			// Vertex buffer offset is not supported by OpenGL, so our renderer API doesn't support it either
-			memset(mOffsets, 0, sizeof(VkDeviceSize) * mNumberOfSlots);
 
 			{ // Loop through all vertex buffers
 				VkBuffer* currentVertexVkBuffer = mVertexVkBuffers;

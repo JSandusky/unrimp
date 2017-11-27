@@ -199,9 +199,10 @@ namespace RendererRuntime
 		mTurbidity(0.0f),
 		mAlbedo(0.0f),
 		mNormalizedSunY(0.0f),
+		mCoefficients{},
 		mSunColor(Math::VEC3_ONE)
 	{
-		memset(&mCoefficients, 0, sizeof(Coefficients));
+		// Nothing here
 	}
 
 	void HosekWilkieSky::recalculate(const glm::vec3& worldSpaceSunDirection, float turbidity, float albedo, float normalizedSunY)

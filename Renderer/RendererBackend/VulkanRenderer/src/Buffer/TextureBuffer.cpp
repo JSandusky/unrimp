@@ -29,7 +29,7 @@
 
 #include <Renderer/ILog.h>
 
-#include <cstring>	// For "memset()" and "memcpy()"
+#include <cstring>	// For "memcpy()"
 
 
 //[-------------------------------------------------------]

@@ -82,6 +82,7 @@ namespace Direct3D12Renderer
 		mD3D12DescriptorHeapRenderTargetView(nullptr),
 		mD3D12DescriptorHeapDepthStencilView(nullptr),
 		mRenderTargetViewDescriptorSize(0),
+		mD3D12ResourceRenderTargets{},
 		mD3D12ResourceDepthStencil(nullptr),
 		mSynchronizationInterval(0),
 		mFrameIndex(0),
@@ -90,7 +91,6 @@ namespace Direct3D12Renderer
 		mFenceValue(0)
 	{
 		Direct3D12Renderer& direct3D12Renderer = static_cast<Direct3D12Renderer&>(renderPass.getRenderer());
-		memset(mD3D12ResourceRenderTargets, 0, sizeof(ID3D12Resource*) * NUMBER_OF_FRAMES);
 		const RenderPass& d3d12RenderPass = static_cast<RenderPass&>(renderPass);
 
 		// Sanity check

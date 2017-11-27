@@ -490,8 +490,7 @@ namespace RendererToolkit
 				{
 					// Get the reference value as string
 					static const uint32_t NAME_LENGTH = 128;
-					char referenceAsString[NAME_LENGTH];
-					memset(&referenceAsString[0], 0, sizeof(char) * NAME_LENGTH);
+					char referenceAsString[NAME_LENGTH] = {};
 					JsonHelper::optionalStringProperty(rapidJsonValue, propertyName, referenceAsString, NAME_LENGTH);
 
 					// The character "@" is used to reference e.g. a material property value
@@ -676,8 +675,7 @@ namespace RendererToolkit
 				{
 					// Get the reference value as string
 					static const uint32_t NAME_LENGTH = 128;
-					char referenceAsString[NAME_LENGTH];
-					memset(&referenceAsString[0], 0, sizeof(char) * NAME_LENGTH);
+					char referenceAsString[NAME_LENGTH] = {};
 					JsonHelper::optionalStringProperty(rapidJsonValueProperty, "Value", referenceAsString, NAME_LENGTH);
 
 					// The character "@" is used to reference e.g. a material property value
@@ -1032,8 +1030,7 @@ namespace RendererToolkit
 
 						// Get the reference value as string
 						static const uint32_t NAME_LENGTH = 128;
-						char referenceAsString[NAME_LENGTH];
-						memset(&referenceAsString[0], 0, sizeof(char) * NAME_LENGTH);
+						char referenceAsString[NAME_LENGTH] = {};
 						JsonHelper::optionalStringProperty(rapidJsonValue, "Value", referenceAsString, NAME_LENGTH);
 
 						// Construct the material property value

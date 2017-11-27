@@ -742,6 +742,7 @@ namespace RendererRuntime
 		mVrDeviceMaterialResourceLoaded(false),
 		mVrDeviceMaterialResourceId(getUninitialized<MaterialResourceId>()),
 		mSceneResourceId(getUninitialized<SceneResourceId>()),
+		mSceneNodes{},
 		mOpenVRRuntimeLinking(new OpenVRRuntimeLinking(rendererRuntime)),
 		mVrTextureType(vr::TextureType_OpenGL),
 		mVrSystem(nullptr),
@@ -750,7 +751,6 @@ namespace RendererRuntime
 		mNumberOfValidDevicePoses(0),
 		mHmdPoseMatrix(Math::MAT4_IDENTITY)
 	{
-		memset(mSceneNodes, 0, sizeof(SceneNode*) * vr::k_unMaxTrackedDeviceCount);
 		for (int i = 0; i < vr::k_unMaxTrackedDeviceCount; ++i)
 		{
 			mDevicePoseMatrix[i] = Math::MAT4_IDENTITY;
