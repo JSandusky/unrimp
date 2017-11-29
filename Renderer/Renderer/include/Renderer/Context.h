@@ -85,31 +85,22 @@ namespace Renderer
 		*  @brief
 		*    Constructor
 		*
-		*  @param[in] contextType
-		*    The type of the context
 		*  @param[in] log
 		*    Log instance to use, the log instance must stay valid as long as the renderer instance exists
 		*  @param[in] nativeWindowHandle
 		*    Native window handle
 		*  @param[in] useExternalContext
 		*    Indicates if an external renderer context is used; in this case the renderer itself has nothing to do with the creation/managing of an renderer context
+		*  @param[in] contextType
+		*    The type of the context
 		*/
-		inline Context(ContextType contextType, ILog& log, handle nativeWindowHandle = 0, bool useExternalContext = false);
+		inline Context(ILog& log, handle nativeWindowHandle = 0, bool useExternalContext = false, ContextType contextType = Context::ContextType::WINDOWS);
 
 		/**
 		*  @brief
 		*    Destructor
 		*/
 		inline virtual ~Context();
-
-		/**
-		*  @brief
-		*    Return the type of the context
-		*
-		*  @return
-		*    The context type
-		*/
-		inline ContextType getType() const;
 
 		/**
 		*  @brief
@@ -137,6 +128,15 @@ namespace Renderer
 		*    "true" if an external context is used, else "false"
 		*/
 		inline bool isUsingExternalContext() const;
+
+		/**
+		*  @brief
+		*    Return the type of the context
+		*
+		*  @return
+		*    The context type
+		*/
+		inline ContextType getType() const;
 
 		/**
 		*  @brief
@@ -169,10 +169,10 @@ namespace Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		ContextType	mContextType;
 		ILog&		mLog;
 		handle		mNativeWindowHandle;
 		bool		mUseExternalContext;
+		ContextType	mContextType;
 		void*		mRendererApiSharedLibrary;	///< A handle to the renderer API shared library (e.g. obtained via "dlopen()" and co)
 
 

@@ -199,19 +199,15 @@ namespace Renderer
 				WAYLAND
 			};
 		public:
-			inline Context(ContextType contextType, ILog& log, handle nativeWindowHandle = 0, bool useExternalContext = false) :
-				mContextType(contextType),
+			inline Context(ILog& log, handle nativeWindowHandle = 0, bool useExternalContext = false, ContextType contextType = Context::ContextType::WINDOWS) :
 				mLog(log),
 				mNativeWindowHandle(nativeWindowHandle),
 				mUseExternalContext(useExternalContext),
+				mContextType(contextType),
 				mRendererApiSharedLibrary(nullptr)
 			{}
 			inline virtual ~Context()
 			{}
-			inline ContextType getType() const
-			{
-				return mContextType;
-			}
 			inline ILog& getLog() const
 			{
 				return mLog;
@@ -223,6 +219,10 @@ namespace Renderer
 			inline bool isUsingExternalContext() const
 			{
 				return mUseExternalContext;
+			}
+			inline ContextType getType() const
+			{
+				return mContextType;
 			}
 			inline void* getRendererApiSharedLibrary() const
 			{
@@ -236,10 +236,10 @@ namespace Renderer
 			explicit Context(const Context&) = delete;
 			Context& operator=(const Context&) = delete;
 		private:
-			ContextType	mContextType;
 			ILog&		mLog;
 			handle		mNativeWindowHandle;
 			bool		mUseExternalContext;
+			ContextType	mContextType;
 			void*		mRendererApiSharedLibrary;
 		};
 
@@ -248,7 +248,7 @@ namespace Renderer
 		{
 		public:
 			inline X11Context(ILog& log, _XDisplay* display, handle nativeWindowHandle = 0, bool useExternalContext = false) :
-				Context(Context::ContextType::X11, log, nativeWindowHandle, useExternalContext),
+				Context(log, nativeWindowHandle, useExternalContext, Context::ContextType::X11),
 				mDisplay(display)
 			{}
 			inline _XDisplay* getDisplay() const
@@ -262,7 +262,7 @@ namespace Renderer
 		{
 		public:
 			inline WaylandContext(ILog& log, wl_display* display, wl_surface* surface = 0, bool useExternalContext = false) :
-				Context(Context::ContextType::WAYLAND, log, 1, useExternalContext),	// Under Wayland the surface (aka window) handle is not an integer, but the renderer implementation expects an integer as window handle so we give here an value != 0 so that a swap chain is created
+				Context(log, 1, useExternalContext, Context::ContextType::WAYLAND),	// Under Wayland the surface (aka window) handle is not an integer, but the renderer implementation expects an integer as window handle so we give here an value != 0 so that a swap chain is created
 				mDisplay(display),
 				mSurface(surface)
 			{

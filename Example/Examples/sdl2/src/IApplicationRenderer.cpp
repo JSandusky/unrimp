@@ -696,7 +696,7 @@ Renderer::Context* IApplicationRenderer::createRendererContext() const
 			switch(info.subsystem) {
 		#ifdef WIN32
 				case SDL_SYSWM_WINDOWS:
-					return new Renderer::Context(Renderer::Context::ContextType::WINDOWS, ::detail::g_RendererLog, info.info.win.window, isOpenGLRenderer);
+					return new Renderer::Context(::detail::g_RendererLog, info.info.win.window, isOpenGLRenderer);
 		#endif
 		#ifdef LINUX
 				case SDL_SYSWM_X11:
