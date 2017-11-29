@@ -149,6 +149,17 @@ void FirstScene::onInitialization()
 	RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
 	if (nullptr != rendererRuntime)
 	{
+		// Usability: Restore the position and size of the main window from a previous session
+		#ifdef WIN32
+		{
+			float value[4] = {};
+			if (rendererRuntime->getDebugGuiManager().getIniSetting("MainWindowPositionSize", value))
+			{
+				::SetWindowPos(reinterpret_cast<HWND>(rendererRuntime->getRenderer().getContext().getNativeWindowHandle()), HWND_TOPMOST, static_cast<int>(value[0]), static_cast<int>(value[1]), static_cast<int>(value[2]), static_cast<int>(value[3]), 0);
+			}
+		}
+		#endif
+
 		// TODO(co) Remove this after the Vulkan renderer backend is fully up-and-running
 		if (strcmp(rendererRuntime->getRenderer().getName(), "Vulkan") == 0)
 		{
@@ -269,7 +280,7 @@ void FirstScene::onUpdate()
 	// Call the base implementation
 	ExampleBase::onUpdate();
 
-	RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
+	const RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
 	if (nullptr != rendererRuntime)
 	{
 		{ // Tell the material blueprint resource manager about our global material properties
@@ -309,6 +320,16 @@ void FirstScene::onUpdate()
 				debugGuiManager.setIniSetting("CameraRotation", glm::value_ptr(mCameraTransformBackup.rotation));
 			}
 		}
+
+		// Usability: Backup the position and size of the main window so we can restore it in the next session
+		#ifdef WIN32
+		{
+			RECT rect;
+			::GetWindowRect(reinterpret_cast<HWND>(rendererRuntime->getRenderer().getContext().getNativeWindowHandle()), &rect);
+			const float value[4] = { static_cast<float>(rect.left), static_cast<float>(rect.top), static_cast<float>(rect.right - rect.left), static_cast<float>(rect.bottom - rect.top) };
+			rendererRuntime->getDebugGuiManager().setIniSetting("MainWindowPositionSize", value);
+		}
+		#endif
 	}
 
 	// TODO(co) We need to get informed when the mesh scene item received the mesh resource loading finished signal
