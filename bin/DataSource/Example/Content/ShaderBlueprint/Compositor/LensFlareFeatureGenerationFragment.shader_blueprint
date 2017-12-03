@@ -75,7 +75,7 @@ float3 GetDistortedTexture(float2 textureCoordinate, float2 direction, float3 di
 //[ Main                                                  ]
 //[-------------------------------------------------------]
 MAIN_BEGIN
-	float2 textureCoordinate = -MAIN_INPUT(TexCoordVS) + float2(1.0f, 1.0f);	// Flip texture coordinates
+	float2 textureCoordinate = MAIN_INPUT(TexCoordVS);
 	float2 texelSize = PassData.InverseViewportSize;
 
 	float2 ghostVector = (float2(0.5f, 0.5f) - textureCoordinate) * PassData.GhostDispersalFactor;

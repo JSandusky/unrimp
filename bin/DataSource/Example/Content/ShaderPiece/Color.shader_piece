@@ -34,7 +34,7 @@
 	float3 CalculateExposedColor(float3 color, float averageLuminance, float threshold, out float exposure)
 	{
 		// Use geometric mean
-		averageLuminance = max(averageLuminance, 0.001f);
+		averageLuminance = clamp(averageLuminance, 0.125f, 4.0f);
 		float linearExposure = (PassData.ToneMapKeyValue / averageLuminance);
 		exposure = log2(max(linearExposure, 0.0001f));
 		exposure -= threshold;

@@ -107,17 +107,17 @@ MAIN_BEGIN
 	@property(UseLensFlareMap)
 	{
 		// Apply the lens flare with dirty lens
-		float lensFlareIntensity = 5.0f;
+		float lensFlareIntensity = 0.1f;
 		float3 lensFlare = SAMPLE_2D_LOD(LensFlareMap, SamplerLinear, textureCoordinate).rgb;
 		float2 lensStarTexcoord = (MATRIX_MUL(float3(MAIN_INPUT(TexCoordVS), 1.0f), CAST_TO(PassData.LensStarMatrix, float3x3))).xy;
-		color.rgb += lensFlare * (dirtyLens + SAMPLE_2D_LOD(LensStarMap, SamplerLinear, float4(lensStarTexcoord, 0.0f, 0.0f)).rgb) * lensFlareIntensity;
+		color.rgb += lensFlare * lensFlareIntensity;
+		color.rgb += lensFlare * SAMPLE_2D_LOD(LensStarMap, SamplerLinear, float4(lensStarTexcoord, 0.0f, 0.0f)).rgb * 10.0f;
 	}
 	@end
 
 	{ // Apply the bloom with dirty lens
 		float3 bloom = SAMPLE_2D_LOD(BloomMap, SamplerLinear, textureCoordinate).rgb;
-		float dirtyLenseIntensity = 0.5f;
-		color.rgb += (bloom * dirtyLenseIntensity * dirtyLens + bloom * (1.0f - dirtyLenseIntensity)) * PassData.BloomIntensity;
+		color.rgb += bloom * PassData.BloomIntensity + bloom * PassData.BloomIntensity * dirtyLens;
 	}
 
 	// Done, ensure we're in a 0..1 range
