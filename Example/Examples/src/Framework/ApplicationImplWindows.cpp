@@ -36,7 +36,8 @@
 ApplicationImplWindows::ApplicationImplWindows(IApplication& application, const char* windowTitle) :
 	IApplicationImpl(application),
 	mApplication(&application),
-	mNativeWindowHandle(NULL_HANDLE)
+	mNativeWindowHandle(NULL_HANDLE),
+	mFirstUpdate(true)
 {
 	// Copy the given window title
 	if (nullptr != windowTitle)
@@ -78,12 +79,6 @@ void ApplicationImplWindows::onInitialization()
 
 	// Create the OS window instance
 	mNativeWindowHandle = ::CreateWindowA("ApplicationImplWindows", mWindowTitle, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 1024, 768, nullptr, nullptr, ::GetModuleHandle(nullptr), this);
-	if (NULL_HANDLE != mNativeWindowHandle)
-	{
-		// Show the created OS window
-		::ShowWindow(mNativeWindowHandle, SW_SHOWDEFAULT);
-		::UpdateWindow(mNativeWindowHandle);
-	}
 }
 
 void ApplicationImplWindows::onDeinitialization()
@@ -102,6 +97,19 @@ void ApplicationImplWindows::onDeinitialization()
 
 bool ApplicationImplWindows::processMessages()
 {
+	// The window is made visible before the first processing of operation system messages, this way the concrete example has the
+	// opportunity to e.g. restore the window position and size from a previous season without having a visible jumping window
+	if (mFirstUpdate)
+	{
+		if (NULL_HANDLE != mNativeWindowHandle)
+		{
+			// Show the created OS window
+			::ShowWindow(mNativeWindowHandle, SW_SHOWDEFAULT);
+			::UpdateWindow(mNativeWindowHandle);
+		}
+		mFirstUpdate = false;
+	}
+
 	// By default, do not shut down the application
 	bool quit = false;
 

@@ -155,7 +155,7 @@ void FirstScene::onInitialization()
 			float value[4] = {};
 			if (rendererRuntime->getDebugGuiManager().getIniSetting("MainWindowPositionSize", value))
 			{
-				::SetWindowPos(reinterpret_cast<HWND>(rendererRuntime->getRenderer().getContext().getNativeWindowHandle()), HWND_TOPMOST, static_cast<int>(value[0]), static_cast<int>(value[1]), static_cast<int>(value[2]), static_cast<int>(value[3]), 0);
+				::SetWindowPos(reinterpret_cast<HWND>(rendererRuntime->getRenderer().getContext().getNativeWindowHandle()), HWND_TOP, static_cast<int>(value[0]), static_cast<int>(value[1]), static_cast<int>(value[2]), static_cast<int>(value[3]), 0);
 			}
 		}
 		#endif
