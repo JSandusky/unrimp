@@ -85,17 +85,17 @@ namespace RendererToolkit
 	class Context
 	{
 	public:
-		inline Context::Context(Renderer::ILog& log, RendererRuntime::IFileManager& fileManager) :
+		inline Context(Renderer::ILog& log, RendererRuntime::IFileManager& fileManager) :
 			mLog(log),
 			mFileManager(fileManager)
 		{ }
-		inline Context::~Context()
+		inline ~Context()
 		{ }
-		inline Renderer::ILog& Context::getLog() const
+		inline Renderer::ILog& getLog() const
 		{
 			return mLog;
 		}
-		inline RendererRuntime::IFileManager& Context::getFileManager() const
+		inline RendererRuntime::IFileManager& getFileManager() const
 		{
 			return mFileManager;
 		}

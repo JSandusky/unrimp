@@ -31,7 +31,12 @@
 
 #include <GLES3/gl3.h>
 #include <GLES3/gl2ext.h>
-#include <EGL/egl.h>
+
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(5039)	// warning C5039: 'TpSetCallbackCleanupGroup': pointer or reference to potentially throwing function passed to extern C function under -EHc. Undefined behavior may occur if this function throws an exception
+	#include <EGL/egl.h>
+PRAGMA_WARNING_POP
 
 // Get rid of some nasty OS macros
 #undef None	// Linux: Undefine "None", this name is used inside enums defined by Unrimp (which gets defined inside Xlib.h pulled in by egl.h)

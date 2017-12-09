@@ -18,6 +18,7 @@
 	#pragma warning(disable: 4505)	// warning C4505: '<x>': unreferenced local function has been removed
 	#pragma warning(disable: 4706)	// warning C4706: assignment within conditional expression
 	#pragma warning(disable: 4701)	// warning C4701: potentially uninitialized local variable 'incltype' used
+	#pragma warning(disable: 5039)	// warning C5039: 'TpSetCallbackCleanupGroup': pointer or reference to potentially throwing function passed to extern C function under -EHc. Undefined behavior may occur if this function throws an exception.
 
 	#include "RendererRuntime/Core/Platform/WindowsHeader.h"
 #elif defined(__clang__)
