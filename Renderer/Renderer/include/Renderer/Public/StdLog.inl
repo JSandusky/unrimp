@@ -30,6 +30,7 @@ PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4626)	// warning C4626: 'std::codecvt_base': assignment operator was implicitly defined as deleted
 	PRAGMA_WARNING_DISABLE_MSVC(4774)	// warning C4774: 'sprintf_s' : format string expected in argument 3 is not a string literal
 	#include <iostream>
+	#include <string>
 PRAGMA_WARNING_POP
 
 #ifdef WIN32
@@ -76,7 +77,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ILog methods                 ]
 	//[-------------------------------------------------------]
-	inline void StdLog::print(Type type, const char* attachment, const char* format, ...)
+	inline void StdLog::print(Type type, const char* attachment, const char* file, uint32_t line, const char* format, ...)
 	{
 		// Get the required buffer length, does not include the terminating zero character
 		va_list vaList;
@@ -94,7 +95,7 @@ namespace Renderer
 			va_end(vaList);
 
 			// Internal processing
-			printInternal(type, attachment, formattedText, textLength);
+			printInternal(type, attachment, file, line, formattedText, textLength);
 		}
 		else
 		{
@@ -108,7 +109,7 @@ namespace Renderer
 			va_end(vaList);
 
 			// Internal processing
-			printInternal(type, attachment, formattedText, textLength);
+			printInternal(type, attachment, file, line, formattedText, textLength);
 
 			// Cleanup
 			delete [] formattedText;
@@ -119,12 +120,18 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Protected virtual Renderer::StdLog methods            ]
 	//[-------------------------------------------------------]
-	inline void StdLog::printInternal(Type type, const char*, const char* message, uint32_t)
+	inline void StdLog::printInternal(Type type, const char*, const char* file, uint32_t line, const char* message, uint32_t)
 	{
 		std::lock_guard<std::mutex> mutexLock(mMutex);
 
 		// Construct the full UTF-8 message text
-		std::string fullMessage = std::string(typeToString(type)) + message;
+		#ifdef RENDERER_NO_DEBUG
+			std::ignore = file;
+			std::ignore = line;
+			std::string fullMessage = std::string(typeToString(type)) + message;
+		#else
+			std::string fullMessage = "File \"" + std::string(file) + "\" | Line " + std::to_string(line) + " | " + std::string(typeToString(type)) + message;
+		#endif
 		if ('\n' != fullMessage.back())
 		{
 			fullMessage += '\n';

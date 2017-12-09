@@ -27,6 +27,8 @@
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
 
+#include <Renderer/IAssert.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -107,7 +109,7 @@ namespace OpenGLRenderer
 	void TextureBufferDsa::copyDataFrom(uint32_t numberOfBytes, const void* data)
 	{
 		// Sanity check
-		assert(nullptr != data);
+		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid OpenGL texture buffer data");
 
 		// Upload the data
 		if (static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_ARB_direct_state_access())

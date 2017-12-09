@@ -36,6 +36,8 @@
 namespace Renderer
 {
 	class ILog;
+	class IAssert;
+	class IMemory;
 	class IRenderer;
 }
 namespace RendererRuntime
@@ -91,6 +93,24 @@ namespace RendererRuntime
 		*    The log instance
 		*/
 		RENDERERRUNTIME_API_EXPORT Renderer::ILog& getLog() const;
+
+		/**
+		*  @brief
+		*    Return the assert instance
+		*
+		*  @return
+		*    The assert instance
+		*/
+		RENDERERRUNTIME_API_EXPORT Renderer::IAssert& getAssert() const;
+
+		/**
+		*  @brief
+		*    Return the memory instance
+		*
+		*  @return
+		*    The memory instance
+		*/
+		RENDERERRUNTIME_API_EXPORT Renderer::IMemory& getMemory() const;
 
 		/**
 		*  @brief

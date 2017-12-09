@@ -35,5 +35,5 @@
 	#define OPENGLES3RENDERER_RENDERERMATCHCHECK_ASSERT(rendererReference, resourceReference)
 #else
 	#define OPENGLES3RENDERER_RENDERERMATCHCHECK_ASSERT(rendererReference, resourceReference) \
-		assert((&rendererReference == &(resourceReference).getRenderer()) && "OpenGL ES 3 error: The given resource is owned by another renderer instance");
+		RENDERER_ASSERT(mContext, &rendererReference == &(resourceReference).getRenderer(), "OpenGL ES 3 error: The given resource is owned by another renderer instance");
 #endif

@@ -32,6 +32,7 @@
 #include "Direct3D11Renderer/Direct3D11RuntimeLinking.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/IAssert.h>
 
 
 //[-------------------------------------------------------]
@@ -64,8 +65,8 @@ namespace Direct3D11Renderer
 	ID3DBlob* ShaderLanguageHlsl::loadShaderFromSourcecode(const char* shaderModel, const char* sourceCode, const char* entryPoint) const
 	{
 		// Sanity checks
-		assert(nullptr != shaderModel);
-		assert(nullptr != sourceCode);
+		RENDERER_ASSERT(getRenderer().getContext(), nullptr != shaderModel, "Invalid Direct3D 11 shader model");
+		RENDERER_ASSERT(getRenderer().getContext(), nullptr != sourceCode, "Invalid Direct3D 11 shader source code");
 
 		// Get compile flags
 		UINT compileFlags = D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_WARNINGS_ARE_ERRORS;
@@ -108,7 +109,7 @@ namespace Direct3D11Renderer
 		{
 			if (nullptr != errorD3dBlob)
 			{
-				static_cast<Direct3D11Renderer&>(getRenderer()).getContext().getLog().print(Renderer::ILog::Type::CRITICAL, sourceCode, static_cast<char*>(errorD3dBlob->GetBufferPointer()));
+				static_cast<Direct3D11Renderer&>(getRenderer()).getContext().getLog().print(Renderer::ILog::Type::CRITICAL, sourceCode, __FILE__, static_cast<uint32_t>(__LINE__), static_cast<char*>(errorD3dBlob->GetBufferPointer()));
 				errorD3dBlob->Release();
 			}
 			return nullptr;

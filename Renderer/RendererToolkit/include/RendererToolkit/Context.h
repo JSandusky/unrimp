@@ -30,6 +30,8 @@
 namespace Renderer
 {
 	class ILog;
+	class IAssert;
+	class IMemory;
 }
 namespace RendererRuntime
 {
@@ -65,10 +67,14 @@ namespace RendererToolkit
 		*
 		*  @param[in] log
 		*    Log instance to use, the log instance must stay valid as long as the renderer toolkit instance exists
+		*  @param[in] assert
+		*    Assert instance to use, the assert instance must stay valid as long as the renderer toolkit instance exists
+		*  @param[in] memory
+		*    Memory instance to use, the memory instance must stay valid as long as the renderer toolkit instance exists
 		*  @param[in] fileManager
 		*    File manager instance to use, the file manager instance must stay valid as long as the renderer toolkit instance exists
 		*/
-		inline Context(Renderer::ILog& log, RendererRuntime::IFileManager& fileManager);
+		inline Context(Renderer::ILog& log, Renderer::IAssert& assert, Renderer::IMemory& memory, RendererRuntime::IFileManager& fileManager);
 
 		/**
 		*  @brief
@@ -84,6 +90,24 @@ namespace RendererToolkit
 		*    The used log instance
 		*/
 		inline Renderer::ILog& getLog() const;
+
+		/**
+		*  @brief
+		*    Return the used assert instance
+		*
+		*  @return
+		*    The used assert instance
+		*/
+		inline Renderer::IAssert& getAssert() const;
+
+		/**
+		*  @brief
+		*    Return the used memory instance
+		*
+		*  @return
+		*    The used memory instance
+		*/
+		inline Renderer::IMemory& getMemory() const;
 
 		/**
 		*  @brief
@@ -108,6 +132,8 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	private:
 		Renderer::ILog&				   mLog;
+		Renderer::IAssert&			   mAssert;
+		Renderer::IMemory&			   mMemory;
 		RendererRuntime::IFileManager& mFileManager;
 
 

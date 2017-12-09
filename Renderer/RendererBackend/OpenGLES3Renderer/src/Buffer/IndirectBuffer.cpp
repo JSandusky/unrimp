@@ -24,6 +24,8 @@
 #include "OpenGLES3Renderer/Buffer/IndirectBuffer.h"
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
+#include <Renderer/IAssert.h>
+
 #include <cstring>	// For "memcpy"
 
 
@@ -52,7 +54,7 @@ namespace OpenGLES3Renderer
 		}
 		else
 		{
-			assert(nullptr == data);
+			RENDERER_ASSERT(openGLES3Renderer.getContext(), nullptr == data, "Invalid OpenGL ES 3 indirect buffer data");
 		}
 	}
 
@@ -67,8 +69,8 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	void IndirectBuffer::copyDataFrom(uint32_t numberOfBytes, const void* data)
 	{
-		assert(numberOfBytes <= mNumberOfBytes);
-		assert(nullptr != data);
+		RENDERER_ASSERT(getRenderer().getContext(), numberOfBytes <= mNumberOfBytes, "Invalid OpenGL ES 3 indirect buffer data");
+		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid OpenGL ES 3 indirect buffer data");
 		memcpy(mData, data, numberOfBytes);
 	}
 

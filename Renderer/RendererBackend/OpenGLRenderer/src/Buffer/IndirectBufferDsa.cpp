@@ -26,6 +26,8 @@
 #include "OpenGLRenderer/OpenGLRenderer.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 
+#include <Renderer/IAssert.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -72,7 +74,7 @@ namespace OpenGLRenderer
 	void IndirectBufferDsa::copyDataFrom(uint32_t numberOfBytes, const void* data)
 	{
 		// Sanity check
-		assert(nullptr != data);
+		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid OpenGL indirect buffer data");
 
 		// Upload the data
 		if (static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_ARB_direct_state_access())

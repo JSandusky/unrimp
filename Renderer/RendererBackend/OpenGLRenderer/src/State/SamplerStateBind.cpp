@@ -26,6 +26,8 @@
 #include "OpenGLRenderer/Mapping.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
 
+#include <Renderer/IAssert.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -39,20 +41,20 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	SamplerStateBind::SamplerStateBind(OpenGLRenderer& openGLRenderer, const Renderer::SamplerState& samplerState) :
 		SamplerState(openGLRenderer),
-		mOpenGLMagFilterMode(Mapping::getOpenGLMagFilterMode(samplerState.filter)),
-		mOpenGLMinFilterMode(Mapping::getOpenGLMinFilterMode(samplerState.filter, samplerState.maxLOD > 0.0f)),
+		mOpenGLMagFilterMode(Mapping::getOpenGLMagFilterMode(openGLRenderer.getContext(), samplerState.filter)),
+		mOpenGLMinFilterMode(Mapping::getOpenGLMinFilterMode(openGLRenderer.getContext(), samplerState.filter, samplerState.maxLOD > 0.0f)),
 		mOpenGLTextureAddressModeS(Mapping::getOpenGLTextureAddressMode(samplerState.addressU)),
 		mOpenGLTextureAddressModeT(Mapping::getOpenGLTextureAddressMode(samplerState.addressV)),
 		mOpenGLTextureAddressModeR(Mapping::getOpenGLTextureAddressMode(samplerState.addressW)),
 		mMipLODBias(samplerState.mipLODBias),
 		mMaxAnisotropy(static_cast<float>(samplerState.maxAnisotropy)),	// Maximum anisotropy is "uint32_t" in Direct3D 10 & 11
-		mOpenGLCompareMode(Mapping::getOpenGLCompareMode(samplerState.filter)),
+		mOpenGLCompareMode(Mapping::getOpenGLCompareMode(openGLRenderer.getContext(), samplerState.filter)),
 		mOpenGLComparisonFunc(Mapping::getOpenGLComparisonFunc(samplerState.comparisonFunc)),
 		mMinLOD(samplerState.minLOD),
 		mMaxLOD(samplerState.maxLOD)
 	{
 		// Sanity check
-		assert((samplerState.maxAnisotropy <= openGLRenderer.getCapabilities().maximumAnisotropy) && "Maximum anisotropy value violated");
+		RENDERER_ASSERT(openGLRenderer.getContext(), samplerState.maxAnisotropy <= openGLRenderer.getCapabilities().maximumAnisotropy, "Maximum OpenGL anisotropy value violated");
 
 		// Renderer::SamplerState::borderColor[4]
 		mBorderColor[0] = samplerState.borderColor[0];

@@ -42,11 +42,10 @@
 #include "NullRenderer/Shader/ShaderLanguage.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/IAssert.h>
 #include <Renderer/Texture/ITexture.h>
 #include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
-
-#include <tuple>	// For "std::ignore"
 
 
 //[-------------------------------------------------------]
@@ -87,7 +86,7 @@ namespace
 			void ExecuteCommandBuffer(const void* data, Renderer::IRenderer& renderer)
 			{
 				const Renderer::Command::ExecuteCommandBuffer* realData = static_cast<const Renderer::Command::ExecuteCommandBuffer*>(data);
-				assert(nullptr != realData->commandBufferToExecute);
+				RENDERER_ASSERT(renderer.getContext(), nullptr != realData->commandBufferToExecute, "The null command buffer to execute must be valid");
 				renderer.submitCommandBuffer(*realData->commandBufferToExecute);
 			}
 
@@ -443,7 +442,7 @@ namespace NullRenderer
 	void NullRenderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport* viewports)
 	{
 		// Sanity check
-		assert((numberOfViewports > 0 && nullptr != viewports) && "Invalid rasterizer state viewports");
+		RENDERER_ASSERT(mContext, numberOfViewports > 0 && nullptr != viewports, "Invalid null rasterizer state viewports");
 		std::ignore = numberOfViewports;
 		std::ignore = viewports;
 	}
@@ -451,7 +450,7 @@ namespace NullRenderer
 	void NullRenderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles)
 	{
 		// Sanity check
-		assert((numberOfScissorRectangles > 0 && nullptr != scissorRectangles) && "Invalid rasterizer state scissor rectangles");
+		RENDERER_ASSERT(mContext, numberOfScissorRectangles > 0 && nullptr != scissorRectangles, "Invalid null rasterizer state scissor rectangles");
 		std::ignore = numberOfScissorRectangles;
 		std::ignore = scissorRectangles;
 	}
@@ -523,8 +522,8 @@ namespace NullRenderer
 	void NullRenderer::drawEmulated(const uint8_t* emulationData, uint32_t, uint32_t numberOfDraws)
 	{
 		// Sanity checks
-		assert(nullptr != emulationData);
-		assert((numberOfDraws > 0) && "Number of draws must not be zero");
+		RENDERER_ASSERT(mContext, nullptr != emulationData, "The null emulation data must be valid");
+		RENDERER_ASSERT(mContext, numberOfDraws > 0, "The number of null draws must not be zero");
 		std::ignore = emulationData;
 		std::ignore = numberOfDraws;
 	}
@@ -532,8 +531,8 @@ namespace NullRenderer
 	void NullRenderer::drawIndexedEmulated(const uint8_t* emulationData, uint32_t, uint32_t numberOfDraws)
 	{
 		// Sanity checks
-		assert(nullptr != emulationData);
-		assert((numberOfDraws > 0) && "Number of draws must not be zero");
+		RENDERER_ASSERT(mContext, nullptr != emulationData, "The null emulation data must be valid");
+		RENDERER_ASSERT(mContext, numberOfDraws > 0, "The number of null draws must not be zero");
 		std::ignore = emulationData;
 		std::ignore = numberOfDraws;
 	}
@@ -644,7 +643,7 @@ namespace NullRenderer
 	{
 		// Sanity checks
 		NULLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
-		assert((NULL_HANDLE != windowHandle.nativeWindowHandle) && "The provided native window handle must not be a null handle");
+		RENDERER_ASSERT(mContext, NULL_HANDLE != windowHandle.nativeWindowHandle, "Null: The provided native window handle must not be a null handle");
 
 		// Create the swap chain
 		return new SwapChain(renderPass, windowHandle);

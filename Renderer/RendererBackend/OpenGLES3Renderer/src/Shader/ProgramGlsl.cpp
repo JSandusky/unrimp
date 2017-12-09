@@ -29,6 +29,7 @@
 #include "OpenGLES3Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 3 functions
 
 #include <Renderer/ILog.h>
+#include <Renderer/IAssert.h>
 #include <Renderer/Buffer/VertexArrayTypes.h>
 
 
@@ -101,7 +102,7 @@ namespace OpenGLES3Renderer
 					const Renderer::RootParameter& rootParameter = rootSignatureData.parameters[rootParameterIndex];
 					if (Renderer::RootParameterType::DESCRIPTOR_TABLE == rootParameter.parameterType)
 					{
-						assert(nullptr != reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges));
+						RENDERER_ASSERT(openGLES3Renderer.getContext(), nullptr != reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges), "Invalid OpenGL ES 3 descriptor ranges");
 						const uint32_t numberOfDescriptorRanges = rootParameter.descriptorTable.numberOfDescriptorRanges;
 						for (uint32_t descriptorRangeIndex = 0; descriptorRangeIndex < numberOfDescriptorRanges; ++descriptorRangeIndex)
 						{

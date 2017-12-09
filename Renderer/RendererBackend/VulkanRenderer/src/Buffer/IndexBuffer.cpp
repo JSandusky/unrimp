@@ -26,6 +26,8 @@
 #include "VulkanRenderer/Mapping.h"
 #include "VulkanRenderer/Helper.h"
 
+#include <Renderer/IAssert.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -39,7 +41,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	IndexBuffer::IndexBuffer(VulkanRenderer& vulkanRenderer, uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void* data, Renderer::BufferUsage) :
 		IIndexBuffer(vulkanRenderer),
-		mVkIndexType(Mapping::getVulkanType(indexBufferFormat)),
+		mVkIndexType(Mapping::getVulkanType(vulkanRenderer.getContext(), indexBufferFormat)),
 		mVkBuffer(VK_NULL_HANDLE),
 		mVkDeviceMemory(VK_NULL_HANDLE)
 	{

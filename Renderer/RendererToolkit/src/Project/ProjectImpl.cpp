@@ -211,7 +211,7 @@ namespace RendererToolkit
 		AssetCompilers::const_iterator iterator = mAssetCompilers.find(AssetCompilerTypeId(assetType.c_str()));
 		if (mAssetCompilers.end() != iterator)
 		{
-			assert(nullptr != mRapidJsonDocument);
+			RENDERER_ASSERT(getContext(), nullptr != mRapidJsonDocument, "Invalid renderer toolkit Rapid JSON document");
 			const IAssetCompiler::Configuration configuration(rapidJsonDocument, (*mRapidJsonDocument)["Targets"], rendererTarget, mQualityStrategy);
 			return iterator->second->checkIfChanged(input, configuration);
 		}
@@ -254,7 +254,7 @@ namespace RendererToolkit
 		IAssetCompiler::Input input(mContext, mProjectName, *mCacheManager, virtualAssetPackageInputDirectory, virtualAssetFilename, virtualAssetInputDirectory, virtualAssetOutputDirectory, mSourceAssetIdToCompiledAssetId, mSourceAssetIdToVirtualFilename);
 
 		// Asset compiler configuration
-		assert(nullptr != mRapidJsonDocument);
+		RENDERER_ASSERT(getContext(), nullptr != mRapidJsonDocument, "Invalid renderer toolkit Rapid JSON document");
 		const IAssetCompiler::Configuration configuration(rapidJsonDocument, (*mRapidJsonDocument)["Targets"], rendererTarget, mQualityStrategy);
 
 		// Asset compiler output
@@ -569,7 +569,7 @@ namespace RendererToolkit
 
 	std::string ProjectImpl::getRenderTargetDataRootDirectory(const char* rendererTarget) const
 	{
-		assert(nullptr != mRapidJsonDocument);
+		RENDERER_ASSERT(getContext(), nullptr != mRapidJsonDocument, "Invalid renderer toolkit Rapid JSON document");
 		const rapidjson::Value& rapidJsonValueRendererTargets = (*mRapidJsonDocument)["Targets"]["RendererTargets"];
 		const rapidjson::Value& rapidJsonValueRendererTarget = rapidJsonValueRendererTargets[rendererTarget];
 		return "Data" + std::string(rapidJsonValueRendererTarget["Platform"].GetString());
@@ -577,8 +577,8 @@ namespace RendererToolkit
 
 	void ProjectImpl::buildSourceAssetIdToCompiledAssetId()
 	{
-		assert(0 == mSourceAssetIdToCompiledAssetId.size());
-		assert(0 == mSourceAssetIdToVirtualFilename.size());
+		RENDERER_ASSERT(getContext(), 0 == mSourceAssetIdToCompiledAssetId.size(), "Renderer toolkit source asset ID to compiled asset ID should be empty at this point in time");
+		RENDERER_ASSERT(getContext(), 0 == mSourceAssetIdToVirtualFilename.size(), "Renderer toolkit source asset ID to virtual filename should be empty at this point in time");
 
 		const RendererRuntime::AssetPackage::SortedAssetVector& sortedAssetVector = mAssetPackage.getSortedAssetVector();
 		const size_t numberOfAssets = sortedAssetVector.size();

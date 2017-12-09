@@ -23,6 +23,9 @@
 //[-------------------------------------------------------]
 #include "OpenGLES3Renderer/Mapping.h"
 
+#include <Renderer/IAssert.h>
+#include <Renderer/Context.h>
+
 #include <GLES3/gl3.h>
 #include <GLES3/gl2ext.h>
 
@@ -37,7 +40,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	int Mapping::getOpenGLES3MagFilterMode(Renderer::FilterMode filterMode)
+	int Mapping::getOpenGLES3MagFilterMode(const Renderer::Context& context, Renderer::FilterMode filterMode)
 	{
 		switch (filterMode)
 		{
@@ -96,7 +99,7 @@ namespace OpenGLES3Renderer
 				return GL_LINEAR;	// There's no special setting in OpenGL ES 3
 
 			case Renderer::FilterMode::UNKNOWN:
-				assert(false && "Filter mode must not be unknown");
+				RENDERER_ASSERT(context, false, "OpenGL ES 3 filter mode must not be unknown");
 				return GL_NEAREST;
 
 			default:
@@ -104,7 +107,7 @@ namespace OpenGLES3Renderer
 		}
 	}
 
-	int Mapping::getOpenGLES3MinFilterMode(Renderer::FilterMode filterMode, bool hasMipmaps)
+	int Mapping::getOpenGLES3MinFilterMode(const Renderer::Context& context, Renderer::FilterMode filterMode, bool hasMipmaps)
 	{
 		switch (filterMode)
 		{
@@ -163,7 +166,7 @@ namespace OpenGLES3Renderer
 				return hasMipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;	// There's no special setting in OpenGL ES 3
 
 			case Renderer::FilterMode::UNKNOWN:
-				assert(false && "Filter mode must not be unknown");
+				RENDERER_ASSERT(context, false, "OpenGL ES 3 filter mode must not be unknown");
 				return GL_NEAREST;
 
 			default:

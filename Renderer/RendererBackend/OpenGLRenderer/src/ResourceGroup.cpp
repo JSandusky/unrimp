@@ -24,6 +24,8 @@
 #include "OpenGLRenderer/ResourceGroup.h"
 #include "OpenGLRenderer/RootSignature.h"
 
+#include <Renderer/IAssert.h>
+#include <Renderer/IRenderer.h>
 #include <Renderer/State/ISamplerState.h>
 
 
@@ -53,7 +55,7 @@ namespace OpenGLRenderer
 			const Renderer::RootParameter& rootParameter = rootSignatureData.parameters[currentRootParameterIndex];
 			if (Renderer::RootParameterType::DESCRIPTOR_TABLE == rootParameter.parameterType)
 			{
-				assert(nullptr != reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges));
+				RENDERER_ASSERT(rootSignature.getRenderer().getContext(), nullptr != reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges), "Invalid OpenGL descriptor ranges");
 				const uint32_t numberOfDescriptorRanges = rootParameter.descriptorTable.numberOfDescriptorRanges;
 				for (uint32_t descriptorRangeIndex = 0; descriptorRangeIndex < numberOfDescriptorRanges; ++descriptorRangeIndex)
 				{

@@ -85,8 +85,10 @@ namespace RendererToolkit
 	class Context
 	{
 	public:
-		inline Context(Renderer::ILog& log, RendererRuntime::IFileManager& fileManager) :
+		inline Context(Renderer::ILog& log, Renderer::IAssert& assert, Renderer::IMemory& memory, RendererRuntime::IFileManager& fileManager) :
 			mLog(log),
+			mAssert(assert),
+			mMemory(memory),
 			mFileManager(fileManager)
 		{ }
 		inline ~Context()
@@ -94,6 +96,14 @@ namespace RendererToolkit
 		inline Renderer::ILog& getLog() const
 		{
 			return mLog;
+		}
+		inline Renderer::IAssert& getAssert() const
+		{
+			return mAssert;
+		}
+		inline Renderer::IMemory& getMemory() const
+		{
+			return mMemory;
 		}
 		inline RendererRuntime::IFileManager& getFileManager() const
 		{
@@ -104,6 +114,8 @@ namespace RendererToolkit
 		Context& operator=(const Context&) = delete;
 	private:
 		Renderer::ILog&				   mLog;
+		Renderer::IAssert&			   mAssert;
+		Renderer::IMemory&			   mMemory;
 		RendererRuntime::IFileManager& mFileManager;
 	};
 

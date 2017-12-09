@@ -22,9 +22,12 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Buffer/TextureBufferBind.h"
-#include "OpenGLRenderer/Mapping.h"
-#include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
+#include "OpenGLRenderer/Extensions.h"
+#include "OpenGLRenderer/Mapping.h"
+
+#include <Renderer/IAssert.h>
+#include <Renderer/IRenderer.h>
 
 
 //[-------------------------------------------------------]
@@ -96,7 +99,7 @@ namespace OpenGLRenderer
 	void TextureBufferBind::copyDataFrom(uint32_t numberOfBytes, const void* data)
 	{
 		// Sanity check
-		assert(nullptr != data);
+		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid OpenGL texture buffer data");
 
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently bound OpenGL texture buffer

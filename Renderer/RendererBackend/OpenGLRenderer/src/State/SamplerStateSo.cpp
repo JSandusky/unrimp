@@ -26,6 +26,8 @@
 #include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
 
+#include <Renderer/IAssert.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -42,14 +44,14 @@ namespace OpenGLRenderer
 		mOpenGLSampler(0)
 	{
 		// Sanity check
-		assert((samplerState.maxAnisotropy <= openGLRenderer.getCapabilities().maximumAnisotropy) && "Maximum anisotropy value violated");
+		RENDERER_ASSERT(openGLRenderer.getContext(), samplerState.maxAnisotropy <= openGLRenderer.getCapabilities().maximumAnisotropy, "Maximum OpenGL anisotropy value violated");
 
 		// Create the OpenGL sampler
 		glGenSamplers(1, &mOpenGLSampler);
 
 		// Renderer::SamplerState::filter
-		glSamplerParameteri(mOpenGLSampler, GL_TEXTURE_MAG_FILTER, Mapping::getOpenGLMagFilterMode(samplerState.filter));
-		glSamplerParameteri(mOpenGLSampler, GL_TEXTURE_MIN_FILTER, Mapping::getOpenGLMinFilterMode(samplerState.filter, samplerState.maxLOD > 0.0f));
+		glSamplerParameteri(mOpenGLSampler, GL_TEXTURE_MAG_FILTER, Mapping::getOpenGLMagFilterMode(openGLRenderer.getContext(), samplerState.filter));
+		glSamplerParameteri(mOpenGLSampler, GL_TEXTURE_MIN_FILTER, Mapping::getOpenGLMinFilterMode(openGLRenderer.getContext(), samplerState.filter, samplerState.maxLOD > 0.0f));
 
 		// Renderer::SamplerState::addressU
 		glSamplerParameteri(mOpenGLSampler, GL_TEXTURE_WRAP_S, Mapping::getOpenGLTextureAddressMode(samplerState.addressU));
@@ -70,7 +72,7 @@ namespace OpenGLRenderer
 
 		// Renderer::SamplerState::comparisonFunc
 		// -> "GL_EXT_shadow_funcs"/"GL_EXT_shadow_samplers"-extension
-		glSamplerParameteri(mOpenGLSampler, GL_TEXTURE_COMPARE_MODE, Mapping::getOpenGLCompareMode(samplerState.filter));
+		glSamplerParameteri(mOpenGLSampler, GL_TEXTURE_COMPARE_MODE, Mapping::getOpenGLCompareMode(openGLRenderer.getContext(), samplerState.filter));
 		glSamplerParameteri(mOpenGLSampler, GL_TEXTURE_COMPARE_FUNC, Mapping::getOpenGLComparisonFunc(samplerState.comparisonFunc));
 
 		// Renderer::SamplerState::borderColor[4]

@@ -24,6 +24,9 @@
 #include "OpenGLRenderer/Mapping.h"
 #include "OpenGLRenderer/Extensions.h"
 
+#include <Renderer/IAssert.h>
+#include <Renderer/Context.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -35,7 +38,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	int Mapping::getOpenGLMagFilterMode(Renderer::FilterMode filterMode)
+	int Mapping::getOpenGLMagFilterMode(const Renderer::Context& context, Renderer::FilterMode filterMode)
 	{
 		switch (filterMode)
 		{
@@ -94,7 +97,7 @@ namespace OpenGLRenderer
 				return GL_LINEAR;	// There's no special setting in OpenGL
 
 			case Renderer::FilterMode::UNKNOWN:
-				assert(false && "Filter mode must not be unknown");
+				RENDERER_ASSERT(context, false, "OpenGL filter mode must not be unknown");
 				return GL_NEAREST;
 
 			default:
@@ -102,7 +105,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	int Mapping::getOpenGLMinFilterMode(Renderer::FilterMode filterMode, bool hasMipmaps)
+	int Mapping::getOpenGLMinFilterMode(const Renderer::Context& context, Renderer::FilterMode filterMode, bool hasMipmaps)
 	{
 		switch (filterMode)
 		{
@@ -161,7 +164,7 @@ namespace OpenGLRenderer
 				return hasMipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;	// There's no special setting in OpenGL
 
 			case Renderer::FilterMode::UNKNOWN:
-				assert(false && "Filter mode must not be unknown");
+				RENDERER_ASSERT(context, false, "OpenGL filter mode must not be unknown");
 				return GL_NEAREST;
 
 			default:
@@ -169,7 +172,7 @@ namespace OpenGLRenderer
 		}
 	}
 
-	int Mapping::getOpenGLCompareMode(Renderer::FilterMode filterMode)
+	int Mapping::getOpenGLCompareMode(const Renderer::Context& context, Renderer::FilterMode filterMode)
 	{
 		switch (filterMode)
 		{
@@ -196,7 +199,7 @@ namespace OpenGLRenderer
 				return GL_COMPARE_REF_TO_TEXTURE;
 
 			case Renderer::FilterMode::UNKNOWN:
-				assert(false && "Filter mode must not be unknown");
+				RENDERER_ASSERT(context, false, "OpenGL filter mode must not be unknown");
 				return GL_NEAREST;
 
 			default:

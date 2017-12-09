@@ -67,10 +67,9 @@
 #endif
 
 #include <Renderer/ILog.h>
+#include <Renderer/IAssert.h>
 #include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
-
-#include <tuple>	// For "std::ignore"
 
 
 //[-------------------------------------------------------]
@@ -108,7 +107,7 @@ namespace
 			return N;
 		}
 
-		bool mapBuffer(const OpenGLRenderer::Extensions& extensions, GLenum target, GLenum bindingTarget, GLuint openGLBuffer, Renderer::MapType mapType, Renderer::MappedSubresource& mappedSubresource)
+		bool mapBuffer(const Renderer::Context& context, const OpenGLRenderer::Extensions& extensions, GLenum target, GLenum bindingTarget, GLuint openGLBuffer, Renderer::MapType mapType, Renderer::MappedSubresource& mappedSubresource)
 		{
 			// TODO(co) This buffer update isn't efficient, use e.g. persistent buffer mapping
 
@@ -155,7 +154,7 @@ namespace
 			}
 
 			// Done
-			assert((nullptr != mappedSubresource.data) && "Mapping of OpenGL buffer failed");
+			RENDERER_ASSERT(context, nullptr != mappedSubresource.data, "Mapping of OpenGL buffer failed");
 			return (nullptr != mappedSubresource.data);
 		}
 
@@ -208,7 +207,7 @@ namespace
 			void ExecuteCommandBuffer(const void* data, Renderer::IRenderer& renderer)
 			{
 				const Renderer::Command::ExecuteCommandBuffer* realData = static_cast<const Renderer::Command::ExecuteCommandBuffer*>(data);
-				assert(nullptr != realData->commandBufferToExecute);
+				RENDERER_ASSERT(renderer.getContext(), nullptr != realData->commandBufferToExecute, "The OpenGL command buffer to execute must be valid");
 				renderer.submitCommandBuffer(*realData->commandBufferToExecute);
 			}
 
@@ -637,7 +636,7 @@ namespace OpenGLRenderer
 			for (uint32_t resourceIndex = 0; resourceIndex < numberOfResources; ++resourceIndex, ++resources)
 			{
 				Renderer::IResource* resource = *resources;
-				assert(nullptr != reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges));
+				RENDERER_ASSERT(mContext, nullptr != reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges), "Invalid OpenGL descriptor ranges");
 				const Renderer::DescriptorRange& descriptorRange = reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges)[resourceIndex];
 
 				// Check the type of resource to set
@@ -652,7 +651,7 @@ namespace OpenGLRenderer
 							// Attach the buffer to the given UBO binding point
 							// -> Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 							// -> Direct3D 10 and Direct3D 11 have explicit binding points
-							assert(nullptr != openGLResourceGroup->getResourceIndexToUniformBlockBindingIndex());
+							RENDERER_ASSERT(mContext, nullptr != openGLResourceGroup->getResourceIndexToUniformBlockBindingIndex(), "Invalid OpenGL resource index to uniform block binding index");
 							glBindBufferBase(GL_UNIFORM_BUFFER, openGLResourceGroup->getResourceIndexToUniformBlockBindingIndex()[resourceIndex], static_cast<UniformBuffer*>(resource)->getOpenGLUniformBuffer());
 						}
 						break;
@@ -781,7 +780,7 @@ namespace OpenGLRenderer
 							// Set the OpenGL sampler states, if required (texture buffer has no sampler state), it's valid that there's no sampler state (e.g. texel fetch instead of sampling might be used)
 							if (Renderer::ResourceType::TEXTURE_BUFFER != resourceType)
 							{
-								assert(nullptr != openGLResourceGroup->getSamplerState());
+								RENDERER_ASSERT(mContext, nullptr != openGLResourceGroup->getSamplerState(), "Invalid OpenGL sampler state");
 								const SamplerState* samplerState = static_cast<const SamplerState*>(openGLResourceGroup->getSamplerState()[resourceIndex]);
 								if (nullptr != samplerState)
 								{
@@ -898,7 +897,7 @@ namespace OpenGLRenderer
 								// Set the OpenGL sampler states, if required (texture buffer has no sampler state), it's valid that there's no sampler state (e.g. texel fetch instead of sampling might be used)
 								if (Renderer::ResourceType::TEXTURE_BUFFER != resourceType)
 								{
-									assert(nullptr != openGLResourceGroup->getSamplerState());
+									RENDERER_ASSERT(mContext, nullptr != openGLResourceGroup->getSamplerState(), "Invalid OpenGL sampler state");
 									const SamplerState* samplerState = static_cast<const SamplerState*>(openGLResourceGroup->getSamplerState()[resourceIndex]);
 									if (nullptr != samplerState)
 									{
@@ -1050,7 +1049,7 @@ namespace OpenGLRenderer
 	void OpenGLRenderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport* viewports)
 	{
 		// Sanity check
-		assert((numberOfViewports > 0 && nullptr != viewports) && "Invalid rasterizer state viewports");
+		RENDERER_ASSERT(mContext, numberOfViewports > 0 && nullptr != viewports, "Invalid OpenGL rasterizer state viewports");
 		std::ignore = numberOfViewports;
 
 		// In OpenGL, the origin of the viewport is left bottom while Direct3D is using a left top origin. To make the
@@ -1080,7 +1079,7 @@ namespace OpenGLRenderer
 	void OpenGLRenderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles)
 	{
 		// Sanity check
-		assert((numberOfScissorRectangles > 0 && nullptr != scissorRectangles) && "Invalid rasterizer state scissor rectangles");
+		RENDERER_ASSERT(mContext, numberOfScissorRectangles > 0 && nullptr != scissorRectangles, "Invalid OpenGL rasterizer state scissor rectangles");
 		std::ignore = numberOfScissorRectangles;
 
 		// In OpenGL, the origin of the scissor rectangle is left bottom while Direct3D is using a left top origin. To make the
@@ -1398,8 +1397,8 @@ namespace OpenGLRenderer
 					// Get the OpenGL texture 2D instances
 					const Texture2D& openGlDestinationTexture2D = static_cast<const Texture2D&>(destinationResource);
 					const Texture2D& openGlSourceTexture2D = static_cast<const Texture2D&>(sourceResource);
-					assert(openGlDestinationTexture2D.getWidth() == openGlSourceTexture2D.getWidth());
-					assert(openGlDestinationTexture2D.getHeight() == openGlSourceTexture2D.getHeight());
+					RENDERER_ASSERT(mContext, openGlDestinationTexture2D.getWidth() == openGlSourceTexture2D.getWidth(), "OpenGL source and destination width must be identical for resource copy");
+					RENDERER_ASSERT(mContext, openGlDestinationTexture2D.getHeight() == openGlSourceTexture2D.getHeight(), "OpenGL source and destination height must be identical for resource copy");
 
 					// Copy resource
 					const GLsizei width = static_cast<GLsizei>(openGlDestinationTexture2D.getWidth());
@@ -1442,7 +1441,7 @@ namespace OpenGLRenderer
 				else
 				{
 					// Error!
-					assert(false);
+					RENDERER_ASSERT(mContext, false, "Failed to copy OpenGL resource");
 				}
 				break;
 
@@ -1482,7 +1481,7 @@ namespace OpenGLRenderer
 	void OpenGLRenderer::draw(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
 		// Sanity check
-		assert((numberOfDraws > 0) && "Number of draws must not be zero");
+		RENDERER_ASSERT(mContext, numberOfDraws > 0, "Number of OpenGL draws must not be zero");
 		// It's possible to draw without "mVertexArray"
 
 		// Tessellation support: "glPatchParameteri()" is called within "OpenGLRenderer::iaSetPrimitiveTopology()"
@@ -1496,7 +1495,7 @@ namespace OpenGLRenderer
 		else
 		{
 			// Sanity check
-			assert(mExtensions->isGL_ARB_draw_indirect());
+			RENDERER_ASSERT(mContext, mExtensions->isGL_ARB_draw_indirect(), "The GL_ARB_draw_indirect OpenGL extension isn't supported");
 
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			OPENGLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, indirectBuffer)
@@ -1532,8 +1531,8 @@ namespace OpenGLRenderer
 	void OpenGLRenderer::drawEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
 		// Sanity checks
-		assert(nullptr != emulationData);
-		assert((numberOfDraws > 0) && "Number of draws must not be zero");
+		RENDERER_ASSERT(mContext, nullptr != emulationData, "The OpenGL emulation data must be valid");
+		RENDERER_ASSERT(mContext, numberOfDraws > 0, "The number of OpenGL draws must not be zero");
 		// It's possible to draw without "mVertexArray"
 
 		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
@@ -1561,7 +1560,7 @@ namespace OpenGLRenderer
 			else
 			{
 				// Without instancing
-				assert(drawInstancedArguments.instanceCount <= 1);
+				RENDERER_ASSERT(mContext, drawInstancedArguments.instanceCount <= 1, "Invalid OpenGL instance count");
 				glDrawArrays(mOpenGLPrimitiveTopology, static_cast<GLint>(drawInstancedArguments.startVertexLocation), static_cast<GLsizei>(drawInstancedArguments.vertexCountPerInstance));
 			}
 			emulationData += sizeof(Renderer::DrawInstancedArguments);
@@ -1571,9 +1570,9 @@ namespace OpenGLRenderer
 	void OpenGLRenderer::drawIndexed(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
 		// Sanity checks
-		assert((numberOfDraws > 0) && "Number of draws must not be zero");
-		assert((nullptr != mVertexArray) && "Draw indexed needs a set vertex array");
-		assert((nullptr != mVertexArray->getIndexBuffer()) && "Draw indexed needs a set vertex array which contains an index buffer");
+		RENDERER_ASSERT(mContext, numberOfDraws > 0, "Number of OpenGL draws must not be zero");
+		RENDERER_ASSERT(mContext, nullptr != mVertexArray, "OpenGL draw indexed needs a set vertex array");
+		RENDERER_ASSERT(mContext, nullptr != mVertexArray->getIndexBuffer(), "OpenGL draw indexed needs a set vertex array which contains an index buffer");
 
 		// Tessellation support: "glPatchParameteri()" is called within "OpenGLRenderer::iaSetPrimitiveTopology()"
 
@@ -1586,7 +1585,7 @@ namespace OpenGLRenderer
 		else
 		{
 			// Sanity checks
-			assert(mExtensions->isGL_ARB_draw_indirect());
+			RENDERER_ASSERT(mContext, mExtensions->isGL_ARB_draw_indirect(), "The GL_ARB_draw_indirect OpenGL extension isn't supported");
 
 			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
 			OPENGLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, indirectBuffer)
@@ -1622,10 +1621,10 @@ namespace OpenGLRenderer
 	void OpenGLRenderer::drawIndexedEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
 		// Sanity checks
-		assert(nullptr != emulationData);
-		assert((numberOfDraws > 0) && "Number of draws must not be zero");
-		assert((nullptr != mVertexArray) && "Draw indexed needs a set vertex array");
-		assert((nullptr != mVertexArray->getIndexBuffer()) && "Draw indexed needs a set vertex array which contains an index buffer");
+		RENDERER_ASSERT(mContext, nullptr != emulationData, "The OpenGL emulation data must be valid");
+		RENDERER_ASSERT(mContext, numberOfDraws > 0, "The number of OpenGL draws must not be zero");
+		RENDERER_ASSERT(mContext, nullptr != mVertexArray, "OpenGL draw indexed needs a set vertex array");
+		RENDERER_ASSERT(mContext, nullptr != mVertexArray->getIndexBuffer(), "OpenGL draw indexed needs a set vertex array which contains an index buffer");
 
 		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
 		emulationData += indirectBufferOffset;
@@ -1659,7 +1658,7 @@ namespace OpenGLRenderer
 					else
 					{
 						// Error!
-						assert(false);
+						RENDERER_ASSERT(mContext, false, "Failed to OpenGL draw indexed emulated");
 					}
 				}
 				else if (drawIndexedInstancedArguments.startInstanceLocation > 0 && mExtensions->isGL_ARB_base_instance())
@@ -1676,7 +1675,7 @@ namespace OpenGLRenderer
 			else
 			{
 				// Without instancing
-				assert(drawIndexedInstancedArguments.instanceCount <= 1);
+				RENDERER_ASSERT(mContext, drawIndexedInstancedArguments.instanceCount <= 1, "Invalid OpenGL instance count");
 
 				// Use base vertex location?
 				if (drawIndexedInstancedArguments.baseVertexLocation > 0)
@@ -1690,7 +1689,7 @@ namespace OpenGLRenderer
 					else
 					{
 						// Error!
-						assert(false);
+						RENDERER_ASSERT(mContext, false, "Failed to OpenGL draw indexed emulated");
 					}
 				}
 				else
@@ -1852,7 +1851,7 @@ namespace OpenGLRenderer
 	{
 		// Sanity checks
 		OPENGLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
-		assert((NULL_HANDLE != windowHandle.nativeWindowHandle || nullptr != windowHandle.renderWindow) && "The provided native window handle or render window must not be a null handle / null pointer");
+		RENDERER_ASSERT(mContext, NULL_HANDLE != windowHandle.nativeWindowHandle || nullptr != windowHandle.renderWindow, "OpenGL: The provided native window handle or render window must not be a null handle / null pointer");
 
 		// Create the swap chain
 		return new SwapChain(renderPass, windowHandle, useExternalContext);
@@ -1939,16 +1938,16 @@ namespace OpenGLRenderer
 		switch (resource.getResourceType())
 		{
 			case Renderer::ResourceType::INDEX_BUFFER:
-				return ::detail::mapBuffer(*mExtensions, GL_ELEMENT_ARRAY_BUFFER_ARB, GL_ELEMENT_ARRAY_BUFFER_BINDING_ARB, static_cast<IndexBuffer&>(resource).getOpenGLElementArrayBuffer(), mapType, mappedSubresource);
+				return ::detail::mapBuffer(mContext, *mExtensions, GL_ELEMENT_ARRAY_BUFFER_ARB, GL_ELEMENT_ARRAY_BUFFER_BINDING_ARB, static_cast<IndexBuffer&>(resource).getOpenGLElementArrayBuffer(), mapType, mappedSubresource);
 
 			case Renderer::ResourceType::VERTEX_BUFFER:
-				return ::detail::mapBuffer(*mExtensions, GL_ARRAY_BUFFER_ARB, GL_ARRAY_BUFFER_BINDING_ARB, static_cast<VertexBuffer&>(resource).getOpenGLArrayBuffer(), mapType, mappedSubresource);
+				return ::detail::mapBuffer(mContext, *mExtensions, GL_ARRAY_BUFFER_ARB, GL_ARRAY_BUFFER_BINDING_ARB, static_cast<VertexBuffer&>(resource).getOpenGLArrayBuffer(), mapType, mappedSubresource);
 
 			case Renderer::ResourceType::UNIFORM_BUFFER:
-				return ::detail::mapBuffer(*mExtensions, GL_UNIFORM_BUFFER, GL_UNIFORM_BUFFER_BINDING, static_cast<UniformBuffer&>(resource).getOpenGLUniformBuffer(), mapType, mappedSubresource);
+				return ::detail::mapBuffer(mContext, *mExtensions, GL_UNIFORM_BUFFER, GL_UNIFORM_BUFFER_BINDING, static_cast<UniformBuffer&>(resource).getOpenGLUniformBuffer(), mapType, mappedSubresource);
 
 			case Renderer::ResourceType::TEXTURE_BUFFER:
-				return ::detail::mapBuffer(*mExtensions, GL_TEXTURE_BUFFER_ARB, GL_TEXTURE_BINDING_BUFFER_ARB, static_cast<TextureBuffer&>(resource).getOpenGLTextureBuffer(), mapType, mappedSubresource);
+				return ::detail::mapBuffer(mContext, *mExtensions, GL_TEXTURE_BUFFER_ARB, GL_TEXTURE_BINDING_BUFFER_ARB, static_cast<TextureBuffer&>(resource).getOpenGLTextureBuffer(), mapType, mappedSubresource);
 
 			case Renderer::ResourceType::INDIRECT_BUFFER:
 			{
@@ -1965,7 +1964,7 @@ namespace OpenGLRenderer
 				}
 				else
 				{
-					return ::detail::mapBuffer(*mExtensions, GL_DRAW_INDIRECT_BUFFER, GL_DRAW_INDIRECT_BUFFER_BINDING, indirectBuffer.getOpenGLIndirectBuffer(), mapType, mappedSubresource);
+					return ::detail::mapBuffer(mContext, *mExtensions, GL_DRAW_INDIRECT_BUFFER, GL_DRAW_INDIRECT_BUFFER_BINDING, indirectBuffer.getOpenGLIndirectBuffer(), mapType, mappedSubresource);
 				}
 				break;	// Impossible to reach, but still add it
 			}

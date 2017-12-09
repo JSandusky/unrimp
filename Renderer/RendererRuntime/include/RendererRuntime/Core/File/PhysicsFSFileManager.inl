@@ -57,7 +57,7 @@ namespace
 			const char* errorAsString = PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode());
 			if (nullptr != errorAsString)
 			{
-				log.print(Renderer::ILog::Type::CRITICAL, "PhysicsFS error: %s", errorAsString);
+				log.print(Renderer::ILog::Type::CRITICAL, nullptr, __FILE__, static_cast<uint32_t>(__LINE__), "PhysicsFS error: %s", errorAsString);
 			}
 			else
 			{
@@ -536,7 +536,7 @@ namespace RendererRuntime
 		}
 		if (file->isInvalid())
 		{
-			mLog.print(Renderer::ILog::Type::CRITICAL, "Failed to open file %s", virtualFilename);
+			mLog.print(Renderer::ILog::Type::CRITICAL, nullptr, __FILE__, static_cast<uint32_t>(__LINE__), "Failed to open file %s", virtualFilename);
 			delete file;
 			file = nullptr;
 		}

@@ -25,6 +25,8 @@
 #include "OpenGLES3Renderer/ResourceGroup.h"
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
+#include <Renderer/IAssert.h>
+
 #include <memory.h>
 
 
@@ -100,9 +102,9 @@ namespace OpenGLES3Renderer
 	Renderer::IResourceGroup* RootSignature::createResourceGroup(uint32_t rootParameterIndex, uint32_t numberOfResources, Renderer::IResource** resources, Renderer::ISamplerState** samplerStates)
 	{
 		// Sanity checks
-		assert((rootParameterIndex < mRootSignature.numberOfParameters) && "The root parameter index is out-of-bounds");
-		assert((numberOfResources > 0) && "The number of resources must not be zero");
-		assert((nullptr != resources) && "The resource pointers must be valid");
+		RENDERER_ASSERT(getRenderer().getContext(), rootParameterIndex < mRootSignature.numberOfParameters, "The OpenGL ES 3 root parameter index is out-of-bounds");
+		RENDERER_ASSERT(getRenderer().getContext(), numberOfResources > 0, "The number of OpenGL ES 3 resources must not be zero");
+		RENDERER_ASSERT(getRenderer().getContext(), nullptr != resources, "The OpenGL ES 3 resource pointers must be valid");
 
 		// Create resource group
 		return new ResourceGroup(*this, rootParameterIndex, numberOfResources, resources, samplerStates);

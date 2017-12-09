@@ -54,6 +54,7 @@
 #include "Direct3D10Renderer/Shader/FragmentShaderHlsl.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/IAssert.h>
 #include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
 
@@ -122,7 +123,7 @@ namespace
 			void ExecuteCommandBuffer(const void* data, Renderer::IRenderer& renderer)
 			{
 				const Renderer::Command::ExecuteCommandBuffer* realData = static_cast<const Renderer::Command::ExecuteCommandBuffer*>(data);
-				assert(nullptr != realData->commandBufferToExecute);
+				RENDERER_ASSERT(renderer.getContext(), nullptr != realData->commandBufferToExecute, "The Direct3D 10 command buffer to execute must be valid");
 				renderer.submitCommandBuffer(*realData->commandBufferToExecute);
 			}
 
@@ -568,7 +569,7 @@ namespace Direct3D10Renderer
 			for (uint32_t resourceIndex = 0; resourceIndex < numberOfResources; ++resourceIndex, ++resources)
 			{
 				const Renderer::IResource* resource = *resources;
-				assert(nullptr != reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges));
+				RENDERER_ASSERT(mContext, nullptr != reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges), "Invalid Direct3D 10 descriptor ranges");
 				const Renderer::DescriptorRange& descriptorRange = reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges)[resourceIndex];
 
 				// Check the type of resource to set
@@ -820,7 +821,7 @@ namespace Direct3D10Renderer
 	void Direct3D10Renderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport* viewports)
 	{
 		// Sanity check
-		assert((numberOfViewports > 0 && nullptr != viewports) && "Invalid rasterizer state viewports");
+		RENDERER_ASSERT(mContext, numberOfViewports > 0 && nullptr != viewports, "Invalid Direct3D 10 rasterizer state viewports");
 
 		#ifndef RENDERER_NO_DEBUG
 			// Is the given number of viewports valid?
@@ -849,7 +850,7 @@ namespace Direct3D10Renderer
 	void Direct3D10Renderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles)
 	{
 		// Sanity check
-		assert((numberOfScissorRectangles > 0 && nullptr != scissorRectangles) && "Invalid rasterizer state scissor rectangles");
+		RENDERER_ASSERT(mContext, numberOfScissorRectangles > 0 && nullptr != scissorRectangles, "Invalid Direct3D 10 rasterizer state scissor rectangles");
 
 		// Set the Direct3D 10 scissor rectangles
 		// -> "Renderer::ScissorRectangle" directly maps to Direct3D 9 & 10 & 11, do not change it
@@ -1187,7 +1188,7 @@ namespace Direct3D10Renderer
 				else
 				{
 					// Error!
-					assert(false);
+					RENDERER_ASSERT(mContext, false, "Failed to copy the Direct3D 10 resource");
 				}
 				break;
 
@@ -1227,8 +1228,8 @@ namespace Direct3D10Renderer
 	void Direct3D10Renderer::drawEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
 		// Sanity checks
-		assert(nullptr != emulationData);
-		assert((numberOfDraws > 0) && "Number of draws must not be zero");
+		RENDERER_ASSERT(mContext, nullptr != emulationData, "The Direct3D 10 emulation data must be valid");
+		RENDERER_ASSERT(mContext, numberOfDraws > 0, "The number of Direct3D 10 draws must not be zero");
 
 		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
 		emulationData += indirectBufferOffset;
@@ -1266,8 +1267,8 @@ namespace Direct3D10Renderer
 	void Direct3D10Renderer::drawIndexedEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
 		// Sanity checks
-		assert(nullptr != emulationData);
-		assert((numberOfDraws > 0) && "Number of draws must not be zero");
+		RENDERER_ASSERT(mContext, nullptr != emulationData, "The Direct3D 10 emulation data must be valid");
+		RENDERER_ASSERT(mContext, numberOfDraws > 0, "The number of Direct3D 10 draws must not be zero");
 
 		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
 		emulationData += indirectBufferOffset;
@@ -1320,7 +1321,7 @@ namespace Direct3D10Renderer
 			// Call the Direct3D 9 PIX function
 			if (mDirect3D9RuntimeLinking->isDirect3D9Avaiable())
 			{
-				assert(strlen(name) < 256);
+				RENDERER_ASSERT(mContext, strlen(name) < 256, "Direct3D 10 debug marker names must not have more than 255 characters");
 				wchar_t unicodeName[256];
 				std::mbstowcs(unicodeName, name, 256);
 				D3DPERF_SetMarker(D3DCOLOR_RGBA(255, 0, 255, 255), unicodeName);
@@ -1340,7 +1341,7 @@ namespace Direct3D10Renderer
 			// Call the Direct3D 9 PIX function
 			if (mDirect3D9RuntimeLinking->isDirect3D9Avaiable())
 			{
-				assert(strlen(name) < 256);
+				RENDERER_ASSERT(mContext, strlen(name) < 256, "Direct3D 10 debug event names must not have more than 255 characters");
 				wchar_t unicodeName[256];
 				std::mbstowcs(unicodeName, name, 256);
 				D3DPERF_BeginEvent(D3DCOLOR_RGBA(255, 255, 255, 255), unicodeName);
@@ -1443,7 +1444,7 @@ namespace Direct3D10Renderer
 	{
 		// Sanity checks
 		DIRECT3D10RENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
-		assert((NULL_HANDLE != windowHandle.nativeWindowHandle) && "The provided native window handle must not be a null handle");
+		RENDERER_ASSERT(mContext, NULL_HANDLE != windowHandle.nativeWindowHandle, "Direct3D 10: The provided native window handle must not be a null handle");
 
 		// Create the swap chain
 		return new SwapChain(renderPass, windowHandle);

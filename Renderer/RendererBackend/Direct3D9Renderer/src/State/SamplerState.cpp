@@ -27,6 +27,7 @@
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/IAssert.h>
 
 
 //[-------------------------------------------------------]
@@ -41,9 +42,9 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	SamplerState::SamplerState(Direct3D9Renderer& direct3D9Renderer, const Renderer::SamplerState& samplerState) :
 		ISamplerState(direct3D9Renderer),
-		mDirect3D9MagFilterMode(Mapping::getDirect3D9MagFilterMode(samplerState.filter)),
-		mDirect3D9MinFilterMode(Mapping::getDirect3D9MinFilterMode(samplerState.filter)),
-		mDirect3D9MipFilterMode((0.0f == samplerState.maxLOD) ? D3DTEXF_NONE : Mapping::getDirect3D9MipFilterMode(samplerState.filter)),	// In case "Renderer::SamplerState::maxLOD" is zero, disable mipmapping in order to ensure a correct behaviour when using Direct3D 9, float equal check is valid in here
+		mDirect3D9MagFilterMode(Mapping::getDirect3D9MagFilterMode(direct3D9Renderer.getContext(), samplerState.filter)),
+		mDirect3D9MinFilterMode(Mapping::getDirect3D9MinFilterMode(direct3D9Renderer.getContext(), samplerState.filter)),
+		mDirect3D9MipFilterMode((0.0f == samplerState.maxLOD) ? D3DTEXF_NONE : Mapping::getDirect3D9MipFilterMode(direct3D9Renderer.getContext(), samplerState.filter)),	// In case "Renderer::SamplerState::maxLOD" is zero, disable mipmapping in order to ensure a correct behaviour when using Direct3D 9, float equal check is valid in here
 		mDirect3D9AddressModeU(Mapping::getDirect3D9TextureAddressMode(samplerState.addressU)),
 		mDirect3D9AddressModeV(Mapping::getDirect3D9TextureAddressMode(samplerState.addressV)),
 		mDirect3D9AddressModeW(Mapping::getDirect3D9TextureAddressMode(samplerState.addressW)),
@@ -53,7 +54,7 @@ namespace Direct3D9Renderer
 		mDirect3DMaxMipLevel((samplerState.minLOD > 0.0f) ? static_cast<unsigned long>(samplerState.minLOD) : 0)	// Direct3D 9 type is unsigned long, lookout the Direct3D 9 name is twisted and implies "Renderer::SamplerState::maxLOD" but it's really "Renderer::SamplerState::minLOD"
 	{
 		// Sanity check
-		assert((samplerState.maxAnisotropy <= direct3D9Renderer.getCapabilities().maximumAnisotropy) && "Maximum anisotropy value violated");
+		RENDERER_ASSERT(direct3D9Renderer.getContext(), samplerState.maxAnisotropy <= direct3D9Renderer.getCapabilities().maximumAnisotropy, "Maximum Direct3D 9 anisotropy value violated");
 
 		{ // Renderer::SamplerState::borderColor[4]
 			// For Direct3D 9, the clear color must be between [0..1]

@@ -19,6 +19,12 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include <Renderer/IAssert.h>
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace Direct3D12Renderer
@@ -35,7 +41,7 @@ namespace Direct3D12Renderer
 
 	inline IDXGIFactory4 &Direct3D12Renderer::getDxgiFactory4Safe() const
 	{
-		assert(nullptr != mDxgiFactory4);
+		RENDERER_ASSERT(mContext, nullptr != mDxgiFactory4, "Invalid Direct3D 12 DXGI factory 3");
 		return *mDxgiFactory4;
 	}
 

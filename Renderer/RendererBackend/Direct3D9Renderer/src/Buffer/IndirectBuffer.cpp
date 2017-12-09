@@ -24,6 +24,8 @@
 #include "Direct3D9Renderer/Buffer/IndirectBuffer.h"
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
 
+#include <Renderer/IAssert.h>
+
 #include <cstring>	// For "memcpy()"
 
 
@@ -52,7 +54,7 @@ namespace Direct3D9Renderer
 		}
 		else
 		{
-			assert(nullptr == data);
+			RENDERER_ASSERT(direct3D9Renderer.getContext(), nullptr == data, "Invalid Direct3D 9 indirect buffer data");
 		}
 	}
 
@@ -67,8 +69,8 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	void IndirectBuffer::copyDataFrom(uint32_t numberOfBytes, const void* data)
 	{
-		assert(numberOfBytes <= mNumberOfBytes);
-		assert(nullptr != data);
+		RENDERER_ASSERT(getRenderer().getContext(), numberOfBytes <= mNumberOfBytes, "Invalid Direct3D 9 indirect buffer data");
+		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid Direct3D 9 indirect buffer data");
 		memcpy(mData, data, numberOfBytes);
 	}
 

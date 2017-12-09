@@ -27,6 +27,8 @@
 #include "Direct3D11Renderer/Mapping.h"
 #include "Direct3D11Renderer/Direct3D11Renderer.h"
 
+#include <Renderer/IAssert.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -146,7 +148,7 @@ namespace Direct3D11Renderer
 	void TextureBuffer::copyDataFrom(uint32_t numberOfBytes, const void* data)
 	{
 		// Check resource pointers
-		assert(nullptr != data);
+		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid Direct3D 11 texture buffer data");
 		if (nullptr != mD3D11Buffer)
 		{
 			Direct3D11Renderer& direct3D11Renderer = static_cast<Direct3D11Renderer&>(getRenderer());

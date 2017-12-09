@@ -51,7 +51,7 @@ namespace VulkanRenderer
 		mVkRenderPass(VK_NULL_HANDLE),
 		mNumberOfColorAttachments(numberOfColorAttachments),
 		mDepthStencilAttachmentTextureFormat(depthStencilAttachmentTextureFormat),
-		mVkSampleCountFlagBits(Mapping::getVulkanSampleCountFlagBits(numberOfMultisamples))
+		mVkSampleCountFlagBits(Mapping::getVulkanSampleCountFlagBits(vulkanRenderer.getContext(), numberOfMultisamples))
 	{
 		const bool hasDepthStencilAttachment = (Renderer::TextureFormat::Enum::UNKNOWN != depthStencilAttachmentTextureFormat);
 

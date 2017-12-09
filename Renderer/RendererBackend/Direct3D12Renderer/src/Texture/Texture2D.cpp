@@ -30,6 +30,7 @@
 #include "Direct3D12Renderer/Direct3D12RuntimeLinking.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/IAssert.h>
 
 
 //[-------------------------------------------------------]
@@ -49,13 +50,13 @@ namespace Direct3D12Renderer
 		mD3D12DescriptorHeap(nullptr)
 	{
 		// Sanity checks
-		assert(numberOfMultisamples == 1 || numberOfMultisamples == 2 || numberOfMultisamples == 4 || numberOfMultisamples == 8);
-		assert(numberOfMultisamples == 1 || nullptr == data);
-		assert(numberOfMultisamples == 1 || 0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS));
-		assert(numberOfMultisamples == 1 || 0 == (flags & Renderer::TextureFlag::GENERATE_MIPMAPS));
-		assert(numberOfMultisamples == 1 || 0 != (flags & Renderer::TextureFlag::RENDER_TARGET));
-		assert(0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data);
-		assert(((flags & Renderer::TextureFlag::RENDER_TARGET) == 0 || nullptr == data) && "Render target textures can't be filled using provided data");
+		RENDERER_ASSERT(direct3D12Renderer.getContext(), numberOfMultisamples == 1 || numberOfMultisamples == 2 || numberOfMultisamples == 4 || numberOfMultisamples == 8, "Invalid Direct3D 12 texture parameters");
+		RENDERER_ASSERT(direct3D12Renderer.getContext(), numberOfMultisamples == 1 || nullptr == data, "Invalid Direct3D 12 texture parameters");
+		RENDERER_ASSERT(direct3D12Renderer.getContext(), numberOfMultisamples == 1 || 0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS), "Invalid Direct3D 12 texture parameters");
+		RENDERER_ASSERT(direct3D12Renderer.getContext(), numberOfMultisamples == 1 || 0 == (flags & Renderer::TextureFlag::GENERATE_MIPMAPS), "Invalid Direct3D 12 texture parameters");
+		RENDERER_ASSERT(direct3D12Renderer.getContext(), numberOfMultisamples == 1 || 0 != (flags & Renderer::TextureFlag::RENDER_TARGET), "Invalid Direct3D 12 texture parameters");
+		RENDERER_ASSERT(direct3D12Renderer.getContext(), 0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data, "Invalid Direct3D 12 texture parameters");
+		RENDERER_ASSERT(direct3D12Renderer.getContext(), (flags & Renderer::TextureFlag::RENDER_TARGET) == 0 || nullptr == data, "Direct3D 12 render target textures can't be filled using provided data");
 
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D12Renderer)

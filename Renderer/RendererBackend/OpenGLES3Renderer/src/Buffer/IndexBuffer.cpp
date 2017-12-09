@@ -26,6 +26,8 @@
 #include "OpenGLES3Renderer/IExtensions.h"
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
+#include <Renderer/IAssert.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -71,7 +73,7 @@ namespace OpenGLES3Renderer
 		else
 		{
 			// Error!
-			assert(false && "\"GL_UNSIGNED_INT\" is only allowed in case the \"GL_OES_element_index_uint\" extension is there");
+			RENDERER_ASSERT(openGLES3Renderer.getContext(), false, "\"GL_UNSIGNED_INT\" is only allowed in case the \"GL_OES_element_index_uint\" extension is there");
 		}
 	}
 

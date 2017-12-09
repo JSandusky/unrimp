@@ -45,6 +45,12 @@
 
 	/**
 	*  @brief
+	*    Debug break operation macro
+	*/
+	#define DEBUG_BREAK __debugbreak()
+
+	/**
+	*  @brief
 	*    Platform specific "#pragma warning(push)" (MS Windows Visual Studio)
 	*/
 	#define PRAGMA_WARNING_PUSH __pragma(warning(push))
@@ -87,6 +93,12 @@
 	*    No operation macro ("_asm nop"/__nop())
 	*/
 	#define NOP asm ("nop");
+
+	/**
+	*  @brief
+	*    Debug break operation macro
+	*/
+	#define DEBUG_BREAK __builtin_trap()
 
 	#ifdef __clang__
 		/**
@@ -169,7 +181,6 @@ PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4668)	// warning C4668: '_M_HYBRID_X86_ARM64' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
 	#include <inttypes.h>	// For uint32_t, uint64_t etc.
 PRAGMA_WARNING_POP
-#include <cassert>
 #include <string.h>		// For "strcat()" and "strncat()", we include it here because inside this header macros are defined which uses those methods
 
 
@@ -391,7 +402,7 @@ PRAGMA_WARNING_POP
 	*    - Do not add this within the public "Renderer/Public/Renderer.h"-header, it's for the internal implementation only
 	*/
 	#define RENDERER_DECORATED_DEBUG_NAME(name, detailedName, decoration, numberOfDecorationCharacters) \
-		assert(strlen(name) < 256); \
+		RENDERER_ASSERT(getRenderer().getContext(), strlen(name) < 256, "Name is not allowed to exceed 255 characters"); \
 		char detailedName[256 + numberOfDecorationCharacters] = decoration; \
 		if (name[0] != '\0') \
 		{ \

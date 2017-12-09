@@ -22,8 +22,11 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Buffer/UniformBufferBind.h"
-#include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
+#include "OpenGLRenderer/Extensions.h"
+
+#include <Renderer/IAssert.h>
+#include <Renderer/IRenderer.h>
 
 
 //[-------------------------------------------------------]
@@ -73,7 +76,7 @@ namespace OpenGLRenderer
 	void UniformBufferBind::copyDataFrom(uint32_t numberOfBytes, const void* data)
 	{
 		// Sanity check
-		assert(nullptr != data);
+		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid OpenGL uniform buffer data");
 
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently bound OpenGL uniform buffer

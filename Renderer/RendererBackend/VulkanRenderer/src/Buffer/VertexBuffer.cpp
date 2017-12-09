@@ -24,6 +24,8 @@
 #include "VulkanRenderer/Buffer/VertexBuffer.h"
 #include "VulkanRenderer/VulkanRenderer.h"
 
+#include <Renderer/IAssert.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

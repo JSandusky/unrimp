@@ -874,7 +874,7 @@ namespace
 			// TODO(co) More context information like which asset is compiled right now might be useful. We need to keep in mind that there can be multiple texture compiler instances
 			//          running at one and the same time. We could use the Crunch console output data to transport this information, on the other hand we need to ensure that we can
 			//          unregister our function when we're done. "crnlib::console::remove_console_output_func() only checks the function pointer.
-			static_cast<const RendererToolkit::Context*>(data)->getLog().print(type, nullptr, message);
+			static_cast<const RendererToolkit::Context*>(data)->getLog().print(type, nullptr, __FILE__, static_cast<uint32_t>(__LINE__), message);
 
 			// We handled the console output
 			return true;

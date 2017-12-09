@@ -31,6 +31,7 @@
 #include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/Mapping.h"
 
+#include <Renderer/IAssert.h>
 #include <Renderer/RenderTarget/IRenderPass.h>
 
 
@@ -73,7 +74,7 @@ namespace OpenGLRenderer
 			else
 			{
 				// Error!
-				assert(false);
+				RENDERER_ASSERT(openGLRenderer.getContext(), false, "Invalid number of OpenGL vertices per patch");
 			}
 		}
 		else

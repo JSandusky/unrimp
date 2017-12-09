@@ -36,6 +36,8 @@
 namespace Renderer
 {
 	class ILog;
+	class IAssert;
+	class IMemory;
 }
 #ifdef LINUX
 	// Copied from "Xlib.h"
@@ -87,6 +89,10 @@ namespace Renderer
 		*
 		*  @param[in] log
 		*    Log instance to use, the log instance must stay valid as long as the renderer instance exists
+		*  @param[in] assert
+		*    Assert instance to use, the assert instance must stay valid as long as the renderer instance exists
+		*  @param[in] memory
+		*    Memory instance to use, the memory instance must stay valid as long as the renderer instance exists
 		*  @param[in] nativeWindowHandle
 		*    Native window handle
 		*  @param[in] useExternalContext
@@ -94,7 +100,7 @@ namespace Renderer
 		*  @param[in] contextType
 		*    The type of the context
 		*/
-		inline Context(ILog& log, handle nativeWindowHandle = 0, bool useExternalContext = false, ContextType contextType = Context::ContextType::WINDOWS);
+		inline Context(ILog& log, IAssert& assert, IMemory& memory, handle nativeWindowHandle = 0, bool useExternalContext = false, ContextType contextType = Context::ContextType::WINDOWS);
 
 		/**
 		*  @brief
@@ -110,6 +116,24 @@ namespace Renderer
 		*    The log instance
 		*/
 		inline ILog& getLog() const;
+
+		/**
+		*  @brief
+		*    Return the assert instance
+		*
+		*  @return
+		*    The assert instance
+		*/
+		inline IAssert& getAssert() const;
+
+		/**
+		*  @brief
+		*    Return the memory instance
+		*
+		*  @return
+		*    The memory instance
+		*/
+		inline IMemory& getMemory() const;
 
 		/**
 		*  @brief
@@ -170,6 +194,8 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	private:
 		ILog&		mLog;
+		IAssert&	mAssert;
+		IMemory&	mMemory;
 		handle		mNativeWindowHandle;
 		bool		mUseExternalContext;
 		ContextType	mContextType;
@@ -198,6 +224,10 @@ namespace Renderer
 		*
 		*  @param[in] log
 		*    Log instance to use, the log instance must stay valid as long as the renderer instance exists
+		*  @param[in] assert
+		*    Assert instance to use, the assert instance must stay valid as long as the renderer instance exists
+		*  @param[in] memory
+		*    Memory instance to use, the memory instance must stay valid as long as the renderer instance exists
 		*  @param[in] display
 		*    The X11 display connection
 		*  @param[in] nativeWindowHandle
@@ -205,7 +235,7 @@ namespace Renderer
 		*  @param[in] useExternalContext
 		*    Indicates if an external renderer context is used; in this case the renderer itself has nothing to do with the creation/managing of an renderer context
 		*/
-		inline X11Context(ILog& log, _XDisplay* display, handle nativeWindowHandle = 0, bool useExternalContext = false);
+		inline X11Context(ILog& log, IAssert& assert, IMemory& memory, _XDisplay* display, handle nativeWindowHandle = 0, bool useExternalContext = false);
 
 		/**
 		*  @brief
@@ -244,6 +274,10 @@ namespace Renderer
 		*
 		*  @param[in] log
 		*    Log instance to use, the log instance must stay valid as long as the renderer instance exists
+		*  @param[in] assert
+		*    Assert instance to use, the assert instance must stay valid as long as the renderer instance exists
+		*  @param[in] memory
+		*    Memory instance to use, the memory instance must stay valid as long as the renderer instance exists
 		*  @param[in] display
 		*    The Wayland display connection
 		*  @param[in] surface
@@ -251,7 +285,7 @@ namespace Renderer
 		*  @param[in] useExternalContext
 		*    Indicates if an external renderer context is used; in this case the renderer itself has nothing to do with the creation/managing of an renderer context
 		*/
-		inline WaylandContext(ILog& log, wl_display* display, wl_surface* surface = 0, bool useExternalContext = false);
+		inline WaylandContext(ILog& log, IAssert& assert, IMemory& memory, wl_display* display, wl_surface* surface = 0, bool useExternalContext = false);
 
 		/**
 		*  @brief
@@ -276,8 +310,8 @@ namespace Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		wl_display*	mDisplay;
-		wl_surface*	mSurface;
+		wl_display* mDisplay;
+		wl_surface* mSurface;
 
 
 	};

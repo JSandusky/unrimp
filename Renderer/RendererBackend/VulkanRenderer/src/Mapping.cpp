@@ -23,6 +23,9 @@
 //[-------------------------------------------------------]
 #include "VulkanRenderer/Mapping.h"
 
+#include <Renderer/IAssert.h>
+#include <Renderer/Context.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -34,7 +37,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	VkFilter Mapping::getVulkanMagFilterMode(Renderer::FilterMode filterMode)
+	VkFilter Mapping::getVulkanMagFilterMode(const Renderer::Context& context, Renderer::FilterMode filterMode)
 	{
 		switch (filterMode)
 		{
@@ -93,7 +96,7 @@ namespace VulkanRenderer
 				return VK_FILTER_LINEAR;	// There's no special setting in Vulkan
 
 			case Renderer::FilterMode::UNKNOWN:
-				assert(false && "Filter mode must not be unknown");
+				RENDERER_ASSERT(context, false, "Vulkan filter mode must not be unknown");
 				return VK_FILTER_NEAREST;
 
 			default:
@@ -101,7 +104,7 @@ namespace VulkanRenderer
 		}
 	}
 
-	VkFilter Mapping::getVulkanMinFilterMode(Renderer::FilterMode filterMode)
+	VkFilter Mapping::getVulkanMinFilterMode(const Renderer::Context& context, Renderer::FilterMode filterMode)
 	{
 		switch (filterMode)
 		{
@@ -160,7 +163,7 @@ namespace VulkanRenderer
 				return VK_FILTER_LINEAR;	// There's no special setting in Vulkan
 
 			case Renderer::FilterMode::UNKNOWN:
-				assert(false && "Filter mode must not be unknown");
+				RENDERER_ASSERT(context, false, "Vulkan filter mode must not be unknown");
 				return VK_FILTER_NEAREST;
 
 			default:
@@ -168,7 +171,7 @@ namespace VulkanRenderer
 		}
 	}
 
-	VkSamplerMipmapMode Mapping::getVulkanMipmapMode(Renderer::FilterMode filterMode)
+	VkSamplerMipmapMode Mapping::getVulkanMipmapMode(const Renderer::Context& context, Renderer::FilterMode filterMode)
 	{
 		switch (filterMode)
 		{
@@ -227,7 +230,7 @@ namespace VulkanRenderer
 				return VK_SAMPLER_MIPMAP_MODE_LINEAR;	// There's no special setting in Vulkan
 
 			case Renderer::FilterMode::UNKNOWN:
-				assert(false && "Filter mode must not be unknown");
+				RENDERER_ASSERT(context, false, "Vulkan filter mode must not be unknown");
 				return VK_SAMPLER_MIPMAP_MODE_NEAREST;
 
 			default:
@@ -321,9 +324,9 @@ namespace VulkanRenderer
 		return MAPPING[static_cast<int>(vertexAttributeFormat)];
 	}
 
-	VkIndexType Mapping::getVulkanType(Renderer::IndexBufferFormat::Enum indexBufferFormat)
+	VkIndexType Mapping::getVulkanType(const Renderer::Context& context, Renderer::IndexBufferFormat::Enum indexBufferFormat)
 	{
-		assert((Renderer::IndexBufferFormat::UNSIGNED_CHAR != indexBufferFormat) && "One byte per element index buffer format isn't supported by Vulkan");
+		RENDERER_ASSERT(context, Renderer::IndexBufferFormat::UNSIGNED_CHAR != indexBufferFormat, "One byte per element index buffer format isn't supported by Vulkan");
 		static const VkIndexType MAPPING[] =
 		{
 			VK_INDEX_TYPE_MAX_ENUM,	// Renderer::IndexBufferFormat::UNSIGNED_CHAR  - One byte per element, uint8_t (may not be supported by each API) - Not supported by Vulkan
@@ -386,9 +389,9 @@ namespace VulkanRenderer
 		return MAPPING[textureFormat];
 	}
 
-	VkSampleCountFlagBits Mapping::getVulkanSampleCountFlagBits(uint8_t numberOfMultisamples)
+	VkSampleCountFlagBits Mapping::getVulkanSampleCountFlagBits(const Renderer::Context& context, uint8_t numberOfMultisamples)
 	{
-		assert(numberOfMultisamples <= 8);
+		RENDERER_ASSERT(context, numberOfMultisamples <= 8, "Invalid number of Vulkan multisamples");
 		static const VkSampleCountFlagBits MAPPING[] =
 		{
 			VK_SAMPLE_COUNT_1_BIT,

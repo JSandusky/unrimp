@@ -51,10 +51,9 @@
 #include "Direct3D9Renderer/Shader/FragmentShaderHlsl.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/IAssert.h>
 #include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
-
-#include <tuple>	// For "std::ignore"
 
 
 //[-------------------------------------------------------]
@@ -95,7 +94,7 @@ namespace
 			void ExecuteCommandBuffer(const void* data, Renderer::IRenderer& renderer)
 			{
 				const Renderer::Command::ExecuteCommandBuffer* realData = static_cast<const Renderer::Command::ExecuteCommandBuffer*>(data);
-				assert(nullptr != realData->commandBufferToExecute);
+				RENDERER_ASSERT(renderer.getContext(), nullptr != realData->commandBufferToExecute, "The Direct3D 9 command buffer to execute must be valid");
 				renderer.submitCommandBuffer(*realData->commandBufferToExecute);
 			}
 
@@ -103,16 +102,16 @@ namespace
 			//[-------------------------------------------------------]
 			//[ Resource handling                                     ]
 			//[-------------------------------------------------------]
-			void CopyUniformBufferData(const void*, Renderer::IRenderer&)
+			void CopyUniformBufferData(const void*, Renderer::IRenderer& renderer)
 			{
 				// Not supported by Direct3D 9
-				assert(false);
+				RENDERER_ASSERT(renderer.getContext(), false, "Uniform buffer isn't supported by Direct3D 9");
 			}
 
-			void CopyTextureBufferData(const void*, Renderer::IRenderer&)
+			void CopyTextureBufferData(const void*, Renderer::IRenderer& renderer)
 			{
 				// Not supported by Direct3D 9
-				assert(false);
+				RENDERER_ASSERT(renderer.getContext(), false, "Texture buffer isn't supported by Direct3D 9");
 			}
 
 			//[-------------------------------------------------------]
@@ -527,7 +526,7 @@ namespace Direct3D9Renderer
 				{
 					continue;
 				}
-				assert(nullptr != reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges));
+				RENDERER_ASSERT(mContext, nullptr != reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges), "Invalid Direct3D 9 descriptor table");
 				const Renderer::DescriptorRange& descriptorRange = reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges)[resourceIndex];
 
 				// Check the type of resource to set
@@ -628,7 +627,7 @@ namespace Direct3D9Renderer
 								mDirect3DDevice9->SetTexture(startSlot, direct3DBaseTexture9);
 
 								{ // Set sampler, it's valid that there's no sampler state (e.g. texel fetch instead of sampling might be used)
-									assert(nullptr != d3d9ResourceGroup->getSamplerState());
+									RENDERER_ASSERT(mContext, nullptr != d3d9ResourceGroup->getSamplerState(), "Invalid Direct3D 9 sampler state");
 									const SamplerState* samplerState = static_cast<const SamplerState*>(d3d9ResourceGroup->getSamplerState()[resourceIndex]);
 									if (nullptr != samplerState)
 									{
@@ -650,7 +649,7 @@ namespace Direct3D9Renderer
 								mDirect3DDevice9->SetTexture(vertexFetchStartSlot, direct3DBaseTexture9);
 
 								{ // Set sampler, it's valid that there's no sampler state (e.g. texel fetch instead of sampling might be used)
-									assert(nullptr != d3d9ResourceGroup->getSamplerState());
+									RENDERER_ASSERT(mContext, nullptr != d3d9ResourceGroup->getSamplerState(), "Invalid Direct3D 9 sampler state");
 									const SamplerState* samplerState = static_cast<const SamplerState*>(d3d9ResourceGroup->getSamplerState()[resourceIndex]);
 									if (nullptr != samplerState)
 									{
@@ -684,7 +683,7 @@ namespace Direct3D9Renderer
 								mDirect3DDevice9->SetTexture(startSlot, direct3DBaseTexture9);
 
 								{ // Set sampler, it's valid that there's no sampler state (e.g. texel fetch instead of sampling might be used)
-									assert(nullptr != d3d9ResourceGroup->getSamplerState());
+									RENDERER_ASSERT(mContext, nullptr != d3d9ResourceGroup->getSamplerState(), "Invalid Direct3D 9 sampler state");
 									const SamplerState* samplerState = static_cast<const SamplerState*>(d3d9ResourceGroup->getSamplerState()[resourceIndex]);
 									if (nullptr != samplerState)
 									{
@@ -781,7 +780,7 @@ namespace Direct3D9Renderer
 	void Direct3D9Renderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport* viewports)
 	{
 		// Sanity check
-		assert((numberOfViewports > 0 && nullptr != viewports) && "Invalid rasterizer state viewports");
+		RENDERER_ASSERT(mContext, numberOfViewports > 0 && nullptr != viewports, "Invalid Direct3D 9 rasterizer state viewports");
 		std::ignore = numberOfViewports;
 
 		// Set the Direct3D 9 viewport
@@ -807,7 +806,7 @@ namespace Direct3D9Renderer
 	void Direct3D9Renderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles)
 	{
 		// Sanity check
-		assert((numberOfScissorRectangles > 0 && nullptr != scissorRectangles) && "Invalid rasterizer state scissor rectangles");
+		RENDERER_ASSERT(mContext, numberOfScissorRectangles > 0 && nullptr != scissorRectangles, "Invalid Direct3D 9 rasterizer state scissor rectangles");
 		std::ignore = numberOfScissorRectangles;
 
 		// Set the Direct3D 9 scissor rectangles
@@ -1067,8 +1066,8 @@ namespace Direct3D9Renderer
 	void Direct3D9Renderer::drawEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
 		// Sanity checks
-		assert(nullptr != emulationData);
-		assert((numberOfDraws > 0) && "Number of draws must not be zero");
+		RENDERER_ASSERT(mContext, nullptr != emulationData, "The Direct3D 9 emulation data must be valid");
+		RENDERER_ASSERT(mContext, numberOfDraws > 0, "The number of Direct3D 9 draws must not be zero");
 
 		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
 		emulationData += indirectBufferOffset;
@@ -1082,8 +1081,8 @@ namespace Direct3D9Renderer
 			// -> In Direct3D 9, instanced arrays is only possible when drawing indexed primitives, see
 			//    "Efficiently Drawing Multiple Instances of Geometry (Direct3D 9)"-article at MSDN: http://msdn.microsoft.com/en-us/library/windows/desktop/bb173349%28v=vs.85%29.aspx#Drawing_Non_Indexed_Geometry
 			// -> This document states that this is not supported by hardware acceleration on any device, and it's long winded anyway
-			assert(1 == drawInstancedArguments.instanceCount);
-			assert(0 == drawInstancedArguments.startInstanceLocation);
+			RENDERER_ASSERT(mContext, 1 == drawInstancedArguments.instanceCount, "Direct3D 9 instance count must be one");
+			RENDERER_ASSERT(mContext, 0 == drawInstancedArguments.startInstanceLocation, "Direct3D 9 start instance location must be zero");
 
 			{ // Draw
 				// Get number of primitives
@@ -1159,8 +1158,8 @@ namespace Direct3D9Renderer
 	void Direct3D9Renderer::drawIndexedEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
 		// Sanity checks
-		assert(nullptr != emulationData);
-		assert((numberOfDraws > 0) && "Number of draws must not be zero");
+		RENDERER_ASSERT(mContext, nullptr != emulationData, "The Direct3D 9 emulation data must be valid");
+		RENDERER_ASSERT(mContext, numberOfDraws > 0, "The number of Direct3D 9 draws must not be zero");
 
 		// Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 		if (mCapabilities.instancedArrays)
@@ -1172,7 +1171,7 @@ namespace Direct3D9Renderer
 			for (uint32_t i = 0; i < numberOfDraws; ++i)
 			{
 				const Renderer::DrawIndexedInstancedArguments& drawIndexedInstancedArguments = *reinterpret_cast<const Renderer::DrawIndexedInstancedArguments*>(emulationData);
-				assert(0 == drawIndexedInstancedArguments.startInstanceLocation);	// Not supported by DirectX 9
+				RENDERER_ASSERT(mContext, 0 == drawIndexedInstancedArguments.startInstanceLocation, "Start instance location isn't supported by Direct3D 9");	// Not supported by Direct3D 9
 
 				// The "Efficiently Drawing Multiple Instances of Geometry (Direct3D 9)"-article at MSDN http://msdn.microsoft.com/en-us/library/windows/desktop/bb173349%28v=vs.85%29.aspx#Drawing_Non_Indexed_Geometry
 				// states: "Note that D3DSTREAMSOURCE_INDEXEDDATA and the number of instances to draw must always be set in stream zero."
@@ -1264,7 +1263,7 @@ namespace Direct3D9Renderer
 		#ifndef DIRECT3D9RENDERER_NO_DEBUG
 			if (nullptr != D3DPERF_SetMarker)
 			{
-				assert(strlen(name) < 256);
+				RENDERER_ASSERT(mContext, strlen(name) < 256, "Direct3D 9 debug marker names must not have more than 255 characters");
 				wchar_t unicodeName[256];
 				std::mbstowcs(unicodeName, name, 256);
 				D3DPERF_SetMarker(D3DCOLOR_RGBA(255, 0, 255, 255), unicodeName);
@@ -1277,7 +1276,7 @@ namespace Direct3D9Renderer
 		#ifndef DIRECT3D9RENDERER_NO_DEBUG
 			if (nullptr != D3DPERF_BeginEvent)
 			{
-				assert(strlen(name) < 256);
+				RENDERER_ASSERT(mContext, strlen(name) < 256, "Direct3D 9 debug event names must not have more than 255 characters");
 				wchar_t unicodeName[256];
 				std::mbstowcs(unicodeName, name, 256);
 				D3DPERF_BeginEvent(D3DCOLOR_RGBA(255, 255, 255, 255), unicodeName);
@@ -1373,7 +1372,7 @@ namespace Direct3D9Renderer
 	{
 		// Sanity checks
 		DIRECT3D9RENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
-		assert((NULL_HANDLE != windowHandle.nativeWindowHandle) && "The provided native window handle must not be a null handle");
+		RENDERER_ASSERT(mContext, NULL_HANDLE != windowHandle.nativeWindowHandle, "Direct3D 9: The provided native window handle must not be a null handle");
 
 		// Create the swap chain
 		return new SwapChain(renderPass, windowHandle);

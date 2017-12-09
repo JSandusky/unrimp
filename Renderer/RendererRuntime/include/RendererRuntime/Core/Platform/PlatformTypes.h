@@ -48,6 +48,12 @@
 
 	/**
 	*  @brief
+	*    Debug break operation macro
+	*/
+	#define DEBUG_BREAK __debugbreak()
+
+	/**
+	*  @brief
 	*    Platform specific "#pragma warning(push)" (MS Windows Visual Studio)
 	*/
 	#define PRAGMA_WARNING_PUSH __pragma(warning(push))
@@ -90,6 +96,12 @@
 	*    No operation macro ("_asm nop"/__nop())
 	*/
 	#define NOP asm ("nop");
+
+	/**
+	*  @brief
+	*    Debug break operation macro
+	*/
+	#define DEBUG_BREAK __builtin_trap()
 
 	#ifdef __clang__
 		/**

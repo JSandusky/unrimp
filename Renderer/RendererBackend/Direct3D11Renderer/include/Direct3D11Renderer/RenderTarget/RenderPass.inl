@@ -19,6 +19,13 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include <Renderer/IAssert.h>
+#include <Renderer/IRenderer.h>
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace Direct3D11Renderer
@@ -45,7 +52,7 @@ namespace Direct3D11Renderer
 
 	inline Renderer::TextureFormat::Enum RenderPass::getColorAttachmentTextureFormat(uint32_t colorAttachmentIndex) const
 	{
-		assert(colorAttachmentIndex < mNumberOfColorAttachments);
+		RENDERER_ASSERT(getRenderer().getContext(), colorAttachmentIndex < mNumberOfColorAttachments, "Invalid Direct3D 11 color attachment index");
 		return mColorAttachmentTextureFormats[colorAttachmentIndex];
 	}
 

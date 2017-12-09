@@ -172,13 +172,13 @@ namespace
 			return result;
 		}
 
-		void registerRenderModel(const std::string& renderModelName, RendererRuntime::VrManagerOpenVR::RenderModelNames& renderModelNames, RendererRuntime::AssetPackage& assetPackage)
+		void registerRenderModel(const RendererRuntime::Context& context, const std::string& renderModelName, RendererRuntime::VrManagerOpenVR::RenderModelNames& renderModelNames, RendererRuntime::AssetPackage& assetPackage)
 		{
 			// Some render models might share component render models, so we need to ensure the render model asset ID isn't registered, yet
 			const RendererRuntime::AssetId assetId(renderModelName.c_str());
 			if (nullptr == assetPackage.tryGetAssetByAssetId(assetId))
 			{
-				assetPackage.addAsset(assetId, std::to_string(renderModelNames.size()).c_str());
+				assetPackage.addAsset(context, assetId, std::to_string(renderModelNames.size()).c_str());
 				renderModelNames.push_back(renderModelName);
 			}
 		}
@@ -479,6 +479,7 @@ namespace RendererRuntime
 
 			{ // Add dynamic OpenVR asset package
 				AssetPackage& assetPackage = mRendererRuntime.getAssetManager().addAssetPackage(::detail::ASSET_PACKAGE_ID);
+				const Context& context = mRendererRuntime.getContext();
 
 				// Register render models
 				// -> OpenVR render model names can get awful long due to absolute path information, so, we need to store them inside a separate list and tell the asset just about the render model name index
@@ -495,13 +496,13 @@ namespace RendererRuntime
 							const std::string componentRenderModelName = ::detail::getRenderModelComponentRenderModelName(renderModelName, componentName);
 							if (!componentRenderModelName.empty())
 							{
-								::detail::registerRenderModel(componentRenderModelName, mRenderModelNames, assetPackage);
+								::detail::registerRenderModel(context, componentRenderModelName, mRenderModelNames, assetPackage);
 							}
 						}
 					}
 					else
 					{
-						::detail::registerRenderModel(renderModelName, mRenderModelNames, assetPackage);
+						::detail::registerRenderModel(context, renderModelName, mRenderModelNames, assetPackage);
 					}
 				}
 				assert(assetPackage.getSortedAssetVector().size() == mRenderModelNames.size());
@@ -511,7 +512,7 @@ namespace RendererRuntime
 				// -> We assume, that albedo texture IDs are linear
 				for (uint32_t renderModelIndex = 0; renderModelIndex < renderModelCount; ++renderModelIndex)
 				{
-					assetPackage.addAsset(VrManagerOpenVR::albedoTextureIdToAssetId(static_cast<vr::TextureID_t>(renderModelIndex)), std::to_string(renderModelIndex).c_str());
+					assetPackage.addAsset(context, VrManagerOpenVR::albedoTextureIdToAssetId(static_cast<vr::TextureID_t>(renderModelIndex)), std::to_string(renderModelIndex).c_str());
 				}
 			}
 

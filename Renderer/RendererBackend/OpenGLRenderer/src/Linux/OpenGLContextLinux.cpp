@@ -28,6 +28,7 @@
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/IAssert.h>
 #include <Renderer/Context.h>
 
 #include <GL/glext.h>
@@ -122,7 +123,7 @@ namespace OpenGLRenderer
 		else
 		{
 			const Renderer::Context& context = openGLRenderer.getContext();
-			assert(context.getType() == Renderer::Context::ContextType::X11);
+			RENDERER_ASSERT(context, context.getType() == Renderer::Context::ContextType::X11, "Invalid OpenGL context type");
 
 			// If the given renderer context is an X11 context use the display connection object provided by the context
 			if (context.getType() == Renderer::Context::ContextType::X11)

@@ -28,6 +28,7 @@
 #include "VulkanRenderer/Mapping.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/IAssert.h>
 
 
 //[-------------------------------------------------------]
@@ -45,31 +46,31 @@ namespace VulkanRenderer
 		mVkSampler(VK_NULL_HANDLE)
 	{
 		// Sanity checks
-		assert((samplerState.filter != Renderer::FilterMode::UNKNOWN) && "Filter mode must not be unknown");
-		assert((samplerState.maxAnisotropy <= vulkanRenderer.getCapabilities().maximumAnisotropy) && "Maximum anisotropy value violated");
+		RENDERER_ASSERT(vulkanRenderer.getContext(), samplerState.filter != Renderer::FilterMode::UNKNOWN, "Vulkan filter mode must not be unknown");
+		RENDERER_ASSERT(vulkanRenderer.getContext(), samplerState.maxAnisotropy <= vulkanRenderer.getCapabilities().maximumAnisotropy, "Maximum Vulkan anisotropy value violated");
 
 		// TODO(co) Map "Renderer::SamplerState" to VkSamplerCreateInfo
 		const bool anisotropyEnable = (Renderer::FilterMode::ANISOTROPIC == samplerState.filter || Renderer::FilterMode::COMPARISON_ANISOTROPIC == samplerState.filter);
 		const VkSamplerCreateInfo vkSamplerCreateInfo =
 		{
-			VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,							// sType (VkStructureType)
-			nullptr,														// pNext (const void*)
-			0,																// flags (VkSamplerCreateFlags)
-			Mapping::getVulkanMagFilterMode(samplerState.filter),			// magFilter (VkFilter)
-			Mapping::getVulkanMinFilterMode(samplerState.filter),			// minFilter (VkFilter)
-			Mapping::getVulkanMipmapMode(samplerState.filter),				// mipmapMode (VkSamplerMipmapMode)
-			Mapping::getVulkanTextureAddressMode(samplerState.addressU),	// addressModeU (VkSamplerAddressMode)
-			Mapping::getVulkanTextureAddressMode(samplerState.addressV),	// addressModeV (VkSamplerAddressMode)
-			Mapping::getVulkanTextureAddressMode(samplerState.addressW),	// addressModeW (VkSamplerAddressMode)
-			samplerState.mipLODBias,										// mipLodBias (float)
-			static_cast<VkBool32>(anisotropyEnable),						// anisotropyEnable (VkBool32)
-			static_cast<float>(samplerState.maxAnisotropy),					// maxAnisotropy (float)
-			VK_FALSE,														// compareEnable (VkBool32)
-			VK_COMPARE_OP_ALWAYS,											// compareOp (VkCompareOp)
-			samplerState.minLOD,											// minLod (float)
-			samplerState.maxLOD,											// maxLod (float)
-			VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK,						// borderColor (VkBorderColor)
-			VK_FALSE														// unnormalizedCoordinates (VkBool32)
+			VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,												// sType (VkStructureType)
+			nullptr,																			// pNext (const void*)
+			0,																					// flags (VkSamplerCreateFlags)
+			Mapping::getVulkanMagFilterMode(vulkanRenderer.getContext(), samplerState.filter),	// magFilter (VkFilter)
+			Mapping::getVulkanMinFilterMode(vulkanRenderer.getContext(), samplerState.filter),	// minFilter (VkFilter)
+			Mapping::getVulkanMipmapMode(vulkanRenderer.getContext(), samplerState.filter),		// mipmapMode (VkSamplerMipmapMode)
+			Mapping::getVulkanTextureAddressMode(samplerState.addressU),						// addressModeU (VkSamplerAddressMode)
+			Mapping::getVulkanTextureAddressMode(samplerState.addressV),						// addressModeV (VkSamplerAddressMode)
+			Mapping::getVulkanTextureAddressMode(samplerState.addressW),						// addressModeW (VkSamplerAddressMode)
+			samplerState.mipLODBias,															// mipLodBias (float)
+			static_cast<VkBool32>(anisotropyEnable),											// anisotropyEnable (VkBool32)
+			static_cast<float>(samplerState.maxAnisotropy),										// maxAnisotropy (float)
+			VK_FALSE,																			// compareEnable (VkBool32)
+			VK_COMPARE_OP_ALWAYS,																// compareOp (VkCompareOp)
+			samplerState.minLOD,																// minLod (float)
+			samplerState.maxLOD,																// maxLod (float)
+			VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK,											// borderColor (VkBorderColor)
+			VK_FALSE																			// unnormalizedCoordinates (VkBool32)
 		};
 		if (vkCreateSampler(vulkanRenderer.getVulkanContext().getVkDevice(), &vkSamplerCreateInfo, nullptr, &mVkSampler) != VK_SUCCESS)
 		{

@@ -44,6 +44,7 @@ PRAGMA_WARNING_POP
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+	class Context;
 	class IFileManager;
 }
 
@@ -92,7 +93,7 @@ namespace RendererRuntime
 		inline AssetPackageId getAssetPackageId() const;
 		inline void clear();
 		inline const SortedAssetVector& getSortedAssetVector() const;
-		RENDERERRUNTIME_API_EXPORT void addAsset(AssetId assetId, VirtualFilename virtualFilename);
+		RENDERERRUNTIME_API_EXPORT void addAsset(const Context& context, AssetId assetId, VirtualFilename virtualFilename);
 		RENDERERRUNTIME_API_EXPORT const Asset* tryGetAssetByAssetId(AssetId assetId) const;
 		inline VirtualFilename tryGetVirtualFilenameByAssetId(AssetId assetId) const;
 		RENDERERRUNTIME_API_EXPORT bool validateIntegrity(const IFileManager& fileManager) const;

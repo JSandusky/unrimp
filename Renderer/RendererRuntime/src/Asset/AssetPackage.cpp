@@ -24,6 +24,9 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Asset/AssetPackage.h"
 #include "RendererRuntime/Core/Math/Math.h"
+#include "RendererRuntime/Context.h"
+
+#include <Renderer/Public/Renderer.h>
 
 #include <cassert>
 #include <algorithm>
@@ -72,10 +75,10 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	void AssetPackage::addAsset(AssetId assetId, VirtualFilename virtualFilename)
+	void AssetPackage::addAsset(const Context& context, AssetId assetId, VirtualFilename virtualFilename)
 	{
-		assert((nullptr == tryGetAssetByAssetId(assetId)) && "Asset ID is already used");
-		assert((strlen(virtualFilename) <= Asset::MAXIMUM_ASSET_FILENAME_LENGTH) && "The asset filename is too long");
+		RENDERER_ASSERT(context, nullptr == tryGetAssetByAssetId(assetId), "Renderer runtime asset ID is already used");
+		RENDERER_ASSERT(context, strlen(virtualFilename) <= Asset::MAXIMUM_ASSET_FILENAME_LENGTH, "The renderer runtime asset filename is too long");
 		SortedAssetVector::const_iterator iterator = std::lower_bound(mSortedAssetVector.cbegin(), mSortedAssetVector.cend(), assetId, ::detail::OrderByAssetId());
 		Asset& asset = *mSortedAssetVector.insert(iterator, Asset());
 		asset.assetId = assetId;

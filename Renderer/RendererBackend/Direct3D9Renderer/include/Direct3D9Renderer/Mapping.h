@@ -36,6 +36,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace Renderer
+{
+	class Context;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace Direct3D9Renderer
@@ -64,37 +73,43 @@ namespace Direct3D9Renderer
 		*  @brief
 		*    "Renderer::FilterMode" to Direct3D 9 magnification filter mode
 		*
+		*  @param[in] context
+		*    Used renderer context
 		*  @param[in] filterMode
 		*    "Renderer::FilterMode" to map
 		*
 		*  @return
 		*    Direct3D 9 magnification filter mode
 		*/
-		static uint32_t getDirect3D9MagFilterMode(Renderer::FilterMode filterMode);
+		static uint32_t getDirect3D9MagFilterMode(const Renderer::Context& context, Renderer::FilterMode filterMode);
 
 		/**
 		*  @brief
 		*    "Renderer::FilterMode" to Direct3D 9 minification filter mode
 		*
+		*  @param[in] context
+		*    Used renderer context
 		*  @param[in] filterMode
 		*    "Renderer::FilterMode" to map
 		*
 		*  @return
 		*    Direct3D 9 minification filter mode
 		*/
-		static uint32_t getDirect3D9MinFilterMode(Renderer::FilterMode filterMode);
+		static uint32_t getDirect3D9MinFilterMode(const Renderer::Context& context, Renderer::FilterMode filterMode);
 
 		/**
 		*  @brief
 		*    "Renderer::FilterMode" to Direct3D 9 mipmapping filter mode
 		*
+		*  @param[in] context
+		*    Used renderer context
 		*  @param[in] filterMode
 		*    "Renderer::FilterMode" to map
 		*
 		*  @return
 		*    Direct3D 9 mipmapping filter mode
 		*/
-		static uint32_t getDirect3D9MipFilterMode(Renderer::FilterMode filterMode);
+		static uint32_t getDirect3D9MipFilterMode(const Renderer::Context& context, Renderer::FilterMode filterMode);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::TextureAddressMode                          ]
@@ -206,13 +221,15 @@ namespace Direct3D9Renderer
 		*  @brief
 		*    Synchronization interval to Direct3D 9 presentation interval
 		*
+		*  @param[in] context
+		*    Used renderer context
 		*  @param[in] synchronizationInterval
 		*    Synchronization interval to map
 		*
 		*  @return
 		*    Direct3D 9 presentation interval
 		*/
-		static uint32_t getDirect3D9PresentationInterval(uint32_t synchronizationInterval);
+		static uint32_t getDirect3D9PresentationInterval(const Renderer::Context& context, uint32_t synchronizationInterval);
 
 
 	};

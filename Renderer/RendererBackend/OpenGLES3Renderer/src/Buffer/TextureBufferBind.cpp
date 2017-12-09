@@ -25,6 +25,9 @@
 #include "OpenGLES3Renderer/ExtensionsRuntimeLinking.h"
 #include "OpenGLES3Renderer/Mapping.h"
 
+#include <Renderer/IAssert.h>
+#include <Renderer/IRenderer.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -89,7 +92,7 @@ namespace OpenGLES3Renderer
 	void TextureBufferBind::copyDataFrom(uint32_t numberOfBytes, const void* data)
 	{
 		// Sanity check
-		assert(nullptr != data);
+		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid OpenGL ES 3 texture buffer data");
 
 		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Backup the currently bound OpenGL ES 3 texture buffer

@@ -38,6 +38,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace Renderer
+{
+	class Context;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace OpenGLES3Renderer
@@ -66,18 +75,22 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    "Renderer::FilterMode" to OpenGL ES 3 magnification filter mode
 		*
+		*  @param[in] context
+		*    Renderer context to use
 		*  @param[in] filterMode
 		*    "Renderer::FilterMode" to map
 		*
 		*  @return
 		*    OpenGL ES 3 magnification filter mode (type "GLint" not used in here in order to keep the header slim)
 		*/
-		static int getOpenGLES3MagFilterMode(Renderer::FilterMode filterMode);
+		static int getOpenGLES3MagFilterMode(const Renderer::Context& context, Renderer::FilterMode filterMode);
 
 		/**
 		*  @brief
 		*    "Renderer::FilterMode" to OpenGL ES 3 minification filter mode
 		*
+		*  @param[in] context
+		*    Renderer context to use
 		*  @param[in] filterMode
 		*    "Renderer::FilterMode" to map
 		*  @param[in] hasMipmaps
@@ -86,7 +99,7 @@ namespace OpenGLES3Renderer
 		*  @return
 		*    OpenGL ES 3 minification filter mode (type "GLint" not used in here in order to keep the header slim)
 		*/
-		static int getOpenGLES3MinFilterMode(Renderer::FilterMode filterMode, bool hasMipmaps);
+		static int getOpenGLES3MinFilterMode(const Renderer::Context& context, Renderer::FilterMode filterMode, bool hasMipmaps);
 
 		/**
 		*  @brief

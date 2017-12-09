@@ -28,6 +28,7 @@
 #include "VulkanRenderer/Helper.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/IAssert.h>
 
 #include <cstring>	// For "memcpy()"
 
@@ -85,9 +86,9 @@ namespace VulkanRenderer
 	void TextureBuffer::copyDataFrom(uint32_t numberOfBytes, const void* data)
 	{
 		// Sanity checks
-		assert(0 != numberOfBytes);
-		assert(nullptr != data);
-		assert(VK_NULL_HANDLE != mVkDeviceMemory);
+		RENDERER_ASSERT(getRenderer().getContext(), 0 != numberOfBytes, "Invalid Vulkan texture buffer data");
+		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid Vulkan texture buffer data");
+		RENDERER_ASSERT(getRenderer().getContext(), VK_NULL_HANDLE != mVkDeviceMemory, "Invalid Vulkan device memory");
 
 		// Upload data
 		const VulkanRenderer& vulkanRenderer = static_cast<const VulkanRenderer&>(getRenderer());

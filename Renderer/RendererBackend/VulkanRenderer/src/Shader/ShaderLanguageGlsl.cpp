@@ -35,6 +35,7 @@
 #include "VulkanRenderer/VulkanContext.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/IAssert.h>
 
 #ifdef VULKANRENDERER_GLSLTOSPIRV
 	// Disable warnings in external headers, we can't fix them
@@ -261,7 +262,7 @@ namespace VulkanRenderer
 			}
 			else
 			{
-				assert(false && "Invalid Vulkan shader stage flag bits");
+				RENDERER_ASSERT(vulkanRenderer.getContext(), false, "Invalid Vulkan shader stage flag bits");
 			}
 			glslang::TShader shader(shLanguage);
 			shader.setEnvInput(glslang::EShSourceGlsl, shLanguage, glslang::EShClientVulkan, glslVersion);
@@ -318,13 +319,13 @@ namespace VulkanRenderer
 				else
 				{
 					// Failed to link the program
-					vulkanRenderer.getContext().getLog().print(Renderer::ILog::Type::CRITICAL, sourceCode, "Failed to link the GLSL program: %s", program.getInfoLog());
+					vulkanRenderer.getContext().getLog().print(Renderer::ILog::Type::CRITICAL, sourceCode, __FILE__, static_cast<uint32_t>(__LINE__), "Failed to link the GLSL program: %s", program.getInfoLog());
 				}
 			}
 			else
 			{
 				// Failed to parse the shader source code
-				vulkanRenderer.getContext().getLog().print(Renderer::ILog::Type::CRITICAL, sourceCode, "Failed to parse the GLSL shader source code: %s", shader.getInfoLog());
+				vulkanRenderer.getContext().getLog().print(Renderer::ILog::Type::CRITICAL, sourceCode, __FILE__, static_cast<uint32_t>(__LINE__), "Failed to parse the GLSL shader source code: %s", shader.getInfoLog());
 			}
 		#else
 			std::ignore = vulkanRenderer;

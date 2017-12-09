@@ -26,6 +26,8 @@
 #include "OpenGLES3Renderer/IOpenGLES3Context.h"	// We need to include this header, else the linker won't find our defined OpenGL ES 3 functions
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
+#include <Renderer/IAssert.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -44,8 +46,8 @@ namespace OpenGLES3Renderer
 		mGenerateMipmaps(false)
 	{
 		// Sanity checks
-		assert(0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data);
-		assert(((flags & Renderer::TextureFlag::RENDER_TARGET) == 0 || nullptr == data) && "Render target textures can't be filled using provided data");
+		RENDERER_ASSERT(openGLES3Renderer.getContext(), 0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data, "Invalid OpenGL ES 3 texture parameters");
+		RENDERER_ASSERT(openGLES3Renderer.getContext(), (flags & Renderer::TextureFlag::RENDER_TARGET) == 0 || nullptr == data, "OpenGL ES 3 render target textures can't be filled using provided data");
 
 		// TODO(co) Check support formats
 
@@ -175,7 +177,7 @@ namespace OpenGLES3Renderer
 	void Texture3D::copyDataFrom(uint32_t, const void* data)
 	{
 		// Sanity check
-		assert(nullptr != data);
+		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid OpenGL ES 3 texture data");
 
 		// Copy data
 		glTexImage3D(GL_TEXTURE_3D, 0, Mapping::getOpenGLES3InternalFormat(mTextureFormat), static_cast<GLsizei>(getWidth()), static_cast<GLsizei>(getHeight()), static_cast<GLsizei>(getDepth()), 0, Mapping::getOpenGLES3Format(mTextureFormat), Mapping::getOpenGLES3Type(mTextureFormat), data);

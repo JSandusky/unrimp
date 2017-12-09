@@ -29,6 +29,7 @@
 #include "Direct3D10Renderer/Direct3D10Renderer.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/IAssert.h>
 
 #include <VersionHelpers.h>
 
@@ -128,7 +129,7 @@ namespace Direct3D10Renderer
 		const RenderPass& d3d10RenderPass = static_cast<RenderPass&>(renderPass);
 
 		// Sanity check
-		assert(1 == d3d10RenderPass.getNumberOfColorAttachments());
+		RENDERER_ASSERT(renderPass.getRenderer().getContext(), 1 == d3d10RenderPass.getNumberOfColorAttachments(), "There must be exactly one Direct3D 10 render pass color attachment");
 
 		// Get the Direct3D 10 device instance
 		ID3D10Device* d3d10Device = static_cast<Direct3D10Renderer&>(renderPass.getRenderer()).getD3D10Device();
@@ -208,13 +209,13 @@ namespace Direct3D10Renderer
 		dxgiSwapChainDesc.Windowed							 = TRUE;
 		if (isWindows10OrGreater)
 		{
-			assert((d3d10RenderPass.getNumberOfMultisamples() == 1) && "Direct3D 10 doesn't support multisampling if the flip model vertical synchronization is used");
+			RENDERER_ASSERT(renderPass.getRenderer().getContext(), d3d10RenderPass.getNumberOfMultisamples() == 1, "Direct3D 10 doesn't support multisampling if the flip model vertical synchronization is used");
 			dxgiSwapChainDesc.BufferCount = 2;
 			dxgiSwapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 		}
 		else if (::IsWindows8OrGreater())
 		{
-			assert((d3d10RenderPass.getNumberOfMultisamples() == 1) && "Direct3D 10 doesn't support multisampling if the flip model vertical synchronization is used");
+			RENDERER_ASSERT(renderPass.getRenderer().getContext(), d3d10RenderPass.getNumberOfMultisamples() == 1, "Direct3D 10 doesn't support multisampling if the flip model vertical synchronization is used");
 			dxgiSwapChainDesc.BufferCount = 2;
 			dxgiSwapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
 		}

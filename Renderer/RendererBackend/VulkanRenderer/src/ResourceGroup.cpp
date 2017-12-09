@@ -35,6 +35,7 @@
 #include "VulkanRenderer/Buffer/TextureBuffer.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/IAssert.h>
 
 
 //[-------------------------------------------------------]
@@ -201,9 +202,9 @@ namespace VulkanRenderer
 					}
 
 					// Get the sampler state
-					assert(nullptr != mSamplerStates);
+					RENDERER_ASSERT(vulkanRenderer.getContext(), nullptr != mSamplerStates, "Invalid Vulkan sampler states");
 					const SamplerState* samplerState = static_cast<const SamplerState*>(mSamplerStates[resourceIndex]);
-					assert(nullptr != samplerState);
+					RENDERER_ASSERT(vulkanRenderer.getContext(), nullptr != samplerState, "Invalid Vulkan sampler states");
 
 					// Update Vulkan descriptor sets
 					const VkDescriptorImageInfo vkDescriptorImageInfo =

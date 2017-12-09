@@ -27,6 +27,8 @@
 #include "Direct3D12Renderer/Mapping.h"
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
 
+#include <Renderer/IAssert.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -57,7 +59,7 @@ namespace Direct3D12Renderer
 		}
 		else
 		{
-			assert(nullptr == data);
+			RENDERER_ASSERT(direct3D12Renderer.getContext(), nullptr == data, "Invalid Direct3D 12 indirect buffer data");
 		}
 
 		/*
@@ -172,8 +174,8 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	void IndirectBuffer::copyDataFrom(uint32_t numberOfBytes, const void* data)
 	{
-		assert(numberOfBytes <= mNumberOfBytes);
-		assert(nullptr != data);
+		RENDERER_ASSERT(getRenderer().getContext(), numberOfBytes <= mNumberOfBytes, "Invalid Direct3D 12 indirect buffer data");
+		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid Direct3D 12 indirect buffer data");
 		memcpy(mData, data, numberOfBytes);
 
 		// TODO(co) Direct3D 12 update

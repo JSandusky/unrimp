@@ -28,6 +28,8 @@
 #include <RendererRuntime/Core/File/StdFileManager.h>
 
 #include <Renderer/Public/StdLog.h>
+#include <Renderer/Public/StdAssert.h>
+#include <Renderer/Public/StdMemory.h>
 
 #include <iostream>
 
@@ -38,8 +40,10 @@
 int programEntryPoint(const CommandLineArguments& commandLineArguments)
 {
 	Renderer::StdLog stdLog;
-	RendererRuntime::StdFileManager stdFileManager(stdLog, "..");
-	RendererToolkit::Context rendererToolkitContext(stdLog, stdFileManager);
+	Renderer::StdAssert stdAssert;
+	Renderer::StdMemory stdMemory;
+	RendererRuntime::StdFileManager stdFileManager(stdLog, stdAssert, stdMemory, "..");
+	RendererToolkit::Context rendererToolkitContext(stdLog, stdAssert, stdMemory, stdFileManager);
 	RendererToolkit::RendererToolkitInstance rendererToolkitInstance(rendererToolkitContext);
 	RendererToolkit::IRendererToolkit* rendererToolkit = rendererToolkitInstance.getRendererToolkit();
 	if (nullptr != rendererToolkit)

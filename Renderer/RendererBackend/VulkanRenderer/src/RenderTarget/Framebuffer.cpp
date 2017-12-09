@@ -29,6 +29,7 @@
 #include "VulkanRenderer/VulkanContext.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/IAssert.h>
 #include <Renderer/Context.h>
 
 // Disable warnings in external headers, we can't fix them
@@ -75,7 +76,7 @@ namespace VulkanRenderer
 			for (Renderer::ITexture** colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture, ++colorFramebufferAttachments)
 			{
 				// Sanity check
-				assert(nullptr != colorFramebufferAttachments->texture);
+				RENDERER_ASSERT(renderPass.getRenderer().getContext(), nullptr != colorFramebufferAttachments->texture, "Invalid Vulkan color framebuffer attachment texture");
 
 				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
 				*colorTexture = colorFramebufferAttachments->texture;
@@ -88,7 +89,7 @@ namespace VulkanRenderer
 					case Renderer::ResourceType::TEXTURE_2D:
 					{
 						// Sanity check
-						assert(0 == colorFramebufferAttachments->layerIndex);
+						RENDERER_ASSERT(renderPass.getRenderer().getContext(), 0 == colorFramebufferAttachments->layerIndex, "Invalid Vulkan color framebuffer attachment layer index");
 
 						// Update the framebuffer width and height if required
 						Texture2D* texture2D = static_cast<Texture2D*>(*colorTexture);
@@ -159,7 +160,7 @@ namespace VulkanRenderer
 		if (nullptr != depthStencilFramebufferAttachment)
 		{
 			mDepthStencilTexture = depthStencilFramebufferAttachment->texture;
-			assert(nullptr != mDepthStencilTexture);
+			RENDERER_ASSERT(renderPass.getRenderer().getContext(), nullptr != mDepthStencilTexture, "Invalid Vulkan depth stencil framebuffer attachment texture");
 			mDepthStencilTexture->addReference();
 
 			// Evaluate the depth stencil texture type
@@ -169,7 +170,7 @@ namespace VulkanRenderer
 				case Renderer::ResourceType::TEXTURE_2D:
 				{
 					// Sanity check
-					assert(0 == depthStencilFramebufferAttachment->layerIndex);
+					RENDERER_ASSERT(renderPass.getRenderer().getContext(), 0 == depthStencilFramebufferAttachment->layerIndex, "Invalid Vulkan depth stencil framebuffer attachment layer index");
 
 					// Update the framebuffer width and height if required
 					Texture2D* texture2D = static_cast<Texture2D*>(mDepthStencilTexture);
@@ -235,12 +236,12 @@ namespace VulkanRenderer
 		// Validate the framebuffer width and height
 		if (0 == mWidth || UINT_MAX == mWidth)
 		{
-			assert(false);
+			RENDERER_ASSERT(renderPass.getRenderer().getContext(), false, "Invalid Vulkan framebuffer width");
 			mWidth = 1;
 		}
 		if (0 == mHeight || UINT_MAX == mHeight)
 		{
-			assert(false);
+			RENDERER_ASSERT(renderPass.getRenderer().getContext(), false, "Invalid Vulkan framebuffer height");
 			mHeight = 1;
 		}
 

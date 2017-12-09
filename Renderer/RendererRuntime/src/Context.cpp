@@ -42,6 +42,16 @@ namespace RendererRuntime
 		return mRenderer.getContext().getLog();
 	}
 
+	Renderer::IAssert& Context::getAssert() const
+	{
+		return mRenderer.getContext().getAssert();
+	}
+
+	Renderer::IMemory& Context::getMemory() const
+	{
+		return mRenderer.getContext().getMemory();
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

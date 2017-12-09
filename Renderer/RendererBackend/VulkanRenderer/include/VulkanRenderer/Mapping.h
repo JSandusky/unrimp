@@ -36,6 +36,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace Renderer
+{
+	class Context;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace VulkanRenderer
@@ -64,37 +73,43 @@ namespace VulkanRenderer
 		*  @brief
 		*    "Renderer::FilterMode" to Vulkan magnification filter mode
 		*
+		*  @param[in] context
+		*    Renderer context to use
 		*  @param[in] filterMode
 		*    "Renderer::FilterMode" to map
 		*
 		*  @return
 		*    Vulkan magnification filter mode
 		*/
-		static VkFilter getVulkanMagFilterMode(Renderer::FilterMode filterMode);
+		static VkFilter getVulkanMagFilterMode(const Renderer::Context& context, Renderer::FilterMode filterMode);
 
 		/**
 		*  @brief
 		*    "Renderer::FilterMode" to Vulkan minification filter mode
 		*
+		*  @param[in] context
+		*    Renderer context to use
 		*  @param[in] filterMode
 		*    "Renderer::FilterMode" to map
 		*
 		*  @return
 		*    Vulkan minification filter mode
 		*/
-		static VkFilter getVulkanMinFilterMode(Renderer::FilterMode filterMode);
+		static VkFilter getVulkanMinFilterMode(const Renderer::Context& context, Renderer::FilterMode filterMode);
 
 		/**
 		*  @brief
 		*    "Renderer::FilterMode" to Vulkan sampler mipmap mode
 		*
+		*  @param[in] context
+		*    Renderer context to use
 		*  @param[in] filterMode
 		*    "Renderer::FilterMode" to map
 		*
 		*  @return
 		*    Vulkan sampler mipmap mode
 		*/
-		static VkSamplerMipmapMode getVulkanMipmapMode(Renderer::FilterMode filterMode);
+		static VkSamplerMipmapMode getVulkanMipmapMode(const Renderer::Context& context, Renderer::FilterMode filterMode);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::TextureAddressMode                          ]
@@ -175,13 +190,15 @@ namespace VulkanRenderer
 		*  @brief
 		*    "Renderer::IndexBufferFormat" to Vulkan type
 		*
+		*  @param[in] context
+		*    Renderer context to use
 		*  @param[in] indexBufferFormat
 		*    "Renderer::IndexBufferFormat" to map
 		*
 		*  @return
 		*    Vulkan index type
 		*/
-		static VkIndexType getVulkanType(Renderer::IndexBufferFormat::Enum indexBufferFormat);
+		static VkIndexType getVulkanType(const Renderer::Context& context, Renderer::IndexBufferFormat::Enum indexBufferFormat);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::PrimitiveTopology                           ]
@@ -217,13 +234,15 @@ namespace VulkanRenderer
 		*  @brief
 		*    Number of multisamples to Vulkan sample count flag bits
 		*
+		*  @param[in] context
+		*    Renderer context to use
 		*  @param[in] numberOfMultisamples
 		*    The number of multisamples per pixel (valid values: 1, 2, 4, 8)
 		*
 		*  @return
 		*    Vulkan sample count flag bits
 		*/
-		static VkSampleCountFlagBits getVulkanSampleCountFlagBits(uint8_t numberOfMultisamples);
+		static VkSampleCountFlagBits getVulkanSampleCountFlagBits(const Renderer::Context& context, uint8_t numberOfMultisamples);
 
 
 	};

@@ -76,7 +76,7 @@ namespace Renderer
 	//[ Public virtual Renderer::ILog methods                 ]
 	//[-------------------------------------------------------]
 	public:
-		inline virtual void print(Type type, const char* attachment, const char* format, ...) override;
+		inline virtual void print(Type type, const char* attachment, const char* file, uint32_t line, const char* format, ...) override;
 
 
 	//[-------------------------------------------------------]
@@ -91,12 +91,16 @@ namespace Renderer
 		*    Log message type
 		*  @param[in] attachment
 		*    Optional attachment (for example build shader source code), can be a null pointer
+		*  @param[in] file
+		*    File as ASCII string
+		*  @param[in] line
+		*    Line number
 		*  @param[in] message
-		*    Message
+		*    UTF-8 message
 		*  @param[in] numberOfCharacters
 		*    Number of characters inside the message, does not include the terminating zero character
 		*/
-		inline virtual void printInternal(Type type, const char* attachment, const char* message, uint32_t numberOfCharacters);
+		inline virtual void printInternal(Type type, const char* attachment, const char* file, uint32_t line, const char* message, uint32_t numberOfCharacters);
 
 
 	//[-------------------------------------------------------]

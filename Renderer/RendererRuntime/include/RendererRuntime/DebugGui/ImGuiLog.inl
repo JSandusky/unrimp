@@ -152,7 +152,7 @@ namespace RendererRuntime
 												else
 												{
 													// Error!
-													print(Renderer::ILog::Type::CRITICAL, nullptr, "Failed to open the file \"%s\" for writing", virtualFilename.c_str());
+													print(Renderer::ILog::Type::CRITICAL, nullptr, __FILE__, static_cast<uint32_t>(__LINE__), "Failed to open the file \"%s\" for writing", virtualFilename.c_str());
 												}
 											}
 										}
@@ -188,13 +188,19 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected virtual Renderer::StdLog methods            ]
 	//[-------------------------------------------------------]
-	inline void ImGuiLog::printInternal(Type type, const char* attachment, const char* message, uint32_t numberOfCharacters)
+	inline void ImGuiLog::printInternal(Type type, const char* attachment, const char* file, uint32_t line, const char* message, uint32_t numberOfCharacters)
 	{
 		// Call the base implementation
-		StdLog::printInternal(type, attachment, message, numberOfCharacters);
+		StdLog::printInternal(type, attachment, file, line, message, numberOfCharacters);
 
 		// Construct the full UTF-8 message text
-		std::string fullMessage = std::string(typeToString(type)) + message;
+		#ifdef RENDERER_NO_DEBUG
+			std::ignore = file;
+			std::ignore = line;
+			std::string fullMessage = std::string(typeToString(type)) + message;
+		#else
+			std::string fullMessage = "File \"" + std::string(file) + "\" | Line " + std::to_string(line) + " | " + std::string(typeToString(type)) + message;
+		#endif
 		if ('\n' != fullMessage.back())
 		{
 			fullMessage += '\n';

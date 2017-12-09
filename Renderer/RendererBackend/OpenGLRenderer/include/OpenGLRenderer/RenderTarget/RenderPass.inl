@@ -19,6 +19,13 @@
 
 
 //[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include <Renderer/IAssert.h>
+#include <Renderer/IRenderer.h>
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace OpenGLRenderer
@@ -45,7 +52,7 @@ namespace OpenGLRenderer
 
 	inline Renderer::TextureFormat::Enum RenderPass::getColorAttachmentTextureFormat(uint32_t colorAttachmentIndex) const
 	{
-		assert(colorAttachmentIndex < mNumberOfColorAttachments);
+		RENDERER_ASSERT(getRenderer().getContext(), colorAttachmentIndex < mNumberOfColorAttachments, "Invalid OpenGL color attachment index");
 		return mColorAttachmentTextureFormats[colorAttachmentIndex];
 	}
 

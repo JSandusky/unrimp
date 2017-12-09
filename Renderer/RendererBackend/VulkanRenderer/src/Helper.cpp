@@ -27,6 +27,7 @@
 #include "VulkanRenderer/Mapping.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/IAssert.h>
 #include <Renderer/Texture/ITexture.h>
 
 #include <cstring>	// For "memcpy()"
@@ -412,7 +413,7 @@ namespace VulkanRenderer
 		uint32_t numberOfMipmaps = (dataContainsMipmaps || generateMipmaps) ? Renderer::ITexture::getNumberOfMipmaps(vkExtent3D.width, vkExtent3D.height) : 1;
 
 		// Get Vulkan image usage flags
-		assert((flags & Renderer::TextureFlag::RENDER_TARGET) == 0 || nullptr == data && "Render target textures can't be filled using provided data");
+		RENDERER_ASSERT(vulkanRenderer.getContext(), (flags & Renderer::TextureFlag::RENDER_TARGET) == 0 || nullptr == data, "Vulkan render target textures can't be filled using provided data");
 		const bool isDepthTextureFormat = Renderer::TextureFormat::isDepth(textureFormat);
 		VkImageUsageFlags vkImageUsageFlags = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
 		if (flags & Renderer::TextureFlag::RENDER_TARGET)
@@ -436,7 +437,7 @@ namespace VulkanRenderer
 		const bool     layered    = (VK_IMAGE_VIEW_TYPE_2D_ARRAY == vkImageViewType || VK_IMAGE_VIEW_TYPE_CUBE == vkImageViewType);
 		const uint32_t layerCount = layered ? vkExtent3D.depth : 1;
 		const uint32_t depth	  = layered ? 1 : vkExtent3D.depth;
-		const VkSampleCountFlagBits vkSampleCountFlagBits = Mapping::getVulkanSampleCountFlagBits(numberOfMultisamples);
+		const VkSampleCountFlagBits vkSampleCountFlagBits = Mapping::getVulkanSampleCountFlagBits(vulkanRenderer.getContext(), numberOfMultisamples);
 		VkImageAspectFlags vkImageAspectFlags = isDepthTextureFormat ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
 		if (::detail::hasVkFormatStencilComponent(vkFormat))
 		{
@@ -542,8 +543,8 @@ namespace VulkanRenderer
 					vkGetPhysicalDeviceFormatProperties(vulkanRenderer.getVulkanContext().getVkPhysicalDevice(), vkFormat, &vkFormatProperties);
 
 					// Mip-chain generation requires support for blit source and destination
-					assert(vkFormatProperties.optimalTilingFeatures & VK_FORMAT_FEATURE_BLIT_SRC_BIT);
-					assert(vkFormatProperties.optimalTilingFeatures & VK_FORMAT_FEATURE_BLIT_DST_BIT);
+					RENDERER_ASSERT(vulkanRenderer.getContext(), vkFormatProperties.optimalTilingFeatures & VK_FORMAT_FEATURE_BLIT_SRC_BIT, "Invalid Vulkan optimal tiling features");
+					RENDERER_ASSERT(vulkanRenderer.getContext(), vkFormatProperties.optimalTilingFeatures & VK_FORMAT_FEATURE_BLIT_DST_BIT, "Invalid Vulkan optimal tiling features");
 				}
 				#endif
 

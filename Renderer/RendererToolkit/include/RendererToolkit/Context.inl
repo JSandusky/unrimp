@@ -28,8 +28,10 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline Context::Context(Renderer::ILog& log, RendererRuntime::IFileManager& fileManager) :
+	inline Context::Context(Renderer::ILog& log, Renderer::IAssert& assert, Renderer::IMemory& memory, RendererRuntime::IFileManager& fileManager) :
 		mLog(log),
+		mAssert(assert),
+		mMemory(memory),
 		mFileManager(fileManager)
 	{
 		// Nothing here
@@ -43,6 +45,16 @@ namespace RendererToolkit
 	inline Renderer::ILog& Context::getLog() const
 	{
 		return mLog;
+	}
+
+	inline Renderer::IAssert& Context::getAssert() const
+	{
+		return mAssert;
+	}
+
+	inline Renderer::IMemory& Context::getMemory() const
+	{
+		return mMemory;
 	}
 
 	inline RendererRuntime::IFileManager& Context::getFileManager() const

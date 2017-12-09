@@ -39,6 +39,7 @@
 		#endif
 		#define FORCEINLINE __forceinline
 		#define NOP __nop()
+		#define DEBUG_BREAK __debugbreak()
 		#define PRAGMA_WARNING_PUSH __pragma(warning(push))
 		#define PRAGMA_WARNING_POP __pragma(warning(pop))
 		#define PRAGMA_WARNING_DISABLE_MSVC(id) __pragma(warning(disable: id))
@@ -50,6 +51,7 @@
 		#endif
 		#define FORCEINLINE __attribute__((always_inline))
 		#define NOP asm ("nop");
+		#define DEBUG_BREAK __builtin_trap()
 		#ifdef __clang__
 			#define PRAGMA_WARNING_PUSH _Pragma("clang diagnostic push")
 			#define PRAGMA_WARNING_POP _Pragma("clang diagnostic pop")
@@ -118,6 +120,8 @@ PRAGMA_WARNING_POP
 namespace Renderer
 {
 	class ILog;
+	class IAssert;
+	class IMemory;
 	class Context;
 	class IRenderer;
 	class IShaderLanguage;
@@ -199,8 +203,10 @@ namespace Renderer
 				WAYLAND
 			};
 		public:
-			inline Context(ILog& log, handle nativeWindowHandle = 0, bool useExternalContext = false, ContextType contextType = Context::ContextType::WINDOWS) :
+			inline Context(ILog& log, IAssert& assert, IMemory& memory, handle nativeWindowHandle = 0, bool useExternalContext = false, ContextType contextType = Context::ContextType::WINDOWS) :
 				mLog(log),
+				mAssert(assert),
+				mMemory(memory),
 				mNativeWindowHandle(nativeWindowHandle),
 				mUseExternalContext(useExternalContext),
 				mContextType(contextType),
@@ -211,6 +217,14 @@ namespace Renderer
 			inline ILog& getLog() const
 			{
 				return mLog;
+			}
+			inline IAssert& getAssert() const
+			{
+				return mAssert;
+			}
+			inline IMemory& getMemory() const
+			{
+				return mMemory;
 			}
 			inline handle getNativeWindowHandle() const
 			{
@@ -237,54 +251,55 @@ namespace Renderer
 			Context& operator=(const Context&) = delete;
 		private:
 			ILog&		mLog;
+			IAssert&	mAssert;
+			IMemory&	mMemory;
 			handle		mNativeWindowHandle;
 			bool		mUseExternalContext;
 			ContextType	mContextType;
 			void*		mRendererApiSharedLibrary;
 		};
 
-	#ifdef LINUX
-		class X11Context : public Context
-		{
-		public:
-			inline X11Context(ILog& log, _XDisplay* display, handle nativeWindowHandle = 0, bool useExternalContext = false) :
-				Context(log, nativeWindowHandle, useExternalContext, Context::ContextType::X11),
-				mDisplay(display)
-			{}
-			inline _XDisplay* getDisplay() const
+		#ifdef LINUX
+			class X11Context : public Context
 			{
-				return mDisplay;
-			}
-		private:
-			_XDisplay* mDisplay;
-		};
-		class WaylandContext : public Context
-		{
-		public:
-			inline WaylandContext(ILog& log, wl_display* display, wl_surface* surface = 0, bool useExternalContext = false) :
-				Context(log, 1, useExternalContext, Context::ContextType::WAYLAND),	// Under Wayland the surface (aka window) handle is not an integer, but the renderer implementation expects an integer as window handle so we give here an value != 0 so that a swap chain is created
-				mDisplay(display),
-				mSurface(surface)
+			public:
+				inline X11Context(ILog& log, IAssert& assert, IMemory& memory, _XDisplay* display, handle nativeWindowHandle = 0, bool useExternalContext = false) :
+					Context(log, assert, memory, nativeWindowHandle, useExternalContext, Context::ContextType::X11),
+					mDisplay(display)
+				{}
+				inline _XDisplay* getDisplay() const
+				{
+					return mDisplay;
+				}
+			private:
+				_XDisplay* mDisplay;
+			};
+			class WaylandContext : public Context
 			{
-				// Nothing here
-			}
-			inline wl_display* getDisplay() const
-			{
-				return mDisplay;
-			}
-			inline wl_surface* getSurface() const
-			{
-				return mSurface;
-			}
-		private:
-			wl_display*	mDisplay;
-			wl_surface*	mSurface;
-		};
-	#endif
-		#define RENDERER_LOG(context, type, format, ...) (context).getLog().print(Renderer::ILog::Type::type, nullptr, format, ##__VA_ARGS__);
+			public:
+				inline WaylandContext(ILog& log, IAssert& assert, IMemory& memory, wl_display* display, wl_surface* surface = 0, bool useExternalContext = false) :
+					Context(log, assert, memory, 1, useExternalContext, Context::ContextType::WAYLAND),	// Under Wayland the surface (aka window) handle is not an integer, but the renderer implementation expects an integer as window handle so we give here an value != 0 so that a swap chain is created
+					mDisplay(display),
+					mSurface(surface)
+				{
+					// Nothing here
+				}
+				inline wl_display* getDisplay() const
+				{
+					return mDisplay;
+				}
+				inline wl_surface* getSurface() const
+				{
+					return mSurface;
+				}
+			private:
+				wl_display* mDisplay;
+				wl_surface* mSurface;
+			};
+		#endif
 	#endif
 
-	// Renderer/Log/ILog.h
+	// Renderer/ILog.h
 	#ifndef __RENDERER_RENDERER_ILOG_H__
 	#define __RENDERER_RENDERER_ILOG_H__
 		class ILog
@@ -301,7 +316,7 @@ namespace Renderer
 				CRITICAL
 			};
 		public:
-			virtual void print(Type type, const char* attachment, const char* format, ...) = 0;
+			virtual void print(Type type, const char* attachment, const char* file, uint32_t line, const char* format, ...) = 0;
 		protected:
 			inline ILog()
 			{}
@@ -310,6 +325,55 @@ namespace Renderer
 			explicit ILog(const ILog&) = delete;
 			ILog& operator=(const ILog&) = delete;
 		};
+		#define RENDERER_LOG(context, type, format, ...) (context).getLog().print(Renderer::ILog::Type::type, nullptr, __FILE__, static_cast<uint32_t>(__LINE__), format, ##__VA_ARGS__);
+	#endif
+
+	// Renderer/IAssert.h
+	#ifndef __RENDERER_RENDERER_IASSERT_H__
+	#define __RENDERER_RENDERER_IASSERT_H__
+		class IAssert
+		{
+		public:
+			virtual bool handleAssert(const char* expression, const char* file, uint32_t line, const char* format, ...) = 0;
+		protected:
+			inline IAssert()
+			{}
+			inline virtual ~IAssert()
+			{}
+			explicit IAssert(const IAssert&) = delete;
+			IAssert& operator=(const IAssert&) = delete;
+		};
+		#ifdef RENDERER_NO_DEBUG
+			#define RENDERER_ASSERT(context, expression, format, ...) std::ignore = context;
+		#else
+			#define RENDERER_ASSERT(context, expression, format, ...) \
+				do \
+				{ \
+					if (!(expression) && (context).getAssert().handleAssert(#expression, __FILE__, static_cast<uint32_t>(__LINE__), format, ##__VA_ARGS__)) \
+					{ \
+						DEBUG_BREAK; \
+					} \
+				} while (0)
+		#endif
+	#endif
+
+	// Renderer/IMemory.h
+	#ifndef __RENDERER_RENDERER_IMEMORY_H__
+	#define __RENDERER_RENDERER_IMEMORY_H__
+		// TODO(co) Implement me
+		class IMemory
+		{
+		public:
+			virtual void test(bool test) = 0;
+		protected:
+			inline IMemory()
+			{}
+			inline virtual ~IMemory()
+			{}
+			explicit IMemory(const IMemory&) = delete;
+			IMemory& operator=(const IMemory&) = delete;
+		};
+		#define RENDERER_MEMORY(context, test) (context).getMemory().test(true);
 	#endif
 
 	// Renderer/RendererTypes.h

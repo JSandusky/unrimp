@@ -26,6 +26,8 @@
 #include "Framework/ExampleBase.h"
 
 #include <Renderer/Public/StdLog.h>
+#include <Renderer/Public/StdAssert.h>
+#include <Renderer/Public/StdMemory.h>
 #include <Renderer/Public/RendererInstance.h>
 
 #include <SDL2/SDL_syswm.h>
@@ -46,7 +48,9 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global variables                                      ]
 		//[-------------------------------------------------------]
-		Renderer::StdLog g_RendererLog;
+		Renderer::StdLog	g_RendererLog;
+		Renderer::StdAssert g_RendererAssert;
+		Renderer::StdMemory g_RendererMemory;
 
 
 //[-------------------------------------------------------]
@@ -689,28 +693,30 @@ Renderer::Context* IApplicationRenderer::createRendererContext() const
 		SDL_SysWMinfo info;
 		SDL_VERSION(&info.version);
 
-		const bool isOpenGLRenderer = mRendererName == "OpenGLES3" || mRendererName == "OpenGL";
-	  
-		if(SDL_GetWindowWMInfo(mMainWindow,&info))
+		const bool isOpenGLRenderer = (mRendererName == "OpenGLES3" || mRendererName == "OpenGL");
+
+		if (SDL_GetWindowWMInfo(mMainWindow,&info))
 		{
-			switch(info.subsystem) {
-		#ifdef WIN32
-				case SDL_SYSWM_WINDOWS:
-					return new Renderer::Context(::detail::g_RendererLog, info.info.win.window, isOpenGLRenderer);
-		#endif
-		#ifdef LINUX
-				case SDL_SYSWM_X11:
-					return new Renderer::X11Context(::detail::g_RendererLog, info.info.x11.display, info.info.x11.window, isOpenGLRenderer);
-				case SDL_SYSWM_WAYLAND:
-					return new Renderer::WaylandContext(::detail::g_RendererLog, info.info.wl.display, info.info.wl.surface, isOpenGLRenderer);
-		#endif
+			switch (info.subsystem)
+			{
+				#ifdef WIN32
+					case SDL_SYSWM_WINDOWS:
+						return new Renderer::Context(::detail::g_RendererLog, ::detail::g_RendererAssert, ::detail::g_RendererMemory, info.info.win.window, isOpenGLRenderer);
+				#endif
+				#ifdef LINUX
+					case SDL_SYSWM_X11:
+						return new Renderer::X11Context(::detail::g_RendererLog, ::detail::g_RendererAssert, ::detail::g_RendererMemory, info.info.x11.display, info.info.x11.window, isOpenGLRenderer);
+
+					case SDL_SYSWM_WAYLAND:
+						return new Renderer::WaylandContext(::detail::g_RendererLog, ::detail::g_RendererAssert, ::detail::g_RendererMemory, info.info.wl.display, info.info.wl.surface, isOpenGLRenderer);
+				#endif
 			}
 		}
 	}
 	return nullptr;
 }
 
-void IApplicationRenderer::getWindowSize(uint32_t &width, uint32_t &height) const
+void IApplicationRenderer::getWindowSize(uint32_t& width, uint32_t& height) const
 {
 	// Is there a valid OS window?
 	if (nullptr != mMainWindow)

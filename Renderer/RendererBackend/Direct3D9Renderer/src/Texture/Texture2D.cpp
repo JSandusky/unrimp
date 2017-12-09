@@ -27,6 +27,8 @@
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
 #include "Direct3D9Renderer/Direct3D9RuntimeLinking.h"
 
+#include <Renderer/IAssert.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -43,7 +45,7 @@ namespace Direct3D9Renderer
 		mDirect3DTexture9(nullptr)
 	{
 		// Sanity checks
-		assert(0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data);
+		RENDERER_ASSERT(direct3D9Renderer.getContext(), 0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data, "Invalid Direct3D 9 texture parameters");
 
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D9Renderer)
@@ -69,7 +71,7 @@ namespace Direct3D9Renderer
 		// Use this texture as render target?
 		if (flags & Renderer::TextureFlag::RENDER_TARGET)
 		{
-			assert((nullptr == data) && "Render target textures can't be filled using provided data");
+			RENDERER_ASSERT(direct3D9Renderer.getContext(), nullptr == data, "Direct3D 9 render target textures can't be filled using provided data");
 			direct3D9Usage |= D3DUSAGE_RENDERTARGET;
 		}
 

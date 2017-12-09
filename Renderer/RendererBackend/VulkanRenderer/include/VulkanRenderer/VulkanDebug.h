@@ -35,5 +35,5 @@
 	#define VULKANRENDERER_RENDERERMATCHCHECK_ASSERT(rendererReference, resourceReference)
 #else
 	#define VULKANRENDERER_RENDERERMATCHCHECK_ASSERT(rendererReference, resourceReference) \
-		assert((&rendererReference == &(resourceReference).getRenderer()) && "Vulkan error: The given resource is owned by another renderer instance");
+		RENDERER_ASSERT(mContext, &rendererReference == &(resourceReference).getRenderer(), "Vulkan error: The given resource is owned by another renderer instance");
 #endif

@@ -26,6 +26,8 @@
 #include "OpenGLES3Renderer/IOpenGLES3Context.h"	// We need to include this header, else the linker won't find our defined OpenGL ES 3 functions
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
+#include <Renderer/IAssert.h>
+
 #include <GLES3/gl3.h>
 
 
@@ -41,8 +43,8 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	SamplerState::SamplerState(OpenGLES3Renderer& openGLES3Renderer, const Renderer::SamplerState& samplerState) :
 		ISamplerState(openGLES3Renderer),
-		mOpenGLMagFilterMode(Mapping::getOpenGLES3MagFilterMode(samplerState.filter)),
-		mOpenGLMinFilterMode(Mapping::getOpenGLES3MinFilterMode(samplerState.filter, samplerState.maxLOD > 0.0f)),
+		mOpenGLMagFilterMode(Mapping::getOpenGLES3MagFilterMode(openGLES3Renderer.getContext(), samplerState.filter)),
+		mOpenGLMinFilterMode(Mapping::getOpenGLES3MinFilterMode(openGLES3Renderer.getContext(), samplerState.filter, samplerState.maxLOD > 0.0f)),
 		mOpenGLTextureAddressModeS(Mapping::getOpenGLES3TextureAddressMode(samplerState.addressU)),
 		mOpenGLTextureAddressModeT(Mapping::getOpenGLES3TextureAddressMode(samplerState.addressV)),
 		mOpenGLTextureAddressModeR(Mapping::getOpenGLES3TextureAddressMode(samplerState.addressW)),
@@ -54,7 +56,7 @@ namespace OpenGLES3Renderer
 		mMaxLOD(samplerState.maxLOD)
 	{
 		// Sanity check
-		assert((samplerState.maxAnisotropy <= openGLES3Renderer.getCapabilities().maximumAnisotropy) && "Maximum anisotropy value violated");
+		RENDERER_ASSERT(openGLES3Renderer.getContext(), samplerState.maxAnisotropy <= openGLES3Renderer.getCapabilities().maximumAnisotropy, "Maximum OpenGL ES 3 anisotropy value violated");
 
 		// Ignore "Renderer::SamplerState.borderColor", border color is not supported by OpenGL ES 3
 

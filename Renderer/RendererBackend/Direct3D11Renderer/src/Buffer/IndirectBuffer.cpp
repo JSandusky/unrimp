@@ -27,6 +27,8 @@
 #include "Direct3D11Renderer/Mapping.h"
 #include "Direct3D11Renderer/Direct3D11Renderer.h"
 
+#include <Renderer/IAssert.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -55,7 +57,7 @@ namespace Direct3D11Renderer
 		}
 		else
 		{
-			assert(nullptr == data);
+			RENDERER_ASSERT(direct3D11Renderer.getContext(), nullptr == data, "Invalid Direct3D 11 indirect buffer data");
 		}
 
 		// TODO(co) Implement indirect buffer support, see e.g. "Voxel visualization using DrawIndexedInstancedIndirect" - http://www.alexandre-pestana.com/tag/directx/ for hints
@@ -165,8 +167,8 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	void IndirectBuffer::copyDataFrom(uint32_t numberOfBytes, const void* data)
 	{
-		assert(numberOfBytes <= mNumberOfBytes);
-		assert(nullptr != data);
+		RENDERER_ASSERT(getRenderer().getContext(), numberOfBytes <= mNumberOfBytes, "Invalid Direct3D 11 indirect buffer data");
+		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid Direct3D 11 indirect buffer data");
 		memcpy(mData, data, numberOfBytes);
 
 		// Check resource pointers

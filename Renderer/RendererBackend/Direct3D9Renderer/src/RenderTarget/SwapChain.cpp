@@ -28,6 +28,8 @@
 #include "Direct3D9Renderer/Mapping.h"
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
 
+#include <Renderer/IAssert.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -49,7 +51,7 @@ namespace Direct3D9Renderer
 		const RenderPass& d3d9RenderPass = static_cast<RenderPass&>(renderPass);
 
 		// Sanity check
-		assert(1 == d3d9RenderPass.getNumberOfColorAttachments());
+		RENDERER_ASSERT(renderPass.getRenderer().getContext(), 1 == d3d9RenderPass.getNumberOfColorAttachments(), "There must be exactly one Direct3D 9 render pass color attachment");
 
 		// Get the Direct3D 9 device instance
 		IDirect3DDevice9* direct3DDevice9 = static_cast<Direct3D9Renderer&>(renderPass.getRenderer()).getDirect3DDevice9();
@@ -92,7 +94,7 @@ namespace Direct3D9Renderer
 		d3dPresentParameters.hDeviceWindow			= hWnd;
 		d3dPresentParameters.Windowed				= TRUE;
 		d3dPresentParameters.EnableAutoDepthStencil = FALSE;
-		d3dPresentParameters.PresentationInterval	= Mapping::getDirect3D9PresentationInterval(mVerticalSynchronizationInterval);
+		d3dPresentParameters.PresentationInterval	= Mapping::getDirect3D9PresentationInterval(renderPass.getRenderer().getContext(), mVerticalSynchronizationInterval);
 
 		// Create the Direct3D 9 swap chain
 		// -> Direct3D 9 now also automatically fills the given present parameters instance with the chosen settings
@@ -313,7 +315,7 @@ namespace Direct3D9Renderer
 			d3dPresentParameters.Windowed				= TRUE;
 			d3dPresentParameters.EnableAutoDepthStencil = TRUE;
 			d3dPresentParameters.AutoDepthStencilFormat = D3DFMT_D24X8;
-			d3dPresentParameters.PresentationInterval	= Mapping::getDirect3D9PresentationInterval(mVerticalSynchronizationInterval);
+			d3dPresentParameters.PresentationInterval	= Mapping::getDirect3D9PresentationInterval(getRenderer().getContext(), mVerticalSynchronizationInterval);
 
 			// Create the Direct3D 9 swap chain
 			// -> Direct3D 9 now also automatically fills the given present parameters instance with the chosen settings

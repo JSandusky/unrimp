@@ -42,7 +42,7 @@ namespace Direct3D11Renderer
 		mDepthStencilAttachmentTextureFormat(depthStencilAttachmentTextureFormat),
 		mNumberOfMultisamples(numberOfMultisamples)
 	{
-		assert(mNumberOfColorAttachments < 8);
+		RENDERER_ASSERT(renderer.getContext(), mNumberOfColorAttachments < 8, "Invalid number of Direct3D 11 color attachments");
 		memcpy(mColorAttachmentTextureFormats, colorAttachmentTextureFormats, sizeof(Renderer::TextureFormat::Enum) * mNumberOfColorAttachments);
 	}
 

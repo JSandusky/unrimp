@@ -80,7 +80,7 @@ namespace RendererRuntime
 	//[ Protected virtual Renderer::StdLog methods            ]
 	//[-------------------------------------------------------]
 	protected:
-		inline virtual void printInternal(Type type, const char* attachment, const char* message, uint32_t numberOfCharacters) override;
+		inline virtual void printInternal(Type type, const char* attachment, const char* file, uint32_t line, const char* message, uint32_t numberOfCharacters) override;
 
 
 	//[-------------------------------------------------------]

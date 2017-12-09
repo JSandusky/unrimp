@@ -29,6 +29,7 @@
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/IAssert.h>
 
 
 //[-------------------------------------------------------]
@@ -151,7 +152,7 @@ namespace OpenGLRenderer
 				case Renderer::ResourceType::TEXTURE_2D:
 				{
 					// Sanity check
-					assert(0 == depthStencilFramebufferAttachment->layerIndex);
+					RENDERER_ASSERT(renderPass.getRenderer().getContext(), 0 == depthStencilFramebufferAttachment->layerIndex, "Invalid OpenGL depth stencil framebuffer attachment layer index");
 
 					// Bind the depth stencil texture to framebuffer
 					const Texture2D* texture2D = static_cast<const Texture2D*>(mDepthStencilTexture);
@@ -270,7 +271,7 @@ namespace OpenGLRenderer
 	void FramebufferBind::generateMipmaps() const
 	{
 		// Sanity check
-		assert(mGenerateMipmaps);
+		RENDERER_ASSERT(getRenderer().getContext(), mGenerateMipmaps, "OpenGL framebuffer mipmap generation is disabled");
 
 		// TODO(co) Complete, currently only 2D textures are supported
 		Renderer::ITexture** colorTexturesEnd = mColorTextures + mNumberOfColorTextures;

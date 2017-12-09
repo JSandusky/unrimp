@@ -91,8 +91,10 @@ RendererToolkit::IRendererToolkit* IApplicationRendererRuntime::getRendererToolk
 			assert((nullptr != mRendererRuntimeInstance) && "The renderer runtime instance must be valid");
 			const RendererRuntime::IRendererRuntime* rendererRuntime = mRendererRuntimeInstance->getRendererRuntime();
 			Renderer::ILog& log = rendererRuntime->getRenderer().getContext().getLog();
-			mRendererToolkitFileManager = new RendererRuntime::StdFileManager(log, mFileManager->getRelativeRootDirectory());
-			mRendererToolkitContext = new RendererToolkit::Context(log, *mRendererToolkitFileManager);
+			Renderer::IAssert& assert = rendererRuntime->getRenderer().getContext().getAssert();
+			Renderer::IMemory& memory = rendererRuntime->getRenderer().getContext().getMemory();
+			mRendererToolkitFileManager = new RendererRuntime::StdFileManager(log, assert, memory, mFileManager->getRelativeRootDirectory());
+			mRendererToolkitContext = new RendererToolkit::Context(log, assert, memory, *mRendererToolkitFileManager);
 			mRendererToolkitInstance = new RendererToolkit::RendererToolkitInstance(*mRendererToolkitContext);
 		}
 		return (nullptr != mRendererToolkitInstance) ? mRendererToolkitInstance->getRendererToolkit() : nullptr;

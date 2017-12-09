@@ -28,6 +28,7 @@
 #include "Direct3D11Renderer/Direct3D11Renderer.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/IAssert.h>
 
 
 //[-------------------------------------------------------]

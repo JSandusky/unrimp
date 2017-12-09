@@ -51,12 +51,11 @@
 #include "OpenGLES3Renderer/OpenGLES3ContextRuntimeLinking.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/IAssert.h>
 #include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
 
 #include <GLES3/gl2ext.h>
-
-#include <tuple>	// For "std::ignore"
 
 
 //[-------------------------------------------------------]
@@ -94,7 +93,7 @@ namespace
 			return N;
 		}
 
-		bool mapBuffer(GLenum target, GLenum bindingTarget, GLuint openGLES3Buffer, uint32_t bufferSize, Renderer::MapType mapType, Renderer::MappedSubresource& mappedSubresource)
+		bool mapBuffer(const Renderer::Context& context, GLenum target, GLenum bindingTarget, GLuint openGLES3Buffer, uint32_t bufferSize, Renderer::MapType mapType, Renderer::MappedSubresource& mappedSubresource)
 		{
 			// TODO(co) This buffer update isn't efficient, use e.g. persistent buffer mapping
 
@@ -118,7 +117,7 @@ namespace
 			#endif
 
 			// Done
-			assert((nullptr != mappedSubresource.data) && "Mapping of OpenGL ES 3 buffer failed");
+			RENDERER_ASSERT(context, nullptr != mappedSubresource.data, "Mapping of OpenGL ES 3 buffer failed");
 			return (nullptr != mappedSubresource.data);
 		}
 
@@ -152,7 +151,7 @@ namespace
 			void ExecuteCommandBuffer(const void* data, Renderer::IRenderer& renderer)
 			{
 				const Renderer::Command::ExecuteCommandBuffer* realData = static_cast<const Renderer::Command::ExecuteCommandBuffer*>(data);
-				assert(nullptr != realData->commandBufferToExecute);
+				RENDERER_ASSERT(renderer.getContext(), nullptr != realData->commandBufferToExecute, "The OpenGL ES 3 command buffer to execute must be valid");
 				renderer.submitCommandBuffer(*realData->commandBufferToExecute);
 			}
 
@@ -548,7 +547,7 @@ namespace OpenGLES3Renderer
 			for (uint32_t resourceIndex = 0; resourceIndex < numberOfResources; ++resourceIndex, ++resources)
 			{
 				Renderer::IResource* resource = *resources;
-				assert(nullptr != reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges));
+				RENDERER_ASSERT(mContext, nullptr != reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges), "Invalid OpenGL ES 3 descriptor ranges");
 				const Renderer::DescriptorRange& descriptorRange = reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges)[resourceIndex];
 
 				// Check the type of resource to set
@@ -560,7 +559,7 @@ namespace OpenGLES3Renderer
 						// Attach the buffer to the given UBO binding point
 						// -> Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 						// -> Direct3D 10 and Direct3D 11 have explicit binding points
-						assert(nullptr != openGLES3ResourceGroup->getResourceIndexToUniformBlockBindingIndex());
+						RENDERER_ASSERT(mContext, nullptr != openGLES3ResourceGroup->getResourceIndexToUniformBlockBindingIndex(), "Invalid OpenGL ES 3 resource index to uniform block binding index");
 						glBindBufferBase(GL_UNIFORM_BUFFER, openGLES3ResourceGroup->getResourceIndexToUniformBlockBindingIndex()[resourceIndex], static_cast<UniformBuffer*>(resource)->getOpenGLES3UniformBuffer());
 						break;
 
@@ -576,7 +575,7 @@ namespace OpenGLES3Renderer
 							// Attach the buffer to the given UBO binding point
 							// -> Explicit binding points ("layout(binding = 0)" in GLSL shader) requires OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension
 							// -> Direct3D 10 and Direct3D 11 have explicit binding points
-							assert(nullptr != openGLES3ResourceGroup->getResourceIndexToUniformBlockBindingIndex());
+							RENDERER_ASSERT(mContext, nullptr != openGLES3ResourceGroup->getResourceIndexToUniformBlockBindingIndex(), "Invalid OpenGL ES 3 resource index to uniform block binding index");
 							glBindBufferBase(GL_UNIFORM_BUFFER, openGLES3ResourceGroup->getResourceIndexToUniformBlockBindingIndex()[resourceIndex], static_cast<TextureBuffer*>(resource)->getOpenGLES3TextureBuffer());
 							break;
 						}
@@ -636,7 +635,7 @@ namespace OpenGLES3Renderer
 								// Set the OpenGL ES 3 sampler states, if required (texture buffer has no sampler state), it's valid that there's no sampler state (e.g. texel fetch instead of sampling might be used)
 								if (Renderer::ResourceType::TEXTURE_BUFFER != resourceType)
 								{
-									assert(nullptr != openGLES3ResourceGroup->getSamplerState());
+									RENDERER_ASSERT(mContext, nullptr != openGLES3ResourceGroup->getSamplerState(), "Invalid OpenGL ES 3 sampler state");
 									const SamplerState* samplerState = static_cast<const SamplerState*>(openGLES3ResourceGroup->getSamplerState()[resourceIndex]);
 									if (nullptr != samplerState)
 									{
@@ -780,7 +779,7 @@ namespace OpenGLES3Renderer
 	void OpenGLES3Renderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport* viewports)
 	{
 		// Sanity check
-		assert((numberOfViewports > 0 && nullptr != viewports) && "Invalid rasterizer state viewports");
+		RENDERER_ASSERT(mContext, numberOfViewports > 0 && nullptr != viewports, "Invalid OpenGL ES 3 rasterizer state viewports");
 		std::ignore = numberOfViewports;
 
 		// In OpenGL ES 3, the origin of the viewport is left bottom while Direct3D is using a left top origin. To make the
@@ -809,7 +808,7 @@ namespace OpenGLES3Renderer
 	void OpenGLES3Renderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles)
 	{
 		// Sanity check
-		assert((numberOfScissorRectangles > 0 && nullptr != scissorRectangles) && "Invalid rasterizer state scissor rectangles");
+		RENDERER_ASSERT(mContext, numberOfScissorRectangles > 0 && nullptr != scissorRectangles, "Invalid OpenGL ES 3 rasterizer state scissor rectangles");
 		std::ignore = numberOfScissorRectangles;
 
 		// In OpenGL ES 3, the origin of the scissor rectangle is left bottom while Direct3D is using a left top origin. To make the
@@ -1050,8 +1049,8 @@ namespace OpenGLES3Renderer
 					// Get the OpenGL ES 3 texture 2D instances
 					const Texture2D& openGlEs3DestinationTexture2D = static_cast<const Texture2D&>(destinationResource);
 					const Texture2D& openGlEs3SourceTexture2D = static_cast<const Texture2D&>(sourceResource);
-					assert(openGlEs3DestinationTexture2D.getWidth() == openGlEs3SourceTexture2D.getWidth());
-					assert(openGlEs3DestinationTexture2D.getHeight() == openGlEs3SourceTexture2D.getHeight());
+					RENDERER_ASSERT(mContext, openGlEs3DestinationTexture2D.getWidth() == openGlEs3SourceTexture2D.getWidth(), "OpenGL source and destination width must be identical for resource copy");
+					RENDERER_ASSERT(mContext, openGlEs3DestinationTexture2D.getHeight() == openGlEs3SourceTexture2D.getHeight(), "OpenGL source and destination height must be identical for resource copy");
 
 					#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 						// Backup the currently bound OpenGL ES 3 framebuffer
@@ -1084,7 +1083,7 @@ namespace OpenGLES3Renderer
 				else
 				{
 					// Error!
-					assert(false);
+					RENDERER_ASSERT(mContext, false, "Failed to copy OpenGL ES 3 resource");
 				}
 				break;
 
@@ -1124,8 +1123,8 @@ namespace OpenGLES3Renderer
 	void OpenGLES3Renderer::drawEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
 		// Sanity checks
-		assert(nullptr != emulationData);
-		assert((numberOfDraws > 0) && "Number of draws must not be zero");
+		RENDERER_ASSERT(mContext, nullptr != emulationData, "The OpenGL ES 3 emulation data must be valid");
+		RENDERER_ASSERT(mContext, numberOfDraws > 0, "The number of OpenGL ES 3 draws must not be zero");
 		// It's possible to draw without "mVertexArray"
 
 		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
@@ -1153,7 +1152,7 @@ namespace OpenGLES3Renderer
 			else
 			{
 				// Without instancing
-				assert(drawInstancedArguments.instanceCount <= 1);
+				RENDERER_ASSERT(mContext, drawInstancedArguments.instanceCount <= 1, "Invalid OpenGL ES 3 instance count");
 				glDrawArrays(mOpenGLES3PrimitiveTopology, static_cast<GLint>(drawInstancedArguments.startVertexLocation), static_cast<GLsizei>(drawInstancedArguments.vertexCountPerInstance));
 			}
 			emulationData += sizeof(Renderer::DrawInstancedArguments);
@@ -1163,10 +1162,10 @@ namespace OpenGLES3Renderer
 	void OpenGLES3Renderer::drawIndexedEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
 		// Sanity checks
-		assert(nullptr != emulationData);
-		assert((numberOfDraws > 0) && "Number of draws must not be zero");
-		assert((nullptr != mVertexArray) && "Draw indexed needs a set vertex array");
-		assert((nullptr != mVertexArray->getIndexBuffer()) && "Draw indexed needs a set vertex array which contains an index buffer");
+		RENDERER_ASSERT(mContext, nullptr != emulationData, "The OpenGL ES 3 emulation data must be valid");
+		RENDERER_ASSERT(mContext, numberOfDraws > 0, "The number of OpenGL ES 3 draws must not be zero");
+		RENDERER_ASSERT(mContext, nullptr != mVertexArray, "Draw OpenGL ES 3 indexed needs a set vertex array");
+		RENDERER_ASSERT(mContext, nullptr != mVertexArray->getIndexBuffer(), "Draw OpenGL ES 3 indexed needs a set vertex array which contains an index buffer");
 
 		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
 		emulationData += indirectBufferOffset;
@@ -1200,7 +1199,7 @@ namespace OpenGLES3Renderer
 					else
 					{
 						// Error!
-						assert(false);
+						RENDERER_ASSERT(mContext, false, "Failed to OpenGL ES 3 draw indexed emulated");
 					}
 				}
 				else if (drawIndexedInstancedArguments.startInstanceLocation > 0 && mOpenGLES3Context->getExtensions().isGL_EXT_base_instance())
@@ -1230,7 +1229,7 @@ namespace OpenGLES3Renderer
 					else
 					{
 						// Error!
-						assert(false);
+						RENDERER_ASSERT(mContext, false, "Failed to OpenGL ES 3 draw indexed emulated");
 					}
 				}
 				else
@@ -1356,7 +1355,7 @@ namespace OpenGLES3Renderer
 	{
 		// Sanity checks
 		OPENGLES3RENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
-		assert((NULL_HANDLE != windowHandle.nativeWindowHandle || nullptr != windowHandle.renderWindow) && "The provided native window handle or render window must not be a null handle / null pointer");
+		RENDERER_ASSERT(mContext, NULL_HANDLE != windowHandle.nativeWindowHandle || nullptr != windowHandle.renderWindow, "OpenGL ES 3: The provided native window handle or render window must not be a null handle / null pointer");
 
 		// Create the swap chain
 		return new SwapChain(renderPass, windowHandle);
@@ -1408,25 +1407,25 @@ namespace OpenGLES3Renderer
 			case Renderer::ResourceType::INDEX_BUFFER:
 			{
 				const IndexBuffer& indexBuffer = static_cast<IndexBuffer&>(resource);
-				return ::detail::mapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER_BINDING, indexBuffer.getOpenGLES3ElementArrayBuffer(), indexBuffer.getBufferSize(), mapType, mappedSubresource);
+				return ::detail::mapBuffer(mContext, GL_ELEMENT_ARRAY_BUFFER, GL_ELEMENT_ARRAY_BUFFER_BINDING, indexBuffer.getOpenGLES3ElementArrayBuffer(), indexBuffer.getBufferSize(), mapType, mappedSubresource);
 			}
 
 			case Renderer::ResourceType::VERTEX_BUFFER:
 			{
 				const VertexBuffer& vertexBuffer = static_cast<VertexBuffer&>(resource);
-				return ::detail::mapBuffer(GL_ARRAY_BUFFER, GL_ARRAY_BUFFER_BINDING, vertexBuffer.getOpenGLES3ArrayBuffer(), vertexBuffer.getBufferSize(), mapType, mappedSubresource);
+				return ::detail::mapBuffer(mContext, GL_ARRAY_BUFFER, GL_ARRAY_BUFFER_BINDING, vertexBuffer.getOpenGLES3ArrayBuffer(), vertexBuffer.getBufferSize(), mapType, mappedSubresource);
 			}
 
 			case Renderer::ResourceType::UNIFORM_BUFFER:
 			{
 				const UniformBuffer& uniformBuffer = static_cast<UniformBuffer&>(resource);
-				return ::detail::mapBuffer(GL_UNIFORM_BUFFER, GL_UNIFORM_BUFFER_BINDING, uniformBuffer.getOpenGLES3UniformBuffer(), uniformBuffer.getBufferSize(), mapType, mappedSubresource);
+				return ::detail::mapBuffer(mContext, GL_UNIFORM_BUFFER, GL_UNIFORM_BUFFER_BINDING, uniformBuffer.getOpenGLES3UniformBuffer(), uniformBuffer.getBufferSize(), mapType, mappedSubresource);
 			}
 
 			case Renderer::ResourceType::TEXTURE_BUFFER:
 			{
 				const TextureBuffer& textureBuffer = static_cast<TextureBuffer&>(resource);
-				return ::detail::mapBuffer(GL_TEXTURE_BUFFER_EXT, GL_TEXTURE_BINDING_BUFFER_EXT, textureBuffer.getOpenGLES3TextureBuffer(), textureBuffer.getBufferSize(), mapType, mappedSubresource);
+				return ::detail::mapBuffer(mContext, GL_TEXTURE_BUFFER_EXT, GL_TEXTURE_BINDING_BUFFER_EXT, textureBuffer.getOpenGLES3TextureBuffer(), textureBuffer.getBufferSize(), mapType, mappedSubresource);
 			}
 
 			case Renderer::ResourceType::INDIRECT_BUFFER:

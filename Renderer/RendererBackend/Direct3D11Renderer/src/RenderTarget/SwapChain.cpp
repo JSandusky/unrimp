@@ -29,6 +29,7 @@
 #include "Direct3D11Renderer/Direct3D11Renderer.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/IAssert.h>
 
 #include <VersionHelpers.h>
 
@@ -131,7 +132,7 @@ namespace Direct3D11Renderer
 		direct3D11Renderer.getD3D11DeviceContext()->QueryInterface(__uuidof(ID3D11DeviceContext1), reinterpret_cast<void**>(&mD3D11DeviceContext1));
 
 		// Sanity check
-		assert(1 == d3d11RenderPass.getNumberOfColorAttachments());
+		RENDERER_ASSERT(direct3D11Renderer.getContext(), 1 == d3d11RenderPass.getNumberOfColorAttachments(), "There must be exactly one Direct3D 11 render pass color attachment");
 
 		// Get the Direct3D 11 device instance
 		ID3D11Device* d3d11Device = direct3D11Renderer.getD3D11Device();
@@ -204,13 +205,13 @@ namespace Direct3D11Renderer
 			const bool isWindows8OrGreater = ::IsWindows8OrGreater();
 			if (isWindows10OrGreater)
 			{
-				assert((d3d11RenderPass.getNumberOfMultisamples() == 1) && "Direct3D 11 doesn't support multisampling if the flip model vertical synchronization is used");
+				RENDERER_ASSERT(direct3D11Renderer.getContext(), d3d11RenderPass.getNumberOfMultisamples() == 1, "Direct3D 11 doesn't support multisampling if the flip model vertical synchronization is used");
 				bufferCount = 2;
 				swapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 			}
 			else if (isWindows8OrGreater)
 			{
-				assert((d3d11RenderPass.getNumberOfMultisamples() == 1) && "Direct3D 11 doesn't support multisampling if the flip model vertical synchronization is used");
+				RENDERER_ASSERT(direct3D11Renderer.getContext(), d3d11RenderPass.getNumberOfMultisamples() == 1, "Direct3D 11 doesn't support multisampling if the flip model vertical synchronization is used");
 				bufferCount = 2;
 				swapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
 			}

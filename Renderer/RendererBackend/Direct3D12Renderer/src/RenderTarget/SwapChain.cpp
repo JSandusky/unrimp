@@ -29,6 +29,7 @@
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/IAssert.h>
 
 
 //[-------------------------------------------------------]
@@ -94,7 +95,7 @@ namespace Direct3D12Renderer
 		const RenderPass& d3d12RenderPass = static_cast<RenderPass&>(renderPass);
 
 		// Sanity check
-		assert(1 == d3d12RenderPass.getNumberOfColorAttachments());
+		RENDERER_ASSERT(direct3D12Renderer.getContext(), 1 == d3d12RenderPass.getNumberOfColorAttachments(), "There must be exactly one Direct3D 12 render pass color attachment");
 
 		// Get the native window handle
 		const HWND hWnd = reinterpret_cast<HWND>(windowHandle.nativeWindowHandle);
@@ -485,7 +486,7 @@ namespace Direct3D12Renderer
 
 	void SwapChain::createDirect3D12Views()
 	{
-		assert(nullptr != mDxgiSwapChain3);
+		RENDERER_ASSERT(getRenderer().getContext(), nullptr != mDxgiSwapChain3, "Invalid Direct3D 12 DXGI swap chain 3");
 
 		// TODO(co) Debug name gets lost when resizing a window, fix this
 
@@ -619,7 +620,7 @@ namespace Direct3D12Renderer
 
 	void SwapChain::waitForPreviousFrame()
 	{
-		assert(nullptr != mDxgiSwapChain3);
+		RENDERER_ASSERT(getRenderer().getContext(), nullptr != mDxgiSwapChain3, "Invalid Direct3D 12 DXGI swap chain 3");
 
 		// TODO(co) This is the most simple but least effective approach and only meant for the Direct3D 12 renderer backend kickoff.
 

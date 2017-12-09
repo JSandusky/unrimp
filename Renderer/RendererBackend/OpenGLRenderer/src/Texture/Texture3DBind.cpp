@@ -27,6 +27,8 @@
 #include "OpenGLRenderer/OpenGLRenderer.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 
+#include <Renderer/IAssert.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -42,8 +44,8 @@ namespace OpenGLRenderer
 		Texture3D(openGLRenderer, width, height, depth, textureFormat)
 	{
 		// Sanity checks
-		assert(0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data);
-		assert(((flags & Renderer::TextureFlag::RENDER_TARGET) == 0 || nullptr == data) && "Render target textures can't be filled using provided data");
+		RENDERER_ASSERT(openGLRenderer.getContext(), 0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data, "Invalid OpenGL texture parameters");
+		RENDERER_ASSERT(openGLRenderer.getContext(), (flags & Renderer::TextureFlag::RENDER_TARGET) == 0 || nullptr == data, "OpenGL render target textures can't be filled using provided data");
 
 		// Create the OpenGL texture instance
 		glGenTextures(1, &mOpenGLTexture);
@@ -171,7 +173,7 @@ namespace OpenGLRenderer
 	void Texture3DBind::copyDataFrom(uint32_t, const void* data)
 	{
 		// Sanity check
-		assert(nullptr != data);
+		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid OpenGL texture data");
 
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently set alignment

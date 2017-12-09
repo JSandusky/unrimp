@@ -93,7 +93,7 @@ namespace
 			#elif defined VK_USE_PLATFORM_XLIB_KHR || defined VK_USE_PLATFORM_WAYLAND_KHR
 				VulkanRenderer::VulkanRenderer& vulkanRenderer = vulkanContext.getVulkanRenderer();
 				const Renderer::Context& context = vulkanRenderer.getContext();
-				assert(context.getType() == Renderer::Context::ContextType::X11 || context.getType() == Renderer::Context::ContextType::WAYLAND);
+				RENDERER_ASSERT(context, context.getType() == Renderer::Context::ContextType::X11 || context.getType() == Renderer::Context::ContextType::WAYLAND, "Invalid Vulkan context type");
 
 				// If the given renderer context is an X11 context use the display connection object provided by the context
 				if (context.getType() == Renderer::Context::ContextType::X11)
@@ -556,7 +556,7 @@ namespace VulkanRenderer
 			{
 				VulkanRenderer& vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
 				const Renderer::Context& context = vulkanRenderer.getContext();
-				assert(context.getType() == Renderer::Context::ContextType::X11);
+				RENDERER_ASSERT(context, context.getType() == Renderer::Context::ContextType::X11, "Invalid Vulkan context type");
 
 				// If the given renderer context is an X11 context use the display connection object provided by the context
 				if (context.getType() == Renderer::Context::ContextType::X11)
@@ -718,8 +718,8 @@ namespace VulkanRenderer
 		const VkDevice		   vkDevice			= vulkanContext.getVkDevice();
 
 		// Sanity checks
-		assert(VK_NULL_HANDLE != vkPhysicalDevice);
-		assert(VK_NULL_HANDLE != vkDevice);
+		RENDERER_ASSERT(context, VK_NULL_HANDLE != vkPhysicalDevice, "Invalid physical Vulkan device");
+		RENDERER_ASSERT(context, VK_NULL_HANDLE != vkDevice, "Invalid Vulkan device");
 
 		// Wait for the Vulkan device to become idle
 		vkDeviceWaitIdle(vkDevice);
@@ -948,8 +948,8 @@ namespace VulkanRenderer
 	{
 		if (VK_NULL_HANDLE != mDepthVkImage)
 		{
-			assert(VK_NULL_HANDLE != mDepthVkDeviceMemory);
-			assert(VK_NULL_HANDLE != mDepthVkImageView);
+			RENDERER_ASSERT(getRenderer().getContext(), VK_NULL_HANDLE != mDepthVkDeviceMemory, "Invalid Vulkan depth device memory");
+			RENDERER_ASSERT(getRenderer().getContext(), VK_NULL_HANDLE != mDepthVkImageView, "Invalid Vulkan depth image view");
 			Helper::destroyAndFreeVkImage(static_cast<VulkanRenderer&>(getRenderer()), mDepthVkImage, mDepthVkDeviceMemory, mDepthVkImageView);
 		}
 	}

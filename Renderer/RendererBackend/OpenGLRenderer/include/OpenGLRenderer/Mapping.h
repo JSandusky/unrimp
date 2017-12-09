@@ -37,6 +37,15 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace Renderer
+{
+	class Context;
+}
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace OpenGLRenderer
@@ -65,18 +74,22 @@ namespace OpenGLRenderer
 		*  @brief
 		*    "Renderer::FilterMode" to OpenGL magnification filter mode
 		*
+		*  @param[in] context
+		*    Renderer context to use
 		*  @param[in] filterMode
 		*    "Renderer::FilterMode" to map
 		*
 		*  @return
 		*    OpenGL magnification filter mode (type "GLint" not used in here in order to keep the header slim)
 		*/
-		static int getOpenGLMagFilterMode(Renderer::FilterMode filterMode);
+		static int getOpenGLMagFilterMode(const Renderer::Context& context, Renderer::FilterMode filterMode);
 
 		/**
 		*  @brief
 		*    "Renderer::FilterMode" to OpenGL minification filter mode
 		*
+		*  @param[in] context
+		*    Renderer context to use
 		*  @param[in] filterMode
 		*    "Renderer::FilterMode" to map
 		*  @param[in] hasMipmaps
@@ -85,19 +98,21 @@ namespace OpenGLRenderer
 		*  @return
 		*    OpenGL minification filter mode (type "GLint" not used in here in order to keep the header slim)
 		*/
-		static int getOpenGLMinFilterMode(Renderer::FilterMode filterMode, bool hasMipmaps);
+		static int getOpenGLMinFilterMode(const Renderer::Context& context, Renderer::FilterMode filterMode, bool hasMipmaps);
 
 		/**
 		*  @brief
 		*    "Renderer::FilterMode" to OpenGL compare mode
 		*
+		*  @param[in] context
+		*    Renderer context to use
 		*  @param[in] filterMode
 		*    "Renderer::FilterMode" to map
 		*
 		*  @return
 		*    OpenGL compare mode (type "GLint" not used in here in order to keep the header slim)
 		*/
-		static int getOpenGLCompareMode(Renderer::FilterMode filterMode);
+		static int getOpenGLCompareMode(const Renderer::Context& context, Renderer::FilterMode filterMode);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::TextureAddressMode                          ]

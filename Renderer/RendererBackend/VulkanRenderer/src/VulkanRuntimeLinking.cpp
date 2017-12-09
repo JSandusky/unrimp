@@ -27,6 +27,7 @@
 #include "VulkanRenderer/VulkanRenderer.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/IAssert.h>
 #ifdef WIN32
 	#include <Renderer/WindowsHeader.h>
 #elif defined LINUX
@@ -191,7 +192,7 @@ namespace
 			message << "Message: \"" << pMessage << "\" ";
 
 			// Print log message
-			context->getLog().print(type, nullptr, message.str().c_str());
+			context->getLog().print(type, nullptr, __FILE__, static_cast<uint32_t>(__LINE__), message.str().c_str());
 
 			// The Vulkan call should not be aborted to have the same behavior with and without validation layers enabled
 			return VK_FALSE;
@@ -697,11 +698,11 @@ namespace VulkanRenderer
 	void VulkanRuntimeLinking::setupDebugCallback()
 	{
 		// Sanity check
-		assert(mValidationEnabled && "Do only call this method if validation is enabled");
+		RENDERER_ASSERT(mVulkanRenderer.getContext(), mValidationEnabled, "Do only call this Vulkan method if validation is enabled");
 
 		// The report flags determine what type of messages for the layers will be displayed
 		// -> Use "VK_DEBUG_REPORT_FLAG_BITS_MAX_ENUM_EXT" to get everything, quite verbose
-		const VkDebugReportFlagsEXT vkDebugReportFlagsEXT = VK_DEBUG_REPORT_WARNING_BIT_EXT | VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT | VK_DEBUG_REPORT_ERROR_BIT_EXT;
+		const VkDebugReportFlagsEXT vkDebugReportFlagsEXT = (VK_DEBUG_REPORT_WARNING_BIT_EXT | VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT | VK_DEBUG_REPORT_ERROR_BIT_EXT);
 
 		// Setup debug callback
 		const VkDebugReportCallbackCreateInfoEXT vkDebugReportCallbackCreateInfoEXT =
