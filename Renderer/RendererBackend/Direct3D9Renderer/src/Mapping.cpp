@@ -98,7 +98,7 @@ namespace Direct3D9Renderer
 				return D3DTEXF_LINEAR;
 
 			case Renderer::FilterMode::UNKNOWN:
-				RENDERER_ASSERT(context, false, "Direct3D 9 filter mode must not be unknown");
+				RENDERER_ASSERT(context, false, "Direct3D 9 filter mode must not be unknown")
 				return D3DTEXF_POINT;
 
 			default:
@@ -165,7 +165,7 @@ namespace Direct3D9Renderer
 				return D3DTEXF_ANISOTROPIC;
 
 			case Renderer::FilterMode::UNKNOWN:
-				RENDERER_ASSERT(context, false, "Direct3D 9 filter mode must not be unknown");
+				RENDERER_ASSERT(context, false, "Direct3D 9 filter mode must not be unknown")
 				return D3DTEXF_POINT;
 
 			default:
@@ -232,7 +232,7 @@ namespace Direct3D9Renderer
 				return D3DTEXF_ANISOTROPIC;
 
 			case Renderer::FilterMode::UNKNOWN:
-				RENDERER_ASSERT(context, false, "Direct3D 9 filter mode must not be unknown");
+				RENDERER_ASSERT(context, false, "Direct3D 9 filter mode must not be unknown")
 				return D3DTEXF_POINT;
 
 			default:
@@ -422,7 +422,7 @@ namespace Direct3D9Renderer
 
 	uint32_t Mapping::getDirect3D9PresentationInterval(const Renderer::Context& context, uint32_t synchronizationInterval)
 	{
-		RENDERER_ASSERT(context, synchronizationInterval <= 4, "Direct3D 9 supports a maximum synchronization interval of four");
+		RENDERER_ASSERT(context, synchronizationInterval <= 4, "Direct3D 9 supports a maximum synchronization interval of four")
 		static const uint32_t MAPPING[] =
 		{
 			D3DPRESENT_INTERVAL_IMMEDIATE,

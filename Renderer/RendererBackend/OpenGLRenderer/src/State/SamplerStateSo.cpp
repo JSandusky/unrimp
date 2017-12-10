@@ -44,7 +44,7 @@ namespace OpenGLRenderer
 		mOpenGLSampler(0)
 	{
 		// Sanity check
-		RENDERER_ASSERT(openGLRenderer.getContext(), samplerState.maxAnisotropy <= openGLRenderer.getCapabilities().maximumAnisotropy, "Maximum OpenGL anisotropy value violated");
+		RENDERER_ASSERT(openGLRenderer.getContext(), samplerState.maxAnisotropy <= openGLRenderer.getCapabilities().maximumAnisotropy, "Maximum OpenGL anisotropy value violated")
 
 		// Create the OpenGL sampler
 		glGenSamplers(1, &mOpenGLSampler);

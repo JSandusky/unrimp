@@ -74,7 +74,7 @@ namespace OpenGLRenderer
 	void IndirectBufferBind::copyDataFrom(uint32_t numberOfBytes, const void* data)
 	{
 		// Sanity check
-		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid OpenGL indirect buffer data");
+		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid OpenGL indirect buffer data")
 
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently bound OpenGL indirect buffer

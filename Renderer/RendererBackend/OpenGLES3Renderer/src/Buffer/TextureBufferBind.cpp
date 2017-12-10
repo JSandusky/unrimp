@@ -92,7 +92,7 @@ namespace OpenGLES3Renderer
 	void TextureBufferBind::copyDataFrom(uint32_t numberOfBytes, const void* data)
 	{
 		// Sanity check
-		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid OpenGL ES 3 texture buffer data");
+		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid OpenGL ES 3 texture buffer data")
 
 		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
 			// Backup the currently bound OpenGL ES 3 texture buffer

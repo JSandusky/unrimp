@@ -52,7 +52,7 @@ namespace OpenGLRenderer
 
 	inline Renderer::TextureFormat::Enum RenderPass::getColorAttachmentTextureFormat(uint32_t colorAttachmentIndex) const
 	{
-		RENDERER_ASSERT(getRenderer().getContext(), colorAttachmentIndex < mNumberOfColorAttachments, "Invalid OpenGL color attachment index");
+		RENDERER_ASSERT(getRenderer().getContext(), colorAttachmentIndex < mNumberOfColorAttachments, "Invalid OpenGL color attachment index")
 		return mColorAttachmentTextureFormats[colorAttachmentIndex];
 	}
 

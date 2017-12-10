@@ -97,7 +97,7 @@ namespace
 			void ExecuteCommandBuffer(const void* data, Renderer::IRenderer& renderer)
 			{
 				const Renderer::Command::ExecuteCommandBuffer* realData = static_cast<const Renderer::Command::ExecuteCommandBuffer*>(data);
-				RENDERER_ASSERT(renderer.getContext(), nullptr != realData->commandBufferToExecute, "The Direct3D 12 command buffer to execute must be valid");
+				RENDERER_ASSERT(renderer.getContext(), nullptr != realData->commandBufferToExecute, "The Direct3D 12 command buffer to execute must be valid")
 				renderer.submitCommandBuffer(*realData->commandBufferToExecute);
 			}
 
@@ -530,7 +530,7 @@ namespace Direct3D12Renderer
 	void Direct3D12Renderer::setGraphicsResourceGroup(uint32_t, Renderer::IResourceGroup*)
 	{
 		// TODO(co) Implement resource group
-		RENDERER_ASSERT(mContext, false, "Direct3D 12 setGraphicsResourceGroup() isn't implemented, yet");
+		RENDERER_ASSERT(mContext, false, "Direct3D 12 setGraphicsResourceGroup() isn't implemented, yet")
 		/*
 		if (nullptr != resource)
 		{
@@ -724,7 +724,7 @@ namespace Direct3D12Renderer
 	void Direct3D12Renderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport* viewports)
 	{
 		// Sanity check
-		RENDERER_ASSERT(mContext, numberOfViewports > 0 && nullptr != viewports, "Invalid Direct3D 12 rasterizer state viewports");
+		RENDERER_ASSERT(mContext, numberOfViewports > 0 && nullptr != viewports, "Invalid Direct3D 12 rasterizer state viewports")
 
 		// Set the Direct3D 12 viewports
 		// -> "Renderer::Viewport" directly maps to Direct3D 12, do not change it
@@ -735,7 +735,7 @@ namespace Direct3D12Renderer
 	void Direct3D12Renderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles)
 	{
 		// Sanity check
-		RENDERER_ASSERT(mContext, numberOfScissorRectangles > 0 && nullptr != scissorRectangles, "Invalid Direct3D 12 rasterizer state scissor rectangles");
+		RENDERER_ASSERT(mContext, numberOfScissorRectangles > 0 && nullptr != scissorRectangles, "Invalid Direct3D 12 rasterizer state scissor rectangles")
 
 		// Set the Direct3D 12 scissor rectangles
 		// -> "Renderer::ScissorRectangle" directly maps to Direct3D 9 & 10 & 11 & 12, do not change it
@@ -1075,8 +1075,8 @@ namespace Direct3D12Renderer
 	void Direct3D12Renderer::drawEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
 		// Sanity checks
-		RENDERER_ASSERT(mContext, nullptr != emulationData, "The Direct3D 12 emulation data must be valid");
-		RENDERER_ASSERT(mContext, numberOfDraws > 0, "The number of Direct3D 12 draws must not be zero");
+		RENDERER_ASSERT(mContext, nullptr != emulationData, "The Direct3D 12 emulation data must be valid")
+		RENDERER_ASSERT(mContext, numberOfDraws > 0, "The number of Direct3D 12 draws must not be zero")
 
 		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
 		emulationData += indirectBufferOffset;
@@ -1102,8 +1102,8 @@ namespace Direct3D12Renderer
 	void Direct3D12Renderer::drawIndexedEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
 		// Sanity checks
-		RENDERER_ASSERT(mContext, nullptr != emulationData, "The Direct3D 12 emulation data must be valid");
-		RENDERER_ASSERT(mContext, numberOfDraws > 0, "The number of Direct3D 12 draws must not be zero");
+		RENDERER_ASSERT(mContext, nullptr != emulationData, "The Direct3D 12 emulation data must be valid")
+		RENDERER_ASSERT(mContext, numberOfDraws > 0, "The number of Direct3D 12 draws must not be zero")
 
 		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
 		emulationData += indirectBufferOffset;
@@ -1240,7 +1240,7 @@ namespace Direct3D12Renderer
 	{
 		// Sanity checks
 		DIRECT3D12RENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
-		RENDERER_ASSERT(mContext, NULL_HANDLE != windowHandle.nativeWindowHandle, "Direct3D 12: The provided native window handle must not be a null handle");
+		RENDERER_ASSERT(mContext, NULL_HANDLE != windowHandle.nativeWindowHandle, "Direct3D 12: The provided native window handle must not be a null handle")
 
 		// Create the swap chain
 		return new SwapChain(renderPass, windowHandle);

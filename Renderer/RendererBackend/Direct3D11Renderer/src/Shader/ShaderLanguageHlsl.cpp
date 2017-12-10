@@ -65,8 +65,8 @@ namespace Direct3D11Renderer
 	ID3DBlob* ShaderLanguageHlsl::loadShaderFromSourcecode(const char* shaderModel, const char* sourceCode, const char* entryPoint) const
 	{
 		// Sanity checks
-		RENDERER_ASSERT(getRenderer().getContext(), nullptr != shaderModel, "Invalid Direct3D 11 shader model");
-		RENDERER_ASSERT(getRenderer().getContext(), nullptr != sourceCode, "Invalid Direct3D 11 shader source code");
+		RENDERER_ASSERT(getRenderer().getContext(), nullptr != shaderModel, "Invalid Direct3D 11 shader model")
+		RENDERER_ASSERT(getRenderer().getContext(), nullptr != sourceCode, "Invalid Direct3D 11 shader source code")
 
 		// Get compile flags
 		UINT compileFlags = D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_WARNINGS_ARE_ERRORS;

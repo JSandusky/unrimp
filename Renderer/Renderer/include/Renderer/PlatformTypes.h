@@ -402,7 +402,7 @@ PRAGMA_WARNING_POP
 	*    - Do not add this within the public "Renderer/Public/Renderer.h"-header, it's for the internal implementation only
 	*/
 	#define RENDERER_DECORATED_DEBUG_NAME(name, detailedName, decoration, numberOfDecorationCharacters) \
-		RENDERER_ASSERT(getRenderer().getContext(), strlen(name) < 256, "Name is not allowed to exceed 255 characters"); \
+		RENDERER_ASSERT(getRenderer().getContext(), strlen(name) < 256, "Name is not allowed to exceed 255 characters") \
 		char detailedName[256 + numberOfDecorationCharacters] = decoration; \
 		if (name[0] != '\0') \
 		{ \

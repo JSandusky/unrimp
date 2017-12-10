@@ -46,8 +46,8 @@ namespace VulkanRenderer
 		mVkSampler(VK_NULL_HANDLE)
 	{
 		// Sanity checks
-		RENDERER_ASSERT(vulkanRenderer.getContext(), samplerState.filter != Renderer::FilterMode::UNKNOWN, "Vulkan filter mode must not be unknown");
-		RENDERER_ASSERT(vulkanRenderer.getContext(), samplerState.maxAnisotropy <= vulkanRenderer.getCapabilities().maximumAnisotropy, "Maximum Vulkan anisotropy value violated");
+		RENDERER_ASSERT(vulkanRenderer.getContext(), samplerState.filter != Renderer::FilterMode::UNKNOWN, "Vulkan filter mode must not be unknown")
+		RENDERER_ASSERT(vulkanRenderer.getContext(), samplerState.maxAnisotropy <= vulkanRenderer.getCapabilities().maximumAnisotropy, "Maximum Vulkan anisotropy value violated")
 
 		// TODO(co) Map "Renderer::SamplerState" to VkSamplerCreateInfo
 		const bool anisotropyEnable = (Renderer::FilterMode::ANISOTROPIC == samplerState.filter || Renderer::FilterMode::COMPARISON_ANISOTROPIC == samplerState.filter);

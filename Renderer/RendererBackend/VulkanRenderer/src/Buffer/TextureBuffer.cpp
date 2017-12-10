@@ -86,9 +86,9 @@ namespace VulkanRenderer
 	void TextureBuffer::copyDataFrom(uint32_t numberOfBytes, const void* data)
 	{
 		// Sanity checks
-		RENDERER_ASSERT(getRenderer().getContext(), 0 != numberOfBytes, "Invalid Vulkan texture buffer data");
-		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid Vulkan texture buffer data");
-		RENDERER_ASSERT(getRenderer().getContext(), VK_NULL_HANDLE != mVkDeviceMemory, "Invalid Vulkan device memory");
+		RENDERER_ASSERT(getRenderer().getContext(), 0 != numberOfBytes, "Invalid Vulkan texture buffer data")
+		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid Vulkan texture buffer data")
+		RENDERER_ASSERT(getRenderer().getContext(), VK_NULL_HANDLE != mVkDeviceMemory, "Invalid Vulkan device memory")
 
 		// Upload data
 		const VulkanRenderer& vulkanRenderer = static_cast<const VulkanRenderer&>(getRenderer());

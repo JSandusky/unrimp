@@ -413,7 +413,7 @@ namespace VulkanRenderer
 		uint32_t numberOfMipmaps = (dataContainsMipmaps || generateMipmaps) ? Renderer::ITexture::getNumberOfMipmaps(vkExtent3D.width, vkExtent3D.height) : 1;
 
 		// Get Vulkan image usage flags
-		RENDERER_ASSERT(vulkanRenderer.getContext(), (flags & Renderer::TextureFlag::RENDER_TARGET) == 0 || nullptr == data, "Vulkan render target textures can't be filled using provided data");
+		RENDERER_ASSERT(vulkanRenderer.getContext(), (flags & Renderer::TextureFlag::RENDER_TARGET) == 0 || nullptr == data, "Vulkan render target textures can't be filled using provided data")
 		const bool isDepthTextureFormat = Renderer::TextureFormat::isDepth(textureFormat);
 		VkImageUsageFlags vkImageUsageFlags = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
 		if (flags & Renderer::TextureFlag::RENDER_TARGET)
@@ -543,8 +543,8 @@ namespace VulkanRenderer
 					vkGetPhysicalDeviceFormatProperties(vulkanRenderer.getVulkanContext().getVkPhysicalDevice(), vkFormat, &vkFormatProperties);
 
 					// Mip-chain generation requires support for blit source and destination
-					RENDERER_ASSERT(vulkanRenderer.getContext(), vkFormatProperties.optimalTilingFeatures & VK_FORMAT_FEATURE_BLIT_SRC_BIT, "Invalid Vulkan optimal tiling features");
-					RENDERER_ASSERT(vulkanRenderer.getContext(), vkFormatProperties.optimalTilingFeatures & VK_FORMAT_FEATURE_BLIT_DST_BIT, "Invalid Vulkan optimal tiling features");
+					RENDERER_ASSERT(vulkanRenderer.getContext(), vkFormatProperties.optimalTilingFeatures & VK_FORMAT_FEATURE_BLIT_SRC_BIT, "Invalid Vulkan optimal tiling features")
+					RENDERER_ASSERT(vulkanRenderer.getContext(), vkFormatProperties.optimalTilingFeatures & VK_FORMAT_FEATURE_BLIT_DST_BIT, "Invalid Vulkan optimal tiling features")
 				}
 				#endif
 

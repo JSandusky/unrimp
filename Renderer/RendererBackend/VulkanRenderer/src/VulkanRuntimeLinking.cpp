@@ -701,7 +701,7 @@ namespace VulkanRenderer
 	void VulkanRuntimeLinking::setupDebugCallback()
 	{
 		// Sanity check
-		RENDERER_ASSERT(mVulkanRenderer.getContext(), mValidationEnabled, "Do only call this Vulkan method if validation is enabled");
+		RENDERER_ASSERT(mVulkanRenderer.getContext(), mValidationEnabled, "Do only call this Vulkan method if validation is enabled")
 
 		// The report flags determine what type of messages for the layers will be displayed
 		// -> Use "VK_DEBUG_REPORT_FLAG_BITS_MAX_ENUM_EXT" to get everything, quite verbose

@@ -128,7 +128,7 @@ namespace Direct3D10Renderer
 	void UniformBuffer::copyDataFrom(uint32_t numberOfBytes, const void* data)
 	{
 		// Check resource pointers
-		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid Direct3D 10 uniform buffer data");
+		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid Direct3D 10 uniform buffer data")
 		if (nullptr != mD3D10Buffer)
 		{
 			// Begin debug event

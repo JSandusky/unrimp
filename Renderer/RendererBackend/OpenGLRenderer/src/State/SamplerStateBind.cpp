@@ -54,7 +54,7 @@ namespace OpenGLRenderer
 		mMaxLOD(samplerState.maxLOD)
 	{
 		// Sanity check
-		RENDERER_ASSERT(openGLRenderer.getContext(), samplerState.maxAnisotropy <= openGLRenderer.getCapabilities().maximumAnisotropy, "Maximum OpenGL anisotropy value violated");
+		RENDERER_ASSERT(openGLRenderer.getContext(), samplerState.maxAnisotropy <= openGLRenderer.getCapabilities().maximumAnisotropy, "Maximum OpenGL anisotropy value violated")
 
 		// Renderer::SamplerState::borderColor[4]
 		mBorderColor[0] = samplerState.borderColor[0];

@@ -100,7 +100,7 @@ namespace OpenGLRenderer
 			for (Renderer::ITexture** colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture, ++colorFramebufferAttachments)
 			{
 				// Sanity check
-				RENDERER_ASSERT(renderPass.getRenderer().getContext(), nullptr != colorFramebufferAttachments->texture, "Invalid OpenGL color framebuffer attachment texture");
+				RENDERER_ASSERT(renderPass.getRenderer().getContext(), nullptr != colorFramebufferAttachments->texture, "Invalid OpenGL color framebuffer attachment texture")
 
 				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
 				*colorTexture = colorFramebufferAttachments->texture;
@@ -112,7 +112,7 @@ namespace OpenGLRenderer
 					case Renderer::ResourceType::TEXTURE_2D:
 					{
 						// Sanity check
-						RENDERER_ASSERT(renderPass.getRenderer().getContext(), 0 == colorFramebufferAttachments->layerIndex, "Invalid OpenGL color framebuffer attachment layer index");
+						RENDERER_ASSERT(renderPass.getRenderer().getContext(), 0 == colorFramebufferAttachments->layerIndex, "Invalid OpenGL color framebuffer attachment layer index")
 
 						// Update the framebuffer width and height if required
 						Texture2D* texture2D = static_cast<Texture2D*>(*colorTexture);
@@ -181,7 +181,7 @@ namespace OpenGLRenderer
 		if (nullptr != depthStencilFramebufferAttachment)
 		{
 			mDepthStencilTexture = depthStencilFramebufferAttachment->texture;
-			RENDERER_ASSERT(renderPass.getRenderer().getContext(), nullptr != mDepthStencilTexture, "Invalid OpenGL depth stencil framebuffer attachment texture");
+			RENDERER_ASSERT(renderPass.getRenderer().getContext(), nullptr != mDepthStencilTexture, "Invalid OpenGL depth stencil framebuffer attachment texture")
 			mDepthStencilTexture->addReference();
 
 			// Evaluate the depth stencil texture type
@@ -190,7 +190,7 @@ namespace OpenGLRenderer
 				case Renderer::ResourceType::TEXTURE_2D:
 				{
 					// Sanity check
-					RENDERER_ASSERT(renderPass.getRenderer().getContext(), 0 == depthStencilFramebufferAttachment->layerIndex, "Invalid OpenGL depth stencil framebuffer attachment layer index");
+					RENDERER_ASSERT(renderPass.getRenderer().getContext(), 0 == depthStencilFramebufferAttachment->layerIndex, "Invalid OpenGL depth stencil framebuffer attachment layer index")
 
 					// Update the framebuffer width and height if required
 					Texture2D* texture2D = static_cast<Texture2D*>(mDepthStencilTexture);
@@ -257,12 +257,12 @@ namespace OpenGLRenderer
 		// Validate the framebuffer width and height
 		if (0 == mWidth || UINT_MAX == mWidth)
 		{
-			RENDERER_ASSERT(renderPass.getRenderer().getContext(), false, "Invalid OpenGL framebuffer width");
+			RENDERER_ASSERT(renderPass.getRenderer().getContext(), false, "Invalid OpenGL framebuffer width")
 			mWidth = 1;
 		}
 		if (0 == mHeight || UINT_MAX == mHeight)
 		{
-			RENDERER_ASSERT(renderPass.getRenderer().getContext(), false, "Invalid OpenGL framebuffer height");
+			RENDERER_ASSERT(renderPass.getRenderer().getContext(), false, "Invalid OpenGL framebuffer height")
 			mHeight = 1;
 		}
 	}

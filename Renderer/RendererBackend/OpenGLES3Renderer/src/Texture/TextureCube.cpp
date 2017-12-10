@@ -45,8 +45,8 @@ namespace OpenGLES3Renderer
 		mGenerateMipmaps(false)
 	{
 		// Sanity checks
-		RENDERER_ASSERT(openGLES3Renderer.getContext(), 0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data, "Invalid OpenGL ES 3 texture parameters");
-		RENDERER_ASSERT(openGLES3Renderer.getContext(), (flags & Renderer::TextureFlag::RENDER_TARGET) == 0 || nullptr == data, "OpenGL ES 3 render target textures can't be filled using provided data");
+		RENDERER_ASSERT(openGLES3Renderer.getContext(), 0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data, "Invalid OpenGL ES 3 texture parameters")
+		RENDERER_ASSERT(openGLES3Renderer.getContext(), (flags & Renderer::TextureFlag::RENDER_TARGET) == 0 || nullptr == data, "OpenGL ES 3 render target textures can't be filled using provided data")
 
 		// TODO(co) Check support formats
 

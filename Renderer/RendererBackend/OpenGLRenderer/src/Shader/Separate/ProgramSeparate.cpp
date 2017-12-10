@@ -185,7 +185,7 @@ namespace OpenGLRenderer
 				const Renderer::RootParameter& rootParameter = rootSignatureData.parameters[rootParameterIndex];
 				if (Renderer::RootParameterType::DESCRIPTOR_TABLE == rootParameter.parameterType)
 				{
-					RENDERER_ASSERT(openGLRenderer.getContext(), nullptr != reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges), "Invalid OpenGL descriptor ranges");
+					RENDERER_ASSERT(openGLRenderer.getContext(), nullptr != reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges), "Invalid OpenGL descriptor ranges")
 					const uint32_t numberOfDescriptorRanges = rootParameter.descriptorTable.numberOfDescriptorRanges;
 					for (uint32_t descriptorRangeIndex = 0; descriptorRangeIndex < numberOfDescriptorRanges; ++descriptorRangeIndex)
 					{

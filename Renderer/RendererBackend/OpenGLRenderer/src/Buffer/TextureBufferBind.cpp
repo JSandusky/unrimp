@@ -99,7 +99,7 @@ namespace OpenGLRenderer
 	void TextureBufferBind::copyDataFrom(uint32_t numberOfBytes, const void* data)
 	{
 		// Sanity check
-		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid OpenGL texture buffer data");
+		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid OpenGL texture buffer data")
 
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently bound OpenGL texture buffer

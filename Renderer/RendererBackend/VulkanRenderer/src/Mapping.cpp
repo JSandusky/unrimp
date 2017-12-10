@@ -96,7 +96,7 @@ namespace VulkanRenderer
 				return VK_FILTER_LINEAR;	// There's no special setting in Vulkan
 
 			case Renderer::FilterMode::UNKNOWN:
-				RENDERER_ASSERT(context, false, "Vulkan filter mode must not be unknown");
+				RENDERER_ASSERT(context, false, "Vulkan filter mode must not be unknown")
 				return VK_FILTER_NEAREST;
 
 			default:
@@ -163,7 +163,7 @@ namespace VulkanRenderer
 				return VK_FILTER_LINEAR;	// There's no special setting in Vulkan
 
 			case Renderer::FilterMode::UNKNOWN:
-				RENDERER_ASSERT(context, false, "Vulkan filter mode must not be unknown");
+				RENDERER_ASSERT(context, false, "Vulkan filter mode must not be unknown")
 				return VK_FILTER_NEAREST;
 
 			default:
@@ -230,7 +230,7 @@ namespace VulkanRenderer
 				return VK_SAMPLER_MIPMAP_MODE_LINEAR;	// There's no special setting in Vulkan
 
 			case Renderer::FilterMode::UNKNOWN:
-				RENDERER_ASSERT(context, false, "Vulkan filter mode must not be unknown");
+				RENDERER_ASSERT(context, false, "Vulkan filter mode must not be unknown")
 				return VK_SAMPLER_MIPMAP_MODE_NEAREST;
 
 			default:
@@ -326,7 +326,7 @@ namespace VulkanRenderer
 
 	VkIndexType Mapping::getVulkanType(const Renderer::Context& context, Renderer::IndexBufferFormat::Enum indexBufferFormat)
 	{
-		RENDERER_ASSERT(context, Renderer::IndexBufferFormat::UNSIGNED_CHAR != indexBufferFormat, "One byte per element index buffer format isn't supported by Vulkan");
+		RENDERER_ASSERT(context, Renderer::IndexBufferFormat::UNSIGNED_CHAR != indexBufferFormat, "One byte per element index buffer format isn't supported by Vulkan")
 		static const VkIndexType MAPPING[] =
 		{
 			VK_INDEX_TYPE_MAX_ENUM,	// Renderer::IndexBufferFormat::UNSIGNED_CHAR  - One byte per element, uint8_t (may not be supported by each API) - Not supported by Vulkan
@@ -391,7 +391,7 @@ namespace VulkanRenderer
 
 	VkSampleCountFlagBits Mapping::getVulkanSampleCountFlagBits(const Renderer::Context& context, uint8_t numberOfMultisamples)
 	{
-		RENDERER_ASSERT(context, numberOfMultisamples <= 8, "Invalid number of Vulkan multisamples");
+		RENDERER_ASSERT(context, numberOfMultisamples <= 8, "Invalid number of Vulkan multisamples")
 		static const VkSampleCountFlagBits MAPPING[] =
 		{
 			VK_SAMPLE_COUNT_1_BIT,

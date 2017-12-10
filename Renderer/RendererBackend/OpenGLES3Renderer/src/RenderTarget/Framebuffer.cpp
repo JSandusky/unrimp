@@ -84,7 +84,7 @@ namespace OpenGLES3Renderer
 			for (GLenum openGLES3Attachment = GL_COLOR_ATTACHMENT0; colorFramebufferAttachment < colorFramebufferAttachmentEnd; ++colorFramebufferAttachment, ++openGLES3Attachment, ++colorTexture)
 			{
 				// Sanity check
-				RENDERER_ASSERT(renderPass.getRenderer().getContext(), nullptr != colorFramebufferAttachments->texture, "Invalid OpenGL ES 3 color framebuffer attachment texture");
+				RENDERER_ASSERT(renderPass.getRenderer().getContext(), nullptr != colorFramebufferAttachments->texture, "Invalid OpenGL ES 3 color framebuffer attachment texture")
 
 				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
 				*colorTexture = colorFramebufferAttachment->texture;
@@ -108,7 +108,7 @@ namespace OpenGLES3Renderer
 					case Renderer::ResourceType::TEXTURE_2D:
 					{
 						// Sanity check
-						RENDERER_ASSERT(renderPass.getRenderer().getContext(), 0 == colorFramebufferAttachment->layerIndex, "Invalid OpenGL ES 3 color framebuffer attachment layer index");
+						RENDERER_ASSERT(renderPass.getRenderer().getContext(), 0 == colorFramebufferAttachment->layerIndex, "Invalid OpenGL ES 3 color framebuffer attachment layer index")
 
 						// Set the OpenGL ES 3 framebuffer color attachment
 						Texture2D* texture2D = static_cast<Texture2D*>(*colorTexture);
@@ -177,7 +177,7 @@ namespace OpenGLES3Renderer
 		if (nullptr != depthStencilFramebufferAttachment)
 		{
 			mDepthStencilTexture = depthStencilFramebufferAttachment->texture;
-			RENDERER_ASSERT(renderPass.getRenderer().getContext(), nullptr != mDepthStencilTexture, "Invalid OpenGL ES 3 depth stencil framebuffer attachment texture");
+			RENDERER_ASSERT(renderPass.getRenderer().getContext(), nullptr != mDepthStencilTexture, "Invalid OpenGL ES 3 depth stencil framebuffer attachment texture")
 			mDepthStencilTexture->addReference();
 
 			// Evaluate the color texture type
@@ -186,7 +186,7 @@ namespace OpenGLES3Renderer
 				case Renderer::ResourceType::TEXTURE_2D:
 				{
 					// Sanity check
-					RENDERER_ASSERT(renderPass.getRenderer().getContext(), 0 == depthStencilFramebufferAttachment->layerIndex, "Invalid OpenGL ES 3 depth stencil framebuffer attachment layer index");
+					RENDERER_ASSERT(renderPass.getRenderer().getContext(), 0 == depthStencilFramebufferAttachment->layerIndex, "Invalid OpenGL ES 3 depth stencil framebuffer attachment layer index")
 
 					// Bind the depth stencil texture to framebuffer
 					const Texture2D* texture2D = static_cast<const Texture2D*>(mDepthStencilTexture);
@@ -295,12 +295,12 @@ namespace OpenGLES3Renderer
 		// Validate the framebuffer width and height
 		if (0 == mWidth || UINT_MAX == mWidth)
 		{
-			RENDERER_ASSERT(renderPass.getRenderer().getContext(), false, "Invalid OpenGL ES 3 framebuffer width");
+			RENDERER_ASSERT(renderPass.getRenderer().getContext(), false, "Invalid OpenGL ES 3 framebuffer width")
 			mWidth = 1;
 		}
 		if (0 == mHeight || UINT_MAX == mHeight)
 		{
-			RENDERER_ASSERT(renderPass.getRenderer().getContext(), false, "Invalid OpenGL ES 3 framebuffer height");
+			RENDERER_ASSERT(renderPass.getRenderer().getContext(), false, "Invalid OpenGL ES 3 framebuffer height")
 			mHeight = 1;
 		}
 	}
@@ -337,7 +337,7 @@ namespace OpenGLES3Renderer
 	void Framebuffer::generateMipmaps() const
 	{
 		// Sanity check
-		RENDERER_ASSERT(getRenderer().getContext(), mGenerateMipmaps, "OpenGL ES 3 framebuffer mipmap generation is disabled");
+		RENDERER_ASSERT(getRenderer().getContext(), mGenerateMipmaps, "OpenGL ES 3 framebuffer mipmap generation is disabled")
 
 		// TODO(co) Complete, currently only 2D textures are supported
 		Renderer::ITexture** colorTexturesEnd = mColorTextures + mNumberOfColorTextures;

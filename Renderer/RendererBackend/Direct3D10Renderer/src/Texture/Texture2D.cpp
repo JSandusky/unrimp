@@ -49,13 +49,13 @@ namespace Direct3D10Renderer
 		mD3D10ShaderResourceViewTexture(nullptr)
 	{
 		// Sanity checks
-		RENDERER_ASSERT(direct3D10Renderer.getContext(), numberOfMultisamples == 1 || numberOfMultisamples == 2 || numberOfMultisamples == 4 || numberOfMultisamples == 8, "Invalid Direct3D 10 texture parameters");
-		RENDERER_ASSERT(direct3D10Renderer.getContext(), numberOfMultisamples == 1 || nullptr == data, "Invalid Direct3D 10 texture parameters");
-		RENDERER_ASSERT(direct3D10Renderer.getContext(), numberOfMultisamples == 1 || 0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS), "Invalid Direct3D 10 texture parameters");
-		RENDERER_ASSERT(direct3D10Renderer.getContext(), numberOfMultisamples == 1 || 0 == (flags & Renderer::TextureFlag::GENERATE_MIPMAPS), "Invalid Direct3D 10 texture parameters");
-		RENDERER_ASSERT(direct3D10Renderer.getContext(), numberOfMultisamples == 1 || 0 != (flags & Renderer::TextureFlag::RENDER_TARGET), "Invalid Direct3D 10 texture parameters");
-		RENDERER_ASSERT(direct3D10Renderer.getContext(), 0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data, "Invalid Direct3D 10 texture parameters");
-		RENDERER_ASSERT(direct3D10Renderer.getContext(), (flags & Renderer::TextureFlag::RENDER_TARGET) == 0 || nullptr == data, "Direct3D 10 render target textures can't be filled using provided data");
+		RENDERER_ASSERT(direct3D10Renderer.getContext(), numberOfMultisamples == 1 || numberOfMultisamples == 2 || numberOfMultisamples == 4 || numberOfMultisamples == 8, "Invalid Direct3D 10 texture parameters")
+		RENDERER_ASSERT(direct3D10Renderer.getContext(), numberOfMultisamples == 1 || nullptr == data, "Invalid Direct3D 10 texture parameters")
+		RENDERER_ASSERT(direct3D10Renderer.getContext(), numberOfMultisamples == 1 || 0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS), "Invalid Direct3D 10 texture parameters")
+		RENDERER_ASSERT(direct3D10Renderer.getContext(), numberOfMultisamples == 1 || 0 == (flags & Renderer::TextureFlag::GENERATE_MIPMAPS), "Invalid Direct3D 10 texture parameters")
+		RENDERER_ASSERT(direct3D10Renderer.getContext(), numberOfMultisamples == 1 || 0 != (flags & Renderer::TextureFlag::RENDER_TARGET), "Invalid Direct3D 10 texture parameters")
+		RENDERER_ASSERT(direct3D10Renderer.getContext(), 0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data, "Invalid Direct3D 10 texture parameters")
+		RENDERER_ASSERT(direct3D10Renderer.getContext(), (flags & Renderer::TextureFlag::RENDER_TARGET) == 0 || nullptr == data, "Direct3D 10 render target textures can't be filled using provided data")
 
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D10Renderer)
@@ -124,7 +124,7 @@ namespace Direct3D10Renderer
 			{
 				// We don't want dynamic allocations, so we limit the maximum number of mipmaps and hence are able to use the efficient C runtime stack
 				static const uint32_t MAXIMUM_NUMBER_OF_MIPMAPS = 15;	// A 16384x16384 texture has 15 mipmaps
-				RENDERER_ASSERT(getRenderer().getContext(), numberOfMipmaps <= MAXIMUM_NUMBER_OF_MIPMAPS, "Invalid Direct3D 10 number of mipmaps");
+				RENDERER_ASSERT(getRenderer().getContext(), numberOfMipmaps <= MAXIMUM_NUMBER_OF_MIPMAPS, "Invalid Direct3D 10 number of mipmaps")
 				D3D10_SUBRESOURCE_DATA d3d10SubresourceData[MAXIMUM_NUMBER_OF_MIPMAPS];
 
 				// Did the user provided data containing mipmaps from 0-n down to 1x1 linearly in memory?

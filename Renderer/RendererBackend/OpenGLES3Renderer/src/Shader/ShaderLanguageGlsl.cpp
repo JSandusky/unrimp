@@ -129,7 +129,7 @@ namespace OpenGLES3Renderer
 	Renderer::IVertexShader* ShaderLanguageGlsl::createVertexShaderFromBytecode(const Renderer::VertexAttributes&, const Renderer::ShaderBytecode&)
 	{
 		// Error!
-		RENDERER_ASSERT(getRenderer().getContext(), false, "Monolithic shaders have no shader bytecode, only a monolithic program bytecode");
+		RENDERER_ASSERT(getRenderer().getContext(), false, "Monolithic shaders have no shader bytecode, only a monolithic program bytecode")
 		return nullptr;
 	}
 
@@ -143,7 +143,7 @@ namespace OpenGLES3Renderer
 	Renderer::ITessellationControlShader* ShaderLanguageGlsl::createTessellationControlShaderFromBytecode(const Renderer::ShaderBytecode&)
 	{
 		// Error!
-		RENDERER_ASSERT(getRenderer().getContext(), false, "Monolithic shaders have no shader bytecode, only a monolithic program bytecode");
+		RENDERER_ASSERT(getRenderer().getContext(), false, "Monolithic shaders have no shader bytecode, only a monolithic program bytecode")
 		return nullptr;
 	}
 
@@ -156,7 +156,7 @@ namespace OpenGLES3Renderer
 	Renderer::ITessellationEvaluationShader* ShaderLanguageGlsl::createTessellationEvaluationShaderFromBytecode(const Renderer::ShaderBytecode&)
 	{
 		// Error!
-		RENDERER_ASSERT(getRenderer().getContext(), false, "Monolithic shaders have no shader bytecode, only a monolithic program bytecode");
+		RENDERER_ASSERT(getRenderer().getContext(), false, "Monolithic shaders have no shader bytecode, only a monolithic program bytecode")
 		return nullptr;
 	}
 
@@ -169,7 +169,7 @@ namespace OpenGLES3Renderer
 	Renderer::IGeometryShader* ShaderLanguageGlsl::createGeometryShaderFromBytecode(const Renderer::ShaderBytecode&, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t)
 	{
 		// Error!
-		RENDERER_ASSERT(getRenderer().getContext(), false, "Monolithic shaders have no shader bytecode, only a monolithic program bytecode");
+		RENDERER_ASSERT(getRenderer().getContext(), false, "Monolithic shaders have no shader bytecode, only a monolithic program bytecode")
 		return nullptr;
 	}
 
@@ -182,7 +182,7 @@ namespace OpenGLES3Renderer
 	Renderer::IFragmentShader* ShaderLanguageGlsl::createFragmentShaderFromBytecode(const Renderer::ShaderBytecode&)
 	{
 		// Error!
-		RENDERER_ASSERT(getRenderer().getContext(), false, "Monolithic shaders have no shader bytecode, only a monolithic program bytecode");
+		RENDERER_ASSERT(getRenderer().getContext(), false, "Monolithic shaders have no shader bytecode, only a monolithic program bytecode")
 		return nullptr;
 	}
 

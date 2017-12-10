@@ -54,7 +54,7 @@ namespace Direct3D9Renderer
 		}
 		else
 		{
-			RENDERER_ASSERT(direct3D9Renderer.getContext(), nullptr == data, "Invalid Direct3D 9 indirect buffer data");
+			RENDERER_ASSERT(direct3D9Renderer.getContext(), nullptr == data, "Invalid Direct3D 9 indirect buffer data")
 		}
 	}
 
@@ -69,8 +69,8 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	void IndirectBuffer::copyDataFrom(uint32_t numberOfBytes, const void* data)
 	{
-		RENDERER_ASSERT(getRenderer().getContext(), numberOfBytes <= mNumberOfBytes, "Invalid Direct3D 9 indirect buffer data");
-		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid Direct3D 9 indirect buffer data");
+		RENDERER_ASSERT(getRenderer().getContext(), numberOfBytes <= mNumberOfBytes, "Invalid Direct3D 9 indirect buffer data")
+		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid Direct3D 9 indirect buffer data")
 		memcpy(mData, data, numberOfBytes);
 	}
 

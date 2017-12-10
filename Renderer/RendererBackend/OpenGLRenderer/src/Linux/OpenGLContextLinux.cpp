@@ -123,7 +123,7 @@ namespace OpenGLRenderer
 		else
 		{
 			const Renderer::Context& context = openGLRenderer.getContext();
-			RENDERER_ASSERT(context, context.getType() == Renderer::Context::ContextType::X11, "Invalid OpenGL context type");
+			RENDERER_ASSERT(context, context.getType() == Renderer::Context::ContextType::X11, "Invalid OpenGL context type")
 
 			// If the given renderer context is an X11 context use the display connection object provided by the context
 			if (context.getType() == Renderer::Context::ContextType::X11)

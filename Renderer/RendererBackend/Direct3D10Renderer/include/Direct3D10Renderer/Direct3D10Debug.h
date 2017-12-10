@@ -35,5 +35,5 @@
 	#define DIRECT3D10RENDERER_RENDERERMATCHCHECK_ASSERT(rendererReference, resourceReference)
 #else
 	#define DIRECT3D10RENDERER_RENDERERMATCHCHECK_ASSERT(rendererReference, resourceReference) \
-		RENDERER_ASSERT(mContext, &rendererReference == &(resourceReference).getRenderer(), "Direct3D 10 error: The given resource is owned by another renderer instance");
+		RENDERER_ASSERT(mContext, &rendererReference == &(resourceReference).getRenderer(), "Direct3D 10 error: The given resource is owned by another renderer instance")
 #endif

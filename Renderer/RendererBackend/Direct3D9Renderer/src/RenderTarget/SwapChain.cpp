@@ -51,7 +51,7 @@ namespace Direct3D9Renderer
 		const RenderPass& d3d9RenderPass = static_cast<RenderPass&>(renderPass);
 
 		// Sanity check
-		RENDERER_ASSERT(renderPass.getRenderer().getContext(), 1 == d3d9RenderPass.getNumberOfColorAttachments(), "There must be exactly one Direct3D 9 render pass color attachment");
+		RENDERER_ASSERT(renderPass.getRenderer().getContext(), 1 == d3d9RenderPass.getNumberOfColorAttachments(), "There must be exactly one Direct3D 9 render pass color attachment")
 
 		// Get the Direct3D 9 device instance
 		IDirect3DDevice9* direct3DDevice9 = static_cast<Direct3D9Renderer&>(renderPass.getRenderer()).getDirect3DDevice9();

@@ -99,7 +99,7 @@ namespace OpenGLES3Renderer
 				return GL_LINEAR;	// There's no special setting in OpenGL ES 3
 
 			case Renderer::FilterMode::UNKNOWN:
-				RENDERER_ASSERT(context, false, "OpenGL ES 3 filter mode must not be unknown");
+				RENDERER_ASSERT(context, false, "OpenGL ES 3 filter mode must not be unknown")
 				return GL_NEAREST;
 
 			default:
@@ -166,7 +166,7 @@ namespace OpenGLES3Renderer
 				return hasMipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;	// There's no special setting in OpenGL ES 3
 
 			case Renderer::FilterMode::UNKNOWN:
-				RENDERER_ASSERT(context, false, "OpenGL ES 3 filter mode must not be unknown");
+				RENDERER_ASSERT(context, false, "OpenGL ES 3 filter mode must not be unknown")
 				return GL_NEAREST;
 
 			default:

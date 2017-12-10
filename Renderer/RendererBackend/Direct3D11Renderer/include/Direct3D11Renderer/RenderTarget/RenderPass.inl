@@ -52,7 +52,7 @@ namespace Direct3D11Renderer
 
 	inline Renderer::TextureFormat::Enum RenderPass::getColorAttachmentTextureFormat(uint32_t colorAttachmentIndex) const
 	{
-		RENDERER_ASSERT(getRenderer().getContext(), colorAttachmentIndex < mNumberOfColorAttachments, "Invalid Direct3D 11 color attachment index");
+		RENDERER_ASSERT(getRenderer().getContext(), colorAttachmentIndex < mNumberOfColorAttachments, "Invalid Direct3D 11 color attachment index")
 		return mColorAttachmentTextureFormats[colorAttachmentIndex];
 	}
 

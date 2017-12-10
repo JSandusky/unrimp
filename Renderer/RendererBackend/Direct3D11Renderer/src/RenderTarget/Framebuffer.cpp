@@ -73,7 +73,7 @@ namespace Direct3D11Renderer
 			for (Renderer::ITexture** colorTexture = mColorTextures; colorTexture < colorTexturesEnd; ++colorTexture, ++colorFramebufferAttachments, ++d3d11RenderTargetView)
 			{
 				// Sanity check
-				RENDERER_ASSERT(renderPass.getRenderer().getContext(), nullptr != colorFramebufferAttachments->texture, "Invalid Direct3D 11 color framebuffer attachment texture");
+				RENDERER_ASSERT(renderPass.getRenderer().getContext(), nullptr != colorFramebufferAttachments->texture, "Invalid Direct3D 11 color framebuffer attachment texture")
 
 				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
 				*colorTexture = colorFramebufferAttachments->texture;
@@ -85,7 +85,7 @@ namespace Direct3D11Renderer
 					case Renderer::ResourceType::TEXTURE_2D:
 					{
 						// Sanity check
-						RENDERER_ASSERT(renderPass.getRenderer().getContext(), 0 == colorFramebufferAttachments->layerIndex, "Invalid Direct3D 11 color framebuffer attachment layer index");
+						RENDERER_ASSERT(renderPass.getRenderer().getContext(), 0 == colorFramebufferAttachments->layerIndex, "Invalid Direct3D 11 color framebuffer attachment layer index")
 
 						// Update the framebuffer width and height if required
 						Texture2D* texture2D = static_cast<Texture2D*>(*colorTexture);
@@ -177,7 +177,7 @@ namespace Direct3D11Renderer
 		if (nullptr != depthStencilFramebufferAttachment)
 		{
 			mDepthStencilTexture = depthStencilFramebufferAttachment->texture;
-			RENDERER_ASSERT(renderPass.getRenderer().getContext(), nullptr != mDepthStencilTexture, "Invalid Direct3D 11 depth stencil framebuffer attachment texture");
+			RENDERER_ASSERT(renderPass.getRenderer().getContext(), nullptr != mDepthStencilTexture, "Invalid Direct3D 11 depth stencil framebuffer attachment texture")
 			mDepthStencilTexture->addReference();
 
 			// Evaluate the depth stencil texture type
@@ -186,7 +186,7 @@ namespace Direct3D11Renderer
 				case Renderer::ResourceType::TEXTURE_2D:
 				{
 					// Sanity check
-					RENDERER_ASSERT(renderPass.getRenderer().getContext(), 0 == depthStencilFramebufferAttachment->layerIndex, "Invalid Direct3D 11 depth stencil framebuffer attachment layer index");
+					RENDERER_ASSERT(renderPass.getRenderer().getContext(), 0 == depthStencilFramebufferAttachment->layerIndex, "Invalid Direct3D 11 depth stencil framebuffer attachment layer index")
 
 					// Update the framebuffer width and height if required
 					Texture2D* texture2D = static_cast<Texture2D*>(mDepthStencilTexture);
@@ -275,12 +275,12 @@ namespace Direct3D11Renderer
 		// Validate the framebuffer width and height
 		if (0 == mWidth || UINT_MAX == mWidth)
 		{
-			RENDERER_ASSERT(renderPass.getRenderer().getContext(), false, "Invalid Direct3D 11 framebuffer width");
+			RENDERER_ASSERT(renderPass.getRenderer().getContext(), false, "Invalid Direct3D 11 framebuffer width")
 			mWidth = 1;
 		}
 		if (0 == mHeight || UINT_MAX == mHeight)
 		{
-			RENDERER_ASSERT(renderPass.getRenderer().getContext(), false, "Invalid Direct3D 11 framebuffer height");
+			RENDERER_ASSERT(renderPass.getRenderer().getContext(), false, "Invalid Direct3D 11 framebuffer height")
 			mHeight = 1;
 		}
 
@@ -334,7 +334,7 @@ namespace Direct3D11Renderer
 	void Framebuffer::generateMipmaps(ID3D11DeviceContext& d3d11DeviceContext) const
 	{
 		// Sanity check
-		RENDERER_ASSERT(getRenderer().getContext(), mGenerateMipmaps, "Direct3D 11 framebuffer mipmap generation is disabled");
+		RENDERER_ASSERT(getRenderer().getContext(), mGenerateMipmaps, "Direct3D 11 framebuffer mipmap generation is disabled")
 
 		// TODO(co) Complete, currently only 2D textures are supported
 		Renderer::ITexture** colorTexturesEnd = mColorTextures + mNumberOfColorTextures;

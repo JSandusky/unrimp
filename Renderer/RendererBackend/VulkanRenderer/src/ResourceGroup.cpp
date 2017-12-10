@@ -202,9 +202,9 @@ namespace VulkanRenderer
 					}
 
 					// Get the sampler state
-					RENDERER_ASSERT(vulkanRenderer.getContext(), nullptr != mSamplerStates, "Invalid Vulkan sampler states");
+					RENDERER_ASSERT(vulkanRenderer.getContext(), nullptr != mSamplerStates, "Invalid Vulkan sampler states")
 					const SamplerState* samplerState = static_cast<const SamplerState*>(mSamplerStates[resourceIndex]);
-					RENDERER_ASSERT(vulkanRenderer.getContext(), nullptr != samplerState, "Invalid Vulkan sampler states");
+					RENDERER_ASSERT(vulkanRenderer.getContext(), nullptr != samplerState, "Invalid Vulkan sampler states")
 
 					// Update Vulkan descriptor sets
 					const VkDescriptorImageInfo vkDescriptorImageInfo =

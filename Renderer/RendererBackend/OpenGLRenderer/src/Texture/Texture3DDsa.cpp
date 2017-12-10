@@ -44,8 +44,8 @@ namespace OpenGLRenderer
 		Texture3D(openGLRenderer, width, height, depth, textureFormat)
 	{
 		// Sanity checks
-		RENDERER_ASSERT(openGLRenderer.getContext(), 0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data, "Invalid OpenGL texture parameters");
-		RENDERER_ASSERT(openGLRenderer.getContext(), (flags & Renderer::TextureFlag::RENDER_TARGET) == 0 || nullptr == data, "OpenGL render target textures can't be filled using provided data");
+		RENDERER_ASSERT(openGLRenderer.getContext(), 0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data, "Invalid OpenGL texture parameters")
+		RENDERER_ASSERT(openGLRenderer.getContext(), (flags & Renderer::TextureFlag::RENDER_TARGET) == 0 || nullptr == data, "OpenGL render target textures can't be filled using provided data")
 
 		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
 			// Backup the currently set alignment
@@ -246,7 +246,7 @@ namespace OpenGLRenderer
 	void Texture3DDsa::copyDataFrom(uint32_t, const void* data)
 	{
 		// Sanity check
-		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid OpenGL texture data");
+		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid OpenGL texture data")
 
 		// Copy data
 		if (static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_ARB_direct_state_access())

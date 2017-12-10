@@ -44,8 +44,8 @@ namespace Direct3D11Renderer
 		mD3D11SamplerState(nullptr)
 	{
 		// Sanity checks
-		RENDERER_ASSERT(direct3D11Renderer.getContext(), samplerState.filter != Renderer::FilterMode::UNKNOWN, "Direct3D 11 filter mode must not be unknown");
-		RENDERER_ASSERT(direct3D11Renderer.getContext(), samplerState.maxAnisotropy <= direct3D11Renderer.getCapabilities().maximumAnisotropy, "Maximum Direct3D 11 anisotropy value violated");
+		RENDERER_ASSERT(direct3D11Renderer.getContext(), samplerState.filter != Renderer::FilterMode::UNKNOWN, "Direct3D 11 filter mode must not be unknown")
+		RENDERER_ASSERT(direct3D11Renderer.getContext(), samplerState.maxAnisotropy <= direct3D11Renderer.getCapabilities().maximumAnisotropy, "Maximum Direct3D 11 anisotropy value violated")
 
 		// Create the Direct3D 11 sampler state
 		// -> "Renderer::SamplerState" maps directly to Direct3D 10 & 11, do not change it

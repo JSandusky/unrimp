@@ -56,7 +56,7 @@ namespace OpenGLES3Renderer
 		mMaxLOD(samplerState.maxLOD)
 	{
 		// Sanity check
-		RENDERER_ASSERT(openGLES3Renderer.getContext(), samplerState.maxAnisotropy <= openGLES3Renderer.getCapabilities().maximumAnisotropy, "Maximum OpenGL ES 3 anisotropy value violated");
+		RENDERER_ASSERT(openGLES3Renderer.getContext(), samplerState.maxAnisotropy <= openGLES3Renderer.getCapabilities().maximumAnisotropy, "Maximum OpenGL ES 3 anisotropy value violated")
 
 		// Ignore "Renderer::SamplerState.borderColor", border color is not supported by OpenGL ES 3
 

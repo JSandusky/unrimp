@@ -262,7 +262,7 @@ namespace VulkanRenderer
 			}
 			else
 			{
-				RENDERER_ASSERT(vulkanRenderer.getContext(), false, "Invalid Vulkan shader stage flag bits");
+				RENDERER_ASSERT(vulkanRenderer.getContext(), false, "Invalid Vulkan shader stage flag bits")
 			}
 			glslang::TShader shader(shLanguage);
 			shader.setEnvInput(glslang::EShSourceGlsl, shLanguage, glslang::EShClientVulkan, glslVersion);

@@ -110,8 +110,8 @@ namespace VulkanRenderer
 		mRenderPass->addReference();
 
 		// Sanity checks
-		RENDERER_ASSERT(vulkanRenderer.getContext(), nullptr != pipelineState.rootSignature, "Invalid Vulkan root signature");
-		RENDERER_ASSERT(vulkanRenderer.getContext(), nullptr != pipelineState.renderPass, "Invalid Vulkan render pass");
+		RENDERER_ASSERT(vulkanRenderer.getContext(), nullptr != pipelineState.rootSignature, "Invalid Vulkan root signature")
+		RENDERER_ASSERT(vulkanRenderer.getContext(), nullptr != pipelineState.renderPass, "Invalid Vulkan render pass")
 
 		// Our pipeline state needs to be independent of concrete render targets, so we're using dynamic viewport ("VK_DYNAMIC_STATE_VIEWPORT") and scissor ("VK_DYNAMIC_STATE_SCISSOR") states
 		const uint32_t width  = 42;
@@ -291,8 +291,8 @@ namespace VulkanRenderer
 			1.0f																									// maxDepthBounds (float)
 		};
 		const uint32_t numberOfColorAttachments = renderPass->getNumberOfColorAttachments();
-		RENDERER_ASSERT(vulkanRenderer.getContext(), numberOfColorAttachments < 8, "Invalid number of Vulkan color attachments");
-		RENDERER_ASSERT(vulkanRenderer.getContext(), numberOfColorAttachments == pipelineState.numberOfRenderTargets, "Invalid number of Vulkan color attachments");
+		RENDERER_ASSERT(vulkanRenderer.getContext(), numberOfColorAttachments < 8, "Invalid number of Vulkan color attachments")
+		RENDERER_ASSERT(vulkanRenderer.getContext(), numberOfColorAttachments == pipelineState.numberOfRenderTargets, "Invalid number of Vulkan color attachments")
 		std::array<VkPipelineColorBlendAttachmentState, 8> vkPipelineColorBlendAttachmentStates;
 		for (uint8_t i = 0; i < numberOfColorAttachments; ++i)
 		{

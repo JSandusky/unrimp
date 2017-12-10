@@ -97,7 +97,7 @@ namespace OpenGLRenderer
 				return GL_LINEAR;	// There's no special setting in OpenGL
 
 			case Renderer::FilterMode::UNKNOWN:
-				RENDERER_ASSERT(context, false, "OpenGL filter mode must not be unknown");
+				RENDERER_ASSERT(context, false, "OpenGL filter mode must not be unknown")
 				return GL_NEAREST;
 
 			default:
@@ -164,7 +164,7 @@ namespace OpenGLRenderer
 				return hasMipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;	// There's no special setting in OpenGL
 
 			case Renderer::FilterMode::UNKNOWN:
-				RENDERER_ASSERT(context, false, "OpenGL filter mode must not be unknown");
+				RENDERER_ASSERT(context, false, "OpenGL filter mode must not be unknown")
 				return GL_NEAREST;
 
 			default:
@@ -199,7 +199,7 @@ namespace OpenGLRenderer
 				return GL_COMPARE_REF_TO_TEXTURE;
 
 			case Renderer::FilterMode::UNKNOWN:
-				RENDERER_ASSERT(context, false, "OpenGL filter mode must not be unknown");
+				RENDERER_ASSERT(context, false, "OpenGL filter mode must not be unknown")
 				return GL_NEAREST;
 
 			default:

@@ -47,7 +47,7 @@ namespace Direct3D12Renderer
 		// TODO(co) Direct3D 12 update
 		/*
 		// Sanity checks
-		RENDERER_ASSERT(direct3D12Renderer.getContext(), (flags & Renderer::TextureFlag::RENDER_TARGET) == 0 || nullptr == data, "Direct3D 12 render target textures can't be filled using provided data");
+		RENDERER_ASSERT(direct3D12Renderer.getContext(), (flags & Renderer::TextureFlag::RENDER_TARGET) == 0 || nullptr == data, "Direct3D 12 render target textures can't be filled using provided data")
 
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D12Renderer)

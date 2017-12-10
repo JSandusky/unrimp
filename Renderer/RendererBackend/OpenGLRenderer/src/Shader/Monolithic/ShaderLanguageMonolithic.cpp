@@ -133,7 +133,7 @@ namespace OpenGLRenderer
 	Renderer::IVertexShader* ShaderLanguageMonolithic::createVertexShaderFromBytecode(const Renderer::VertexAttributes&, const Renderer::ShaderBytecode&)
 	{
 		// Error!
-		RENDERER_ASSERT(getRenderer().getContext(), false, "Monolithic shaders have no shader bytecode, only a monolithic program bytecode");
+		RENDERER_ASSERT(getRenderer().getContext(), false, "Monolithic shaders have no shader bytecode, only a monolithic program bytecode")
 		return nullptr;
 	}
 
@@ -156,7 +156,7 @@ namespace OpenGLRenderer
 	Renderer::ITessellationControlShader* ShaderLanguageMonolithic::createTessellationControlShaderFromBytecode(const Renderer::ShaderBytecode&)
 	{
 		// Error!
-		RENDERER_ASSERT(getRenderer().getContext(), false, "Monolithic shaders have no shader bytecode, only a monolithic program bytecode");
+		RENDERER_ASSERT(getRenderer().getContext(), false, "Monolithic shaders have no shader bytecode, only a monolithic program bytecode")
 		return nullptr;
 	}
 
@@ -179,7 +179,7 @@ namespace OpenGLRenderer
 	Renderer::ITessellationEvaluationShader* ShaderLanguageMonolithic::createTessellationEvaluationShaderFromBytecode(const Renderer::ShaderBytecode&)
 	{
 		// Error!
-		RENDERER_ASSERT(getRenderer().getContext(), false, "Monolithic shaders have no shader bytecode, only a monolithic program bytecode");
+		RENDERER_ASSERT(getRenderer().getContext(), false, "Monolithic shaders have no shader bytecode, only a monolithic program bytecode")
 		return nullptr;
 	}
 
@@ -202,7 +202,7 @@ namespace OpenGLRenderer
 	Renderer::IGeometryShader* ShaderLanguageMonolithic::createGeometryShaderFromBytecode(const Renderer::ShaderBytecode&, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t)
 	{
 		// Error!
-		RENDERER_ASSERT(getRenderer().getContext(), false, "Monolithic shaders have no shader bytecode, only a monolithic program bytecode");
+		RENDERER_ASSERT(getRenderer().getContext(), false, "Monolithic shaders have no shader bytecode, only a monolithic program bytecode")
 		return nullptr;
 	}
 
@@ -229,7 +229,7 @@ namespace OpenGLRenderer
 	Renderer::IFragmentShader* ShaderLanguageMonolithic::createFragmentShaderFromBytecode(const Renderer::ShaderBytecode&)
 	{
 		// Error!
-		RENDERER_ASSERT(getRenderer().getContext(), false, "Monolithic shaders have no shader bytecode, only a monolithic program bytecode");
+		RENDERER_ASSERT(getRenderer().getContext(), false, "Monolithic shaders have no shader bytecode, only a monolithic program bytecode")
 		return nullptr;
 	}
 

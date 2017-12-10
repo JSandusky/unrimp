@@ -102,9 +102,9 @@ namespace OpenGLRenderer
 	Renderer::IResourceGroup* RootSignature::createResourceGroup(uint32_t rootParameterIndex, uint32_t numberOfResources, Renderer::IResource** resources, Renderer::ISamplerState** samplerStates)
 	{
 		// Sanity checks
-		RENDERER_ASSERT(getRenderer().getContext(), rootParameterIndex < mRootSignature.numberOfParameters, "The OpenGL root parameter index is out-of-bounds");
-		RENDERER_ASSERT(getRenderer().getContext(), numberOfResources > 0, "The number of OpenGL resources must not be zero");
-		RENDERER_ASSERT(getRenderer().getContext(), nullptr != resources, "The OpenGL resource pointers must be valid");
+		RENDERER_ASSERT(getRenderer().getContext(), rootParameterIndex < mRootSignature.numberOfParameters, "The OpenGL root parameter index is out-of-bounds")
+		RENDERER_ASSERT(getRenderer().getContext(), numberOfResources > 0, "The number of OpenGL resources must not be zero")
+		RENDERER_ASSERT(getRenderer().getContext(), nullptr != resources, "The OpenGL resource pointers must be valid")
 
 		// Create resource group
 		return new ResourceGroup(*this, rootParameterIndex, numberOfResources, resources, samplerStates);

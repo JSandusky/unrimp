@@ -35,5 +35,5 @@
 	#define NULLRENDERER_RENDERERMATCHCHECK_ASSERT(rendererReference, resourceReference)
 #else
 	#define NULLRENDERER_RENDERERMATCHCHECK_ASSERT(rendererReference, resourceReference) \
-		RENDERER_ASSERT(mContext, &rendererReference == &(resourceReference).getRenderer(), "Null error: The given resource is owned by another renderer instance");
+		RENDERER_ASSERT(mContext, &rendererReference == &(resourceReference).getRenderer(), "Null error: The given resource is owned by another renderer instance")
 #endif

@@ -176,7 +176,7 @@ namespace Direct3D12Renderer
 	Renderer::IResourceGroup* RootSignature::createResourceGroup(uint32_t, uint32_t, Renderer::IResource**, Renderer::ISamplerState**)
 	{
 		// TODO(co) Implement resource group
-		RENDERER_ASSERT(getRenderer().getContext(), false, "Direct3D 12 resource group creation isn't implemented, yet");
+		RENDERER_ASSERT(getRenderer().getContext(), false, "Direct3D 12 resource group creation isn't implemented, yet")
 		return nullptr;
 	}
 

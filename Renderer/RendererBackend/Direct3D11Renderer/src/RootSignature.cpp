@@ -101,9 +101,9 @@ namespace Direct3D11Renderer
 	Renderer::IResourceGroup* RootSignature::createResourceGroup(uint32_t rootParameterIndex, uint32_t numberOfResources, Renderer::IResource** resources, Renderer::ISamplerState** samplerStates)
 	{
 		// Sanity checks
-		RENDERER_ASSERT(getRenderer().getContext(), rootParameterIndex < mRootSignature.numberOfParameters, "The Direct3D 11 root parameter index is out-of-bounds");
-		RENDERER_ASSERT(getRenderer().getContext(), numberOfResources > 0, "The number of Direct3D 11 resources must not be zero");
-		RENDERER_ASSERT(getRenderer().getContext(), nullptr != resources, "The Direct3D 11 resource pointers must be valid");
+		RENDERER_ASSERT(getRenderer().getContext(), rootParameterIndex < mRootSignature.numberOfParameters, "The Direct3D 11 root parameter index is out-of-bounds")
+		RENDERER_ASSERT(getRenderer().getContext(), numberOfResources > 0, "The number of Direct3D 11 resources must not be zero")
+		RENDERER_ASSERT(getRenderer().getContext(), nullptr != resources, "The Direct3D 11 resource pointers must be valid")
 
 		// Create resource group
 		return new ResourceGroup(getRenderer(), rootParameterIndex, numberOfResources, resources, samplerStates);

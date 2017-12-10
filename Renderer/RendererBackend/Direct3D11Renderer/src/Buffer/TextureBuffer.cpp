@@ -148,7 +148,7 @@ namespace Direct3D11Renderer
 	void TextureBuffer::copyDataFrom(uint32_t numberOfBytes, const void* data)
 	{
 		// Check resource pointers
-		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid Direct3D 11 texture buffer data");
+		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid Direct3D 11 texture buffer data")
 		if (nullptr != mD3D11Buffer)
 		{
 			Direct3D11Renderer& direct3D11Renderer = static_cast<Direct3D11Renderer&>(getRenderer());

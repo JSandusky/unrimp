@@ -45,7 +45,7 @@ namespace Direct3D9Renderer
 		// TODO(co) Implement Direct3D 9 volume texture
 		/*
 		// Sanity checks
-		RENDERER_ASSERT(direct3D9Renderer.getContext(), 0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data, "Invalid Direct3D 9 texture parameters");
+		RENDERER_ASSERT(direct3D9Renderer.getContext(), 0 == (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS) || nullptr != data, "Invalid Direct3D 9 texture parameters")
 
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D9Renderer)
@@ -71,7 +71,7 @@ namespace Direct3D9Renderer
 		// Use this texture as render target?
 		if (flags & Renderer::TextureFlag::RENDER_TARGET)
 		{
-			RENDERER_ASSERT(direct3D9Renderer.getContext(), nullptr == data, "Direct3D 9 render target textures can't be filled using provided data");
+			RENDERER_ASSERT(direct3D9Renderer.getContext(), nullptr == data, "Direct3D 9 render target textures can't be filled using provided data")
 			direct3D9Usage |= D3DUSAGE_RENDERTARGET;
 		}
 

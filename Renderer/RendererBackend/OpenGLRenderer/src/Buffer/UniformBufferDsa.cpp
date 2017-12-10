@@ -76,7 +76,7 @@ namespace OpenGLRenderer
 	void UniformBufferDsa::copyDataFrom(uint32_t numberOfBytes, const void* data)
 	{
 		// Sanity check
-		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid OpenGL uniform buffer data");
+		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid OpenGL uniform buffer data")
 
 		// Upload the data
 		// -> Subdata is quite optimized for uniform buffers, see http://on-demand.gputechconf.com/siggraph/2014/presentation/SG4117-OpenGL-Scene-Rendering-Techniques.pdf

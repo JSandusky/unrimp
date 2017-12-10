@@ -45,7 +45,7 @@ namespace NullRenderer
 		mDepthStencilAttachmentTextureFormat(depthStencilAttachmentTextureFormat),
 		mNumberOfMultisamples(numberOfMultisamples)
 	{
-		RENDERER_ASSERT(renderer.getContext(), mNumberOfColorAttachments < 8, "Invalid number of null color attachments");
+		RENDERER_ASSERT(renderer.getContext(), mNumberOfColorAttachments < 8, "Invalid number of null color attachments")
 		memcpy(mColorAttachmentTextureFormats, colorAttachmentTextureFormats, sizeof(Renderer::TextureFormat::Enum) * mNumberOfColorAttachments);
 	}
 

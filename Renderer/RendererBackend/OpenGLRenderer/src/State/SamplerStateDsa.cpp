@@ -42,7 +42,7 @@ namespace OpenGLRenderer
 		mSamplerState(samplerState)
 	{
 		// Sanity check
-		RENDERER_ASSERT(openGLRenderer.getContext(), samplerState.maxAnisotropy <= openGLRenderer.getCapabilities().maximumAnisotropy, "Maximum OpenGL anisotropy value violated");
+		RENDERER_ASSERT(openGLRenderer.getContext(), samplerState.maxAnisotropy <= openGLRenderer.getCapabilities().maximumAnisotropy, "Maximum OpenGL anisotropy value violated")
 	}
 
 	SamplerStateDsa::~SamplerStateDsa()

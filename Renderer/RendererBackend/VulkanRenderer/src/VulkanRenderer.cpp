@@ -99,7 +99,7 @@ namespace
 			void ExecuteCommandBuffer(const void* data, Renderer::IRenderer& renderer)
 			{
 				const Renderer::Command::ExecuteCommandBuffer* realData = static_cast<const Renderer::Command::ExecuteCommandBuffer*>(data);
-				RENDERER_ASSERT(renderer.getContext(), nullptr != realData->commandBufferToExecute, "The Vulkan command buffer to execute must be valid");
+				RENDERER_ASSERT(renderer.getContext(), nullptr != realData->commandBufferToExecute, "The Vulkan command buffer to execute must be valid")
 				renderer.submitCommandBuffer(*realData->commandBufferToExecute);
 			}
 
@@ -557,7 +557,7 @@ namespace VulkanRenderer
 	void VulkanRenderer::rsSetViewports(uint32_t numberOfViewports, const Renderer::Viewport* viewports)
 	{
 		// Sanity check
-		RENDERER_ASSERT(mContext, numberOfViewports > 0 && nullptr != viewports, "Invalid Vulkan rasterizer state viewports");
+		RENDERER_ASSERT(mContext, numberOfViewports > 0 && nullptr != viewports, "Invalid Vulkan rasterizer state viewports")
 		std::ignore = numberOfViewports;
 
 		// Set Vulkan viewport
@@ -573,7 +573,7 @@ namespace VulkanRenderer
 	void VulkanRenderer::rsSetScissorRectangles(uint32_t numberOfScissorRectangles, const Renderer::ScissorRectangle* scissorRectangles)
 	{
 		// Sanity check
-		RENDERER_ASSERT(mContext, numberOfScissorRectangles > 0 && nullptr != scissorRectangles, "Invalid Vulkan rasterizer state scissor rectangles");
+		RENDERER_ASSERT(mContext, numberOfScissorRectangles > 0 && nullptr != scissorRectangles, "Invalid Vulkan rasterizer state scissor rectangles")
 		std::ignore = numberOfScissorRectangles;
 
 		// Set Vulkan scissor
@@ -628,7 +628,7 @@ namespace VulkanRenderer
 
 				// Set clear color and clear depth stencil values
 				const uint32_t numberOfColorAttachments = static_cast<const RenderPass&>(mRenderTarget->getRenderPass()).getNumberOfColorAttachments();
-				RENDERER_ASSERT(mContext, numberOfColorAttachments < 8, "Vulkan only supports 7 render pass color attachments");
+				RENDERER_ASSERT(mContext, numberOfColorAttachments < 8, "Vulkan only supports 7 render pass color attachments")
 				for (uint32_t i = 0; i < numberOfColorAttachments; ++i)
 				{
 					mVkClearValues[i] = VkClearValue{0.0f, 0.0f, 0.0f, 1.0f};
@@ -645,12 +645,12 @@ namespace VulkanRenderer
 	void VulkanRenderer::clear(uint32_t flags, const float color[4], float z, uint32_t stencil)
 	{
 		// Sanity check
-		RENDERER_ASSERT(mContext, nullptr != mRenderTarget, "Can't execute Vulkan clear command without a render target set");
-		RENDERER_ASSERT(mContext, !mInsideVulkanRenderPass, "Can't execute clear command inside a Vulkan render pass");
+		RENDERER_ASSERT(mContext, nullptr != mRenderTarget, "Can't execute Vulkan clear command without a render target set")
+		RENDERER_ASSERT(mContext, !mInsideVulkanRenderPass, "Can't execute clear command inside a Vulkan render pass")
 
 		// Clear color
 		const uint32_t numberOfColorAttachments = static_cast<const RenderPass&>(mRenderTarget->getRenderPass()).getNumberOfColorAttachments();
-		RENDERER_ASSERT(mContext, numberOfColorAttachments < 8, "Vulkan only supports 7 render pass color attachments");
+		RENDERER_ASSERT(mContext, numberOfColorAttachments < 8, "Vulkan only supports 7 render pass color attachments")
 		if (flags & Renderer::ClearFlag::COLOR)
 		{
 			for (uint32_t i = 0; i < numberOfColorAttachments; ++i)
@@ -684,7 +684,7 @@ namespace VulkanRenderer
 	void VulkanRenderer::draw(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
 		// Sanity check
-		RENDERER_ASSERT(mContext, numberOfDraws > 0, "Number of Vulkan draws must not be zero");
+		RENDERER_ASSERT(mContext, numberOfDraws > 0, "Number of Vulkan draws must not be zero")
 		// It's possible to draw without "mVertexArray"
 
 		// Before doing anything else: If there's emulation data, use it (for example "Renderer::IndirectBuffer" might have been used to generate the data)
@@ -712,8 +712,8 @@ namespace VulkanRenderer
 	void VulkanRenderer::drawEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
 		// Sanity checks
-		RENDERER_ASSERT(mContext, nullptr != emulationData, "The Vulkan emulation data must be valid");
-		RENDERER_ASSERT(mContext, numberOfDraws > 0, "The number of Vulkan draws must not be zero");
+		RENDERER_ASSERT(mContext, nullptr != emulationData, "The Vulkan emulation data must be valid")
+		RENDERER_ASSERT(mContext, numberOfDraws > 0, "The number of Vulkan draws must not be zero")
 		// It's possible to draw without "mVertexArray"
 
 		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
@@ -739,9 +739,9 @@ namespace VulkanRenderer
 	void VulkanRenderer::drawIndexed(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
 		// Sanity checks
-		RENDERER_ASSERT(mContext, numberOfDraws > 0, "Number of Vulkan draws must not be zero");
-		RENDERER_ASSERT(mContext, nullptr != mVertexArray, "Vulkan draw indexed needs a set vertex array");
-		RENDERER_ASSERT(mContext, nullptr != mVertexArray->getIndexBuffer(), "Vulkan draw indexed needs a set vertex array which contains an index buffer");
+		RENDERER_ASSERT(mContext, numberOfDraws > 0, "Number of Vulkan draws must not be zero")
+		RENDERER_ASSERT(mContext, nullptr != mVertexArray, "Vulkan draw indexed needs a set vertex array")
+		RENDERER_ASSERT(mContext, nullptr != mVertexArray->getIndexBuffer(), "Vulkan draw indexed needs a set vertex array which contains an index buffer")
 
 		// Before doing anything else: If there's emulation data, use it (for example "Renderer::IndirectBuffer" might have been used to generate the data)
 		const uint8_t* emulationData = indirectBuffer.getEmulationData();
@@ -768,10 +768,10 @@ namespace VulkanRenderer
 	void VulkanRenderer::drawIndexedEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
 		// Sanity checks
-		RENDERER_ASSERT(mContext, nullptr != emulationData, "The Vulkan emulation data must be valid");
-		RENDERER_ASSERT(mContext, numberOfDraws > 0, "The number of Vulkan draws must not be zero");
-		RENDERER_ASSERT(mContext, nullptr != mVertexArray, "Vulkan draw indexed needs a set vertex array");
-		RENDERER_ASSERT(mContext, nullptr != mVertexArray->getIndexBuffer(), "Vulkan draw indexed needs a set vertex array which contains an index buffer");
+		RENDERER_ASSERT(mContext, nullptr != emulationData, "The Vulkan emulation data must be valid")
+		RENDERER_ASSERT(mContext, numberOfDraws > 0, "The number of Vulkan draws must not be zero")
+		RENDERER_ASSERT(mContext, nullptr != mVertexArray, "Vulkan draw indexed needs a set vertex array")
+		RENDERER_ASSERT(mContext, nullptr != mVertexArray->getIndexBuffer(), "Vulkan draw indexed needs a set vertex array which contains an index buffer")
 
 		// TODO(co) Currently no buffer overflow check due to lack of interface provided data
 		emulationData += indirectBufferOffset;
@@ -922,7 +922,7 @@ namespace VulkanRenderer
 	{
 		// Sanity checks
 		VULKANRENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
-		RENDERER_ASSERT(mContext, NULL_HANDLE != windowHandle.nativeWindowHandle || nullptr != windowHandle.renderWindow, "Vulkan: The provided native window handle or render window must not be a null handle / null pointer");
+		RENDERER_ASSERT(mContext, NULL_HANDLE != windowHandle.nativeWindowHandle || nullptr != windowHandle.renderWindow, "Vulkan: The provided native window handle or render window must not be a null handle / null pointer")
 
 		// Create the swap chain
 		return new SwapChain(renderPass, windowHandle);
@@ -1383,12 +1383,12 @@ namespace VulkanRenderer
 	void VulkanRenderer::beginVulkanRenderPass()
 	{
 		// Sanity checks
-		RENDERER_ASSERT(mContext, !mInsideVulkanRenderPass, "We're already inside a Vulkan render pass");
-		RENDERER_ASSERT(mContext, nullptr != mRenderTarget, "Can't begin a Vulkan render pass without a render target set");
+		RENDERER_ASSERT(mContext, !mInsideVulkanRenderPass, "We're already inside a Vulkan render pass")
+		RENDERER_ASSERT(mContext, nullptr != mRenderTarget, "Can't begin a Vulkan render pass without a render target set")
 
 		// Start Vulkan render pass
 		const uint32_t numberOfAttachments = static_cast<const RenderPass&>(mRenderTarget->getRenderPass()).getNumberOfAttachments();
-		RENDERER_ASSERT(mContext, numberOfAttachments < 9, "Vulkan only supports 8 render pass attachments");
+		RENDERER_ASSERT(mContext, numberOfAttachments < 9, "Vulkan only supports 8 render pass attachments")
 		switch (mRenderTarget->getResourceType())
 		{
 			case Renderer::ResourceType::SWAP_CHAIN:

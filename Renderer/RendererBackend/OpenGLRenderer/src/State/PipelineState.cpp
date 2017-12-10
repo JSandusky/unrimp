@@ -74,7 +74,7 @@ namespace OpenGLRenderer
 			else
 			{
 				// Error!
-				RENDERER_ASSERT(openGLRenderer.getContext(), false, "Invalid number of OpenGL vertices per patch");
+				RENDERER_ASSERT(openGLRenderer.getContext(), false, "Invalid number of OpenGL vertices per patch")
 			}
 		}
 		else
