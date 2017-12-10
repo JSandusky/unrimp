@@ -43,6 +43,7 @@
 
 #include <Renderer/ILog.h>
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 #include <Renderer/Texture/ITexture.h>
 #include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
@@ -59,7 +60,7 @@
 #endif
 NULLRENDERER_API_EXPORT Renderer::IRenderer* createNullRendererInstance(const Renderer::Context& context)
 {
-	return new NullRenderer::NullRenderer(context);
+	return RENDERER_NEW(context, NullRenderer::NullRenderer)(context);
 }
 #undef NULLRENDERER_API_EXPORT
 
@@ -614,7 +615,7 @@ namespace NullRenderer
 				// If required, create the null shader language instance right now
 				if (nullptr == mShaderLanguage)
 				{
-					mShaderLanguage = new ShaderLanguage(*this);
+					mShaderLanguage = RENDERER_NEW(mContext, ShaderLanguage)(*this);
 					mShaderLanguage->addReference();	// Internal renderer reference
 				}
 
@@ -636,7 +637,7 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	Renderer::IRenderPass* NullRenderer::createRenderPass(uint32_t numberOfColorAttachments, const Renderer::TextureFormat::Enum* colorAttachmentTextureFormats, Renderer::TextureFormat::Enum depthStencilAttachmentTextureFormat, uint8_t numberOfMultisamples)
 	{
-		return new RenderPass(*this, numberOfColorAttachments, colorAttachmentTextureFormats, depthStencilAttachmentTextureFormat, numberOfMultisamples);
+		return RENDERER_NEW(mContext, RenderPass)(*this, numberOfColorAttachments, colorAttachmentTextureFormats, depthStencilAttachmentTextureFormat, numberOfMultisamples);
 	}
 
 	Renderer::ISwapChain* NullRenderer::createSwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowHandle windowHandle, bool)
@@ -646,7 +647,7 @@ namespace NullRenderer
 		RENDERER_ASSERT(mContext, NULL_HANDLE != windowHandle.nativeWindowHandle, "Null: The provided native window handle must not be a null handle")
 
 		// Create the swap chain
-		return new SwapChain(renderPass, windowHandle);
+		return RENDERER_NEW(mContext, SwapChain)(renderPass, windowHandle);
 	}
 
 	Renderer::IFramebuffer* NullRenderer::createFramebuffer(Renderer::IRenderPass& renderPass, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment)
@@ -683,32 +684,32 @@ namespace NullRenderer
 		}
 
 		// Create the framebuffer instance
-		return new Framebuffer(renderPass);
+		return RENDERER_NEW(mContext, Framebuffer)(renderPass);
 	}
 
 	Renderer::IBufferManager* NullRenderer::createBufferManager()
 	{
-		return new BufferManager(*this);
+		return RENDERER_NEW(mContext, BufferManager)(*this);
 	}
 
 	Renderer::ITextureManager* NullRenderer::createTextureManager()
 	{
-		return new TextureManager(*this);
+		return RENDERER_NEW(mContext, TextureManager)(*this);
 	}
 
 	Renderer::IRootSignature* NullRenderer::createRootSignature(const Renderer::RootSignature& rootSignature)
 	{
-		return new RootSignature(*this, rootSignature);
+		return RENDERER_NEW(mContext, RootSignature)(*this, rootSignature);
 	}
 
 	Renderer::IPipelineState* NullRenderer::createPipelineState(const Renderer::PipelineState& pipelineState)
 	{
-		return new PipelineState(*this, pipelineState);
+		return RENDERER_NEW(mContext, PipelineState)(*this, pipelineState);
 	}
 
 	Renderer::ISamplerState* NullRenderer::createSamplerState(const Renderer::SamplerState &)
 	{
-		return new SamplerState(*this);
+		return RENDERER_NEW(mContext, SamplerState)(*this);
 	}
 
 

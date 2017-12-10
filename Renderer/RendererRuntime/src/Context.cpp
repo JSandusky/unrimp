@@ -40,7 +40,7 @@ namespace RendererRuntime
 	Context::Context(Renderer::IRenderer& renderer, IFileManager& fileManager) :
 		mLog(renderer.getContext().getLog()),
 		mAssert(renderer.getContext().getAssert()),
-		mMemory(renderer.getContext().getMemory()),
+		mAllocator(renderer.getContext().getAllocator()),
 		mRenderer(renderer),
 		mFileManager(fileManager)
 	{

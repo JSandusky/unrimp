@@ -29,23 +29,19 @@
 //[-------------------------------------------------------]
 #include <Renderer/State/IPipelineState.h>
 
+#include "Direct3D9Renderer/State/BlendState.h"
+#include "Direct3D9Renderer/State/RasterizerState.h"
+#include "Direct3D9Renderer/State/DepthStencilState.h"
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
-struct IDirect3DDevice9;
 struct IDirect3DVertexDeclaration9;
 namespace Renderer
 {
 	class IProgram;
 	struct PipelineState;
-}
-namespace Direct3D9Renderer
-{
-	class BlendState;
-	class RasterizerState;
-	class DepthStencilState;
-	class Direct3D9Renderer;
 }
 
 
@@ -137,9 +133,9 @@ namespace Direct3D9Renderer
 		Renderer::IProgram*			 mProgram;
 		Renderer::IRenderPass*		 mRenderPass;
 		IDirect3DVertexDeclaration9* mDirect3DVertexDeclaration9;	///< Direct3D 9 vertex declaration instance, can be a null pointer
-		RasterizerState*			 mRasterizerState;
-		DepthStencilState*			 mDepthStencilState;
-		BlendState*					 mBlendState;
+		RasterizerState				 mRasterizerState;
+		DepthStencilState			 mDepthStencilState;
+		BlendState					 mBlendState;
 
 
 	};

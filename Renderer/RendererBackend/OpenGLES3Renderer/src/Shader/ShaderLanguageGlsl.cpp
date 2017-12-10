@@ -30,6 +30,7 @@
 
 #include <Renderer/ILog.h>
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 
 //[-------------------------------------------------------]
@@ -137,7 +138,7 @@ namespace OpenGLES3Renderer
 	{
 		// There's no need to check for "Renderer::Capabilities::vertexShader", we know there's vertex shader support
 		// -> Monolithic shaders have no shader bytecode, only a monolithic program bytecode
-		return new VertexShaderGlsl(static_cast<OpenGLES3Renderer&>(getRenderer()), shaderSourceCode.sourceCode);
+		return RENDERER_NEW(getRenderer().getContext(), VertexShaderGlsl)(static_cast<OpenGLES3Renderer&>(getRenderer()), shaderSourceCode.sourceCode);
 	}
 
 	Renderer::ITessellationControlShader* ShaderLanguageGlsl::createTessellationControlShaderFromBytecode(const Renderer::ShaderBytecode&)
@@ -190,7 +191,7 @@ namespace OpenGLES3Renderer
 	{
 		// There's no need to check for "Renderer::Capabilities::fragmentShader", we know there's fragment shader support
 		// -> Monolithic shaders have no shader bytecode, only a monolithic program bytecode
-		return new FragmentShaderGlsl(static_cast<OpenGLES3Renderer&>(getRenderer()), shaderSourceCode.sourceCode);
+		return RENDERER_NEW(getRenderer().getContext(), FragmentShaderGlsl)(static_cast<OpenGLES3Renderer&>(getRenderer()), shaderSourceCode.sourceCode);
 	}
 
 	Renderer::IProgram* ShaderLanguageGlsl::createProgram(const Renderer::IRootSignature& rootSignature, const Renderer::VertexAttributes& vertexAttributes, Renderer::IVertexShader* vertexShader, Renderer::ITessellationControlShader* tessellationControlShader, Renderer::ITessellationEvaluationShader* tessellationEvaluationShader, Renderer::IGeometryShader* geometryShader, Renderer::IFragmentShader* fragmentShader)
@@ -222,7 +223,7 @@ namespace OpenGLES3Renderer
 		else
 		{
 			// Create the program
-			return new ProgramGlsl(static_cast<OpenGLES3Renderer&>(getRenderer()), rootSignature, vertexAttributes, static_cast<VertexShaderGlsl*>(vertexShader), static_cast<FragmentShaderGlsl*>(fragmentShader));
+			return RENDERER_NEW(getRenderer().getContext(), ProgramGlsl)(static_cast<OpenGLES3Renderer&>(getRenderer()), rootSignature, vertexAttributes, static_cast<VertexShaderGlsl*>(vertexShader), static_cast<FragmentShaderGlsl*>(fragmentShader));
 		}
 
 		// Error! Shader language mismatch!

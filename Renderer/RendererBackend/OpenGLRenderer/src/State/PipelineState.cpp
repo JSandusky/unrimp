@@ -22,9 +22,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/State/PipelineState.h"
-#include "OpenGLRenderer/State/BlendState.h"
-#include "OpenGLRenderer/State/RasterizerState.h"
-#include "OpenGLRenderer/State/DepthStencilState.h"
 #include "OpenGLRenderer/Shader/Monolithic/ProgramMonolithic.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 #include "OpenGLRenderer/OpenGLRenderer.h"
@@ -51,9 +48,9 @@ namespace OpenGLRenderer
 		mNumberOfVerticesPerPatch(0),
 		mProgram(pipelineState.program),
 		mRenderPass(pipelineState.renderPass),
-		mRasterizerState(new RasterizerState(pipelineState.rasterizerState)),
-		mDepthStencilState(new DepthStencilState(pipelineState.depthStencilState)),
-		mBlendState(new BlendState(pipelineState.blendState))
+		mRasterizerState(pipelineState.rasterizerState),
+		mDepthStencilState(pipelineState.depthStencilState),
+		mBlendState(pipelineState.blendState)
 	{
 		// Tessellation support: Up to 32 vertices per patch are supported "Renderer::PrimitiveTopology::PATCH_LIST_1" ... "Renderer::PrimitiveTopology::PATCH_LIST_32"
 		if (pipelineState.primitiveTopology >= Renderer::PrimitiveTopology::PATCH_LIST_1)
@@ -92,11 +89,6 @@ namespace OpenGLRenderer
 
 	PipelineState::~PipelineState()
 	{
-		// Destroy states
-		delete mRasterizerState;
-		delete mDepthStencilState;
-		delete mBlendState;
-
 		// Release the program and render pass reference
 		mProgram->releaseReference();
 		mRenderPass->releaseReference();
@@ -107,28 +99,28 @@ namespace OpenGLRenderer
 		static_cast<OpenGLRenderer&>(getRenderer()).setProgram(mProgram);
 
 		// Set the OpenGL rasterizer state
-		mRasterizerState->setOpenGLRasterizerStates();
+		mRasterizerState.setOpenGLRasterizerStates();
 
 		// Set OpenGL depth stencil state
-		mDepthStencilState->setOpenGLDepthStencilStates();
+		mDepthStencilState.setOpenGLDepthStencilStates();
 
 		// Set OpenGL blend state
-		mBlendState->setOpenGLBlendStates();
+		mBlendState.setOpenGLBlendStates();
 	}
 
 	const Renderer::RasterizerState& PipelineState::getRasterizerState() const
 	{
-		return mRasterizerState->getRasterizerState();
+		return mRasterizerState.getRasterizerState();
 	}
 
 	const Renderer::DepthStencilState& PipelineState::getDepthStencilState() const
 	{
-		return mDepthStencilState->getDepthStencilState();
+		return mDepthStencilState.getDepthStencilState();
 	}
 
 	const Renderer::BlendState& PipelineState::getBlendState() const
 	{
-		return mBlendState->getBlendState();
+		return mBlendState.getBlendState();
 	}
 
 

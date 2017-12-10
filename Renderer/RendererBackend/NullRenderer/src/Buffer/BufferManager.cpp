@@ -30,6 +30,7 @@
 #include "NullRenderer/Buffer/IndexBuffer.h"
 #include "NullRenderer/NullRenderer.h"
 
+#include <Renderer/IAllocator.h>
 #include <Renderer/Buffer/VertexArrayTypes.h>
 
 
@@ -55,12 +56,12 @@ namespace NullRenderer
 	//[-------------------------------------------------------]
 	Renderer::IVertexBuffer* BufferManager::createVertexBuffer(uint32_t, const void*, Renderer::BufferUsage)
 	{
-		return new VertexBuffer(static_cast<NullRenderer&>(getRenderer()));
+		return RENDERER_NEW(getRenderer().getContext(), VertexBuffer)(static_cast<NullRenderer&>(getRenderer()));
 	}
 
 	Renderer::IIndexBuffer* BufferManager::createIndexBuffer(uint32_t, Renderer::IndexBufferFormat::Enum, const void*, Renderer::BufferUsage)
 	{
-		return new IndexBuffer(static_cast<NullRenderer&>(getRenderer()));
+		return RENDERER_NEW(getRenderer().getContext(), IndexBuffer)(static_cast<NullRenderer&>(getRenderer()));
 	}
 
 	Renderer::IVertexArray* BufferManager::createVertexArray(const Renderer::VertexAttributes&, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer* vertexBuffers, Renderer::IIndexBuffer* indexBuffer)
@@ -83,22 +84,22 @@ namespace NullRenderer
 		}
 
 		// Create the vertex array instance
-		return new VertexArray(static_cast<NullRenderer&>(getRenderer()));
+		return RENDERER_NEW(getRenderer().getContext(), VertexArray)(static_cast<NullRenderer&>(getRenderer()));
 	}
 
 	Renderer::IUniformBuffer* BufferManager::createUniformBuffer(uint32_t, const void*, Renderer::BufferUsage)
 	{
-		return new UniformBuffer(static_cast<NullRenderer&>(getRenderer()));
+		return RENDERER_NEW(getRenderer().getContext(), UniformBuffer)(static_cast<NullRenderer&>(getRenderer()));
 	}
 
 	Renderer::ITextureBuffer* BufferManager::createTextureBuffer(uint32_t, Renderer::TextureFormat::Enum, const void*, Renderer::BufferUsage)
 	{
-		return new TextureBuffer(static_cast<NullRenderer&>(getRenderer()));
+		return RENDERER_NEW(getRenderer().getContext(), TextureBuffer)(static_cast<NullRenderer&>(getRenderer()));
 	}
 
 	Renderer::IIndirectBuffer* BufferManager::createIndirectBuffer(uint32_t, const void*, Renderer::BufferUsage)
 	{
-		return new IndirectBuffer(static_cast<NullRenderer&>(getRenderer()));
+		return RENDERER_NEW(getRenderer().getContext(), IndirectBuffer)(static_cast<NullRenderer&>(getRenderer()));
 	}
 
 

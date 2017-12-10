@@ -52,6 +52,7 @@
 
 #include <Renderer/ILog.h>
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 #include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
 
@@ -69,7 +70,7 @@
 #endif
 OPENGLES3RENDERER_API_EXPORT Renderer::IRenderer* createOpenGLES3RendererInstance(const Renderer::Context& context)
 {
-	return new OpenGLES3Renderer::OpenGLES3Renderer(context);
+	return RENDERER_NEW(context, OpenGLES3Renderer::OpenGLES3Renderer)(context);
 }
 #undef OPENGLES3RENDERER_API_EXPORT
 
@@ -378,7 +379,7 @@ namespace OpenGLES3Renderer
 		mCurrentStartInstanceLocation(~0u)
 	{
 		// Initialize the OpenGL ES 3 context
-		mOpenGLES3Context = new OpenGLES3ContextRuntimeLinking(*this, context.getNativeWindowHandle(), context.isUsingExternalContext());
+		mOpenGLES3Context = RENDERER_NEW(mContext, OpenGLES3ContextRuntimeLinking)(*this, context.getNativeWindowHandle(), context.isUsingExternalContext());
 		if (mOpenGLES3Context->initialize(0))
 		{
 			// Initialize the capabilities
@@ -481,7 +482,7 @@ namespace OpenGLES3Renderer
 		}
 
 		// Destroy the OpenGL ES 3 context instance
-		delete mOpenGLES3Context;
+		RENDERER_DELETE(mContext, IOpenGLES3Context, mOpenGLES3Context);
 	}
 
 
@@ -1326,7 +1327,7 @@ namespace OpenGLES3Renderer
 				// If required, create the GLSL shader language instance right now
 				if (nullptr == mShaderLanguageGlsl)
 				{
-					mShaderLanguageGlsl = new ShaderLanguageGlsl(*this);
+					mShaderLanguageGlsl = RENDERER_NEW(mContext, ShaderLanguageGlsl)(*this);
 					mShaderLanguageGlsl->addReference();	// Internal renderer reference
 				}
 
@@ -1348,7 +1349,7 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	Renderer::IRenderPass* OpenGLES3Renderer::createRenderPass(uint32_t numberOfColorAttachments, const Renderer::TextureFormat::Enum* colorAttachmentTextureFormats, Renderer::TextureFormat::Enum depthStencilAttachmentTextureFormat, uint8_t numberOfMultisamples)
 	{
-		return new RenderPass(*this, numberOfColorAttachments, colorAttachmentTextureFormats, depthStencilAttachmentTextureFormat, numberOfMultisamples);
+		return RENDERER_NEW(mContext, RenderPass)(*this, numberOfColorAttachments, colorAttachmentTextureFormats, depthStencilAttachmentTextureFormat, numberOfMultisamples);
 	}
 
 	Renderer::ISwapChain* OpenGLES3Renderer::createSwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowHandle windowHandle, bool)
@@ -1358,7 +1359,7 @@ namespace OpenGLES3Renderer
 		RENDERER_ASSERT(mContext, NULL_HANDLE != windowHandle.nativeWindowHandle || nullptr != windowHandle.renderWindow, "OpenGL ES 3: The provided native window handle or render window must not be a null handle / null pointer")
 
 		// Create the swap chain
-		return new SwapChain(renderPass, windowHandle);
+		return RENDERER_NEW(mContext, SwapChain)(renderPass, windowHandle);
 	}
 
 	Renderer::IFramebuffer* OpenGLES3Renderer::createFramebuffer(Renderer::IRenderPass& renderPass, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment)
@@ -1367,32 +1368,32 @@ namespace OpenGLES3Renderer
 		OPENGLES3RENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
 
 		// Create the framebuffer
-		return new Framebuffer(renderPass, colorFramebufferAttachments, depthStencilFramebufferAttachment);
+		return RENDERER_NEW(mContext, Framebuffer)(renderPass, colorFramebufferAttachments, depthStencilFramebufferAttachment);
 	}
 
 	Renderer::IBufferManager* OpenGLES3Renderer::createBufferManager()
 	{
-		return new BufferManager(*this);
+		return RENDERER_NEW(mContext, BufferManager)(*this);
 	}
 
 	Renderer::ITextureManager* OpenGLES3Renderer::createTextureManager()
 	{
-		return new TextureManager(*this);
+		return RENDERER_NEW(mContext, TextureManager)(*this);
 	}
 
 	Renderer::IRootSignature* OpenGLES3Renderer::createRootSignature(const Renderer::RootSignature& rootSignature)
 	{
-		return new RootSignature(*this, rootSignature);
+		return RENDERER_NEW(mContext, RootSignature)(*this, rootSignature);
 	}
 
 	Renderer::IPipelineState* OpenGLES3Renderer::createPipelineState(const Renderer::PipelineState& pipelineState)
 	{
-		return new PipelineState(*this, pipelineState);
+		return RENDERER_NEW(mContext, PipelineState)(*this, pipelineState);
 	}
 
 	Renderer::ISamplerState* OpenGLES3Renderer::createSamplerState(const Renderer::SamplerState& samplerState)
 	{
-		return new SamplerState(*this, samplerState);
+		return RENDERER_NEW(mContext, SamplerState)(*this, samplerState);
 	}
 
 

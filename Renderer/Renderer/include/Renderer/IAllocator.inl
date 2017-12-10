@@ -19,9 +19,9 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
+//[ Includes                                              ]
 //[-------------------------------------------------------]
-#pragma once
+#include <cassert>
 
 
 //[-------------------------------------------------------]
@@ -32,72 +32,31 @@ namespace Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Classes                                               ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    Abstract memory interface
-	*
-	*  @note
-	*    - The implementation must be multi-threading safe since the renderer is allowed to internally use multiple threads
-	*    - TODO(co) Implement me
-	*/
-	class IMemory
+	void* IAllocator::reallocate(void* oldPointer, size_t oldNumberOfBytes, size_t newNumberOfBytes, size_t alignment)
 	{
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IMemory methods              ]
-	//[-------------------------------------------------------]
-	public:
-		/**
-		*  @brief
-		*    Test
-		*
-		*  @param[in] test
-		*    Test
-		*/
-		virtual void test(bool test) = 0;
+		assert(mReallocateFuntion);
+		return (*mReallocateFuntion)(*this, oldPointer, oldNumberOfBytes, newNumberOfBytes, alignment);
+	}
 
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	protected:
-		inline IMemory();
-		inline virtual ~IMemory();
-		explicit IMemory(const IMemory&) = delete;
-		IMemory& operator=(const IMemory&) = delete;
+	inline IAllocator::IAllocator(ReallocateFuntion reallocateFuntion) :
+		mReallocateFuntion(reallocateFuntion)
+	{
+		assert(mReallocateFuntion);
+	}
 
-
-	};
+	inline IAllocator::~IAllocator()
+	{
+		// Nothing here
+	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // Renderer
-
-
-//[-------------------------------------------------------]
-//[ Macros & definitions                                  ]
-//[-------------------------------------------------------]
-/**
-*  @brief
-*    Ease-of-use memory macro
-*
-*  @param[in] context
-*    Renderer context to ask for the memory interface
-*  @param[in] test
-*    Test
-*
-*  @note
-*    - Example: RENDERER_MEMORY(mContext, true)
-*/
-#define RENDERER_MEMORY(context, test) (context).getMemory().test(true);
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "Renderer/IMemory.inl"

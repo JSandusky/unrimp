@@ -85,10 +85,10 @@ namespace RendererToolkit
 	class Context
 	{
 	public:
-		inline Context(Renderer::ILog& log, Renderer::IAssert& assert, Renderer::IMemory& memory, RendererRuntime::IFileManager& fileManager) :
+		inline Context(Renderer::ILog& log, Renderer::IAssert& assert, Renderer::IAllocator& allocator, RendererRuntime::IFileManager& fileManager) :
 			mLog(log),
 			mAssert(assert),
-			mMemory(memory),
+			mAllocator(allocator),
 			mFileManager(fileManager)
 		{ }
 		inline ~Context()
@@ -101,9 +101,9 @@ namespace RendererToolkit
 		{
 			return mAssert;
 		}
-		inline Renderer::IMemory& getMemory() const
+		inline Renderer::IAllocator& getAllocator() const
 		{
-			return mMemory;
+			return mAllocator;
 		}
 		inline RendererRuntime::IFileManager& getFileManager() const
 		{
@@ -115,7 +115,7 @@ namespace RendererToolkit
 	private:
 		Renderer::ILog&				   mLog;
 		Renderer::IAssert&			   mAssert;
-		Renderer::IMemory&			   mMemory;
+		Renderer::IAllocator&		   mAllocator;
 		RendererRuntime::IFileManager& mFileManager;
 	};
 

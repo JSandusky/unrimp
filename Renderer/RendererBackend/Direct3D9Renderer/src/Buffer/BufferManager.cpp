@@ -28,6 +28,8 @@
 #include "Direct3D9Renderer/Buffer/IndexBuffer.h"
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
 
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -52,19 +54,19 @@ namespace Direct3D9Renderer
 	Renderer::IVertexBuffer* BufferManager::createVertexBuffer(uint32_t numberOfBytes, const void* data, Renderer::BufferUsage bufferUsage)
 	{
 		// TODO(co) Security checks
-		return new VertexBuffer(static_cast<Direct3D9Renderer&>(getRenderer()), numberOfBytes, data, bufferUsage);
+		return RENDERER_NEW(getRenderer().getContext(), VertexBuffer)(static_cast<Direct3D9Renderer&>(getRenderer()), numberOfBytes, data, bufferUsage);
 	}
 
 	Renderer::IIndexBuffer* BufferManager::createIndexBuffer(uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void* data, Renderer::BufferUsage bufferUsage)
 	{
 		// TODO(co) Security checks
-		return new IndexBuffer(static_cast<Direct3D9Renderer&>(getRenderer()), numberOfBytes, indexBufferFormat, data, bufferUsage);
+		return RENDERER_NEW(getRenderer().getContext(), IndexBuffer)(static_cast<Direct3D9Renderer&>(getRenderer()), numberOfBytes, indexBufferFormat, data, bufferUsage);
 	}
 
 	Renderer::IVertexArray* BufferManager::createVertexArray(const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer* vertexBuffers, Renderer::IIndexBuffer* indexBuffer)
 	{
 		// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-		return new VertexArray(static_cast<Direct3D9Renderer&>(getRenderer()), vertexAttributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
+		return RENDERER_NEW(getRenderer().getContext(), VertexArray)(static_cast<Direct3D9Renderer&>(getRenderer()), vertexAttributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
 	}
 
 	Renderer::IUniformBuffer* BufferManager::createUniformBuffer(uint32_t, const void*, Renderer::BufferUsage)
@@ -81,7 +83,7 @@ namespace Direct3D9Renderer
 
 	Renderer::IIndirectBuffer* BufferManager::createIndirectBuffer(uint32_t numberOfBytes, const void* data, Renderer::BufferUsage)
 	{
-		return new IndirectBuffer(static_cast<Direct3D9Renderer&>(getRenderer()), numberOfBytes, data);
+		return RENDERER_NEW(getRenderer().getContext(), IndirectBuffer)(static_cast<Direct3D9Renderer&>(getRenderer()), numberOfBytes, data);
 	}
 
 

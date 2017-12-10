@@ -29,6 +29,8 @@
 #include "Direct3D10Renderer/Texture/Texture2DArray.h"
 #include "Direct3D10Renderer/Direct3D10Renderer.h"
 
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -55,7 +57,7 @@ namespace Direct3D10Renderer
 		// Check whether or not the given texture dimension is valid
 		if (width > 0)
 		{
-			return new Texture1D(static_cast<Direct3D10Renderer&>(getRenderer()), width, textureFormat, data, flags, textureUsage);
+			return RENDERER_NEW(getRenderer().getContext(), Texture1D)(static_cast<Direct3D10Renderer&>(getRenderer()), width, textureFormat, data, flags, textureUsage);
 		}
 		else
 		{
@@ -68,7 +70,7 @@ namespace Direct3D10Renderer
 		// Check whether or not the given texture dimension is valid
 		if (width > 0 && height > 0)
 		{
-			return new Texture2D(static_cast<Direct3D10Renderer&>(getRenderer()), width, height, textureFormat, data, flags, textureUsage, numberOfMultisamples);
+			return RENDERER_NEW(getRenderer().getContext(), Texture2D)(static_cast<Direct3D10Renderer&>(getRenderer()), width, height, textureFormat, data, flags, textureUsage, numberOfMultisamples);
 		}
 		else
 		{
@@ -81,7 +83,7 @@ namespace Direct3D10Renderer
 		// Check whether or not the given texture dimension is valid
 		if (width > 0 && height > 0 && numberOfSlices > 0)
 		{
-			return new Texture2DArray(static_cast<Direct3D10Renderer&>(getRenderer()), width, height, numberOfSlices, textureFormat, data, flags, textureUsage);
+			return RENDERER_NEW(getRenderer().getContext(), Texture2DArray)(static_cast<Direct3D10Renderer&>(getRenderer()), width, height, numberOfSlices, textureFormat, data, flags, textureUsage);
 		}
 		else
 		{
@@ -94,7 +96,7 @@ namespace Direct3D10Renderer
 		// Check whether or not the given texture dimension is valid
 		if (width > 0 && height > 0 && depth > 0)
 		{
-			return new Texture3D(static_cast<Direct3D10Renderer&>(getRenderer()), width, height, depth, textureFormat, data, flags, textureUsage);
+			return RENDERER_NEW(getRenderer().getContext(), Texture3D)(static_cast<Direct3D10Renderer&>(getRenderer()), width, height, depth, textureFormat, data, flags, textureUsage);
 		}
 		else
 		{
@@ -107,7 +109,7 @@ namespace Direct3D10Renderer
 		// Check whether or not the given texture dimension is valid
 		if (width > 0 && height > 0)
 		{
-			return new TextureCube(static_cast<Direct3D10Renderer&>(getRenderer()), width, height, textureFormat, data, flags, textureUsage);
+			return RENDERER_NEW(getRenderer().getContext(), TextureCube)(static_cast<Direct3D10Renderer&>(getRenderer()), width, height, textureFormat, data, flags, textureUsage);
 		}
 		else
 		{

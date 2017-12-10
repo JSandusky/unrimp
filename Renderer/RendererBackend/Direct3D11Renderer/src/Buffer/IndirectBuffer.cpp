@@ -28,6 +28,7 @@
 #include "Direct3D11Renderer/Direct3D11Renderer.h"
 
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 
 //[-------------------------------------------------------]
@@ -49,7 +50,7 @@ namespace Direct3D11Renderer
 	{
 		if (mNumberOfBytes > 0)
 		{
-			mData = new uint8_t[mNumberOfBytes];
+			mData = RENDERER_MALLOC_TYPED(direct3D11Renderer.getContext(), uint8_t, mNumberOfBytes);
 			if (nullptr != data)
 			{
 				memcpy(mData, data, mNumberOfBytes);
@@ -112,7 +113,7 @@ namespace Direct3D11Renderer
 
 	IndirectBuffer::~IndirectBuffer()
 	{
-		delete [] mData;
+		RENDERER_FREE(getRenderer().getContext(), mData);
 
 		// Release the used resources
 		if (nullptr != mD3D11ShaderResourceViewIndirect)

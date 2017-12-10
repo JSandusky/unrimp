@@ -28,6 +28,8 @@
 #include "Direct3D9Renderer/Texture/TextureCube.h"
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
 
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -54,7 +56,7 @@ namespace Direct3D9Renderer
 		// Check whether or not the given texture dimension is valid
 		if (width > 0)
 		{
-			return new Texture1D(static_cast<Direct3D9Renderer&>(getRenderer()), width, textureFormat, data, flags, textureUsage);
+			return RENDERER_NEW(getRenderer().getContext(), Texture1D)(static_cast<Direct3D9Renderer&>(getRenderer()), width, textureFormat, data, flags, textureUsage);
 		}
 		else
 		{
@@ -67,7 +69,7 @@ namespace Direct3D9Renderer
 		// Check whether or not the given texture dimension is valid
 		if (width > 0 && height > 0)
 		{
-			return new Texture2D(static_cast<Direct3D9Renderer&>(getRenderer()), width, height, textureFormat, data, flags, textureUsage);
+			return RENDERER_NEW(getRenderer().getContext(), Texture2D)(static_cast<Direct3D9Renderer&>(getRenderer()), width, height, textureFormat, data, flags, textureUsage);
 		}
 		else
 		{
@@ -86,7 +88,7 @@ namespace Direct3D9Renderer
 		// Check whether or not the given texture dimension is valid
 		if (width > 0 && height > 0 && depth > 0)
 		{
-			return new Texture3D(static_cast<Direct3D9Renderer&>(getRenderer()), width, height, depth, textureFormat, data, flags, textureUsage);
+			return RENDERER_NEW(getRenderer().getContext(), Texture3D)(static_cast<Direct3D9Renderer&>(getRenderer()), width, height, depth, textureFormat, data, flags, textureUsage);
 		}
 		else
 		{
@@ -99,7 +101,7 @@ namespace Direct3D9Renderer
 		// Check whether or not the given texture dimension is valid
 		if (width > 0 && height > 0)
 		{
-			return new TextureCube(static_cast<Direct3D9Renderer&>(getRenderer()), width, height, textureFormat, data, flags, textureUsage);
+			return RENDERER_NEW(getRenderer().getContext(), TextureCube)(static_cast<Direct3D9Renderer&>(getRenderer()), width, height, textureFormat, data, flags, textureUsage);
 		}
 		else
 		{

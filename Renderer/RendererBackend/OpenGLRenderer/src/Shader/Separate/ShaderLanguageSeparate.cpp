@@ -36,6 +36,7 @@
 #include "OpenGLRenderer/OpenGLRenderer.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/IAllocator.h>
 
 #ifdef OPENGLRENDERER_GLSLTOSPIRV
 	// Disable warnings in external headers, we can't fix them
@@ -455,7 +456,7 @@ namespace OpenGLRenderer
 		const Extensions& extensions = openGLRenderer.getExtensions();
 		if (extensions.isGL_ARB_vertex_shader() && extensions.isGL_ARB_gl_spirv())
 		{
-			return new VertexShaderSeparate(openGLRenderer, vertexAttributes, shaderBytecode);
+			return RENDERER_NEW(getRenderer().getContext(), VertexShaderSeparate)(openGLRenderer, vertexAttributes, shaderBytecode);
 		}
 		else
 		{
@@ -471,7 +472,7 @@ namespace OpenGLRenderer
 		const Extensions& extensions = openGLRenderer.getExtensions();
 		if (extensions.isGL_ARB_vertex_shader())
 		{
-			return new VertexShaderSeparate(openGLRenderer, vertexAttributes, shaderSourceCode.sourceCode, extensions.isGL_ARB_gl_spirv() ? shaderBytecode : nullptr);
+			return RENDERER_NEW(getRenderer().getContext(), VertexShaderSeparate)(openGLRenderer, vertexAttributes, shaderSourceCode.sourceCode, extensions.isGL_ARB_gl_spirv() ? shaderBytecode : nullptr);
 		}
 		else
 		{
@@ -487,7 +488,7 @@ namespace OpenGLRenderer
 		const Extensions& extensions = openGLRenderer.getExtensions();
 		if (extensions.isGL_ARB_tessellation_shader() && extensions.isGL_ARB_gl_spirv())
 		{
-			return new TessellationControlShaderSeparate(openGLRenderer, shaderBytecode);
+			return RENDERER_NEW(getRenderer().getContext(), TessellationControlShaderSeparate)(openGLRenderer, shaderBytecode);
 		}
 		else
 		{
@@ -503,7 +504,7 @@ namespace OpenGLRenderer
 		const Extensions& extensions = openGLRenderer.getExtensions();
 		if (extensions.isGL_ARB_tessellation_shader())
 		{
-			return new TessellationControlShaderSeparate(openGLRenderer, shaderSourceCode.sourceCode, extensions.isGL_ARB_gl_spirv() ? shaderBytecode : nullptr);
+			return RENDERER_NEW(getRenderer().getContext(), TessellationControlShaderSeparate)(openGLRenderer, shaderSourceCode.sourceCode, extensions.isGL_ARB_gl_spirv() ? shaderBytecode : nullptr);
 		}
 		else
 		{
@@ -519,7 +520,7 @@ namespace OpenGLRenderer
 		const Extensions& extensions = openGLRenderer.getExtensions();
 		if (extensions.isGL_ARB_tessellation_shader() && extensions.isGL_ARB_gl_spirv())
 		{
-			return new TessellationEvaluationShaderSeparate(openGLRenderer, shaderBytecode);
+			return RENDERER_NEW(getRenderer().getContext(), TessellationEvaluationShaderSeparate)(openGLRenderer, shaderBytecode);
 		}
 		else
 		{
@@ -535,7 +536,7 @@ namespace OpenGLRenderer
 		const Extensions& extensions = openGLRenderer.getExtensions();
 		if (extensions.isGL_ARB_tessellation_shader())
 		{
-			return new TessellationEvaluationShaderSeparate(openGLRenderer, shaderSourceCode.sourceCode, extensions.isGL_ARB_gl_spirv() ? shaderBytecode : nullptr);
+			return RENDERER_NEW(getRenderer().getContext(), TessellationEvaluationShaderSeparate)(openGLRenderer, shaderSourceCode.sourceCode, extensions.isGL_ARB_gl_spirv() ? shaderBytecode : nullptr);
 		}
 		else
 		{
@@ -555,7 +556,7 @@ namespace OpenGLRenderer
 			//   "layout(triangles) in;"
 			//   "layout(triangle_strip, max_vertices = 3) out;"
 			// -> To be able to support older GLSL versions, we have to provide this information also via OpenGL API functions
-			return new GeometryShaderSeparate(openGLRenderer, shaderBytecode, gsInputPrimitiveTopology, gsOutputPrimitiveTopology, numberOfOutputVertices);
+			return RENDERER_NEW(getRenderer().getContext(), GeometryShaderSeparate)(openGLRenderer, shaderBytecode, gsInputPrimitiveTopology, gsOutputPrimitiveTopology, numberOfOutputVertices);
 		}
 		else
 		{
@@ -575,7 +576,7 @@ namespace OpenGLRenderer
 			//   "layout(triangles) in;"
 			//   "layout(triangle_strip, max_vertices = 3) out;"
 			// -> To be able to support older GLSL versions, we have to provide this information also via OpenGL API functions
-			return new GeometryShaderSeparate(openGLRenderer, shaderSourceCode.sourceCode, gsInputPrimitiveTopology, gsOutputPrimitiveTopology, numberOfOutputVertices, extensions.isGL_ARB_gl_spirv() ? shaderBytecode : nullptr);
+			return RENDERER_NEW(getRenderer().getContext(), GeometryShaderSeparate)(openGLRenderer, shaderSourceCode.sourceCode, gsInputPrimitiveTopology, gsOutputPrimitiveTopology, numberOfOutputVertices, extensions.isGL_ARB_gl_spirv() ? shaderBytecode : nullptr);
 		}
 		else
 		{
@@ -591,7 +592,7 @@ namespace OpenGLRenderer
 		const Extensions& extensions = openGLRenderer.getExtensions();
 		if (extensions.isGL_ARB_fragment_shader() && extensions.isGL_ARB_gl_spirv())
 		{
-			return new FragmentShaderSeparate(openGLRenderer, shaderBytecode);
+			return RENDERER_NEW(getRenderer().getContext(), FragmentShaderSeparate)(openGLRenderer, shaderBytecode);
 		}
 		else
 		{
@@ -607,7 +608,7 @@ namespace OpenGLRenderer
 		const Extensions& extensions = openGLRenderer.getExtensions();
 		if (extensions.isGL_ARB_fragment_shader())
 		{
-			return new FragmentShaderSeparate(openGLRenderer, shaderSourceCode.sourceCode, extensions.isGL_ARB_gl_spirv() ? shaderBytecode : nullptr);
+			return RENDERER_NEW(getRenderer().getContext(), FragmentShaderSeparate)(openGLRenderer, shaderSourceCode.sourceCode, extensions.isGL_ARB_gl_spirv() ? shaderBytecode : nullptr);
 		}
 		else
 		{
@@ -649,12 +650,12 @@ namespace OpenGLRenderer
 		else if (openGLRenderer.getExtensions().isGL_EXT_direct_state_access() || openGLRenderer.getExtensions().isGL_ARB_direct_state_access())
 		{
 			// Effective direct state access (DSA)
-			return new ProgramSeparateDsa(openGLRenderer, rootSignature, static_cast<VertexShaderSeparate*>(vertexShader), static_cast<TessellationControlShaderSeparate*>(tessellationControlShader), static_cast<TessellationEvaluationShaderSeparate*>(tessellationEvaluationShader), static_cast<GeometryShaderSeparate*>(geometryShader), static_cast<FragmentShaderSeparate*>(fragmentShader));
+			return RENDERER_NEW(getRenderer().getContext(), ProgramSeparateDsa)(openGLRenderer, rootSignature, static_cast<VertexShaderSeparate*>(vertexShader), static_cast<TessellationControlShaderSeparate*>(tessellationControlShader), static_cast<TessellationEvaluationShaderSeparate*>(tessellationEvaluationShader), static_cast<GeometryShaderSeparate*>(geometryShader), static_cast<FragmentShaderSeparate*>(fragmentShader));
 		}
 		else
 		{
 			// Traditional bind version
-			return new ProgramSeparate(openGLRenderer, rootSignature, static_cast<VertexShaderSeparate*>(vertexShader), static_cast<TessellationControlShaderSeparate*>(tessellationControlShader), static_cast<TessellationEvaluationShaderSeparate*>(tessellationEvaluationShader), static_cast<GeometryShaderSeparate*>(geometryShader), static_cast<FragmentShaderSeparate*>(fragmentShader));
+			return RENDERER_NEW(getRenderer().getContext(), ProgramSeparate)(openGLRenderer, rootSignature, static_cast<VertexShaderSeparate*>(vertexShader), static_cast<TessellationControlShaderSeparate*>(tessellationControlShader), static_cast<TessellationEvaluationShaderSeparate*>(tessellationEvaluationShader), static_cast<GeometryShaderSeparate*>(geometryShader), static_cast<FragmentShaderSeparate*>(fragmentShader));
 		}
 
 		// Error! Shader language mismatch!

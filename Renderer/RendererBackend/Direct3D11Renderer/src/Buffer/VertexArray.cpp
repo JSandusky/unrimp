@@ -27,6 +27,7 @@
 #include "Direct3D11Renderer/D3D11.h"
 #include "Direct3D11Renderer/Direct3D11Renderer.h"
 
+#include <Renderer/IAllocator.h>
 #include <Renderer/Buffer/VertexArrayTypes.h>
 
 
@@ -62,10 +63,12 @@ namespace Direct3D11Renderer
 		// Add a reference to the used vertex buffers
 		if (mNumberOfSlots > 0)
 		{
-			mD3D11Buffers = new ID3D11Buffer*[mNumberOfSlots];
-			mStrides = new UINT[mNumberOfSlots];
-			mOffsets = new UINT[mNumberOfSlots]{};	// Vertex buffer offset is not supported by OpenGL, so our renderer API doesn't support it either, set everything to zero
-			mVertexBuffers = new VertexBuffer*[mNumberOfSlots];
+			const Renderer::Context& context = direct3D11Renderer.getContext();
+			mD3D11Buffers = RENDERER_MALLOC_TYPED(context, ID3D11Buffer*, mNumberOfSlots);
+			mStrides = RENDERER_MALLOC_TYPED(context, UINT, mNumberOfSlots);
+			mOffsets = RENDERER_MALLOC_TYPED(context, UINT, mNumberOfSlots);
+			memset(mOffsets, 0, sizeof(UINT) * mNumberOfSlots);	// Vertex buffer offset is not supported by OpenGL, so our renderer API doesn't support it either, set everything to zero
+			mVertexBuffers = RENDERER_MALLOC_TYPED(context, VertexBuffer*, mNumberOfSlots);
 
 			{ // Loop through all vertex buffers
 				ID3D11Buffer** currentD3D11Buffer = mD3D11Buffers;
@@ -100,11 +103,12 @@ namespace Direct3D11Renderer
 		}
 
 		// Cleanup Direct3D 11 input slot data
+		const Renderer::Context& context = getRenderer().getContext();
 		if (mNumberOfSlots > 0)
 		{
-			delete [] mD3D11Buffers;
-			delete [] mStrides;
-			delete [] mOffsets;
+			RENDERER_FREE(context, mD3D11Buffers);
+			RENDERER_FREE(context, mStrides);
+			RENDERER_FREE(context, mOffsets);
 		}
 
 		// Release the reference to the used vertex buffers
@@ -118,7 +122,7 @@ namespace Direct3D11Renderer
 			}
 
 			// Cleanup
-			delete [] mVertexBuffers;
+			RENDERER_FREE(context, mVertexBuffers);
 		}
 
 		// Release our Direct3D 11 device context reference

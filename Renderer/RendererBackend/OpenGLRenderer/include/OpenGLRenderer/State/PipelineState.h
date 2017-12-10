@@ -29,6 +29,10 @@
 //[-------------------------------------------------------]
 #include <Renderer/State/IPipelineState.h>
 
+#include "OpenGLRenderer/State/BlendState.h"
+#include "OpenGLRenderer/State/RasterizerState.h"
+#include "OpenGLRenderer/State/DepthStencilState.h"
+
 
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
@@ -40,13 +44,6 @@ namespace Renderer
 	struct PipelineState;
 	struct RasterizerState;
 	struct DepthStencilState;
-}
-namespace OpenGLRenderer
-{
-	class BlendState;
-	class OpenGLRenderer;
-	class RasterizerState;
-	class DepthStencilState;
 }
 
 
@@ -137,9 +134,9 @@ namespace OpenGLRenderer
 		int					   mNumberOfVerticesPerPatch;	///< Number of vertices per patch (type "GLint" not used in here in order to keep the header slim)
 		Renderer::IProgram*	   mProgram;
 		Renderer::IRenderPass* mRenderPass;
-		RasterizerState*	   mRasterizerState;
-		DepthStencilState*	   mDepthStencilState;
-		BlendState*			   mBlendState;
+		RasterizerState		   mRasterizerState;
+		DepthStencilState	   mDepthStencilState;
+		BlendState			   mBlendState;
 
 
 	};

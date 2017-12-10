@@ -32,6 +32,8 @@
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 #include "OpenGLES3Renderer/IExtensions.h"
 
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -56,24 +58,24 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	Renderer::IVertexBuffer* BufferManager::createVertexBuffer(uint32_t numberOfBytes, const void* data, Renderer::BufferUsage bufferUsage)
 	{
-		return new VertexBuffer(static_cast<OpenGLES3Renderer&>(getRenderer()), numberOfBytes, data, bufferUsage);
+		return RENDERER_NEW(getRenderer().getContext(), VertexBuffer)(static_cast<OpenGLES3Renderer&>(getRenderer()), numberOfBytes, data, bufferUsage);
 	}
 
 	Renderer::IIndexBuffer* BufferManager::createIndexBuffer(uint32_t numberOfBytes, Renderer::IndexBufferFormat::Enum indexBufferFormat, const void* data, Renderer::BufferUsage bufferUsage)
 	{
-		return new IndexBuffer(static_cast<OpenGLES3Renderer&>(getRenderer()), numberOfBytes, indexBufferFormat, data, bufferUsage);
+		return RENDERER_NEW(getRenderer().getContext(), IndexBuffer)(static_cast<OpenGLES3Renderer&>(getRenderer()), numberOfBytes, indexBufferFormat, data, bufferUsage);
 	}
 
 	Renderer::IVertexArray* BufferManager::createVertexArray(const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer* vertexBuffers, Renderer::IIndexBuffer* indexBuffer)
 	{
 		// Effective vertex array object (VAO)
 		// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-		return new VertexArray(static_cast<OpenGLES3Renderer&>(getRenderer()), vertexAttributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
+		return RENDERER_NEW(getRenderer().getContext(), VertexArray)(static_cast<OpenGLES3Renderer&>(getRenderer()), vertexAttributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
 	}
 
 	Renderer::IUniformBuffer* BufferManager::createUniformBuffer(uint32_t numberOfBytes, const void* data, Renderer::BufferUsage bufferUsage)
 	{
-		return new UniformBuffer(static_cast<OpenGLES3Renderer&>(getRenderer()), numberOfBytes, data, bufferUsage);
+		return RENDERER_NEW(getRenderer().getContext(), UniformBuffer)(static_cast<OpenGLES3Renderer&>(getRenderer()), numberOfBytes, data, bufferUsage);
 	}
 
 	Renderer::ITextureBuffer* BufferManager::createTextureBuffer(uint32_t numberOfBytes, Renderer::TextureFormat::Enum textureFormat, const void* data, Renderer::BufferUsage bufferUsage)
@@ -82,14 +84,14 @@ namespace OpenGLES3Renderer
 		if (mExtensions->isGL_EXT_texture_buffer())
 		{
 			// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-			return new TextureBufferBind(static_cast<OpenGLES3Renderer&>(getRenderer()), numberOfBytes, textureFormat, data, bufferUsage);
+			return RENDERER_NEW(getRenderer().getContext(), TextureBufferBind)(static_cast<OpenGLES3Renderer&>(getRenderer()), numberOfBytes, textureFormat, data, bufferUsage);
 		}
 
 		// We can only emulate the "Renderer::TextureFormat::R32G32B32A32F" texture format using an uniform buffer
 		else if (Renderer::TextureFormat::R32G32B32A32F == textureFormat)
 		{
 			// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-			return new TextureBufferBindEmulation(static_cast<OpenGLES3Renderer&>(getRenderer()), numberOfBytes, textureFormat, data, bufferUsage);
+			return RENDERER_NEW(getRenderer().getContext(), TextureBufferBindEmulation)(static_cast<OpenGLES3Renderer&>(getRenderer()), numberOfBytes, textureFormat, data, bufferUsage);
 		}
 
 		// Error!
@@ -98,7 +100,7 @@ namespace OpenGLES3Renderer
 
 	Renderer::IIndirectBuffer* BufferManager::createIndirectBuffer(uint32_t numberOfBytes, const void* data, Renderer::BufferUsage)
 	{
-		return new IndirectBuffer(static_cast<OpenGLES3Renderer&>(getRenderer()), numberOfBytes, data);
+		return RENDERER_NEW(getRenderer().getContext(), IndirectBuffer)(static_cast<OpenGLES3Renderer&>(getRenderer()), numberOfBytes, data);
 	}
 
 

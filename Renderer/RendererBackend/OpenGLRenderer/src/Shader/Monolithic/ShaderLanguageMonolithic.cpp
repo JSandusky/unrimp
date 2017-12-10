@@ -34,6 +34,7 @@
 
 #include <Renderer/ILog.h>
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 
 //[-------------------------------------------------------]
@@ -144,7 +145,7 @@ namespace OpenGLRenderer
 		OpenGLRenderer& openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		if (openGLRenderer.getExtensions().isGL_ARB_vertex_shader())
 		{
-			return new VertexShaderMonolithic(openGLRenderer, shaderSourceCode.sourceCode);
+			return RENDERER_NEW(getRenderer().getContext(), VertexShaderMonolithic)(openGLRenderer, shaderSourceCode.sourceCode);
 		}
 		else
 		{
@@ -167,7 +168,7 @@ namespace OpenGLRenderer
 		OpenGLRenderer& openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		if (openGLRenderer.getExtensions().isGL_ARB_tessellation_shader())
 		{
-			return new TessellationControlShaderMonolithic(openGLRenderer, shaderSourceCode.sourceCode);
+			return RENDERER_NEW(getRenderer().getContext(), TessellationControlShaderMonolithic)(openGLRenderer, shaderSourceCode.sourceCode);
 		}
 		else
 		{
@@ -190,7 +191,7 @@ namespace OpenGLRenderer
 		OpenGLRenderer& openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		if (openGLRenderer.getExtensions().isGL_ARB_tessellation_shader())
 		{
-			return new TessellationEvaluationShaderMonolithic(openGLRenderer, shaderSourceCode.sourceCode);
+			return RENDERER_NEW(getRenderer().getContext(), TessellationEvaluationShaderMonolithic)(openGLRenderer, shaderSourceCode.sourceCode);
 		}
 		else
 		{
@@ -217,7 +218,7 @@ namespace OpenGLRenderer
 			//   "layout(triangles) in;"
 			//   "layout(triangle_strip, max_vertices = 3) out;"
 			// -> To be able to support older GLSL versions, we have to provide this information also via OpenGL API functions
-			return new GeometryShaderMonolithic(openGLRenderer, shaderSourceCode.sourceCode, gsInputPrimitiveTopology, gsOutputPrimitiveTopology, numberOfOutputVertices);
+			return RENDERER_NEW(getRenderer().getContext(), GeometryShaderMonolithic)(openGLRenderer, shaderSourceCode.sourceCode, gsInputPrimitiveTopology, gsOutputPrimitiveTopology, numberOfOutputVertices);
 		}
 		else
 		{
@@ -240,7 +241,7 @@ namespace OpenGLRenderer
 		OpenGLRenderer& openGLRenderer = static_cast<OpenGLRenderer&>(getRenderer());
 		if (openGLRenderer.getExtensions().isGL_ARB_fragment_shader())
 		{
-			return new FragmentShaderMonolithic(openGLRenderer, shaderSourceCode.sourceCode);
+			return RENDERER_NEW(getRenderer().getContext(), FragmentShaderMonolithic)(openGLRenderer, shaderSourceCode.sourceCode);
 		}
 		else
 		{
@@ -282,12 +283,12 @@ namespace OpenGLRenderer
 		else if (openGLRenderer.getExtensions().isGL_EXT_direct_state_access() || openGLRenderer.getExtensions().isGL_ARB_direct_state_access())
 		{
 			// Effective direct state access (DSA)
-			return new ProgramMonolithicDsa(openGLRenderer, rootSignature, vertexAttributes, static_cast<VertexShaderMonolithic*>(vertexShader), static_cast<TessellationControlShaderMonolithic*>(tessellationControlShader), static_cast<TessellationEvaluationShaderMonolithic*>(tessellationEvaluationShader), static_cast<GeometryShaderMonolithic*>(geometryShader), static_cast<FragmentShaderMonolithic*>(fragmentShader));
+			return RENDERER_NEW(getRenderer().getContext(), ProgramMonolithicDsa)(openGLRenderer, rootSignature, vertexAttributes, static_cast<VertexShaderMonolithic*>(vertexShader), static_cast<TessellationControlShaderMonolithic*>(tessellationControlShader), static_cast<TessellationEvaluationShaderMonolithic*>(tessellationEvaluationShader), static_cast<GeometryShaderMonolithic*>(geometryShader), static_cast<FragmentShaderMonolithic*>(fragmentShader));
 		}
 		else
 		{
 			// Traditional bind version
-			return new ProgramMonolithic(openGLRenderer, rootSignature, vertexAttributes, static_cast<VertexShaderMonolithic*>(vertexShader), static_cast<TessellationControlShaderMonolithic*>(tessellationControlShader), static_cast<TessellationEvaluationShaderMonolithic*>(tessellationEvaluationShader), static_cast<GeometryShaderMonolithic*>(geometryShader), static_cast<FragmentShaderMonolithic*>(fragmentShader));
+			return RENDERER_NEW(getRenderer().getContext(), ProgramMonolithic)(openGLRenderer, rootSignature, vertexAttributes, static_cast<VertexShaderMonolithic*>(vertexShader), static_cast<TessellationControlShaderMonolithic*>(tessellationControlShader), static_cast<TessellationEvaluationShaderMonolithic*>(tessellationEvaluationShader), static_cast<GeometryShaderMonolithic*>(geometryShader), static_cast<FragmentShaderMonolithic*>(fragmentShader));
 		}
 
 		// Error! Shader language mismatch!

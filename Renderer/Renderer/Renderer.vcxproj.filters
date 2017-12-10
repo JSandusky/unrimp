@@ -208,17 +208,17 @@
     <ClInclude Include="include\Renderer\RenderTarget\IRenderPass.h">
       <Filter>Header Files\RenderTarget</Filter>
     </ClInclude>
-    <ClInclude Include="include\Renderer\IMemory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Renderer\IAssert.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Renderer\Public\StdMemory.h">
-      <Filter>Header Files\Public</Filter>
-    </ClInclude>
     <ClInclude Include="include\Renderer\Public\StdAssert.h">
       <Filter>Header Files\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\Public\StdAllocator.h">
+      <Filter>Header Files\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\IAllocator.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -368,14 +368,14 @@
     <None Include="include\Renderer\IAssert.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="include\Renderer\IMemory.inl">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="include\Renderer\Public\StdMemory.inl">
-      <Filter>Header Files\Public</Filter>
-    </None>
     <None Include="include\Renderer\Public\StdAssert.inl">
       <Filter>Header Files\Public</Filter>
+    </None>
+    <None Include="include\Renderer\Public\StdAllocator.inl">
+      <Filter>Header Files\Public</Filter>
+    </None>
+    <None Include="include\Renderer\IAllocator.inl">
+      <Filter>Header Files</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -37,7 +37,7 @@ namespace Renderer
 {
 	class ILog;
 	class IAssert;
-	class IMemory;
+	class IAllocator;
 }
 #ifdef LINUX
 	// Copied from "Xlib.h"
@@ -91,8 +91,8 @@ namespace Renderer
 		*    Log instance to use, the log instance must stay valid as long as the renderer instance exists
 		*  @param[in] assert
 		*    Assert instance to use, the assert instance must stay valid as long as the renderer instance exists
-		*  @param[in] memory
-		*    Memory instance to use, the memory instance must stay valid as long as the renderer instance exists
+		*  @param[in] allocator
+		*    Allocator instance to use, the allocator instance must stay valid as long as the renderer instance exists
 		*  @param[in] nativeWindowHandle
 		*    Native window handle
 		*  @param[in] useExternalContext
@@ -100,7 +100,7 @@ namespace Renderer
 		*  @param[in] contextType
 		*    The type of the context
 		*/
-		inline Context(ILog& log, IAssert& assert, IMemory& memory, handle nativeWindowHandle = 0, bool useExternalContext = false, ContextType contextType = Context::ContextType::WINDOWS);
+		inline Context(ILog& log, IAssert& assert, IAllocator& allocator, handle nativeWindowHandle = 0, bool useExternalContext = false, ContextType contextType = Context::ContextType::WINDOWS);
 
 		/**
 		*  @brief
@@ -128,12 +128,12 @@ namespace Renderer
 
 		/**
 		*  @brief
-		*    Return the memory instance
+		*    Return the allocator instance
 		*
 		*  @return
-		*    The memory instance
+		*    The allocator instance
 		*/
-		inline IMemory& getMemory() const;
+		inline IAllocator& getAllocator() const;
 
 		/**
 		*  @brief
@@ -195,7 +195,7 @@ namespace Renderer
 	private:
 		ILog&		mLog;
 		IAssert&	mAssert;
-		IMemory&	mMemory;
+		IAllocator&	mAllocator;
 		handle		mNativeWindowHandle;
 		bool		mUseExternalContext;
 		ContextType	mContextType;
@@ -226,8 +226,8 @@ namespace Renderer
 		*    Log instance to use, the log instance must stay valid as long as the renderer instance exists
 		*  @param[in] assert
 		*    Assert instance to use, the assert instance must stay valid as long as the renderer instance exists
-		*  @param[in] memory
-		*    Memory instance to use, the memory instance must stay valid as long as the renderer instance exists
+		*  @param[in] allocator
+		*    Allocator instance to use, the allocator instance must stay valid as long as the renderer instance exists
 		*  @param[in] display
 		*    The X11 display connection
 		*  @param[in] nativeWindowHandle
@@ -235,7 +235,7 @@ namespace Renderer
 		*  @param[in] useExternalContext
 		*    Indicates if an external renderer context is used; in this case the renderer itself has nothing to do with the creation/managing of an renderer context
 		*/
-		inline X11Context(ILog& log, IAssert& assert, IMemory& memory, _XDisplay* display, handle nativeWindowHandle = 0, bool useExternalContext = false);
+		inline X11Context(ILog& log, IAssert& assert, IAllocator& allocator, _XDisplay* display, handle nativeWindowHandle = 0, bool useExternalContext = false);
 
 		/**
 		*  @brief
@@ -276,8 +276,8 @@ namespace Renderer
 		*    Log instance to use, the log instance must stay valid as long as the renderer instance exists
 		*  @param[in] assert
 		*    Assert instance to use, the assert instance must stay valid as long as the renderer instance exists
-		*  @param[in] memory
-		*    Memory instance to use, the memory instance must stay valid as long as the renderer instance exists
+		*  @param[in] allocator
+		*    Allocator instance to use, the allocator instance must stay valid as long as the renderer instance exists
 		*  @param[in] display
 		*    The Wayland display connection
 		*  @param[in] surface
@@ -285,7 +285,7 @@ namespace Renderer
 		*  @param[in] useExternalContext
 		*    Indicates if an external renderer context is used; in this case the renderer itself has nothing to do with the creation/managing of an renderer context
 		*/
-		inline WaylandContext(ILog& log, IAssert& assert, IMemory& memory, wl_display* display, wl_surface* surface = 0, bool useExternalContext = false);
+		inline WaylandContext(ILog& log, IAssert& assert, IAllocator& allocator, wl_display* display, wl_surface* surface = 0, bool useExternalContext = false);
 
 		/**
 		*  @brief

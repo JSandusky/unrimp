@@ -52,7 +52,7 @@ namespace Renderer
 {
 	class ILog;
 	class IAssert;
-	class IMemory;
+	class IAllocator;
 }
 
 
@@ -82,7 +82,7 @@ namespace RendererRuntime
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline StdFileManager(Renderer::ILog& log, Renderer::IAssert& assert, Renderer::IMemory& memory, const std::string& relativeRootDirectory);
+		inline StdFileManager(Renderer::ILog& log, Renderer::IAssert& assert, Renderer::IAllocator& allocator, const std::string& relativeRootDirectory);
 		inline virtual ~StdFileManager() override;
 
 
@@ -132,7 +132,7 @@ namespace RendererRuntime
 	private:
 		Renderer::ILog&		   mLog;
 		Renderer::IAssert&	   mAssert;
-		Renderer::IMemory&	   mMemory;
+		Renderer::IAllocator&  mAllocator;
 		AbsoluteDirectoryNames mAbsoluteBaseDirectory;	///< Absolute UTF-8 base directory, without "/" at the end
 		MountedDirectories	   mMountedDirectories;
 

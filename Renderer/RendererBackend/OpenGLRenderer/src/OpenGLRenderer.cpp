@@ -68,6 +68,7 @@
 
 #include <Renderer/ILog.h>
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 #include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
 
@@ -83,7 +84,7 @@
 #endif
 OPENGLRENDERER_API_EXPORT Renderer::IRenderer* createOpenGLRendererInstance(const Renderer::Context& context)
 {
-	return new OpenGLRenderer::OpenGLRenderer(context);
+	return RENDERER_NEW(context, OpenGLRenderer::OpenGLRenderer)(context);
 }
 #undef OPENGLRENDERER_API_EXPORT
 
@@ -438,7 +439,7 @@ namespace OpenGLRenderer
 		mCurrentStartInstanceLocation(~0u)
 	{
 		// Is OpenGL available?
-		mOpenGLRuntimeLinking = new OpenGLRuntimeLinking(*this);
+		mOpenGLRuntimeLinking = RENDERER_NEW(mContext, OpenGLRuntimeLinking)(*this);
 		if (mOpenGLRuntimeLinking->isOpenGLAvaiable())
 		{
 			const handle nativeWindowHandle = mContext.getNativeWindowHandle();
@@ -447,16 +448,16 @@ namespace OpenGLRenderer
 			#ifdef WIN32
 			{
 				// TODO(co) Add external OpenGL context support
-				mOpenGLContext = new OpenGLContextWindows(mOpenGLRuntimeLinking, renderPass, nativeWindowHandle);
+				mOpenGLContext = RENDERER_NEW(mContext, OpenGLContextWindows)(mOpenGLRuntimeLinking, renderPass, nativeWindowHandle);
 			}
 			#elif defined LINUX
-				mOpenGLContext = new OpenGLContextLinux(*this, mOpenGLRuntimeLinking, renderPass, nativeWindowHandle, mContext.isUsingExternalContext());
+				mOpenGLContext = RENDERER_NEW(mContext, OpenGLContextLinux)(*this, mOpenGLRuntimeLinking, renderPass, nativeWindowHandle, mContext.isUsingExternalContext());
 			#else
 				#error "Unsupported platform"
 			#endif
 
 			// We're using "this" in here, so we are not allowed to write the following within the initializer list
-			mExtensions = new Extensions(*this, *mOpenGLContext);
+			mExtensions = RENDERER_NEW(mContext, Extensions)(*this, *mOpenGLContext);
 
 			// Is the OpenGL context initialized?
 			if (mOpenGLContext->isInitialized())
@@ -564,13 +565,13 @@ namespace OpenGLRenderer
 		}
 
 		// Destroy the extensions instance
-		delete mExtensions;
+		RENDERER_DELETE(mContext, Extensions, mExtensions);
 
 		// Destroy the OpenGL context instance
-		delete mOpenGLContext;
+		RENDERER_DELETE(mContext, IOpenGLContext, mOpenGLContext);
 
 		// Destroy the OpenGL runtime linking instance
-		delete mOpenGLRuntimeLinking;
+		RENDERER_DELETE(mContext, OpenGLRuntimeLinking, mOpenGLRuntimeLinking);
 	}
 
 
@@ -1806,7 +1807,7 @@ namespace OpenGLRenderer
 						// If required, create the separate shader language instance right now
 						if (nullptr == mShaderLanguage)
 						{
-							mShaderLanguage = new ShaderLanguageSeparate(*this);
+							mShaderLanguage = RENDERER_NEW(mContext, ShaderLanguageSeparate)(*this);
 							mShaderLanguage->addReference();	// Internal renderer reference
 						}
 
@@ -1818,7 +1819,7 @@ namespace OpenGLRenderer
 						// If required, create the monolithic shader language instance right now
 						if (nullptr == mShaderLanguage)
 						{
-							mShaderLanguage = new ShaderLanguageMonolithic(*this);
+							mShaderLanguage = RENDERER_NEW(mContext, ShaderLanguageMonolithic)(*this);
 							mShaderLanguage->addReference();	// Internal renderer reference
 						}
 
@@ -1844,7 +1845,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	Renderer::IRenderPass* OpenGLRenderer::createRenderPass(uint32_t numberOfColorAttachments, const Renderer::TextureFormat::Enum* colorAttachmentTextureFormats, Renderer::TextureFormat::Enum depthStencilAttachmentTextureFormat, uint8_t numberOfMultisamples)
 	{
-		return new RenderPass(*this, numberOfColorAttachments, colorAttachmentTextureFormats, depthStencilAttachmentTextureFormat, numberOfMultisamples);
+		return RENDERER_NEW(mContext, RenderPass)(*this, numberOfColorAttachments, colorAttachmentTextureFormats, depthStencilAttachmentTextureFormat, numberOfMultisamples);
 	}
 
 	Renderer::ISwapChain* OpenGLRenderer::createSwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowHandle windowHandle, bool useExternalContext)
@@ -1854,7 +1855,7 @@ namespace OpenGLRenderer
 		RENDERER_ASSERT(mContext, NULL_HANDLE != windowHandle.nativeWindowHandle || nullptr != windowHandle.renderWindow, "OpenGL: The provided native window handle or render window must not be a null handle / null pointer")
 
 		// Create the swap chain
-		return new SwapChain(renderPass, windowHandle, useExternalContext);
+		return RENDERER_NEW(mContext, SwapChain)(renderPass, windowHandle, useExternalContext);
 	}
 
 	Renderer::IFramebuffer* OpenGLRenderer::createFramebuffer(Renderer::IRenderPass& renderPass, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment)
@@ -1870,13 +1871,13 @@ namespace OpenGLRenderer
 			{
 				// Effective direct state access (DSA)
 				// -> Validation is done inside the framebuffer implementation
-				return new FramebufferDsa(renderPass, colorFramebufferAttachments, depthStencilFramebufferAttachment);
+				return RENDERER_NEW(mContext, FramebufferDsa)(renderPass, colorFramebufferAttachments, depthStencilFramebufferAttachment);
 			}
 			else
 			{
 				// Traditional bind version
 				// -> Validation is done inside the framebuffer implementation
-				return new FramebufferBind(renderPass, colorFramebufferAttachments, depthStencilFramebufferAttachment);
+				return RENDERER_NEW(mContext, FramebufferBind)(renderPass, colorFramebufferAttachments, depthStencilFramebufferAttachment);
 			}
 		}
 		else
@@ -1888,22 +1889,22 @@ namespace OpenGLRenderer
 
 	Renderer::IBufferManager* OpenGLRenderer::createBufferManager()
 	{
-		return new BufferManager(*this);
+		return RENDERER_NEW(mContext, BufferManager)(*this);
 	}
 
 	Renderer::ITextureManager* OpenGLRenderer::createTextureManager()
 	{
-		return new TextureManager(*this);
+		return RENDERER_NEW(mContext, TextureManager)(*this);
 	}
 
 	Renderer::IRootSignature* OpenGLRenderer::createRootSignature(const Renderer::RootSignature& rootSignature)
 	{
-		return new RootSignature(*this, rootSignature);
+		return RENDERER_NEW(mContext, RootSignature)(*this, rootSignature);
 	}
 
 	Renderer::IPipelineState* OpenGLRenderer::createPipelineState(const Renderer::PipelineState& pipelineState)
 	{
-		return new PipelineState(*this, pipelineState);
+		return RENDERER_NEW(mContext, PipelineState)(*this, pipelineState);
 	}
 
 	Renderer::ISamplerState* OpenGLRenderer::createSamplerState(const Renderer::SamplerState& samplerState)
@@ -1912,19 +1913,19 @@ namespace OpenGLRenderer
 		if (mExtensions->isGL_ARB_sampler_objects())
 		{
 			// Effective sampler object (SO)
-			return new SamplerStateSo(*this, samplerState);
+			return RENDERER_NEW(mContext, SamplerStateSo)(*this, samplerState);
 		}
 
 		// Is "GL_EXT_direct_state_access" there?
 		else if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
 		{
 			// Direct state access (DSA) version to emulate a sampler object
-			return new SamplerStateDsa(*this, samplerState);
+			return RENDERER_NEW(mContext, SamplerStateDsa)(*this, samplerState);
 		}
 		else
 		{
 			// Traditional bind version to emulate a sampler object
-			return new SamplerStateBind(*this, samplerState);
+			return RENDERER_NEW(mContext, SamplerStateBind)(*this, samplerState);
 		}
 	}
 

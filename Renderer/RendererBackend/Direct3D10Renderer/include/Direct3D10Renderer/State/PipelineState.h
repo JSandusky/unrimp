@@ -30,6 +30,9 @@
 #include <Renderer/State/IPipelineState.h>
 
 #include "Direct3D10Renderer/D3D10.h"
+#include "Direct3D10Renderer/State/BlendState.h"
+#include "Direct3D10Renderer/State/RasterizerState.h"
+#include "Direct3D10Renderer/State/DepthStencilState.h"
 
 
 //[-------------------------------------------------------]
@@ -39,13 +42,6 @@ namespace Renderer
 {
 	class IProgram;
 	struct PipelineState;
-}
-namespace Direct3D10Renderer
-{
-	class BlendState;
-	class RasterizerState;
-	class DepthStencilState;
-	class Direct3D10Renderer;
 }
 
 
@@ -137,9 +133,9 @@ namespace Direct3D10Renderer
 		Renderer::IProgram*		 mProgram;
 		Renderer::IRenderPass*   mRenderPass;
 		ID3D10InputLayout*		 mD3D10InputLayout;			///< Direct3D 10 input layout, can be a null pointer
-		RasterizerState*		 mRasterizerState;
-		DepthStencilState*		 mDepthStencilState;
-		BlendState*				 mBlendState;
+		RasterizerState			 mRasterizerState;
+		DepthStencilState		 mDepthStencilState;
+		BlendState				 mBlendState;
 
 
 	};

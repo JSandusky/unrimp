@@ -19,6 +19,18 @@
 
 
 //[-------------------------------------------------------]
+//[ Header guard                                          ]
+//[-------------------------------------------------------]
+#pragma once
+
+
+//[-------------------------------------------------------]
+//[ Includes                                              ]
+//[-------------------------------------------------------]
+#include <Renderer/Public/Renderer.h>
+
+
+//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace Renderer
@@ -26,29 +38,45 @@ namespace Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Classes                                               ]
+	//[-------------------------------------------------------]
+	/**
+	*  @brief
+	*    STD memory allocator implementation class one can use
+	*
+	*  @note
+	*    - Designed to be instanced and used inside a single C++ file
+	*/
+	class StdAllocator : public IAllocator
+	{
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline StdMemory::StdMemory()
-	{
-		// Nothing here
-	}
-
-	inline StdMemory::~StdMemory()
-	{
-		// Nothing here
-	}
+	public:
+		inline StdAllocator();
+		inline virtual ~StdAllocator() override;
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IMemory methods              ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	inline void StdMemory::test(bool)
-	{
-		// TODO(co)
-	}
+	private:
+		explicit StdAllocator(const StdAllocator&) = delete;
+		StdAllocator& operator=(const StdAllocator&) = delete;
+
+
+	};
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // Renderer
+
+
+//[-------------------------------------------------------]
+//[ Implementation                                        ]
+//[-------------------------------------------------------]
+#include <Renderer/Public/StdAllocator.inl>

@@ -121,9 +121,9 @@ namespace Renderer
 {
 	class ILog;
 	class IAssert;
-	class IMemory;
 	class Context;
 	class IRenderer;
+	class IAllocator;
 	class IShaderLanguage;
 	class IResource;
 		class IRootSignature;
@@ -203,10 +203,10 @@ namespace Renderer
 				WAYLAND
 			};
 		public:
-			inline Context(ILog& log, IAssert& assert, IMemory& memory, handle nativeWindowHandle = 0, bool useExternalContext = false, ContextType contextType = Context::ContextType::WINDOWS) :
+			inline Context(ILog& log, IAssert& assert, IAllocator& allocator, handle nativeWindowHandle = 0, bool useExternalContext = false, ContextType contextType = Context::ContextType::WINDOWS) :
 				mLog(log),
 				mAssert(assert),
-				mMemory(memory),
+				mAllocator(allocator),
 				mNativeWindowHandle(nativeWindowHandle),
 				mUseExternalContext(useExternalContext),
 				mContextType(contextType),
@@ -222,9 +222,9 @@ namespace Renderer
 			{
 				return mAssert;
 			}
-			inline IMemory& getMemory() const
+			inline IAllocator& getAllocator() const
 			{
-				return mMemory;
+				return mAllocator;
 			}
 			inline handle getNativeWindowHandle() const
 			{
@@ -252,7 +252,7 @@ namespace Renderer
 		private:
 			ILog&		mLog;
 			IAssert&	mAssert;
-			IMemory&	mMemory;
+			IAllocator&	mAllocator;
 			handle		mNativeWindowHandle;
 			bool		mUseExternalContext;
 			ContextType	mContextType;
@@ -263,8 +263,8 @@ namespace Renderer
 			class X11Context : public Context
 			{
 			public:
-				inline X11Context(ILog& log, IAssert& assert, IMemory& memory, _XDisplay* display, handle nativeWindowHandle = 0, bool useExternalContext = false) :
-					Context(log, assert, memory, nativeWindowHandle, useExternalContext, Context::ContextType::X11),
+				inline X11Context(ILog& log, IAssert& assert, IAllocator& allocator, _XDisplay* display, handle nativeWindowHandle = 0, bool useExternalContext = false) :
+					Context(log, assert, allocator, nativeWindowHandle, useExternalContext, Context::ContextType::X11),
 					mDisplay(display)
 				{}
 				inline _XDisplay* getDisplay() const
@@ -277,8 +277,8 @@ namespace Renderer
 			class WaylandContext : public Context
 			{
 			public:
-				inline WaylandContext(ILog& log, IAssert& assert, IMemory& memory, wl_display* display, wl_surface* surface = 0, bool useExternalContext = false) :
-					Context(log, assert, memory, 1, useExternalContext, Context::ContextType::WAYLAND),	// Under Wayland the surface (aka window) handle is not an integer, but the renderer implementation expects an integer as window handle so we give here an value != 0 so that a swap chain is created
+				inline WaylandContext(ILog& log, IAssert& assert, IAllocator& allocator, wl_display* display, wl_surface* surface = 0, bool useExternalContext = false) :
+					Context(log, assert, allocator, 1, useExternalContext, Context::ContextType::WAYLAND),	// Under Wayland the surface (aka window) handle is not an integer, but the renderer implementation expects an integer as window handle so we give here an value != 0 so that a swap chain is created
 					mDisplay(display),
 					mSurface(surface)
 				{
@@ -364,23 +364,72 @@ namespace Renderer
 		#endif
 	#endif
 
-	// Renderer/IMemory.h
-	#ifndef __RENDERER_RENDERER_IMEMORY_H__
-	#define __RENDERER_RENDERER_IMEMORY_H__
-		// TODO(co) Implement me
-		class IMemory
+	// Renderer/IAllocator.h
+	#ifndef __RENDERER_RENDERER_IALLOCATOR_H__
+	#define __RENDERER_RENDERER_IALLOCATOR_H__
+		class IAllocator
 		{
 		public:
-			virtual void test(bool test) = 0;
+			template<typename Type>
+			inline static Type* constructN(Type* basePointer, size_t count)
+			{
+				for (size_t i = 0; i < count; ++i)
+				{
+					new ((void*)(basePointer + i)) Type();
+				}
+				return basePointer;
+			}
+		public:
+			void* reallocate(void* oldPointer, size_t oldNumberOfBytes, size_t newNumberOfBytes, size_t alignment)
+			{
+				#ifndef RENDERER_NO_DEBUG
+					assert(mReallocateFuntion);
+				#endif
+				return (*mReallocateFuntion)(*this, oldPointer, oldNumberOfBytes, newNumberOfBytes, alignment);
+			}
 		protected:
-			inline IMemory()
+			typedef void* (*ReallocateFuntion)(IAllocator&, void*, size_t, size_t, size_t);
+		protected:
+			inline explicit IAllocator(ReallocateFuntion reallocateFuntion) :
+				mReallocateFuntion(reallocateFuntion)
+			{
+				#ifndef RENDERER_NO_DEBUG
+					assert(mReallocateFuntion);
+				#endif
+			}
+			inline virtual ~IAllocator()
 			{}
-			inline virtual ~IMemory()
-			{}
-			explicit IMemory(const IMemory&) = delete;
-			IMemory& operator=(const IMemory&) = delete;
+			explicit IAllocator(const IAllocator&) = delete;
+			IAllocator& operator=(const IAllocator&) = delete;
+		private:
+			ReallocateFuntion mReallocateFuntion;
 		};
-		#define RENDERER_MEMORY(context, test) (context).getMemory().test(true);
+		#define RENDERER_MALLOC(context, newNumberOfBytes) (context).getAllocator().reallocate(nullptr, 0, newNumberOfBytes, 1)
+		#define RENDERER_MALLOC_TYPED(context, type, newNumberOfElements) reinterpret_cast<type*>((context).getAllocator().reallocate(nullptr, 0, sizeof(type) * newNumberOfElements, 1))
+		#define RENDERER_FREE(context, oldPointer) (context).getAllocator().reallocate(oldPointer, 0, 0, 1)
+		#define RENDERER_NEW(context, type) new ((context).getAllocator().reallocate(nullptr, 0, sizeof(type), 1)) type
+		#define RENDERER_DELETE(context, type, oldPointer) \
+			do \
+			{ \
+				if (nullptr != oldPointer) \
+				{ \
+					oldPointer->~type(); \
+					(context).getAllocator().reallocate(oldPointer, 0, 0, 1); \
+				} \
+			} while (0)
+		#define RENDERER_NEW_ARRAY(context, type, count) Renderer::IAllocator::constructN(static_cast<type*>(((context).getAllocator().reallocate(nullptr, 0, sizeof(type) * (count), 1))), count)
+		#define RENDERER_DELETE_ARRAY(context, type, oldPointer, count) \
+			do \
+			{ \
+				if (nullptr != oldPointer) \
+				{ \
+					for (size_t allocatorArrayIndex = 0; allocatorArrayIndex < count; ++allocatorArrayIndex) \
+					{ \
+						(oldPointer)[allocatorArrayIndex].~type(); \
+					} \
+					(context).getAllocator().reallocate(oldPointer, 0, 0, 1); \
+				} \
+			} while (0)
 	#endif
 
 	// Renderer/RendererTypes.h

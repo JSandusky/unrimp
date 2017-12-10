@@ -55,6 +55,7 @@
 
 #include <Renderer/ILog.h>
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 #include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
 
@@ -70,7 +71,7 @@
 #endif
 DIRECT3D12RENDERER_API_EXPORT Renderer::IRenderer* createDirect3D12RendererInstance(const Renderer::Context& context)
 {
-	return new Direct3D12Renderer::Direct3D12Renderer(context);
+	return RENDERER_NEW(context, Direct3D12Renderer::Direct3D12Renderer)(context);
 }
 #undef DIRECT3D12RENDERER_API_EXPORT
 
@@ -318,7 +319,7 @@ namespace Direct3D12Renderer
 		mRenderTarget(nullptr),
 		mD3D12PrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_UNDEFINED)
 	{
-		mDirect3D12RuntimeLinking = new Direct3D12RuntimeLinking(*this);
+		mDirect3D12RuntimeLinking = RENDERER_NEW(mContext, Direct3D12RuntimeLinking)(*this);
 
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
@@ -501,7 +502,7 @@ namespace Direct3D12Renderer
 		}
 
 		// Destroy the Direct3D 12 runtime linking instance
-		delete mDirect3D12RuntimeLinking;
+		RENDERER_DELETE(mContext, Direct3D12RuntimeLinking, mDirect3D12RuntimeLinking);
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(this)
@@ -1211,7 +1212,7 @@ namespace Direct3D12Renderer
 				// If required, create the HLSL shader language instance right now
 				if (nullptr == mShaderLanguageHlsl)
 				{
-					mShaderLanguageHlsl = new ShaderLanguageHlsl(*this);
+					mShaderLanguageHlsl = RENDERER_NEW(mContext, ShaderLanguageHlsl)(*this);
 					mShaderLanguageHlsl->addReference();	// Internal renderer reference
 				}
 
@@ -1233,7 +1234,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	Renderer::IRenderPass* Direct3D12Renderer::createRenderPass(uint32_t numberOfColorAttachments, const Renderer::TextureFormat::Enum* colorAttachmentTextureFormats, Renderer::TextureFormat::Enum depthStencilAttachmentTextureFormat, uint8_t numberOfMultisamples)
 	{
-		return new RenderPass(*this, numberOfColorAttachments, colorAttachmentTextureFormats, depthStencilAttachmentTextureFormat, numberOfMultisamples);
+		return RENDERER_NEW(mContext, RenderPass)(*this, numberOfColorAttachments, colorAttachmentTextureFormats, depthStencilAttachmentTextureFormat, numberOfMultisamples);
 	}
 
 	Renderer::ISwapChain* Direct3D12Renderer::createSwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowHandle windowHandle, bool)
@@ -1243,7 +1244,7 @@ namespace Direct3D12Renderer
 		RENDERER_ASSERT(mContext, NULL_HANDLE != windowHandle.nativeWindowHandle, "Direct3D 12: The provided native window handle must not be a null handle")
 
 		// Create the swap chain
-		return new SwapChain(renderPass, windowHandle);
+		return RENDERER_NEW(mContext, SwapChain)(renderPass, windowHandle);
 	}
 
 	Renderer::IFramebuffer* Direct3D12Renderer::createFramebuffer(Renderer::IRenderPass& renderPass, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment)
@@ -1252,32 +1253,32 @@ namespace Direct3D12Renderer
 		DIRECT3D12RENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
 
 		// Create the framebuffer
-		return new Framebuffer(renderPass, colorFramebufferAttachments, depthStencilFramebufferAttachment);
+		return RENDERER_NEW(mContext, Framebuffer)(renderPass, colorFramebufferAttachments, depthStencilFramebufferAttachment);
 	}
 
 	Renderer::IBufferManager* Direct3D12Renderer::createBufferManager()
 	{
-		return new BufferManager(*this);
+		return RENDERER_NEW(mContext, BufferManager)(*this);
 	}
 
 	Renderer::ITextureManager* Direct3D12Renderer::createTextureManager()
 	{
-		return new TextureManager(*this);
+		return RENDERER_NEW(mContext, TextureManager)(*this);
 	}
 
 	Renderer::IRootSignature* Direct3D12Renderer::createRootSignature(const Renderer::RootSignature& rootSignature)
 	{
-		return new RootSignature(*this, rootSignature);
+		return RENDERER_NEW(mContext, RootSignature)(*this, rootSignature);
 	}
 
 	Renderer::IPipelineState* Direct3D12Renderer::createPipelineState(const Renderer::PipelineState& pipelineState)
 	{
-		return new PipelineState(*this, pipelineState);
+		return RENDERER_NEW(mContext, PipelineState)(*this, pipelineState);
 	}
 
 	Renderer::ISamplerState* Direct3D12Renderer::createSamplerState(const Renderer::SamplerState& samplerState)
 	{
-		return new SamplerState(*this, samplerState);
+		return RENDERER_NEW(mContext, SamplerState)(*this, samplerState);
 	}
 
 

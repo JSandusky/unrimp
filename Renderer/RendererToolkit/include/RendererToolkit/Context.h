@@ -31,7 +31,7 @@ namespace Renderer
 {
 	class ILog;
 	class IAssert;
-	class IMemory;
+	class IAllocator;
 }
 namespace RendererRuntime
 {
@@ -69,12 +69,12 @@ namespace RendererToolkit
 		*    Log instance to use, the log instance must stay valid as long as the renderer toolkit instance exists
 		*  @param[in] assert
 		*    Assert instance to use, the assert instance must stay valid as long as the renderer toolkit instance exists
-		*  @param[in] memory
-		*    Memory instance to use, the memory instance must stay valid as long as the renderer toolkit instance exists
+		*  @param[in] allocator
+		*    Allocator instance to use, the allocator instance must stay valid as long as the renderer toolkit instance exists
 		*  @param[in] fileManager
 		*    File manager instance to use, the file manager instance must stay valid as long as the renderer toolkit instance exists
 		*/
-		inline Context(Renderer::ILog& log, Renderer::IAssert& assert, Renderer::IMemory& memory, RendererRuntime::IFileManager& fileManager);
+		inline Context(Renderer::ILog& log, Renderer::IAssert& assert, Renderer::IAllocator& allocator, RendererRuntime::IFileManager& fileManager);
 
 		/**
 		*  @brief
@@ -102,12 +102,12 @@ namespace RendererToolkit
 
 		/**
 		*  @brief
-		*    Return the used memory instance
+		*    Return the used allocator instance
 		*
 		*  @return
-		*    The used memory instance
+		*    The used allocator instance
 		*/
-		inline Renderer::IMemory& getMemory() const;
+		inline Renderer::IAllocator& getAllocator() const;
 
 		/**
 		*  @brief
@@ -133,7 +133,7 @@ namespace RendererToolkit
 	private:
 		Renderer::ILog&				   mLog;
 		Renderer::IAssert&			   mAssert;
-		Renderer::IMemory&			   mMemory;
+		Renderer::IAllocator&		   mAllocator;
 		RendererRuntime::IFileManager& mFileManager;
 
 

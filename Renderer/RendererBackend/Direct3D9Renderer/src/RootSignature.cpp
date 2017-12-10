@@ -26,6 +26,7 @@
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
 
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 #include <memory.h>
 
@@ -107,7 +108,7 @@ namespace Direct3D9Renderer
 		RENDERER_ASSERT(getRenderer().getContext(), nullptr != resources, "The Direct3D 9 resource pointers must be valid")
 
 		// Create resource group
-		return new ResourceGroup(getRenderer(), rootParameterIndex, numberOfResources, resources, samplerStates);
+		return RENDERER_NEW(getRenderer().getContext(), ResourceGroup)(getRenderer(), rootParameterIndex, numberOfResources, resources, samplerStates);
 	}
 
 

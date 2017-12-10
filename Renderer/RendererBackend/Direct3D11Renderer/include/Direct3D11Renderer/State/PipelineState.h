@@ -30,6 +30,9 @@
 #include <Renderer/State/IPipelineState.h>
 
 #include "Direct3D11Renderer/D3D11.h"
+#include "Direct3D11Renderer/State/BlendState.h"
+#include "Direct3D11Renderer/State/RasterizerState.h"
+#include "Direct3D11Renderer/State/DepthStencilState.h"
 
 
 //[-------------------------------------------------------]
@@ -39,13 +42,6 @@ namespace Renderer
 {
 	class IProgram;
 	struct PipelineState;
-}
-namespace Direct3D11Renderer
-{
-	class BlendState;
-	class RasterizerState;
-	class DepthStencilState;
-	class Direct3D11Renderer;
 }
 
 
@@ -137,9 +133,9 @@ namespace Direct3D11Renderer
 		ID3D11DeviceContext*	 mD3D11DeviceContext;	///< The Direct3D 11 device context instance (we keep a reference to it), null pointer on horrible error (so we don't check)
 		D3D11_PRIMITIVE_TOPOLOGY mD3D11PrimitiveTopology;
 		ID3D11InputLayout*		 mD3D11InputLayout;		///< Direct3D 11 input layout, can be a null pointer
-		RasterizerState*		 mRasterizerState;
-		DepthStencilState*		 mDepthStencilState;
-		BlendState*				 mBlendState;
+		RasterizerState			 mRasterizerState;
+		DepthStencilState		 mDepthStencilState;
+		BlendState				 mBlendState;
 
 
 	};

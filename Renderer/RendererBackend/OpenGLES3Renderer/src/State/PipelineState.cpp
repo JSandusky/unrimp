@@ -22,9 +22,6 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLES3Renderer/State/PipelineState.h"
-#include "OpenGLES3Renderer/State/BlendState.h"
-#include "OpenGLES3Renderer/State/RasterizerState.h"
-#include "OpenGLES3Renderer/State/DepthStencilState.h"
 #include "OpenGLES3Renderer/Shader/ProgramGlsl.h"
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 #include "OpenGLES3Renderer/Mapping.h"
@@ -47,9 +44,9 @@ namespace OpenGLES3Renderer
 		mOpenGLES3PrimitiveTopology(Mapping::getOpenGLES3Type(pipelineState.primitiveTopology)),
 		mProgram(pipelineState.program),
 		mRenderPass(pipelineState.renderPass),
-		mRasterizerState(new RasterizerState(pipelineState.rasterizerState)),
-		mDepthStencilState(new DepthStencilState(pipelineState.depthStencilState)),
-		mBlendState(new BlendState(pipelineState.blendState))
+		mRasterizerState(pipelineState.rasterizerState),
+		mDepthStencilState(pipelineState.depthStencilState),
+		mBlendState(pipelineState.blendState)
 	{
 		// Add a reference to the given program and render pass
 		mProgram->addReference();
@@ -58,11 +55,6 @@ namespace OpenGLES3Renderer
 
 	PipelineState::~PipelineState()
 	{
-		// Destroy states
-		delete mRasterizerState;
-		delete mDepthStencilState;
-		delete mBlendState;
-
 		// Release the program and render pass reference
 		mProgram->releaseReference();
 		mRenderPass->releaseReference();
@@ -73,28 +65,28 @@ namespace OpenGLES3Renderer
 		static_cast<OpenGLES3Renderer&>(getRenderer()).setProgram(mProgram);
 
 		// Set the OpenGL ES 3 rasterizer state
-		mRasterizerState->setOpenGLES3RasterizerStates();
+		mRasterizerState.setOpenGLES3RasterizerStates();
 
 		// Set OpenGL ES 3 depth stencil state
-		mDepthStencilState->setOpenGLES3DepthStencilStates();
+		mDepthStencilState.setOpenGLES3DepthStencilStates();
 
 		// Set OpenGL ES 3 blend state
-		mBlendState->setOpenGLES3BlendStates();
+		mBlendState.setOpenGLES3BlendStates();
 	}
 
 	const Renderer::RasterizerState& PipelineState::getRasterizerState() const
 	{
-		return mRasterizerState->getRasterizerState();
+		return mRasterizerState.getRasterizerState();
 	}
 
 	const Renderer::DepthStencilState& PipelineState::getDepthStencilState() const
 	{
-		return mDepthStencilState->getDepthStencilState();
+		return mDepthStencilState.getDepthStencilState();
 	}
 
 	const Renderer::BlendState& PipelineState::getBlendState() const
 	{
-		return mBlendState->getBlendState();
+		return mBlendState.getBlendState();
 	}
 
 

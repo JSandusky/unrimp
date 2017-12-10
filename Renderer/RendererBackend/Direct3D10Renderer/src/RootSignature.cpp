@@ -26,6 +26,7 @@
 #include "Direct3D10Renderer/Direct3D10Renderer.h"
 
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 #include <memory.h>
 
@@ -106,7 +107,7 @@ namespace Direct3D10Renderer
 		RENDERER_ASSERT(getRenderer().getContext(), nullptr != resources, "The Direct3D 10 resource pointers must be valid")
 
 		// Create resource group
-		return new ResourceGroup(getRenderer(), rootParameterIndex, numberOfResources, resources, samplerStates);
+		return RENDERER_NEW(getRenderer().getContext(), ResourceGroup)(getRenderer(), rootParameterIndex, numberOfResources, resources, samplerStates);
 	}
 
 

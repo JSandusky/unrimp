@@ -28,10 +28,10 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline Context::Context(ILog& log, IAssert& assert, IMemory& memory, handle nativeWindowHandle, bool useExternalContext, ContextType contextType) :
+	inline Context::Context(ILog& log, IAssert& assert, IAllocator& allocator, handle nativeWindowHandle, bool useExternalContext, ContextType contextType) :
 		mLog(log),
 		mAssert(assert),
-		mMemory(memory),
+		mAllocator(allocator),
 		mNativeWindowHandle(nativeWindowHandle),
 		mUseExternalContext(useExternalContext),
 		mContextType(contextType),
@@ -55,9 +55,9 @@ namespace Renderer
 		return mAssert;
 	}
 
-	inline IMemory& Context::getMemory() const
+	inline IAllocator& Context::getAllocator() const
 	{
-		return mMemory;
+		return mAllocator;
 	}
 
 	inline handle Context::getNativeWindowHandle() const
@@ -86,8 +86,8 @@ namespace Renderer
 	}
 
 #ifdef LINUX
-	inline X11Context::X11Context(ILog& log, IAssert& assert, IMemory& memory, _XDisplay* display, handle nativeWindowHandle, bool useExternalContext) :
-		Context(log, assert, memory, nativeWindowHandle, useExternalContext, Context::ContextType::X11),
+	inline X11Context::X11Context(ILog& log, IAssert& assert, IAllocator& allocator, _XDisplay* display, handle nativeWindowHandle, bool useExternalContext) :
+		Context(log, assert, allocator, nativeWindowHandle, useExternalContext, Context::ContextType::X11),
 		mDisplay(display)
 	{
 		// Nothing here
@@ -99,8 +99,8 @@ namespace Renderer
 	}
 
 
-	inline WaylandContext::WaylandContext(ILog& log, IAssert& assert, IMemory& memory, wl_display* display, wl_surface* surface, bool useExternalContext) :
-		Context(log, assert, memory, 1, useExternalContext, Context::ContextType::WAYLAND),	// Under Wayland the surface (aka window) handle is not an integer, but the renderer implementation expects an integer as window handle so we give here an value != 0 so that a swap chain is created
+	inline WaylandContext::WaylandContext(ILog& log, IAssert& assert, IAllocator& allocator, wl_display* display, wl_surface* surface, bool useExternalContext) :
+		Context(log, assert, allocator, 1, useExternalContext, Context::ContextType::WAYLAND),	// Under Wayland the surface (aka window) handle is not an integer, but the renderer implementation expects an integer as window handle so we give here an value != 0 so that a swap chain is created
 		mDisplay(display),
 		mSurface(surface)
 	{

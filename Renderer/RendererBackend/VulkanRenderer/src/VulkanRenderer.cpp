@@ -51,6 +51,7 @@
 
 #include <Renderer/ILog.h>
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 #include <Renderer/Buffer/CommandBuffer.h>
 
 
@@ -65,7 +66,7 @@
 #endif
 VULKANRENDERER_API_EXPORT Renderer::IRenderer* createVulkanRendererInstance(const Renderer::Context& context)
 {
-	return new VulkanRenderer::VulkanRenderer(context);
+	return RENDERER_NEW(context, VulkanRenderer::VulkanRenderer)(context);
 }
 #undef VULKANRENDERER_API_EXPORT
 
@@ -347,11 +348,11 @@ namespace VulkanRenderer
 		#endif
 
 		// Is Vulkan available?
-		mVulkanRuntimeLinking = new VulkanRuntimeLinking(*this, enableValidation);
+		mVulkanRuntimeLinking = RENDERER_NEW(mContext, VulkanRuntimeLinking)(*this, enableValidation);
 		if (mVulkanRuntimeLinking->isVulkanAvaiable())
 		{
 			// TODO(co) Add external Vulkan context support
-			mVulkanContext = new VulkanContext(*this);
+			mVulkanContext = RENDERER_NEW(mContext, VulkanContext)(*this);
 
 			// Is the Vulkan context initialized?
 			if (mVulkanContext->isInitialized())
@@ -427,10 +428,10 @@ namespace VulkanRenderer
 		}
 
 		// Destroy the Vulkan context instance
-		delete mVulkanContext;
+		RENDERER_DELETE(mContext, VulkanContext, mVulkanContext);
 
 		// Destroy the Vulkan runtime linking instance
-		delete mVulkanRuntimeLinking;
+		RENDERER_DELETE(mContext, VulkanRuntimeLinking, mVulkanRuntimeLinking);
 	}
 
 
@@ -893,7 +894,7 @@ namespace VulkanRenderer
 				// If required, create the GLSL shader language instance right now
 				if (nullptr == mShaderLanguageGlsl)
 				{
-					mShaderLanguageGlsl = new ShaderLanguageGlsl(*this);
+					mShaderLanguageGlsl = RENDERER_NEW(mContext, ShaderLanguageGlsl(*this));
 					mShaderLanguageGlsl->addReference();	// Internal renderer reference
 				}
 				return mShaderLanguageGlsl;
@@ -915,7 +916,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	Renderer::IRenderPass* VulkanRenderer::createRenderPass(uint32_t numberOfColorAttachments, const Renderer::TextureFormat::Enum* colorAttachmentTextureFormats, Renderer::TextureFormat::Enum depthStencilAttachmentTextureFormat, uint8_t numberOfMultisamples)
 	{
-		return new RenderPass(*this, numberOfColorAttachments, colorAttachmentTextureFormats, depthStencilAttachmentTextureFormat, numberOfMultisamples);
+		return RENDERER_NEW(mContext, RenderPass)(*this, numberOfColorAttachments, colorAttachmentTextureFormats, depthStencilAttachmentTextureFormat, numberOfMultisamples);
 	}
 
 	Renderer::ISwapChain* VulkanRenderer::createSwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowHandle windowHandle, bool)
@@ -925,7 +926,7 @@ namespace VulkanRenderer
 		RENDERER_ASSERT(mContext, NULL_HANDLE != windowHandle.nativeWindowHandle || nullptr != windowHandle.renderWindow, "Vulkan: The provided native window handle or render window must not be a null handle / null pointer")
 
 		// Create the swap chain
-		return new SwapChain(renderPass, windowHandle);
+		return RENDERER_NEW(mContext, SwapChain)(renderPass, windowHandle);
 	}
 
 	Renderer::IFramebuffer* VulkanRenderer::createFramebuffer(Renderer::IRenderPass& renderPass, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment)
@@ -934,32 +935,32 @@ namespace VulkanRenderer
 		VULKANRENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
 
 		// Create the framebuffer
-		return new Framebuffer(renderPass, colorFramebufferAttachments, depthStencilFramebufferAttachment);
+		return RENDERER_NEW(mContext, Framebuffer)(renderPass, colorFramebufferAttachments, depthStencilFramebufferAttachment);
 	}
 
 	Renderer::IBufferManager* VulkanRenderer::createBufferManager()
 	{
-		return new BufferManager(*this);
+		return RENDERER_NEW(mContext, BufferManager)(*this);
 	}
 
 	Renderer::ITextureManager* VulkanRenderer::createTextureManager()
 	{
-		return new TextureManager(*this);
+		return RENDERER_NEW(mContext, TextureManager)(*this);
 	}
 
 	Renderer::IRootSignature* VulkanRenderer::createRootSignature(const Renderer::RootSignature& rootSignature)
 	{
-		return new RootSignature(*this, rootSignature);
+		return RENDERER_NEW(mContext, RootSignature)(*this, rootSignature);
 	}
 
 	Renderer::IPipelineState* VulkanRenderer::createPipelineState(const Renderer::PipelineState& pipelineState)
 	{
-		return new PipelineState(*this, pipelineState);
+		return RENDERER_NEW(mContext, PipelineState)(*this, pipelineState);
 	}
 
 	Renderer::ISamplerState* VulkanRenderer::createSamplerState(const Renderer::SamplerState& samplerState)
 	{
-		return new SamplerState(*this, samplerState);
+		return RENDERER_NEW(mContext, SamplerState)(*this, samplerState);
 	}
 
 

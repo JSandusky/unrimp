@@ -37,8 +37,8 @@ namespace Renderer
 {
 	class ILog;
 	class IAssert;
-	class IMemory;
 	class IRenderer;
+	class IAllocator;
 }
 namespace RendererRuntime
 {
@@ -105,12 +105,12 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Return the memory instance
+		*    Return the allocator instance
 		*
 		*  @return
-		*    The memory instance
+		*    The allocator instance
 		*/
-		inline Renderer::IMemory& getMemory() const;
+		inline Renderer::IAllocator& getAllocator() const;
 
 		/**
 		*  @brief
@@ -143,11 +143,11 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Renderer::ILog&		 mLog;
-		Renderer::IAssert&	 mAssert;
-		Renderer::IMemory&	 mMemory;
-		Renderer::IRenderer& mRenderer;
-		IFileManager&		 mFileManager;
+		Renderer::ILog&		  mLog;
+		Renderer::IAssert&	  mAssert;
+		Renderer::IAllocator& mAllocator;
+		Renderer::IRenderer&  mRenderer;
+		IFileManager&		  mFileManager;
 
 
 	};

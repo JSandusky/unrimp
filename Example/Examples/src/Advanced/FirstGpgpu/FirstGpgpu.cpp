@@ -27,7 +27,7 @@
 
 #include <Renderer/Public/StdLog.h>
 #include <Renderer/Public/StdAssert.h>
-#include <Renderer/Public/StdMemory.h>
+#include <Renderer/Public/StdAllocator.h>
 #include <Renderer/Public/RendererInstance.h>
 
 #include <string.h>
@@ -64,9 +64,9 @@ int FirstGpgpu::run()
 	// Create renderer instance
 	Renderer::StdLog rendererLog;
 	Renderer::StdAssert rendererAssert;
-	Renderer::StdMemory rendererMemory;
+	Renderer::StdAllocator rendererAllocator;
 	// TODO(sw) We misuse the MS Windows context type here because no window handle is given
-	Renderer::Context rendererContext(rendererLog, rendererAssert, rendererMemory);
+	Renderer::Context rendererContext(rendererLog, rendererAssert, rendererAllocator);
 	mRendererInstance = new Renderer::RendererInstance(mRendererName, rendererContext);
 
 	// Get the renderer instance and ensure it's valid

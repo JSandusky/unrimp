@@ -29,6 +29,8 @@
 #include "VulkanRenderer/Texture/Texture2DArray.h"
 #include "VulkanRenderer/VulkanRenderer.h"
 
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -57,7 +59,7 @@ namespace VulkanRenderer
 		// Check whether or not the given texture dimension is valid
 		if (width > 0)
 		{
-			return new Texture1D(static_cast<VulkanRenderer&>(getRenderer()), width, textureFormat, data, flags);
+			return RENDERER_NEW(getRenderer().getContext(), Texture1D)(static_cast<VulkanRenderer&>(getRenderer()), width, textureFormat, data, flags);
 		}
 		else
 		{
@@ -72,7 +74,7 @@ namespace VulkanRenderer
 		// Check whether or not the given texture dimension is valid
 		if (width > 0 && height > 0)
 		{
-			return new Texture2D(static_cast<VulkanRenderer&>(getRenderer()), width, height, textureFormat, data, flags, numberOfMultisamples);
+			return RENDERER_NEW(getRenderer().getContext(), Texture2D)(static_cast<VulkanRenderer&>(getRenderer()), width, height, textureFormat, data, flags, numberOfMultisamples);
 		}
 		else
 		{
@@ -87,7 +89,7 @@ namespace VulkanRenderer
 		// Check whether or not the given texture dimension is valid
 		if (width > 0 && height > 0 && numberOfSlices > 0)
 		{
-			return new Texture2DArray(static_cast<VulkanRenderer&>(getRenderer()), width, height, numberOfSlices, textureFormat, data, flags);
+			return RENDERER_NEW(getRenderer().getContext(), Texture2DArray)(static_cast<VulkanRenderer&>(getRenderer()), width, height, numberOfSlices, textureFormat, data, flags);
 		}
 		else
 		{
@@ -102,7 +104,7 @@ namespace VulkanRenderer
 		// Check whether or not the given texture dimension is valid
 		if (width > 0 && height > 0 && depth > 0)
 		{
-			return new Texture3D(static_cast<VulkanRenderer&>(getRenderer()), width, height, depth, textureFormat, data, flags);
+			return RENDERER_NEW(getRenderer().getContext(), Texture3D)(static_cast<VulkanRenderer&>(getRenderer()), width, height, depth, textureFormat, data, flags);
 		}
 		else
 		{
@@ -117,7 +119,7 @@ namespace VulkanRenderer
 		// Check whether or not the given texture dimension is valid
 		if (width > 0 && height > 0)
 		{
-			return new TextureCube(static_cast<VulkanRenderer&>(getRenderer()), width, height, textureFormat, data, flags);
+			return RENDERER_NEW(getRenderer().getContext(), TextureCube)(static_cast<VulkanRenderer&>(getRenderer()), width, height, textureFormat, data, flags);
 		}
 		else
 		{

@@ -26,6 +26,7 @@
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 #include <memory.h>
 
@@ -107,7 +108,7 @@ namespace OpenGLES3Renderer
 		RENDERER_ASSERT(getRenderer().getContext(), nullptr != resources, "The OpenGL ES 3 resource pointers must be valid")
 
 		// Create resource group
-		return new ResourceGroup(*this, rootParameterIndex, numberOfResources, resources, samplerStates);
+		return RENDERER_NEW(getRenderer().getContext(), ResourceGroup)(*this, rootParameterIndex, numberOfResources, resources, samplerStates);
 	}
 
 

@@ -35,6 +35,8 @@
 #include "OpenGLRenderer/OpenGLRenderer.h"
 #include "OpenGLRenderer/Extensions.h"
 
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -68,12 +70,12 @@ namespace OpenGLRenderer
 			if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
 			{
 				// Effective direct state access (DSA)
-				return new Texture1DDsa(static_cast<OpenGLRenderer&>(getRenderer()), width, textureFormat, data, flags);
+				return RENDERER_NEW(getRenderer().getContext(), Texture1DDsa)(static_cast<OpenGLRenderer&>(getRenderer()), width, textureFormat, data, flags);
 			}
 			else
 			{
 				// Traditional bind version
-				return new Texture1DBind(static_cast<OpenGLRenderer&>(getRenderer()), width, textureFormat, data, flags);
+				return RENDERER_NEW(getRenderer().getContext(), Texture1DBind)(static_cast<OpenGLRenderer&>(getRenderer()), width, textureFormat, data, flags);
 			}
 		}
 		else
@@ -93,12 +95,12 @@ namespace OpenGLRenderer
 			if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
 			{
 				// Effective direct state access (DSA)
-				return new Texture2DDsa(static_cast<OpenGLRenderer&>(getRenderer()), width, height, textureFormat, data, flags, numberOfMultisamples);
+				return RENDERER_NEW(getRenderer().getContext(), Texture2DDsa)(static_cast<OpenGLRenderer&>(getRenderer()), width, height, textureFormat, data, flags, numberOfMultisamples);
 			}
 			else
 			{
 				// Traditional bind version
-				return new Texture2DBind(static_cast<OpenGLRenderer&>(getRenderer()), width, height, textureFormat, data, flags, numberOfMultisamples);
+				return RENDERER_NEW(getRenderer().getContext(), Texture2DBind)(static_cast<OpenGLRenderer&>(getRenderer()), width, height, textureFormat, data, flags, numberOfMultisamples);
 			}
 		}
 		else
@@ -118,12 +120,12 @@ namespace OpenGLRenderer
 			if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
 			{
 				// Effective direct state access (DSA)
-				return new Texture2DArrayDsa(static_cast<OpenGLRenderer&>(getRenderer()), width, height, numberOfSlices, textureFormat, data, flags);
+				return RENDERER_NEW(getRenderer().getContext(), Texture2DArrayDsa)(static_cast<OpenGLRenderer&>(getRenderer()), width, height, numberOfSlices, textureFormat, data, flags);
 			}
 			else
 			{
 				// Traditional bind version
-				return new Texture2DArrayBind(static_cast<OpenGLRenderer&>(getRenderer()), width, height, numberOfSlices, textureFormat, data, flags);
+				return RENDERER_NEW(getRenderer().getContext(), Texture2DArrayBind)(static_cast<OpenGLRenderer&>(getRenderer()), width, height, numberOfSlices, textureFormat, data, flags);
 			}
 		}
 		else
@@ -143,12 +145,12 @@ namespace OpenGLRenderer
 			if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
 			{
 				// Effective direct state access (DSA)
-				return new Texture3DDsa(static_cast<OpenGLRenderer&>(getRenderer()), width, height, depth, textureFormat, data, flags);
+				return RENDERER_NEW(getRenderer().getContext(), Texture3DDsa)(static_cast<OpenGLRenderer&>(getRenderer()), width, height, depth, textureFormat, data, flags);
 			}
 			else
 			{
 				// Traditional bind version
-				return new Texture3DBind(static_cast<OpenGLRenderer&>(getRenderer()), width, height, depth, textureFormat, data, flags);
+				return RENDERER_NEW(getRenderer().getContext(), Texture3DBind)(static_cast<OpenGLRenderer&>(getRenderer()), width, height, depth, textureFormat, data, flags);
 			}
 		}
 		else
@@ -168,12 +170,12 @@ namespace OpenGLRenderer
 			if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
 			{
 				// Effective direct state access (DSA)
-				return new TextureCubeDsa(static_cast<OpenGLRenderer&>(getRenderer()), width, height, textureFormat, data, flags);
+				return RENDERER_NEW(getRenderer().getContext(), TextureCubeDsa)(static_cast<OpenGLRenderer&>(getRenderer()), width, height, textureFormat, data, flags);
 			}
 			else
 			{
 				// Traditional bind version
-				return new TextureCubeBind(static_cast<OpenGLRenderer&>(getRenderer()), width, height, textureFormat, data, flags);
+				return RENDERER_NEW(getRenderer().getContext(), TextureCubeBind)(static_cast<OpenGLRenderer&>(getRenderer()), width, height, textureFormat, data, flags);
 			}
 		}
 		else

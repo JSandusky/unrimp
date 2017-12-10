@@ -92,9 +92,9 @@ RendererToolkit::IRendererToolkit* IApplicationRendererRuntime::getRendererToolk
 			const RendererRuntime::IRendererRuntime* rendererRuntime = mRendererRuntimeInstance->getRendererRuntime();
 			Renderer::ILog& log = rendererRuntime->getRenderer().getContext().getLog();
 			Renderer::IAssert& assert = rendererRuntime->getRenderer().getContext().getAssert();
-			Renderer::IMemory& memory = rendererRuntime->getRenderer().getContext().getMemory();
-			mRendererToolkitFileManager = new RendererRuntime::StdFileManager(log, assert, memory, mFileManager->getRelativeRootDirectory());
-			mRendererToolkitContext = new RendererToolkit::Context(log, assert, memory, *mRendererToolkitFileManager);
+			Renderer::IAllocator& allocator = rendererRuntime->getRenderer().getContext().getAllocator();
+			mRendererToolkitFileManager = new RendererRuntime::StdFileManager(log, assert, allocator, mFileManager->getRelativeRootDirectory());
+			mRendererToolkitContext = new RendererToolkit::Context(log, assert, allocator, *mRendererToolkitFileManager);
 			mRendererToolkitInstance = new RendererToolkit::RendererToolkitInstance(*mRendererToolkitContext);
 		}
 		return (nullptr != mRendererToolkitInstance) ? mRendererToolkitInstance->getRendererToolkit() : nullptr;

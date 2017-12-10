@@ -19,15 +19,38 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include <Renderer/Public/Renderer.h>
+#include <stdlib.h>
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+namespace
+{
+	namespace detail
+	{
+
+
+		//[-------------------------------------------------------]
+		//[ Global functions                                      ]
+		//[-------------------------------------------------------]
+		void* reallocate(Renderer::IAllocator&, void* oldPointer, size_t, size_t newNumberOfBytes, size_t)
+		{
+			// Null pointer is valid in here, does nothing in this case
+			::free(oldPointer);
+
+			// Allocate
+			return (0 != newNumberOfBytes) ? ::malloc(newNumberOfBytes) : nullptr;
+		}
+
+
+//[-------------------------------------------------------]
+//[ Anonymous detail namespace                            ]
+//[-------------------------------------------------------]
+	} // detail
+}
 
 
 //[-------------------------------------------------------]
@@ -38,52 +61,21 @@ namespace Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Classes                                               ]
-	//[-------------------------------------------------------]
-	/**
-	*  @brief
-	*    STD memory implementation class one can use
-	*
-	*  @note
-	*    - Designed to be instanced and used inside a single C++ file
-	*/
-	class StdMemory : public IMemory
-	{
-
-
-	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	public:
-		inline StdMemory();
-		inline virtual ~StdMemory() override;
+	inline StdAllocator::StdAllocator() :
+		IAllocator(&::detail::reallocate)
+	{
+		// Nothing here
+	}
 
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IMemory methods              ]
-	//[-------------------------------------------------------]
-	public:
-		inline virtual void test(bool test) override;
-
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	private:
-		explicit StdMemory(const StdMemory&) = delete;
-		StdMemory& operator=(const StdMemory&) = delete;
-
-
-	};
+	inline StdAllocator::~StdAllocator()
+	{
+		// Nothing here
+	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // Renderer
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include <Renderer/Public/StdMemory.inl>

@@ -26,6 +26,7 @@
 #include "NullRenderer/NullRenderer.h"
 
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 #include <memory.h>
 
@@ -106,7 +107,7 @@ namespace NullRenderer
 		RENDERER_ASSERT(getRenderer().getContext(), nullptr != resources, "The null resource pointers must be valid")
 
 		// Create resource group
-		return new ResourceGroup(getRenderer(), rootParameterIndex, numberOfResources, resources, samplerStates);
+		return RENDERER_NEW(getRenderer().getContext(), ResourceGroup)(getRenderer(), rootParameterIndex, numberOfResources, resources, samplerStates);
 	}
 
 

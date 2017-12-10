@@ -263,11 +263,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline StdFileManager::StdFileManager(Renderer::ILog& log, Renderer::IAssert& assert, Renderer::IMemory& memory, const std::string& relativeRootDirectory) :
+	inline StdFileManager::StdFileManager(Renderer::ILog& log, Renderer::IAssert& assert, Renderer::IAllocator& allocator, const std::string& relativeRootDirectory) :
 		IFileManager(relativeRootDirectory),
 		mLog(log),
 		mAssert(assert),
-		mMemory(memory)
+		mAllocator(allocator)
 	{
 		// Setup local data mount point
 		std_filesystem::path absoluteDirectoryName = std_filesystem::canonical(std_filesystem::current_path());

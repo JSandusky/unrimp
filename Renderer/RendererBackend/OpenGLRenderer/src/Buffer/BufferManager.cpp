@@ -38,6 +38,8 @@
 #include "OpenGLRenderer/OpenGLRenderer.h"
 #include "OpenGLRenderer/Extensions.h"
 
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -69,12 +71,12 @@ namespace OpenGLRenderer
 			if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
 			{
 				// Effective direct state access (DSA)
-				return new VertexBufferDsa(static_cast<OpenGLRenderer&>(getRenderer()), numberOfBytes, data, bufferUsage);
+				return RENDERER_NEW(getRenderer().getContext(), VertexBufferDsa)(static_cast<OpenGLRenderer&>(getRenderer()), numberOfBytes, data, bufferUsage);
 			}
 			else
 			{
 				// Traditional bind version
-				return new VertexBufferBind(static_cast<OpenGLRenderer&>(getRenderer()), numberOfBytes, data, bufferUsage);
+				return RENDERER_NEW(getRenderer().getContext(), VertexBufferBind)(static_cast<OpenGLRenderer&>(getRenderer()), numberOfBytes, data, bufferUsage);
 			}
 		}
 		else
@@ -93,12 +95,12 @@ namespace OpenGLRenderer
 			if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
 			{
 				// Effective direct state access (DSA)
-				return new IndexBufferDsa(static_cast<OpenGLRenderer&>(getRenderer()), numberOfBytes, indexBufferFormat, data, bufferUsage);
+				return RENDERER_NEW(getRenderer().getContext(), IndexBufferDsa)(static_cast<OpenGLRenderer&>(getRenderer()), numberOfBytes, indexBufferFormat, data, bufferUsage);
 			}
 			else
 			{
 				// Traditional bind version
-				return new IndexBufferBind(static_cast<OpenGLRenderer&>(getRenderer()), numberOfBytes, indexBufferFormat, data, bufferUsage);
+				return RENDERER_NEW(getRenderer().getContext(), IndexBufferBind)(static_cast<OpenGLRenderer&>(getRenderer()), numberOfBytes, indexBufferFormat, data, bufferUsage);
 			}
 		}
 		else
@@ -120,20 +122,20 @@ namespace OpenGLRenderer
 			{
 				// Effective direct state access (DSA)
 				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-				return new VertexArrayVaoDsa(static_cast<OpenGLRenderer&>(getRenderer()), vertexAttributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
+				return RENDERER_NEW(getRenderer().getContext(), VertexArrayVaoDsa)(static_cast<OpenGLRenderer&>(getRenderer()), vertexAttributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
 			}
 			else
 			{
 				// Traditional bind version
 				// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-				return new VertexArrayVaoBind(static_cast<OpenGLRenderer&>(getRenderer()), vertexAttributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
+				return RENDERER_NEW(getRenderer().getContext(), VertexArrayVaoBind)(static_cast<OpenGLRenderer&>(getRenderer()), vertexAttributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
 			}
 		}
 		else
 		{
 			// Traditional version
 			// TODO(co) Add security check: Is the given resource one of the currently used renderer?
-			return new VertexArrayNoVao(static_cast<OpenGLRenderer&>(getRenderer()), vertexAttributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
+			return RENDERER_NEW(getRenderer().getContext(), VertexArrayNoVao)(static_cast<OpenGLRenderer&>(getRenderer()), vertexAttributes, numberOfVertexBuffers, vertexBuffers, static_cast<IndexBuffer*>(indexBuffer));
 		}
 	}
 
@@ -146,12 +148,12 @@ namespace OpenGLRenderer
 			if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
 			{
 				// Effective direct state access (DSA)
-				return new UniformBufferDsa(static_cast<OpenGLRenderer&>(getRenderer()), numberOfBytes, data, bufferUsage);
+				return RENDERER_NEW(getRenderer().getContext(), UniformBufferDsa)(static_cast<OpenGLRenderer&>(getRenderer()), numberOfBytes, data, bufferUsage);
 			}
 			else
 			{
 				// Traditional bind version
-				return new UniformBufferBind(static_cast<OpenGLRenderer&>(getRenderer()), numberOfBytes, data, bufferUsage);
+				return RENDERER_NEW(getRenderer().getContext(), UniformBufferBind)(static_cast<OpenGLRenderer&>(getRenderer()), numberOfBytes, data, bufferUsage);
 			}
 		}
 		else
@@ -170,12 +172,12 @@ namespace OpenGLRenderer
 			if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
 			{
 				// Effective direct state access (DSA)
-				return new TextureBufferDsa(static_cast<OpenGLRenderer&>(getRenderer()), numberOfBytes, textureFormat, data, bufferUsage);
+				return RENDERER_NEW(getRenderer().getContext(), TextureBufferDsa)(static_cast<OpenGLRenderer&>(getRenderer()), numberOfBytes, textureFormat, data, bufferUsage);
 			}
 			else
 			{
 				// Traditional bind version
-				return new TextureBufferBind(static_cast<OpenGLRenderer&>(getRenderer()), numberOfBytes, textureFormat, data, bufferUsage);
+				return RENDERER_NEW(getRenderer().getContext(), TextureBufferBind)(static_cast<OpenGLRenderer&>(getRenderer()), numberOfBytes, textureFormat, data, bufferUsage);
 			}
 		}
 		else
@@ -194,12 +196,12 @@ namespace OpenGLRenderer
 			if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
 			{
 				// Effective direct state access (DSA)
-				return new IndirectBufferDsa(static_cast<OpenGLRenderer&>(getRenderer()), numberOfBytes, data, bufferUsage);
+				return RENDERER_NEW(getRenderer().getContext(), IndirectBufferDsa)(static_cast<OpenGLRenderer&>(getRenderer()), numberOfBytes, data, bufferUsage);
 			}
 			else
 			{
 				// Traditional bind version
-				return new IndirectBufferBind(static_cast<OpenGLRenderer&>(getRenderer()), numberOfBytes, data, bufferUsage);
+				return RENDERER_NEW(getRenderer().getContext(), IndirectBufferBind)(static_cast<OpenGLRenderer&>(getRenderer()), numberOfBytes, data, bufferUsage);
 			}
 		}
 		else

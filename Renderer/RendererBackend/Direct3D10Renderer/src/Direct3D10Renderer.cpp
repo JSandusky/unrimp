@@ -55,6 +55,7 @@
 
 #include <Renderer/ILog.h>
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 #include <Renderer/Buffer/CommandBuffer.h>
 #include <Renderer/Buffer/IndirectBufferTypes.h>
 
@@ -70,7 +71,7 @@
 #endif
 DIRECT3D10RENDERER_API_EXPORT Renderer::IRenderer* createDirect3D10RendererInstance(const Renderer::Context& context)
 {
-	return new Direct3D10Renderer::Direct3D10Renderer(context);
+	return RENDERER_NEW(context, Direct3D10Renderer::Direct3D10Renderer(context));
 }
 #undef DIRECT3D10RENDERER_API_EXPORT
 
@@ -96,7 +97,7 @@ namespace
 				D3D10_DRIVER_TYPE_WARP,
 				D3D10_DRIVER_TYPE_REFERENCE,
 			};
-			static const UINT NUMBER_OF_DRIVER_TYPES = sizeof(D3D10_DRIVER_TYPES) / sizeof(D3D10_DRIVER_TYPE);
+			static const UINT NUMBER_OF_DRIVER_TYPES = _countof(D3D10_DRIVER_TYPES);
 
 			// Create the Direct3D 10 device
 			for (UINT deviceType = 0; deviceType < NUMBER_OF_DRIVER_TYPES; ++deviceType)
@@ -343,7 +344,7 @@ namespace Direct3D10Renderer
 		mD3d10GeometryShader(nullptr),
 		mD3d10PixelShader(nullptr)
 	{
-		mDirect3D10RuntimeLinking = new Direct3D10RuntimeLinking(*this);
+		mDirect3D10RuntimeLinking = RENDERER_NEW(mContext, Direct3D10RuntimeLinking)(*this);
 
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)
@@ -370,7 +371,7 @@ namespace Direct3D10Renderer
 			{
 				#ifdef DIRECT3D10RENDERER_NO_DEBUG
 					// Create the Direct3D 9 runtime linking instance, we know there can't be one, yet
-					mDirect3D9RuntimeLinking = new Direct3D9RuntimeLinking();
+					mDirect3D9RuntimeLinking = RENDERER_NEW(mContext, Direct3D9RuntimeLinking)();
 
 					// Call the Direct3D 9 PIX function
 					if (mDirect3D9RuntimeLinking->isDirect3D9Avaiable())
@@ -497,13 +498,13 @@ namespace Direct3D10Renderer
 		}
 
 		// Destroy the Direct3D 10 runtime linking instance
-		delete mDirect3D10RuntimeLinking;
+		RENDERER_DELETE(mContext, Direct3D10RuntimeLinking, mDirect3D10RuntimeLinking);
 
 		// End debug event
 		RENDERER_END_DEBUG_EVENT(this)
 
 		// Destroy the Direct3D 9 runtime linking instance, in case there's one
-		delete mDirect3D9RuntimeLinking;
+		RENDERER_DELETE(mContext, Direct3D9RuntimeLinking, mDirect3D9RuntimeLinking);
 	}
 
 
@@ -1315,7 +1316,7 @@ namespace Direct3D10Renderer
 			// Create the Direct3D 9 runtime linking instance, in case there's no one, yet
 			if (nullptr == mDirect3D9RuntimeLinking)
 			{
-				mDirect3D9RuntimeLinking = new Direct3D9RuntimeLinking(*this);
+				mDirect3D9RuntimeLinking = RENDERER_NEW(mContext, Direct3D9RuntimeLinking)(*this);
 			}
 
 			// Call the Direct3D 9 PIX function
@@ -1335,7 +1336,7 @@ namespace Direct3D10Renderer
 			// Create the Direct3D 9 runtime linking instance, in case there's no one, yet
 			if (nullptr == mDirect3D9RuntimeLinking)
 			{
-				mDirect3D9RuntimeLinking = new Direct3D9RuntimeLinking(*this);
+				mDirect3D9RuntimeLinking = RENDERER_NEW(mContext, Direct3D9RuntimeLinking)(*this);
 			}
 
 			// Call the Direct3D 9 PIX function
@@ -1355,7 +1356,7 @@ namespace Direct3D10Renderer
 			// Create the Direct3D 9 runtime linking instance, in case there's no one, yet
 			if (nullptr == mDirect3D9RuntimeLinking)
 			{
-				mDirect3D9RuntimeLinking = new Direct3D9RuntimeLinking(*this);
+				mDirect3D9RuntimeLinking = RENDERER_NEW(mContext, Direct3D9RuntimeLinking)(*this);
 			}
 
 			// Call the Direct3D 9 PIX function
@@ -1415,7 +1416,7 @@ namespace Direct3D10Renderer
 				// If required, create the HLSL shader language instance right now
 				if (nullptr == mShaderLanguageHlsl)
 				{
-					mShaderLanguageHlsl = new ShaderLanguageHlsl(*this);
+					mShaderLanguageHlsl = RENDERER_NEW(mContext, ShaderLanguageHlsl)(*this);
 					mShaderLanguageHlsl->addReference();	// Internal renderer reference
 				}
 
@@ -1437,7 +1438,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	Renderer::IRenderPass* Direct3D10Renderer::createRenderPass(uint32_t numberOfColorAttachments, const Renderer::TextureFormat::Enum* colorAttachmentTextureFormats, Renderer::TextureFormat::Enum depthStencilAttachmentTextureFormat, uint8_t numberOfMultisamples)
 	{
-		return new RenderPass(*this, numberOfColorAttachments, colorAttachmentTextureFormats, depthStencilAttachmentTextureFormat, numberOfMultisamples);
+		return RENDERER_NEW(mContext, RenderPass)(*this, numberOfColorAttachments, colorAttachmentTextureFormats, depthStencilAttachmentTextureFormat, numberOfMultisamples);
 	}
 
 	Renderer::ISwapChain* Direct3D10Renderer::createSwapChain(Renderer::IRenderPass& renderPass, Renderer::WindowHandle windowHandle, bool)
@@ -1447,7 +1448,7 @@ namespace Direct3D10Renderer
 		RENDERER_ASSERT(mContext, NULL_HANDLE != windowHandle.nativeWindowHandle, "Direct3D 10: The provided native window handle must not be a null handle")
 
 		// Create the swap chain
-		return new SwapChain(renderPass, windowHandle);
+		return RENDERER_NEW(mContext, SwapChain)(renderPass, windowHandle);
 	}
 
 	Renderer::IFramebuffer* Direct3D10Renderer::createFramebuffer(Renderer::IRenderPass& renderPass, const Renderer::FramebufferAttachment* colorFramebufferAttachments, const Renderer::FramebufferAttachment* depthStencilFramebufferAttachment)
@@ -1456,32 +1457,32 @@ namespace Direct3D10Renderer
 		DIRECT3D10RENDERER_RENDERERMATCHCHECK_ASSERT(*this, renderPass)
 
 		// Create the framebuffer
-		return new Framebuffer(renderPass, colorFramebufferAttachments, depthStencilFramebufferAttachment);
+		return RENDERER_NEW(mContext, Framebuffer)(renderPass, colorFramebufferAttachments, depthStencilFramebufferAttachment);
 	}
 
 	Renderer::IBufferManager* Direct3D10Renderer::createBufferManager()
 	{
-		return new BufferManager(*this);
+		return RENDERER_NEW(mContext, BufferManager)(*this);
 	}
 
 	Renderer::ITextureManager* Direct3D10Renderer::createTextureManager()
 	{
-		return new TextureManager(*this);
+		return RENDERER_NEW(mContext, TextureManager)(*this);
 	}
 
 	Renderer::IRootSignature* Direct3D10Renderer::createRootSignature(const Renderer::RootSignature& rootSignature)
 	{
-		return new RootSignature(*this, rootSignature);
+		return RENDERER_NEW(mContext, RootSignature)(*this, rootSignature);
 	}
 
 	Renderer::IPipelineState* Direct3D10Renderer::createPipelineState(const Renderer::PipelineState& pipelineState)
 	{
-		return new PipelineState(*this, pipelineState);
+		return RENDERER_NEW(mContext, PipelineState)(*this, pipelineState);
 	}
 
 	Renderer::ISamplerState* Direct3D10Renderer::createSamplerState(const Renderer::SamplerState& samplerState)
 	{
-		return new SamplerState(*this, samplerState);
+		return RENDERER_NEW(mContext, SamplerState)(*this, samplerState);
 	}
 
 

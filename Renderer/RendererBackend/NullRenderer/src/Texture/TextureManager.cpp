@@ -29,6 +29,8 @@
 #include "NullRenderer/Texture/Texture2DArray.h"
 #include "NullRenderer/NullRenderer.h"
 
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -55,7 +57,7 @@ namespace NullRenderer
 		// Check whether or not the given texture dimension is valid
 		if (width > 0)
 		{
-			return new Texture1D(static_cast<NullRenderer&>(getRenderer()), width);
+			return RENDERER_NEW(getRenderer().getContext(), Texture1D)(static_cast<NullRenderer&>(getRenderer()), width);
 		}
 		else
 		{
@@ -68,7 +70,7 @@ namespace NullRenderer
 		// Check whether or not the given texture dimension is valid
 		if (width > 0 && height > 0)
 		{
-			return new Texture2D(static_cast<NullRenderer&>(getRenderer()), width, height);
+			return RENDERER_NEW(getRenderer().getContext(), Texture2D)(static_cast<NullRenderer&>(getRenderer()), width, height);
 		}
 		else
 		{
@@ -81,7 +83,7 @@ namespace NullRenderer
 		// Check whether or not the given texture dimension is valid
 		if (width > 0 && height > 0 && numberOfSlices > 0)
 		{
-			return new Texture2DArray(static_cast<NullRenderer&>(getRenderer()), width, height, numberOfSlices);
+			return RENDERER_NEW(getRenderer().getContext(), Texture2DArray)(static_cast<NullRenderer&>(getRenderer()), width, height, numberOfSlices);
 		}
 		else
 		{
@@ -94,7 +96,7 @@ namespace NullRenderer
 		// Check whether or not the given texture dimension is valid
 		if (width > 0 && height > 0 && depth > 0)
 		{
-			return new Texture3D(static_cast<NullRenderer&>(getRenderer()), width, height, depth);
+			return RENDERER_NEW(getRenderer().getContext(), Texture3D)(static_cast<NullRenderer&>(getRenderer()), width, height, depth);
 		}
 		else
 		{
@@ -107,7 +109,7 @@ namespace NullRenderer
 		// Check whether or not the given texture dimension is valid
 		if (width > 0 && height > 0)
 		{
-			return new TextureCube(static_cast<NullRenderer&>(getRenderer()), width, height);
+			return RENDERER_NEW(getRenderer().getContext(), TextureCube)(static_cast<NullRenderer&>(getRenderer()), width, height);
 		}
 		else
 		{

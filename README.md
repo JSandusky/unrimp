@@ -86,7 +86,7 @@ Renderer API and Backends
 	- Used inside the renderer implementations for better renderer debugging
 - Renderer implementation specific optimizations
 	- OpenGL: Usage of direct state access (DSA), if available
-- Interfaces for log, assert and memory so the user has the control over those things, standard implementations are provided
+- Interfaces for log, assert and memory allocator so the user has the control over those things, standard implementations are provided
 
 
 Renderer Runtime (e.g. "The Game")

@@ -29,7 +29,7 @@
 
 #include <Renderer/Public/StdLog.h>
 #include <Renderer/Public/StdAssert.h>
-#include <Renderer/Public/StdMemory.h>
+#include <Renderer/Public/StdAllocator.h>
 
 #include <iostream>
 
@@ -41,9 +41,9 @@ int programEntryPoint(const CommandLineArguments& commandLineArguments)
 {
 	Renderer::StdLog stdLog;
 	Renderer::StdAssert stdAssert;
-	Renderer::StdMemory stdMemory;
-	RendererRuntime::StdFileManager stdFileManager(stdLog, stdAssert, stdMemory, "..");
-	RendererToolkit::Context rendererToolkitContext(stdLog, stdAssert, stdMemory, stdFileManager);
+	Renderer::StdAllocator stdAllocator;
+	RendererRuntime::StdFileManager stdFileManager(stdLog, stdAssert, stdAllocator, "..");
+	RendererToolkit::Context rendererToolkitContext(stdLog, stdAssert, stdAllocator, stdFileManager);
 	RendererToolkit::RendererToolkitInstance rendererToolkitInstance(rendererToolkitContext);
 	RendererToolkit::IRendererToolkit* rendererToolkit = rendererToolkitInstance.getRendererToolkit();
 	if (nullptr != rendererToolkit)

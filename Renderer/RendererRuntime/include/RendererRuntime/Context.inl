@@ -43,9 +43,9 @@ namespace RendererRuntime
 		return mAssert;
 	}
 
-	inline Renderer::IMemory& Context::getMemory() const
+	inline Renderer::IAllocator& Context::getAllocator() const
 	{
-		return mMemory;
+		return mAllocator;
 	}
 
 	inline Renderer::IRenderer& Context::getRenderer() const
