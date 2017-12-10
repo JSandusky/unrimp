@@ -28,16 +28,24 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline Context::Context(Renderer::IRenderer& renderer, IFileManager& fileManager) :
-		mRenderer(renderer),
-		mFileManager(fileManager)
+	inline Context::~Context()
 	{
 		// Nothing here
 	}
 
-	inline Context::~Context()
+	inline Renderer::ILog& Context::getLog() const
 	{
-		// Nothing here
+		return mLog;
+	}
+
+	inline Renderer::IAssert& Context::getAssert() const
+	{
+		return mAssert;
+	}
+
+	inline Renderer::IMemory& Context::getMemory() const
+	{
+		return mMemory;
 	}
 
 	inline Renderer::IRenderer& Context::getRenderer() const

@@ -37,19 +37,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Renderer::ILog& Context::getLog() const
+	Context::Context(Renderer::IRenderer& renderer, IFileManager& fileManager) :
+		mLog(renderer.getContext().getLog()),
+		mAssert(renderer.getContext().getAssert()),
+		mMemory(renderer.getContext().getMemory()),
+		mRenderer(renderer),
+		mFileManager(fileManager)
 	{
-		return mRenderer.getContext().getLog();
-	}
-
-	Renderer::IAssert& Context::getAssert() const
-	{
-		return mRenderer.getContext().getAssert();
-	}
-
-	Renderer::IMemory& Context::getMemory() const
-	{
-		return mRenderer.getContext().getMemory();
+		// Nothing here
 	}
 
 

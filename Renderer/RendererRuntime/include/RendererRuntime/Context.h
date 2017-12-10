@@ -77,7 +77,7 @@ namespace RendererRuntime
 		*  @param[in] fileManager
 		*    File manager instance to use, the file manager instance must stay valid as long as the renderer runtime instance exists
 		*/
-		inline Context(Renderer::IRenderer& renderer, IFileManager& fileManager);
+		RENDERERRUNTIME_API_EXPORT Context(Renderer::IRenderer& renderer, IFileManager& fileManager);
 
 		/**
 		*  @brief
@@ -92,7 +92,7 @@ namespace RendererRuntime
 		*  @return
 		*    The log instance
 		*/
-		RENDERERRUNTIME_API_EXPORT Renderer::ILog& getLog() const;
+		inline Renderer::ILog& getLog() const;
 
 		/**
 		*  @brief
@@ -101,7 +101,7 @@ namespace RendererRuntime
 		*  @return
 		*    The assert instance
 		*/
-		RENDERERRUNTIME_API_EXPORT Renderer::IAssert& getAssert() const;
+		inline Renderer::IAssert& getAssert() const;
 
 		/**
 		*  @brief
@@ -110,7 +110,7 @@ namespace RendererRuntime
 		*  @return
 		*    The memory instance
 		*/
-		RENDERERRUNTIME_API_EXPORT Renderer::IMemory& getMemory() const;
+		inline Renderer::IMemory& getMemory() const;
 
 		/**
 		*  @brief
@@ -143,6 +143,9 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		Renderer::ILog&		 mLog;
+		Renderer::IAssert&	 mAssert;
+		Renderer::IMemory&	 mMemory;
 		Renderer::IRenderer& mRenderer;
 		IFileManager&		 mFileManager;
 
