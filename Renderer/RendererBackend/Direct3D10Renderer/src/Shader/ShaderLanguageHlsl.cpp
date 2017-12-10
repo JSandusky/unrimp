@@ -107,7 +107,10 @@ namespace Direct3D10Renderer
 		{
 			if (nullptr != errorD3dBlob)
 			{
-				static_cast<Direct3D10Renderer&>(getRenderer()).getContext().getLog().print(Renderer::ILog::Type::CRITICAL, sourceCode, __FILE__, static_cast<uint32_t>(__LINE__), static_cast<char*>(errorD3dBlob->GetBufferPointer()));
+				if (static_cast<Direct3D10Renderer&>(getRenderer()).getContext().getLog().print(Renderer::ILog::Type::CRITICAL, sourceCode, __FILE__, static_cast<uint32_t>(__LINE__), static_cast<char*>(errorD3dBlob->GetBufferPointer())))
+				{
+					DEBUG_BREAK;
+				}
 				errorD3dBlob->Release();
 			}
 			return nullptr;

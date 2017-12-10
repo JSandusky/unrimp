@@ -152,7 +152,10 @@ namespace RendererRuntime
 												else
 												{
 													// Error!
-													print(Renderer::ILog::Type::CRITICAL, nullptr, __FILE__, static_cast<uint32_t>(__LINE__), "Failed to open the file \"%s\" for writing", virtualFilename.c_str());
+													if (print(Renderer::ILog::Type::CRITICAL, nullptr, __FILE__, static_cast<uint32_t>(__LINE__), "Failed to open the file \"%s\" for writing", virtualFilename.c_str()))
+													{
+														DEBUG_BREAK;
+													}
 												}
 											}
 										}
@@ -188,10 +191,10 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected virtual Renderer::StdLog methods            ]
 	//[-------------------------------------------------------]
-	inline void ImGuiLog::printInternal(Type type, const char* attachment, const char* file, uint32_t line, const char* message, uint32_t numberOfCharacters)
+	inline bool ImGuiLog::printInternal(Type type, const char* attachment, const char* file, uint32_t line, const char* message, uint32_t numberOfCharacters)
 	{
 		// Call the base implementation
-		StdLog::printInternal(type, attachment, file, line, message, numberOfCharacters);
+		const bool requestDebugBreak = StdLog::printInternal(type, attachment, file, line, message, numberOfCharacters);
 
 		// Construct the full UTF-8 message text
 		#ifdef RENDERER_NO_DEBUG
@@ -244,6 +247,9 @@ namespace RendererRuntime
 				open();
 				break;
 		}
+
+		// Done
+		return requestDebugBreak;
 	}
 
 

@@ -83,8 +83,11 @@ namespace Renderer
 		*    Line number
 		*  @param[in] format
 		*    "sprintf"-style formatted UTF-8 log message
+		*
+		*  @return
+		*    "true" to request debug break, else "false"
 		*/
-		virtual void print(Type type, const char* attachment, const char* file, uint32_t line, const char* format, ...) = 0;
+		virtual bool print(Type type, const char* attachment, const char* file, uint32_t line, const char* format, ...) = 0;
 
 
 	//[-------------------------------------------------------]
@@ -122,8 +125,16 @@ namespace Renderer
 *
 *  @note
 *    - Example: RENDERER_LOG(mContext, DEBUG, "Direct3D 11 renderer backend startup")
+*    - See http://cnicholson.net/2009/02/stupid-c-tricks-adventures-in-assert/ - "2.  Wrap your macros in do { … } while(0)." for background information about the do-while wrap
 */
-#define RENDERER_LOG(context, type, format, ...) (context).getLog().print(Renderer::ILog::Type::type, nullptr, __FILE__, static_cast<uint32_t>(__LINE__), format, ##__VA_ARGS__);
+#define RENDERER_LOG(context, type, format, ...) \
+	do \
+	{ \
+		if ((context).getLog().print(Renderer::ILog::Type::type, nullptr, __FILE__, static_cast<uint32_t>(__LINE__), format, ##__VA_ARGS__)) \
+		{ \
+			DEBUG_BREAK; \
+		} \
+	} while (0);
 
 
 //[-------------------------------------------------------]

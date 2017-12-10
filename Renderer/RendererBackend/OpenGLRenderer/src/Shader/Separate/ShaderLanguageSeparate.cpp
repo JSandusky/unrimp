@@ -191,7 +191,10 @@ namespace
 				OpenGLRenderer::glGetInfoLogARB(openGLObject, informationLength, nullptr, informationLog);
 
 				// Output the debug string
-				openGLRenderer.getContext().getLog().print(Renderer::ILog::Type::CRITICAL, sourceCode, __FILE__, static_cast<uint32_t>(__LINE__), informationLog);
+				if (openGLRenderer.getContext().getLog().print(Renderer::ILog::Type::CRITICAL, sourceCode, __FILE__, static_cast<uint32_t>(__LINE__), informationLog))
+				{
+					DEBUG_BREAK;
+				}
 
 				// Cleanup information memory
 				delete [] informationLog;
@@ -390,13 +393,19 @@ namespace OpenGLRenderer
 				else
 				{
 					// Failed to link the program
-					openGLRenderer.getContext().getLog().print(Renderer::ILog::Type::CRITICAL, sourceCode, __FILE__, static_cast<uint32_t>(__LINE__), "Failed to link the GLSL program: %s", program.getInfoLog());
+					if (openGLRenderer.getContext().getLog().print(Renderer::ILog::Type::CRITICAL, sourceCode, __FILE__, static_cast<uint32_t>(__LINE__), "Failed to link the GLSL program: %s", program.getInfoLog()))
+					{
+						DEBUG_BREAK;
+					}
 				}
 			}
 			else
 			{
 				// Failed to parse the shader source code
-				openGLRenderer.getContext().getLog().print(Renderer::ILog::Type::CRITICAL, sourceCode, __FILE__, static_cast<uint32_t>(__LINE__), "Failed to parse the GLSL shader source code: %s", shader.getInfoLog());
+				if (openGLRenderer.getContext().getLog().print(Renderer::ILog::Type::CRITICAL, sourceCode, __FILE__, static_cast<uint32_t>(__LINE__), "Failed to parse the GLSL shader source code: %s", shader.getInfoLog()))
+				{
+					DEBUG_BREAK;
+				}
 			}
 		#else
 			std::ignore = shaderType;

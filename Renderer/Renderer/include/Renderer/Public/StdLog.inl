@@ -77,8 +77,10 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::ILog methods                 ]
 	//[-------------------------------------------------------]
-	inline void StdLog::print(Type type, const char* attachment, const char* file, uint32_t line, const char* format, ...)
+	inline bool StdLog::print(Type type, const char* attachment, const char* file, uint32_t line, const char* format, ...)
 	{
+		bool requestDebugBreak = false;
+
 		// Get the required buffer length, does not include the terminating zero character
 		va_list vaList;
 		va_start(vaList, format);
@@ -95,7 +97,7 @@ namespace Renderer
 			va_end(vaList);
 
 			// Internal processing
-			printInternal(type, attachment, file, line, formattedText, textLength);
+			requestDebugBreak = printInternal(type, attachment, file, line, formattedText, textLength);
 		}
 		else
 		{
@@ -109,20 +111,24 @@ namespace Renderer
 			va_end(vaList);
 
 			// Internal processing
-			printInternal(type, attachment, file, line, formattedText, textLength);
+			requestDebugBreak = printInternal(type, attachment, file, line, formattedText, textLength);
 
 			// Cleanup
 			delete [] formattedText;
 		}
+
+		// Done
+		return requestDebugBreak;
 	}
 
 
 	//[-------------------------------------------------------]
 	//[ Protected virtual Renderer::StdLog methods            ]
 	//[-------------------------------------------------------]
-	inline void StdLog::printInternal(Type type, const char*, const char* file, uint32_t line, const char* message, uint32_t)
+	inline bool StdLog::printInternal(Type type, const char*, const char* file, uint32_t line, const char* message, uint32_t)
 	{
 		std::lock_guard<std::mutex> mutexLock(mMutex);
+		bool requestDebugBreak = false;
 
 		// Construct the full UTF-8 message text
 		#ifdef RENDERER_NO_DEBUG
@@ -158,7 +164,7 @@ namespace Renderer
 			::OutputDebugStringW(utf16Line.c_str());
 			if (Type::CRITICAL == type && ::IsDebuggerPresent())
 			{
-				::__debugbreak();
+				requestDebugBreak = true;
 			}
 		}
 		#elif LINUX
@@ -174,6 +180,9 @@ namespace Renderer
 		#else
 			#error "Unsupported platform"
 		#endif
+
+		// Done
+		return requestDebugBreak;
 	}
 
 

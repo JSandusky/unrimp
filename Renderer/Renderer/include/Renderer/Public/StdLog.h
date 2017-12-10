@@ -76,7 +76,7 @@ namespace Renderer
 	//[ Public virtual Renderer::ILog methods                 ]
 	//[-------------------------------------------------------]
 	public:
-		inline virtual void print(Type type, const char* attachment, const char* file, uint32_t line, const char* format, ...) override;
+		inline virtual bool print(Type type, const char* attachment, const char* file, uint32_t line, const char* format, ...) override;
 
 
 	//[-------------------------------------------------------]
@@ -99,8 +99,11 @@ namespace Renderer
 		*    UTF-8 message
 		*  @param[in] numberOfCharacters
 		*    Number of characters inside the message, does not include the terminating zero character
+		*
+		*  @return
+		*    "true" to request debug break, else "false"
 		*/
-		inline virtual void printInternal(Type type, const char* attachment, const char* file, uint32_t line, const char* message, uint32_t numberOfCharacters);
+		inline virtual bool printInternal(Type type, const char* attachment, const char* file, uint32_t line, const char* message, uint32_t numberOfCharacters);
 
 
 	//[-------------------------------------------------------]

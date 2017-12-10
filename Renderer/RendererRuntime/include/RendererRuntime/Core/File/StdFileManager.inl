@@ -456,7 +456,10 @@ namespace RendererRuntime
 			}
 			if (file->isInvalid())
 			{
-				mLog.print(Renderer::ILog::Type::CRITICAL, nullptr, __FILE__, static_cast<uint32_t>(__LINE__), "Failed to open file %s", virtualFilename);
+				if (mLog.print(Renderer::ILog::Type::CRITICAL, nullptr, __FILE__, static_cast<uint32_t>(__LINE__), "Failed to open file %s", virtualFilename))
+				{
+					DEBUG_BREAK;
+				}
 				delete file;
 				file = nullptr;
 			}

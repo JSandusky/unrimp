@@ -100,7 +100,10 @@ namespace Direct3D9Renderer
 		ID3DXBuffer* d3dXBufferErrorMessages = nullptr;
 		if (D3D_OK != D3DXCompileShader(sourceCode, static_cast<UINT>(strlen(sourceCode)), nullptr, nullptr, entryPoint ? entryPoint : "main", shaderModel, compileFlags, &d3dXBuffer, &d3dXBufferErrorMessages, d3dXConstantTable))
 		{
-			static_cast<Direct3D9Renderer&>(getRenderer()).getContext().getLog().print(Renderer::ILog::Type::CRITICAL, sourceCode, __FILE__, static_cast<uint32_t>(__LINE__), static_cast<char*>(d3dXBufferErrorMessages->GetBufferPointer()));
+			if (static_cast<Direct3D9Renderer&>(getRenderer()).getContext().getLog().print(Renderer::ILog::Type::CRITICAL, sourceCode, __FILE__, static_cast<uint32_t>(__LINE__), static_cast<char*>(d3dXBufferErrorMessages->GetBufferPointer())))
+			{
+				DEBUG_BREAK;
+			}
 			d3dXBufferErrorMessages->Release();
 		}
 

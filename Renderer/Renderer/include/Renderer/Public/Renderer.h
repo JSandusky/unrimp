@@ -316,7 +316,7 @@ namespace Renderer
 				CRITICAL
 			};
 		public:
-			virtual void print(Type type, const char* attachment, const char* file, uint32_t line, const char* format, ...) = 0;
+			virtual bool print(Type type, const char* attachment, const char* file, uint32_t line, const char* format, ...) = 0;
 		protected:
 			inline ILog()
 			{}
@@ -325,7 +325,14 @@ namespace Renderer
 			explicit ILog(const ILog&) = delete;
 			ILog& operator=(const ILog&) = delete;
 		};
-		#define RENDERER_LOG(context, type, format, ...) (context).getLog().print(Renderer::ILog::Type::type, nullptr, __FILE__, static_cast<uint32_t>(__LINE__), format, ##__VA_ARGS__);
+		#define RENDERER_LOG(context, type, format, ...) \
+			do \
+			{ \
+				if ((context).getLog().print(Renderer::ILog::Type::type, nullptr, __FILE__, static_cast<uint32_t>(__LINE__), format, ##__VA_ARGS__)) \
+				{ \
+					DEBUG_BREAK; \
+				} \
+			} while (0);
 	#endif
 
 	// Renderer/IAssert.h

@@ -319,13 +319,19 @@ namespace VulkanRenderer
 				else
 				{
 					// Failed to link the program
-					vulkanRenderer.getContext().getLog().print(Renderer::ILog::Type::CRITICAL, sourceCode, __FILE__, static_cast<uint32_t>(__LINE__), "Failed to link the GLSL program: %s", program.getInfoLog());
+					if (vulkanRenderer.getContext().getLog().print(Renderer::ILog::Type::CRITICAL, sourceCode, __FILE__, static_cast<uint32_t>(__LINE__), "Failed to link the GLSL program: %s", program.getInfoLog()))
+					{
+						DEBUG_BREAK;
+					}
 				}
 			}
 			else
 			{
 				// Failed to parse the shader source code
-				vulkanRenderer.getContext().getLog().print(Renderer::ILog::Type::CRITICAL, sourceCode, __FILE__, static_cast<uint32_t>(__LINE__), "Failed to parse the GLSL shader source code: %s", shader.getInfoLog());
+				if (vulkanRenderer.getContext().getLog().print(Renderer::ILog::Type::CRITICAL, sourceCode, __FILE__, static_cast<uint32_t>(__LINE__), "Failed to parse the GLSL shader source code: %s", shader.getInfoLog()))
+				{
+					DEBUG_BREAK;
+				}
 			}
 		#else
 			std::ignore = vulkanRenderer;
