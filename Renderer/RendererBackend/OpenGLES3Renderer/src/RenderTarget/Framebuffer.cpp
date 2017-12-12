@@ -30,6 +30,7 @@
 
 #include <Renderer/ILog.h>
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 #include <climits> // For UINT_MAX
 
@@ -74,7 +75,7 @@ namespace OpenGLES3Renderer
 		OpenGLES3Renderer& openGLES3Renderer = static_cast<OpenGLES3Renderer&>(renderPass.getRenderer());
 		if (mNumberOfColorTextures > 0)
 		{
-			mColorTextures = new Renderer::ITexture*[mNumberOfColorTextures];
+			mColorTextures = RENDERER_MALLOC_TYPED(openGLES3Renderer.getContext(), Renderer::ITexture*, mNumberOfColorTextures);
 
 			// Loop through all framebuffer color attachments
 			// -> "GL_COLOR_ATTACHMENT0" and "GL_COLOR_ATTACHMENT0_NV" have the same value
@@ -323,7 +324,7 @@ namespace OpenGLES3Renderer
 			}
 
 			// Cleanup
-			delete [] mColorTextures;
+			RENDERER_FREE(getRenderer().getContext(), mColorTextures);
 		}
 
 		// Release the reference to the used depth stencil texture

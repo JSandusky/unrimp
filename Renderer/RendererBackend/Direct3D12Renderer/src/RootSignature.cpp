@@ -28,6 +28,7 @@
 
 #include <Renderer/ILog.h>
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 #include <Renderer/RootSignatureTypes.h>
 
 
@@ -45,6 +46,8 @@ namespace Direct3D12Renderer
 		IRootSignature(direct3D12Renderer),
 		mD3D12RootSignature(nullptr)
 	{
+		const Renderer::Context& context = direct3D12Renderer.getContext();
+
 		// Create temporary Direct3D 12 root signature instance data
 		// -> "Renderer::RootSignature" is not identical to "D3D12_ROOT_SIGNATURE_DESC" because it had to be extended by information required by OpenGL
 		D3D12_ROOT_SIGNATURE_DESC d3d12RootSignatureDesc;
@@ -54,7 +57,7 @@ namespace Direct3D12Renderer
 				d3d12RootSignatureDesc.NumParameters = numberOfRootParameters;
 				if (numberOfRootParameters > 0)
 				{
-					d3d12RootSignatureDesc.pParameters = new D3D12_ROOT_PARAMETER[numberOfRootParameters];
+					d3d12RootSignatureDesc.pParameters = RENDERER_MALLOC_TYPED(context, D3D12_ROOT_PARAMETER, numberOfRootParameters);
 					D3D12_ROOT_PARAMETER* d3dRootParameters = const_cast<D3D12_ROOT_PARAMETER*>(d3d12RootSignatureDesc.pParameters);
 					for (uint32_t parameterIndex = 0; parameterIndex < numberOfRootParameters; ++parameterIndex)
 					{
@@ -67,7 +70,7 @@ namespace Direct3D12Renderer
 						{
 							const uint32_t numberOfDescriptorRanges = d3dRootParameter.DescriptorTable.NumDescriptorRanges;
 							d3dRootParameter.DescriptorTable.NumDescriptorRanges = numberOfDescriptorRanges;
-							d3dRootParameter.DescriptorTable.pDescriptorRanges = new D3D12_DESCRIPTOR_RANGE[numberOfDescriptorRanges];
+							d3dRootParameter.DescriptorTable.pDescriptorRanges = RENDERER_MALLOC_TYPED(context, D3D12_DESCRIPTOR_RANGE, numberOfDescriptorRanges);
 
 							// "Renderer::DescriptorRange" is not identical to "D3D12_DESCRIPTOR_RANGE" because it had to be extended by information required by OpenGL
 							for (uint32_t descriptorRangeIndex = 0; descriptorRangeIndex < numberOfDescriptorRanges; ++descriptorRangeIndex)
@@ -106,7 +109,7 @@ namespace Direct3D12Renderer
 				d3d12RootSignatureDesc.NumStaticSamplers = numberOfStaticSamplers;
 				if (numberOfStaticSamplers > 0)
 				{
-					d3d12RootSignatureDesc.pStaticSamplers = new D3D12_STATIC_SAMPLER_DESC[numberOfStaticSamplers];
+					d3d12RootSignatureDesc.pStaticSamplers = RENDERER_MALLOC_TYPED(context, D3D12_STATIC_SAMPLER_DESC, numberOfStaticSamplers);
 					memcpy(const_cast<D3D12_STATIC_SAMPLER_DESC*>(d3d12RootSignatureDesc.pStaticSamplers), rootSignature.staticSamplers, sizeof(Renderer::StaticSampler) * numberOfStaticSamplers);
 				}
 				else
@@ -138,21 +141,20 @@ namespace Direct3D12Renderer
 			}
 		}
 
-		{ // Free temporary Direct3D 12 root signature instance data
-			if (nullptr != d3d12RootSignatureDesc.pParameters)
+		// Free temporary Direct3D 12 root signature instance data
+		if (nullptr != d3d12RootSignatureDesc.pParameters)
+		{
+			for (uint32_t i = 0; i < d3d12RootSignatureDesc.NumParameters; ++i)
 			{
-				for (uint32_t i = 0; i < d3d12RootSignatureDesc.NumParameters; ++i)
+				const D3D12_ROOT_PARAMETER& d3d12RootParameter = d3d12RootSignatureDesc.pParameters[i];
+				if (D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE == d3d12RootParameter.ParameterType)
 				{
-					const D3D12_ROOT_PARAMETER& d3d12RootParameter = d3d12RootSignatureDesc.pParameters[i];
-					if (D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE == d3d12RootParameter.ParameterType)
-					{
-						delete [] d3d12RootParameter.DescriptorTable.pDescriptorRanges;
-					}
+					RENDERER_FREE(context, const_cast<D3D12_DESCRIPTOR_RANGE*>(d3d12RootParameter.DescriptorTable.pDescriptorRanges));
 				}
-				delete [] d3d12RootSignatureDesc.pParameters;
 			}
-			delete [] d3d12RootSignatureDesc.pStaticSamplers;
+			RENDERER_FREE(context, const_cast<D3D12_ROOT_PARAMETER*>(d3d12RootSignatureDesc.pParameters));
 		}
+		RENDERER_FREE(context, const_cast<D3D12_STATIC_SAMPLER_DESC*>(d3d12RootSignatureDesc.pStaticSamplers));
 
 		// Assign a default name to the resource for debugging purposes
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG

@@ -27,6 +27,7 @@
 #include "Direct3D10Renderer/D3D10.h"
 #include "Direct3D10Renderer/Direct3D10Renderer.h"
 
+#include <Renderer/IAllocator.h>
 #include <Renderer/Buffer/VertexArrayTypes.h>
 
 
@@ -62,10 +63,12 @@ namespace Direct3D10Renderer
 		// Add a reference to the used vertex buffers
 		if (mNumberOfSlots > 0)
 		{
-			mD3D10Buffers = new ID3D10Buffer*[mNumberOfSlots];
-			mStrides = new UINT[mNumberOfSlots];
-			mOffsets = new UINT[mNumberOfSlots]{};	// Vertex buffer offset is not supported by OpenGL, so our renderer API doesn't support it either, set everything to zero
-			mVertexBuffers = new VertexBuffer*[mNumberOfSlots];
+			const Renderer::Context& context = direct3D10Renderer.getContext();
+			mD3D10Buffers = RENDERER_MALLOC_TYPED(context, ID3D10Buffer*, mNumberOfSlots);
+			mStrides = RENDERER_MALLOC_TYPED(context, UINT, mNumberOfSlots);
+			mOffsets = RENDERER_MALLOC_TYPED(context, UINT, mNumberOfSlots);
+			memset(mOffsets, 0, sizeof(UINT) * mNumberOfSlots);	// Vertex buffer offset is not supported by OpenGL, so our renderer API doesn't support it either, set everything to zero
+			mVertexBuffers = RENDERER_MALLOC_TYPED(context, VertexBuffer*, mNumberOfSlots);
 
 			{ // Loop through all vertex buffers
 				ID3D10Buffer** currentD3D10Buffer = mD3D10Buffers;
@@ -100,11 +103,12 @@ namespace Direct3D10Renderer
 		}
 
 		// Cleanup Direct3D 10 input slot data
+		const Renderer::Context& context = getRenderer().getContext();
 		if (mNumberOfSlots > 0)
 		{
-			delete [] mD3D10Buffers;
-			delete [] mStrides;
-			delete [] mOffsets;
+			RENDERER_FREE(context, mD3D10Buffers);
+			RENDERER_FREE(context, mStrides);
+			RENDERER_FREE(context, mOffsets);
 		}
 
 		// Release the reference to the used vertex buffers
@@ -118,7 +122,7 @@ namespace Direct3D10Renderer
 			}
 
 			// Cleanup
-			delete [] mVertexBuffers;
+			RENDERER_FREE(context, mVertexBuffers);
 		}
 
 		// Release our Direct3D 10 device reference

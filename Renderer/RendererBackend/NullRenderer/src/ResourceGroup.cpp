@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "NullRenderer/ResourceGroup.h"
 
+#include <Renderer/IRenderer.h>
+#include <Renderer/IAllocator.h>
 #include <Renderer/State/ISamplerState.h>
 
 
@@ -40,7 +42,7 @@ namespace NullRenderer
 		IResourceGroup(renderer),
 		mRootParameterIndex(rootParameterIndex),
 		mNumberOfResources(numberOfResources),
-		mResources(new Renderer::IResource*[mNumberOfResources]),
+		mResources(RENDERER_MALLOC_TYPED(renderer.getContext(), Renderer::IResource*, mNumberOfResources)),
 		mSamplerStates(nullptr)
 	{
 		// Process all resources and add our reference to the renderer resource
@@ -52,7 +54,7 @@ namespace NullRenderer
 		}
 		if (nullptr != samplerStates)
 		{
-			mSamplerStates = new Renderer::ISamplerState*[mNumberOfResources];
+			mSamplerStates = RENDERER_MALLOC_TYPED(renderer.getContext(), Renderer::ISamplerState*, mNumberOfResources);
 			for (uint32_t resourceIndex = 0; resourceIndex < mNumberOfResources; ++resourceIndex)
 			{
 				Renderer::ISamplerState* samplerState = mSamplerStates[resourceIndex] = samplerStates[resourceIndex];
@@ -67,6 +69,7 @@ namespace NullRenderer
 	ResourceGroup::~ResourceGroup()
 	{
 		// Remove our reference from the renderer resources
+		const Renderer::Context& context = getRenderer().getContext();
 		if (nullptr != mSamplerStates)
 		{
 			for (uint32_t resourceIndex = 0; resourceIndex < mNumberOfResources; ++resourceIndex)
@@ -77,13 +80,13 @@ namespace NullRenderer
 					samplerState->releaseReference();
 				}
 			}
-			delete [] mSamplerStates;
+			RENDERER_FREE(context, mSamplerStates);
 		}
 		for (uint32_t resourceIndex = 0; resourceIndex < mNumberOfResources; ++resourceIndex)
 		{
 			mResources[resourceIndex]->releaseReference();
 		}
-		delete [] mResources;
+		RENDERER_FREE(context, mResources);
 	}
 
 

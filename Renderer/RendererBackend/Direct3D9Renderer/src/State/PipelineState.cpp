@@ -27,6 +27,7 @@
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
 #include "Direct3D9Renderer/Shader/ProgramHlsl.h"
 
+#include <Renderer/IAllocator.h>
 #include <Renderer/RenderTarget/IRenderPass.h>
 
 
@@ -63,7 +64,8 @@ namespace Direct3D9Renderer
 			const Renderer::VertexAttribute* attributes = pipelineState.vertexAttributes.attributes;
 
 			// TODO(co) We could manage in here without new/delete when using a fixed maximum supported number of elements
-			D3DVERTEXELEMENT9* d3dVertexElements   = new D3DVERTEXELEMENT9[numberOfAttributes + 1];	// +1 for D3DDECL_END()
+			const Renderer::Context& context = direct3D9Renderer.getContext();
+			D3DVERTEXELEMENT9* d3dVertexElements   = RENDERER_MALLOC_TYPED(context, D3DVERTEXELEMENT9, numberOfAttributes + 1);	// +1 for D3DDECL_END()
 			D3DVERTEXELEMENT9* d3dVertexElement    = d3dVertexElements;
 			D3DVERTEXELEMENT9* d3dVertexElementEnd = d3dVertexElements + numberOfAttributes;
 			for (; d3dVertexElement < d3dVertexElementEnd; ++d3dVertexElement, ++attributes)
@@ -88,7 +90,7 @@ namespace Direct3D9Renderer
 			direct3D9Renderer.getDirect3DDevice9()->CreateVertexDeclaration(d3dVertexElements, &mDirect3DVertexDeclaration9);
 
 			// Destroy Direct3D 9 vertex elements
-			delete [] d3dVertexElements;
+			RENDERER_FREE(context, d3dVertexElements);
 		}
 	}
 

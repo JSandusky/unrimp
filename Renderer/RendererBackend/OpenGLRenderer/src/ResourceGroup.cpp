@@ -26,6 +26,7 @@
 
 #include <Renderer/IAssert.h>
 #include <Renderer/IRenderer.h>
+#include <Renderer/IAllocator.h>
 #include <Renderer/State/ISamplerState.h>
 
 
@@ -43,11 +44,12 @@ namespace OpenGLRenderer
 		IResourceGroup(rootSignature.getRenderer()),
 		mRootParameterIndex(rootParameterIndex),
 		mNumberOfResources(numberOfResources),
-		mResources(new Renderer::IResource*[mNumberOfResources]),
+		mResources(RENDERER_MALLOC_TYPED(rootSignature.getRenderer().getContext(), Renderer::IResource*, mNumberOfResources)),
 		mSamplerStates(nullptr),
 		mResourceIndexToUniformBlockBindingIndex(nullptr)
 	{
 		// Get the uniform block binding start index
+		const Renderer::Context& context = rootSignature.getRenderer().getContext();
 		const Renderer::RootSignature& rootSignatureData = rootSignature.getRootSignature();
 		uint32_t uniformBlockBindingIndex = 0;
 		for (uint32_t currentRootParameterIndex = 0; currentRootParameterIndex < rootParameterIndex; ++currentRootParameterIndex)
@@ -81,7 +83,8 @@ namespace OpenGLRenderer
 			{
 				if (nullptr == mResourceIndexToUniformBlockBindingIndex)
 				{
-					mResourceIndexToUniformBlockBindingIndex = new uint32_t[mNumberOfResources]{};
+					mResourceIndexToUniformBlockBindingIndex = RENDERER_MALLOC_TYPED(context, uint32_t, mNumberOfResources);
+					memset(mResourceIndexToUniformBlockBindingIndex, 0, sizeof(uint32_t) * mNumberOfResources);
 				}
 				mResourceIndexToUniformBlockBindingIndex[resourceIndex] = uniformBlockBindingIndex;
 				++uniformBlockBindingIndex;
@@ -89,7 +92,7 @@ namespace OpenGLRenderer
 		}
 		if (nullptr != samplerStates)
 		{
-			mSamplerStates = new Renderer::ISamplerState*[mNumberOfResources];
+			mSamplerStates = RENDERER_MALLOC_TYPED(context, Renderer::ISamplerState*, mNumberOfResources);
 			for (uint32_t resourceIndex = 0; resourceIndex < mNumberOfResources; ++resourceIndex)
 			{
 				Renderer::ISamplerState* samplerState = mSamplerStates[resourceIndex] = samplerStates[resourceIndex];
@@ -104,6 +107,7 @@ namespace OpenGLRenderer
 	ResourceGroup::~ResourceGroup()
 	{
 		// Remove our reference from the renderer resources
+		const Renderer::Context& context = getRenderer().getContext();
 		if (nullptr != mSamplerStates)
 		{
 			for (uint32_t resourceIndex = 0; resourceIndex < mNumberOfResources; ++resourceIndex)
@@ -114,14 +118,14 @@ namespace OpenGLRenderer
 					samplerState->releaseReference();
 				}
 			}
-			delete [] mSamplerStates;
+			RENDERER_FREE(context, mSamplerStates);
 		}
 		for (uint32_t resourceIndex = 0; resourceIndex < mNumberOfResources; ++resourceIndex)
 		{
 			mResources[resourceIndex]->releaseReference();
 		}
-		delete [] mResources;
-		delete [] mResourceIndexToUniformBlockBindingIndex;
+		RENDERER_FREE(context, mResources);
+		RENDERER_FREE(context, mResourceIndexToUniformBlockBindingIndex);
 	}
 
 

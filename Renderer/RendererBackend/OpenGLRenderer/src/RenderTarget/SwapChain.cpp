@@ -32,6 +32,8 @@
 	#include "OpenGLRenderer/Linux/OpenGLContextLinux.h"
 #endif
 
+#include <Renderer/IAllocator.h>
+
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4668)	// warning C4668: '_M_HYBRID_X86_ARM64' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
@@ -55,9 +57,9 @@ namespace OpenGLRenderer
 		ISwapChain(renderPass),
 		mNativeWindowHandle(windowHandle.nativeWindowHandle),
 		#ifdef WIN32
-			mOpenGLContext(new OpenGLContextWindows(static_cast<const RenderPass&>(renderPass), windowHandle.nativeWindowHandle, static_cast<const OpenGLContextWindows*>(&static_cast<OpenGLRenderer&>(renderPass.getRenderer()).getOpenGLContext()))),
+			mOpenGLContext(RENDERER_NEW(renderPass.getRenderer().getContext(), OpenGLContextWindows)(static_cast<const RenderPass&>(renderPass), windowHandle.nativeWindowHandle, static_cast<const OpenGLContextWindows*>(&static_cast<OpenGLRenderer&>(renderPass.getRenderer()).getOpenGLContext()))),
 		#elif defined LINUX
-			mOpenGLContext(new OpenGLContextLinux(static_cast<OpenGLRenderer&>(renderPass.getRenderer()), static_cast<const RenderPass&>(renderPass), windowHandle.nativeWindowHandle, useExternalContext, static_cast<const OpenGLContextLinux*>(&static_cast<OpenGLRenderer&>(renderPass.getRenderer()).getOpenGLContext()))),
+			mOpenGLContext(RENDERER_NEW(renderPass.getRenderer().getContext(), OpenGLContextLinux)(static_cast<OpenGLRenderer&>(renderPass.getRenderer()), static_cast<const RenderPass&>(renderPass), windowHandle.nativeWindowHandle, useExternalContext, static_cast<const OpenGLContextLinux*>(&static_cast<OpenGLRenderer&>(renderPass.getRenderer()).getOpenGLContext()))),
 		#else
 			#error "Unsupported platform"
 		#endif
@@ -75,7 +77,7 @@ namespace OpenGLRenderer
 	{
 		if (mOwnsOpenGLContext)
 		{
-			delete mOpenGLContext;
+			RENDERER_DELETE(getRenderer().getContext(), IOpenGLContext, mOpenGLContext);
 		}
 	}
 

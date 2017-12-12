@@ -28,6 +28,8 @@
 #include "OpenGLES3Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 3 functions
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -43,7 +45,7 @@ namespace OpenGLES3Renderer
 		IVertexArray(openGLES3Renderer),
 		mOpenGLES3VertexArray(0),
 		mNumberOfVertexBuffers(numberOfVertexBuffers),
-		mVertexBuffers((mNumberOfVertexBuffers > 0) ? new VertexBuffer*[mNumberOfVertexBuffers] : nullptr),	// Guaranteed to be filled below, so we don't need to care to initialize the content in here
+		mVertexBuffers((mNumberOfVertexBuffers > 0) ? RENDERER_MALLOC_TYPED(openGLES3Renderer.getContext(), VertexBuffer*, mNumberOfVertexBuffers) : nullptr),	// Guaranteed to be filled below, so we don't need to care to initialize the content in here
 		mIndexBuffer(indexBuffer)
 	{
 		// Create the OpenGL ES 3 vertex array
@@ -160,7 +162,7 @@ namespace OpenGLES3Renderer
 			}
 
 			// Cleanup
-			delete [] mVertexBuffers;
+			RENDERER_FREE(getRenderer().getContext(), mVertexBuffers);
 		}
 
 		// Release the index buffer reference

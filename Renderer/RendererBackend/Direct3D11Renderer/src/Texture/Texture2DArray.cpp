@@ -28,6 +28,7 @@
 #include "Direct3D11Renderer/Direct3D11RuntimeLinking.h"
 
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 
 //[-------------------------------------------------------]
@@ -127,9 +128,10 @@ namespace Direct3D11Renderer
 				// We don't want dynamic allocations, so we limit the maximum number of mipmaps and hence are able to use the efficient C runtime stack
 				static const uint32_t MAXIMUM_NUMBER_OF_MIPMAPS = 15;	// A 16384x16384 texture has 15 mipmaps
 				static const uint32_t MAXIMUM_NUMBER_OF_SLICES = 10;
-				RENDERER_ASSERT(direct3D11Renderer.getContext(), numberOfMipmaps <= MAXIMUM_NUMBER_OF_MIPMAPS, "Invalid Direct3D 11 number of mipmaps")
+				const Renderer::Context& context = direct3D11Renderer.getContext();
+				RENDERER_ASSERT(context, numberOfMipmaps <= MAXIMUM_NUMBER_OF_MIPMAPS, "Invalid Direct3D 11 number of mipmaps")
 				D3D11_SUBRESOURCE_DATA d3d11SubresourceDataStack[MAXIMUM_NUMBER_OF_SLICES * MAXIMUM_NUMBER_OF_MIPMAPS];
-				D3D11_SUBRESOURCE_DATA* d3d11SubresourceData = (numberOfSlices <= MAXIMUM_NUMBER_OF_SLICES) ? d3d11SubresourceDataStack : new D3D11_SUBRESOURCE_DATA[numberOfSlices];
+				D3D11_SUBRESOURCE_DATA* d3d11SubresourceData = (numberOfSlices <= MAXIMUM_NUMBER_OF_SLICES) ? d3d11SubresourceDataStack : RENDERER_MALLOC_TYPED(context, D3D11_SUBRESOURCE_DATA, numberOfSlices);
 
 				// Did the user provided data containing mipmaps from 0-n down to 1x1 linearly in memory?
 				if (dataContainsMipmaps)
@@ -185,7 +187,7 @@ namespace Direct3D11Renderer
 				direct3D11Renderer.getD3D11Device()->CreateTexture2D(&d3d11Texture2DDesc, d3d11SubresourceData, &mD3D11Texture2D);
 				if (numberOfSlices > MAXIMUM_NUMBER_OF_SLICES)
 				{
-					delete [] d3d11SubresourceData;
+					RENDERER_FREE(context, d3d11SubresourceData);
 				}
 			}
 		}

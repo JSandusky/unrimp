@@ -31,6 +31,7 @@
 
 #include <Renderer/ILog.h>
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 
 //[-------------------------------------------------------]
@@ -60,8 +61,9 @@ namespace Direct3D12Renderer
 		// Add a reference to the used color textures
 		if (mNumberOfColorTextures > 0)
 		{
-			mColorTextures = new Renderer::ITexture*[mNumberOfColorTextures];
-			mD3D12DescriptorHeapRenderTargetViews = new ID3D12DescriptorHeap*[mNumberOfColorTextures];
+			const Renderer::Context& context = direct3D12Renderer.getContext();
+			mColorTextures = RENDERER_MALLOC_TYPED(context, Renderer::ITexture*, mNumberOfColorTextures);
+			mD3D12DescriptorHeapRenderTargetViews = RENDERER_MALLOC_TYPED(context, ID3D12DescriptorHeap*, mNumberOfColorTextures);
 
 			// Loop through all color textures
 			ID3D12DescriptorHeap **d3d12DescriptorHeapRenderTargetView = mD3D12DescriptorHeapRenderTargetViews;
@@ -203,7 +205,7 @@ namespace Direct3D12Renderer
 					}
 
 					// Get the Direct3D 12 resource
-					ID3D12Resource *d3d12Resource = texture2D->getD3D12Resource();
+					ID3D12Resource* d3d12Resource = texture2D->getD3D12Resource();
 
 					// Create the Direct3D 12 render target view instance
 					D3D12_DESCRIPTOR_HEAP_DESC d3d12DescriptorHeapDesc = {};
@@ -303,6 +305,7 @@ namespace Direct3D12Renderer
 	Framebuffer::~Framebuffer()
 	{
 		// Release the reference to the used color textures
+		const Renderer::Context& context = getRenderer().getContext();
 		if (nullptr != mD3D12DescriptorHeapRenderTargetViews)
 		{
 			// Release references
@@ -313,7 +316,7 @@ namespace Direct3D12Renderer
 			}
 
 			// Cleanup
-			delete [] mD3D12DescriptorHeapRenderTargetViews;
+			RENDERER_FREE(context, mD3D12DescriptorHeapRenderTargetViews);
 		}
 		if (nullptr != mColorTextures)
 		{
@@ -325,7 +328,7 @@ namespace Direct3D12Renderer
 			}
 
 			// Cleanup
-			delete [] mColorTextures;
+			RENDERER_FREE(context, mColorTextures);
 		}
 
 		// Release the reference to the used depth stencil texture
@@ -350,7 +353,8 @@ namespace Direct3D12Renderer
 		#ifndef DIRECT3D12RENDERER_NO_DEBUG
 			{ // Assign a debug name to the Direct3D 12 render target view, do also add the index to the name
 				const size_t nameLength = strlen(name) + 5;	// Direct3D 12 supports 8 render targets ("D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT", so: One digit + one [ + one ] + one space + terminating zero = 5 characters)
-				char* nameWithIndex = new char[nameLength];
+				const Renderer::Context& context = getRenderer().getContext();
+				char* nameWithIndex = RENDERER_MALLOC_TYPED(context, char, nameLength);
 				ID3D12DescriptorHeap **d3d12DescriptorHeapRenderTargetViewsEnd = mD3D12DescriptorHeapRenderTargetViews + mNumberOfColorTextures;
 				for (ID3D12DescriptorHeap **d3d12DescriptorHeapRenderTargetView = mD3D12DescriptorHeapRenderTargetViews; d3d12DescriptorHeapRenderTargetView < d3d12DescriptorHeapRenderTargetViewsEnd; ++d3d12DescriptorHeapRenderTargetView)
 				{
@@ -360,7 +364,7 @@ namespace Direct3D12Renderer
 					(*d3d12DescriptorHeapRenderTargetView)->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
 					(*d3d12DescriptorHeapRenderTargetView)->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(nameLength), nameWithIndex);
 				}
-				delete [] nameWithIndex;
+				RENDERER_FREE(context, nameWithIndex);
 			}
 
 			// Assign a debug name to the Direct3D 12 depth stencil view

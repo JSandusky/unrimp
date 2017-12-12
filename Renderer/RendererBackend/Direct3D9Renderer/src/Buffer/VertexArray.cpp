@@ -27,6 +27,7 @@
 #include "Direct3D9Renderer/d3d9.h"
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
 
+#include <Renderer/IAllocator.h>
 #include <Renderer/Buffer/VertexArrayTypes.h>
 
 
@@ -62,10 +63,11 @@ namespace Direct3D9Renderer
 		// Add a reference to the used vertex buffers
 		if (mNumberOfSlots > 0)
 		{
-			mDirect3DVertexBuffer9 = new IDirect3DVertexBuffer9*[mNumberOfSlots];
-			mStrides = new uint32_t[mNumberOfSlots];
-			mInstancesPerElement = new uint32_t[mNumberOfSlots];
-			mVertexBuffers = new VertexBuffer*[mNumberOfSlots];
+			const Renderer::Context& context = direct3D9Renderer.getContext();
+			mDirect3DVertexBuffer9 = RENDERER_MALLOC_TYPED(context, IDirect3DVertexBuffer9*, mNumberOfSlots);
+			mStrides = RENDERER_MALLOC_TYPED(context, uint32_t, mNumberOfSlots);
+			mInstancesPerElement = RENDERER_MALLOC_TYPED(context, uint32_t, mNumberOfSlots);
+			mVertexBuffers = RENDERER_MALLOC_TYPED(context, VertexBuffer*, mNumberOfSlots);
 
 			{ // Loop through all vertex buffers
 				IDirect3DVertexBuffer9** currentDirect3DVertexBuffer9 = mDirect3DVertexBuffer9;
@@ -104,11 +106,12 @@ namespace Direct3D9Renderer
 		}
 
 		// Cleanup Direct3D 9 input slot data
+		const Renderer::Context& context = getRenderer().getContext();
 		if (mNumberOfSlots > 0)
 		{
-			delete [] mDirect3DVertexBuffer9;
-			delete [] mStrides;
-			delete [] mInstancesPerElement;
+			RENDERER_FREE(context, mDirect3DVertexBuffer9);
+			RENDERER_FREE(context, mStrides);
+			RENDERER_FREE(context, mInstancesPerElement);
 		}
 
 		// Release the reference to the used vertex buffers
@@ -122,7 +125,7 @@ namespace Direct3D9Renderer
 			}
 
 			// Cleanup
-			delete [] mVertexBuffers;
+			RENDERER_FREE(context, mVertexBuffers);
 		}
 
 		// Release our Direct3D 9 device reference

@@ -186,19 +186,20 @@ namespace
 			if (informationLength > 1)
 			{
 				// Allocate memory for the information
-				char* informationLog = new char[static_cast<uint32_t>(informationLength)];
+				const Renderer::Context& context = openGLRenderer.getContext();
+				char* informationLog = RENDERER_MALLOC_TYPED(context, char, informationLength);
 
 				// Get the information
 				OpenGLRenderer::glGetInfoLogARB(openGLObject, informationLength, nullptr, informationLog);
 
 				// Output the debug string
-				if (openGLRenderer.getContext().getLog().print(Renderer::ILog::Type::CRITICAL, sourceCode, __FILE__, static_cast<uint32_t>(__LINE__), informationLog))
+				if (context.getLog().print(Renderer::ILog::Type::CRITICAL, sourceCode, __FILE__, static_cast<uint32_t>(__LINE__), informationLog))
 				{
 					DEBUG_BREAK;
 				}
 
 				// Cleanup information memory
-				delete [] informationLog;
+				RENDERER_FREE(context, informationLog);
 			}
 		}
 
@@ -226,7 +227,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
-	uint32_t ShaderLanguageSeparate::loadShaderFromBytecode(uint32_t shaderType, const Renderer::ShaderBytecode& shaderBytecode)
+	uint32_t ShaderLanguageSeparate::loadShaderFromBytecode(OpenGLRenderer& openGLRenderer, uint32_t shaderType, const Renderer::ShaderBytecode& shaderBytecode)
 	{
 		// Create the shader object
 		const GLuint openGLShader = glCreateShaderObjectARB(shaderType);
@@ -238,10 +239,11 @@ namespace OpenGLRenderer
 			// -> https://github.com/aras-p/smol-v
 			// -> http://aras-p.info/blog/2016/09/01/SPIR-V-Compression/
 			const size_t spirvOutputBufferSize = smolv::GetDecodedBufferSize(shaderBytecode.getBytecode(), shaderBytecode.getNumberOfBytes());
-			uint8_t* spirvOutputBuffer = new uint8_t[spirvOutputBufferSize];
+			const Renderer::Context& context = openGLRenderer.getContext();
+			uint8_t* spirvOutputBuffer = RENDERER_MALLOC_TYPED(context, uint8_t, spirvOutputBufferSize);
 			smolv::Decode(shaderBytecode.getBytecode(), shaderBytecode.getNumberOfBytes(), spirvOutputBuffer, spirvOutputBufferSize);
 			glShaderBinary(1, &openGLShader, GL_SHADER_BINARY_FORMAT_SPIR_V_ARB, spirvOutputBuffer, static_cast<GLsizei>(spirvOutputBufferSize));
-			delete [] spirvOutputBuffer;
+			RENDERER_FREE(context, spirvOutputBuffer);
 		}
 
 		// Done
@@ -251,7 +253,7 @@ namespace OpenGLRenderer
 	uint32_t ShaderLanguageSeparate::loadShaderProgramFromBytecode(OpenGLRenderer& openGLRenderer, uint32_t shaderType, const Renderer::ShaderBytecode& shaderBytecode)
 	{
 		// Create and load the shader object
-		const GLuint openGLShader = loadShaderFromBytecode(shaderType, shaderBytecode);
+		const GLuint openGLShader = loadShaderFromBytecode(openGLRenderer, shaderType, shaderBytecode);
 
 		// Specialize the shader
 		// -> Before this shader the isn't compiled, after this shader is supposed to be compiled

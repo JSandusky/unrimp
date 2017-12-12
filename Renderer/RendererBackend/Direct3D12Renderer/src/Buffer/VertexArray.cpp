@@ -28,6 +28,8 @@
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
 #include "Direct3D12Renderer/Direct3D12RuntimeLinking.h"
 
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -55,8 +57,9 @@ namespace Direct3D12Renderer
 		// Add a reference to the used vertex buffers
 		if (mNumberOfSlots > 0)
 		{
-			mD3D12VertexBufferViews = new D3D12_VERTEX_BUFFER_VIEW[mNumberOfSlots];
-			mVertexBuffers = new VertexBuffer*[mNumberOfSlots];
+			const Renderer::Context& context = direct3D12Renderer.getContext();
+			mD3D12VertexBufferViews = RENDERER_MALLOC_TYPED(context, D3D12_VERTEX_BUFFER_VIEW, mNumberOfSlots);
+			mVertexBuffers = RENDERER_MALLOC_TYPED(context, VertexBuffer*, mNumberOfSlots);
 
 			{ // Loop through all vertex buffers
 				D3D12_VERTEX_BUFFER_VIEW* currentD3D12VertexBufferView = mD3D12VertexBufferViews;
@@ -97,7 +100,8 @@ namespace Direct3D12Renderer
 		}
 
 		// Cleanup Direct3D 12 input slot data, if needed
-		delete [] mD3D12VertexBufferViews;
+		const Renderer::Context& context = getRenderer().getContext();
+		RENDERER_FREE(context, mD3D12VertexBufferViews);
 
 		// Release the reference to the used vertex buffers
 		if (nullptr != mVertexBuffers)
@@ -110,7 +114,7 @@ namespace Direct3D12Renderer
 			}
 
 			// Cleanup
-			delete [] mVertexBuffers;
+			RENDERER_FREE(context, mVertexBuffers);
 		}
 	}
 

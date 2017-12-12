@@ -34,6 +34,7 @@
 
 #include <Renderer/ILog.h>
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 
 //[-------------------------------------------------------]
@@ -277,16 +278,17 @@ namespace OpenGLRenderer
 			if (informationLength > 1)
 			{
 				// Allocate memory for the information
-				char* informationLog = new char[static_cast<uint32_t>(informationLength)];
+				const Renderer::Context& context = openGLRenderer.getContext();
+				char* informationLog = RENDERER_MALLOC_TYPED(context, char, informationLength);
 
 				// Get the information
 				glGetProgramPipelineInfoLog(mOpenGLProgramPipeline, informationLength, nullptr, informationLog);
 
 				// Output the debug string
-				RENDERER_LOG(openGLRenderer.getContext(), CRITICAL, informationLog)
+				RENDERER_LOG(context, CRITICAL, informationLog)
 
 				// Cleanup information memory
-				delete [] informationLog;
+				RENDERER_FREE(context, informationLog);
 			}
 		}
 

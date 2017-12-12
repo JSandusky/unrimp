@@ -25,6 +25,7 @@
 #include "Direct3D10Renderer/Direct3D10Renderer.h"
 
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 #include <cstring>	// For "memcpy()"
 
@@ -46,7 +47,7 @@ namespace Direct3D10Renderer
 	{
 		if (mNumberOfBytes > 0)
 		{
-			mData = new uint8_t[mNumberOfBytes];
+			mData = RENDERER_MALLOC_TYPED(direct3D10Renderer.getContext(), uint8_t, mNumberOfBytes);
 			if (nullptr != data)
 			{
 				memcpy(mData, data, mNumberOfBytes);
@@ -60,7 +61,7 @@ namespace Direct3D10Renderer
 
 	IndirectBuffer::~IndirectBuffer()
 	{
-		delete [] mData;
+		RENDERER_FREE(getRenderer().getContext(), mData);
 	}
 
 

@@ -28,6 +28,7 @@
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
 
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 
 //[-------------------------------------------------------]
@@ -51,7 +52,7 @@ namespace Direct3D12Renderer
 		// TODO(co) Direct3D 12 update
 		if (mNumberOfBytes > 0)
 		{
-			mData = new uint8_t[mNumberOfBytes];
+			mData = RENDERER_MALLOC_TYPED(direct3D12Renderer.getContext(), uint8_t, mNumberOfBytes);
 			if (nullptr != data)
 			{
 				memcpy(mData, data, mNumberOfBytes);
@@ -113,7 +114,7 @@ namespace Direct3D12Renderer
 
 	IndirectBuffer::~IndirectBuffer()
 	{
-		delete [] mData;
+		RENDERER_FREE(getRenderer().getContext(), mData);
 
 		// TODO(co) Direct3D 12 update
 		/*

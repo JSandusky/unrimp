@@ -30,6 +30,7 @@
 #include "Direct3D11Renderer/Shader/VertexShaderHlsl.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/IAllocator.h>
 #include <Renderer/RenderTarget/IRenderPass.h>
 
 
@@ -72,7 +73,8 @@ namespace Direct3D11Renderer
 				const Renderer::VertexAttribute* attributes = pipelineState.vertexAttributes.attributes;
 
 				// TODO(co) We could manage in here without new/delete when using a fixed maximum supported number of elements
-				D3D11_INPUT_ELEMENT_DESC* d3d11InputElementDescs   = numberOfAttributes ? new D3D11_INPUT_ELEMENT_DESC[numberOfAttributes] : new D3D11_INPUT_ELEMENT_DESC[1];
+				const Renderer::Context& context = direct3D11Renderer.getContext();
+				D3D11_INPUT_ELEMENT_DESC* d3d11InputElementDescs   = numberOfAttributes ? RENDERER_MALLOC_TYPED(context, D3D11_INPUT_ELEMENT_DESC, numberOfAttributes) : RENDERER_MALLOC_TYPED(context, D3D11_INPUT_ELEMENT_DESC, 1);
 				D3D11_INPUT_ELEMENT_DESC* d3d11InputElementDesc    = d3d11InputElementDescs;
 				D3D11_INPUT_ELEMENT_DESC* d3d11InputElementDescEnd = d3d11InputElementDescs + numberOfAttributes;
 				for (; d3d11InputElementDesc < d3d11InputElementDescEnd; ++d3d11InputElementDesc, ++attributes)
@@ -101,7 +103,7 @@ namespace Direct3D11Renderer
 				direct3D11Renderer.getD3D11Device()->CreateInputLayout(d3d11InputElementDescs, numberOfAttributes, d3dBlobVertexShader->GetBufferPointer(), d3dBlobVertexShader->GetBufferSize(), &mD3D11InputLayout);
 
 				// Destroy Direct3D 11 input element descriptions
-				delete [] d3d11InputElementDescs;
+				RENDERER_FREE(context, d3d11InputElementDescs);
 			}
 		}
 		else

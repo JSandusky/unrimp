@@ -29,6 +29,7 @@
 
 #include <Renderer/ILog.h>
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 
 //[-------------------------------------------------------]
@@ -59,8 +60,9 @@ namespace Direct3D9Renderer
 		Direct3D9Renderer& direct3D9Renderer = static_cast<Direct3D9Renderer&>(renderPass.getRenderer());
 		if (mNumberOfColorTextures > 0)
 		{
-			mColorTextures = new Renderer::ITexture*[mNumberOfColorTextures];
-			mDirect3D9ColorSurfaces = new IDirect3DSurface9*[mNumberOfColorTextures];
+			const Renderer::Context& context = direct3D9Renderer.getContext();
+			mColorTextures = RENDERER_MALLOC_TYPED(context, Renderer::ITexture*, mNumberOfColorTextures);
+			mDirect3D9ColorSurfaces = RENDERER_MALLOC_TYPED(context, IDirect3DSurface9*, mNumberOfColorTextures);
 
 			// Loop through all color textures
 			IDirect3DSurface9** direct3D9ColorSurface = mDirect3D9ColorSurfaces;
@@ -205,6 +207,7 @@ namespace Direct3D9Renderer
 	Framebuffer::~Framebuffer()
 	{
 		// Release the reference to the used color textures
+		const Renderer::Context& context = getRenderer().getContext();
 		if (nullptr != mDirect3D9ColorSurfaces)
 		{
 			// Release references
@@ -215,7 +218,7 @@ namespace Direct3D9Renderer
 			}
 
 			// Cleanup
-			delete [] mDirect3D9ColorSurfaces;
+			RENDERER_FREE(context, mDirect3D9ColorSurfaces);
 		}
 		if (nullptr != mColorTextures)
 		{
@@ -227,7 +230,7 @@ namespace Direct3D9Renderer
 			}
 
 			// Cleanup
-			delete [] mColorTextures;
+			RENDERER_FREE(context, mColorTextures);
 		}
 
 		// Release the reference to the used depth stencil texture

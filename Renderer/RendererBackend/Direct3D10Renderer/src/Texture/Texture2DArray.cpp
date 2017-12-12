@@ -28,6 +28,7 @@
 #include "Direct3D10Renderer/Direct3D10RuntimeLinking.h"
 
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 
 //[-------------------------------------------------------]
@@ -128,7 +129,8 @@ namespace Direct3D10Renderer
 				static const uint32_t MAXIMUM_NUMBER_OF_SLICES = 10;
 				RENDERER_ASSERT(direct3D10Renderer.getContext(), numberOfMipmaps <= MAXIMUM_NUMBER_OF_MIPMAPS, "Invalid Direct3D 10 number of mipmaps")
 				D3D10_SUBRESOURCE_DATA d3d10SubresourceDataStack[MAXIMUM_NUMBER_OF_SLICES * MAXIMUM_NUMBER_OF_MIPMAPS];
-				D3D10_SUBRESOURCE_DATA* d3d10SubresourceData = (numberOfSlices <= MAXIMUM_NUMBER_OF_SLICES) ? d3d10SubresourceDataStack : new D3D10_SUBRESOURCE_DATA[numberOfSlices];
+				const Renderer::Context& context = getRenderer().getContext();
+				D3D10_SUBRESOURCE_DATA* d3d10SubresourceData = (numberOfSlices <= MAXIMUM_NUMBER_OF_SLICES) ? d3d10SubresourceDataStack : RENDERER_MALLOC_TYPED(context, D3D10_SUBRESOURCE_DATA, numberOfSlices);
 
 				// Did the user provided data containing mipmaps from 0-n down to 1x1 linearly in memory?
 				if (dataContainsMipmaps)
@@ -184,7 +186,7 @@ namespace Direct3D10Renderer
 				d3d10Device->CreateTexture2D(&d3d10Texture2DDesc, d3d10SubresourceData, &mD3D10Texture2D);
 				if (numberOfSlices > MAXIMUM_NUMBER_OF_SLICES)
 				{
-					delete [] d3d10SubresourceData;
+					RENDERER_FREE(context, d3d10SubresourceData);
 				}
 			}
 		}

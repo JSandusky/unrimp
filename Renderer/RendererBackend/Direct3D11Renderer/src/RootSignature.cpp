@@ -45,11 +45,13 @@ namespace Direct3D11Renderer
 		IRootSignature(direct3D11Renderer),
 		mRootSignature(rootSignature)
 	{
+		const Renderer::Context& context = direct3D11Renderer.getContext();
+
 		{ // Copy the parameter data
 			const uint32_t numberOfParameters = mRootSignature.numberOfParameters;
 			if (numberOfParameters > 0)
 			{
-				mRootSignature.parameters = new Renderer::RootParameter[numberOfParameters];
+				mRootSignature.parameters = RENDERER_MALLOC_TYPED(context, Renderer::RootParameter, numberOfParameters);
 				Renderer::RootParameter* destinationRootParameters = const_cast<Renderer::RootParameter*>(mRootSignature.parameters);
 				memcpy(destinationRootParameters, rootSignature.parameters, sizeof(Renderer::RootParameter) * numberOfParameters);
 
@@ -61,7 +63,7 @@ namespace Direct3D11Renderer
 					if (Renderer::RootParameterType::DESCRIPTOR_TABLE == destinationRootParameter.parameterType)
 					{
 						const uint32_t numberOfDescriptorRanges = destinationRootParameter.descriptorTable.numberOfDescriptorRanges;
-						destinationRootParameter.descriptorTable.descriptorRanges = reinterpret_cast<uintptr_t>(new Renderer::DescriptorRange[numberOfDescriptorRanges]);
+						destinationRootParameter.descriptorTable.descriptorRanges = reinterpret_cast<uintptr_t>(RENDERER_MALLOC_TYPED(context, Renderer::DescriptorRange, numberOfDescriptorRanges));
 						memcpy(reinterpret_cast<Renderer::DescriptorRange*>(destinationRootParameter.descriptorTable.descriptorRanges), reinterpret_cast<const Renderer::DescriptorRange*>(sourceRootParameter.descriptorTable.descriptorRanges), sizeof(Renderer::DescriptorRange) * numberOfDescriptorRanges);
 					}
 				}
@@ -72,7 +74,7 @@ namespace Direct3D11Renderer
 			const uint32_t numberOfStaticSamplers = mRootSignature.numberOfStaticSamplers;
 			if (numberOfStaticSamplers > 0)
 			{
-				mRootSignature.staticSamplers = new Renderer::StaticSampler[numberOfStaticSamplers];
+				mRootSignature.staticSamplers = RENDERER_MALLOC_TYPED(context, Renderer::StaticSampler, numberOfStaticSamplers);
 				memcpy(const_cast<Renderer::StaticSampler*>(mRootSignature.staticSamplers), rootSignature.staticSamplers, sizeof(Renderer::StaticSampler) * numberOfStaticSamplers);
 			}
 		}
@@ -80,6 +82,7 @@ namespace Direct3D11Renderer
 
 	RootSignature::~RootSignature()
 	{
+		const Renderer::Context& context = getRenderer().getContext();
 		if (nullptr != mRootSignature.parameters)
 		{
 			for (uint32_t i = 0; i < mRootSignature.numberOfParameters; ++i)
@@ -87,12 +90,12 @@ namespace Direct3D11Renderer
 				const Renderer::RootParameter& rootParameter = mRootSignature.parameters[i];
 				if (Renderer::RootParameterType::DESCRIPTOR_TABLE == rootParameter.parameterType)
 				{
-					delete [] reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges);
+					RENDERER_FREE(context, reinterpret_cast<Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges));
 				}
 			}
-			delete [] mRootSignature.parameters;
+			RENDERER_FREE(context, const_cast<Renderer::RootParameter*>(mRootSignature.parameters));
 		}
-		delete [] mRootSignature.staticSamplers;
+		RENDERER_FREE(context, const_cast<Renderer::StaticSampler*>(mRootSignature.staticSamplers));
 	}
 
 

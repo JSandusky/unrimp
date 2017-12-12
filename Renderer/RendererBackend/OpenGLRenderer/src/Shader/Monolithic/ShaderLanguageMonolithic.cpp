@@ -82,19 +82,20 @@ namespace OpenGLRenderer
 				if (informationLength > 1)
 				{
 					// Allocate memory for the information
-					GLchar* informationLog = new GLchar[static_cast<uint32_t>(informationLength)];
+					const Renderer::Context& context = openGLRenderer.getContext();
+					GLchar* informationLog = RENDERER_MALLOC_TYPED(context, GLchar, informationLength);
 
 					// Get the information
 					glGetInfoLogARB(openGLShader, informationLength, nullptr, informationLog);
 
 					// Output the debug string
-					if (openGLRenderer.getContext().getLog().print(Renderer::ILog::Type::CRITICAL, sourceCode, __FILE__, static_cast<uint32_t>(__LINE__), informationLog))
+					if (context.getLog().print(Renderer::ILog::Type::CRITICAL, sourceCode, __FILE__, static_cast<uint32_t>(__LINE__), informationLog))
 					{
 						DEBUG_BREAK;
 					}
 
 					// Cleanup information memory
-					delete [] informationLog;
+					RENDERER_FREE(context, informationLog);
 				}
 			}
 

@@ -29,6 +29,7 @@
 #include "OpenGLRenderer/Extensions.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/IAllocator.h>
 #include <Renderer/Buffer/VertexArrayTypes.h>
 
 
@@ -52,7 +53,8 @@ namespace
 			if (informationLength > 1)
 			{
 				// Allocate memory for the information
-				char* informationLog = new char[static_cast<uint32_t>(informationLength)];
+				const Renderer::Context& context = openGLRenderer.getContext();
+				char* informationLog = RENDERER_MALLOC_TYPED(context, char, informationLength);
 
 				// Get the information
 				OpenGLRenderer::glGetInfoLogARB(openGLObject, informationLength, nullptr, informationLog);
@@ -61,7 +63,7 @@ namespace
 				RENDERER_LOG(openGLRenderer.getContext(), CRITICAL, informationLog)
 
 				// Cleanup information memory
-				delete [] informationLog;
+				RENDERER_FREE(context, informationLog);
 			}
 		}
 
@@ -124,7 +126,7 @@ namespace
 		GLuint loadShaderProgramFromBytecode(OpenGLRenderer::OpenGLRenderer& openGLRenderer, const Renderer::VertexAttributes& vertexAttributes, GLenum shaderType, const Renderer::ShaderBytecode& shaderBytecode)
 		{
 			// Create and load the shader object
-			const GLuint openGLShader = OpenGLRenderer::ShaderLanguageSeparate::loadShaderFromBytecode(shaderType, shaderBytecode);
+			const GLuint openGLShader = OpenGLRenderer::ShaderLanguageSeparate::loadShaderFromBytecode(openGLRenderer, shaderType, shaderBytecode);
 
 			// Specialize the shader
 			// -> Before this shader the isn't compiled, after this shader is supposed to be compiled

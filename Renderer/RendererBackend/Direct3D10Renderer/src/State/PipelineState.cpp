@@ -30,6 +30,7 @@
 #include "Direct3D10Renderer/Shader/VertexShaderHlsl.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/IAllocator.h>
 #include <Renderer/RenderTarget/IRenderPass.h>
 
 
@@ -70,7 +71,8 @@ namespace Direct3D10Renderer
 
 			// Create Direct3D 10 input element descriptions
 			// TODO(co) We could manage in here without new/delete when using a fixed maximum supported number of elements
-			D3D10_INPUT_ELEMENT_DESC* d3d10InputElementDescs   = numberOfAttributes ? new D3D10_INPUT_ELEMENT_DESC[numberOfAttributes] : new D3D10_INPUT_ELEMENT_DESC[1];
+			const Renderer::Context& context = getRenderer().getContext();
+			D3D10_INPUT_ELEMENT_DESC* d3d10InputElementDescs   = numberOfAttributes ? RENDERER_MALLOC_TYPED(context, D3D10_INPUT_ELEMENT_DESC, numberOfAttributes) : RENDERER_MALLOC_TYPED(context, D3D10_INPUT_ELEMENT_DESC, 1);
 			D3D10_INPUT_ELEMENT_DESC* d3d10InputElementDesc    = d3d10InputElementDescs;
 			D3D10_INPUT_ELEMENT_DESC* d3d10InputElementDescEnd = d3d10InputElementDescs + numberOfAttributes;
 			for (; d3d10InputElementDesc < d3d10InputElementDescEnd; ++d3d10InputElementDesc, ++attributes)
@@ -101,7 +103,7 @@ namespace Direct3D10Renderer
 			}
 
 			// Destroy Direct3D 10 input element descriptions
-			delete [] d3d10InputElementDescs;
+			RENDERER_FREE(context, d3d10InputElementDescs);
 		}
 		else
 		{

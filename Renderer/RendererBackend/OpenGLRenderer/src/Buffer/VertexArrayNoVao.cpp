@@ -29,6 +29,8 @@
 #include "OpenGLRenderer/OpenGLRenderer.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 
+#include <Renderer/IAllocator.h>
+
 #include <memory.h>
 
 
@@ -45,9 +47,9 @@ namespace OpenGLRenderer
 	VertexArrayNoVao::VertexArrayNoVao(OpenGLRenderer& openGLRenderer, const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer* vertexBuffers, IndexBuffer* indexBuffer) :
 		VertexArray(openGLRenderer, indexBuffer, InternalResourceType::NO_VAO),
 		mNumberOfAttributes(vertexAttributes.numberOfAttributes),
-		mAttributes(mNumberOfAttributes ? new Renderer::VertexAttribute[mNumberOfAttributes] : nullptr),
+		mAttributes(mNumberOfAttributes ? RENDERER_MALLOC_TYPED(openGLRenderer.getContext(), Renderer::VertexAttribute, mNumberOfAttributes) : nullptr),
 		mNumberOfVertexBuffers(numberOfVertexBuffers),
-		mVertexBuffers(numberOfVertexBuffers ? new Renderer::VertexArrayVertexBuffer[numberOfVertexBuffers] : nullptr),
+		mVertexBuffers(numberOfVertexBuffers ? RENDERER_MALLOC_TYPED(openGLRenderer.getContext(), Renderer::VertexArrayVertexBuffer, numberOfVertexBuffers) : nullptr),
 		mIsGL_ARB_instanced_arrays(openGLRenderer.getExtensions().isGL_ARB_instanced_arrays())
 	{
 		// Copy over the data
@@ -71,7 +73,8 @@ namespace OpenGLRenderer
 	VertexArrayNoVao::~VertexArrayNoVao()
 	{
 		// Destroy the vertex array attributes
-		delete [] mAttributes;
+		const Renderer::Context& context = getRenderer().getContext();
+		RENDERER_FREE(context, mAttributes);
 
 		// Destroy the vertex array vertex buffers
 		if (nullptr != mVertexBuffers)
@@ -84,7 +87,7 @@ namespace OpenGLRenderer
 			}
 
 			// Cleanup
-			delete [] mVertexBuffers;
+			RENDERER_FREE(context, mVertexBuffers);
 		}
 	}
 

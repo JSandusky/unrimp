@@ -30,6 +30,7 @@
 
 #include <Renderer/ILog.h>
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 #include <Renderer/Buffer/VertexArrayTypes.h>
 
 
@@ -190,7 +191,8 @@ namespace OpenGLES3Renderer
 			if (informationLength > 1)
 			{
 				// Allocate memory for the information
-				char* informationLog = new char[static_cast<uint32_t>(informationLength)];
+				const Renderer::Context& context = openGLES3Renderer.getContext();
+				char* informationLog = RENDERER_MALLOC_TYPED(context, char, informationLength);
 
 				// Get the information
 				glGetProgramInfoLog(mOpenGLES3Program, informationLength, nullptr, informationLog);
@@ -199,7 +201,7 @@ namespace OpenGLES3Renderer
 				RENDERER_LOG(openGLES3Renderer.getContext(), CRITICAL, informationLog)
 
 				// Cleanup information memory
-				delete [] informationLog;
+				RENDERER_FREE(context, informationLog);
 			}
 		}
 	}

@@ -28,6 +28,7 @@
 #include "OpenGLRenderer/Extensions.h"
 
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 #include <limits.h>	// For "INT_MAX"
 
@@ -59,7 +60,7 @@ namespace OpenGLRenderer
 			}
 
 			// Cleanup
-			delete [] mColorTextures;
+			RENDERER_FREE(getRenderer().getContext(), mColorTextures);
 		}
 
 		// Release the reference to the used depth stencil texture
@@ -93,7 +94,7 @@ namespace OpenGLRenderer
 		// Add a reference to the used color textures
 		if (mNumberOfColorTextures > 0)
 		{
-			mColorTextures = new Renderer::ITexture*[mNumberOfColorTextures];
+			mColorTextures = RENDERER_MALLOC_TYPED(renderPass.getRenderer().getContext(), Renderer::ITexture*, mNumberOfColorTextures);
 
 			// Loop through all color textures
 			Renderer::ITexture** colorTexturesEnd = mColorTextures + mNumberOfColorTextures;

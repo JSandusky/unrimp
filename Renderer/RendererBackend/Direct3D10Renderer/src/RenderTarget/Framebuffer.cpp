@@ -32,6 +32,7 @@
 
 #include <Renderer/ILog.h>
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 
 //[-------------------------------------------------------]
@@ -64,8 +65,9 @@ namespace Direct3D10Renderer
 		Direct3D10Renderer& direct3D10Renderer = static_cast<Direct3D10Renderer&>(renderPass.getRenderer());
 		if (mNumberOfColorTextures > 0)
 		{
-			mColorTextures = new Renderer::ITexture*[mNumberOfColorTextures];
-			mD3D10RenderTargetViews = new ID3D10RenderTargetView*[mNumberOfColorTextures];
+			const Renderer::Context& context = direct3D10Renderer.getContext();
+			mColorTextures = RENDERER_MALLOC_TYPED(context, Renderer::ITexture*, mNumberOfColorTextures);
+			mD3D10RenderTargetViews = RENDERER_MALLOC_TYPED(context, ID3D10RenderTargetView*, mNumberOfColorTextures);
 
 			// Loop through all color textures
 			ID3D10RenderTargetView** d3d10RenderTargetView = mD3D10RenderTargetViews;
@@ -293,6 +295,7 @@ namespace Direct3D10Renderer
 	Framebuffer::~Framebuffer()
 	{
 		// Release the reference to the used color textures
+		const Renderer::Context& context = getRenderer().getContext();
 		if (nullptr != mD3D10RenderTargetViews)
 		{
 			// Release references
@@ -303,7 +306,7 @@ namespace Direct3D10Renderer
 			}
 
 			// Cleanup
-			delete [] mD3D10RenderTargetViews;
+			RENDERER_FREE(context, mD3D10RenderTargetViews);
 		}
 		if (nullptr != mColorTextures)
 		{
@@ -315,7 +318,7 @@ namespace Direct3D10Renderer
 			}
 
 			// Cleanup
-			delete [] mColorTextures;
+			RENDERER_FREE(context, mColorTextures);
 		}
 
 		// Release the reference to the used depth stencil texture
@@ -361,7 +364,8 @@ namespace Direct3D10Renderer
 		#ifndef DIRECT3D10RENDERER_NO_DEBUG
 			{ // Assign a debug name to the Direct3D 10 render target view, do also add the index to the name
 				const size_t nameLength = strlen(name) + 5;	// Direct3D 10 supports 8 render targets ("D3D10_SIMULTANEOUS_RENDER_TARGET_COUNT", so: One digit + one [ + one ] + one space + terminating zero = 5 characters)
-				char* nameWithIndex = new char[nameLength];
+				const Renderer::Context& context = getRenderer().getContext();
+				char* nameWithIndex = RENDERER_MALLOC_TYPED(context, char, nameLength);
 				ID3D10RenderTargetView** d3d10RenderTargetViewsEnd = mD3D10RenderTargetViews + mNumberOfColorTextures;
 				for (ID3D10RenderTargetView** d3d10RenderTargetView = mD3D10RenderTargetViews; d3d10RenderTargetView < d3d10RenderTargetViewsEnd; ++d3d10RenderTargetView)
 				{
@@ -371,7 +375,7 @@ namespace Direct3D10Renderer
 					(*d3d10RenderTargetView)->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
 					(*d3d10RenderTargetView)->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(nameLength), nameWithIndex);
 				}
-				delete [] nameWithIndex;
+				RENDERER_FREE(context, nameWithIndex);
 			}
 
 			// Assign a debug name to the Direct3D 10 depth stencil view

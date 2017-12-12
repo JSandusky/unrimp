@@ -28,6 +28,7 @@
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/IAllocator.h>
 
 #include <EGL/eglext.h> // For "EGL_OPENGL_ES3_BIT_KHR"
 
@@ -53,7 +54,7 @@ namespace OpenGLES3Renderer
 		mEGLSharedLibrary(nullptr),
 		mGLESSharedLibrary(nullptr),
 		mEntryPointsRegistered(false),
-		mExtensions(new ExtensionsRuntimeLinking(openGLES3Renderer))
+		mExtensions(RENDERER_NEW(openGLES3Renderer.getContext(), ExtensionsRuntimeLinking)(openGLES3Renderer))
 	{
 		// Load the shared libraries
 		if (loadSharedLibraries())
@@ -89,7 +90,7 @@ namespace OpenGLES3Renderer
 		deinitialize();
 
 		// Destroy the extensions instance
-		delete mExtensions;
+		RENDERER_DELETE(mOpenGLES3Renderer.getContext(), ExtensionsRuntimeLinking, mExtensions);
 
 		// Destroy the shared library instances
 		#ifdef WIN32

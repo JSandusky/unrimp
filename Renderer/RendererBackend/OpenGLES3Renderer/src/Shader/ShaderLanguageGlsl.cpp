@@ -78,7 +78,8 @@ namespace OpenGLES3Renderer
 				if (informationLength > 1)
 				{
 					// Allocate memory for the information
-					GLchar* informationLog = new GLchar[static_cast<uint32_t>(informationLength)];
+					const Renderer::Context& context = openGLES3Renderer.getContext();
+					GLchar* informationLog = RENDERER_MALLOC_TYPED(context, GLchar, informationLength);
 
 					// Get the information
 					glGetShaderInfoLog(openGLES3Shader, informationLength, nullptr, informationLog);
@@ -90,7 +91,7 @@ namespace OpenGLES3Renderer
 					}
 
 					// Cleanup information memory
-					delete [] informationLog;
+					RENDERER_FREE(context, informationLog);
 				}
 			}
 

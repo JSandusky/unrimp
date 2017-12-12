@@ -23,8 +23,10 @@
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Buffer/VertexArrayVao.h"
 #include "OpenGLRenderer/Buffer/VertexBuffer.h"
+#include "OpenGLRenderer/OpenGLRenderer.h"
 #include "OpenGLRenderer/Extensions.h"
 
+#include <Renderer/IAllocator.h>
 #include <Renderer/Buffer/VertexArrayTypes.h>
 
 
@@ -55,7 +57,7 @@ namespace OpenGLRenderer
 			}
 
 			// Cleanup
-			delete [] mVertexBuffers;
+			RENDERER_FREE(getRenderer().getContext(), mVertexBuffers);
 		}
 	}
 
@@ -72,7 +74,7 @@ namespace OpenGLRenderer
 		// Add a reference to the used vertex buffers
 		if (numberOfVertexBuffers > 0)
 		{
-			mVertexBuffers = new VertexBuffer*[numberOfVertexBuffers];
+			mVertexBuffers = RENDERER_MALLOC_TYPED(openGLRenderer.getContext(), VertexBuffer*, numberOfVertexBuffers);
 
 			// Loop through all vertex buffers
 			VertexBuffer** currentVertexBuffers = mVertexBuffers;

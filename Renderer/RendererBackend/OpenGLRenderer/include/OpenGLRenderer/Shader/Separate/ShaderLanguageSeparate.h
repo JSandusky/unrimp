@@ -72,6 +72,8 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Create and load a shader from bytecode
 		*
+		*  @param[in] openGLRenderer
+		*    Owner OpenGL renderer instance
 		*  @param[in] shaderType
 		*    Shader type (for example "GL_VERTEX_SHADER_ARB", type GLenum not used in here in order to keep the header slim)
 		*  @param[in] shaderBytecode
@@ -80,7 +82,7 @@ namespace OpenGLRenderer
 		*  @return
 		*    The OpenGL shader, 0 on error, destroy the resource if you no longer need it (type "GLuint" not used in here in order to keep the header slim)
 		*/
-		static uint32_t loadShaderFromBytecode(uint32_t shaderType, const Renderer::ShaderBytecode& shaderBytecode);
+		static uint32_t loadShaderFromBytecode(OpenGLRenderer& openGLRenderer, uint32_t shaderType, const Renderer::ShaderBytecode& shaderBytecode);
 
 		/**
 		*  @brief
