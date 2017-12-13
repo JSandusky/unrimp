@@ -28,6 +28,7 @@
 
 #include <Renderer/ILog.h>
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
@@ -69,10 +70,11 @@ namespace VulkanRenderer
 		static const uint32_t maxSets = 4242;	// TODO(co) We probably need to get this provided from the outside
 
 		// Copy the parameter data
+		const Renderer::Context& context = vulkanRenderer.getContext();
 		const uint32_t numberOfRootParameters = mRootSignature.numberOfParameters;
 		if (numberOfRootParameters > 0)
 		{
-			mRootSignature.parameters = new Renderer::RootParameter[numberOfRootParameters];
+			mRootSignature.parameters = RENDERER_MALLOC_TYPED(context, Renderer::RootParameter, numberOfRootParameters);
 			Renderer::RootParameter* destinationRootParameters = const_cast<Renderer::RootParameter*>(mRootSignature.parameters);
 			memcpy(destinationRootParameters, rootSignature.parameters, sizeof(Renderer::RootParameter) * numberOfRootParameters);
 
@@ -84,7 +86,7 @@ namespace VulkanRenderer
 				if (Renderer::RootParameterType::DESCRIPTOR_TABLE == destinationRootParameter.parameterType)
 				{
 					const uint32_t numberOfDescriptorRanges = destinationRootParameter.descriptorTable.numberOfDescriptorRanges;
-					destinationRootParameter.descriptorTable.descriptorRanges = reinterpret_cast<uintptr_t>(new Renderer::DescriptorRange[numberOfDescriptorRanges]);
+					destinationRootParameter.descriptorTable.descriptorRanges = reinterpret_cast<uintptr_t>(RENDERER_MALLOC_TYPED(context, Renderer::DescriptorRange, numberOfDescriptorRanges));
 					memcpy(reinterpret_cast<Renderer::DescriptorRange*>(destinationRootParameter.descriptorTable.descriptorRanges), reinterpret_cast<const Renderer::DescriptorRange*>(sourceRootParameter.descriptorTable.descriptorRanges), sizeof(Renderer::DescriptorRange) * numberOfDescriptorRanges);
 				}
 			}
@@ -94,7 +96,7 @@ namespace VulkanRenderer
 			const uint32_t numberOfStaticSamplers = mRootSignature.numberOfStaticSamplers;
 			if (numberOfStaticSamplers > 0)
 			{
-				mRootSignature.staticSamplers = new Renderer::StaticSampler[numberOfStaticSamplers];
+				mRootSignature.staticSamplers = RENDERER_MALLOC_TYPED(context, Renderer::StaticSampler, numberOfStaticSamplers);
 				memcpy(const_cast<Renderer::StaticSampler*>(mRootSignature.staticSamplers), rootSignature.staticSamplers, sizeof(Renderer::StaticSampler) * numberOfStaticSamplers);
 			}
 		}
@@ -318,6 +320,7 @@ namespace VulkanRenderer
 		}
 
 		// Destroy the root signature data
+		const Renderer::Context& context = getRenderer().getContext();
 		if (nullptr != mRootSignature.parameters)
 		{
 			for (uint32_t rootParameterIndex = 0; rootParameterIndex < mRootSignature.numberOfParameters; ++rootParameterIndex)
@@ -325,12 +328,12 @@ namespace VulkanRenderer
 				const Renderer::RootParameter& rootParameter = mRootSignature.parameters[rootParameterIndex];
 				if (Renderer::RootParameterType::DESCRIPTOR_TABLE == rootParameter.parameterType)
 				{
-					delete [] reinterpret_cast<const Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges);
+					RENDERER_FREE(context, reinterpret_cast<Renderer::DescriptorRange*>(rootParameter.descriptorTable.descriptorRanges));
 				}
 			}
-			delete [] mRootSignature.parameters;
+			RENDERER_FREE(context, const_cast<Renderer::RootParameter*>(mRootSignature.parameters));
 		}
-		delete [] mRootSignature.staticSamplers;
+		RENDERER_FREE(context, const_cast<Renderer::StaticSampler*>(mRootSignature.staticSamplers));
 	}
 
 
@@ -359,17 +362,19 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	Renderer::IResourceGroup* RootSignature::createResourceGroup(uint32_t rootParameterIndex, uint32_t numberOfResources, Renderer::IResource** resources, Renderer::ISamplerState** samplerStates)
 	{
+		VulkanRenderer& vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
+		const Renderer::Context& context = vulkanRenderer.getContext();
+
 		// Sanity checks
-		RENDERER_ASSERT(getRenderer().getContext(), VK_NULL_HANDLE != mVkDescriptorPool, "The Vulkan descriptor pool instance must be valid")
-		RENDERER_ASSERT(getRenderer().getContext(), rootParameterIndex < mVkDescriptorSetLayouts.size(), "The Vulkan root parameter index is out-of-bounds")
-		RENDERER_ASSERT(getRenderer().getContext(), numberOfResources > 0, "The number of Vulkan resources must not be zero")
-		RENDERER_ASSERT(getRenderer().getContext(), nullptr != resources, "The Vulkan resource pointers must be valid")
+		RENDERER_ASSERT(context, VK_NULL_HANDLE != mVkDescriptorPool, "The Vulkan descriptor pool instance must be valid")
+		RENDERER_ASSERT(context, rootParameterIndex < mVkDescriptorSetLayouts.size(), "The Vulkan root parameter index is out-of-bounds")
+		RENDERER_ASSERT(context, numberOfResources > 0, "The number of Vulkan resources must not be zero")
+		RENDERER_ASSERT(context, nullptr != resources, "The Vulkan resource pointers must be valid")
 
 		// Allocate Vulkan descriptor set
 		VkDescriptorSet vkDescriptorSet = VK_NULL_HANDLE;
 		if ((*resources)->getResourceType() != Renderer::ResourceType::SAMPLER_STATE)
 		{
-			VulkanRenderer& vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
 			const VkDescriptorSetAllocateInfo vkDescriptorSetAllocateInfo =
 			{
 				VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO,	// sType (VkStructureType)
@@ -380,12 +385,12 @@ namespace VulkanRenderer
 			};
 			if (vkAllocateDescriptorSets(vulkanRenderer.getVulkanContext().getVkDevice(), &vkDescriptorSetAllocateInfo, &vkDescriptorSet) != VK_SUCCESS)
 			{
-				RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to allocate the Vulkan descriptor set")
+				RENDERER_LOG(context, CRITICAL, "Failed to allocate the Vulkan descriptor set")
 			}
 		}
 
 		// Create resource group
-		return new ResourceGroup(*this, vkDescriptorSet, numberOfResources, resources, samplerStates);
+		return RENDERER_NEW(context, ResourceGroup)(*this, vkDescriptorSet, numberOfResources, resources, samplerStates);
 	}
 
 

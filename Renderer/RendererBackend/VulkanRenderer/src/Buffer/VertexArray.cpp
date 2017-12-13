@@ -25,7 +25,10 @@
 #include "VulkanRenderer/Buffer/IndexBuffer.h"
 #include "VulkanRenderer/Buffer/VertexBuffer.h"
 #include "VulkanRenderer/VulkanRuntimeLinking.h"
+#include "VulkanRenderer/VulkanRenderer.h"
 
+#include <Renderer/Context.h>
+#include <Renderer/IAllocator.h>
 #include <Renderer/Buffer/VertexArrayTypes.h>
 
 #include <cstring>	// For "memcpy()"
@@ -42,7 +45,7 @@ namespace VulkanRenderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	VertexArray::VertexArray(VulkanRenderer& vulkanRenderer, const Renderer::VertexAttributes& vertexAttributes, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer* vertexBuffers, IndexBuffer* indexBuffer) :
-		IVertexArray(reinterpret_cast<Renderer::IRenderer&>(vulkanRenderer)),
+		IVertexArray(static_cast<Renderer::IRenderer&>(vulkanRenderer)),
 		mIndexBuffer(indexBuffer),
 		mNumberOfSlots(numberOfVertexBuffers),
 		mVertexVkBuffers(nullptr),
@@ -59,10 +62,12 @@ namespace VulkanRenderer
 		// Add a reference to the used vertex buffers
 		if (mNumberOfSlots > 0)
 		{
-			mVertexVkBuffers = new VkBuffer[mNumberOfSlots];
-			mStrides = new uint32_t[mNumberOfSlots];
-			mOffsets = new VkDeviceSize[mNumberOfSlots]{};	// Vertex buffer offset is not supported by OpenGL, so our renderer API doesn't support it either, set everything to zero
-			mVertexBuffers = new VertexBuffer*[mNumberOfSlots];
+			const Renderer::Context& context = vulkanRenderer.getContext();
+			mVertexVkBuffers = RENDERER_MALLOC_TYPED(context, VkBuffer, mNumberOfSlots);
+			mStrides = RENDERER_MALLOC_TYPED(context, uint32_t, mNumberOfSlots);
+			mOffsets = RENDERER_MALLOC_TYPED(context, VkDeviceSize, mNumberOfSlots);
+			memset(mOffsets, 0, sizeof(VkDeviceSize) * mNumberOfSlots);	// Vertex buffer offset is not supported by OpenGL, so our renderer API doesn't support it either, set everything to zero
+			mVertexBuffers = RENDERER_MALLOC_TYPED(context, VertexBuffer*, mNumberOfSlots);
 
 			{ // Loop through all vertex buffers
 				VkBuffer* currentVertexVkBuffer = mVertexVkBuffers;
@@ -97,11 +102,12 @@ namespace VulkanRenderer
 		}
 
 		// Cleanup Vulkan input slot data
+		const Renderer::Context& context = getRenderer().getContext();
 		if (mNumberOfSlots > 0)
 		{
-			delete [] mVertexVkBuffers;
-			delete [] mStrides;
-			delete [] mOffsets;
+			RENDERER_FREE(context, mVertexVkBuffers);
+			RENDERER_FREE(context, mStrides);
+			RENDERER_FREE(context, mOffsets);
 		}
 
 		// Release the reference to the used vertex buffers
@@ -115,7 +121,7 @@ namespace VulkanRenderer
 			}
 
 			// Cleanup
-			delete [] mVertexBuffers;
+			RENDERER_FREE(context, mVertexBuffers);
 		}
 	}
 

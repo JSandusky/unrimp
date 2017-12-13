@@ -31,6 +31,7 @@
 #include <Renderer/ILog.h>
 #include <Renderer/IAssert.h>
 #include <Renderer/Context.h>
+#include <Renderer/IAllocator.h>
 
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
@@ -58,7 +59,7 @@ namespace VulkanRenderer
 		mDepthStencilTexture(nullptr),
 		mWidth(UINT_MAX),
 		mHeight(UINT_MAX),
-		mVkRenderPass(static_cast<RenderPass&>(getRenderPass()).getVkRenderPass()),
+		mVkRenderPass(static_cast<RenderPass&>(renderPass).getVkRenderPass()),
 		mVkFramebuffer(VK_NULL_HANDLE)
 	{
 		// Vulkan attachment descriptions and views to fill
@@ -69,7 +70,7 @@ namespace VulkanRenderer
 		// Add a reference to the used color textures
 		if (mNumberOfColorTextures > 0)
 		{
-			mColorTextures = new Renderer::ITexture*[mNumberOfColorTextures];
+			mColorTextures = RENDERER_MALLOC_TYPED(renderPass.getRenderer().getContext(), Renderer::ITexture*, mNumberOfColorTextures);
 
 			// Loop through all color textures
 			Renderer::ITexture** colorTexturesEnd = mColorTextures + mNumberOfColorTextures;
@@ -290,7 +291,7 @@ namespace VulkanRenderer
 			}
 
 			// Cleanup
-			delete [] mColorTextures;
+			RENDERER_FREE(getRenderer().getContext(), mColorTextures);
 		}
 
 		// Release the reference to the used depth stencil texture

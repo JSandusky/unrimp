@@ -36,6 +36,7 @@
 
 #include <Renderer/ILog.h>
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 
 //[-------------------------------------------------------]
@@ -53,7 +54,7 @@ namespace VulkanRenderer
 		mRootSignature(rootSignature),
 		mVkDescriptorSet(vkDescriptorSet),
 		mNumberOfResources(numberOfResources),
-		mResources(new Renderer::IResource*[mNumberOfResources]),
+		mResources(RENDERER_MALLOC_TYPED(rootSignature.getRenderer().getContext(), Renderer::IResource*, mNumberOfResources)),
 		mSamplerStates(nullptr)
 	{
 		// Process all resources and add our reference to the renderer resource
@@ -61,7 +62,7 @@ namespace VulkanRenderer
 		const VkDevice vkDevice = vulkanRenderer.getVulkanContext().getVkDevice();
 		if (nullptr != samplerStates)
 		{
-			mSamplerStates = new Renderer::ISamplerState*[mNumberOfResources];
+			mSamplerStates = RENDERER_MALLOC_TYPED(vulkanRenderer.getContext(), Renderer::ISamplerState*, mNumberOfResources);
 			for (uint32_t resourceIndex = 0; resourceIndex < mNumberOfResources; ++resourceIndex)
 			{
 				Renderer::ISamplerState* samplerState = mSamplerStates[resourceIndex] = samplerStates[resourceIndex];
@@ -261,6 +262,7 @@ namespace VulkanRenderer
 	ResourceGroup::~ResourceGroup()
 	{
 		// Remove our reference from the renderer resources
+		const Renderer::Context& context = getRenderer().getContext();
 		if (nullptr != mSamplerStates)
 		{
 			for (uint32_t resourceIndex = 0; resourceIndex < mNumberOfResources; ++resourceIndex)
@@ -271,13 +273,13 @@ namespace VulkanRenderer
 					samplerState->releaseReference();
 				}
 			}
-			delete [] mSamplerStates;
+			RENDERER_FREE(context, mSamplerStates);
 		}
 		for (uint32_t resourceIndex = 0; resourceIndex < mNumberOfResources; ++resourceIndex)
 		{
 			mResources[resourceIndex]->releaseReference();
 		}
-		delete [] mResources;
+		RENDERER_FREE(context, mResources);
 
 		// Free Vulkan descriptor set
 		if (VK_NULL_HANDLE != mVkDescriptorSet)

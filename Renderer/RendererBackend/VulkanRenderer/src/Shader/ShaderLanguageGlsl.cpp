@@ -204,7 +204,8 @@ namespace VulkanRenderer
 		// -> http://aras-p.info/blog/2016/09/01/SPIR-V-Compression/
 		const size_t spirvOutputBufferSize = smolv::GetDecodedBufferSize(shaderBytecode.getBytecode(), shaderBytecode.getNumberOfBytes());
 		// TODO(co) Try to avoid new/delete by trying to use the C-runtime stack if there aren't too many bytes
-		uint8_t* spirvOutputBuffer = new uint8_t[spirvOutputBufferSize];
+		const Renderer::Context& context = vulkanRenderer.getContext();
+		uint8_t* spirvOutputBuffer = RENDERER_MALLOC_TYPED(context, uint8_t, spirvOutputBufferSize);
 		smolv::Decode(shaderBytecode.getBytecode(), shaderBytecode.getNumberOfBytes(), spirvOutputBuffer, spirvOutputBufferSize);
 
 		// Create the Vulkan shader module
@@ -223,7 +224,7 @@ namespace VulkanRenderer
 		}
 
 		// Done
-		delete [] spirvOutputBuffer;
+		RENDERER_FREE(context, spirvOutputBuffer);
 		return vkShaderModule;
 	}
 
