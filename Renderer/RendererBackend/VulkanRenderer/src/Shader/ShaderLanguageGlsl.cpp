@@ -495,6 +495,15 @@ namespace VulkanRenderer
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void ShaderLanguageGlsl::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), ShaderLanguageGlsl, this);
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

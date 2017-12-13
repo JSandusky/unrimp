@@ -36,13 +36,39 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
-		void* reallocate(Renderer::IAllocator&, void* oldPointer, size_t, size_t newNumberOfBytes, size_t)
+		void* reallocate(Renderer::IAllocator&, void* oldPointer, size_t, size_t newNumberOfBytes, size_t alignment)
 		{
-			// Null pointer is valid in here, does nothing in this case
-			::free(oldPointer);
+			// Sanity check
+			assert((0 != alignment && !(alignment & (alignment - 1))) && "The alignment must be a power of two");
 
-			// Allocate
-			return (0 != newNumberOfBytes) ? ::malloc(newNumberOfBytes) : nullptr;
+			// Do the work
+			if (nullptr != oldPointer && 0 != newNumberOfBytes)
+			{
+				// Reallocate
+				#ifdef _MSC_VER
+					return _aligned_realloc(oldPointer, newNumberOfBytes, alignment);
+				#else
+					// TODO(co) Need aligned version, see e.g. https://github.com/philiptaylor/vulkan-sxs/blob/9cb21b3/common/AllocationCallbacks.cpp#L87
+					return realloc(oldPointer, newNumberOfBytes);
+				#endif
+			}
+			else
+			{
+				// Malloc / free
+				#ifdef _MSC_VER
+					// Null pointer is valid in here, does nothing in this case
+					::_aligned_free(oldPointer);
+
+					// Allocate
+					return (0 != newNumberOfBytes) ? ::_aligned_malloc(newNumberOfBytes, alignment) : nullptr;
+				#else
+					// Null pointer is valid in here, does nothing in this case
+					::free(oldPointer);
+
+					// Allocate
+					return (0 != newNumberOfBytes) ? ::aligned_alloc(alignment, newNumberOfBytes) : nullptr;
+				#endif
+			}
 		}
 
 

@@ -25,6 +25,7 @@
 #include "VulkanRenderer/VulkanRenderer.h"
 
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 
 //[-------------------------------------------------------]
@@ -56,6 +57,15 @@ namespace VulkanRenderer
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	DEFINE_SET_DEBUG_NAME_VKBUFFER_VKDEVICEMEMORY(VertexBuffer, "VBO", 6)	// void VertexBuffer::setDebugName(const char* name)
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void VertexBuffer::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), VertexBuffer, this);
+	}
 
 
 //[-------------------------------------------------------]

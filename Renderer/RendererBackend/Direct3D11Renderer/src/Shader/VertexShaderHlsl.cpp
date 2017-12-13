@@ -28,6 +28,8 @@
 #include "Direct3D11Renderer/Direct3D11Renderer.h"
 #include "Direct3D11Renderer/Direct3D11RuntimeLinking.h"
 
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -116,6 +118,15 @@ namespace Direct3D11Renderer
 	const char* VertexShaderHlsl::getShaderLanguageName() const
 	{
 		return ShaderLanguageHlsl::NAME;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void VertexShaderHlsl::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), VertexShaderHlsl, this);
 	}
 
 

@@ -30,6 +30,7 @@
 
 #include <Renderer/ILog.h>
 #include <Renderer/Context.h>
+#include <Renderer/IAllocator.h>
 
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
@@ -701,6 +702,15 @@ namespace VulkanRenderer
 	void SwapChain::setFullscreenState(bool)
 	{
 		// TODO(co) Implement me
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void SwapChain::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), SwapChain, this);
 	}
 
 

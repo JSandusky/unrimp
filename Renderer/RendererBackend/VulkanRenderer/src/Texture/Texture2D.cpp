@@ -26,6 +26,8 @@
 #include "VulkanRenderer/VulkanContext.h"
 #include "VulkanRenderer/Helper.h"
 
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -83,6 +85,15 @@ namespace VulkanRenderer
 			}
 		}
 	#endif
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void Texture2D::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), Texture2D, this);
+	}
 
 
 //[-------------------------------------------------------]

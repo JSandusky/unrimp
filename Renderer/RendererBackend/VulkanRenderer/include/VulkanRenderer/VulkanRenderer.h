@@ -134,6 +134,15 @@ namespace VulkanRenderer
 
 		/**
 		*  @brief
+		*    Return the Vulkan allocation callbacks
+		*
+		*  @return
+		*    Vulkan allocation callbacks
+		*/
+		inline const VkAllocationCallbacks& getVkAllocationCallbacks() const;
+
+		/**
+		*  @brief
 		*    Return the Vulkan runtime linking instance
 		*
 		*  @return
@@ -233,6 +242,13 @@ namespace VulkanRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	protected:
+		virtual void selfDestruct() override;
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
@@ -262,6 +278,7 @@ namespace VulkanRenderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		VkAllocationCallbacks		mVkAllocationCallbacks;		///< Vulkan allocation callbacks
 		VulkanRuntimeLinking*		mVulkanRuntimeLinking;		///< Vulkan runtime linking instance, always valid
 		VulkanContext*				mVulkanContext;				///< Vulkan context instance, always valid
 		Renderer::IShaderLanguage*	mShaderLanguageGlsl;		///< GLSL shader language instance (we keep a reference to it), can be a null pointer

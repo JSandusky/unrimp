@@ -153,6 +153,15 @@ namespace Direct3D11Renderer
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void VertexArray::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), VertexArray, this);
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

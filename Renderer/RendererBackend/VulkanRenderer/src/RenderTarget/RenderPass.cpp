@@ -27,6 +27,7 @@
 #include "VulkanRenderer/Mapping.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/IAllocator.h>
 
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
@@ -176,6 +177,15 @@ namespace VulkanRenderer
 		{
 			vkDestroyRenderPass(static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), mVkRenderPass, nullptr);
 		}
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void RenderPass::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), RenderPass, this);
 	}
 
 

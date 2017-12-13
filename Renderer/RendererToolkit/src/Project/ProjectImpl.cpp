@@ -499,6 +499,15 @@ namespace RendererToolkit
 
 
 	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void ProjectImpl::selfDestruct()
+	{
+		delete this;
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	void ProjectImpl::clear()

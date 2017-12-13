@@ -30,6 +30,7 @@
 #include "VulkanRenderer/RootSignature.h"
 #include "VulkanRenderer/VulkanRenderer.h"
 
+#include <Renderer/IAllocator.h>
 #include <Renderer/Buffer/VertexArrayTypes.h>
 
 
@@ -97,6 +98,15 @@ namespace VulkanRenderer
 		{
 			mFragmentShaderGlsl->releaseReference();
 		}
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void ProgramGlsl::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), ProgramGlsl, this);
 	}
 
 

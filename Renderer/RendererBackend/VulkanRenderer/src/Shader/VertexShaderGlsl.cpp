@@ -26,6 +26,8 @@
 #include "VulkanRenderer/VulkanRenderer.h"
 #include "VulkanRenderer/VulkanContext.h"
 
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -72,6 +74,15 @@ namespace VulkanRenderer
 	const char* VertexShaderGlsl::getShaderLanguageName() const
 	{
 		return ShaderLanguageGlsl::NAME;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void VertexShaderGlsl::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), VertexShaderGlsl, this);
 	}
 
 

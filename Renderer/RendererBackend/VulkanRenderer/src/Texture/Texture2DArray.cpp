@@ -26,6 +26,8 @@
 #include "VulkanRenderer/VulkanContext.h"
 #include "VulkanRenderer/Helper.h"
 
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -58,6 +60,15 @@ namespace VulkanRenderer
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	DEFINE_SET_DEBUG_NAME_TEXTURE(Texture2DArray)	// void Texture2DArray::setDebugName(const char* name)
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void Texture2DArray::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), Texture2DArray, this);
+	}
 
 
 //[-------------------------------------------------------]

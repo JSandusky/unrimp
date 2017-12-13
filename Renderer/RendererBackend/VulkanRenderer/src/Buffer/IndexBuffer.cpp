@@ -27,6 +27,7 @@
 #include "VulkanRenderer/Helper.h"
 
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 
 //[-------------------------------------------------------]
@@ -59,6 +60,15 @@ namespace VulkanRenderer
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	DEFINE_SET_DEBUG_NAME_VKBUFFER_VKDEVICEMEMORY(IndexBuffer, "IBO", 6)	// void IndexBuffer::setDebugName(const char* name)
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void IndexBuffer::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), IndexBuffer, this);
+	}
 
 
 //[-------------------------------------------------------]

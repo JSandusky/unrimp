@@ -303,6 +303,15 @@ namespace VulkanRenderer
 	#endif
 
 
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void ResourceGroup::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), ResourceGroup, this);
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

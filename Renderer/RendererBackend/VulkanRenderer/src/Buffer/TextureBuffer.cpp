@@ -29,6 +29,7 @@
 
 #include <Renderer/ILog.h>
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 #include <cstring>	// For "memcpy()"
 
@@ -121,6 +122,15 @@ namespace VulkanRenderer
 			}
 		}
 	#endif
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void TextureBuffer::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), TextureBuffer, this);
+	}
 
 
 //[-------------------------------------------------------]

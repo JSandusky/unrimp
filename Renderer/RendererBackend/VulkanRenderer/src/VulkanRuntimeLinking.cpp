@@ -612,7 +612,7 @@ namespace VulkanRenderer
 			static_cast<uint32_t>(enabledExtensions.size()),		// enabledExtensionCount (uint32_t)
 			enabledExtensions.data()								// ppEnabledExtensionNames (const char* const*)
 		};
-		VkResult vkResult = vkCreateInstance(&vkInstanceCreateInfo, nullptr, &mVkInstance);
+		VkResult vkResult = vkCreateInstance(&vkInstanceCreateInfo, &mVulkanRenderer.getVkAllocationCallbacks(), &mVkInstance);
 		if (VK_ERROR_LAYER_NOT_PRESENT == vkResult && enableValidation)
 		{
 			// Error! Since the show must go on, try creating a Vulkan instance without validation enabled...

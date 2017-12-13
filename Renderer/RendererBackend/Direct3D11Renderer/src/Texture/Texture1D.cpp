@@ -28,6 +28,7 @@
 #include "Direct3D11Renderer/Direct3D11RuntimeLinking.h"
 
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 
 //[-------------------------------------------------------]
@@ -216,6 +217,15 @@ namespace Direct3D11Renderer
 	void* Texture1D::getInternalResourceHandle() const
 	{
 		return mD3D11Texture1D;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void Texture1D::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), Texture1D, this);
 	}
 
 

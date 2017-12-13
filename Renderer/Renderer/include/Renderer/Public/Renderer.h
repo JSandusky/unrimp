@@ -1810,11 +1810,11 @@ namespace Renderer
 			{}
 			virtual ~RefCount()
 			{}
-			virtual const AType* getPointer() const
+			const AType* getPointer() const
 			{
 				return static_cast<const AType*>(this);
 			}
-			virtual AType* getPointer()
+			AType* getPointer()
 			{
 				return static_cast<AType*>(this);
 			}
@@ -1832,7 +1832,7 @@ namespace Renderer
 				}
 				else
 				{
-					delete this;
+					selfDestruct();
 					return 0;
 				}
 			}
@@ -1840,6 +1840,8 @@ namespace Renderer
 			{
 				return mRefCount;
 			}
+		protected:
+			virtual void selfDestruct() = 0;
 		private:
 			uint32_t mRefCount;
 		};

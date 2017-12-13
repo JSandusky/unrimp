@@ -401,6 +401,15 @@ namespace Direct3D11Renderer
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void Framebuffer::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), Framebuffer, this);
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

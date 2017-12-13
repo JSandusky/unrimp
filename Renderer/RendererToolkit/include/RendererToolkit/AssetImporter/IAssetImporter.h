@@ -78,7 +78,7 @@ namespace RendererToolkit
 	*    - Asset importers won't manipulate the given source assets to not risk introducing any errors
 	*    - The imported assets will be categorized by asset type into different directories and decorated with additional asset metadata for asset compilers
 	*/
-	class IAssetImporter : public Renderer::RefCount<IAssetImporter>
+	class IAssetImporter
 	{
 
 
@@ -122,7 +122,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	protected:
 		inline IAssetImporter() {}
-		inline virtual ~IAssetImporter() override {}
+		inline virtual ~IAssetImporter() {}
 
 
 	};

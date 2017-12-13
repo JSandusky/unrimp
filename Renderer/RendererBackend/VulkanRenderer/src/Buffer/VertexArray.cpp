@@ -147,6 +147,15 @@ namespace VulkanRenderer
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void VertexArray::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), VertexArray, this);
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

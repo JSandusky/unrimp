@@ -78,7 +78,7 @@ namespace Renderer
 		// Destroy object when no references are left
 		else
 		{
-			delete this;
+			selfDestruct();
 
 			// This object is no longer
 			return 0;

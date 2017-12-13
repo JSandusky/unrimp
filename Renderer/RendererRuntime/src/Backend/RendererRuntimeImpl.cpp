@@ -59,7 +59,7 @@
 // Export the instance creation function
 RENDERERRUNTIME_FUNCTION_EXPORT RendererRuntime::IRendererRuntime* createRendererRuntimeInstance(RendererRuntime::Context& context)
 {
-	return new RendererRuntime::RendererRuntimeImpl(context);
+	return RENDERER_NEW(context, RendererRuntime::RendererRuntimeImpl)(context);
 }
 
 
@@ -340,6 +340,15 @@ namespace RendererRuntime
 			mMaterialBlueprintResourceManager->savePipelineStateObjectCache(memoryFile);
 			::detail::savePipelineStateObjectCacheFile(*this, memoryFile);
 		}
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void RendererRuntimeImpl::selfDestruct()
+	{
+		RENDERER_DELETE(mRenderer->getContext(), RendererRuntimeImpl, this);
 	}
 
 

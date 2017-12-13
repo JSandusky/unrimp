@@ -107,7 +107,7 @@ namespace RendererToolkit
 	*      a mesh asset is referencing and then all texture assets a material assets is referencing
 	*    - Either manually integrate new assets into the source asset database or use an asset importer to do so
 	*/
-	class IAssetCompiler : public Renderer::RefCount<IAssetCompiler>
+	class IAssetCompiler
 	{
 
 
@@ -207,7 +207,7 @@ namespace RendererToolkit
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		inline virtual ~IAssetCompiler() override {}
+		inline virtual ~IAssetCompiler() {}
 
 
 	//[-------------------------------------------------------]

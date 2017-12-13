@@ -27,6 +27,8 @@
 #include "Direct3D11Renderer/D3D11.h"
 #include "Direct3D11Renderer/Direct3D11Renderer.h"
 
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -106,6 +108,15 @@ namespace Direct3D11Renderer
 	const char* TessellationControlShaderHlsl::getShaderLanguageName() const
 	{
 		return ShaderLanguageHlsl::NAME;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void TessellationControlShaderHlsl::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), TessellationControlShaderHlsl, this);
 	}
 
 

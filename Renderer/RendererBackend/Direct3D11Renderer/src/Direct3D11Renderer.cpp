@@ -1724,6 +1724,15 @@ namespace Direct3D11Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void Direct3D11Renderer::selfDestruct()
+	{
+		RENDERER_DELETE(mContext, Direct3D11Renderer, this);
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	void Direct3D11Renderer::initializeCapabilities()

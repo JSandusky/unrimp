@@ -28,6 +28,11 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline const VkAllocationCallbacks& VulkanRenderer::getVkAllocationCallbacks() const
+	{
+		return mVkAllocationCallbacks;
+	}
+
 	inline const VulkanRuntimeLinking& VulkanRenderer::getVulkanRuntimeLinking() const
 	{
 		return *mVulkanRuntimeLinking;

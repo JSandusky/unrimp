@@ -28,6 +28,7 @@
 
 #include <Renderer/ILog.h>
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 #include <cstring>	// For "memcpy()"
 
@@ -87,6 +88,15 @@ namespace VulkanRenderer
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	DEFINE_SET_DEBUG_NAME_VKBUFFER_VKDEVICEMEMORY(UniformBuffer, "UBO", 6)	// void UniformBuffer::setDebugName(const char* name)
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void UniformBuffer::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), UniformBuffer, this);
+	}
 
 
 //[-------------------------------------------------------]

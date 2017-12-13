@@ -28,6 +28,7 @@
 #include "Direct3D11Renderer/Direct3D11Renderer.h"
 
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 
 //[-------------------------------------------------------]
@@ -108,6 +109,15 @@ namespace Direct3D11Renderer
 			// Nothing here
 		}
 	#endif
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void VertexBuffer::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), VertexBuffer, this);
+	}
 
 
 //[-------------------------------------------------------]

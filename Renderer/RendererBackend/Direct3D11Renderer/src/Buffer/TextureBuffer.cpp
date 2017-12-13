@@ -28,6 +28,7 @@
 #include "Direct3D11Renderer/Direct3D11Renderer.h"
 
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 
 //[-------------------------------------------------------]
@@ -172,6 +173,15 @@ namespace Direct3D11Renderer
 			// End debug event
 			RENDERER_END_DEBUG_EVENT(&direct3D11Renderer)
 		}
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void TextureBuffer::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), TextureBuffer, this);
 	}
 
 

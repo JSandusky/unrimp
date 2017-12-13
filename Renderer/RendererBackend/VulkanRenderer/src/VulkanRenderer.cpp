@@ -90,6 +90,21 @@ namespace
 			return N;
 		}
 
+		VKAPI_ATTR void* VKAPI_CALL vkAllocationFunction(void* pUserData, size_t size, size_t alignment, VkSystemAllocationScope)
+		{
+			return reinterpret_cast<Renderer::IAllocator*>(pUserData)->reallocate(nullptr, 0, size, alignment);
+		}
+
+		VKAPI_ATTR void* VKAPI_CALL vkReallocationFunction(void* pUserData, void* pOriginal, size_t size, size_t alignment, VkSystemAllocationScope)
+		{
+			return reinterpret_cast<Renderer::IAllocator*>(pUserData)->reallocate(pOriginal, 0, size, alignment);
+		}
+
+		VKAPI_ATTR void VKAPI_CALL vkFreeFunction(void* pUserData, void* pMemory)
+		{
+			reinterpret_cast<Renderer::IAllocator*>(pUserData)->reallocate(pMemory, 0, 0, 1);
+		}
+
 		namespace BackendDispatch
 		{
 
@@ -330,6 +345,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	VulkanRenderer::VulkanRenderer(const Renderer::Context& context) :
 		IRenderer(context),
+		mVkAllocationCallbacks{&context.getAllocator(), &::detail::vkAllocationFunction, &::detail::vkReallocationFunction, &::detail::vkFreeFunction, nullptr, nullptr},
 		mVulkanRuntimeLinking(nullptr),
 		mVulkanContext(nullptr),
 		mShaderLanguageGlsl(nullptr),
@@ -1268,6 +1284,15 @@ namespace VulkanRenderer
 	void VulkanRenderer::finish()
 	{
 		// TODO(co) Implement me
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void VulkanRenderer::selfDestruct()
+	{
+		RENDERER_DELETE(mContext, VulkanRenderer, this);
 	}
 
 
