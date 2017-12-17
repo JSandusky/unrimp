@@ -28,6 +28,7 @@
 
 #include <Renderer/ILog.h>
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 
 //[-------------------------------------------------------]
@@ -129,6 +130,15 @@ namespace Direct3D9Renderer
 	void SamplerState::setDebugName(const char*)
 	{
 		// There's no Direct3D 9 resource we could assign a debug name to
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void SamplerState::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), SamplerState, this);
 	}
 
 

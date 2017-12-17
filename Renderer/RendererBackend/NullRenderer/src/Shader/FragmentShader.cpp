@@ -24,6 +24,9 @@
 #include "NullRenderer/Shader/FragmentShader.h"
 #include "NullRenderer/Shader/ShaderLanguage.h"
 
+#include <Renderer/IRenderer.h>
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -53,6 +56,15 @@ namespace NullRenderer
 	const char* FragmentShader::getShaderLanguageName() const
 	{
 		return ShaderLanguage::NAME;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void FragmentShader::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), FragmentShader, this);
 	}
 
 

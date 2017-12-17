@@ -214,6 +214,15 @@ namespace OpenGLRenderer
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void VertexShaderSeparate::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), VertexShaderSeparate, this);
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

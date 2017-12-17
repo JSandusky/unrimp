@@ -28,6 +28,9 @@
 #include "NullRenderer/Shader/TessellationControlShader.h"
 #include "NullRenderer/Shader/TessellationEvaluationShader.h"
 
+#include <Renderer/IRenderer.h>
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -74,6 +77,15 @@ namespace NullRenderer
 	Program::~Program()
 	{
 		// Nothing here
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void Program::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), Program, this);
 	}
 
 

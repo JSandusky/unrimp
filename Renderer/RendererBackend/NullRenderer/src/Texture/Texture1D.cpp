@@ -23,6 +23,9 @@
 //[-------------------------------------------------------]
 #include "NullRenderer/Texture/Texture1D.h"
 
+#include <Renderer/IRenderer.h>
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -43,6 +46,15 @@ namespace NullRenderer
 	Texture1D::~Texture1D()
 	{
 		// Nothing here
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void Texture1D::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), Texture1D, this);
 	}
 
 

@@ -1728,6 +1728,15 @@ namespace Direct3D9Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void Direct3D9Renderer::selfDestruct()
+	{
+		RENDERER_DELETE(mContext, Direct3D9Renderer, this);
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	void Direct3D9Renderer::initializeCapabilities()

@@ -97,6 +97,13 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	protected:
+		virtual void selfDestruct() override;
+
+
+	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:

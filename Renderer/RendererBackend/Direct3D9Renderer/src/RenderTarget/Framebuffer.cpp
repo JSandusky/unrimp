@@ -29,6 +29,7 @@
 
 #include <Renderer/ILog.h>
 #include <Renderer/IAssert.h>
+#include <Renderer/IRenderer.h>
 #include <Renderer/IAllocator.h>
 
 
@@ -266,6 +267,15 @@ namespace Direct3D9Renderer
 		// No fancy implementation in here, just copy over the internal information
 		width  = mWidth;
 		height = mHeight;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void Framebuffer::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), Framebuffer, this);
 	}
 
 

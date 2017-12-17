@@ -24,6 +24,9 @@
 #include "NullRenderer/Shader/TessellationEvaluationShader.h"
 #include "NullRenderer/Shader/ShaderLanguage.h"
 
+#include <Renderer/IRenderer.h>
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -53,6 +56,15 @@ namespace NullRenderer
 	const char* TessellationEvaluationShader::getShaderLanguageName() const
 	{
 		return ShaderLanguage::NAME;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void TessellationEvaluationShader::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), TessellationEvaluationShader, this);
 	}
 
 

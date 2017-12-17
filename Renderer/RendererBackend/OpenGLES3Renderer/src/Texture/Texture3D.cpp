@@ -27,6 +27,7 @@
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 
 //[-------------------------------------------------------]
@@ -181,6 +182,15 @@ namespace OpenGLES3Renderer
 
 		// Copy data
 		glTexImage3D(GL_TEXTURE_3D, 0, Mapping::getOpenGLES3InternalFormat(mTextureFormat), static_cast<GLsizei>(getWidth()), static_cast<GLsizei>(getHeight()), static_cast<GLsizei>(getDepth()), 0, Mapping::getOpenGLES3Format(mTextureFormat), Mapping::getOpenGLES3Type(mTextureFormat), data);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void Texture3D::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), Texture3D, this);
 	}
 
 

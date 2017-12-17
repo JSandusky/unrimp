@@ -23,6 +23,9 @@
 //[-------------------------------------------------------]
 #include "NullRenderer/RenderTarget/Framebuffer.h"
 
+#include <Renderer/IRenderer.h>
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -49,6 +52,15 @@ namespace NullRenderer
 		// TODO(co) Better implementation instead of just returning one (not that important, but would be nice)
 		width  = 1;
 		height = 1;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void Framebuffer::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), Framebuffer, this);
 	}
 
 

@@ -24,6 +24,8 @@
 #include "NullRenderer/RenderTarget/SwapChain.h"
 #include "NullRenderer/NullRenderer.h"
 
+#include <Renderer/IAllocator.h>
+
 #ifdef WIN32
 	#include <Renderer/WindowsHeader.h>
 #elif LINUX
@@ -163,6 +165,15 @@ namespace NullRenderer
 	void SwapChain::setRenderWindow(Renderer::IRenderWindow*)
 	{
 		// TODO(sw) implement me
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void SwapChain::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), SwapChain, this);
 	}
 
 

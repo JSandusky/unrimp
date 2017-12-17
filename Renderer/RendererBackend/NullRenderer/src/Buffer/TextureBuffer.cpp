@@ -23,6 +23,9 @@
 //[-------------------------------------------------------]
 #include "NullRenderer/Buffer/TextureBuffer.h"
 
+#include <Renderer/IRenderer.h>
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -52,6 +55,15 @@ namespace NullRenderer
 	void TextureBuffer::copyDataFrom(uint32_t, const void*)
 	{
 		// Nothing here
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void TextureBuffer::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), TextureBuffer, this);
 	}
 
 

@@ -26,6 +26,7 @@
 
 #include <Renderer/IAssert.h>
 #include <Renderer/IRenderer.h>
+#include <Renderer/IAllocator.h>
 
 
 //[-------------------------------------------------------]
@@ -96,6 +97,15 @@ namespace OpenGLES3Renderer
 			// Be polite and restore the previous bound OpenGL ES 3 uniform buffer
 			glBindBuffer(GL_UNIFORM_BUFFER, static_cast<GLuint>(openGLES3UniformBufferBackup));
 		#endif
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void UniformBuffer::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), UniformBuffer, this);
 	}
 
 

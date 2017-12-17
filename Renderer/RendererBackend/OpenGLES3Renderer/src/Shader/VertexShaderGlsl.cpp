@@ -26,6 +26,8 @@
 #include "OpenGLES3Renderer/Shader/ShaderLanguageGlsl.h"
 #include "OpenGLES3Renderer/IExtensions.h"	// We need to include this in here for the definitions of the OpenGL ES 3 functions
 
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -58,6 +60,15 @@ namespace OpenGLES3Renderer
 	const char* VertexShaderGlsl::getShaderLanguageName() const
 	{
 		return ShaderLanguageGlsl::NAME;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void VertexShaderGlsl::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), VertexShaderGlsl, this);
 	}
 
 

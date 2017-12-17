@@ -27,6 +27,9 @@
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
 #include "Direct3D9Renderer/Direct3D9RuntimeLinking.h"
 
+#include <Renderer/IRenderer.h>
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -186,6 +189,15 @@ namespace Direct3D9Renderer
 				}
 			}
 		#endif
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void TextureCube::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), TextureCube, this);
 	}
 
 

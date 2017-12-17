@@ -27,6 +27,8 @@
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
 #include "Direct3D12Renderer/Direct3D12RuntimeLinking.h"
 
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -181,6 +183,15 @@ namespace Direct3D12Renderer
 			}
 		#endif
 		*/
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void Texture2DArray::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), Texture2DArray, this);
 	}
 
 

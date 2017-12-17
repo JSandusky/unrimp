@@ -231,6 +231,15 @@ namespace Direct3D9Renderer
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void ShaderLanguageHlsl::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), ShaderLanguageHlsl, this);
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

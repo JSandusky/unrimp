@@ -138,6 +138,15 @@ namespace Direct3D9Renderer
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void PipelineState::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), PipelineState, this);
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

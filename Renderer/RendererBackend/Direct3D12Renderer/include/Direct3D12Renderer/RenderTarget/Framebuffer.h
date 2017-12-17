@@ -118,7 +118,7 @@ namespace Direct3D12Renderer
 		*  @return
 		*    The Direct3D 12 render target view descriptor heap instance, null pointer on error, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D12DescriptorHeap **getD3D12DescriptorHeapRenderTargetViews() const;
+		inline ID3D12DescriptorHeap** getD3D12DescriptorHeapRenderTargetViews() const;
 
 		/**
 		*  @brief
@@ -127,7 +127,7 @@ namespace Direct3D12Renderer
 		*  @return
 		*    The Direct3D 12 depth stencil view descriptor heap instance, null pointer on error, do not release the returned instance unless you added an own reference to it
 		*/
-		inline ID3D12DescriptorHeap *getD3D12DescriptorHeapDepthStencilView() const;
+		inline ID3D12DescriptorHeap* getD3D12DescriptorHeapDepthStencilView() const;
 
 
 	//[-------------------------------------------------------]
@@ -142,6 +142,13 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	public:
 		virtual void getWidthAndHeight(uint32_t& width, uint32_t& height) const override;
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	protected:
+		virtual void selfDestruct() override;
 
 
 	//[-------------------------------------------------------]

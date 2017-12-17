@@ -23,6 +23,9 @@
 //[-------------------------------------------------------]
 #include "NullRenderer/Buffer/VertexBuffer.h"
 
+#include <Renderer/IRenderer.h>
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -43,6 +46,15 @@ namespace NullRenderer
 	VertexBuffer::~VertexBuffer()
 	{
 		// Nothing here
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void VertexBuffer::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), VertexBuffer, this);
 	}
 
 

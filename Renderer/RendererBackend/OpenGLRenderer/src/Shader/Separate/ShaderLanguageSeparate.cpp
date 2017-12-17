@@ -693,6 +693,15 @@ namespace OpenGLRenderer
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void ShaderLanguageSeparate::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), ShaderLanguageSeparate, this);
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

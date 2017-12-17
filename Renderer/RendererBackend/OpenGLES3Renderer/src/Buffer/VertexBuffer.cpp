@@ -26,6 +26,8 @@
 #include "OpenGLES3Renderer/IOpenGLES3Context.h"	// We need to include this header, else the linker won't find our defined OpenGL ES 3 functions
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -66,6 +68,15 @@ namespace OpenGLES3Renderer
 		// Destroy the OpenGL ES 3 array buffer
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
 		glDeleteBuffers(1, &mOpenGLES3ArrayBuffer);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void VertexBuffer::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), VertexBuffer, this);
 	}
 
 

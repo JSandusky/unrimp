@@ -28,6 +28,8 @@
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
 
 #include <Renderer/IAssert.h>
+#include <Renderer/IRenderer.h>
+#include <Renderer/IAllocator.h>
 
 
 //[-------------------------------------------------------]
@@ -95,6 +97,15 @@ namespace Direct3D9Renderer
 			// Nothing here
 		}
 	#endif
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void VertexBuffer::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), VertexBuffer, this);
+	}
 
 
 //[-------------------------------------------------------]

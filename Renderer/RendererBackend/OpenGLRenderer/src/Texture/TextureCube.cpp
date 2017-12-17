@@ -24,6 +24,9 @@
 #include "OpenGLRenderer/Texture/TextureCube.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 
+#include <Renderer/IRenderer.h>
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -40,6 +43,15 @@ namespace OpenGLRenderer
 		// Destroy the OpenGL texture instance
 		// -> Silently ignores 0's and names that do not correspond to existing textures
 		glDeleteTextures(1, &mOpenGLTexture);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void TextureCube::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), TextureCube, this);
 	}
 
 

@@ -25,6 +25,7 @@
 #include "NullRenderer/NullRenderer.h"
 #include "NullRenderer/Shader/Program.h"
 
+#include <Renderer/IAllocator.h>
 #include <Renderer/RenderTarget/IRenderPass.h>
 
 
@@ -53,6 +54,15 @@ namespace NullRenderer
 		// Release the program reference and render pass
 		mProgram->releaseReference();
 		mRenderPass->releaseReference();
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void PipelineState::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), PipelineState, this);
 	}
 
 

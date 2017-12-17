@@ -27,6 +27,7 @@
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 
 //[-------------------------------------------------------]
@@ -82,6 +83,15 @@ namespace OpenGLES3Renderer
 		// Destroy the OpenGL ES 3 element array buffer
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
 		glDeleteBuffers(1, &mOpenGLES3ElementArrayBuffer);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void IndexBuffer::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), IndexBuffer, this);
 	}
 
 

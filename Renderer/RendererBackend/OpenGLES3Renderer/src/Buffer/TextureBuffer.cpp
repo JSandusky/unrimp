@@ -24,6 +24,9 @@
 #include "OpenGLES3Renderer/Buffer/TextureBuffer.h"
 #include "OpenGLES3Renderer/ExtensionsRuntimeLinking.h"
 
+#include <Renderer/IRenderer.h>
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -44,6 +47,15 @@ namespace OpenGLES3Renderer
 		// Destroy the OpenGL ES 3  texture buffer
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
 		glDeleteBuffers(1, &mOpenGLES3TextureBuffer);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void TextureBuffer::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), TextureBuffer, this);
 	}
 
 

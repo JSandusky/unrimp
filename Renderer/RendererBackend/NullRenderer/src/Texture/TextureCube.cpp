@@ -23,6 +23,9 @@
 //[-------------------------------------------------------]
 #include "NullRenderer/Texture/TextureCube.h"
 
+#include <Renderer/IRenderer.h>
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -43,6 +46,15 @@ namespace NullRenderer
 	TextureCube::~TextureCube()
 	{
 		// Nothing here
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void TextureCube::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), TextureCube, this);
 	}
 
 

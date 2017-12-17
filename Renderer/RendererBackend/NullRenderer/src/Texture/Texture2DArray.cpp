@@ -23,6 +23,9 @@
 //[-------------------------------------------------------]
 #include "NullRenderer/Texture/Texture2DArray.h"
 
+#include <Renderer/IRenderer.h>
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -43,6 +46,15 @@ namespace NullRenderer
 	Texture2DArray::~Texture2DArray()
 	{
 		// Nothing here
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void Texture2DArray::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), Texture2DArray, this);
 	}
 
 

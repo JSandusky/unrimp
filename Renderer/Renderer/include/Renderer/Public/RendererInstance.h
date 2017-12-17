@@ -119,6 +119,9 @@ namespace Renderer
 	/**
 	*  @brief
 	*    Renderer instance using runtime linking
+	*
+	*  @note
+	*    - Designed to be instanced and used inside a single C++ file
 	*/
 	class RendererInstance
 	{

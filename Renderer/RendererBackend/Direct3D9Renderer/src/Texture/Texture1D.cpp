@@ -28,6 +28,7 @@
 #include "Direct3D9Renderer/Direct3D9RuntimeLinking.h"
 
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 
 //[-------------------------------------------------------]
@@ -184,6 +185,15 @@ namespace Direct3D9Renderer
 				}
 			}
 		#endif
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void Texture1D::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), Texture1D, this);
 	}
 
 

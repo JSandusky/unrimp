@@ -28,6 +28,7 @@
 
 #include <Renderer/ILog.h>
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 
 //[-------------------------------------------------------]
@@ -104,6 +105,15 @@ namespace Direct3D12Renderer
 				mD3D12DescriptorHeap->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(name)), name);
 			}
 		#endif
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void SamplerState::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), SamplerState, this);
 	}
 
 

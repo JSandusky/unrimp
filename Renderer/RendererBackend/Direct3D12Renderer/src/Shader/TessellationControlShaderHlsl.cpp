@@ -26,6 +26,8 @@
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
 #include "Direct3D12Renderer/Direct3D12RuntimeLinking.h"
 
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -78,6 +80,15 @@ namespace Direct3D12Renderer
 	const char* TessellationControlShaderHlsl::getShaderLanguageName() const
 	{
 		return ShaderLanguageHlsl::NAME;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void TessellationControlShaderHlsl::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), TessellationControlShaderHlsl, this);
 	}
 
 

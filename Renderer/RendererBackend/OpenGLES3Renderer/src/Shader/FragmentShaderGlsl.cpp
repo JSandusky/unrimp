@@ -26,6 +26,8 @@
 #include "OpenGLES3Renderer/Shader/ShaderLanguageGlsl.h"
 #include "OpenGLES3Renderer/IExtensions.h"
 
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -58,6 +60,15 @@ namespace OpenGLES3Renderer
 	const char* FragmentShaderGlsl::getShaderLanguageName() const
 	{
 		return ShaderLanguageGlsl::NAME;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void FragmentShaderGlsl::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), FragmentShaderGlsl, this);
 	}
 
 

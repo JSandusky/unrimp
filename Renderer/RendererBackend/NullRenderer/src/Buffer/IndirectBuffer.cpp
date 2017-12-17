@@ -23,6 +23,9 @@
 //[-------------------------------------------------------]
 #include "NullRenderer/Buffer/IndirectBuffer.h"
 
+#include <Renderer/IRenderer.h>
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -57,6 +60,15 @@ namespace NullRenderer
 	void IndirectBuffer::copyDataFrom(uint32_t, const void*)
 	{
 		// Nothing here
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void IndirectBuffer::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), IndirectBuffer, this);
 	}
 
 

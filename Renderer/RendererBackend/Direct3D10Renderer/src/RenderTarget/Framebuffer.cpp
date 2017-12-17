@@ -401,6 +401,15 @@ namespace Direct3D10Renderer
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void Framebuffer::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), Framebuffer, this);
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

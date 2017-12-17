@@ -28,6 +28,7 @@
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/IAllocator.h>
 
 
 //[-------------------------------------------------------]
@@ -179,6 +180,15 @@ namespace Direct3D12Renderer
 			// End debug event
 			RENDERER_END_DEBUG_EVENT(&static_cast<Direct3D12Renderer&>(getRenderer()))
 		}
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void UniformBuffer::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), UniformBuffer, this);
 	}
 
 

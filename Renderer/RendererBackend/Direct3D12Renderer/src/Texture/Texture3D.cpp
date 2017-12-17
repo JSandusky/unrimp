@@ -27,6 +27,8 @@
 #include "Direct3D12Renderer/Mapping.h"
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
 
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -90,6 +92,15 @@ namespace Direct3D12Renderer
 	void Texture3D::copyDataFrom(uint32_t, const void*)
 	{
 		// TODO(co) Implement me
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void Texture3D::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), Texture3D, this);
 	}
 
 

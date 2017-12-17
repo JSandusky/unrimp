@@ -97,6 +97,13 @@ namespace Direct3D10Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	protected:
+		virtual void selfDestruct() override;
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:

@@ -24,6 +24,9 @@
 #include "OpenGLRenderer/Buffer/IndirectBuffer.h"
 #include "OpenGLRenderer/Extensions.h"
 
+#include <Renderer/IRenderer.h>
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -40,6 +43,15 @@ namespace OpenGLRenderer
 		// Destroy the OpenGL indirect buffer
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
 		glDeleteBuffersARB(1, &mOpenGLIndirectBuffer);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void IndirectBuffer::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), IndirectBuffer, this);
 	}
 
 

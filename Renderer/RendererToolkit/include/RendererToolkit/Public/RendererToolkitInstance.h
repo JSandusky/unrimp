@@ -122,6 +122,9 @@ namespace RendererToolkit
 	/**
 	*  @brief
 	*    Renderer toolkit instance using runtime linking
+	*
+	*  @note
+	*    - Designed to be instanced and used inside a single C++ file
 	*/
 	class RendererToolkitInstance
 	{

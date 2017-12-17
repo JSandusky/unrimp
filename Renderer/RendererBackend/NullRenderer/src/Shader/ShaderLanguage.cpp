@@ -193,6 +193,15 @@ namespace NullRenderer
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void ShaderLanguage::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), ShaderLanguage, this);
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

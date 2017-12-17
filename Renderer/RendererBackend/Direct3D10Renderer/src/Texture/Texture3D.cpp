@@ -28,6 +28,7 @@
 #include "Direct3D10Renderer/Direct3D10RuntimeLinking.h"
 
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 
 //[-------------------------------------------------------]
@@ -245,6 +246,15 @@ namespace Direct3D10Renderer
 	void* Texture3D::getInternalResourceHandle() const
 	{
 		return mD3D10Texture3D;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void Texture3D::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), Texture3D, this);
 	}
 
 

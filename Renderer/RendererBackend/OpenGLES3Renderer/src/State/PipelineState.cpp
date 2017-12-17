@@ -26,6 +26,7 @@
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 #include "OpenGLES3Renderer/Mapping.h"
 
+#include <Renderer/IAllocator.h>
 #include <Renderer/RenderTarget/IRenderPass.h>
 
 
@@ -87,6 +88,15 @@ namespace OpenGLES3Renderer
 	const Renderer::BlendState& PipelineState::getBlendState() const
 	{
 		return mBlendState.getBlendState();
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void PipelineState::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), PipelineState, this);
 	}
 
 

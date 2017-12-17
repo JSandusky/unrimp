@@ -501,6 +501,15 @@ namespace OpenGLRenderer
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void ProgramSeparate::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), ProgramSeparate, this);
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

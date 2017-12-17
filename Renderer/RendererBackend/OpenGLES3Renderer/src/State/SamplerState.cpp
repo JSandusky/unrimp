@@ -27,6 +27,7 @@
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 #include <GLES3/gl3.h>
 
@@ -107,6 +108,15 @@ namespace OpenGLES3Renderer
 		// Renderer::SamplerState::maxLOD
 		glSamplerParameterf(mOpenGLSampler, GL_TEXTURE_MAX_LOD, samplerState.maxLOD);
 		*/
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void SamplerState::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), SamplerState, this);
 	}
 
 

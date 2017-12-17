@@ -28,6 +28,7 @@
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/IAllocator.h>
 
 
 //[-------------------------------------------------------]
@@ -128,6 +129,15 @@ namespace Direct3D12Renderer
 			// Nothing here
 		}
 	#endif
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void VertexBuffer::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), VertexBuffer, this);
+	}
 
 
 //[-------------------------------------------------------]

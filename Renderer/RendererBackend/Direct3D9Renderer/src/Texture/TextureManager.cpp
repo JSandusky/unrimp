@@ -110,6 +110,15 @@ namespace Direct3D9Renderer
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void TextureManager::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), TextureManager, this);
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

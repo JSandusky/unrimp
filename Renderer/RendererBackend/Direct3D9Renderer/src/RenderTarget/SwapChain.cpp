@@ -29,6 +29,7 @@
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
 
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 
 //[-------------------------------------------------------]
@@ -346,6 +347,15 @@ namespace Direct3D9Renderer
 	void SwapChain::setRenderWindow(Renderer::IRenderWindow*)
 	{
 		// TODO(sw) implement me
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void SwapChain::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), SwapChain, this);
 	}
 
 

@@ -29,6 +29,8 @@
 #include "Direct3D12Renderer/Shader/TessellationEvaluationShaderHlsl.h"
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
 
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -135,6 +137,15 @@ namespace Direct3D12Renderer
 	void ProgramHlsl::setUniform4fv(handle, const float*)
 	{
 		// Not supported by Direct3D 12
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void ProgramHlsl::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), ProgramHlsl, this);
 	}
 
 

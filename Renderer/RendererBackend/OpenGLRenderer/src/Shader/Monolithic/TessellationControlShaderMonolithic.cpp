@@ -25,6 +25,9 @@
 #include "OpenGLRenderer/Shader/Monolithic/ShaderLanguageMonolithic.h"
 #include "OpenGLRenderer/Extensions.h"
 
+#include <Renderer/IRenderer.h>
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -57,6 +60,15 @@ namespace OpenGLRenderer
 	const char* TessellationControlShaderMonolithic::getShaderLanguageName() const
 	{
 		return ShaderLanguageMonolithic::NAME;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void TessellationControlShaderMonolithic::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), TessellationControlShaderMonolithic, this);
 	}
 
 

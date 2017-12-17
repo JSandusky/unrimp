@@ -27,6 +27,7 @@
 #include "Direct3D10Renderer/Direct3D10Renderer.h"
 
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 
 //[-------------------------------------------------------]
@@ -82,6 +83,15 @@ namespace Direct3D10Renderer
 				mD3D10SamplerState->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(name)), name);
 			}
 		#endif
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void SamplerState::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), SamplerState, this);
 	}
 
 

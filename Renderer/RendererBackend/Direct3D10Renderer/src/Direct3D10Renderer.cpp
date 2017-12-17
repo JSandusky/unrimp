@@ -1755,6 +1755,15 @@ namespace Direct3D10Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void Direct3D10Renderer::selfDestruct()
+	{
+		RENDERER_DELETE(mContext, Direct3D10Renderer, this);
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	void Direct3D10Renderer::initializeCapabilities()

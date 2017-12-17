@@ -85,6 +85,15 @@ namespace Direct3D12Renderer
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void BufferManager::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), BufferManager, this);
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

@@ -25,6 +25,9 @@
 #include "OpenGLRenderer/Shader/Separate/ShaderLanguageSeparate.h"
 #include "OpenGLRenderer/Extensions.h"
 
+#include <Renderer/IRenderer.h>
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -76,6 +79,15 @@ namespace OpenGLRenderer
 	const char* GeometryShaderSeparate::getShaderLanguageName() const
 	{
 		return ShaderLanguageSeparate::NAME;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void GeometryShaderSeparate::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), GeometryShaderSeparate, this);
 	}
 
 

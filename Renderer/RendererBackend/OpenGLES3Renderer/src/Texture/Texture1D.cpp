@@ -27,6 +27,7 @@
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 
 //[-------------------------------------------------------]
@@ -155,6 +156,15 @@ namespace OpenGLES3Renderer
 		// Destroy the OpenGL ES 3 texture instance
 		// -> Silently ignores 0's and names that do not correspond to existing textures
 		glDeleteTextures(1, &mOpenGLES3Texture);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void Texture1D::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), Texture1D, this);
 	}
 
 

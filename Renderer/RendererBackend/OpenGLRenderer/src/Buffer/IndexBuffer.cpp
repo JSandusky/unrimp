@@ -25,6 +25,9 @@
 #include "OpenGLRenderer/Mapping.h"
 #include "OpenGLRenderer/Extensions.h"
 
+#include <Renderer/IRenderer.h>
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -41,6 +44,15 @@ namespace OpenGLRenderer
 		// Destroy the OpenGL element array buffer
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
 		glDeleteBuffersARB(1, &mOpenGLElementArrayBuffer);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void IndexBuffer::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), IndexBuffer, this);
 	}
 
 

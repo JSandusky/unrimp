@@ -27,6 +27,8 @@
 #include "Direct3D9Renderer/d3d9.h"
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
 
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -212,6 +214,15 @@ namespace Direct3D9Renderer
 		{
 			mD3DXConstantTable->SetFloatArray(mDirect3DDevice9, reinterpret_cast<D3DXHANDLE>(uniformHandle), value, 4 * 4);
 		}
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void ProgramHlsl::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), ProgramHlsl, this);
 	}
 
 

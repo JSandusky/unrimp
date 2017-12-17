@@ -24,6 +24,7 @@
 #include "Direct3D9Renderer/RenderTarget/RenderPass.h"
 
 #include <Renderer/IRenderer.h>
+#include <Renderer/IAllocator.h>
 
 #include <cstring>	// For "memcpy()"
 
@@ -46,6 +47,15 @@ namespace Direct3D9Renderer
 	{
 		RENDERER_ASSERT(renderer.getContext(), mNumberOfColorAttachments < 8, "Invalid number of Direct3D 9 color attachments")
 		memcpy(mColorAttachmentTextureFormats, colorAttachmentTextureFormats, sizeof(Renderer::TextureFormat::Enum) * mNumberOfColorAttachments);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void RenderPass::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), RenderPass, this);
 	}
 
 

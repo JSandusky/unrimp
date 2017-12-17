@@ -1694,6 +1694,15 @@ namespace OpenGLES3Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void OpenGLES3Renderer::selfDestruct()
+	{
+		RENDERER_DELETE(mContext, OpenGLES3Renderer, this);
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private static methods                                ]
 	//[-------------------------------------------------------]
 	void OpenGLES3Renderer::debugMessageCallback(uint32_t source, uint32_t type, uint32_t id, uint32_t severity, int, const char* message, const void* userParam)

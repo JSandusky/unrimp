@@ -27,6 +27,8 @@
 #include "Direct3D12Renderer/Mapping.h"
 #include "Direct3D12Renderer/Direct3D12Renderer.h"
 
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -180,6 +182,15 @@ namespace Direct3D12Renderer
 			RENDERER_END_DEBUG_EVENT(&getRenderer())
 		}
 		*/
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void TextureBuffer::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), TextureBuffer, this);
 	}
 
 

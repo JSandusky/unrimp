@@ -781,6 +781,15 @@ namespace NullRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void NullRenderer::selfDestruct()
+	{
+		RENDERER_DELETE(mContext, NullRenderer, this);
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	void NullRenderer::initializeCapabilities()

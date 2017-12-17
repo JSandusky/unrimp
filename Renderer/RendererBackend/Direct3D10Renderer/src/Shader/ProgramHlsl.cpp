@@ -27,6 +27,8 @@
 #include "Direct3D10Renderer/Shader/FragmentShaderHlsl.h"
 #include "Direct3D10Renderer/Direct3D10Renderer.h"
 
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -116,6 +118,15 @@ namespace Direct3D10Renderer
 	void ProgramHlsl::setUniform4fv(handle, const float*)
 	{
 		// Not supported by Direct3D 10
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void ProgramHlsl::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), ProgramHlsl, this);
 	}
 
 

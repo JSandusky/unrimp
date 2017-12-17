@@ -115,6 +115,15 @@ namespace Direct3D9Renderer
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void RootSignature::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), RootSignature, this);
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

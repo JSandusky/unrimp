@@ -23,6 +23,9 @@
 //[-------------------------------------------------------]
 #include "NullRenderer/Texture/Texture3D.h"
 
+#include <Renderer/IRenderer.h>
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -52,6 +55,15 @@ namespace NullRenderer
 	void Texture3D::copyDataFrom(uint32_t, const void*)
 	{
 		// TODO(co) Implement me
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void Texture3D::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), Texture3D, this);
 	}
 
 

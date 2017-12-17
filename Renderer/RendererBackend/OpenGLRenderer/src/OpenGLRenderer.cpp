@@ -2235,6 +2235,15 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void OpenGLRenderer::selfDestruct()
+	{
+		RENDERER_DELETE(mContext, OpenGLRenderer, this);
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private static methods                                ]
 	//[-------------------------------------------------------]
 	void OpenGLRenderer::debugMessageCallback(uint32_t source, uint32_t type, uint32_t id, uint32_t severity, int, const char* message, const void* userParam)

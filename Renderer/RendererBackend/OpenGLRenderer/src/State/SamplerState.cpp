@@ -23,6 +23,9 @@
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/State/SamplerState.h"
 
+#include <Renderer/IRenderer.h>
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -37,6 +40,15 @@ namespace OpenGLRenderer
 	SamplerState::~SamplerState()
 	{
 		// Nothing here
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void SamplerState::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), SamplerState, this);
 	}
 
 

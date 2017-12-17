@@ -29,6 +29,7 @@
 #include "OpenGLRenderer/Mapping.h"
 
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 #include <Renderer/RenderTarget/IRenderPass.h>
 
 
@@ -121,6 +122,15 @@ namespace OpenGLRenderer
 	const Renderer::BlendState& PipelineState::getBlendState() const
 	{
 		return mBlendState.getBlendState();
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void PipelineState::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), PipelineState, this);
 	}
 
 

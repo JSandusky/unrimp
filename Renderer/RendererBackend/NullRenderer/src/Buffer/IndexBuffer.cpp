@@ -23,6 +23,9 @@
 //[-------------------------------------------------------]
 #include "NullRenderer/Buffer/IndexBuffer.h"
 
+#include <Renderer/IRenderer.h>
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -43,6 +46,15 @@ namespace NullRenderer
 	IndexBuffer::~IndexBuffer()
 	{
 		// Nothing here
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void IndexBuffer::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), IndexBuffer, this);
 	}
 
 

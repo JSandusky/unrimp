@@ -35,6 +35,7 @@
 #include "Direct3D12Renderer/Shader/TessellationEvaluationShaderHlsl.h"
 
 #include <Renderer/ILog.h>
+#include <Renderer/IAllocator.h>
 #include <Renderer/State/PipelineStateTypes.h>
 #include <Renderer/RenderTarget/IRenderPass.h>
 
@@ -196,6 +197,15 @@ namespace Direct3D12Renderer
 				mD3D12PipelineState->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(name)), name);
 			}
 		#endif
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void PipelineState::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), PipelineState, this);
 	}
 
 

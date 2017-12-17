@@ -118,6 +118,15 @@ namespace Direct3D10Renderer
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void TextureManager::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), TextureManager, this);
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

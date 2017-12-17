@@ -25,6 +25,9 @@
 #include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
 
+#include <Renderer/IRenderer.h>
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -45,6 +48,15 @@ namespace OpenGLRenderer
 		// Destroy the OpenGL texture buffer
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
 		glDeleteBuffersARB(1, &mOpenGLTextureBuffer);
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void TextureBuffer::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), TextureBuffer, this);
 	}
 
 

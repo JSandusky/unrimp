@@ -25,6 +25,9 @@
 #include "OpenGLRenderer/Shader/Monolithic/ShaderLanguageMonolithic.h"
 #include "OpenGLRenderer/Extensions.h"
 
+#include <Renderer/IRenderer.h>
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -60,6 +63,15 @@ namespace OpenGLRenderer
 	const char* GeometryShaderMonolithic::getShaderLanguageName() const
 	{
 		return ShaderLanguageMonolithic::NAME;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void GeometryShaderMonolithic::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), GeometryShaderMonolithic, this);
 	}
 
 

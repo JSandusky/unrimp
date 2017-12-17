@@ -28,6 +28,7 @@
 #include "Direct3D10Renderer/Direct3D10Renderer.h"
 
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 
 //[-------------------------------------------------------]
@@ -146,6 +147,15 @@ namespace Direct3D10Renderer
 			// End debug event
 			RENDERER_END_DEBUG_EVENT(&static_cast<Direct3D10Renderer&>(getRenderer()))
 		}
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void UniformBuffer::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), UniformBuffer, this);
 	}
 
 

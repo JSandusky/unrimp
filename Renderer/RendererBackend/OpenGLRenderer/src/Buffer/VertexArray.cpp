@@ -26,6 +26,9 @@
 #include "OpenGLRenderer/Buffer/VertexBuffer.h"
 #include "OpenGLRenderer/Extensions.h"
 
+#include <Renderer/IRenderer.h>
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -44,6 +47,15 @@ namespace OpenGLRenderer
 		{
 			mIndexBuffer->releaseReference();
 		}
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void VertexArray::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), VertexArray, this);
 	}
 
 

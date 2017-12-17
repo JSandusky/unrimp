@@ -27,6 +27,8 @@
 #include "Direct3D10Renderer/D3D10.h"
 #include "Direct3D10Renderer/Direct3D10Renderer.h"
 
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -106,6 +108,15 @@ namespace Direct3D10Renderer
 	const char* FragmentShaderHlsl::getShaderLanguageName() const
 	{
 		return ShaderLanguageHlsl::NAME;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void FragmentShaderHlsl::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), FragmentShaderHlsl, this);
 	}
 
 

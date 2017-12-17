@@ -27,6 +27,8 @@
 #include "Direct3D9Renderer/Direct3D9Renderer.h"
 #include "Direct3D9Renderer/Direct3D9RuntimeLinking.h"
 
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -102,6 +104,15 @@ namespace Direct3D9Renderer
 	const char* VertexShaderHlsl::getShaderLanguageName() const
 	{
 		return ShaderLanguageHlsl::NAME;
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void VertexShaderHlsl::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), VertexShaderHlsl, this);
 	}
 
 

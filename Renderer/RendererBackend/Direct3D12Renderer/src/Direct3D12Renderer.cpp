@@ -1578,6 +1578,15 @@ namespace Direct3D12Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void Direct3D12Renderer::selfDestruct()
+	{
+		RENDERER_DELETE(mContext, Direct3D12Renderer, this);
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	void Direct3D12Renderer::initializeCapabilities()

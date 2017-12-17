@@ -23,6 +23,9 @@
 //[-------------------------------------------------------]
 #include "NullRenderer/Texture/Texture2D.h"
 
+#include <Renderer/IRenderer.h>
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -43,6 +46,15 @@ namespace NullRenderer
 	Texture2D::~Texture2D()
 	{
 		// Nothing here
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void Texture2D::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), Texture2D, this);
 	}
 
 

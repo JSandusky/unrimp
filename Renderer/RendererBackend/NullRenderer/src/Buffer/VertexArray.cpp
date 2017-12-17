@@ -23,6 +23,9 @@
 //[-------------------------------------------------------]
 #include "NullRenderer/Buffer/VertexArray.h"
 
+#include <Renderer/IRenderer.h>
+#include <Renderer/IAllocator.h>
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -43,6 +46,15 @@ namespace NullRenderer
 	VertexArray::~VertexArray()
 	{
 		// Nothing here
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void VertexArray::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), VertexArray, this);
 	}
 
 

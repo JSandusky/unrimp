@@ -30,6 +30,7 @@
 
 #include <Renderer/ILog.h>
 #include <Renderer/IAssert.h>
+#include <Renderer/IAllocator.h>
 
 
 //[-------------------------------------------------------]
@@ -449,6 +450,15 @@ namespace Direct3D12Renderer
 	void SwapChain::setRenderWindow(Renderer::IRenderWindow*)
 	{
 		// TODO(sw) implement me
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void SwapChain::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), SwapChain, this);
 	}
 
 

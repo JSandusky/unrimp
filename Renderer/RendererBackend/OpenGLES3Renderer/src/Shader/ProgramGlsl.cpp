@@ -412,6 +412,15 @@ namespace OpenGLES3Renderer
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void ProgramGlsl::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), ProgramGlsl, this);
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

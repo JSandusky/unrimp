@@ -76,6 +76,15 @@ namespace Direct3D9Renderer
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Protected virtual Renderer::RefCount methods          ]
+	//[-------------------------------------------------------]
+	void IndirectBuffer::selfDestruct()
+	{
+		RENDERER_DELETE(getRenderer().getContext(), IndirectBuffer, this);
+	}
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
