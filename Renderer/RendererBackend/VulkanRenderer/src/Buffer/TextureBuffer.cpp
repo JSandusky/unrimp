@@ -63,7 +63,7 @@ namespace VulkanRenderer
 			0,											// offset (VkDeviceSize)
 			VK_WHOLE_SIZE								// range (VkDeviceSize)
 		};
-		if (vkCreateBufferView(vulkanRenderer.getVulkanContext().getVkDevice(), &vkBufferViewCreateInfo, nullptr, &mVkBufferView) != VK_SUCCESS)
+		if (vkCreateBufferView(vulkanRenderer.getVulkanContext().getVkDevice(), &vkBufferViewCreateInfo, vulkanRenderer.getVkAllocationCallbacks(), &mVkBufferView) != VK_SUCCESS)
 		{
 			RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create the Vulkan buffer view")
 		}
@@ -75,7 +75,7 @@ namespace VulkanRenderer
 		const VulkanRenderer& vulkanRenderer = static_cast<const VulkanRenderer&>(getRenderer());
 		if (VK_NULL_HANDLE != mVkBufferView)
 		{
-			vkDestroyBufferView(vulkanRenderer.getVulkanContext().getVkDevice(), mVkBufferView, nullptr);
+			vkDestroyBufferView(vulkanRenderer.getVulkanContext().getVkDevice(), mVkBufferView, vulkanRenderer.getVkAllocationCallbacks());
 		}
 		Helper::destroyAndFreeVkBuffer(vulkanRenderer, mVkBuffer, mVkDeviceMemory);
 	}

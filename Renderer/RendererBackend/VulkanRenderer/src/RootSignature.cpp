@@ -41,14 +41,9 @@ PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(5026)	// warning C5026: 'std::_Generic_error_category': move constructor was implicitly defined as deleted
 	PRAGMA_WARNING_DISABLE_MSVC(5027)	// warning C5027: 'std::_Generic_error_category': move assignment operator was implicitly defined as deleted
 	#include <array>
-PRAGMA_WARNING_POP
-// Disable warnings in external headers, we can't fix them
-PRAGMA_WARNING_PUSH
-	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'argument': conversion from 'long' to 'unsigned int', signed/unsigned mismatch
-	PRAGMA_WARNING_DISABLE_MSVC(4571)	// warning C4571: Informational: catch(...) semantics changed since Visual C++ 7.1; structured exceptions (SEH) are no longer caught
 	#include <vector>
+	#include <memory.h>
 PRAGMA_WARNING_POP
-#include <memory.h>
 
 
 //[-------------------------------------------------------]
@@ -214,7 +209,7 @@ namespace VulkanRenderer
 						static_cast<uint32_t>(vkDescriptorSetLayoutBindings.size()),	// bindingCount (uint32_t)
 						vkDescriptorSetLayoutBindings.data()							// pBindings (const VkDescriptorSetLayoutBinding*)
 					};
-					if (vkCreateDescriptorSetLayout(vkDevice, &vkDescriptorSetLayoutCreateInfo, nullptr, &mVkDescriptorSetLayouts[rootParameterIndex]) != VK_SUCCESS)
+					if (vkCreateDescriptorSetLayout(vkDevice, &vkDescriptorSetLayoutCreateInfo, vulkanRenderer.getVkAllocationCallbacks(), &mVkDescriptorSetLayouts[rootParameterIndex]) != VK_SUCCESS)
 					{
 						RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create the Vulkan descriptor set layout")
 					}
@@ -234,7 +229,7 @@ namespace VulkanRenderer
 				0,																			// pushConstantRangeCount (uint32_t)
 				nullptr																		// pPushConstantRanges (const VkPushConstantRange*)
 			};
-			if (vkCreatePipelineLayout(vkDevice, &vkPipelineLayoutCreateInfo, nullptr, &mVkPipelineLayout) != VK_SUCCESS)
+			if (vkCreatePipelineLayout(vkDevice, &vkPipelineLayoutCreateInfo, vulkanRenderer.getVkAllocationCallbacks(), &mVkPipelineLayout) != VK_SUCCESS)
 			{
 				RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create the Vulkan pipeline layout")
 			}
@@ -284,7 +279,7 @@ namespace VulkanRenderer
 					numberOfVkDescriptorPoolSizes,						// poolSizeCount (uint32_t)
 					vkDescriptorPoolSizes.data()						// pPoolSizes (const VkDescriptorPoolSize*)
 				};
-				if (vkCreateDescriptorPool(vkDevice, &VkDescriptorPoolCreateInfo, nullptr, &mVkDescriptorPool) != VK_SUCCESS)
+				if (vkCreateDescriptorPool(vkDevice, &VkDescriptorPoolCreateInfo, vulkanRenderer.getVkAllocationCallbacks(), &mVkDescriptorPool) != VK_SUCCESS)
 				{
 					RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create the Vulkan descriptor pool")
 				}
@@ -296,18 +291,19 @@ namespace VulkanRenderer
 
 	RootSignature::~RootSignature()
 	{
-		const VkDevice vkDevice = static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice();
+		const VulkanRenderer& vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
+		const VkDevice vkDevice = vulkanRenderer.getVulkanContext().getVkDevice();
 
 		// Destroy the Vulkan descriptor pool
 		if (VK_NULL_HANDLE != mVkDescriptorPool)
 		{
-			vkDestroyDescriptorPool(vkDevice, mVkDescriptorPool, nullptr);
+			vkDestroyDescriptorPool(vkDevice, mVkDescriptorPool, vulkanRenderer.getVkAllocationCallbacks());
 		}
 
 		// Destroy the Vulkan pipeline layout
 		if (VK_NULL_HANDLE != mVkPipelineLayout)
 		{
-			vkDestroyPipelineLayout(vkDevice, mVkPipelineLayout, nullptr);
+			vkDestroyPipelineLayout(vkDevice, mVkPipelineLayout, vulkanRenderer.getVkAllocationCallbacks());
 		}
 
 		// Destroy the Vulkan descriptor set layout
@@ -315,7 +311,7 @@ namespace VulkanRenderer
 		{
 			if (VK_NULL_HANDLE != vkDescriptorSetLayout)
 			{
-				vkDestroyDescriptorSetLayout(vkDevice, vkDescriptorSetLayout, nullptr);
+				vkDestroyDescriptorSetLayout(vkDevice, vkDescriptorSetLayout, vulkanRenderer.getVkAllocationCallbacks());
 			}
 		}
 

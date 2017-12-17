@@ -260,7 +260,7 @@ namespace VulkanRenderer
 			mHeight,									// height (uint32_t
 			1											// layers (uint32_t)
 		};
-		if (vkCreateFramebuffer(vulkanRenderer.getVulkanContext().getVkDevice(), &vkFramebufferCreateInfo, nullptr, &mVkFramebuffer) != VK_SUCCESS)
+		if (vkCreateFramebuffer(vulkanRenderer.getVulkanContext().getVkDevice(), &vkFramebufferCreateInfo, vulkanRenderer.getVkAllocationCallbacks(), &mVkFramebuffer) != VK_SUCCESS)
 		{
 			RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create Vulkan framebuffer")
 		}
@@ -272,12 +272,13 @@ namespace VulkanRenderer
 
 	Framebuffer::~Framebuffer()
 	{
-		const VkDevice vkDevice = static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice();
+		const VulkanRenderer& vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
+		const VkDevice vkDevice = vulkanRenderer.getVulkanContext().getVkDevice();
 
 		// Destroy Vulkan framebuffer instance
 		if (VK_NULL_HANDLE != mVkFramebuffer)
 		{
-			vkDestroyFramebuffer(vkDevice, mVkFramebuffer, nullptr);
+			vkDestroyFramebuffer(vkDevice, mVkFramebuffer, vulkanRenderer.getVkAllocationCallbacks());
 		}
 
 		// Release the reference to the used color textures

@@ -354,7 +354,7 @@ namespace VulkanRenderer
 			VK_NULL_HANDLE,																			// basePipelineHandle (VkPipeline)
 			0																						// basePipelineIndex (int32_t)
 		};
-		if (vkCreateGraphicsPipelines(vulkanRenderer.getVulkanContext().getVkDevice(), VK_NULL_HANDLE, 1, &vkGraphicsPipelineCreateInfo, nullptr, &mVkPipeline) != VK_SUCCESS)
+		if (vkCreateGraphicsPipelines(vulkanRenderer.getVulkanContext().getVkDevice(), VK_NULL_HANDLE, 1, &vkGraphicsPipelineCreateInfo, vulkanRenderer.getVkAllocationCallbacks(), &mVkPipeline) != VK_SUCCESS)
 		{
 			RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create the Vulkan graphics pipeline")
 		}
@@ -369,7 +369,8 @@ namespace VulkanRenderer
 		// Destroy the Vulkan graphics pipeline
 		if (VK_NULL_HANDLE != mVkPipeline)
 		{
-			vkDestroyPipeline(static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), mVkPipeline, nullptr);
+			const VulkanRenderer& vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
+			vkDestroyPipeline(vulkanRenderer.getVulkanContext().getVkDevice(), mVkPipeline, vulkanRenderer.getVkAllocationCallbacks());
 		}
 
 		// Release the program and render pass reference

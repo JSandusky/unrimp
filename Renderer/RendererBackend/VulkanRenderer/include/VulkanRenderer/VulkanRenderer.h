@@ -137,9 +137,9 @@ namespace VulkanRenderer
 		*    Return the Vulkan allocation callbacks
 		*
 		*  @return
-		*    Vulkan allocation callbacks
+		*    Vulkan allocation callbacks, can be a null pointer, don't destroy the instance
 		*/
-		inline const VkAllocationCallbacks& getVkAllocationCallbacks() const;
+		inline const VkAllocationCallbacks* getVkAllocationCallbacks() const;
 
 		/**
 		*  @brief

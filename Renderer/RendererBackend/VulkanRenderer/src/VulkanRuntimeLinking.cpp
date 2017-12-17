@@ -263,13 +263,13 @@ namespace VulkanRenderer
 		// Destroy the Vulkan debug report callback
 		if (VK_NULL_HANDLE != mVkDebugReportCallbackEXT)
 		{
-			vkDestroyDebugReportCallbackEXT(mVkInstance, mVkDebugReportCallbackEXT, nullptr);
+			vkDestroyDebugReportCallbackEXT(mVkInstance, mVkDebugReportCallbackEXT, mVulkanRenderer.getVkAllocationCallbacks());
 		}
 
 		// Destroy the Vulkan instance
 		if (VK_NULL_HANDLE != mVkInstance)
 		{
-			vkDestroyInstance(mVkInstance, nullptr);
+			vkDestroyInstance(mVkInstance, mVulkanRenderer.getVkAllocationCallbacks());
 		}
 
 		// Destroy the shared library instances
@@ -612,7 +612,7 @@ namespace VulkanRenderer
 			static_cast<uint32_t>(enabledExtensions.size()),		// enabledExtensionCount (uint32_t)
 			enabledExtensions.data()								// ppEnabledExtensionNames (const char* const*)
 		};
-		VkResult vkResult = vkCreateInstance(&vkInstanceCreateInfo, &mVulkanRenderer.getVkAllocationCallbacks(), &mVkInstance);
+		VkResult vkResult = vkCreateInstance(&vkInstanceCreateInfo, mVulkanRenderer.getVkAllocationCallbacks(), &mVkInstance);
 		if (VK_ERROR_LAYER_NOT_PRESENT == vkResult && enableValidation)
 		{
 			// Error! Since the show must go on, try creating a Vulkan instance without validation enabled...
@@ -716,7 +716,7 @@ namespace VulkanRenderer
 			::detail::debugReportCallback,									// pfnCallback (PFN_vkDebugReportCallbackEXT)
 			const_cast<Renderer::Context*>(&mVulkanRenderer.getContext())	// pUserData (void*)
 		};
-		if (vkCreateDebugReportCallbackEXT(mVkInstance, &vkDebugReportCallbackCreateInfoEXT, nullptr, &mVkDebugReportCallbackEXT) != VK_SUCCESS)
+		if (vkCreateDebugReportCallbackEXT(mVkInstance, &vkDebugReportCallbackCreateInfoEXT, mVulkanRenderer.getVkAllocationCallbacks(), &mVkDebugReportCallbackEXT) != VK_SUCCESS)
 		{
 			RENDERER_LOG(mVulkanRenderer.getContext(), WARNING, "Failed to create the Vulkan debug report callback")
 		}

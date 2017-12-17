@@ -218,7 +218,7 @@ namespace VulkanRenderer
 			reinterpret_cast<const uint32_t*>(spirvOutputBuffer)	// pCode (const uint32_t*)
 		};
 		VkShaderModule vkShaderModule = VK_NULL_HANDLE;
-		if (vkCreateShaderModule(vulkanRenderer.getVulkanContext().getVkDevice(), &vkShaderModuleCreateInfo, nullptr, &vkShaderModule) != VK_SUCCESS)
+		if (vkCreateShaderModule(vulkanRenderer.getVulkanContext().getVkDevice(), &vkShaderModuleCreateInfo, vulkanRenderer.getVkAllocationCallbacks(), &vkShaderModule) != VK_SUCCESS)
 		{
 			RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create the Vulkan shader module")
 		}
@@ -311,7 +311,7 @@ namespace VulkanRenderer
 							spirv.data()									// pCode (const uint32_t*)
 						};
 						VkShaderModule vkShaderModule = VK_NULL_HANDLE;
-						if (vkCreateShaderModule(vulkanRenderer.getVulkanContext().getVkDevice(), &vkShaderModuleCreateInfo, nullptr, &vkShaderModule) != VK_SUCCESS)
+						if (vkCreateShaderModule(vulkanRenderer.getVulkanContext().getVkDevice(), &vkShaderModuleCreateInfo, vulkanRenderer.getVkAllocationCallbacks(), &vkShaderModule) != VK_SUCCESS)
 						{
 							RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create the Vulkan shader module")
 						}

@@ -28,9 +28,14 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline const VkAllocationCallbacks& VulkanRenderer::getVkAllocationCallbacks() const
+	inline const VkAllocationCallbacks* VulkanRenderer::getVkAllocationCallbacks() const
 	{
-		return mVkAllocationCallbacks;
+		#ifdef VK_USE_PLATFORM_WIN32_KHR
+			return &mVkAllocationCallbacks;
+		#else
+			#warning TODO(co) The "Renderer::StdAllocator" implementation is currently only tested on MS Window, since Vulkan is using aligment it must be sure the custom standard implemtation runs fine
+			return nullptr;
+		#endif
 	}
 
 	inline const VulkanRuntimeLinking& VulkanRenderer::getVulkanRuntimeLinking() const

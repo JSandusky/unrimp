@@ -73,7 +73,7 @@ namespace VulkanRenderer
 			VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK,											// borderColor (VkBorderColor)
 			VK_FALSE																			// unnormalizedCoordinates (VkBool32)
 		};
-		if (vkCreateSampler(vulkanRenderer.getVulkanContext().getVkDevice(), &vkSamplerCreateInfo, nullptr, &mVkSampler) != VK_SUCCESS)
+		if (vkCreateSampler(vulkanRenderer.getVulkanContext().getVkDevice(), &vkSamplerCreateInfo, vulkanRenderer.getVkAllocationCallbacks(), &mVkSampler) != VK_SUCCESS)
 		{
 			RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create Vulkan sampler instance")
 		}
@@ -87,7 +87,8 @@ namespace VulkanRenderer
 	{
 		if (VK_NULL_HANDLE != mVkSampler)
 		{
-			vkDestroySampler(static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), mVkSampler, nullptr);
+			const VulkanRenderer& vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
+			vkDestroySampler(vulkanRenderer.getVulkanContext().getVkDevice(), mVkSampler, vulkanRenderer.getVkAllocationCallbacks());
 		}
 	}
 

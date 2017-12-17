@@ -164,7 +164,7 @@ namespace VulkanRenderer
 		};
 		const VkDevice vkDevice = vulkanRenderer.getVulkanContext().getVkDevice();
 		const Renderer::Context& context = vulkanRenderer.getContext();
-		if (vkCreateRenderPass(vkDevice, &vkRenderPassCreateInfo, nullptr, &mVkRenderPass) != VK_SUCCESS)
+		if (vkCreateRenderPass(vkDevice, &vkRenderPassCreateInfo, vulkanRenderer.getVkAllocationCallbacks(), &mVkRenderPass) != VK_SUCCESS)
 		{
 			RENDERER_LOG(context, CRITICAL, "Failed to create Vulkan render pass")
 		}
@@ -175,7 +175,8 @@ namespace VulkanRenderer
 		// Destroy Vulkan render pass instance
 		if (VK_NULL_HANDLE != mVkRenderPass)
 		{
-			vkDestroyRenderPass(static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), mVkRenderPass, nullptr);
+			const VulkanRenderer& vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
+			vkDestroyRenderPass(vulkanRenderer.getVulkanContext().getVkDevice(), mVkRenderPass, vulkanRenderer.getVkAllocationCallbacks());
 		}
 	}
 

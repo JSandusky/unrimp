@@ -59,7 +59,8 @@ namespace VulkanRenderer
 	{
 		if (VK_NULL_HANDLE != mVkShaderModule)
 		{
-			vkDestroyShaderModule(static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), mVkShaderModule, nullptr);
+			const VulkanRenderer& vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
+			vkDestroyShaderModule(vulkanRenderer.getVulkanContext().getVkDevice(), mVkShaderModule, vulkanRenderer.getVkAllocationCallbacks());
 		}
 	}
 

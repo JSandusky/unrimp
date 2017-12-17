@@ -37,14 +37,9 @@ PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(5026)	// warning C5026: 'std::_Generic_error_category': move constructor was implicitly defined as deleted
 	PRAGMA_WARNING_DISABLE_MSVC(5027)	// warning C5027: 'std::_Generic_error_category': move assignment operator was implicitly defined as deleted
 	#include <array>
-PRAGMA_WARNING_POP
-// Disable warnings in external headers, we can't fix them
-PRAGMA_WARNING_PUSH
-	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'argument': conversion from 'long' to 'unsigned int', signed/unsigned mismatch
-	PRAGMA_WARNING_DISABLE_MSVC(4571)	// warning C4571: Informational: catch(...) semantics changed since Visual C++ 7.1; structured exceptions (SEH) are no longer caught
 	#include <vector>
+	#include <cstring>	// For "strcmp()"
 PRAGMA_WARNING_POP
-#include <cstring>	// For "strcmp()"
 
 
 //[-------------------------------------------------------]
@@ -297,7 +292,7 @@ namespace
 				enabledExtensions.empty() ? nullptr : enabledExtensions.data(),								// ppEnabledExtensionNames (const char* const*)
 				&vkPhysicalDeviceFeatures																	// pEnabledFeatures (const VkPhysicalDeviceFeatures*)
 			};
-			const VkResult vkResult = vkCreateDevice(vkPhysicalDevice, &vkDeviceCreateInfo, nullptr, &vkDevice);
+			const VkResult vkResult = vkCreateDevice(vkPhysicalDevice, &vkDeviceCreateInfo, vulkanRenderer.getVkAllocationCallbacks(), &vkDevice);
 			if (VK_SUCCESS == vkResult && enableDebugMarker)
 			{
 				// Get "VK_EXT_debug_marker"-extension function pointers
@@ -396,7 +391,7 @@ namespace
 				VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,	// flags (VkCommandPoolCreateFlags)
 				graphicsQueueFamilyIndex,							/// queueFamilyIndex (uint32_t)
 			};
-			const VkResult vkResult = vkCreateCommandPool(vkDevice, &vkCommandPoolCreateInfo, nullptr, &vkCommandPool);
+			const VkResult vkResult = vkCreateCommandPool(vkDevice, &vkCommandPoolCreateInfo, vulkanRenderer.getVkAllocationCallbacks(), &vkCommandPool);
 			if (VK_SUCCESS != vkResult)
 			{
 				// Error!
@@ -524,10 +519,10 @@ namespace VulkanRenderer
 				{
 					vkFreeCommandBuffers(mVkDevice, mVkCommandPool, 1, &mVkCommandBuffer);
 				}
-				vkDestroyCommandPool(mVkDevice, mVkCommandPool, nullptr);
+				vkDestroyCommandPool(mVkDevice, mVkCommandPool, mVulkanRenderer.getVkAllocationCallbacks());
 			}
 			vkDeviceWaitIdle(mVkDevice);
-			vkDestroyDevice(mVkDevice, nullptr);
+			vkDestroyDevice(mVkDevice, mVulkanRenderer.getVkAllocationCallbacks());
 		}
 	}
 

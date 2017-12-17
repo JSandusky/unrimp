@@ -355,7 +355,7 @@ namespace VulkanRenderer
 			0,														// queueFamilyIndexCount (uint32_t)
 			nullptr													// pQueueFamilyIndices (const uint32_t*)
 		};
-		if (vkCreateBuffer(vkDevice, &vkBufferCreateInfo, nullptr, &vkBuffer) != VK_SUCCESS)
+		if (vkCreateBuffer(vkDevice, &vkBufferCreateInfo, vulkanRenderer.getVkAllocationCallbacks(), &vkBuffer) != VK_SUCCESS)
 		{
 			RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create the Vulkan buffer")
 		}
@@ -370,7 +370,7 @@ namespace VulkanRenderer
 			vkMemoryRequirements.size,																		// allocationSize (VkDeviceSize)
 			vulkanContext.findMemoryTypeIndex(vkMemoryRequirements.memoryTypeBits, vkMemoryPropertyFlags)	// memoryTypeIndex (uint32_t)
 		};
-		if (vkAllocateMemory(vkDevice, &vkMemoryAllocateInfo, nullptr, &vkDeviceMemory) != VK_SUCCESS)
+		if (vkAllocateMemory(vkDevice, &vkMemoryAllocateInfo, vulkanRenderer.getVkAllocationCallbacks(), &vkDeviceMemory) != VK_SUCCESS)
 		{
 			RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to allocate the Vulkan buffer memory")
 		}
@@ -397,10 +397,10 @@ namespace VulkanRenderer
 		if (VK_NULL_HANDLE != vkBuffer)
 		{
 			const VkDevice vkDevice = vulkanRenderer.getVulkanContext().getVkDevice();
-			vkDestroyBuffer(vkDevice, vkBuffer, nullptr);
+			vkDestroyBuffer(vkDevice, vkBuffer, vulkanRenderer.getVkAllocationCallbacks());
 			if (VK_NULL_HANDLE != vkDeviceMemory)
 			{
-				vkFreeMemory(vkDevice, vkDeviceMemory, nullptr);
+				vkFreeMemory(vkDevice, vkDeviceMemory, vulkanRenderer.getVkAllocationCallbacks());
 			}
 		}
 	}
@@ -641,7 +641,7 @@ namespace VulkanRenderer
 				nullptr,								// pQueueFamilyIndices (const uint32_t*)
 				VK_IMAGE_LAYOUT_PREINITIALIZED			// initialLayout (VkImageLayout)
 			};
-			if (vkCreateImage(vkDevice, &vkImageCreateInfo, nullptr, &vkImage) != VK_SUCCESS)
+			if (vkCreateImage(vkDevice, &vkImageCreateInfo, vulkanRenderer.getVkAllocationCallbacks(), &vkImage) != VK_SUCCESS)
 			{
 				RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create the Vulkan image")
 			}
@@ -657,7 +657,7 @@ namespace VulkanRenderer
 				vkMemoryRequirements.size,																		// allocationSize (VkDeviceSize)
 				vulkanContext.findMemoryTypeIndex(vkMemoryRequirements.memoryTypeBits, vkMemoryPropertyFlags)	// memoryTypeIndex (uint32_t)
 			};
-			if (vkAllocateMemory(vkDevice, &vkMemoryAllocateInfo, nullptr, &vkDeviceMemory) != VK_SUCCESS)
+			if (vkAllocateMemory(vkDevice, &vkMemoryAllocateInfo, vulkanRenderer.getVkAllocationCallbacks(), &vkDeviceMemory) != VK_SUCCESS)
 			{
 				RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to allocate the Vulkan memory")
 			}
@@ -673,11 +673,11 @@ namespace VulkanRenderer
 		if (VK_NULL_HANDLE != vkImage)
 		{
 			const VkDevice vkDevice = vulkanRenderer.getVulkanContext().getVkDevice();
-			vkDestroyImage(vkDevice, vkImage, nullptr);
+			vkDestroyImage(vkDevice, vkImage, vulkanRenderer.getVkAllocationCallbacks());
 			vkImage = VK_NULL_HANDLE;
 			if (VK_NULL_HANDLE != vkDeviceMemory)
 			{
-				vkFreeMemory(vkDevice, vkDeviceMemory, nullptr);
+				vkFreeMemory(vkDevice, vkDeviceMemory, vulkanRenderer.getVkAllocationCallbacks());
 				vkDeviceMemory = VK_NULL_HANDLE;
 			}
 		}
@@ -687,7 +687,7 @@ namespace VulkanRenderer
 	{
 		if (VK_NULL_HANDLE != vkImageView)
 		{
-			vkDestroyImageView(vulkanRenderer.getVulkanContext().getVkDevice(), vkImageView, nullptr);
+			vkDestroyImageView(vulkanRenderer.getVulkanContext().getVkDevice(), vkImageView, vulkanRenderer.getVkAllocationCallbacks());
 			vkImageView = VK_NULL_HANDLE;
 		}
 		destroyAndFreeVkImage(vulkanRenderer, vkImage, vkDeviceMemory);
@@ -717,7 +717,7 @@ namespace VulkanRenderer
 				layerCount								// layerCount (uint32_t)
 			}
 		};
-		if (vkCreateImageView(vulkanRenderer.getVulkanContext().getVkDevice(), &vkImageViewCreateInfo, nullptr, &vkImageView) != VK_SUCCESS)
+		if (vkCreateImageView(vulkanRenderer.getVulkanContext().getVkDevice(), &vkImageViewCreateInfo, vulkanRenderer.getVkAllocationCallbacks(), &vkImageView) != VK_SUCCESS)
 		{
 			RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to create Vulkan image view")
 		}

@@ -61,6 +61,7 @@ namespace
 		//[-------------------------------------------------------]
 		VkSurfaceKHR createPresentationSurface(const VulkanRenderer::VulkanContext& vulkanContext, VkInstance vkInstance, VkPhysicalDevice vkPhysicalDevice, Renderer::WindowHandle windoInfo)
 		{
+			const VulkanRenderer::VulkanRenderer& vulkanRenderer = vulkanContext.getVulkanRenderer();
 			VkSurfaceKHR vkSurfaceKHR = VK_NULL_HANDLE;
 
 			#ifdef VK_USE_PLATFORM_WIN32_KHR
@@ -72,7 +73,7 @@ namespace
 					reinterpret_cast<HINSTANCE>(::GetWindowLongPtr(reinterpret_cast<HWND>(windoInfo.nativeWindowHandle), GWLP_HINSTANCE)),	// hinstance (HINSTANCE)
 					reinterpret_cast<HWND>(windoInfo.nativeWindowHandle)																	// hwnd (HWND)
 				};
-				if (vkCreateWin32SurfaceKHR(vkInstance, &vkWin32SurfaceCreateInfoKHR, nullptr, &vkSurfaceKHR) != VK_SUCCESS)
+				if (vkCreateWin32SurfaceKHR(vkInstance, &vkWin32SurfaceCreateInfoKHR, vulkanRenderer.getVkAllocationCallbacks(), &vkSurfaceKHR) != VK_SUCCESS)
 				{
 					// TODO(co) Can we ensure "vkSurfaceKHR" doesn't get touched by "vkCreateWin32SurfaceKHR()" in case of failure?
 					vkSurfaceKHR = VK_NULL_HANDLE;
@@ -86,7 +87,7 @@ namespace
 					0,																// flags (VkAndroidSurfaceCreateFlagsKHR)
 					reinterpret_cast<ANativeWindow*>(windoInfo.nativeWindowHandle)	// window (ANativeWindow*)
 				};
-				if (vkCreateAndroidSurfaceKHR(vkInstance, &vkAndroidSurfaceCreateInfoKHR, nullptr, &vkSurfaceKHR) != VK_SUCCESS)
+				if (vkCreateAndroidSurfaceKHR(vkInstance, &vkAndroidSurfaceCreateInfoKHR, vulkanRenderer.getVkAllocationCallbacks(), &vkSurfaceKHR) != VK_SUCCESS)
 				{
 					// TODO(co) Can we ensure "vkSurfaceKHR" doesn't get touched by "vkCreateAndroidSurfaceKHR()" in case of failure?
 					vkSurfaceKHR = VK_NULL_HANDLE;
@@ -108,7 +109,7 @@ namespace
 						x11Context.getDisplay(),						// dpy (Display*)
 						windoInfo.nativeWindowHandle					// window (Window)
 					};
-					if (vkCreateXlibSurfaceKHR(vkInstance, &vkXlibSurfaceCreateInfoKHR, nullptr, &vkSurfaceKHR) != VK_SUCCESS)
+					if (vkCreateXlibSurfaceKHR(vkInstance, &vkXlibSurfaceCreateInfoKHR, vulkanRenderer.getVkAllocationCallbacks(), &vkSurfaceKHR) != VK_SUCCESS)
 					{
 						// TODO(co) Can we ensure "vkSurfaceKHR" doesn't get touched by "vkCreateXlibSurfaceKHR()" in case of failure?
 						vkSurfaceKHR = VK_NULL_HANDLE;
@@ -125,7 +126,7 @@ namespace
 						waylandContext.getDisplay(),						// display (wl_display*)
 						windoInfo.waylandSurface							// surface (wl_surface*)
 					};
-					if (vkCreateWaylandSurfaceKHR(vkInstance, &vkWaylandSurfaceCreateInfoKHR, nullptr, &vkSurfaceKHR) != VK_SUCCESS)
+					if (vkCreateWaylandSurfaceKHR(vkInstance, &vkWaylandSurfaceCreateInfoKHR, vulkanRenderer.getVkAllocationCallbacks(), &vkSurfaceKHR) != VK_SUCCESS)
 					{
 						// TODO(co) Can we ensure "vkSurfaceKHR" doesn't get touched by "vkCreateWaylandSurfaceKHR()" in case of failure?
 						vkSurfaceKHR = VK_NULL_HANDLE;
@@ -141,7 +142,7 @@ namespace
 					TODO(co)										// connection (xcb_connection_t*)
 					TODO(co)										// window (xcb_window_t)
 				};
-				if (vkCreateXcbSurfaceKHR(vkInstance, &vkXcbSurfaceCreateInfoKHR, nullptr, &vkSurfaceKHR) != VK_SUCCESS)
+				if (vkCreateXcbSurfaceKHR(vkInstance, &vkXcbSurfaceCreateInfoKHR, vulkanRenderer.getVkAllocationCallbacks(), &vkSurfaceKHR) != VK_SUCCESS)
 				{
 					// TODO(co) Can we ensure "vkSurfaceKHR" doesn't get touched by "vkCreateXcbSurfaceKHR()" in case of failure?
 					vkSurfaceKHR = VK_NULL_HANDLE;
@@ -317,7 +318,7 @@ namespace
 			return VK_PRESENT_MODE_MAX_ENUM_KHR;
 		}
 
-		VkRenderPass createRenderPass(const Renderer::Context& context, VkDevice vkDevice, VkFormat colorVkFormat, VkFormat depthVkFormat, VkSampleCountFlagBits vkSampleCountFlagBits)
+		VkRenderPass createRenderPass(const VulkanRenderer::VulkanRenderer& vulkanRenderer, const Renderer::Context& context, VkDevice vkDevice, VkFormat colorVkFormat, VkFormat depthVkFormat, VkSampleCountFlagBits vkSampleCountFlagBits)
 		{
 			const bool hasDepthStencilAttachment = (VK_FORMAT_UNDEFINED != depthVkFormat);
 
@@ -395,7 +396,7 @@ namespace
 
 			// Create render pass
 			VkRenderPass vkRenderPass = VK_NULL_HANDLE;
-			if (vkCreateRenderPass(vkDevice, &vkRenderPassCreateInfo, nullptr, &vkRenderPass) != VK_SUCCESS)
+			if (vkCreateRenderPass(vkDevice, &vkRenderPassCreateInfo, vulkanRenderer.getVkAllocationCallbacks(), &vkRenderPass) != VK_SUCCESS)
 			{
 				RENDERER_LOG(context, CRITICAL, "Failed to create Vulkan render pass")
 			}
@@ -447,7 +448,7 @@ namespace VulkanRenderer
 		const VkPhysicalDevice vkPhysicalDevice = vulkanContext.getVkPhysicalDevice();
 		const VkSurfaceKHR vkSurfaceKHR = detail::createPresentationSurface(vulkanContext, vkInstance, vkPhysicalDevice, Renderer::WindowHandle{context.getNativeWindowHandle(), nullptr, nullptr});
 		const VkSurfaceFormatKHR desiredVkSurfaceFormatKHR = ::detail::getSwapChainFormat(context, vkPhysicalDevice, vkSurfaceKHR);
-		vkDestroySurfaceKHR(vkInstance, vkSurfaceKHR, nullptr);
+		vkDestroySurfaceKHR(vkInstance, vkSurfaceKHR, vulkanContext.getVulkanRenderer().getVkAllocationCallbacks());
 		return desiredVkSurfaceFormatKHR.format;
 	}
 
@@ -502,7 +503,8 @@ namespace VulkanRenderer
 		if (VK_NULL_HANDLE != mVkSurfaceKHR)
 		{
 			destroyVulkanSwapChain();
-			vkDestroySurfaceKHR(static_cast<VulkanRenderer&>(getRenderer()).getVulkanRuntimeLinking().getVkInstance(), mVkSurfaceKHR, nullptr);
+			const VulkanRenderer& vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
+			vkDestroySurfaceKHR(vulkanRenderer.getVulkanRuntimeLinking().getVkInstance(), mVkSurfaceKHR, vulkanRenderer.getVkAllocationCallbacks());
 		}
 	}
 
@@ -792,7 +794,7 @@ namespace VulkanRenderer
 				VK_TRUE,										// clipped (VkBool32)
 				mVkSwapchainKHR									// oldSwapchain (VkSwapchainKHR)
 			};
-			if (vkCreateSwapchainKHR(vkDevice, &vkSwapchainCreateInfoKHR, nullptr, &newVkSwapchainKHR) != VK_SUCCESS)
+			if (vkCreateSwapchainKHR(vkDevice, &vkSwapchainCreateInfoKHR, vulkanRenderer.getVkAllocationCallbacks(), &newVkSwapchainKHR) != VK_SUCCESS)
 			{
 				RENDERER_LOG(context, CRITICAL, "Failed to create Vulkan swap chain")
 				return;
@@ -805,7 +807,7 @@ namespace VulkanRenderer
 		createDepthRenderTarget(desiredVkExtent2D);
 
 		// Create render pass
-		mVkRenderPass = ::detail::createRenderPass(context, vkDevice, desiredVkSurfaceFormatKHR.format, mDepthVkFormat, static_cast<RenderPass&>(getRenderPass()).getVkSampleCountFlagBits());
+		mVkRenderPass = ::detail::createRenderPass(vulkanRenderer, context, vkDevice, desiredVkSurfaceFormatKHR.format, mDepthVkFormat, static_cast<RenderPass&>(getRenderPass()).getVkSampleCountFlagBits());
 
 		// Vulkan swap chain image handling
 		if (VK_NULL_HANDLE != mVkRenderPass)
@@ -853,7 +855,7 @@ namespace VulkanRenderer
 						desiredVkExtent2D.height,					// height (uint32_t)
 						1											// layers (uint32_t)
 					};
-					if (vkCreateFramebuffer(vkDevice, &vkFramebufferCreateInfo, nullptr, &swapChainBuffer.vkFramebuffer) != VK_SUCCESS)
+					if (vkCreateFramebuffer(vkDevice, &vkFramebufferCreateInfo, vulkanRenderer.getVkAllocationCallbacks(), &swapChainBuffer.vkFramebuffer) != VK_SUCCESS)
 					{
 						RENDERER_LOG(context, CRITICAL, "Failed to create Vulkan framebuffer")
 					}
@@ -868,8 +870,8 @@ namespace VulkanRenderer
 				nullptr,									// pNext (const void*)
 				0											// flags (VkSemaphoreCreateFlags)
 			};
-			if ((vkCreateSemaphore(vkDevice, &vkSemaphoreCreateInfo, nullptr, &mImageAvailableVkSemaphore) != VK_SUCCESS) ||
-				(vkCreateSemaphore(vkDevice, &vkSemaphoreCreateInfo, nullptr, &mRenderingFinishedVkSemaphore) != VK_SUCCESS))
+			if ((vkCreateSemaphore(vkDevice, &vkSemaphoreCreateInfo, vulkanRenderer.getVkAllocationCallbacks(), &mImageAvailableVkSemaphore) != VK_SUCCESS) ||
+				(vkCreateSemaphore(vkDevice, &vkSemaphoreCreateInfo, vulkanRenderer.getVkAllocationCallbacks(), &mRenderingFinishedVkSemaphore) != VK_SUCCESS))
 			{
 				RENDERER_LOG(context, CRITICAL, "Failed to create Vulkan semaphore")
 			}
@@ -884,35 +886,36 @@ namespace VulkanRenderer
 		// Destroy Vulkan swap chain
 		if (VK_NULL_HANDLE != mVkRenderPass || !mSwapChainBuffer.empty() || VK_NULL_HANDLE != mVkSwapchainKHR)
 		{
-			const VkDevice vkDevice = static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice();
+			const VulkanRenderer& vulkanRenderer = static_cast<VulkanRenderer&>(getRenderer());
+			const VkDevice vkDevice = vulkanRenderer.getVulkanContext().getVkDevice();
 			vkDeviceWaitIdle(vkDevice);
 			if (VK_NULL_HANDLE != mVkRenderPass)
 			{
-				vkDestroyRenderPass(vkDevice, mVkRenderPass, nullptr);
+				vkDestroyRenderPass(vkDevice, mVkRenderPass, vulkanRenderer.getVkAllocationCallbacks());
 				mVkRenderPass = VK_NULL_HANDLE;
 			}
 			if (!mSwapChainBuffer.empty())
 			{
 				for (const SwapChainBuffer& swapChainBuffer : mSwapChainBuffer)
 				{
-					vkDestroyFramebuffer(vkDevice, swapChainBuffer.vkFramebuffer, nullptr);
-					vkDestroyImageView(vkDevice, swapChainBuffer.vkImageView, nullptr);
+					vkDestroyFramebuffer(vkDevice, swapChainBuffer.vkFramebuffer, vulkanRenderer.getVkAllocationCallbacks());
+					vkDestroyImageView(vkDevice, swapChainBuffer.vkImageView, vulkanRenderer.getVkAllocationCallbacks());
 				}
 				mSwapChainBuffer.clear();
 			}
 			if (VK_NULL_HANDLE != mVkSwapchainKHR)
 			{
-				vkDestroySwapchainKHR(vkDevice, mVkSwapchainKHR, nullptr);
+				vkDestroySwapchainKHR(vkDevice, mVkSwapchainKHR, vulkanRenderer.getVkAllocationCallbacks());
 				mVkSwapchainKHR = VK_NULL_HANDLE;
 			}
 			if (VK_NULL_HANDLE != mImageAvailableVkSemaphore)
 			{
-				vkDestroySemaphore(static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), mImageAvailableVkSemaphore, nullptr);
+				vkDestroySemaphore(vulkanRenderer.getVulkanContext().getVkDevice(), mImageAvailableVkSemaphore, vulkanRenderer.getVkAllocationCallbacks());
 				mImageAvailableVkSemaphore = VK_NULL_HANDLE;
 			}
 			if (VK_NULL_HANDLE != mRenderingFinishedVkSemaphore)
 			{
-				vkDestroySemaphore(static_cast<VulkanRenderer&>(getRenderer()).getVulkanContext().getVkDevice(), mRenderingFinishedVkSemaphore, nullptr);
+				vkDestroySemaphore(vulkanRenderer.getVulkanContext().getVkDevice(), mRenderingFinishedVkSemaphore, vulkanRenderer.getVkAllocationCallbacks());
 				mRenderingFinishedVkSemaphore = VK_NULL_HANDLE;
 			}
 		}
