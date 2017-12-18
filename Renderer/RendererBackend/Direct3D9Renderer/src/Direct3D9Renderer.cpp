@@ -808,8 +808,7 @@ namespace Direct3D9Renderer
 		// Set the Direct3D 9 scissor rectangles
 		// -> "Renderer::ScissorRectangle" directly maps to Direct3D 9 & 10 & 11, do not change it
 		// -> Direct3D 9 supports only one viewport
-		RENDERER_ASSERT(mContext, numberOfScissorRectangles < 0, "Direct3D 9 supports only one scissor rectangle")
-	#endif
+		RENDERER_ASSERT(mContext, numberOfScissorRectangles <= 1, "Direct3D 9 supports only one scissor rectangle")
 		mDirect3DDevice9->SetScissorRect(reinterpret_cast<const RECT*>(scissorRectangles));
 	}
 
