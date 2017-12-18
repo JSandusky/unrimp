@@ -103,6 +103,7 @@ namespace OpenGLES3Renderer
 				if (mEGLConfig)
 				{
 					// Create context (request an version 3 client)
+					// TODO(co) Add support for the "GL_KHR_no_error"-extension
 					const EGLint contextAttribs[] = {
 						EGL_CONTEXT_CLIENT_VERSION, 3,
 						#ifdef RENDERER_OUTPUT_DEBUG

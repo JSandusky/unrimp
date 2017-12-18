@@ -220,6 +220,7 @@ namespace OpenGLRenderer
 
 				// Create the OpenGL context
 				// -> OpenGL 4.1 (the best OpenGL version Mac OS X 10.11 supports, so lowest version we have to support)
+				// TODO(co) Add support for the "GL_KHR_no_error"-extension
 				int ATTRIBUTES[] =
 				{
 					// We want an OpenGL context

@@ -258,9 +258,12 @@ namespace OpenGLRenderer
 						WGL_CONTEXT_MAJOR_VERSION_ARB, 4,
 						WGL_CONTEXT_MINOR_VERSION_ARB, 1,
 						WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
-						// -> "WGL_CONTEXT_DEBUG_BIT_ARB" comes from the "GL_ARB_debug_output"-extension
 						#ifdef RENDERER_OUTPUT_DEBUG
+							// "WGL_CONTEXT_DEBUG_BIT_ARB" comes from the "GL_ARB_debug_output"-extension
 							WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_DEBUG_BIT_ARB,
+						#else
+							// "WGL_ARB_create_context_no_error" and "GL_KHR_no_error"-extension
+							((nullptr != strstr(extensions, "WGL_ARB_create_context_no_error")) ? WGL_CONTEXT_OPENGL_NO_ERROR_ARB : 0), 1,
 						#endif
 						// Done
 						0
