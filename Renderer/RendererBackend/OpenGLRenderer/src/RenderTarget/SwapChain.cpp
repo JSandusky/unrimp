@@ -66,7 +66,7 @@ namespace OpenGLRenderer
 		mOwnsOpenGLContext(true),
 		mRenderWindow(windowHandle.renderWindow),
 		mVerticalSynchronizationInterval(0),
-		mNewVerticalSynchronizationInterval(~0u)
+		mNewVerticalSynchronizationInterval(0)	// 0 instead of ~0u to ensure that we always set the swap interval at least once to have a known initial setting
 	{
 		#ifdef WIN32
 			std::ignore = useExternalContext;

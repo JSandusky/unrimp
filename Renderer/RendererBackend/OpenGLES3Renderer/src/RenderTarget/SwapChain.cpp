@@ -49,7 +49,7 @@ namespace OpenGLES3Renderer
 		ISwapChain(renderPass),
 		mNativeWindowHandle(windowHandle.nativeWindowHandle),
 		mRenderWindow(windowHandle.renderWindow),
-		mNewVerticalSynchronizationInterval(~0u)
+		mNewVerticalSynchronizationInterval(0)	// 0 instead of ~0u to ensure that we always set the swap interval at least once to have a known initial setting
 	{
 		// Nothing here
 	}
