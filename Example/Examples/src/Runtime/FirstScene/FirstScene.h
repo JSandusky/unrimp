@@ -177,14 +177,15 @@ private:
 	RendererRuntime::SceneNode*				mSceneNode;
 	// States for runtime-editing
 	RendererRuntime::DebugGuiHelper::GizmoSettings mGizmoSettings;
-	// Global
+	// Video
+	float mResolutionScale;
+	bool  mUseVerticalSynchronization;
+	bool  mCurrentUseVerticalSynchronization;
+	int	  mCurrentMsaa;
+	// Graphics
 	Compositor mInstancedCompositor;
 	int		   mCurrentCompositor;
-	bool	   mUseVerticalSynchronization;
-	bool	   mCurrentUseVerticalSynchronization;
 	bool	   mHighQualityLighting;
-	int		   mCurrentMsaa;
-	float	   mResolutionScale;
 	int		   mCurrentTextureFiltering;
 	int		   mNumberOfTopTextureMipmapsToRemove;
 	// Environment

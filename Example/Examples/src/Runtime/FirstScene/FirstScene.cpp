@@ -96,14 +96,15 @@ FirstScene::FirstScene() :
 	mSunlightSceneItem(nullptr),
 	mSkeletonMeshSceneItem(nullptr),
 	mSceneNode(nullptr),
-	// Global
-	mInstancedCompositor(Compositor::FORWARD),
-	mCurrentCompositor(mInstancedCompositor),
+	// Video
+	mResolutionScale(1.0f),
 	mUseVerticalSynchronization(false),
 	mCurrentUseVerticalSynchronization(false),
-	mHighQualityLighting(true),
 	mCurrentMsaa(Msaa::FOUR),
-	mResolutionScale(1.0f),
+	// Graphics
+	mInstancedCompositor(Compositor::FORWARD),
+	mCurrentCompositor(mInstancedCompositor),
+	mHighQualityLighting(true),
 	mCurrentTextureFiltering(TextureFiltering::ANISOTROPIC_4),
 	mNumberOfTopTextureMipmapsToRemove(0),
 	// Environment
@@ -538,24 +539,29 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				}
 				ImGui::Separator();
 
-				// Global
-				if (ImGui::BeginMenu("Global"))
+				// Video
+				if (ImGui::BeginMenu("Video"))
+				{
+					// TODO(co) Add resolution and refresh rate combo box
+					// TODO(co) Add fullscreen combo box (window, borderless window, native fullscreen)
+					ImGui::SliderFloat("Resolution Scale", &mResolutionScale, 0.05f, 4.0f, "%.3f");
+					ImGui::Checkbox("Vertical Synchronization", &mUseVerticalSynchronization);
+					if (rendererRuntime->getRenderer().getCapabilities().maximumNumberOfMultisamples > 1)
+					{
+						const char* items[] = { "None", "2x", "4x", "8x" };
+						ImGui::Combo("MSAA", &mCurrentMsaa, items, static_cast<int>(glm::countof(items)));
+					}
+					ImGui::EndMenu();
+				}
+
+				// Graphics
+				if (ImGui::BeginMenu("Graphics"))
 				{
 					{
 						const char* items[] = { "Debug", "Forward", "Deferred", "VR" };
 						ImGui::Combo("Compositor", &mCurrentCompositor, items, static_cast<int>(glm::countof(items)));
 					}
-					ImGui::Checkbox("Vertical Synchronization", &mUseVerticalSynchronization);
 					ImGui::Checkbox("High Quality Lighting", &mHighQualityLighting);
-					{
-						const Renderer::Capabilities& capabilities = rendererRuntime->getRenderer().getCapabilities();
-						if (capabilities.maximumNumberOfMultisamples > 1)
-						{
-							const char* items[] = { "None", "2x", "4x", "8x" };
-							ImGui::Combo("MSAA", &mCurrentMsaa, items, static_cast<int>(glm::countof(items)));
-						}
-					}
-					ImGui::SliderFloat("Resolution Scale", &mResolutionScale, 0.05f, 4.0f, "%.3f");
 					{
 						const char* items[] = { "Point", "Bilinear", "Trilinear", "2x Anisotropic", "4x Anisotropic", "8x Anisotropic", "16x Anisotropic" };
 						ImGui::Combo("Texture filtering", &mCurrentTextureFiltering, items, static_cast<int>(glm::countof(items)));
