@@ -87,9 +87,9 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void FragmentShaderHlsl::setDebugName(const char* name)
-	{
-		#ifndef DIRECT3D11RENDERER_NO_DEBUG
+	#ifdef RENDERER_DEBUG
+		void FragmentShaderHlsl::setDebugName(const char* name)
+		{
 			// Valid Direct3D 11 pixel shader?
 			if (nullptr != mD3D11PixelShader)
 			{
@@ -98,8 +98,13 @@ namespace Direct3D11Renderer
 				mD3D11PixelShader->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
 				mD3D11PixelShader->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(name)), name);
 			}
-		#endif
-	}
+		}
+	#else
+		void FragmentShaderHlsl::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 
 	//[-------------------------------------------------------]

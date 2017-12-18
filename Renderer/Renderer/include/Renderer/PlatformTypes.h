@@ -234,82 +234,7 @@ PRAGMA_WARNING_POP
 //[ Debug                                                 ]
 //[-------------------------------------------------------]
 // Debug macros
-#ifdef RENDERER_NO_DEBUG
-	/**
-	*  @brief
-	*    Set a debug marker
-	*
-	*  @param[in] renderer
-	*    Pointer to the renderer instance to use, can be a null pointer
-	*  @param[in] name
-	*    ASCII name of the debug marker
-	*
-	*  @note
-	*    - Only for renderer backend internal usage, don't expose it inside the public renderer header
-	*/
-	#define RENDERER_SET_DEBUG_MARKER(renderer, name)
-
-	/**
-	*  @brief
-	*    Set a debug marker by using the current function name ("__FUNCTION__") as marker name
-	*
-	*  @param[in] renderer
-	*    Pointer to the renderer instance to use, can be a null pointer
-	*
-	*  @note
-	*    - Only for renderer backend internal usage, don't expose it inside the public renderer header
-	*/
-	#define RENDERER_SET_DEBUG_MARKER_FUNCTION(renderer)
-
-	/**
-	*  @brief
-	*    Begin debug event
-	*
-	*  @param[in] renderer
-	*    Pointer to the renderer instance to use, can be a null pointer
-	*  @param[in] name
-	*    ASCII name of the debug event
-	*
-	*  @note
-	*    - Only for renderer backend internal usage, don't expose it inside the public renderer header
-	*/
-	#define RENDERER_BEGIN_DEBUG_EVENT(renderer, name)
-
-	/**
-	*  @brief
-	*    Begin debug event by using the current function name ("__FUNCTION__") as event name
-	*
-	*  @param[in] renderer
-	*    Pointer to the renderer instance to use, can be a null pointer
-	*
-	*  @note
-	*    - Only for renderer backend internal usage, don't expose it inside the public renderer header
-	*/
-	#define RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
-
-	/**
-	*  @brief
-	*    End the last started debug event
-	*
-	*  @param[in] renderer
-	*    Pointer to the renderer instance to use, can be a null pointer
-	*
-	*  @note
-	*    - Only for renderer backend internal usage, don't expose it inside the public renderer header
-	*/
-	#define RENDERER_END_DEBUG_EVENT(renderer)
-
-	/**
-	*  @brief
-	*    Assign a name to a given resource for debugging purposes
-	*
-	*  @param[in] resource
-	*    Resource to assign the debug name to, can be a null pointer
-	*  @param[in] name
-	*    ASCII name for debugging purposes, must be valid (there's no internal null pointer test)
-	*/
-	#define RENDERER_SET_RESOURCE_DEBUG_NAME(resource, name)
-#else
+#ifdef RENDERER_DEBUG
 	/**
 	*  @brief
 	*    Set a debug marker
@@ -409,4 +334,79 @@ PRAGMA_WARNING_POP
 			strcat(detailedName, ": "); \
 			strncat(detailedName, name, 256); \
 		}
+#else
+	/**
+	*  @brief
+	*    Set a debug marker
+	*
+	*  @param[in] renderer
+	*    Pointer to the renderer instance to use, can be a null pointer
+	*  @param[in] name
+	*    ASCII name of the debug marker
+	*
+	*  @note
+	*    - Only for renderer backend internal usage, don't expose it inside the public renderer header
+	*/
+	#define RENDERER_SET_DEBUG_MARKER(renderer, name)
+
+	/**
+	*  @brief
+	*    Set a debug marker by using the current function name ("__FUNCTION__") as marker name
+	*
+	*  @param[in] renderer
+	*    Pointer to the renderer instance to use, can be a null pointer
+	*
+	*  @note
+	*    - Only for renderer backend internal usage, don't expose it inside the public renderer header
+	*/
+	#define RENDERER_SET_DEBUG_MARKER_FUNCTION(renderer)
+
+	/**
+	*  @brief
+	*    Begin debug event
+	*
+	*  @param[in] renderer
+	*    Pointer to the renderer instance to use, can be a null pointer
+	*  @param[in] name
+	*    ASCII name of the debug event
+	*
+	*  @note
+	*    - Only for renderer backend internal usage, don't expose it inside the public renderer header
+	*/
+	#define RENDERER_BEGIN_DEBUG_EVENT(renderer, name)
+
+	/**
+	*  @brief
+	*    Begin debug event by using the current function name ("__FUNCTION__") as event name
+	*
+	*  @param[in] renderer
+	*    Pointer to the renderer instance to use, can be a null pointer
+	*
+	*  @note
+	*    - Only for renderer backend internal usage, don't expose it inside the public renderer header
+	*/
+	#define RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(renderer)
+
+	/**
+	*  @brief
+	*    End the last started debug event
+	*
+	*  @param[in] renderer
+	*    Pointer to the renderer instance to use, can be a null pointer
+	*
+	*  @note
+	*    - Only for renderer backend internal usage, don't expose it inside the public renderer header
+	*/
+	#define RENDERER_END_DEBUG_EVENT(renderer)
+
+	/**
+	*  @brief
+	*    Assign a name to a given resource for debugging purposes
+	*
+	*  @param[in] resource
+	*    Resource to assign the debug name to, can be a null pointer
+	*  @param[in] name
+	*    ASCII name for debugging purposes, must be valid (there's no internal null pointer test)
+	*/
+	#define RENDERER_SET_RESOURCE_DEBUG_NAME(resource, name)
 #endif

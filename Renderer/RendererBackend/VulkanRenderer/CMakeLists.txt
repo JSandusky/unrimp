@@ -24,11 +24,10 @@ cmake_minimum_required(VERSION 3.3.0)
 ##################################################
 ## Preprocessor definitions
 ##################################################
-if(NOT RENDERER_DEBUG)
-	add_definitions(-DRENDERER_NO_DEBUG)
-endif()
-if(RENDERER_VULKAN_NO_RENDERERMATCHCHECK)
-	add_definitions(-DVULKANRENDERER_NO_RENDERERMATCHCHECK)
+if(RENDERER_DEBUG)
+	add_definitions(-DRENDERER_DEBUG)
+else()
+	add_definitions(-D_DEBUG)
 endif()
 if(RENDERER_VULKAN_GLSLTOSPIRV)
 	add_definitions(-DVULKANRENDERER_GLSLTOSPIRV)

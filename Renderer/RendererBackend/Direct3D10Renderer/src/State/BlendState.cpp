@@ -72,7 +72,7 @@ namespace Direct3D10Renderer
 		direct3D10Renderer.getD3D10Device()->CreateBlendState(&d3d10BlendDesc, &mD3D10BlendState);
 
 		// Assign a default name to the resource for debugging purposes
-		#ifndef DIRECT3D10RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			setDebugName("Blend state");
 		#endif
 	}
@@ -90,9 +90,9 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Direct3D10Renderer::IState methods     ]
 	//[-------------------------------------------------------]
-	void BlendState::setDebugName(const char* name)
-	{
-		#ifndef DIRECT3D10RENDERER_NO_DEBUG
+	#ifdef RENDERER_DEBUG
+		void BlendState::setDebugName(const char* name)
+		{
 			// Valid Direct3D 10 blend state?
 			if (nullptr != mD3D10BlendState)
 			{
@@ -101,8 +101,13 @@ namespace Direct3D10Renderer
 				mD3D10BlendState->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
 				mD3D10BlendState->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(name)), name);
 			}
-		#endif
-	}
+		}
+	#else
+		void BlendState::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 
 //[-------------------------------------------------------]

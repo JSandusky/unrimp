@@ -157,7 +157,7 @@ namespace Direct3D12Renderer
 		RENDERER_FREE(context, const_cast<D3D12_STATIC_SAMPLER_DESC*>(d3d12RootSignatureDesc.pStaticSamplers));
 
 		// Assign a default name to the resource for debugging purposes
-		#ifndef DIRECT3D12RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			setDebugName("Root signature");
 		#endif
 	}
@@ -186,9 +186,9 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void RootSignature::setDebugName(const char* name)
-	{
-		#ifndef DIRECT3D12RENDERER_NO_DEBUG
+	#ifdef RENDERER_DEBUG
+		void RootSignature::setDebugName(const char* name)
+		{
 			// Valid Direct3D 12 root signature?
 			if (nullptr != mD3D12RootSignature)
 			{
@@ -197,8 +197,13 @@ namespace Direct3D12Renderer
 				mD3D12RootSignature->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
 				mD3D12RootSignature->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(name)), name);
 			}
-		#endif
-	}
+		}
+	#else
+		void RootSignature::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 
 	//[-------------------------------------------------------]

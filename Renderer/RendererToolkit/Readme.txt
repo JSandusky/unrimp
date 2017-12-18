@@ -33,5 +33,4 @@ Renderer toolkit.
 
 == Preprocessor Definitions ==
 - Set "RENDERERTOOLKIT_EXPORTS" as preprocessor definition when building this library as shared library
-- Set "RENDERERTOOLKIT_NO_RENDERERMATCHCHECK" as preprocessor definition when building this library to remove renderer<->resource matches (better performance, reduces the binary size slightly, but you will receive no hint when using a resource from another renderer instance)
 - Do also have a look into the renderer readme file

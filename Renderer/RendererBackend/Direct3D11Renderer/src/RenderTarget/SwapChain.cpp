@@ -281,7 +281,7 @@ namespace Direct3D11Renderer
 		}
 
 		// Assign a default name to the resource for debugging purposes
-		#ifndef DIRECT3D11RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			setDebugName("Swap chain");
 		#endif
 	}
@@ -325,7 +325,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	void SwapChain::setDebugName(const char* name)
 	{
-		#ifndef DIRECT3D11RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			// Assign a debug name to the DXGI swap chain
 			if (nullptr != mDxgiSwapChain)
 			{
@@ -352,6 +352,8 @@ namespace Direct3D11Renderer
 				mD3D11DepthStencilView->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
 				mD3D11DepthStencilView->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(name)), name);
 			}
+		#else
+			std::ignore = name;
 		#endif
 	}
 

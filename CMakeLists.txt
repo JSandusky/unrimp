@@ -100,21 +100,16 @@ if(NOT ANDROID)
 	set(RENDERER_OPENGL			"1"	CACHE BOOL "Build OpenGL renderer?")
 		# Advanced OpenGL renderer options
 		set(RENDERER_OPENGL_NO_STATE_CLEANUP		"1"	CACHE BOOL "If true, the previous OpenGL state will not be restored after performing an operation (better performance, reduces the binary size slightly, but might result in unexpected behaviour when using OpenGL directly beside this renderer)")
-		set(RENDERER_OPENGL_NO_RENDERERMATCHCHECK	"1"	CACHE BOOL "If true, remove renderer<->resource matches (better performance, reduces the binary size slightly, but you will receive no hint when using a resource from another renderer instance)")
 		set(RENDERER_OPENGL_GLSLTOSPIRV				"1"	CACHE BOOL "If true, GLSL to SPIR-V compiler is included for online shader compilation, increases the binary size around one MiB")
 		mark_as_advanced(RENDERER_OPENGL_NO_STATE_CLEANUP)
-		mark_as_advanced(RENDERER_OPENGL_NO_RENDERERMATCHCHECK)
 		mark_as_advanced(RENDERER_OPENGL_GLSLTOSPIRV)
 endif()
 set(RENDERER_OPENGLES3		"1"	CACHE BOOL "Build OpenGL ES 3 renderer?")
 	# Advanced OpenGL ES 3 renderer options
-	set(RENDERER_OPENGLES3_NO_RENDERERMATCHCHECK	"1"	CACHE BOOL "If true, remove renderer<->resource matches (better performance, reduces the binary size slightly, but you will receive no hint when using a resource from another renderer instance)")
 	mark_as_advanced(RENDERER_OPENGLES3_NO_STATE_CLEANUP)
 set(RENDERER_VULKAN			"1"	CACHE BOOL "Build Vulkan renderer?")
 	# Advanced Vulkan renderer options
-	set(RENDERER_VULKAN_NO_RENDERERMATCHCHECK		"1"	CACHE BOOL "If true, remove renderer<->resource matches (better performance, reduces the binary size slightly, but you will receive no hint when using a resource from another renderer instance)")
 	set(RENDERER_VULKAN_GLSLTOSPIRV					"1"	CACHE BOOL "If true, GLSL to SPIR-V compiler is included for online shader compilation, increases the binary size around one MiB")
-	mark_as_advanced(RENDERER_VULKAN_NO_RENDERERMATCHCHECK)
 	mark_as_advanced(RENDERER_VULKAN_GLSLTOSPIRV)
 if(WIN32)
 	# Direct3D is Windows only

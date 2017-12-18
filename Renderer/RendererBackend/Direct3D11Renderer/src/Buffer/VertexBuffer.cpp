@@ -73,7 +73,7 @@ namespace Direct3D11Renderer
 		}
 
 		// Assign a default name to the resource for debugging purposes
-		#ifndef DIRECT3D11RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			setDebugName("");
 		#endif
 	}
@@ -90,7 +90,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	#if !defined(DIRECT3D11RENDERER_NO_DEBUG) && !defined(RENDERER_NO_DEBUG)
+	#ifdef RENDERER_DEBUG
 		void VertexBuffer::setDebugName(const char* name)
 		{
 			// Valid Direct3D 11 vertex buffer?

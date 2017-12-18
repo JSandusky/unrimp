@@ -369,7 +369,7 @@ namespace NullRenderer
 	void NullRenderer::setGraphicsResourceGroup(uint32_t rootParameterIndex, Renderer::IResourceGroup* resourceGroup)
 	{
 		// Security checks
-		#ifndef NULLRENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 		{
 			if (nullptr == mGraphicsRootSignature)
 			{
@@ -394,6 +394,8 @@ namespace NullRenderer
 				return;
 			}
 		}
+		#else
+			std::ignore = rootParameterIndex;
 		#endif
 
 		if (nullptr != resourceGroup)

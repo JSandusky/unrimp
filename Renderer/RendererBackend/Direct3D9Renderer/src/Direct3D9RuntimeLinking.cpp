@@ -134,7 +134,7 @@ namespace Direct3D9Renderer
 		IMPORT_FUNC(Direct3DCreate9);
 		IMPORT_FUNC(D3DPERF_GetStatus);
 		IMPORT_FUNC(D3DPERF_SetOptions);
-		#ifndef DIRECT3D9RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			IMPORT_FUNC(D3DPERF_SetMarker);
 			IMPORT_FUNC(D3DPERF_BeginEvent);
 			IMPORT_FUNC(D3DPERF_EndEvent);

@@ -216,7 +216,7 @@ namespace Direct3D12Renderer
 		}
 
 		// Assign a default name to the resource for debugging purposes
-		#ifndef DIRECT3D12RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			setDebugName("2D texture");
 		#endif
 
@@ -240,9 +240,9 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void Texture2D::setDebugName(const char*  name)
-	{
-		#ifndef DIRECT3D12RENDERER_NO_DEBUG
+	#ifdef RENDERER_DEBUG
+		void Texture2D::setDebugName(const char* name)
+		{
 			if (nullptr != mD3D12Resource)
 			{
 				// Set the debug name
@@ -257,8 +257,13 @@ namespace Direct3D12Renderer
 				mD3D12DescriptorHeap->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
 				mD3D12DescriptorHeap->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(name)), name);
 			}
-		#endif
-	}
+		}
+	#else
+		void Texture2D::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 
 	//[-------------------------------------------------------]

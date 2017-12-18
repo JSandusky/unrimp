@@ -287,7 +287,7 @@ namespace Direct3D10Renderer
 		}
 
 		// Assign a default name to the resource for debugging purposes
-		#ifndef DIRECT3D10RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			setDebugName("FBO");
 		#endif
 	}
@@ -359,9 +359,9 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void Framebuffer::setDebugName(const char* name)
-	{
-		#ifndef DIRECT3D10RENDERER_NO_DEBUG
+	#ifdef RENDERER_DEBUG
+		void Framebuffer::setDebugName(const char* name)
+		{
 			{ // Assign a debug name to the Direct3D 10 render target view, do also add the index to the name
 				const size_t nameLength = strlen(name) + 5;	// Direct3D 10 supports 8 render targets ("D3D10_SIMULTANEOUS_RENDER_TARGET_COUNT", so: One digit + one [ + one ] + one space + terminating zero = 5 characters)
 				const Renderer::Context& context = getRenderer().getContext();
@@ -386,8 +386,13 @@ namespace Direct3D10Renderer
 				mD3D10DepthStencilView->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
 				mD3D10DepthStencilView->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(name)), name);
 			}
-		#endif
-	}
+		}
+	#else
+		void Framebuffer::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 
 	//[-------------------------------------------------------]

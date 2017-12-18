@@ -1686,7 +1686,7 @@ typedef struct D3D12_GRAPHICS_PIPELINE_STATE_DESC
 	D3D12_PIPELINE_STATE_FLAGS Flags;
 } D3D12_GRAPHICS_PIPELINE_STATE_DESC;
 
-#ifndef DIRECT3D12RENDERER_NO_DEBUG
+#ifdef RENDERER_DEBUG
 	// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "d3d12sdklayers.h"
 	typedef enum D3D12_DEBUG_FEATURE
 	{
@@ -2103,7 +2103,7 @@ ID3D12Device : public ID3D12Object
 		virtual LUID STDMETHODCALLTYPE GetAdapterLuid(void) = 0;
 };
 
-#ifndef DIRECT3D12RENDERER_NO_DEBUG
+#ifdef RENDERER_DEBUG
 	// "Microsoft Windows 10 SDK" -> "10.0.10240.0" -> "d3d12sdklayers.h"
 	MIDL_INTERFACE("344488b7-6846-474b-b989-f027448245e0")
 	ID3D12Debug : public IUnknown

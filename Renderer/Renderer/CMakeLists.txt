@@ -36,8 +36,8 @@ add_custom_target(Renderer)
 ##################################################
 ## Preprocessor definitions
 ##################################################
-if(NOT RENDERER_DEBUG)
-	add_definitions(-DRENDERER_NO_DEBUG)
+if(RENDERER_DEBUG)
+	add_definitions(-DRENDERER_DEBUG)
 endif()
 
 

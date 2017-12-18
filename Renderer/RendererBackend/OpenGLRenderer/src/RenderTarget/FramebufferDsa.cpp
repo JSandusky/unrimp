@@ -67,7 +67,7 @@ namespace OpenGLRenderer
 			Renderer::ITexture* texture = colorFramebufferAttachment->texture;
 
 			// Security check: Is the given resource owned by this renderer?
-			#ifndef OPENGLRENDERER_NO_RENDERERMATCHCHECK
+			#ifdef RENDERER_DEBUG
 				if (&openGLRenderer != &texture->getRenderer())
 				{
 					// Output an error message and keep on going in order to keep a reasonable behaviour even in case on an error
@@ -151,7 +151,7 @@ namespace OpenGLRenderer
 		if (nullptr != mDepthStencilTexture)
 		{
 			// Security check: Is the given resource owned by this renderer?
-			#ifndef OPENGLRENDERER_NO_RENDERERMATCHCHECK
+			#ifdef RENDERER_DEBUG
 				if (&openGLRenderer != &mDepthStencilTexture->getRenderer())
 				{
 					// Output an error message and keep on going in order to keep a reasonable behaviour even in case on an error

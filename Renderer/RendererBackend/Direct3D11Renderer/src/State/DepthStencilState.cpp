@@ -47,7 +47,7 @@ namespace Direct3D11Renderer
 		direct3D11Renderer.getD3D11Device()->CreateDepthStencilState(reinterpret_cast<const D3D11_DEPTH_STENCIL_DESC*>(&depthStencilState), &mD3D11DepthStencilState);
 
 		// Assign a default name to the resource for debugging purposes
-		#ifndef DIRECT3D11RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			setDebugName("Depth stencil state");
 		#endif
 	}
@@ -65,9 +65,9 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Direct3D11Renderer::IState methods     ]
 	//[-------------------------------------------------------]
-	void DepthStencilState::setDebugName(const char* name)
-	{
-		#ifndef DIRECT3D11RENDERER_NO_DEBUG
+	#ifdef RENDERER_DEBUG
+		void DepthStencilState::setDebugName(const char* name)
+		{
 			// Valid Direct3D 11 depth stencil state?
 			if (nullptr != mD3D11DepthStencilState)
 			{
@@ -76,8 +76,13 @@ namespace Direct3D11Renderer
 				mD3D11DepthStencilState->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
 				mD3D11DepthStencilState->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(name)), name);
 			}
-		#endif
-	}
+		}
+	#else
+		void DepthStencilState::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 
 //[-------------------------------------------------------]

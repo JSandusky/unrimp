@@ -72,10 +72,10 @@
 	#else
 		#error "Unsupported platform"
 	#endif
-	#ifdef RENDERER_NO_DEBUG
-		#define RENDERER_SET_RESOURCE_DEBUG_NAME(resource, name)
-	#else
+	#ifdef RENDERER_DEBUG
 		#define RENDERER_SET_RESOURCE_DEBUG_NAME(resource, name) if (nullptr != resource) { (resource)->setDebugName(name); }
+	#else
+		#define RENDERER_SET_RESOURCE_DEBUG_NAME(resource, name)
 	#endif
 #endif
 
@@ -89,7 +89,7 @@ PRAGMA_WARNING_PUSH
 	#include <inttypes.h>	// For uint32_t, uint64_t etc.
 PRAGMA_WARNING_POP
 #include <string.h>		// For "strcpy()"
-#ifndef RENDERER_NO_DEBUG
+#ifdef RENDERER_DEBUG
 	#include <cassert>
 #endif
 #ifndef RENDERER_NO_STATISTICS
@@ -350,9 +350,7 @@ namespace Renderer
 			explicit IAssert(const IAssert&) = delete;
 			IAssert& operator=(const IAssert&) = delete;
 		};
-		#ifdef RENDERER_NO_DEBUG
-			#define RENDERER_ASSERT(context, expression, format, ...) std::ignore = context;
-		#else
+		#ifdef RENDERER_DEBUG
 			#define RENDERER_ASSERT(context, expression, format, ...) \
 				do \
 				{ \
@@ -361,6 +359,8 @@ namespace Renderer
 						DEBUG_BREAK; \
 					} \
 				} while (0);
+		#else
+			#define RENDERER_ASSERT(context, expression, format, ...) std::ignore = context;
 		#endif
 	#endif
 
@@ -382,7 +382,7 @@ namespace Renderer
 		public:
 			void* reallocate(void* oldPointer, size_t oldNumberOfBytes, size_t newNumberOfBytes, size_t alignment)
 			{
-				#ifndef RENDERER_NO_DEBUG
+				#ifdef RENDERER_DEBUG
 					assert(mReallocateFuntion);
 				#endif
 				return (*mReallocateFuntion)(*this, oldPointer, oldNumberOfBytes, newNumberOfBytes, alignment);
@@ -393,7 +393,7 @@ namespace Renderer
 			inline explicit IAllocator(ReallocateFuntion reallocateFuntion) :
 				mReallocateFuntion(reallocateFuntion)
 			{
-				#ifndef RENDERER_NO_DEBUG
+				#ifdef RENDERER_DEBUG
 					assert(mReallocateFuntion);
 				#endif
 			}
@@ -3056,7 +3056,7 @@ namespace Renderer
 			U* addCommand(uint32_t numberOfAuxiliaryBytes = 0)
 			{
 				const uint32_t numberOfCommandBytes = CommandPacketHelper::getNumberOfBytes<U>(numberOfAuxiliaryBytes);
-				#ifndef RENDERER_NO_DEBUG
+				#ifdef RENDERER_DEBUG
 					assert((static_cast<uint64_t>(mCurrentCommandPacketByteIndex) + numberOfCommandBytes) < 4294967295u);
 				#endif
 				if (mCommandPacketBufferNumberOfBytes < mCurrentCommandPacketByteIndex + numberOfCommandBytes)
@@ -3111,7 +3111,7 @@ namespace Renderer
 			{
 				inline static void create(CommandBuffer& commandBuffer, CommandBuffer* commandBufferToExecute)
 				{
-					#ifndef RENDERER_NO_DEBUG
+					#ifdef RENDERER_DEBUG
 						assert(nullptr != commandBufferToExecute);
 					#endif
 					*commandBuffer.addCommand<ExecuteCommandBuffer>() = ExecuteCommandBuffer(commandBufferToExecute);
@@ -3388,7 +3388,7 @@ namespace Renderer
 				}
 				inline SetDebugMarker(const char* _name)
 				{
-					#ifndef RENDERER_NO_DEBUG
+					#ifdef RENDERER_DEBUG
 						assert(strlen(_name) < 128);
 					#endif
 					strncpy(name, _name, 128);
@@ -3405,7 +3405,7 @@ namespace Renderer
 				}
 				inline BeginDebugEvent(const char* _name)
 				{
-					#ifndef RENDERER_NO_DEBUG
+					#ifdef RENDERER_DEBUG
 						assert(strlen(_name) < 128);
 					#endif
 					strncpy(name, _name, 128);
@@ -3423,18 +3423,18 @@ namespace Renderer
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::EndDebugEvent;
 			};
 		}
-		#ifdef RENDERER_NO_DEBUG
-			#define COMMAND_SET_DEBUG_MARKER(commandBuffer, name)
-			#define COMMAND_SET_DEBUG_MARKER_FUNCTION(commandBuffer)
-			#define COMMAND_BEGIN_DEBUG_EVENT(commandBuffer, name)
-			#define COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
-			#define COMMAND_END_DEBUG_EVENT(commandBuffer)
-		#else
+		#ifdef RENDERER_DEBUG
 			#define COMMAND_SET_DEBUG_MARKER(commandBuffer, name) Renderer::Command::SetDebugMarker::create(commandBuffer, name);
 			#define COMMAND_SET_DEBUG_MARKER_FUNCTION(commandBuffer) Renderer::Command::SetDebugMarker::create(commandBuffer, __FUNCTION__);
 			#define COMMAND_BEGIN_DEBUG_EVENT(commandBuffer, name) Renderer::Command::BeginDebugEvent::create(commandBuffer, name);
 			#define COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer) Renderer::Command::BeginDebugEvent::create(commandBuffer, __FUNCTION__);
 			#define COMMAND_END_DEBUG_EVENT(commandBuffer) Renderer::Command::EndDebugEvent::create(commandBuffer);
+		#else
+			#define COMMAND_SET_DEBUG_MARKER(commandBuffer, name)
+			#define COMMAND_SET_DEBUG_MARKER_FUNCTION(commandBuffer)
+			#define COMMAND_BEGIN_DEBUG_EVENT(commandBuffer, name)
+			#define COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
+			#define COMMAND_END_DEBUG_EVENT(commandBuffer)
 		#endif
 	#endif
 

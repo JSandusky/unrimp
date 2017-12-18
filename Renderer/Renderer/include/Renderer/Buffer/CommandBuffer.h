@@ -1059,56 +1059,7 @@ namespace Renderer
 //[ Debug                                                 ]
 //[-------------------------------------------------------]
 // Debug macros
-#ifdef RENDERER_NO_DEBUG
-	/**
-	*  @brief
-	*    Set a debug marker
-	*
-	*  @param[in] commandBuffer
-	*    Reference to the renderer instance to use
-	*  @param[in] name
-	*    ASCII name of the debug marker
-	*/
-	#define COMMAND_SET_DEBUG_MARKER(commandBuffer, name)
-
-	/**
-	*  @brief
-	*    Set a debug marker by using the current function name ("__FUNCTION__") as marker name
-	*
-	*  @param[in] commandBuffer
-	*    Reference to the renderer instance to use
-	*/
-	#define COMMAND_SET_DEBUG_MARKER_FUNCTION(commandBuffer)
-
-	/**
-	*  @brief
-	*    Begin debug event
-	*
-	*  @param[in] commandBuffer
-	*    Reference to the renderer instance to use
-	*  @param[in] name
-	*    ASCII name of the debug event
-	*/
-	#define COMMAND_BEGIN_DEBUG_EVENT(commandBuffer, name)
-
-	/**
-	*  @brief
-	*    Begin debug event by using the current function name ("__FUNCTION__") as event name
-	*
-	*  @param[in] commandBuffer
-	*    Reference to the renderer instance to use
-	*/
-	#define COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
-
-	/**
-	*  @brief
-	*    End the last started debug event
-	*
-	*  @param[in] commandBuffer
-	*    Reference to the renderer instance to use
-	*/
-	#define COMMAND_END_DEBUG_EVENT(commandBuffer)
-#else
+#ifdef RENDERER_DEBUG
 	/**
 	*  @brief
 	*    Set a debug marker
@@ -1157,4 +1108,53 @@ namespace Renderer
 	*    Reference to the renderer instance to use
 	*/
 	#define COMMAND_END_DEBUG_EVENT(commandBuffer) Renderer::Command::EndDebugEvent::create(commandBuffer);
+#else
+	/**
+	*  @brief
+	*    Set a debug marker
+	*
+	*  @param[in] commandBuffer
+	*    Reference to the renderer instance to use
+	*  @param[in] name
+	*    ASCII name of the debug marker
+	*/
+	#define COMMAND_SET_DEBUG_MARKER(commandBuffer, name)
+
+	/**
+	*  @brief
+	*    Set a debug marker by using the current function name ("__FUNCTION__") as marker name
+	*
+	*  @param[in] commandBuffer
+	*    Reference to the renderer instance to use
+	*/
+	#define COMMAND_SET_DEBUG_MARKER_FUNCTION(commandBuffer)
+
+	/**
+	*  @brief
+	*    Begin debug event
+	*
+	*  @param[in] commandBuffer
+	*    Reference to the renderer instance to use
+	*  @param[in] name
+	*    ASCII name of the debug event
+	*/
+	#define COMMAND_BEGIN_DEBUG_EVENT(commandBuffer, name)
+
+	/**
+	*  @brief
+	*    Begin debug event by using the current function name ("__FUNCTION__") as event name
+	*
+	*  @param[in] commandBuffer
+	*    Reference to the renderer instance to use
+	*/
+	#define COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
+
+	/**
+	*  @brief
+	*    End the last started debug event
+	*
+	*  @param[in] commandBuffer
+	*    Reference to the renderer instance to use
+	*/
+	#define COMMAND_END_DEBUG_EVENT(commandBuffer)
 #endif

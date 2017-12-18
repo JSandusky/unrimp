@@ -88,7 +88,7 @@ namespace Direct3D11Renderer
 		}
 
 		// Assign a default name to the resource for debugging purposes
-		#ifndef DIRECT3D11RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			setDebugName("");
 		#endif
 	}
@@ -112,7 +112,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	#if !defined(DIRECT3D11RENDERER_NO_DEBUG) && !defined(RENDERER_NO_DEBUG)
+	#ifdef RENDERER_DEBUG
 		void TextureBuffer::setDebugName(const char* name)
 		{
 			RENDERER_DECORATED_DEBUG_NAME(name, detailedName, "TBO", 6);	// 6 = "TBO: " including terminating zero

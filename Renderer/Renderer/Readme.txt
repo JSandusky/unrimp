@@ -34,4 +34,4 @@ None.
 	- For Linux or similar platforms: Set "HAVE_VISIBILITY_ATTR" as preprocessor definition to use the visibility attribute (the used compiler must support it)
 - Set "X64_ARCHITECTURE" as preprocessor definition when building for x64 instead of x86
 - Set "RENDERER_NO_STATISTICS" as preprocessor definition in order to disable the gathering of statistics (it's recommended to only set this preprocessor definition if there are best possible performance requirements)
-- Set "RENDERER_NO_DEBUG" as preprocessor definition in order to disable e.g. Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box) debug features (disabling support just reduces the binary size slightly but makes debugging more difficult)
+- Set "RENDERER_DEBUG" as preprocessor definition in order to enable e.g. Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box) debug features (disabling support just reduces the binary size slightly but makes debugging more difficult)

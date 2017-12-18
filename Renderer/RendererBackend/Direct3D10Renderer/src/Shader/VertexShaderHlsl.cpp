@@ -97,9 +97,9 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void VertexShaderHlsl::setDebugName(const char* name)
-	{
-		#ifndef DIRECT3D10RENDERER_NO_DEBUG
+	#ifdef RENDERER_DEBUG
+		void VertexShaderHlsl::setDebugName(const char* name)
+		{
 			// Valid Direct3D 10 vertex shader?
 			if (nullptr != mD3D10VertexShader)
 			{
@@ -108,8 +108,13 @@ namespace Direct3D10Renderer
 				mD3D10VertexShader->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
 				mD3D10VertexShader->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(name)), name);
 			}
-		#endif
-	}
+		}
+	#else
+		void VertexShaderHlsl::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 
 	//[-------------------------------------------------------]

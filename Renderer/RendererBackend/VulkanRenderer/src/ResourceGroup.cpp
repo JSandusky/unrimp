@@ -292,7 +292,7 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	#if !defined(VULKANRENDERER_NO_DEBUG) && !defined(RENDERER_NO_DEBUG)
+	#ifdef RENDERER_DEBUG
 		void ResourceGroup::setDebugName(const char* name)
 		{
 			if (nullptr != vkDebugMarkerSetObjectNameEXT)

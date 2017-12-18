@@ -213,7 +213,7 @@ namespace Direct3D10Renderer
 		}
 
 		// Assign a default name to the resource for debugging purposes
-		#ifndef DIRECT3D10RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			setDebugName("2D texture array");
 		#endif
 
@@ -237,9 +237,9 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void Texture2DArray::setDebugName(const char* name)
-	{
-		#ifndef DIRECT3D10RENDERER_NO_DEBUG
+	#ifdef RENDERER_DEBUG
+		void Texture2DArray::setDebugName(const char* name)
+		{
 			// Valid Direct3D 10 shader resource view?
 			if (nullptr != mD3D10ShaderResourceViewTexture)
 			{
@@ -265,8 +265,13 @@ namespace Direct3D10Renderer
 					d3d10Resource->Release();
 				}
 			}
-		#endif
-	}
+		}
+	#else
+		void Texture2DArray::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 
 	//[-------------------------------------------------------]

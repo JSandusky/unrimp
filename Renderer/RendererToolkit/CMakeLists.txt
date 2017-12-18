@@ -25,8 +25,8 @@ cmake_minimum_required(VERSION 3.3.0)
 ## Preprocessor definitions
 ##################################################
 add_definitions(-DGLM_FORCE_RADIANS -DGLM_FORCE_LEFT_HANDED -DGLM_FORCE_DEPTH_ZERO_TO_ONE -DGLM_ENABLE_EXPERIMENTAL)
-if(NOT RENDERER_DEBUG)
-	add_definitions(-DRENDERER_NO_DEBUG)
+if(RENDERER_DEBUG)
+	add_definitions(-DRENDERER_DEBUG)
 endif()
 
 if (Boost_FILESYSTEM_FOUND)

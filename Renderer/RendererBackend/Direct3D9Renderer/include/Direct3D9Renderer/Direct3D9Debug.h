@@ -31,9 +31,9 @@
 *  @brief
 *    Check whether or not the given resource is owned by the given renderer
 */
-#ifdef DIRECT3D9RENDERER_NO_RENDERERMATCHCHECK
-	#define DIRECT3D9RENDERER_RENDERERMATCHCHECK_ASSERT(rendererReference, resourceReference)
-#else
+#ifdef RENDERER_DEBUG
 	#define DIRECT3D9RENDERER_RENDERERMATCHCHECK_ASSERT(rendererReference, resourceReference) \
 		RENDERER_ASSERT(mContext, &rendererReference == &(resourceReference).getRenderer(), "Direct3D 9 error: The given resource is owned by another renderer instance")
+#else
+	#define DIRECT3D9RENDERER_RENDERERMATCHCHECK_ASSERT(rendererReference, resourceReference)
 #endif

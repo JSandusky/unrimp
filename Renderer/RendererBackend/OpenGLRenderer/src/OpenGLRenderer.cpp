@@ -465,7 +465,7 @@ namespace OpenGLRenderer
 				// Initialize the OpenGL extensions
 				mExtensions->initialize();
 
-				#ifdef RENDERER_OUTPUT_DEBUG
+				#ifdef RENDERER_DEBUG
 					// "GL_ARB_debug_output"-extension available?
 					if (mExtensions->isGL_ARB_debug_output())
 					{
@@ -597,7 +597,7 @@ namespace OpenGLRenderer
 	void OpenGLRenderer::setGraphicsResourceGroup(uint32_t rootParameterIndex, Renderer::IResourceGroup* resourceGroup)
 	{
 		// Security checks
-		#ifndef OPENGLRENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 		{
 			if (nullptr == mGraphicsRootSignature)
 			{
@@ -1067,12 +1067,7 @@ namespace OpenGLRenderer
 		// Set the OpenGL viewport
 		// TODO(co) "GL_ARB_viewport_array" support ("OpenGLRenderer::rsSetViewports()")
 		// TODO(co) Check for "numberOfViewports" out of range or are the debug events good enough?
-		#ifndef RENDERER_NO_DEBUG
-			if (numberOfViewports > 1)
-			{
-				RENDERER_LOG(mContext, CRITICAL, "OpenGL supports only one viewport")
-			}
-		#endif
+		RENDERER_ASSERT(mContext, numberOfViewports <= 1, "OpenGL supports only one viewport")
 		glViewport(static_cast<GLint>(viewports->topLeftX), static_cast<GLint>(renderTargetHeight - viewports->topLeftY - viewports->height), static_cast<GLsizei>(viewports->width), static_cast<GLsizei>(viewports->height));
 		glDepthRange(static_cast<GLclampf>(viewports->minDepth), static_cast<GLclampf>(viewports->maxDepth));
 	}
@@ -1097,12 +1092,7 @@ namespace OpenGLRenderer
 		// Set the OpenGL scissor rectangle
 		// TODO(co) "GL_ARB_viewport_array" support ("OpenGLRenderer::rsSetViewports()")
 		// TODO(co) Check for "numberOfViewports" out of range or are the debug events good enough?
-		#ifndef RENDERER_NO_DEBUG
-			if (numberOfScissorRectangles > 1)
-			{
-				RENDERER_LOG(mContext, CRITICAL, "OpenGL supports only one scissor rectangle")
-			}
-		#endif
+		RENDERER_ASSERT(mContext, numberOfScissorRectangles <= 1, "OpenGL supports only one scissor rectangle")
 		const GLsizei width  = scissorRectangles->bottomRightX - scissorRectangles->topLeftX;
 		const GLsizei height = scissorRectangles->bottomRightY - scissorRectangles->topLeftY;
 		glScissor(static_cast<GLint>(scissorRectangles->topLeftX), static_cast<GLint>(renderTargetHeight - scissorRectangles->topLeftY - height), width, height);
@@ -2246,18 +2236,9 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Private static methods                                ]
 	//[-------------------------------------------------------]
-	void OpenGLRenderer::debugMessageCallback(uint32_t source, uint32_t type, uint32_t id, uint32_t severity, int, const char* message, const void* userParam)
-	{
-		// Output the debug message
-		#ifdef RENDERER_NO_DEBUG
-			// Avoid "warning C4100: '<x>' : unreferenced formal parameter"-warning
-			source = source;
-			type = type;
-			id = id;
-			severity = severity;
-			message = message;
-			userParam = userParam;
-		#else
+	#ifdef RENDERER_DEBUG
+		void OpenGLRenderer::debugMessageCallback(uint32_t source, uint32_t type, uint32_t id, uint32_t severity, int, const char* message, const void* userParam)
+		{
 			// Source to string
 			char debugSource[20 + 1]{0};	// +1 for terminating zero
 			switch (source)
@@ -2350,8 +2331,13 @@ namespace OpenGLRenderer
 			}
 
 			RENDERER_LOG(static_cast<const OpenGLRenderer*>(userParam)->getContext(), CRITICAL, "OpenGL debug message\tSource:\"%s\"\tType:\"%s\"\tID:\"%d\"\tSeverity:\"%s\"\tMessage:\"%s\"", debugSource, debugType, id, debugSeverity, message)
-		#endif
-	}
+		}
+	#else
+		void OpenGLRenderer::debugMessageCallback(uint32_t, uint32_t, uint32_t, uint32_t, int, const char*, const void*)
+		{
+			// Nothing here
+		}
+	#endif
 
 
 	//[-------------------------------------------------------]

@@ -87,9 +87,9 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void TessellationEvaluationShaderHlsl::setDebugName(const char* name)
-	{
-		#ifndef DIRECT3D11RENDERER_NO_DEBUG
+	#ifdef RENDERER_DEBUG
+		void TessellationEvaluationShaderHlsl::setDebugName(const char* name)
+		{
 			// Valid Direct3D 11 domain shader?
 			if (nullptr != mD3D11DomainShader)
 			{
@@ -98,8 +98,13 @@ namespace Direct3D11Renderer
 				mD3D11DomainShader->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
 				mD3D11DomainShader->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(name)), name);
 			}
-		#endif
-	}
+		}
+	#else
+		void TessellationEvaluationShaderHlsl::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 
 	//[-------------------------------------------------------]

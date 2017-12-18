@@ -47,7 +47,7 @@ namespace Direct3D11Renderer
 		direct3D11Renderer.getD3D11Device()->CreateBlendState(reinterpret_cast<const D3D11_BLEND_DESC*>(&blendState), &mD3D11BlendState);
 
 		// Assign a default name to the resource for debugging purposes
-		#ifndef DIRECT3D11RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			setDebugName("Blend state");
 		#endif
 	}
@@ -65,9 +65,9 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Direct3D11Renderer::IState methods     ]
 	//[-------------------------------------------------------]
-	void BlendState::setDebugName(const char* name)
-	{
-		#ifndef DIRECT3D11RENDERER_NO_DEBUG
+	#ifdef RENDERER_DEBUG
+		void BlendState::setDebugName(const char* name)
+		{
 			// Valid Direct3D 11 blend state?
 			if (nullptr != mD3D11BlendState)
 			{
@@ -76,8 +76,13 @@ namespace Direct3D11Renderer
 				mD3D11BlendState->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
 				mD3D11BlendState->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(name)), name);
 			}
-		#endif
-	}
+		}
+	#else
+		void BlendState::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 
 //[-------------------------------------------------------]

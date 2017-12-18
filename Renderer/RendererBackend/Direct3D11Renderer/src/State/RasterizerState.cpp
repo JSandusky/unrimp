@@ -58,7 +58,7 @@ namespace Direct3D11Renderer
 		direct3D11Renderer.getD3D11Device()->CreateRasterizerState(&d3d11RasterizerDesc, &mD3D11RasterizerState);
 
 		// Assign a default name to the resource for debugging purposes
-		#ifndef DIRECT3D11RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			setDebugName("Rasterizer state");
 		#endif
 	}
@@ -76,9 +76,9 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Direct3D11Renderer::IState methods     ]
 	//[-------------------------------------------------------]
-	void RasterizerState::setDebugName(const char* name)
-	{
-		#ifndef DIRECT3D11RENDERER_NO_DEBUG
+	#ifdef RENDERER_DEBUG
+		void RasterizerState::setDebugName(const char* name)
+		{
 			// Valid Direct3D 11 rasterizer state?
 			if (nullptr != mD3D11RasterizerState)
 			{
@@ -87,8 +87,13 @@ namespace Direct3D11Renderer
 				mD3D11RasterizerState->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
 				mD3D11RasterizerState->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(name)), name);
 			}
-		#endif
-	}
+		}
+	#else
+		void RasterizerState::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 
 //[-------------------------------------------------------]

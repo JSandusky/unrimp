@@ -115,7 +115,7 @@ namespace Direct3D9Renderer
 		}
 
 		// Assign a default name to the resource for debugging purposes
-		#ifndef DIRECT3D9RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			setDebugName("Swap chain");
 		#endif
 	}
@@ -141,9 +141,9 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void SwapChain::setDebugName(const char* name)
-	{
-		#ifndef DIRECT3D9RENDERER_NO_DEBUG
+	#ifdef RENDERER_DEBUG
+		void SwapChain::setDebugName(const char* name)
+		{
 			// "IDirect3DSwapChain9" is not derived from "IDirect3DResource9", meaning we can't use the "IDirect3DResource9::SetPrivateData()"-method
 
 			// Assign a debug name to the Direct3D 9 render target surface
@@ -163,8 +163,13 @@ namespace Direct3D9Renderer
 				mDirect3DSurface9DepthStencil->SetPrivateData(WKPDID_D3DDebugObjectName, nullptr, 0, 0);
 				mDirect3DSurface9DepthStencil->SetPrivateData(WKPDID_D3DDebugObjectName, name, static_cast<UINT>(strlen(name)), 0);
 			}
-		#endif
-	}
+		}
+	#else
+		void SwapChain::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 
 	//[-------------------------------------------------------]

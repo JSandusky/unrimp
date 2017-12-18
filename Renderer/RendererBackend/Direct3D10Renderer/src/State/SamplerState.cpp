@@ -53,7 +53,7 @@ namespace Direct3D10Renderer
 		direct3D10Renderer.getD3D10Device()->CreateSamplerState(reinterpret_cast<const D3D10_SAMPLER_DESC*>(&samplerState), &mD3D10SamplerState);
 
 		// Assign a default name to the resource for debugging purposes
-		#ifndef DIRECT3D10RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			setDebugName("Sampler state");
 		#endif
 	}
@@ -71,9 +71,9 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void SamplerState::setDebugName(const char* name)
-	{
-		#ifndef DIRECT3D10RENDERER_NO_DEBUG
+	#ifdef RENDERER_DEBUG
+		void SamplerState::setDebugName(const char* name)
+		{
 			// Valid Direct3D 10 sampler state?
 			if (nullptr != mD3D10SamplerState)
 			{
@@ -82,8 +82,13 @@ namespace Direct3D10Renderer
 				mD3D10SamplerState->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
 				mD3D10SamplerState->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(name)), name);
 			}
-		#endif
-	}
+		}
+	#else
+		void SamplerState::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 
 	//[-------------------------------------------------------]

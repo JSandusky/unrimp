@@ -349,7 +349,7 @@ namespace Direct3D9Renderer
 				mDirect3D9->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, NULL_HANDLE, D3DCREATE_HARDWARE_VERTEXPROCESSING, &d3dPresentParameters, &mDirect3DDevice9);
 				if (nullptr != mDirect3DDevice9)
 				{
-					#ifdef DIRECT3D9RENDERER_NO_DEBUG
+					#ifndef RENDERER_DEBUG
 						// Disable debugging
 						D3DPERF_SetOptions(1);
 					#endif
@@ -482,7 +482,7 @@ namespace Direct3D9Renderer
 	void Direct3D9Renderer::setGraphicsResourceGroup(uint32_t rootParameterIndex, Renderer::IResourceGroup* resourceGroup)
 	{
 		// Security checks
-		#ifndef DIRECT3D9RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 		{
 			if (nullptr == mGraphicsRootSignature)
 			{
@@ -786,12 +786,7 @@ namespace Direct3D9Renderer
 
 		// Set the Direct3D 9 viewport
 		// -> Direct3D 9 supports only one viewport
-	#ifndef RENDERER_NO_DEBUG
-		if (numberOfViewports > 1)
-		{
-			RENDERER_LOG(mContext, CRITICAL, "Direct3D 9 supports only one viewport")
-		}
-	#endif
+		RENDERER_ASSERT(mContext, numberOfViewports <= 1, "Direct3D 9 supports only one viewport")
 		const D3DVIEWPORT9 direct3D9Viewport =
 		{
 			static_cast<DWORD>(viewports->topLeftX),	// X (DWORD)
@@ -813,11 +808,7 @@ namespace Direct3D9Renderer
 		// Set the Direct3D 9 scissor rectangles
 		// -> "Renderer::ScissorRectangle" directly maps to Direct3D 9 & 10 & 11, do not change it
 		// -> Direct3D 9 supports only one viewport
-	#ifndef RENDERER_NO_DEBUG
-		if (numberOfScissorRectangles > 1)
-		{
-			RENDERER_LOG(mContext, CRITICAL, "Direct3D 9 supports only one scissor rectangle")
-		}
+		RENDERER_ASSERT(mContext, numberOfScissorRectangles < 0, "Direct3D 9 supports only one scissor rectangle")
 	#endif
 		mDirect3DDevice9->SetScissorRect(reinterpret_cast<const RECT*>(scissorRectangles));
 	}
@@ -977,7 +968,7 @@ namespace Direct3D9Renderer
 				normalizedColor[i] = 1.0f;
 			}
 		}
-		#ifndef RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			if (normalizedColor[0] != color[0] || normalizedColor[1] != color[1] || normalizedColor[2] != color[2] || normalizedColor[3] != color[3])
 			{
 				RENDERER_LOG(mContext, CRITICAL, "The given clear color was clamped to [0, 1] because Direct3D 9 does not support values outside this range")
@@ -1259,9 +1250,9 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
-	void Direct3D9Renderer::setDebugMarker(const char* name)
-	{
-		#ifndef DIRECT3D9RENDERER_NO_DEBUG
+	#ifdef RENDERER_DEBUG
+		void Direct3D9Renderer::setDebugMarker(const char* name)
+		{
 			if (nullptr != D3DPERF_SetMarker)
 			{
 				RENDERER_ASSERT(mContext, strlen(name) < 256, "Direct3D 9 debug marker names must not have more than 255 characters")
@@ -1269,12 +1260,10 @@ namespace Direct3D9Renderer
 				std::mbstowcs(unicodeName, name, 256);
 				D3DPERF_SetMarker(D3DCOLOR_RGBA(255, 0, 255, 255), unicodeName);
 			}
-		#endif
-	}
+		}
 
-	void Direct3D9Renderer::beginDebugEvent(const char* name)
-	{
-		#ifndef DIRECT3D9RENDERER_NO_DEBUG
+		void Direct3D9Renderer::beginDebugEvent(const char* name)
+		{
 			if (nullptr != D3DPERF_BeginEvent)
 			{
 				RENDERER_ASSERT(mContext, strlen(name) < 256, "Direct3D 9 debug event names must not have more than 255 characters")
@@ -1282,12 +1271,22 @@ namespace Direct3D9Renderer
 				std::mbstowcs(unicodeName, name, 256);
 				D3DPERF_BeginEvent(D3DCOLOR_RGBA(255, 255, 255, 255), unicodeName);
 			}
-		#endif
-	}
+		}
+	#else
+		void Direct3D9Renderer::setDebugMarker(const char*)
+		{
+			// Nothing here
+		}
+
+		void Direct3D9Renderer::beginDebugEvent(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 	void Direct3D9Renderer::endDebugEvent()
 	{
-		#ifndef DIRECT3D9RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			if (nullptr != D3DPERF_EndEvent)
 			{
 				D3DPERF_EndEvent();
@@ -1301,7 +1300,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	bool Direct3D9Renderer::isDebugEnabled()
 	{
-		// Don't check for the "DIRECT3D9RENDERER_NO_DEBUG" preprocessor definition, even if debug
+		// Don't check for the "RENDERER_DEBUG" preprocessor definition, even if debug
 		// is disabled it has to be possible to use this function for an additional security check
 		// -> Maybe a debugger/profiler ignores the debug state
 		// -> Maybe someone manipulated the binary to enable the debug state, adding a second check

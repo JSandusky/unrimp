@@ -357,7 +357,7 @@ namespace VulkanRenderer
 		mRenderTarget(nullptr)
 	{
 		// TODO(co) Make it possible to enable/disable validation from the outside?
-		#ifdef _DEBUG
+		#ifdef RENDERER_DEBUG
 			const bool enableValidation = true;
 		#else
 			const bool enableValidation = false;
@@ -473,7 +473,7 @@ namespace VulkanRenderer
 	void VulkanRenderer::setGraphicsResourceGroup(uint32_t rootParameterIndex, Renderer::IResourceGroup* resourceGroup)
 	{
 		// Security checks
-		#if !defined(VULKANRENDERER_NO_DEBUG) && !defined(RENDERER_NO_DEBUG)
+		#ifdef RENDERER_DEBUG
 		{
 			if (nullptr == mGraphicsRootSignature)
 			{

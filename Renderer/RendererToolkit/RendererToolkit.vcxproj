@@ -3229,7 +3229,7 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\inc\;..\..\External\mikktspace\include\;..\..\External\RapidJSON\include\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;RENDERERTOOLKIT_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -3274,7 +3274,7 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\inc\;..\..\External\mikktspace\include\;..\..\External\RapidJSON\include\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;X64_ARCHITECTURE;RENDERERTOOLKIT_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;X64_ARCHITECTURE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -3318,7 +3318,7 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\inc\;..\..\External\mikktspace\include\;..\..\External\RapidJSON\include\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;SHARED_LIBRARIES;RENDERERTOOLKIT_EXPORTS;RENDERERTOOLKIT_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;SHARED_LIBRARIES;RENDERERTOOLKIT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -3360,7 +3360,7 @@ copy "include\RendererToolkit\Public\RendererToolkitInstance.h" "..\..\include\R
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>include\;..\Renderer\include\;..\RendererRuntime\include\;..\..\External\SimpleFileWatcher\src\;..\..\External\glm\include\;..\..\External\Assimp\include\;..\..\External\crunch\inc\;..\..\External\mikktspace\include\;..\..\External\RapidJSON\include\</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;X64_ARCHITECTURE;SHARED_LIBRARIES;RENDERERTOOLKIT_EXPORTS;RENDERERTOOLKIT_NO_RENDERERMATCHCHECK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;X64_ARCHITECTURE;SHARED_LIBRARIES;RENDERERTOOLKIT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>

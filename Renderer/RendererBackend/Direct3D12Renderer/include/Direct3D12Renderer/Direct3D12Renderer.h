@@ -240,7 +240,7 @@ namespace Direct3D12Renderer
 		*/
 		void initializeCapabilities();
 
-		#ifndef DIRECT3D12RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			/**
 			*  @brief
 			*    Reports information about a device object's lifetime for debugging

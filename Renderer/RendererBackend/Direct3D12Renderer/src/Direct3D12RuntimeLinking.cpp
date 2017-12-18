@@ -192,7 +192,7 @@ namespace Direct3D12Renderer
 		// Load the entry points
 		IMPORT_FUNC(D3D12CreateDevice);
 		IMPORT_FUNC(D3D12SerializeRootSignature);
-		#ifndef DIRECT3D12RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			IMPORT_FUNC(D3D12GetDebugInterface);
 		#endif
 

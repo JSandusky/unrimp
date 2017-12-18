@@ -388,7 +388,7 @@ namespace OpenGLES3Renderer
 			// Create the default sampler state
 			mDefaultSamplerState = createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
 
-			#ifdef RENDERER_OUTPUT_DEBUG
+			#ifdef RENDERER_DEBUG
 				// "GL_KHR_debug"-extension available?
 				if (mOpenGLES3Context->getExtensions().isGL_KHR_debug())
 				{
@@ -508,7 +508,7 @@ namespace OpenGLES3Renderer
 	void OpenGLES3Renderer::setGraphicsResourceGroup(uint32_t rootParameterIndex, Renderer::IResourceGroup* resourceGroup)
 	{
 		// Security checks
-		#ifndef OPENGLES3RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 		{
 			if (nullptr == mGraphicsRootSignature)
 			{
@@ -757,18 +757,16 @@ namespace OpenGLES3Renderer
 				// Bind OpenGL ES 3 vertex array
 				glBindVertexArray(static_cast<VertexArray*>(mVertexArray)->getOpenGLES3VertexArray());
 			}
-			else
-			{
-				// Release the vertex array reference, in case we have one
-				if (nullptr != mVertexArray)
-				{
-					// Unbind OpenGL ES 3 vertex array
-					glBindVertexArray(0);
 
-					// Release reference
-					mVertexArray->releaseReference();
-					mVertexArray = nullptr;
-				}
+			// Release the vertex array reference, in case we have one
+			else if (nullptr != mVertexArray)
+			{
+				// Unbind OpenGL ES 3 vertex array
+				glBindVertexArray(0);
+
+				// Release reference
+				mVertexArray->releaseReference();
+				mVertexArray = nullptr;
 			}
 		}
 	}
@@ -796,12 +794,7 @@ namespace OpenGLES3Renderer
 
 		// Set the OpenGL ES 3 viewport
 		// -> OpenGL ES 3 supports only one viewport
-	#ifndef RENDERER_NO_DEBUG
-		if (numberOfViewports > 1)
-		{
-			RENDERER_LOG(mContext, CRITICAL, "OpenGL ES 3 supports only one viewport")
-		}
-	#endif
+		RENDERER_ASSERT(mContext, numberOfViewports <= 1, "OpenGL ES 3 supports only one viewport")
 		glViewport(static_cast<GLint>(viewports->topLeftX), static_cast<GLint>(renderTargetHeight - viewports->topLeftY - viewports->height), static_cast<GLsizei>(viewports->width), static_cast<GLsizei>(viewports->height));
 		glDepthRangef(static_cast<GLclampf>(viewports->minDepth), static_cast<GLclampf>(viewports->maxDepth));
 	}
@@ -824,12 +817,7 @@ namespace OpenGLES3Renderer
 		}
 
 		// Set the OpenGL ES 3 scissor rectangle
-	#ifndef RENDERER_NO_DEBUG
-		if (numberOfScissorRectangles > 1)
-		{
-			RENDERER_LOG(mContext, CRITICAL, "OpenGL ES 3 supports only one scissor rectangle")
-		}
-	#endif
+		RENDERER_ASSERT(mContext, numberOfScissorRectangles <= 1, "OpenGL ES 3 supports only one scissor rectangle")
 		const GLsizei width  = scissorRectangles->bottomRightX - scissorRectangles->topLeftX;
 		const GLsizei height = scissorRectangles->bottomRightY - scissorRectangles->topLeftY;
 		glScissor(static_cast<GLint>(scissorRectangles->topLeftX), static_cast<GLint>(renderTargetHeight - scissorRectangles->topLeftY - height), width, height);
@@ -1705,18 +1693,9 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Private static methods                                ]
 	//[-------------------------------------------------------]
-	void OpenGLES3Renderer::debugMessageCallback(uint32_t source, uint32_t type, uint32_t id, uint32_t severity, int, const char* message, const void* userParam)
-	{
-		// Output the debug message
-		#ifdef RENDERER_NO_DEBUG
-			// Avoid "warning C4100: '<x>' : unreferenced formal parameter"-warning
-			source = source;
-			type = type;
-			id = id;
-			severity = severity;
-			message = message;
-			userParam = userParam;
-		#else
+	#ifdef RENDERER_DEBUG
+		void OpenGLES3Renderer::debugMessageCallback(uint32_t source, uint32_t type, uint32_t id, uint32_t severity, int, const char* message, const void* userParam)
+		{
 			// Source to string
 			char debugSource[20 + 1]{0};	// +1 for terminating zero
 			switch (source)
@@ -1809,8 +1788,13 @@ namespace OpenGLES3Renderer
 			}
 
 			RENDERER_LOG(static_cast<const OpenGLES3Renderer*>(userParam)->getContext(), CRITICAL, "OpenGL ES 3 debug message\tSource:\"%s\"\tType:\"%s\"\tID:\"%d\"\tSeverity:\"%s\"\tMessage:\"%s\"", debugSource, debugType, id, debugSeverity, message)
-		#endif
-	}
+		}
+	#else
+		void OpenGLES3Renderer::debugMessageCallback(uint32_t, uint32_t, uint32_t, uint32_t, int, const char*, const void*)
+		{
+			// Nothing here
+		}
+	#endif
 
 
 	//[-------------------------------------------------------]

@@ -24,11 +24,10 @@ cmake_minimum_required(VERSION 3.3.0)
 ##################################################
 ## Preprocessor definitions
 ##################################################
-if(NOT RENDERER_DEBUG)
-	add_definitions(-DRENDERER_NO_DEBUG)
-endif()
-if(NOT RENDERER_DIRECT3D10_DEBUG)
-	add_definitions(-DRENDERER_DIRECT3D10_NO_DEBUG)
+if(RENDERER_DEBUG)
+	add_definitions(-DRENDERER_DEBUG)
+else()
+	add_definitions(-D_DEBUG)
 endif()
 
 
@@ -78,7 +77,7 @@ set(SOURCE_CODES
 	src/RootSignature.cpp
 	src/ResourceGroup.cpp
 )
-if(NOT DIRECT3D10RENDERER_NO_DEBUG)
+if(RENDERER_DEBUG)
 	# Support Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box) debug features
 	set(SOURCE_CODES
 		${SOURCE_CODES}

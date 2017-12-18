@@ -97,9 +97,9 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void VertexShaderHlsl::setDebugName(const char* name)
-	{
-		#ifndef DIRECT3D11RENDERER_NO_DEBUG
+	#ifdef RENDERER_DEBUG
+		void VertexShaderHlsl::setDebugName(const char* name)
+		{
 			// Valid Direct3D 11 vertex shader?
 			if (nullptr != mD3D11VertexShader)
 			{
@@ -108,8 +108,13 @@ namespace Direct3D11Renderer
 				mD3D11VertexShader->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
 				mD3D11VertexShader->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(name)), name);
 			}
-		#endif
-	}
+		}
+	#else
+		void VertexShaderHlsl::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 
 	//[-------------------------------------------------------]

@@ -134,7 +134,7 @@ namespace Direct3D9Renderer
 		}
 
 		// Assign a default name to the resource for debugging purposes
-		#ifndef DIRECT3D9RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			setDebugName("2D texture");
 		#endif
 
@@ -154,9 +154,9 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void Texture2D::setDebugName(const char* name)
-	{
-		#ifndef DIRECT3D9RENDERER_NO_DEBUG
+	#ifdef RENDERER_DEBUG
+		void Texture2D::setDebugName(const char* name)
+		{
 			// Valid Direct3D 9 texture?
 			if (nullptr != mDirect3DTexture9)
 			{
@@ -185,8 +185,13 @@ namespace Direct3D9Renderer
 					}
 				}
 			}
-		#endif
-	}
+		}
+	#else
+		void Texture2D::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 
 	//[-------------------------------------------------------]

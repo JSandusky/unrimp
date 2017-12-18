@@ -147,7 +147,7 @@ namespace Direct3D9Renderer
 	// Debug
 	FNDEF_D3D9(DWORD,		D3DPERF_GetStatus,	(void));
 	FNDEF_D3D9(void,		D3DPERF_SetOptions,	(DWORD));
-	#ifndef RENDERERDIRECT3D9_NO_DEBUG
+	#ifdef RENDERER_DEBUG
 		FNDEF_D3D9(void,	D3DPERF_SetMarker,	(D3DCOLOR, LPCWSTR));
 		FNDEF_D3D9(int,		D3DPERF_BeginEvent,	(D3DCOLOR, LPCWSTR));
 		FNDEF_D3D9(int,		D3DPERF_EndEvent,	(void));
@@ -181,7 +181,7 @@ namespace Direct3D9Renderer
 	// Debug
 	#define D3DPERF_GetStatus		FNPTR(D3DPERF_GetStatus)
 	#define D3DPERF_SetOptions		FNPTR(D3DPERF_SetOptions)
-	#ifndef DIRECT3D9RENDERER_NO_DEBUG
+	#ifdef RENDERER_DEBUG
 		#define D3DPERF_SetMarker	FNPTR(D3DPERF_SetMarker)
 		#define D3DPERF_BeginEvent	FNPTR(D3DPERF_BeginEvent)
 		#define D3DPERF_EndEvent	FNPTR(D3DPERF_EndEvent)

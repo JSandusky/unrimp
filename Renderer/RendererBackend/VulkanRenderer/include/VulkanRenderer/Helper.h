@@ -35,7 +35,7 @@
 //[-------------------------------------------------------]
 //[ Global helper macros                                  ]
 //[-------------------------------------------------------]
-#if !defined(VULKANRENDERER_NO_DEBUG) && !defined(RENDERER_NO_DEBUG)
+#ifdef RENDERER_DEBUG
 	#define DECLARE_SET_DEBUG_NAME virtual void setDebugName(const char* name) override;
 	#define SET_DEFAULT_DEBUG_NAME setDebugName("");	// Assign a default name to the resource for debugging purposes
 	#define DEFINE_SET_DEBUG_NAME_VKBUFFER_VKDEVICEMEMORY(className, decoration, numberOfDecorationCharacters) \
@@ -132,7 +132,7 @@ namespace VulkanRenderer
 		//[-------------------------------------------------------]
 		//[ Debug                                                 ]
 		//[-------------------------------------------------------]
-		#ifndef VULKANRENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			static void setDebugObjectName(VkDevice vkDevice, VkDebugReportObjectTypeEXT vkDebugReportObjectTypeEXT, uint64_t object, const char* objectName);
 		#endif
 

@@ -31,9 +31,9 @@
 *  @brief
 *    Check whether or not the given resource is owned by the given renderer
 */
-#ifdef NULLRENDERER_NO_RENDERERMATCHCHECK
-	#define NULLRENDERER_RENDERERMATCHCHECK_ASSERT(rendererReference, resourceReference)
-#else
+#ifdef RENDERER_DEBUG
 	#define NULLRENDERER_RENDERERMATCHCHECK_ASSERT(rendererReference, resourceReference) \
 		RENDERER_ASSERT(mContext, &rendererReference == &(resourceReference).getRenderer(), "Null error: The given resource is owned by another renderer instance")
+#else
+	#define NULLRENDERER_RENDERERMATCHCHECK_ASSERT(rendererReference, resourceReference)
 #endif

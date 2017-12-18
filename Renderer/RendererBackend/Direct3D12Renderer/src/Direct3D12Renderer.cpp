@@ -331,7 +331,7 @@ namespace Direct3D12Renderer
 			if (SUCCEEDED(CreateDXGIFactory1(IID_PPV_ARGS(&mDxgiFactory4))))
 			{
 				// Enable the Direct3D 12 debug layer
-				#ifndef DIRECT3D12RENDERER_NO_DEBUG
+				#ifdef RENDERER_DEBUG
 				{
 					ID3D12Debug* d3d12Debug = nullptr;
 					if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&d3d12Debug))))
@@ -1132,31 +1132,39 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
-	void Direct3D12Renderer::setDebugMarker(const char* name)
-	{
-		#ifndef DIRECT3D12RENDERER_NO_DEBUG
+	#ifdef RENDERER_DEBUG
+		void Direct3D12Renderer::setDebugMarker(const char* name)
+		{
 			if (nullptr != mD3D12GraphicsCommandList)
 			{
 				const UINT size = static_cast<UINT>((strlen(name) + 1) * sizeof(name[0]));
 				mD3D12GraphicsCommandList->SetMarker(PIX_EVENT_ANSI_VERSION, name, size);
 			}
-		#endif
-	}
+		}
 
-	void Direct3D12Renderer::beginDebugEvent(const char* name)
-	{
-		#ifndef DIRECT3D12RENDERER_NO_DEBUG
+		void Direct3D12Renderer::beginDebugEvent(const char* name)
+		{
 			if (nullptr != mD3D12GraphicsCommandList)
 			{
 				const UINT size = static_cast<UINT>((strlen(name) + 1) * sizeof(name[0]));
 				mD3D12GraphicsCommandList->BeginEvent(PIX_EVENT_ANSI_VERSION, name, size);
 			}
-		#endif
-	}
+		}
+	#else
+		void Direct3D12Renderer::setDebugMarker(const char*)
+		{
+			// Nothing here
+		}
+
+		void Direct3D12Renderer::beginDebugEvent(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 	void Direct3D12Renderer::endDebugEvent()
 	{
-		#ifndef DIRECT3D12RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			if (nullptr != mD3D12GraphicsCommandList)
 			{
 				mD3D12GraphicsCommandList->EndEvent();
@@ -1170,10 +1178,10 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	bool Direct3D12Renderer::isDebugEnabled()
 	{
-		#ifdef DIRECT3D12RENDERER_NO_DEBUG
-			return false;
-		#else
+		#ifdef RENDERER_DEBUG
 			return true;
+		#else
+			return false;
 		#endif
 	}
 
@@ -1552,7 +1560,7 @@ namespace Direct3D12Renderer
 			d3d12QueryDesc.MiscFlags = 0;
 			mD3D12Device->CreateQuery(&d3d12QueryDesc, &mD3D12QueryFlush);
 
-			#ifndef DIRECT3D12RENDERER_NO_DEBUG
+			#ifdef RENDERER_DEBUG
 				// Set the debug name
 				if (nullptr != mD3D12QueryFlush)
 				{
@@ -1898,7 +1906,7 @@ namespace Direct3D12Renderer
 		mCapabilities.fragmentShader = true;
 	}
 
-	#ifndef DIRECT3D12RENDERER_NO_DEBUG
+	#ifdef RENDERER_DEBUG
 		void Direct3D12Renderer::debugReportLiveDeviceObjects()
 		{
 			ID3D12DebugDevice* d3d12DebugDevice = nullptr;

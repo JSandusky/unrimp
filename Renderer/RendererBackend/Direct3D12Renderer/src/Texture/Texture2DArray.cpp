@@ -123,7 +123,7 @@ namespace Direct3D12Renderer
 		}
 
 		// Assign a default name to the resource for debugging purposes
-		#ifndef DIRECT3D12RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			setDebugName("2D texture array");
 		#endif
 
@@ -155,7 +155,7 @@ namespace Direct3D12Renderer
 	{
 		// TODO(co) Direct3D 12 update
 		/*
-		#ifndef DIRECT3D12RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			// Valid Direct3D 12 shader resource view?
 			if (nullptr != mD3D12ShaderResourceViewTexture)
 			{

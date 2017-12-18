@@ -106,7 +106,7 @@ namespace OpenGLES3Renderer
 					// TODO(co) Add support for the "GL_KHR_no_error"-extension
 					const EGLint contextAttribs[] = {
 						EGL_CONTEXT_CLIENT_VERSION, 3,
-						#ifdef RENDERER_OUTPUT_DEBUG
+						#ifdef RENDERER_DEBUG
 							EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_DEBUG_BIT_KHR, // TODO(sw) make it possible to enable it from outside during runtime
 						#endif
 						EGL_NONE

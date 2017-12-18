@@ -112,7 +112,7 @@ namespace Direct3D11Renderer
 		}
 
 		// Assign a default name to the resource for debugging purposes
-		#ifndef DIRECT3D12RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			setDebugName("Pipeline state");
 		#endif
 	}
@@ -155,9 +155,9 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void PipelineState::setDebugName(const char* name)
-	{
-		#ifndef DIRECT3D11RENDERER_NO_DEBUG
+	#ifdef RENDERER_DEBUG
+		void PipelineState::setDebugName(const char* name)
+		{
 			// Valid Direct3D 11 input layout?
 			if (nullptr != mD3D11InputLayout)
 			{
@@ -166,8 +166,13 @@ namespace Direct3D11Renderer
 				mD3D11InputLayout->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
 				mD3D11InputLayout->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(name)), name);
 			}
-		#endif
-	}
+		}
+	#else
+		void PipelineState::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 
 	//[-------------------------------------------------------]

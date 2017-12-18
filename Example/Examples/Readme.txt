@@ -188,5 +188,5 @@ Other
 - "LINUX":					Set as preprocessor definition when building for Linux or similar platforms
 - "X64_ARCHITECTURE":		Set this as preprocessor definition when building for x64 instead of x86
 - "SHARED_LIBRARIES":		Use renderers via shared libraries, if this is not defined, the renderers are statically linked
-- "RENDERER_NO_DEBUG":		Disable e.g. Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box) debug features (disabling support just reduces the binary size slightly but makes debugging more difficult)
+- "RENDERER_DEBUG":			Enable e.g. Direct3D 9 PIX functions (D3DPERF_* functions, also works directly within VisualStudio 2012 out-of-the-box) debug features (disabling support just reduces the binary size slightly but makes debugging more difficult)
 - "RENDERER_NO_RUNTIME":	Disable renderer runtime support

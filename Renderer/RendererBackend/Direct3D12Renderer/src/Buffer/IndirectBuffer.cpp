@@ -106,7 +106,7 @@ namespace Direct3D12Renderer
 		}
 
 		// Assign a default name to the resource for debugging purposes
-		#ifndef DIRECT3D12RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			setDebugName("");
 		#endif
 		*/
@@ -136,7 +136,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	#if !defined(DIRECT3D12RENDERER_NO_DEBUG) && !defined(RENDERER_NO_DEBUG)
+	#ifdef RENDERER_DEBUG
 		void IndirectBuffer::setDebugName(const char*)
 		{
 			// TODO(co) Direct3D 12 update

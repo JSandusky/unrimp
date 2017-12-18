@@ -131,12 +131,12 @@ namespace Renderer
 		bool requestDebugBreak = false;
 
 		// Construct the full UTF-8 message text
-		#ifdef RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
+			std::string fullMessage = "File \"" + std::string(file) + "\" | Line " + std::to_string(line) + " | " + std::string(typeToString(type)) + message;
+		#else
 			std::ignore = file;
 			std::ignore = line;
 			std::string fullMessage = std::string(typeToString(type)) + message;
-		#else
-			std::string fullMessage = "File \"" + std::string(file) + "\" | Line " + std::to_string(line) + " | " + std::string(typeToString(type)) + message;
 		#endif
 		if ('\n' != fullMessage.back())
 		{

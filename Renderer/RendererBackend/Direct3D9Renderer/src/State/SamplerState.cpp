@@ -71,7 +71,7 @@ namespace Direct3D9Renderer
 					normalizedColor[i] = 1.0f;
 				}
 			}
-			#ifndef RENDERER_NO_DEBUG
+			#ifdef RENDERER_DEBUG
 				if (normalizedColor[0] != samplerState.borderColor[0] || normalizedColor[1] != samplerState.borderColor[1] || normalizedColor[2] != samplerState.borderColor[2] || normalizedColor[3] != samplerState.borderColor[3])
 				{
 					RENDERER_LOG(direct3D9Renderer.getContext(), CRITICAL, "The given border color was clamped to [0, 1] because Direct3D 9 does not support values outside this range")

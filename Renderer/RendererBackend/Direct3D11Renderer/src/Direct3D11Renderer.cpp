@@ -381,7 +381,7 @@ namespace Direct3D11Renderer
 		{
 			// Flags
 			UINT flags = 0;
-			#ifdef _DEBUG
+			#ifdef RENDERER_DEBUG
 				flags |= D3D11_CREATE_DEVICE_DEBUG;
 			#endif
 
@@ -399,7 +399,7 @@ namespace Direct3D11Renderer
 				// Direct3D 11 debug related stuff
 				if (flags & D3D11_CREATE_DEVICE_DEBUG)
 				{
-					#ifndef DIRECT3D11RENDERER_NO_DEBUG
+					#ifdef RENDERER_DEBUG
 						// Try to get the Direct3D 11 user defined annotation interface, Direct3D 11.1 feature
 						mD3D11DeviceContext->QueryInterface(__uuidof(ID3DUserDefinedAnnotation), reinterpret_cast<LPVOID*>(&mD3DUserDefinedAnnotation));
 					#endif
@@ -561,7 +561,7 @@ namespace Direct3D11Renderer
 	void Direct3D11Renderer::setGraphicsResourceGroup(uint32_t rootParameterIndex, Renderer::IResourceGroup* resourceGroup)
 	{
 		// Security checks
-		#ifndef DIRECT3D11RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 		{
 			if (nullptr == mGraphicsRootSignature)
 			{
@@ -1336,9 +1336,9 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
-	void Direct3D11Renderer::setDebugMarker(const char* name)
-	{
-		#ifndef DIRECT3D11RENDERER_NO_DEBUG
+	#ifdef RENDERER_DEBUG
+		void Direct3D11Renderer::setDebugMarker(const char* name)
+		{
 			if (nullptr != mD3DUserDefinedAnnotation)
 			{
 				RENDERER_ASSERT(mContext, strlen(name) < 256, "Direct3D 11 debug marker names must not have more than 255 characters")
@@ -1346,12 +1346,10 @@ namespace Direct3D11Renderer
 				std::mbstowcs(unicodeName, name, 256);
 				mD3DUserDefinedAnnotation->SetMarker(unicodeName);
 			}
-		#endif
-	}
+		}
 
-	void Direct3D11Renderer::beginDebugEvent(const char* name)
-	{
-		#ifndef DIRECT3D11RENDERER_NO_DEBUG
+		void Direct3D11Renderer::beginDebugEvent(const char* name)
+		{
 			if (nullptr != mD3DUserDefinedAnnotation)
 			{
 				RENDERER_ASSERT(mContext, strlen(name) < 256, "Direct3D 11 debug event names must not have more than 255 characters")
@@ -1359,12 +1357,22 @@ namespace Direct3D11Renderer
 				std::mbstowcs(unicodeName, name, 256);
 				mD3DUserDefinedAnnotation->BeginEvent(unicodeName);
 			}
-		#endif
-	}
+		}
+	#else
+		void Direct3D11Renderer::setDebugMarker(const char*)
+		{
+			// Nothing here
+		}
+
+		void Direct3D11Renderer::beginDebugEvent(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 	void Direct3D11Renderer::endDebugEvent()
 	{
-		#ifndef DIRECT3D11RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			if (nullptr != mD3DUserDefinedAnnotation)
 			{
 				mD3DUserDefinedAnnotation->EndEvent();
@@ -1378,7 +1386,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	bool Direct3D11Renderer::isDebugEnabled()
 	{
-		// Don't check for the "DIRECT3D9RENDERER_NO_DEBUG" preprocessor definition, even if debug
+		// Don't check for the "RENDERER_DEBUG" preprocessor definition, even if debug
 		// is disabled it has to be possible to use this function for an additional security check
 		// -> Maybe a debugger/profiler ignores the debug state
 		// -> Maybe someone manipulated the binary to enable the debug state, adding a second check
@@ -1699,7 +1707,7 @@ namespace Direct3D11Renderer
 			d3d11QueryDesc.MiscFlags = 0;
 			mD3D11Device->CreateQuery(&d3d11QueryDesc, &mD3D11QueryFlush);
 
-			#ifndef DIRECT3D11RENDERER_NO_DEBUG
+			#ifdef RENDERER_DEBUG
 				// Set the debug name
 				if (nullptr != mD3D11QueryFlush)
 				{

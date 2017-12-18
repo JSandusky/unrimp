@@ -354,7 +354,7 @@ namespace Direct3D10Renderer
 		{
 			// Flags
 			UINT flags = 0;
-			#ifdef _DEBUG
+			#ifdef RENDERER_DEBUG
 				flags |= D3D10_CREATE_DEVICE_DEBUG;
 			#endif
 
@@ -369,9 +369,9 @@ namespace Direct3D10Renderer
 			// Is there a Direct3D 10 device?
 			if (nullptr != mD3D10Device)
 			{
-				#ifdef DIRECT3D10RENDERER_NO_DEBUG
+				#ifdef RENDERER_DEBUG
 					// Create the Direct3D 9 runtime linking instance, we know there can't be one, yet
-					mDirect3D9RuntimeLinking = RENDERER_NEW(mContext, Direct3D9RuntimeLinking)();
+					mDirect3D9RuntimeLinking = RENDERER_NEW(mContext, Direct3D9RuntimeLinking)(*this);
 
 					// Call the Direct3D 9 PIX function
 					if (mDirect3D9RuntimeLinking->isDirect3D9Avaiable())
@@ -530,7 +530,7 @@ namespace Direct3D10Renderer
 	void Direct3D10Renderer::setGraphicsResourceGroup(uint32_t rootParameterIndex, Renderer::IResourceGroup* resourceGroup)
 	{
 		// Security checks
-		#ifndef DIRECT3D10RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 		{
 			if (nullptr == mGraphicsRootSignature)
 			{
@@ -824,7 +824,7 @@ namespace Direct3D10Renderer
 		// Sanity check
 		RENDERER_ASSERT(mContext, numberOfViewports > 0 && nullptr != viewports, "Invalid Direct3D 10 rasterizer state viewports")
 
-		#ifndef RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			// Is the given number of viewports valid?
 			if (numberOfViewports > (D3D10_VIEWPORT_AND_SCISSORRECT_MAX_INDEX + 1))
 			{
@@ -1310,9 +1310,9 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
-	void Direct3D10Renderer::setDebugMarker(const char* name)
-	{
-		#ifndef DIRECT3D10RENDERER_NO_DEBUG
+	#ifdef RENDERER_DEBUG
+		void Direct3D10Renderer::setDebugMarker(const char* name)
+		{
 			// Create the Direct3D 9 runtime linking instance, in case there's no one, yet
 			if (nullptr == mDirect3D9RuntimeLinking)
 			{
@@ -1327,12 +1327,10 @@ namespace Direct3D10Renderer
 				std::mbstowcs(unicodeName, name, 256);
 				D3DPERF_SetMarker(D3DCOLOR_RGBA(255, 0, 255, 255), unicodeName);
 			}
-		#endif
-	}
+		}
 
-	void Direct3D10Renderer::beginDebugEvent(const char* name)
-	{
-		#ifndef DIRECT3D10RENDERER_NO_DEBUG
+		void Direct3D10Renderer::beginDebugEvent(const char* name)
+		{
 			// Create the Direct3D 9 runtime linking instance, in case there's no one, yet
 			if (nullptr == mDirect3D9RuntimeLinking)
 			{
@@ -1347,12 +1345,22 @@ namespace Direct3D10Renderer
 				std::mbstowcs(unicodeName, name, 256);
 				D3DPERF_BeginEvent(D3DCOLOR_RGBA(255, 255, 255, 255), unicodeName);
 			}
-		#endif
-	}
+		}
+	#else
+		void Direct3D10Renderer::setDebugMarker(const char*)
+		{
+			// Nothing here
+		}
+
+		void Direct3D10Renderer::beginDebugEvent(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 	void Direct3D10Renderer::endDebugEvent()
 	{
-		#ifndef DIRECT3D10RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			// Create the Direct3D 9 runtime linking instance, in case there's no one, yet
 			if (nullptr == mDirect3D9RuntimeLinking)
 			{
@@ -1373,7 +1381,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	bool Direct3D10Renderer::isDebugEnabled()
 	{
-		// Don't check for the "DIRECT3D9RENDERER_NO_DEBUG" preprocessor definition, even if debug
+		// Don't check for the "RENDERER_DEBUG" preprocessor definition, even if debug
 		// is disabled it has to be possible to use this function for an additional security check
 		// -> Maybe a debugger/profiler ignores the debug state
 		// -> Maybe someone manipulated the binary to enable the debug state, adding a second check
@@ -1730,7 +1738,7 @@ namespace Direct3D10Renderer
 			d3d10QueryDesc.MiscFlags = 0;
 			mD3D10Device->CreateQuery(&d3d10QueryDesc, &mD3D10QueryFlush);
 
-			#ifndef DIRECT3D10RENDERER_NO_DEBUG
+			#ifdef RENDERER_DEBUG
 				// Set the debug name
 				if (nullptr != mD3D10QueryFlush)
 				{

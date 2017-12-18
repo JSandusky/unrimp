@@ -113,9 +113,7 @@ namespace Renderer
 *    - Example: RENDERER_ASSERT(mContext, isInitialized, "Direct3D 11 renderer backend assert failed")
 *    - See http://cnicholson.net/2009/02/stupid-c-tricks-adventures-in-assert/ - "2.  Wrap your macros in do { … } while(0)." for background information about the do-while wrap
 */
-#ifdef RENDERER_NO_DEBUG
-	#define RENDERER_ASSERT(context, expression, format, ...) std::ignore = context;
-#else
+#ifdef RENDERER_DEBUG
 	#define RENDERER_ASSERT(context, expression, format, ...) \
 		do \
 		{ \
@@ -124,6 +122,8 @@ namespace Renderer
 				DEBUG_BREAK; \
 			} \
 		} while (0);
+#else
+	#define RENDERER_ASSERT(context, expression, format, ...) std::ignore = context;
 #endif
 
 

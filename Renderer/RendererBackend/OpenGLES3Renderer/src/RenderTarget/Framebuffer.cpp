@@ -92,7 +92,7 @@ namespace OpenGLES3Renderer
 				(*colorTexture)->addReference();
 
 				// Security check: Is the given resource owned by this renderer?
-				#ifndef OPENGLES3RENDERER_NO_RENDERERMATCHCHECK
+				#ifdef RENDERER_DEBUG
 					if (&openGLES3Renderer != &(*colorTexture)->getRenderer())
 					{
 						// Output an error message and keep on going in order to keep a reasonable behaviour even in case on an error

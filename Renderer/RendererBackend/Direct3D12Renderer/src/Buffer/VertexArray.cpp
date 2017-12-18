@@ -86,7 +86,7 @@ namespace Direct3D12Renderer
 		}
 
 		// Assign a default name to the resource for debugging purposes
-		#ifndef DIRECT3D12RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			setDebugName("VAO");
 		#endif
 	}

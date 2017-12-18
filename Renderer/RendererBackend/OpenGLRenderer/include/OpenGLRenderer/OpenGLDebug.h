@@ -31,9 +31,9 @@
 *  @brief
 *    Check whether or not the given resource is owned by the given renderer
 */
-#ifdef OPENGLRENDERER_NO_RENDERERMATCHCHECK
-	#define OPENGLRENDERER_RENDERERMATCHCHECK_ASSERT(rendererReference, resourceReference)
-#else
+#ifdef RENDERER_DEBUG
 	#define OPENGLRENDERER_RENDERERMATCHCHECK_ASSERT(rendererReference, resourceReference) \
 		RENDERER_ASSERT(mContext, &rendererReference == &(resourceReference).getRenderer(), "OpenGL error: The given resource is owned by another renderer instance")
+#else
+	#define OPENGLRENDERER_RENDERERMATCHCHECK_ASSERT(rendererReference, resourceReference)
 #endif

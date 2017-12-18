@@ -70,7 +70,7 @@ namespace Direct3D9Renderer
 		}
 
 		// Assign a default name to the resource for debugging purposes
-		#ifndef DIRECT3D9RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			setDebugName("");
 		#endif
 	}
@@ -87,7 +87,7 @@ namespace Direct3D9Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	#if !defined(DIRECT3D9RENDERER_NO_DEBUG) && !defined(RENDERER_NO_DEBUG)
+	#ifdef RENDERER_DEBUG
 		void IndexBuffer::setDebugName(const char* name)
 		{
 			// Valid Direct3D 9 index buffer?

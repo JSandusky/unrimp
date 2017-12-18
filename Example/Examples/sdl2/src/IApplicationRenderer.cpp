@@ -483,7 +483,7 @@ Renderer::IRenderer *IApplicationRenderer::createRendererInstance(const std::str
 		mRendererInstance = nullptr;
 	}
 
-	#ifdef RENDERER_NO_DEBUG
+	#ifndef RENDERER_DEBUG
 		// By using
 		//   "Renderer::IRenderer::isDebugEnabled()"
 		// in here its possible to check whether or not your application is currently running

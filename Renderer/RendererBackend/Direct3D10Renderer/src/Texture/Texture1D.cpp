@@ -167,7 +167,7 @@ namespace Direct3D10Renderer
 		}
 
 		// Assign a default name to the resource for debugging purposes
-		#ifndef DIRECT3D10RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			setDebugName("1D texture");
 		#endif
 
@@ -191,9 +191,9 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
-	void Texture1D::setDebugName(const char* name)
-	{
-		#ifndef DIRECT3D10RENDERER_NO_DEBUG
+	#ifdef RENDERER_DEBUG
+		void Texture1D::setDebugName(const char* name)
+		{
 			// Valid Direct3D 10 shader resource view?
 			if (nullptr != mD3D10ShaderResourceViewTexture)
 			{
@@ -211,8 +211,13 @@ namespace Direct3D10Renderer
 					mD3D10Texture1D->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(name)), name);
 				}
 			}
-		#endif
-	}
+		}
+	#else
+		void Texture1D::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 	void* Texture1D::getInternalResourceHandle() const
 	{

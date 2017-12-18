@@ -24,11 +24,10 @@ cmake_minimum_required(VERSION 3.3.0)
 ##################################################
 ## Preprocessor definitions
 ##################################################
-if(NOT RENDERER_DEBUG)
-	add_definitions(-DRENDERER_NO_DEBUG)
-endif()
-if(NOT RENDERER_DIRECT3D11_DEBUG)
-	add_definitions(-DRENDERER_DIRECT3D11_NO_DEBUG)
+if(RENDERER_DEBUG)
+	add_definitions(-DRENDERER_DEBUG)
+else()
+	add_definitions(-D_DEBUG)
 endif()
 
 

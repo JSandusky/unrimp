@@ -167,7 +167,7 @@ namespace Direct3D11Renderer
 		}
 
 		// Assign a default name to the resource for debugging purposes
-		#ifndef DIRECT3D11RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			setDebugName("1D texture");
 		#endif
 
@@ -193,7 +193,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	void Texture1D::setDebugName(const char* name)
 	{
-		#ifndef DIRECT3D11RENDERER_NO_DEBUG
+		#ifdef RENDERER_DEBUG
 			// Valid Direct3D 11 shader resource view?
 			if (nullptr != mD3D11ShaderResourceViewTexture)
 			{
@@ -211,6 +211,8 @@ namespace Direct3D11Renderer
 					mD3D11Texture1D->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(name)), name);
 				}
 			}
+		#else
+			std::ignore = name;
 		#endif
 	}
 

@@ -536,7 +536,7 @@ namespace VulkanRenderer
 			// TODO(co) Some GPUs also offer "asynchronous transfer queues" (check for queue families with only the "VK_QUEUE_TRANSFER_BIT" set) that may be used to speed up such operations
 			if (generateMipmaps)
 			{
-				#ifdef _DEBUG
+				#ifdef RENDERER_DEBUG
 				{
 					// Get device properties for the requested Vulkan texture format
 					VkFormatProperties vkFormatProperties;
@@ -723,7 +723,7 @@ namespace VulkanRenderer
 		}
 	}
 
-	#if !defined(VULKANRENDERER_NO_DEBUG) && !defined(RENDERER_NO_DEBUG)
+	#ifdef RENDERER_DEBUG
 		void Helper::setDebugObjectName(VkDevice vkDevice, VkDebugReportObjectTypeEXT vkDebugReportObjectTypeEXT, uint64_t object, const char* objectName)
 		{
 			if (nullptr != vkDebugMarkerSetObjectNameEXT)
