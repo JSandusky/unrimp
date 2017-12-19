@@ -36,7 +36,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	inline PipelineStateSignature::PipelineStateSignature() :
 		mMaterialBlueprintResourceId(getUninitialized<MaterialBlueprintResourceId>()),
-		mPrimitiveTopology(getUninitialized<Renderer::PrimitiveTopology>()),
 		mSerializedPipelineStateHash(getUninitialized<uint32_t>()),
 		mPipelineStateSignatureId(getUninitialized<PipelineStateSignatureId>()),
 		mShaderCombinationId{getUninitialized<ShaderCombinationId>(), getUninitialized<ShaderCombinationId>(), getUninitialized<ShaderCombinationId>(), getUninitialized<ShaderCombinationId>(), getUninitialized<ShaderCombinationId>()}
@@ -44,9 +43,9 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	inline PipelineStateSignature::PipelineStateSignature(const MaterialBlueprintResource& materialBlueprintResource, Renderer::PrimitiveTopology primitiveTopology, uint32_t serializedPipelineStateHash, const ShaderProperties& shaderProperties, const DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES])
+	inline PipelineStateSignature::PipelineStateSignature(const MaterialBlueprintResource& materialBlueprintResource, uint32_t serializedPipelineStateHash, const ShaderProperties& shaderProperties, const DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES])
 	{
-		set(materialBlueprintResource, primitiveTopology, serializedPipelineStateHash, shaderProperties, dynamicShaderPieces);
+		set(materialBlueprintResource, serializedPipelineStateHash, shaderProperties, dynamicShaderPieces);
 	}
 
 	inline PipelineStateSignature::~PipelineStateSignature()
@@ -57,11 +56,6 @@ namespace RendererRuntime
 	inline MaterialBlueprintResourceId PipelineStateSignature::getMaterialBlueprintResourceId() const
 	{
 		return mMaterialBlueprintResourceId;
-	}
-
-	inline Renderer::PrimitiveTopology PipelineStateSignature::getPrimitiveTopology() const
-	{
-		return mPrimitiveTopology;
 	}
 
 	inline uint32_t PipelineStateSignature::getSerializedPipelineStateHash() const

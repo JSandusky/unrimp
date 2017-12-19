@@ -60,16 +60,6 @@ namespace RendererRuntime
 		calculateSortingKey();
 	}
 
-	inline Renderer::PrimitiveTopology Renderable::getPrimitiveTopology() const
-	{
-		return mPrimitiveTopology;
-	}
-
-	inline void Renderable::setPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology)
-	{
-		mPrimitiveTopology = primitiveTopology;
-	}
-
 	inline bool Renderable::getDrawIndexed() const
 	{
 		return mDrawIndexed;
@@ -119,6 +109,16 @@ namespace RendererRuntime
 	inline void Renderable::setSkeletonResourceId(SkeletonResourceId skeletonResourceId)
 	{
 		mSkeletonResourceId = skeletonResourceId;
+	}
+
+	inline uint32_t Renderable::getInstanceCount() const
+	{
+		return mInstanceCount;
+	}
+
+	inline void Renderable::setInstanceCount(uint32_t instanceCount)
+	{
+		mInstanceCount = instanceCount;
 	}
 
 	inline uint8_t Renderable::getRenderQueueIndex() const

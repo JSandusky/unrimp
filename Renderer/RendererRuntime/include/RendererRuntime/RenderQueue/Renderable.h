@@ -81,7 +81,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		RENDERERRUNTIME_API_EXPORT Renderable();
-		RENDERERRUNTIME_API_EXPORT Renderable(RenderableManager& renderableManager, const Renderer::IVertexArrayPtr& vertexArrayPtr, Renderer::PrimitiveTopology primitiveTopology, bool drawIndexed, uint32_t startIndexLocation, uint32_t numberOfIndices, const MaterialResourceManager& materialResourceManager, MaterialResourceId materialResourceId, SkeletonResourceId skeletonResourceId);
+		RENDERERRUNTIME_API_EXPORT Renderable(RenderableManager& renderableManager, const Renderer::IVertexArrayPtr& vertexArrayPtr, bool drawIndexed, uint32_t startIndexLocation, uint32_t numberOfIndices, const MaterialResourceManager& materialResourceManager, MaterialResourceId materialResourceId, SkeletonResourceId skeletonResourceId, uint32_t instanceCount = 1);
 		inline ~Renderable();
 
 		//[-------------------------------------------------------]
@@ -95,8 +95,6 @@ namespace RendererRuntime
 		inline RenderableManager& getRenderableManager() const;
 		inline Renderer::IVertexArrayPtr getVertexArrayPtr() const;
 		inline void setVertexArrayPtr(const Renderer::IVertexArrayPtr& vertexArrayPtr);
-		inline Renderer::PrimitiveTopology getPrimitiveTopology() const;
-		inline void setPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology);
 		inline bool getDrawIndexed() const;
 		inline void setDrawIndexed(bool drawIndexed);
 		inline uint32_t getStartIndexLocation() const;
@@ -108,6 +106,8 @@ namespace RendererRuntime
 		inline void unsetMaterialResourceId();
 		inline SkeletonResourceId getSkeletonResourceId() const;
 		inline void setSkeletonResourceId(SkeletonResourceId skeletonResourceId);
+		inline uint32_t getInstanceCount() const;
+		inline void setInstanceCount(uint32_t instanceCount);
 
 		//[-------------------------------------------------------]
 		//[ Cached material data                                  ]
@@ -134,11 +134,11 @@ namespace RendererRuntime
 		// Data
 		RenderableManager&				mRenderableManager;
 		Renderer::IVertexArrayPtr		mVertexArrayPtr;		///< Vertex array object (VAO), can be a null pointer
-		Renderer::PrimitiveTopology		mPrimitiveTopology;
 		uint32_t						mStartIndexLocation;
 		uint32_t						mNumberOfIndices;
 		MaterialResourceId				mMaterialResourceId;
 		SkeletonResourceId				mSkeletonResourceId;
+		uint32_t						mInstanceCount;
 		bool							mDrawIndexed;			///< Placed at this location due to padding
 		// Cached material data
 		uint8_t							mRenderQueueIndex;

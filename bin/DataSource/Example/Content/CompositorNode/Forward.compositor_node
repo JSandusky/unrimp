@@ -258,8 +258,15 @@
 				{
 					"Description": "Render solid objects",
 					"MinimumRenderQueueIndex": "0",
-					"MaximumRenderQueueIndex": "253",
+					"MaximumRenderQueueIndex": "252",
 					"MaterialTechnique": "Forward"
+				},
+				"Scene":
+				{
+					"Description": "Render terrain",
+					"MinimumRenderQueueIndex": "253",
+					"MaximumRenderQueueIndex": "253",
+					"MaterialTechnique": "Default"
 				}
 			},
 			"HdrSkyMultisampleFramebuffer":

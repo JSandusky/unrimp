@@ -97,6 +97,8 @@ FirstScene::FirstScene() :
 	mSkeletonMeshSceneItem(nullptr),
 	mSceneNode(nullptr),
 	// Video
+	mFullscreen(false),
+	mCurrentFullscreen(false),
 	mResolutionScale(1.0f),
 	mUseVerticalSynchronization(false),
 	mCurrentUseVerticalSynchronization(false),
@@ -515,17 +517,27 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 			if (ImGui::Begin("Options"))
 			{
 				// Status
-				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.5f, 0.5f, 0.5f, 1.0f));
+				static const ImVec4 GREY_COLOR(0.5f, 0.5f, 0.5f, 1.0f);
+				static const ImVec4 RED_COLOR(1.0f, 0.0f, 0.0f, 1.0f);
+				ImGui::PushStyleColor(ImGuiCol_Text, GREY_COLOR);
 					ImGui::Text("Renderer: %s", mainRenderTarget.getRenderer().getName());
 					ImGui::Text("GPU: %s", mainRenderTarget.getRenderer().getCapabilities().deviceName);
 					{
 						const RendererToolkit::IRendererToolkit* rendererToolkit = getRendererToolkit();
 						if (nullptr != rendererToolkit)
 						{
-							ImGui::Text("Renderer Toolkit: %s", (RendererToolkit::IRendererToolkit::State::IDLE == rendererToolkit->getState()) ? "Idle" : "Busy");
+							const bool idle = (RendererToolkit::IRendererToolkit::State::IDLE == rendererToolkit->getState());
+							ImGui::PushStyleColor(ImGuiCol_Text, idle ? GREY_COLOR : RED_COLOR);
+								ImGui::Text("Renderer Toolkit: %s", idle ? "Idle" : "Busy");
+							ImGui::PopStyleColor();
 						}
 					}
-					ImGui::Text("Resource Streamer: %s", (0 == rendererRuntime->getResourceStreamer().getNumberOfInFlightLoadRequests()) ? "Idle" : "Busy");
+					{ // Resource streamer
+						const bool idle = (0 == rendererRuntime->getResourceStreamer().getNumberOfInFlightLoadRequests());
+						ImGui::PushStyleColor(ImGuiCol_Text, idle ? GREY_COLOR : RED_COLOR);
+							ImGui::Text("Resource Streamer: %s", idle ? "Idle" : "Busy");
+						ImGui::PopStyleColor();
+					}
 					ImGui::Text("Pipeline State Compiler: %s", (0 == rendererRuntime->getPipelineStateCompiler().getNumberOfInFlightCompilerRequests()) ? "Idle" : "Busy");
 				ImGui::PopStyleColor();
 				if (ImGui::Button("Log"))
@@ -542,8 +554,10 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				// Video
 				if (ImGui::BeginMenu("Video"))
 				{
-					// TODO(co) Add resolution and refresh rate combo box
 					// TODO(co) Add fullscreen combo box (window, borderless window, native fullscreen)
+					mFullscreen = static_cast<Renderer::ISwapChain&>(mainRenderTarget).getFullscreenState();	// It's possible to toggle fullscreen by using ALT-return, take this into account
+					ImGui::Checkbox("Fullscreen", &mFullscreen);
+					// TODO(co) Add resolution and refresh rate combo box
 					ImGui::SliderFloat("Resolution Scale", &mResolutionScale, 0.05f, 4.0f, "%.3f");
 					ImGui::Checkbox("Vertical Synchronization", &mUseVerticalSynchronization);
 					if (rendererRuntime->getRenderer().getCapabilities().maximumNumberOfMultisamples > 1)
@@ -622,10 +636,15 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 					// Scene node transform using gizmo
 					if (nullptr != mSceneNode)
 					{
+						// Draw gizmo
 						ImGui::Separator();
 						RendererRuntime::Transform transform = mSceneNode->getGlobalTransform();
 						RendererRuntime::DebugGuiHelper::drawGizmo(*mCameraSceneItem, mGizmoSettings, transform);
 						mSceneNode->setTransform(transform);
+
+						// Draw grid
+						// TODO(co) Make this optional via GUI
+						// RendererRuntime::DebugGuiHelper::drawGrid(*mCameraSceneItem, transform.position.y);
 					}
 				}
 			}
@@ -633,6 +652,11 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 		}
 
 		// Changes in main swap chain?
+		if (mCurrentFullscreen != mFullscreen)
+		{
+			mCurrentFullscreen = mFullscreen;
+			static_cast<Renderer::ISwapChain&>(mainRenderTarget).setFullscreenState(mCurrentFullscreen);
+		}
 		if (mCurrentUseVerticalSynchronization != mUseVerticalSynchronization)
 		{
 			mCurrentUseVerticalSynchronization = mUseVerticalSynchronization;

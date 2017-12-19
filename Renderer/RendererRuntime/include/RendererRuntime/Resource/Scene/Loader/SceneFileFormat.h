@@ -119,12 +119,22 @@ namespace RendererRuntime
 				AssetId skeletonAnimationAssetId;
 			};
 
-			struct SkyboxItem
+			struct MaterialItem
 			{
 				AssetId				materialAssetId;				///< If material blueprint asset ID is set, material asset ID must be uninitialized
 				MaterialTechniqueId	materialTechniqueId;			///< Must always be valid
 				AssetId				materialBlueprintAssetId;		///< If material asset ID is set, material blueprint asset ID must be uninitialized
 				uint32_t			numberOfMaterialProperties = 0;
+			};
+
+			struct SkyboxItem : public MaterialItem
+			{
+				// Nothing here
+			};
+
+			struct TerrainItem : public MaterialItem
+			{
+				// Nothing here
 			};
 		#pragma pack(pop)
 

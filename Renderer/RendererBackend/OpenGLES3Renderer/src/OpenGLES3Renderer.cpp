@@ -1730,6 +1730,7 @@ namespace OpenGLES3Renderer
 			}
 
 			// Debug type to string
+			Renderer::ILog::Type logType = Renderer::ILog::Type::CRITICAL;
 			char debugType[25 + 1]{0};	// +1 for terminating zero
 			switch (type)
 			{
@@ -1738,6 +1739,7 @@ namespace OpenGLES3Renderer
 					break;
 
 				case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR_KHR:
+					logType = Renderer::ILog::Type::COMPATIBILITY_WARNING;
 					strncpy(debugType, "Deprecated behavior", 25);
 					break;
 
@@ -1746,10 +1748,12 @@ namespace OpenGLES3Renderer
 					break;
 
 				case GL_DEBUG_TYPE_PORTABILITY_KHR:
+					logType = Renderer::ILog::Type::COMPATIBILITY_WARNING;
 					strncpy(debugType, "Portability", 25);
 					break;
 
 				case GL_DEBUG_TYPE_PERFORMANCE_KHR:
+					logType = Renderer::ILog::Type::PERFORMANCE_WARNING;
 					strncpy(debugType, "Performance", 25);
 					break;
 
@@ -1787,7 +1791,11 @@ namespace OpenGLES3Renderer
 					break;
 			}
 
-			RENDERER_LOG(static_cast<const OpenGLES3Renderer*>(userParam)->getContext(), CRITICAL, "OpenGL ES 3 debug message\tSource:\"%s\"\tType:\"%s\"\tID:\"%d\"\tSeverity:\"%s\"\tMessage:\"%s\"", debugSource, debugType, id, debugSeverity, message)
+			// Print into log
+			if (static_cast<const OpenGLES3Renderer*>(userParam)->getContext().getLog().print(logType, nullptr, __FILE__, static_cast<uint32_t>(__LINE__), "OpenGL ES 3 debug message\tSource:\"%s\"\tType:\"%s\"\tID:\"%d\"\tSeverity:\"%s\"\tMessage:\"%s\"", debugSource, debugType, id, debugSeverity, message))
+			{
+				DEBUG_BREAK;
+			}
 		}
 	#else
 		void OpenGLES3Renderer::debugMessageCallback(uint32_t, uint32_t, uint32_t, uint32_t, int, const char*, const void*)

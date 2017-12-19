@@ -167,6 +167,122 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
+	void JsonMaterialBlueprintHelper::optionalPrimitiveTopology(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::PrimitiveTopology& value)
+	{
+		if (rapidJsonValue.HasMember(propertyName))
+		{
+			const rapidjson::Value& rapidJsonValueUsage = rapidJsonValue[propertyName];
+			const char* valueAsString = rapidJsonValueUsage.GetString();
+			const rapidjson::SizeType valueStringLength = rapidJsonValueUsage.GetStringLength();
+
+			// Define helper macros
+			#define IF_VALUE(name)			 if (strncmp(valueAsString, #name, valueStringLength) == 0) value = Renderer::PrimitiveTopology::name;
+			#define ELSE_IF_VALUE(name) else if (strncmp(valueAsString, #name, valueStringLength) == 0) value = Renderer::PrimitiveTopology::name;
+
+			// Evaluate value
+			IF_VALUE(POINT_LIST)
+			ELSE_IF_VALUE(LINE_LIST)
+			ELSE_IF_VALUE(LINE_STRIP)
+			ELSE_IF_VALUE(TRIANGLE_LIST)
+			ELSE_IF_VALUE(TRIANGLE_STRIP)
+			ELSE_IF_VALUE(PATCH_LIST_1)
+			ELSE_IF_VALUE(PATCH_LIST_2)
+			ELSE_IF_VALUE(PATCH_LIST_3)
+			ELSE_IF_VALUE(PATCH_LIST_4)
+			ELSE_IF_VALUE(PATCH_LIST_5)
+			ELSE_IF_VALUE(PATCH_LIST_6)
+			ELSE_IF_VALUE(PATCH_LIST_7)
+			ELSE_IF_VALUE(PATCH_LIST_8)
+			ELSE_IF_VALUE(PATCH_LIST_9)
+			ELSE_IF_VALUE(PATCH_LIST_10)
+			ELSE_IF_VALUE(PATCH_LIST_11)
+			ELSE_IF_VALUE(PATCH_LIST_12)
+			ELSE_IF_VALUE(PATCH_LIST_13)
+			ELSE_IF_VALUE(PATCH_LIST_14)
+			ELSE_IF_VALUE(PATCH_LIST_15)
+			ELSE_IF_VALUE(PATCH_LIST_16)
+			ELSE_IF_VALUE(PATCH_LIST_17)
+			ELSE_IF_VALUE(PATCH_LIST_18)
+			ELSE_IF_VALUE(PATCH_LIST_19)
+			ELSE_IF_VALUE(PATCH_LIST_20)
+			ELSE_IF_VALUE(PATCH_LIST_21)
+			ELSE_IF_VALUE(PATCH_LIST_22)
+			ELSE_IF_VALUE(PATCH_LIST_23)
+			ELSE_IF_VALUE(PATCH_LIST_24)
+			ELSE_IF_VALUE(PATCH_LIST_25)
+			ELSE_IF_VALUE(PATCH_LIST_26)
+			ELSE_IF_VALUE(PATCH_LIST_27)
+			ELSE_IF_VALUE(PATCH_LIST_28)
+			ELSE_IF_VALUE(PATCH_LIST_29)
+			ELSE_IF_VALUE(PATCH_LIST_30)
+			ELSE_IF_VALUE(PATCH_LIST_31)
+			ELSE_IF_VALUE(PATCH_LIST_32)
+			else
+			{
+				throw std::runtime_error("Primitive topology of property \"" + std::string(propertyName) + "\" has invalid value \"" + std::string(valueAsString) + "\" set");
+			}
+
+			// Undefine helper macros
+			#undef IF_VALUE
+			#undef ELSE_IF_VALUE
+		}
+	}
+
+	Renderer::PrimitiveTopologyType JsonMaterialBlueprintHelper::getPrimitiveTopologyTypeByPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology)
+	{
+		switch (primitiveTopology)
+		{
+			default:
+			case Renderer::PrimitiveTopology::UNKNOWN:
+				return Renderer::PrimitiveTopologyType::UNDEFINED;
+
+			case Renderer::PrimitiveTopology::POINT_LIST:
+				return Renderer::PrimitiveTopologyType::POINT;
+
+			case Renderer::PrimitiveTopology::LINE_LIST:
+			case Renderer::PrimitiveTopology::LINE_STRIP:
+				return Renderer::PrimitiveTopologyType::LINE;
+
+			case Renderer::PrimitiveTopology::TRIANGLE_LIST:
+			case Renderer::PrimitiveTopology::TRIANGLE_STRIP:
+				return Renderer::PrimitiveTopologyType::TRIANGLE;
+
+			case Renderer::PrimitiveTopology::PATCH_LIST_1:
+			case Renderer::PrimitiveTopology::PATCH_LIST_2:
+			case Renderer::PrimitiveTopology::PATCH_LIST_3:
+			case Renderer::PrimitiveTopology::PATCH_LIST_4:
+			case Renderer::PrimitiveTopology::PATCH_LIST_5:
+			case Renderer::PrimitiveTopology::PATCH_LIST_6:
+			case Renderer::PrimitiveTopology::PATCH_LIST_7:
+			case Renderer::PrimitiveTopology::PATCH_LIST_8:
+			case Renderer::PrimitiveTopology::PATCH_LIST_9:
+			case Renderer::PrimitiveTopology::PATCH_LIST_10:
+			case Renderer::PrimitiveTopology::PATCH_LIST_11:
+			case Renderer::PrimitiveTopology::PATCH_LIST_12:
+			case Renderer::PrimitiveTopology::PATCH_LIST_13:
+			case Renderer::PrimitiveTopology::PATCH_LIST_14:
+			case Renderer::PrimitiveTopology::PATCH_LIST_15:
+			case Renderer::PrimitiveTopology::PATCH_LIST_16:
+			case Renderer::PrimitiveTopology::PATCH_LIST_17:
+			case Renderer::PrimitiveTopology::PATCH_LIST_18:
+			case Renderer::PrimitiveTopology::PATCH_LIST_19:
+			case Renderer::PrimitiveTopology::PATCH_LIST_20:
+			case Renderer::PrimitiveTopology::PATCH_LIST_21:
+			case Renderer::PrimitiveTopology::PATCH_LIST_22:
+			case Renderer::PrimitiveTopology::PATCH_LIST_23:
+			case Renderer::PrimitiveTopology::PATCH_LIST_24:
+			case Renderer::PrimitiveTopology::PATCH_LIST_25:
+			case Renderer::PrimitiveTopology::PATCH_LIST_26:
+			case Renderer::PrimitiveTopology::PATCH_LIST_27:
+			case Renderer::PrimitiveTopology::PATCH_LIST_28:
+			case Renderer::PrimitiveTopology::PATCH_LIST_29:
+			case Renderer::PrimitiveTopology::PATCH_LIST_30:
+			case Renderer::PrimitiveTopology::PATCH_LIST_31:
+			case Renderer::PrimitiveTopology::PATCH_LIST_32:
+				return Renderer::PrimitiveTopologyType::PATCH;
+		}
+	}
+
 	void JsonMaterialBlueprintHelper::optionalShaderVisibilityProperty(const rapidjson::Value& rapidJsonValue, const char* propertyName, Renderer::ShaderVisibility& value)
 	{
 		if (rapidJsonValue.HasMember(propertyName))
@@ -780,6 +896,10 @@ namespace RendererToolkit
 
 		// Start with the default settings
 		Renderer::PipelineState pipelineState = Renderer::PipelineStateBuilder();
+
+		// Optional primitive topology
+		optionalPrimitiveTopology(rapidJsonValuePipelineState, "PrimitiveTopology", pipelineState.primitiveTopology);
+		pipelineState.primitiveTopologyType = getPrimitiveTopologyTypeByPrimitiveTopology(pipelineState.primitiveTopology);
 
 		// Optional rasterizer state
 		if (rapidJsonValuePipelineState.HasMember("RasterizerState"))

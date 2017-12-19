@@ -26,7 +26,7 @@
 #include "RendererRuntime/Resource/Texture/TextureResource.h"
 #include "RendererRuntime/Resource/Texture/Loader/CrnTextureResourceLoader.h"
 #include "RendererRuntime/Resource/Texture/Loader/KtxTextureResourceLoader.h"
-#include "RendererRuntime/Resource/Texture/Loader/DdsTextureResourceLoader.h"
+#include "RendererRuntime/Resource/Texture/Loader/Lz4DdsTextureResourceLoader.h"
 #include "RendererRuntime/Resource/Detail/ResourceManagerTemplate.h"
 #ifdef WIN32	// TODO(sw) openvr doesn't support non windows systems yet
 	#include "RendererRuntime/Vr/OpenVR/Loader/OpenVRTextureResourceLoader.h"
@@ -336,13 +336,17 @@ namespace RendererRuntime
 		{
 			return new CrnTextureResourceLoader(*this, mInternalResourceManager->getRendererRuntime());
 		}
-		else if (resourceLoaderTypeId == KtxTextureResourceLoader::TYPE_ID)
+		else if (resourceLoaderTypeId == Lz4DdsTextureResourceLoader::TYPE_ID)
 		{
-			return new KtxTextureResourceLoader(*this, mInternalResourceManager->getRendererRuntime());
+			return new Lz4DdsTextureResourceLoader(*this, mInternalResourceManager->getRendererRuntime());
 		}
 		else if (resourceLoaderTypeId == DdsTextureResourceLoader::TYPE_ID)
 		{
 			return new DdsTextureResourceLoader(*this, mInternalResourceManager->getRendererRuntime());
+		}
+		else if (resourceLoaderTypeId == KtxTextureResourceLoader::TYPE_ID)
+		{
+			return new KtxTextureResourceLoader(*this, mInternalResourceManager->getRendererRuntime());
 		}
 		#ifdef WIN32	// TODO(sw) openvr doesn't support non windows systems yet
 			else if (resourceLoaderTypeId == OpenVRTextureResourceLoader::TYPE_ID)

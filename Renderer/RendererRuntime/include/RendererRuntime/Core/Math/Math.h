@@ -139,6 +139,20 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
+		*    Make a given value to a multiple of another given value
+		*
+		*  @param[in] value
+		*    Value to make a multiple of the given second value (e.g. 0.9)
+		*  @param[in] primaryValue
+		*    Value the first one should be a multiple of (e.g. 1.5)
+		*
+		*  @return
+		*    The updated value (e.g. 1.5)
+		*/
+		RENDERERRUNTIME_API_EXPORT static float makeMultipleOf(float value, float primaryValue);
+
+		/**
+		*  @brief
 		*    Get renderer dependent texture scale bias matrix
 		*
 		*  @param[in] renderer

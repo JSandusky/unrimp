@@ -245,6 +245,15 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
+	void StringHelper::replaceFirstString(std::string& stringToUpdate, const std::string& fromString, const std::string& toString)
+	{
+		const size_t startIndex = stringToUpdate.find(fromString);
+		if (std::string::npos != startIndex)
+		{
+			stringToUpdate.replace(startIndex, fromString.size(), toString);
+		}
+	}
+
 	void StringHelper::toLowerCase(std::string& strintToLower)
 	{
 		std::transform(strintToLower.begin(), strintToLower.end(), strintToLower.begin(), ::tolower);
@@ -340,11 +349,7 @@ namespace RendererToolkit
 			{
 				// If there's a "$ProjectName", resolve it by the project name
 				std::string resolvedSourceAssetIdAsString = sourceAssetIdAsString;
-				const size_t startIndex = resolvedSourceAssetIdAsString.find("$ProjectName");
-				if (std::string::npos != startIndex)
-				{
-					resolvedSourceAssetIdAsString.replace(startIndex, 12, input.projectName);
-				}
+				replaceFirstString(resolvedSourceAssetIdAsString, "$ProjectName", input.projectName);
 				return RendererRuntime::StringId(resolvedSourceAssetIdAsString.c_str());
 			}
 		}
@@ -397,11 +402,7 @@ namespace RendererToolkit
 			{
 				// If there's a "$ProjectName", resolve it by the project name
 				std::string resolvedAssetIdAsString = assetIdAsString;
-				const size_t startIndex = resolvedAssetIdAsString.find("$ProjectName");
-				if (std::string::npos != startIndex)
-				{
-					resolvedAssetIdAsString.replace(startIndex, 12, input.projectName);
-				}
+				replaceFirstString(resolvedAssetIdAsString, "$ProjectName", input.projectName);
 
 				// Relative to the asset package the asset is in
 				return input.getCompiledAssetIdBySourceAssetIdAsString(resolvedAssetIdAsString);

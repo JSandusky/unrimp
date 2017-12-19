@@ -151,7 +151,6 @@ namespace RendererRuntime
 				MaterialResourceId materialResourceId = getUninitialized<MaterialResourceId>();
 				materialResourceManager.loadMaterialResourceByAssetId(v1SubMesh.materialAssetId, materialResourceId);
 				subMesh.setMaterialResourceId(materialResourceId);
-				subMesh.setPrimitiveTopology(static_cast<Renderer::PrimitiveTopology>(v1SubMesh.primitiveTopology));
 				subMesh.setStartIndexLocation(v1SubMesh.startIndexLocation);
 				subMesh.setNumberOfIndices(v1SubMesh.numberOfIndices);
 

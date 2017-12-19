@@ -178,6 +178,8 @@ private:
 	// States for runtime-editing
 	RendererRuntime::DebugGuiHelper::GizmoSettings mGizmoSettings;
 	// Video
+	bool  mFullscreen;
+	bool  mCurrentFullscreen;
 	float mResolutionScale;
 	bool  mUseVerticalSynchronization;
 	bool  mCurrentUseVerticalSynchronization;

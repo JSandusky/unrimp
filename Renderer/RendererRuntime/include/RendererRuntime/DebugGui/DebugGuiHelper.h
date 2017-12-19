@@ -102,6 +102,7 @@ namespace RendererRuntime
 		RENDERERRUNTIME_API_EXPORT static void drawText(const char* text, float x, float y, bool drawBackground = true);
 		RENDERERRUNTIME_API_EXPORT static void drawGizmo(const CameraSceneItem& cameraSceneItem, GizmoSettings& gizmoSettings, Transform& transform);	// Using "ImGuizmo" ( https://github.com/CedricGuillemet/ImGuizmo )
 		RENDERERRUNTIME_API_EXPORT static void drawSkeleton(const CameraSceneItem& cameraSceneItem, const SkeletonMeshSceneItem& skeletonMeshSceneItem);
+		RENDERERRUNTIME_API_EXPORT static void drawGrid(const CameraSceneItem& cameraSceneItem, float cellSize = 1.0f, float yPosition = 0.0f);
 
 
 	//[-------------------------------------------------------]

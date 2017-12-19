@@ -66,7 +66,7 @@ namespace RendererRuntime
 	{
 		if (mOpen)
 		{
-			ImGui::SetNextWindowSize(ImVec2(500.0f, 400.0f), ImGuiSetCond_FirstUseEver);
+			ImGui::SetNextWindowSize(ImVec2(500.0f, 400.0f), ImGuiCond_FirstUseEver);
 			ImGui::Begin("Log", &mOpen);
 			if (ImGui::Button("Clear"))
 			{

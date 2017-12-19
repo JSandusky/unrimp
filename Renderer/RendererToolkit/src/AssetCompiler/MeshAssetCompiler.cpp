@@ -382,10 +382,9 @@ namespace
 					if (RendererRuntime::isInitialized(materialAssetId))
 					{
 						RendererRuntime::v1Mesh::SubMesh subMesh;
-						subMesh.materialAssetId		= materialAssetId;
-						subMesh.primitiveTopology	= static_cast<uint8_t>(Renderer::PrimitiveTopology::TRIANGLE_LIST);
-						subMesh.startIndexLocation	= previousNumberOfIndices;
-						subMesh.numberOfIndices		= numberOfIndices - previousNumberOfIndices;
+						subMesh.materialAssetId	   = materialAssetId;
+						subMesh.startIndexLocation = previousNumberOfIndices;
+						subMesh.numberOfIndices	   = numberOfIndices - previousNumberOfIndices;
 						subMeshes.push_back(subMesh);
 					}
 					else
@@ -666,7 +665,8 @@ namespace RendererToolkit
 	{
 		// Let the cache manager check whether or not the files have been changed in order to speed up later checks and to support dependency tracking
 		const std::string virtualInputFilename = input.virtualAssetInputDirectory + '/' + configuration.rapidJsonDocumentAsset["Asset"]["MeshAssetCompiler"]["InputFile"].GetString();
-		return input.cacheManager.checkIfFileIsModified(configuration.rendererTarget, input.virtualAssetFilename, {virtualInputFilename}, RendererRuntime::v1Mesh::FORMAT_VERSION);
+		const std::string virtualOutputAssetFilename = input.virtualAssetOutputDirectory + '/' + std_filesystem::path(input.virtualAssetFilename).stem().generic_string() + ".mesh";
+		return input.cacheManager.checkIfFileIsModified(configuration.rendererTarget, input.virtualAssetFilename, {virtualInputFilename}, virtualOutputAssetFilename, RendererRuntime::v1Mesh::FORMAT_VERSION);
 	}
 
 	void MeshAssetCompiler::compile(const Input& input, const Configuration& configuration, Output& output)

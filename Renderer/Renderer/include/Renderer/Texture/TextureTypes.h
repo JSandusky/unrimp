@@ -65,13 +65,14 @@ namespace Renderer
 			BC4				  = 14,	///< 1 component texture compression (also known as 3DC+/ATI1N, known as BC4 in DirectX 10, 8 bytes per block)
 			BC5				  = 15,	///< 2 component texture compression (luminance & alpha compression 4:1 -> normal map compression, also known as 3DC/ATI2N, known as BC5 in DirectX 10, 16 bytes per block)
 			ETC1			  = 16,	///< 3 component texture compression meant for mobile devices
-			R32_UINT		  = 17,	///< 32-bit unsigned integer format
-			R32_FLOAT		  = 18,	///< 32-bit float format
-			D32_FLOAT		  = 19,	///< 32-bit float depth format
-			R16G16_SNORM	  = 20,	///< A two-component, 32-bit signed-normalized-integer format that supports 16 bits for the red channel and 16 bits for the green channel
-			R16G16_FLOAT	  = 21,	///< A two-component, 32-bit floating-point format that supports 16 bits for the red channel and 16 bits for the green channel
-			UNKNOWN			  = 22,	///< Unknown
-			NUMBER_OF_FORMATS = 23	///< Number of texture formats
+			R16_UNORM		  = 17,	///< 16-bit unsigned-normalized-integer format that supports 16 bits for the red channel
+			R32_UINT		  = 18,	///< 32-bit unsigned integer format
+			R32_FLOAT		  = 19,	///< 32-bit float format
+			D32_FLOAT		  = 20,	///< 32-bit float depth format
+			R16G16_SNORM	  = 21,	///< A two-component, 32-bit signed-normalized-integer format that supports 16 bits for the red channel and 16 bits for the green channel
+			R16G16_FLOAT	  = 22,	///< A two-component, 32-bit floating-point format that supports 16 bits for the red channel and 16 bits for the green channel
+			UNKNOWN			  = 23,	///< Unknown
+			NUMBER_OF_FORMATS = 24	///< Number of texture formats
 		};
 
 		/**

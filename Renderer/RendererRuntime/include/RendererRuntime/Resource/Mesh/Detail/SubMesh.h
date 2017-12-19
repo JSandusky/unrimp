@@ -59,14 +59,12 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		inline SubMesh();
-		inline SubMesh(MaterialResourceId materialResourceId, Renderer::PrimitiveTopology primitiveTopology, uint32_t startIndexLocation, uint32_t numberOfIndices);
+		inline SubMesh(MaterialResourceId materialResourceId, uint32_t startIndexLocation, uint32_t numberOfIndices);
 		inline ~SubMesh();
 		inline SubMesh(const SubMesh& subMesh);
 		inline SubMesh& operator=(const SubMesh& subMesh);
 		inline MaterialResourceId getMaterialResourceId() const;
 		inline void setMaterialResourceId(MaterialResourceId materialResourceId);
-		inline Renderer::PrimitiveTopology getPrimitiveTopology() const;
-		inline void setPrimitiveTopology(Renderer::PrimitiveTopology primitiveTopology);
 		inline uint32_t getStartIndexLocation() const;
 		inline void setStartIndexLocation(uint32_t startIndexLocation);
 		inline uint32_t getNumberOfIndices() const;
@@ -77,10 +75,9 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		MaterialResourceId			mMaterialResourceId;	///< Material resource ID, can be set to uninitialized value
-		Renderer::PrimitiveTopology mPrimitiveTopology;
-		uint32_t					mStartIndexLocation;
-		uint32_t					mNumberOfIndices;
+		MaterialResourceId mMaterialResourceId;	///< Material resource ID, can be set to uninitialized value
+		uint32_t		   mStartIndexLocation;
+		uint32_t		   mNumberOfIndices;
 
 
 	};

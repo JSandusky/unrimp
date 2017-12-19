@@ -66,11 +66,11 @@ namespace RendererRuntime
 		mSortingKey(getUninitialized<uint64_t>()),
 		// Data
 		mRenderableManager(::detail::NullRenderableManager),
-		mPrimitiveTopology(Renderer::PrimitiveTopology::UNKNOWN),
 		mStartIndexLocation(0),
 		mNumberOfIndices(0),
 		mMaterialResourceId(getUninitialized<MaterialResourceId>()),
 		mSkeletonResourceId(getUninitialized<SkeletonResourceId>()),
+		mInstanceCount(1),
 		mDrawIndexed(false),
 		// Cached material data
 		mRenderQueueIndex(0),
@@ -82,17 +82,17 @@ namespace RendererRuntime
 		// Nothing here
 	}
 
-	Renderable::Renderable(RenderableManager& renderableManager, const Renderer::IVertexArrayPtr& vertexArrayPtr, Renderer::PrimitiveTopology primitiveTopology, bool drawIndexed, uint32_t startIndexLocation, uint32_t numberOfIndices, const MaterialResourceManager& materialResourceManager, MaterialResourceId materialResourceId, SkeletonResourceId skeletonResourceId) :
+	Renderable::Renderable(RenderableManager& renderableManager, const Renderer::IVertexArrayPtr& vertexArrayPtr, bool drawIndexed, uint32_t startIndexLocation, uint32_t numberOfIndices, const MaterialResourceManager& materialResourceManager, MaterialResourceId materialResourceId, SkeletonResourceId skeletonResourceId, uint32_t instanceCount) :
 		// Derived data
 		mSortingKey(getUninitialized<uint64_t>()),
 		// Data
 		mRenderableManager(renderableManager),
 		mVertexArrayPtr(vertexArrayPtr),
-		mPrimitiveTopology(primitiveTopology),
 		mStartIndexLocation(startIndexLocation),
 		mNumberOfIndices(numberOfIndices),
 		mMaterialResourceId(getUninitialized<MaterialResourceId>()),
 		mSkeletonResourceId(skeletonResourceId),
+		mInstanceCount(instanceCount),
 		mDrawIndexed(drawIndexed),
 		// Cached material data
 		mRenderQueueIndex(0),

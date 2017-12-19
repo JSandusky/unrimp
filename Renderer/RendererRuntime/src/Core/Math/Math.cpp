@@ -108,6 +108,11 @@ namespace RendererRuntime
 		return interval ? (value - floor((value - minimum) / interval) * (maximum - minimum)) : minimum;
 	}
 
+	float Math::makeMultipleOf(float value, float primaryValue)
+	{
+		return std::floor(value / primaryValue + 0.5f) * primaryValue;
+	}
+
 	const glm::mat4& Math::getTextureScaleBiasMatrix(const Renderer::IRenderer& renderer)
 	{
 		static const glm::mat4 SHADOW_SCALE_BIAS_MATRIX_DIRECT3D = glm::mat4(0.5f,  0.0f, 0.0f, 0.0f,

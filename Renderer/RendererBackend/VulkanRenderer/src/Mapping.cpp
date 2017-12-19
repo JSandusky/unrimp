@@ -379,6 +379,7 @@ namespace VulkanRenderer
 			VK_FORMAT_BC4_UNORM_BLOCK,			// Renderer::TextureFormat::BC4           - 1 component texture compression (also known as 3DC+/ATI1N, known as BC4 in DirectX 10, 8 bytes per block)
 			VK_FORMAT_BC5_UNORM_BLOCK,			// Renderer::TextureFormat::BC5           - 2 component texture compression (luminance & alpha compression 4:1 -> normal map compression, also known as 3DC/ATI2N, known as BC5 in DirectX 10, 16 bytes per block)
 			VK_FORMAT_UNDEFINED,				// Renderer::TextureFormat::ETC1          - 3 component texture compression meant for mobile devices - not supported in Direct3D 11 - TODO(co) Check for Vulkan format
+			VK_FORMAT_R16_UNORM,				// Renderer::TextureFormat::R16_UNORM     - 16-bit unsigned-normalized-integer format that supports 16 bits for the red channel
 			VK_FORMAT_R32_UINT,					// Renderer::TextureFormat::R32_UINT      - 32-bit unsigned integer format
 			VK_FORMAT_R32_SFLOAT,				// Renderer::TextureFormat::R32_FLOAT     - 32-bit float format
 			VK_FORMAT_D32_SFLOAT,				// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format

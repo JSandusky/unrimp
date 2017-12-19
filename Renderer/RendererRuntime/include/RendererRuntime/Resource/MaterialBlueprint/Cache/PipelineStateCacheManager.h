@@ -149,8 +149,6 @@ namespace RendererRuntime
 		*  @brief
 		*    Request a pipeline state cache instance by combination
 		*
-		*  @param[in] primitiveTopology
-		*    Primitive topology
 		*  @param[in] serializedPipelineStateHash
 		*    FNV1a hash of "Renderer::SerializedPipelineState"
 		*  @param[in] shaderProperties
@@ -163,7 +161,7 @@ namespace RendererRuntime
 		*  @return
 		*    The requested pipeline state cache instance, null pointer on error, do not destroy the instance
 		*/
-		Renderer::IPipelineStatePtr getPipelineStateCacheByCombination(Renderer::PrimitiveTopology primitiveTopology, uint32_t serializedPipelineStateHash, const ShaderProperties& shaderProperties, const DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES], bool allowEmergencySynchronousCompilation);
+		Renderer::IPipelineStatePtr getPipelineStateCacheByCombination(uint32_t serializedPipelineStateHash, const ShaderProperties& shaderProperties, const DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES], bool allowEmergencySynchronousCompilation);
 
 		/**
 		*  @brief

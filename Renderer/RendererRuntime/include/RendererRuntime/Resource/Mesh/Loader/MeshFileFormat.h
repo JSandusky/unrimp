@@ -57,7 +57,7 @@ namespace RendererRuntime
 		//[ Definitions                                           ]
 		//[-------------------------------------------------------]
 		static const uint32_t FORMAT_TYPE	 = StringId("Mesh");
-		static const uint32_t FORMAT_VERSION = 5;
+		static const uint32_t FORMAT_VERSION = 6;
 
 		#pragma pack(push)
 		#pragma pack(1)
@@ -78,7 +78,6 @@ namespace RendererRuntime
 			struct SubMesh
 			{
 				AssetId  materialAssetId;
-				uint8_t  primitiveTopology;	// "Renderer::PrimitiveTopology"-type
 				uint32_t startIndexLocation;
 				uint32_t numberOfIndices;
 			};

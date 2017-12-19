@@ -1,0 +1,14 @@
+{
+	"Format":
+	{
+		"Type": "MaterialAsset",
+		"Version": "1"
+	},
+	"MaterialAsset":
+	{
+		"Techniques":
+		{
+			"Forward": "$ProjectName/MaterialBlueprint/Scene/Terrain.asset"
+		}
+	}
+}

@@ -15,6 +15,7 @@
 #include "crn_buffer_stream.h"
 
 #define STBI_HEADER_FILE_ONLY
+#define STB_IMAGE_IMPLEMENTATION
 #include "crn_stb_image.cpp"
 
 #include "crn_jpgd.h"
@@ -284,7 +285,8 @@ namespace crnlib
          }
          else
          {
-            success = ((ext == "bmp" ? stbi_write_bmp : stbi_write_tga)(pFilename, img.get_width(), img.get_height(), num_src_chans, pSrc_img) == CRNLIB_TRUE);
+            // TODO(co) Gone after STBI update? Uncritical for Unrimp since the renderer toolkit doesn't need to write out bmp nor tga.
+            // success = ((ext == "bmp" ? stbi_write_bmp : stbi_write_tga)(pFilename, img.get_width(), img.get_height(), num_src_chans, pSrc_img) == CRNLIB_TRUE);
          }
          return success;
       }

@@ -2273,6 +2273,7 @@ namespace OpenGLRenderer
 			}
 
 			// Debug type to string
+			Renderer::ILog::Type logType = Renderer::ILog::Type::CRITICAL;
 			char debugType[25 + 1]{0};	// +1 for terminating zero
 			switch (type)
 			{
@@ -2281,6 +2282,7 @@ namespace OpenGLRenderer
 					break;
 
 				case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR_ARB:
+					logType = Renderer::ILog::Type::COMPATIBILITY_WARNING;
 					strncpy(debugType, "Deprecated behavior", 25);
 					break;
 
@@ -2289,10 +2291,12 @@ namespace OpenGLRenderer
 					break;
 
 				case GL_DEBUG_TYPE_PORTABILITY_ARB:
+					logType = Renderer::ILog::Type::COMPATIBILITY_WARNING;
 					strncpy(debugType, "Portability", 25);
 					break;
 
 				case GL_DEBUG_TYPE_PERFORMANCE_ARB:
+					logType = Renderer::ILog::Type::PERFORMANCE_WARNING;
 					strncpy(debugType, "Performance", 25);
 					break;
 
@@ -2330,7 +2334,11 @@ namespace OpenGLRenderer
 					break;
 			}
 
-			RENDERER_LOG(static_cast<const OpenGLRenderer*>(userParam)->getContext(), CRITICAL, "OpenGL debug message\tSource:\"%s\"\tType:\"%s\"\tID:\"%d\"\tSeverity:\"%s\"\tMessage:\"%s\"", debugSource, debugType, id, debugSeverity, message)
+			// Print into log
+			if (static_cast<const OpenGLRenderer*>(userParam)->getContext().getLog().print(logType, nullptr, __FILE__, static_cast<uint32_t>(__LINE__), "OpenGL debug message\tSource:\"%s\"\tType:\"%s\"\tID:\"%d\"\tSeverity:\"%s\"\tMessage:\"%s\"", debugSource, debugType, id, debugSeverity, message))
+			{
+				DEBUG_BREAK;
+			}
 		}
 	#else
 		void OpenGLRenderer::debugMessageCallback(uint32_t, uint32_t, uint32_t, uint32_t, int, const char*, const void*)

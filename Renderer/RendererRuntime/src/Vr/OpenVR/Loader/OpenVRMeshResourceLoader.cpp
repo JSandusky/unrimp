@@ -336,7 +336,7 @@ namespace RendererRuntime
 			const MaterialResourceId materialResourceId = ::detail::setupRenderModelMaterial(mRendererRuntime, static_cast<const VrManagerOpenVR&>(mRendererRuntime.getVrManager()).getVrDeviceMaterialResourceId(), mVrRenderModel->diffuseTextureId, albedoTextureAssetId);
 
 			// Tell the mesh resource about the sub-mesh
-			mMeshResource->getSubMeshes().push_back(SubMesh(materialResourceId, Renderer::PrimitiveTopology::TRIANGLE_LIST, 0, mMeshResource->getNumberOfIndices()));
+			mMeshResource->getSubMeshes().push_back(SubMesh(materialResourceId, 0, mMeshResource->getNumberOfIndices()));
 		}
 
 		// Free the render model

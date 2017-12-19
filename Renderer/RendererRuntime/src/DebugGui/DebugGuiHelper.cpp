@@ -100,11 +100,7 @@ namespace
 		bool objectSpaceToScreenSpacePosition(const glm::vec3& objectSpacePosition, const glm::mat4& objectSpaceToClipSpaceMatrix, ImVec2& screenSpacePosition)
 		{
 			glm::vec4 position = objectSpaceToClipSpaceMatrix * glm::vec4(objectSpacePosition, 1.0f);
-			if (position.z < 0.0f)
-			{
-				// Behind camera
-				return false;
-			}
+			const bool inFront = (position.z >= 0.0f);
 			position *= 0.5f / position.w;
 			position += glm::vec4(0.5f, 0.5f, 0.0f, 0.0f);
 			position.y = 1.0f - position.y;
@@ -113,8 +109,21 @@ namespace
 			position.y *= imGuiIO.DisplaySize.y;
 			screenSpacePosition = ImVec2(position.x, position.y);
 
-			// In front of camera
-			return true;
+			// In front of camera?
+			return inFront;
+		}
+
+		void draw3DLine(const glm::mat4& objectSpaceToClipSpaceMatrix, const glm::vec3& objectSpaceStartPosition, const glm::vec3& objectSpaceEndPosition, const ImColor& color, float thickness, ImDrawList& imDrawList)
+		{
+			// TODO(co) Add near plane clip
+			ImVec2 screenSpaceStartPosition;
+			ImVec2 screenSpaceEndPosition;
+			const bool screenSpaceStartPositionVisible = objectSpaceToScreenSpacePosition(objectSpaceStartPosition, objectSpaceToClipSpaceMatrix, screenSpaceStartPosition);
+			const bool screenSpaceEndPositionVisible = objectSpaceToScreenSpacePosition(objectSpaceEndPosition, objectSpaceToClipSpaceMatrix, screenSpaceEndPosition);
+			if (screenSpaceStartPositionVisible || screenSpaceEndPositionVisible)
+			{
+				imDrawList.AddLine(screenSpaceStartPosition, screenSpaceEndPosition, color, thickness);
+			}
 		}
 
 
@@ -241,21 +250,49 @@ namespace RendererRuntime
 			const glm::mat4* globalBoneMatrices = skeletonResource->getGlobalBoneMatrices();
 
 			// Draw skeleton hierarchy as lines
-			ImGui::Begin("skeleton", nullptr, ImGui::GetIO().DisplaySize, 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoBringToFrontOnFocus);
-			static const ImColor whiteImColor(255, 255, 255);
-			ImDrawList* imDrawList = ImGui::GetWindowDrawList();
-			ImVec2 parentBonePosition;
-			ImVec2 bonePosition;
-			for (uint8_t boneIndex = 1; boneIndex < numberOfBones; ++boneIndex)
+			if (ImGui::Begin("skeleton", nullptr, ImGui::GetIO().DisplaySize, 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoBringToFrontOnFocus))
 			{
-				if (::detail::objectSpaceToScreenSpacePosition(globalBoneMatrices[boneParentIndices[boneIndex]][3], objectSpaceToClipSpaceMatrix, parentBonePosition) &&
-					::detail::objectSpaceToScreenSpacePosition(globalBoneMatrices[boneIndex][3], objectSpaceToClipSpaceMatrix, bonePosition))
+				static const ImColor WHITE_COLOR(255, 255, 255);
+				ImDrawList* imDrawList = ImGui::GetWindowDrawList();
+				ImVec2 parentBonePosition;
+				ImVec2 bonePosition;
+				for (uint8_t boneIndex = 1; boneIndex < numberOfBones; ++boneIndex)
 				{
-					imDrawList->AddLine(parentBonePosition, bonePosition, whiteImColor, 6.0f);
+					::detail::draw3DLine(objectSpaceToClipSpaceMatrix, globalBoneMatrices[boneParentIndices[boneIndex]][3], globalBoneMatrices[boneIndex][3], WHITE_COLOR, 6.0f, *imDrawList);
 				}
 			}
 			ImGui::End();
 		}
+	}
+
+	void DebugGuiHelper::drawGrid(const CameraSceneItem& cameraSceneItem, float cellSize, float yPosition)
+	{
+		if (ImGui::Begin("grid", nullptr, ImGui::GetIO().DisplaySize, 0, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoBringToFrontOnFocus))
+		{
+			const int32_t NUMBER_OF_LINES_PER_DIRECTION = 10;
+			static const ImColor GREY_COLOR(0.5f, 0.5f, 0.5f, 1.0f);
+			ImDrawList* imDrawList = ImGui::GetWindowDrawList();
+			const glm::mat4 objectSpaceToClipSpaceMatrix = cameraSceneItem.getViewSpaceToClipSpaceMatrix() * cameraSceneItem.getWorldSpaceToViewSpaceMatrix();
+
+			// Keep the grid fixed at camera
+			const glm::vec3& cameraPosition = cameraSceneItem.getParentSceneNodeSafe().getTransform().position;
+			const glm::vec3 centerPosition(Math::makeMultipleOf(cameraPosition.x, cellSize), yPosition, Math::makeMultipleOf(cameraPosition.z, cellSize));
+
+			// Lines along z axis
+			for (int32_t z = -NUMBER_OF_LINES_PER_DIRECTION; z <= NUMBER_OF_LINES_PER_DIRECTION; ++z)
+			{
+				const float thickness = (0 == z || NUMBER_OF_LINES_PER_DIRECTION == std::abs(z)) ? 4.0f : 1.0f;
+				::detail::draw3DLine(objectSpaceToClipSpaceMatrix, centerPosition + glm::vec3(-NUMBER_OF_LINES_PER_DIRECTION * cellSize, 0.0f, z * cellSize), centerPosition + glm::vec3(NUMBER_OF_LINES_PER_DIRECTION * cellSize, 0.0f, z * cellSize), GREY_COLOR, thickness, *imDrawList);
+			}
+
+			// Lines along x axis
+			for (int32_t x = -NUMBER_OF_LINES_PER_DIRECTION; x <= NUMBER_OF_LINES_PER_DIRECTION; ++x)
+			{
+				const float thickness = (0 == x || NUMBER_OF_LINES_PER_DIRECTION == std::abs(x)) ? 4.0f : 1.0f;
+				::detail::draw3DLine(objectSpaceToClipSpaceMatrix, centerPosition + glm::vec3(x * cellSize, 0.0f, -NUMBER_OF_LINES_PER_DIRECTION * cellSize), centerPosition + glm::vec3(x * cellSize, 0.0f, NUMBER_OF_LINES_PER_DIRECTION * cellSize), GREY_COLOR, thickness, *imDrawList);
+			}
+		}
+		ImGui::End();
 	}
 
 

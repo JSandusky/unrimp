@@ -58,6 +58,7 @@ namespace RendererToolkit
 	//[ Public static methods                                 ]
 	//[-------------------------------------------------------]
 	public:
+		static void replaceFirstString(std::string& stringToUpdate, const std::string& fromString, const std::string& toString);
 		static void toLowerCase(std::string& strintToLower);
 		static void splitString(const std::string& stringToSplit, char separator, std::vector<std::string>& elements);
 		static void splitString(const std::string& stringToSplit, const std::string& separators, std::vector<std::string>& elements);

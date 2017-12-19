@@ -76,6 +76,14 @@ SAMPLER_STATE(2, 1, SamplerPointWrap, 1)
 	@insertpiece(DefineGetLinearDepth)
 	@insertpiece(DefineGetDepthFromDepthMap)
 
+// Fade value with distance
+float farFade(float value, float2 fadeStartEnd, float linearDepth)
+{
+	float fadeRange = fadeStartEnd.x - fadeStartEnd.y;
+	float fade = 1 - ((linearDepth - fadeStartEnd.y) / fadeRange);
+	return (linearDepth > fadeStartEnd.x) ? 1.0 : ((linearDepth > fadeStartEnd.y) ? 1.0 - ((1.0 - value) * fade) : value);
+}
+
 float3 GetNormalFromNormalMap(float2 textureCoordinate, int sampleIndex)
 {
 	@property(NumberOfMultisamples)
@@ -131,9 +139,17 @@ float CalculateOcclusion(float3 viewRay, float2 textureCoordinate, int sampleInd
 			occlusion += ((linearSampleDepth <= samplePosition.z) ? 1.0 : 0.0) * rangeCheck;
 		}
 	}
+	occlusion = 1.0f - (occlusion / float(PassData.SampleKernelSize));
+
+	// Increase SSAO strength to make it more visible
+	occlusion = pow(occlusion, 2.0f);
+
+	// Fade occlusion with distance to reduce visible precision artefacts
+	float2 ssaoFarFadeStart = float2(20.0f, 60.0f);	// TODO(co) We could expose this
+	occlusion = farFade(occlusion, ssaoFarFadeStart, originLinearDepth);
 
 	// Done
-	return 1.0f - (occlusion / float(PassData.SampleKernelSize));
+	return occlusion;
 }
 
 
@@ -147,9 +163,6 @@ MAIN_BEGIN
 	// Calculate SSAO
 	// -> No complex pixel detection since it doesn't make a notable visual difference here
 	float sum = CalculateOcclusion(viewRay, MAIN_INPUT(TexCoordVS), 0);
-
-	// Increase SSAO strength to make it more visible
-	sum = pow(sum, 2.0f);
 
 	// Done
 	MAIN_OUTPUT_COLOR(0) = float4(sum, sum, sum, sum);

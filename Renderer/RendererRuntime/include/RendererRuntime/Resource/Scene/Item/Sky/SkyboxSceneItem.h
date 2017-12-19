@@ -27,10 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/RenderQueue/RenderableManager.h"
-#include "RendererRuntime/Resource/IResourceListener.h"
-#include "RendererRuntime/Resource/Scene/Item/ISceneItem.h"
-#include "RendererRuntime/Resource/Material/MaterialProperties.h"
+#include "RendererRuntime/Resource/Scene/Item/MaterialSceneItem.h"
 
 
 //[-------------------------------------------------------]
@@ -41,21 +38,13 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Global definitions                                    ]
-	//[-------------------------------------------------------]
-	typedef StringId AssetId;				///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
-	typedef StringId MaterialTechniqueId;	///< Material technique identifier, internally just a POD "uint32_t", result of hashing the material technique name
-	typedef uint32_t MaterialResourceId;	///< POD material resource identifier
-
-
-	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
 	*    Skybox scene item
 	*/
-	class SkyboxSceneItem : public ISceneItem, public IResourceListener
+	class SkyboxSceneItem : public MaterialSceneItem
 	{
 
 
@@ -73,22 +62,10 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	public:
-		inline AssetId getMaterialAssetId() const;
-		inline MaterialTechniqueId getMaterialTechniqueId() const;
-		inline AssetId getMaterialBlueprintAssetId() const;
-		inline const MaterialProperties& getMaterialProperties() const;
-		inline MaterialResourceId getMaterialResourceId() const;
-
-
-	//[-------------------------------------------------------]
 	//[ Public RendererRuntime::ISceneItem methods            ]
 	//[-------------------------------------------------------]
 	public:
 		inline virtual SceneItemTypeId getSceneItemTypeId() const override;
-		virtual void deserialize(uint32_t numberOfBytes, const uint8_t* data) override;
 		virtual void onAttachedToSceneNode(SceneNode& sceneNode) override;
 		inline virtual void onDetachedFromSceneNode(SceneNode& sceneNode) override;
 		inline virtual void setVisible(bool visible) override;
@@ -96,34 +73,27 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected virtual RendererRuntime::IResourceListener methods ]
+	//[ Protected virtual RendererRuntime::MaterialSceneItem methods ]
 	//[-------------------------------------------------------]
 	protected:
-		virtual void onLoadingStateChange(const IResource& resource) override;
+		virtual void onMaterialResourceCreated() override;
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	protected:
+	private:
 		inline explicit SkyboxSceneItem(SceneResource& sceneResource);
 		virtual ~SkyboxSceneItem() override;
 		explicit SkyboxSceneItem(const SkyboxSceneItem&) = delete;
 		SkyboxSceneItem& operator=(const SkyboxSceneItem&) = delete;
-		void initialize();
-		void createMaterialResource(MaterialResourceId parentMaterialResourceId);
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		AssetId				mMaterialAssetId;			///< If material blueprint asset ID is set, material asset ID must be uninitialized
-		MaterialTechniqueId	mMaterialTechniqueId;		///< Must always be valid
-		AssetId				mMaterialBlueprintAssetId;	///< If material asset ID is set, material blueprint asset ID must be uninitialized
-		MaterialProperties	mMaterialProperties;
-		MaterialResourceId  mMaterialResourceId;
-		RenderableManager	mRenderableManager;
+		RenderableManager mRenderableManager;
 
 
 	};

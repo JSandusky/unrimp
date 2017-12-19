@@ -221,6 +221,9 @@
     <Filter Include="Source Files\Resource\Scene\Item\Sky">
       <UniqueIdentifier>{08e94f8b-27c8-4028-8835-9f8c0978f6e9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resource\Scene\Item\Terrain">
+      <UniqueIdentifier>{5312d43c-2e10-4c62-bdb9-7a8fb8232406}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -635,6 +638,15 @@
     </None>
     <None Include="include\RendererRuntime\DebugGui\DebugGuiManager.inl">
       <Filter>Source Files\DebugGui</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Scene\Item\Terrain\TerrainSceneItem.inl">
+      <Filter>Source Files\Resource\Scene\Item\Terrain</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Scene\Item\MaterialSceneItem.inl">
+      <Filter>Source Files\Resource\Scene\Item</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Texture\Loader\Lz4DdsTextureResourceLoader.inl">
+      <Filter>Source Files\Resource\Texture\Loader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1262,6 +1274,15 @@
     <ClInclude Include="include\RendererRuntime\DebugGui\ImGuiLog.h">
       <Filter>Source Files\DebugGui</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Terrain\TerrainSceneItem.h">
+      <Filter>Source Files\Resource\Scene\Item\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\MaterialSceneItem.h">
+      <Filter>Source Files\Resource\Scene\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Texture\Loader\Lz4DdsTextureResourceLoader.h">
+      <Filter>Source Files\Resource\Texture\Loader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
@@ -1647,6 +1668,15 @@
     </ClCompile>
     <ClCompile Include="src\Core\File\FileSystemHelper.cpp">
       <Filter>Source Files\Core\File</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Scene\Item\Terrain\TerrainSceneItem.cpp">
+      <Filter>Source Files\Resource\Scene\Item\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Scene\Item\MaterialSceneItem.cpp">
+      <Filter>Source Files\Resource\Scene\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Texture\Loader\Lz4DdsTextureResourceLoader.cpp">
+      <Filter>Source Files\Resource\Texture\Loader</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

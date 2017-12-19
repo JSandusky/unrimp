@@ -23,14 +23,9 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/Scene/Item/Sky/SkyboxSceneItem.h"
-#include "RendererRuntime/Resource/Scene/Loader/SceneFileFormat.h"
 #include "RendererRuntime/Resource/Scene/SceneResource.h"
 #include "RendererRuntime/Resource/Scene/SceneNode.h"
-#include "RendererRuntime/Resource/Material/MaterialResource.h"
-#include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
-
-#include <tuple>
 
 
 //[-------------------------------------------------------]
@@ -133,31 +128,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public RendererRuntime::ISceneItem methods            ]
 	//[-------------------------------------------------------]
-	void SkyboxSceneItem::deserialize(uint32_t numberOfBytes, const uint8_t* data)
-	{
-		// Sanity check
-		assert(sizeof(v1Scene::SkyboxItem) <= numberOfBytes);
-		std::ignore = numberOfBytes;
-
-		// Read data
-		const v1Scene::SkyboxItem* skyboxItem = reinterpret_cast<const v1Scene::SkyboxItem*>(data);
-		assert(sizeof(v1Scene::SkyboxItem) + sizeof(MaterialProperty) * skyboxItem->numberOfMaterialProperties == numberOfBytes);
-		mMaterialAssetId = skyboxItem->materialAssetId;
-		mMaterialTechniqueId = skyboxItem->materialTechniqueId;
-		mMaterialBlueprintAssetId = skyboxItem->materialBlueprintAssetId;
-
-		{ // Read material properties
-			// TODO(co) Get rid of the evil const-cast
-			MaterialProperties::SortedPropertyVector& sortedPropertyVector = const_cast<MaterialProperties::SortedPropertyVector&>(mMaterialProperties.getSortedPropertyVector());
-			sortedPropertyVector.resize(skyboxItem->numberOfMaterialProperties);
-			memcpy(reinterpret_cast<char*>(sortedPropertyVector.data()), data + sizeof(v1Scene::SkyboxItem), sizeof(MaterialProperty) * skyboxItem->numberOfMaterialProperties);
-		}
-
-		// Sanity checks
-		assert(isInitialized(mMaterialAssetId) || isInitialized(mMaterialBlueprintAssetId));
-		assert(!(isInitialized(mMaterialAssetId) && isInitialized(mMaterialBlueprintAssetId)));
-	}
-
 	void SkyboxSceneItem::onAttachedToSceneNode(SceneNode& sceneNode)
 	{
 		mRenderableManager.setTransform(&sceneNode.getGlobalTransform());
@@ -168,7 +138,7 @@ namespace RendererRuntime
 
 	const RenderableManager* SkyboxSceneItem::getRenderableManager() const
 	{
-		if (!isInitialized(mMaterialResourceId))
+		if (!isInitialized(getMaterialResourceId()))
 		{
 			// TODO(co) Get rid of the nasty delayed initialization in here, including the evil const-cast. For this, full asynchronous material blueprint loading must work. See "TODO(co) Currently material blueprint resource loading is a blocking process.".
 			const_cast<SkyboxSceneItem*>(this)->initialize();
@@ -178,91 +148,11 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected virtual RendererRuntime::IResourceListener methods ]
+	//[ Protected virtual RendererRuntime::MaterialSceneItem methods ]
 	//[-------------------------------------------------------]
-	void SkyboxSceneItem::onLoadingStateChange(const IResource& resource)
+	void SkyboxSceneItem::onMaterialResourceCreated()
 	{
-		assert(resource.getId() == mMaterialResourceId);
-		createMaterialResource(resource.getId());
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	SkyboxSceneItem::~SkyboxSceneItem()
-	{
-		if (isInitialized(mMaterialResourceId))
-		{
-			// Clear the renderable manager right now so we have no more references to the shared vertex array
-			mRenderableManager.getRenderables().clear();
-
-			// Release reference to vertex array object (VAO) shared between all skybox instances
-			if (nullptr != ::detail::VertexArrayPtr && 1 == ::detail::VertexArrayPtr->releaseReference())	// +1 for reference to global shared pointer
-			{
-				::detail::VertexArrayPtr = nullptr;
-			}
-
-			// Destroy the material resource the skybox created
-			getSceneResource().getRendererRuntime().getMaterialResourceManager().destroyMaterialResource(mMaterialResourceId);
-		}
-	}
-
-	void SkyboxSceneItem::initialize()
-	{
-		// Sanity checks
-		assert(isInitialized(mMaterialAssetId) || isInitialized(mMaterialBlueprintAssetId));
-		assert(!(isInitialized(mMaterialAssetId) && isInitialized(mMaterialBlueprintAssetId)));
-
-		// Get parent material resource ID and initiate creating the skybox material resource
-		MaterialResourceManager& materialResourceManager = getSceneResource().getRendererRuntime().getMaterialResourceManager();
-		if (isInitialized(mMaterialAssetId))
-		{
-			// Get or load material resource
-			MaterialResourceId materialResourceId = getUninitialized<MaterialResourceId>();
-			materialResourceManager.loadMaterialResourceByAssetId(mMaterialAssetId, materialResourceId, this);
-		}
-		else
-		{
-			// Get or load material blueprint resource
-			const AssetId materialBlueprintAssetId = mMaterialBlueprintAssetId;
-			if (isInitialized(materialBlueprintAssetId))
-			{
-				MaterialResourceId parentMaterialResourceId = materialResourceManager.getMaterialResourceIdByAssetId(materialBlueprintAssetId);
-				if (isUninitialized(parentMaterialResourceId))
-				{
-					parentMaterialResourceId = materialResourceManager.createMaterialResourceByAssetId(materialBlueprintAssetId, materialBlueprintAssetId, mMaterialTechniqueId);
-				}
-				createMaterialResource(parentMaterialResourceId);
-			}
-		}
-	}
-
-	void SkyboxSceneItem::createMaterialResource(MaterialResourceId parentMaterialResourceId)
-	{
-		// Sanity checks
-		assert(isUninitialized(mMaterialResourceId));
-		assert(isInitialized(parentMaterialResourceId));
-
-		// Each skybox instance must have its own material resource since material property values might vary
 		const IRendererRuntime& rendererRuntime = getSceneResource().getRendererRuntime();
-		MaterialResourceManager& materialResourceManager = rendererRuntime.getMaterialResourceManager();
-		mMaterialResourceId = materialResourceManager.createMaterialResourceByCloning(parentMaterialResourceId);
-
-		{ // Set skybox material properties
-			const MaterialProperties::SortedPropertyVector& sortedPropertyVector = mMaterialProperties.getSortedPropertyVector();
-			if (!sortedPropertyVector.empty())
-			{
-				MaterialResource& materialResource = materialResourceManager.getById(mMaterialResourceId);
-				for (const MaterialProperty& materialProperty : sortedPropertyVector)
-				{
-					if (materialProperty.isOverwritten())
-					{
-						materialResource.setPropertyById(materialProperty.getMaterialPropertyId(), materialProperty);
-					}
-				}
-			}
-		}
 
 		// Add reference to vertex array object (VAO) shared between all skybox instances
 		if (nullptr == ::detail::VertexArrayPtr)
@@ -273,8 +163,27 @@ namespace RendererRuntime
 		::detail::VertexArrayPtr->addReference();
 
 		// Setup renderable manager
-		mRenderableManager.getRenderables().emplace_back(mRenderableManager, ::detail::VertexArrayPtr, Renderer::PrimitiveTopology::TRIANGLE_LIST, true, 0, 36, materialResourceManager, mMaterialResourceId, getUninitialized<SkeletonResourceId>());
+		mRenderableManager.getRenderables().emplace_back(mRenderableManager, ::detail::VertexArrayPtr, true, 0, 36, rendererRuntime.getMaterialResourceManager(), getMaterialResourceId(), getUninitialized<SkeletonResourceId>());
 		mRenderableManager.updateCachedRenderablesData();
+	}
+
+
+	//[-------------------------------------------------------]
+	//[ Private methods                                       ]
+	//[-------------------------------------------------------]
+	SkyboxSceneItem::~SkyboxSceneItem()
+	{
+		if (isInitialized(getMaterialResourceId()))
+		{
+			// Clear the renderable manager right now so we have no more references to the shared vertex array
+			mRenderableManager.getRenderables().clear();
+
+			// Release reference to vertex array object (VAO) shared between all skybox instances
+			if (nullptr != ::detail::VertexArrayPtr && 1 == ::detail::VertexArrayPtr->releaseReference())	// +1 for reference to global shared pointer
+			{
+				::detail::VertexArrayPtr = nullptr;
+			}
+		}
 	}
 
 

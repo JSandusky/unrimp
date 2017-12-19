@@ -95,8 +95,6 @@ namespace RendererRuntime
 		*
 		*  @param[in] materialBlueprintResource
 		*    Material blueprint resource to use
-		*  @param[in] primitiveTopology
-		*    Primitive topology
 		*  @param[in] serializedPipelineStateHash
 		*    FNV1a hash of "Renderer::SerializedPipelineState"
 		*  @param[in] shaderProperties
@@ -104,7 +102,7 @@ namespace RendererRuntime
 		*  @param[in] dynamicShaderPieces
 		*    Dynamic via C++ generated shader pieces to use
 		*/
-		inline PipelineStateSignature(const MaterialBlueprintResource& materialBlueprintResource, Renderer::PrimitiveTopology primitiveTopology, uint32_t serializedPipelineStateHash, const ShaderProperties& shaderProperties, const DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES]);
+		inline PipelineStateSignature(const MaterialBlueprintResource& materialBlueprintResource, uint32_t serializedPipelineStateHash, const ShaderProperties& shaderProperties, const DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES]);
 
 		/**
 		*  @brief
@@ -133,8 +131,6 @@ namespace RendererRuntime
 		*
 		*  @param[in] materialBlueprintResource
 		*    Material blueprint resource to use
-		*  @param[in] primitiveTopology
-		*    Primitive topology
 		*  @param[in] serializedPipelineStateHash
 		*    FNV1a hash of "Renderer::SerializedPipelineState"
 		*  @param[in] shaderProperties
@@ -142,13 +138,12 @@ namespace RendererRuntime
 		*  @param[in] dynamicShaderPieces
 		*    Dynamic via C++ generated shader pieces to use
 		*/
-		void set(const MaterialBlueprintResource& materialBlueprintResource, Renderer::PrimitiveTopology primitiveTopology, uint32_t serializedPipelineStateHash, const ShaderProperties& shaderProperties, const DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES]);
+		void set(const MaterialBlueprintResource& materialBlueprintResource, uint32_t serializedPipelineStateHash, const ShaderProperties& shaderProperties, const DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES]);
 
 		//[-------------------------------------------------------]
 		//[ Getter for input data                                 ]
 		//[-------------------------------------------------------]
 		inline MaterialBlueprintResourceId getMaterialBlueprintResourceId() const;
-		inline Renderer::PrimitiveTopology getPrimitiveTopology() const;
 		inline uint32_t getSerializedPipelineStateHash() const;
 		inline const ShaderProperties& getShaderProperties() const;
 		inline const DynamicShaderPieces& getDynamicShaderPieces(ShaderType shaderType) const;
@@ -166,7 +161,6 @@ namespace RendererRuntime
 	private:
 		// Input data
 		MaterialBlueprintResourceId mMaterialBlueprintResourceId;
-		Renderer::PrimitiveTopology mPrimitiveTopology;
 		uint32_t					mSerializedPipelineStateHash;
 		ShaderProperties			mShaderProperties;
 		DynamicShaderPieces			mDynamicShaderPieces[NUMBER_OF_SHADER_TYPES];

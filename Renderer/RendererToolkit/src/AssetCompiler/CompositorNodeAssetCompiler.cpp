@@ -511,7 +511,8 @@ namespace RendererToolkit
 	{
 		// Let the cache manager check whether or not the files have been changed in order to speed up later checks and to support dependency tracking
 		const std::string virtualInputFilename = input.virtualAssetInputDirectory + '/' + configuration.rapidJsonDocumentAsset["Asset"]["CompositorNodeAssetCompiler"]["InputFile"].GetString();
-		return input.cacheManager.checkIfFileIsModified(configuration.rendererTarget, input.virtualAssetFilename, {virtualInputFilename}, RendererRuntime::v1CompositorNode::FORMAT_VERSION);
+		const std::string virtualOutputAssetFilename = input.virtualAssetOutputDirectory + '/' + std_filesystem::path(input.virtualAssetFilename).stem().generic_string() + ".compositor_node";
+		return input.cacheManager.checkIfFileIsModified(configuration.rendererTarget, input.virtualAssetFilename, {virtualInputFilename}, virtualOutputAssetFilename, RendererRuntime::v1CompositorNode::FORMAT_VERSION);
 	}
 
 	void CompositorNodeAssetCompiler::compile(const Input& input, const Configuration& configuration, Output& output)

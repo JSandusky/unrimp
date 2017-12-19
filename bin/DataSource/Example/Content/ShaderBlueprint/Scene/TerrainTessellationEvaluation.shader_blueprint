@@ -1,0 +1,136 @@
+/*********************************************************\
+ * Copyright (c) 2012-2017 The Unrimp Team
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+\*********************************************************/
+
+
+// This software contains source code provided by NVIDIA Corporation. The height map terrain tessellation implementation is basing on "DirectX 11 Terrain Tessellation" by Iain Cantlay ( https://developer.nvidia.com/sites/default/files/akamai/gamedev/files/sdk/11/TerrainTessellation_WhitePaper.pdf ) and the concrete implementation "TerrainTessellation"-sample inside "NVIDIA Direct3D SDK 11" ( https://developer.nvidia.com/dx11-samples ).
+
+
+//[-------------------------------------------------------]
+//[ Definitions                                           ]
+//[-------------------------------------------------------]
+@includepiece($ProjectName/ShaderPiece/Core.asset)
+	@insertpiece(SetCrossPlatformSettings)
+
+
+//[-------------------------------------------------------]
+//[ Input / output                                        ]
+//[-------------------------------------------------------]
+struct HS_CONSTANT_DATA_OUTPUT
+{
+	float  TessLevelInner[2] : SV_INSIDETESSFACTOR;	// Inner tessellation level
+	float  TessLevelOuter[4] : SV_TESSFACTOR;		// Outer tessellation level
+};
+struct HS_OUTPUT
+{
+	float4 PositionTC : SV_POSITION;	// World space control point position of the patch we received from the tessellation control shader (TCS) as input
+};
+struct DS_OUTPUT
+{
+	float4 Position 				   : SV_POSITION;	// Interpolated world space vertex position inside the patch as output
+	float2 TexCoord 				   : TEXCOORD0;		// Texture coordinate
+	float3 PreviousClipSpacePositionVS : TEXCOORD1;		// Previous clip space position
+	float3 WorldSpacePosition		   : TEXCOORD2;		// World space position
+};
+
+// Uniform buffers
+struct PassDataStruct
+{
+	float4x4 WorldSpaceToClipSpaceMatrix;
+	float4x4 WorldSpaceToViewSpaceMatrix;
+	float4x4 PreviousWorldSpaceToViewSpaceMatrix;
+	float4x4 ShadowMatrix;
+	float4   ShadowCascadeOffsets[4];
+	float4   ShadowCascadeScales[4];
+	float4   ShadowCascadeSplits;
+	float4x4 ViewSpaceToClipSpaceMatrix;
+	float4	 ViewSpaceToWorldSpaceQuaternion;
+	float4	 WorldSpaceToViewSpaceQuaternion;
+	float3	 ViewSpaceSunlightDirection;
+	float	 Wetness;
+	float3	 WorldPosition;
+	float3	 WorldSize;
+	float3	 AmbientColor;
+	float3	 SunlightColor;
+	float3   CameraWorldSpacePosition;
+	float3	 LightClustersScale;
+	float3	 LightClustersBias;
+	float2   ViewportSize;
+	float2   ProjectionParameters;
+	uint	 FullCoverageMask;
+};
+UNIFORM_BUFFER_BEGIN(0, 0, PassUniformBuffer, 0)
+	PassDataStruct PassData;
+UNIFORM_BUFFER_END
+
+// Textures
+TEXTURE_2D(2, 3, HeightMap, 4)
+
+// Samplers
+SAMPLER_STATE(3, 1, SamplerLinearClamp, 1)
+
+
+//[-------------------------------------------------------]
+//[ Functions                                             ]
+//[-------------------------------------------------------]
+@includepiece($ProjectName/ShaderPiece/Terrain.asset)
+	@insertpiece(DefineWorldXZToHeightUV)
+	@insertpiece(DefineSampleHeightMap)
+
+float4 Bilerp(float4 v0, float4 v1, float4 v2, float4 v3, float2 i)
+{
+	float4 bottom = LERP(v0, v3, i.x);
+	float4 top    = LERP(v1, v2, i.x);
+	return LERP(bottom, top, i.y);
+}
+
+
+//[-------------------------------------------------------]
+//[ Main: HLSL shader language                            ]
+//[-------------------------------------------------------]
+@property(HLSL)
+	[domain("quad")]
+	DS_OUTPUT main(HS_CONSTANT_DATA_OUTPUT inputTessellation, float2 inputTessellationCoordinate : SV_DOMAINLOCATION, const OutputPatch<HS_OUTPUT, 4> input)
+	{
+		DS_OUTPUT output;
+
+		// Bilerp the position
+		float4 worldSpacePosition = Bilerp(input[0].PositionTC, input[1].PositionTC, input[2].PositionTC, input[3].PositionTC, inputTessellationCoordinate);
+		worldSpacePosition.w = 1.0f;
+
+		// Apply height map
+		worldSpacePosition.y = SampleHeightMap(worldSpacePosition.xz);
+
+		// Transform to clip-space
+		output.Position = MATRIX_MUL(PassData.WorldSpaceToClipSpaceMatrix, worldSpacePosition);
+
+		// Texture coordinate
+		output.TexCoord = WorldXZToHeightUV(worldSpacePosition.xz);
+
+		{ // Previous clip space position
+			float4 previousPiewSpacePosition = MATRIX_MUL(PassData.PreviousWorldSpaceToViewSpaceMatrix, worldSpacePosition);
+			output.PreviousClipSpacePositionVS = MATRIX_MUL(PassData.ViewSpaceToClipSpaceMatrix, previousPiewSpacePosition).xyw;
+		}
+
+		// World space position
+		output.WorldSpacePosition = worldSpacePosition.xyz;
+
+		// Done
+		return output;
+	}
+@end

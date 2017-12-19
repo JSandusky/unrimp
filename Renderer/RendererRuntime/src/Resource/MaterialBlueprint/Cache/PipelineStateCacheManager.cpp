@@ -40,13 +40,13 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Renderer::IPipelineStatePtr PipelineStateCacheManager::getPipelineStateCacheByCombination(Renderer::PrimitiveTopology primitiveTopology, uint32_t serializedPipelineStateHash, const ShaderProperties& shaderProperties, const DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES], bool allowEmergencySynchronousCompilation)
+	Renderer::IPipelineStatePtr PipelineStateCacheManager::getPipelineStateCacheByCombination(uint32_t serializedPipelineStateHash, const ShaderProperties& shaderProperties, const DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES], bool allowEmergencySynchronousCompilation)
 	{
 		// TODO(co) Asserts whether or not e.g. the material resource is using the owning material resource blueprint
 		assert(IResource::LoadingState::LOADED == mMaterialBlueprintResource.getLoadingState());
 
 		// Generate the pipeline state signature
-		mTemporaryPipelineStateSignature.set(mMaterialBlueprintResource, primitiveTopology, serializedPipelineStateHash, shaderProperties, dynamicShaderPieces);
+		mTemporaryPipelineStateSignature.set(mMaterialBlueprintResource, serializedPipelineStateHash, shaderProperties, dynamicShaderPieces);
 		{
 			PipelineStateCacheByPipelineStateSignatureId::const_iterator iterator = mPipelineStateCacheByPipelineStateSignatureId.find(mTemporaryPipelineStateSignature.getPipelineStateSignatureId());
 			if (iterator != mPipelineStateCacheByPipelineStateSignatureId.cend())
@@ -116,7 +116,7 @@ namespace RendererRuntime
 				}
 
 				// Generate the current fallback pipeline state signature
-				PipelineStateSignature fallbackPipelineStateSignature(mMaterialBlueprintResource, primitiveTopology, serializedPipelineStateHash, fallbackShaderProperties, dynamicShaderPieces);	// TODO(co) Optimization: There are allocations for vector and map involved in here, we might want to get rid of those
+				PipelineStateSignature fallbackPipelineStateSignature(mMaterialBlueprintResource, serializedPipelineStateHash, fallbackShaderProperties, dynamicShaderPieces);	// TODO(co) Optimization: There are allocations for vector and map involved in here, we might want to get rid of those
 				PipelineStateCacheByPipelineStateSignatureId::const_iterator iterator = mPipelineStateCacheByPipelineStateSignatureId.find(fallbackPipelineStateSignature.getPipelineStateSignatureId());
 				if (iterator != mPipelineStateCacheByPipelineStateSignatureId.cend())
 				{
@@ -133,7 +133,7 @@ namespace RendererRuntime
 			{
 				// TODO(co) Optimization: There are allocations for vector and map involved in here, we might want to get rid of those
 				fallbackShaderProperties.clear();
-				PipelineStateCacheByPipelineStateSignatureId::const_iterator iterator = mPipelineStateCacheByPipelineStateSignatureId.find(PipelineStateSignature(mMaterialBlueprintResource, primitiveTopology, serializedPipelineStateHash, fallbackShaderProperties, dynamicShaderPieces).getPipelineStateSignatureId());
+				PipelineStateCacheByPipelineStateSignatureId::const_iterator iterator = mPipelineStateCacheByPipelineStateSignatureId.find(PipelineStateSignature(mMaterialBlueprintResource, serializedPipelineStateHash, fallbackShaderProperties, dynamicShaderPieces).getPipelineStateSignatureId());
 				if (iterator != mPipelineStateCacheByPipelineStateSignatureId.cend())
 				{
 					// We don't care whether or not the pipeline state cache is currently using fallback data due to asynchronous complication

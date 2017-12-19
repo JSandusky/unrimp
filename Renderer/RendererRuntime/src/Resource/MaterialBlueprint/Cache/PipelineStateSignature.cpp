@@ -104,7 +104,6 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	PipelineStateSignature::PipelineStateSignature(const PipelineStateSignature& pipelineStateSignature) :
 		mMaterialBlueprintResourceId(pipelineStateSignature.mMaterialBlueprintResourceId),
-		mPrimitiveTopology(pipelineStateSignature.mPrimitiveTopology),
 		mSerializedPipelineStateHash(pipelineStateSignature.mSerializedPipelineStateHash),
 		mShaderProperties(pipelineStateSignature.mShaderProperties),
 		mPipelineStateSignatureId(pipelineStateSignature.mPipelineStateSignatureId),
@@ -120,7 +119,6 @@ namespace RendererRuntime
 	PipelineStateSignature& PipelineStateSignature::operator=(const PipelineStateSignature& pipelineStateSignature)
 	{
 		mMaterialBlueprintResourceId = pipelineStateSignature.mMaterialBlueprintResourceId;
-		mPrimitiveTopology = pipelineStateSignature.mPrimitiveTopology;
 		mSerializedPipelineStateHash = pipelineStateSignature.mSerializedPipelineStateHash;
 		mShaderProperties = pipelineStateSignature.mShaderProperties;
 		mPipelineStateSignatureId = pipelineStateSignature.mPipelineStateSignatureId;
@@ -134,10 +132,9 @@ namespace RendererRuntime
 		return *this;
 	}
 
-	void PipelineStateSignature::set(const MaterialBlueprintResource& materialBlueprintResource, Renderer::PrimitiveTopology primitiveTopology, uint32_t serializedPipelineStateHash, const ShaderProperties& shaderProperties, const DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES])
+	void PipelineStateSignature::set(const MaterialBlueprintResource& materialBlueprintResource, uint32_t serializedPipelineStateHash, const ShaderProperties& shaderProperties, const DynamicShaderPieces dynamicShaderPieces[NUMBER_OF_SHADER_TYPES])
 	{
 		mMaterialBlueprintResourceId = materialBlueprintResource.getId();
-		mPrimitiveTopology			 = primitiveTopology;
 		mSerializedPipelineStateHash = serializedPipelineStateHash;
 		mShaderProperties			 = shaderProperties;
 		mPipelineStateSignatureId	 = Math::FNV1a_INITIAL_HASH_32;
@@ -154,7 +151,6 @@ namespace RendererRuntime
 
 		// Incorporate primitive hashes
 		mPipelineStateSignatureId = Math::calculateFNV1a32(reinterpret_cast<const uint8_t*>(&mMaterialBlueprintResourceId), sizeof(uint32_t), mPipelineStateSignatureId);
-		mPipelineStateSignatureId = Math::calculateFNV1a32(reinterpret_cast<const uint8_t*>(&mPrimitiveTopology), sizeof(Renderer::PrimitiveTopology), mPipelineStateSignatureId);
 		mPipelineStateSignatureId = Math::calculateFNV1a32(reinterpret_cast<const uint8_t*>(&mSerializedPipelineStateHash), sizeof(uint32_t), mPipelineStateSignatureId);
 
 		// Incorporate shader related hashes

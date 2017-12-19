@@ -177,6 +177,9 @@ Examples (just some high level keywords)
 - [RGB dither](http://media.steampowered.com/apps/valve/2015/Alex_Vlachos_Advanced_VR_Rendering_GDC2015.pdf)
 - Depth fog
 - Vignette
+- Terrain
+	- This software contains source code provided by NVIDIA Corporation. The height map terrain tessellation implementation is basing on ["DirectX 11 Terrain Tessellation"](https://developer.nvidia.com/sites/default/files/akamai/gamedev/files/sdk/11/TerrainTessellation_WhitePaper.pdf) by Iain Cantlay and the concrete implementation "TerrainTessellation"-sample inside ["NVIDIA Direct3D SDK 11"](https://developer.nvidia.com/dx11-samples).
+	- Terrain data created by [Marcel Gonzales](http://www.marcelgonzales.com/)
 
 
 Terminology and Acronyms
@@ -226,6 +229,7 @@ Useful MS Windows Developer Tools
 	- CPU
 		- For CPU profiling the tool [Very Sleepy](http://www.codersnotes.com/sleepy/) is easy to use while providing useful results
 - Checking external dependencies of exe and dll: [Dependency Walker](http://www.dependencywalker.com/)
+- Texture handling related: [Compressonator](https://github.com/GPUOpen-Tools/Compressonator)
 - When there's need to figure out why the binaries are so large
 	- ["Sizer - executable size breakdown (2007)"](http://aras-p.info/projSizer.html): "Command line tool that reports size of things (functions, data, classes, templates, object files) in a Visual Studio compiled exe/dll. Extracts info from debug information (.pdb) file."
 		- As of October 14, 2017: Doesn't work with Visual Studio 2017 (v141), compile for Visual Studio 2015 (v140) if you want to analys the binaries using Sizer

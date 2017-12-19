@@ -138,6 +138,7 @@ set(SOURCE_CODES
 	src/Resource/Mesh/MeshResourceManager.cpp
 	src/Resource/Mesh/MeshResource.cpp
 	src/Resource/Scene/Factory/SceneFactory.cpp
+	src/Resource/Scene/Item/MaterialSceneItem.cpp
 	src/Resource/Scene/Item/Camera/CameraSceneItem.cpp
 	src/Resource/Scene/Item/Light/LightSceneItem.cpp
 	src/Resource/Scene/Item/Light/SunlightSceneItem.cpp
@@ -145,6 +146,7 @@ set(SOURCE_CODES
 	src/Resource/Scene/Item/Mesh/SkeletonMeshSceneItem.cpp
 	src/Resource/Scene/Item/Sky/SkyboxSceneItem.cpp
 	src/Resource/Scene/Item/Sky/HosekWilkieSky.cpp
+	src/Resource/Scene/Item/Terrain/TerrainSceneItem.cpp
 	src/Resource/Scene/Loader/SceneResourceLoader.cpp
 	src/Resource/Scene/SceneNode.cpp
 	src/Resource/Scene/SceneResource.cpp
@@ -170,6 +172,7 @@ set(SOURCE_CODES
 	src/Resource/Texture/Loader/ITextureResourceLoader.cpp
 	src/Resource/Texture/Loader/CrnTextureResourceLoader.cpp
 	src/Resource/Texture/Loader/DdsTextureResourceLoader.cpp
+	src/Resource/Texture/Loader/Lz4DdsTextureResourceLoader.cpp
 	src/Resource/Texture/Loader/KtxTextureResourceLoader.cpp
 	src/Resource/Texture/TextureResourceManager.cpp
 	src/Resource/VertexAttributes/Loader/VertexAttributesResourceLoader.cpp

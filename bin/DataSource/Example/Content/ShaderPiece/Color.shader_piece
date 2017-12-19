@@ -170,6 +170,7 @@
 		fogDirection = pow(fogDirection, 15.0f);
 
 		// Calculate fogged color
+		// -> See e.g. http://www.iquilezles.org/www/articles/fog/fog.htm
 		float3 ambientFogDiffuseColor = PassData.AmbientColor * PassData.DiffuseFogColor;
 		float3 sunFogDiffuseColor = PassData.SunlightColor * PassData.DiffuseFogColor;
 		float3 litFog = LERP(ambientFogDiffuseColor, ambientFogDiffuseColor + sunFogDiffuseColor, fogDirection);

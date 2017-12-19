@@ -28,9 +28,9 @@
 #include "RendererToolkit/Context.h"
 
 #include <RendererRuntime/Asset/AssetPackage.h>
-#include <RendererRuntime/Core/File/IFile.h>
 #include <RendererRuntime/Core/File/IFileManager.h>
 #include <RendererRuntime/Core/File/FileSystemHelper.h>
+#include <RendererRuntime/Resource/Texture/Loader/Lz4DdsTextureResourceLoader.h>
 
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
@@ -52,6 +52,7 @@ PRAGMA_WARNING_PUSH
 	#include <dds_defs.h>
 	#include <../src/crn_texture_conversion.h>
 	#include <../src/crn_command_line_params.h>
+	#include <../src/crn_stb_image.cpp>
 	#include <../src/crn_console.h>
 PRAGMA_WARNING_POP
 
@@ -193,6 +194,7 @@ namespace
 			METALLIC_MAP,
 			EMISSIVE_MAP,
 			HEIGHT_MAP,
+			TERRAIN_HEIGHT_MAP,	///< 16-bit height map
 			TINT_MAP,
 			AMBIENT_OCCLUSION_MAP,
 			REFLECTION_2D_MAP,
@@ -422,6 +424,7 @@ namespace
 			ELSE_IF_VALUE(METALLIC_MAP)
 			ELSE_IF_VALUE(EMISSIVE_MAP)
 			ELSE_IF_VALUE(HEIGHT_MAP)
+			ELSE_IF_VALUE(TERRAIN_HEIGHT_MAP)
 			ELSE_IF_VALUE(TINT_MAP)
 			ELSE_IF_VALUE(AMBIENT_OCCLUSION_MAP)
 			ELSE_IF_VALUE(REFLECTION_2D_MAP)
@@ -1127,7 +1130,6 @@ namespace
 			else if (TextureSemantic::PACKED_CHANNELS == textureSemantic)
 			{
 				loadPackedChannelsCrunchMipmappedTexture(fileManager, configuration, rapidJsonValueTextureAssetCompiler, basePath, virtualSourceNormalMapFilename, crunchMipmappedTexture, crunchConvertParams);
-				crunchConvertParams.m_texture_type = crunchMipmappedTexture.determine_texture_type();
 			}
 			else
 			{
@@ -1136,7 +1138,6 @@ namespace
 					virtualSourceNormalMapFilename = nullptr;
 				}
 				load2DCrunchMipmappedTexture(fileManager, virtualSourceFilename, virtualSourceNormalMapFilename, crunchMipmappedTexture, crunchConvertParams);
-				crunchConvertParams.m_texture_type = crunchMipmappedTexture.determine_texture_type();
 			}
 
 			// Get absolute destination filename
@@ -1209,6 +1210,7 @@ namespace
 					// Nothing here, just a regular texture
 					break;
 
+				case TextureSemantic::TERRAIN_HEIGHT_MAP:
 				case TextureSemantic::REFLECTION_CUBE_MAP:
 				case TextureSemantic::COLOR_CORRECTION_LOOKUP_TABLE:
 				case TextureSemantic::PACKED_CHANNELS:
@@ -1369,6 +1371,7 @@ namespace
 			ddsSurfaceDesc2.lPitch								= (ddsSurfaceDesc2.dwWidth * ddsSurfaceDesc2.ddpfPixelFormat.dwRGBBitCount) >> 3;
 
 			// Write down the 3D destination texture
+			// -> Since usually tiny, not really worth to apply LZ4 compression here
 			RendererRuntime::IFile* file = fileManager.openFile(RendererRuntime::IFileManager::FileMode::WRITE, virtualDestinationFilename);
 			if (nullptr == file)
 			{
@@ -1381,6 +1384,65 @@ namespace
 
 			// Done
 			delete [] destinationData;
+		}
+
+		void convertTerrainHeightMap(RendererRuntime::IFileManager& fileManager, RendererRuntime::VirtualFilename virtualSourceFilename, std::string& virtualDestinationFilename)
+		{
+			// Load the 2D source image
+			FileDataStreamSerializer fileDataStreamSerializer(fileManager, RendererRuntime::IFileManager::FileMode::READ, virtualSourceFilename);
+			crnlib::uint8_vec buf;
+			if (fileDataStreamSerializer.read_entire_file(buf))
+			{
+				int x = 0, y = 0, n = 0;
+				stbi_set_flip_vertically_on_load(true);
+				stbi_us* pData = stbi_load_16_from_memory(buf.get_ptr(), buf.size_in_bytes(), &x, &y, &n, 1);
+				stbi_set_flip_vertically_on_load(false);
+				if (nullptr != pData)
+				{
+					const uint32_t numberOfTexelsPerLayer = x * y;
+
+					// TODO(co) Check n?
+
+					// Fill dds header for 16-bit height map "DXGI_FORMAT_R16_UNORM" ("A single-component, 16-bit unsigned-normalized-integer format that supports 16 bits for the red channel.") used during runtime.
+					// TODO(co) Correct this so generic dds tools can open the texture as well
+					crnlib::DDSURFACEDESC2 ddsSurfaceDesc2 = {};
+					ddsSurfaceDesc2.dwSize								= sizeof(crnlib::DDSURFACEDESC2);
+					ddsSurfaceDesc2.dwFlags								= crnlib::DDSD_WIDTH | crnlib::DDSD_HEIGHT | crnlib::DDSD_PIXELFORMAT | crnlib::DDSD_CAPS | crnlib::DDSD_LINEARSIZE;
+					ddsSurfaceDesc2.dwHeight							= y;
+					ddsSurfaceDesc2.dwWidth								= x;
+					ddsSurfaceDesc2.dwBackBufferCount					= 1;
+					ddsSurfaceDesc2.ddsCaps.dwCaps						= crnlib::DDSCAPS_TEXTURE | crnlib::DDSCAPS_COMPLEX;
+					ddsSurfaceDesc2.ddsCaps.dwCaps2						= 0;
+					ddsSurfaceDesc2.ddpfPixelFormat.dwSize				= sizeof(crnlib::DDPIXELFORMAT);
+					ddsSurfaceDesc2.ddpfPixelFormat.dwFlags			   |= crnlib::DDPF_LUMINANCE;
+					ddsSurfaceDesc2.ddpfPixelFormat.dwRGBBitCount		= 32;
+					ddsSurfaceDesc2.ddpfPixelFormat.dwRBitMask			= 0xFF0000;
+					ddsSurfaceDesc2.ddpfPixelFormat.dwGBitMask			= 0x00FF00;
+					ddsSurfaceDesc2.ddpfPixelFormat.dwBBitMask			= 0x0000FF;
+					ddsSurfaceDesc2.ddpfPixelFormat.dwRGBAlphaBitMask	= 0xFF000000;
+					ddsSurfaceDesc2.lPitch								= (ddsSurfaceDesc2.dwWidth * ddsSurfaceDesc2.ddpfPixelFormat.dwRGBBitCount) >> 3;
+
+					// Write down the 3D destination texture
+					RendererRuntime::MemoryFile memoryFile(0, 4096);
+					memoryFile.write("DDS ", sizeof(uint32_t));
+					memoryFile.write(reinterpret_cast<const char*>(&ddsSurfaceDesc2), sizeof(crnlib::DDSURFACEDESC2));
+					memoryFile.write(pData, sizeof(stbi_us) * numberOfTexelsPerLayer);
+					RendererToolkit::StringHelper::replaceFirstString(virtualDestinationFilename, ".dds", ".lz4dds");
+					memoryFile.writeLz4CompressedDataByVirtualFilename(RendererRuntime::Lz4DdsTextureResourceLoader::FORMAT_TYPE, RendererRuntime::Lz4DdsTextureResourceLoader::FORMAT_VERSION, fileManager, virtualDestinationFilename.c_str());
+
+					// Free temporary memory
+					stbi_image_free(pData);
+				}
+				else
+				{
+					// Error! TODO(co) Handle
+				}
+			}
+			else
+			{
+				// Error! TODO(co) Handle
+				//throw std::runtime_error("Color correction lookup table must be RGB");
+			}
 		}
 
 
@@ -1442,7 +1504,7 @@ namespace RendererToolkit
 		{
 			assetFileFormat = rapidJsonValueTextureAssetCompiler["FileFormat"].GetString();
 		}
-		if (::detail::TextureSemantic::COLOR_CORRECTION_LOOKUP_TABLE == textureSemantic)
+		if (::detail::TextureSemantic::COLOR_CORRECTION_LOOKUP_TABLE == textureSemantic || ::detail::TextureSemantic::TERRAIN_HEIGHT_MAP == textureSemantic)
 		{
 			assetFileFormat = "dds";
 		}
@@ -1453,6 +1515,10 @@ namespace RendererToolkit
 		std::string virtualOutputAssetFilename;
 		crnlib::texture_file_types::format crunchOutputTextureFileType = crnlib::texture_file_types::cFormatCRN;
 		::detail::getVirtualOutputAssetFilenameAndCrunchOutputTextureFileType(configuration, assetFileFormat, assetName, input.virtualAssetOutputDirectory, virtualOutputAssetFilename, crunchOutputTextureFileType);
+		if (::detail::TextureSemantic::TERRAIN_HEIGHT_MAP == textureSemantic)
+		{
+			StringHelper::replaceFirstString(virtualOutputAssetFilename, ".dds", ".lz4dds");
+		}
 
 		// Check if changed
 		std::vector<CacheManager::CacheEntries> cacheEntries;
@@ -1490,7 +1556,7 @@ namespace RendererToolkit
 			}
 
 			// Texture semantic overrules manual settings
-			if (::detail::TextureSemantic::COLOR_CORRECTION_LOOKUP_TABLE == textureSemantic)
+			if (::detail::TextureSemantic::COLOR_CORRECTION_LOOKUP_TABLE == textureSemantic ||::detail::TextureSemantic::TERRAIN_HEIGHT_MAP == textureSemantic)
 			{
 				assetFileFormat = "dds";
 				createMipmaps = false;
@@ -1537,6 +1603,10 @@ namespace RendererToolkit
 			if (::detail::TextureSemantic::COLOR_CORRECTION_LOOKUP_TABLE == textureSemantic)
 			{
 				detail::convertColorCorrectionLookupTable(input.context.getFileManager(), virtualInputAssetFilename.c_str(), virtualOutputAssetFilename.c_str());
+			}
+			else if (::detail::TextureSemantic::TERRAIN_HEIGHT_MAP == textureSemantic)
+			{
+				detail::convertTerrainHeightMap(input.context.getFileManager(), virtualInputAssetFilename.c_str(), virtualOutputAssetFilename);
 			}
 			else
 			{

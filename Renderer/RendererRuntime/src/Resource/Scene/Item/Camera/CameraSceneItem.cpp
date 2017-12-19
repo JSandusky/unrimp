@@ -51,7 +51,7 @@ namespace RendererRuntime
 	const SceneItemTypeId CameraSceneItem::TYPE_ID("CameraSceneItem");
 	const float CameraSceneItem::DEFAULT_FOV_Y  = glm::radians(45.0f);
 	const float CameraSceneItem::DEFAULT_NEAR_Z = 0.1f;
-	const float CameraSceneItem::DEFAULT_FAR_Z  = 1000.0f;
+	const float CameraSceneItem::DEFAULT_FAR_Z  = 5000.0f;
 
 
 	//[-------------------------------------------------------]

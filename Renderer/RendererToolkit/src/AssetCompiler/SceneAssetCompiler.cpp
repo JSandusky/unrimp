@@ -36,6 +36,7 @@
 #include <RendererRuntime/Resource/Scene/Item/Sky/SkyboxSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/Camera/CameraSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/Light/SunlightSceneItem.h>
+#include <RendererRuntime/Resource/Scene/Item/Terrain/TerrainSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/Mesh/SkeletonMeshSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Loader/SceneFileFormat.h>
 #include <RendererRuntime/Resource/Material/MaterialProperties.h>
@@ -135,34 +136,34 @@ namespace
 			}
 		}
 
-		void readSkyboxSceneItem(const RendererToolkit::IAssetCompiler::Input& input, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, const rapidjson::Value& rapidJsonValueSceneItem, RendererRuntime::v1Scene::SkyboxItem& skyboxItem)
+		void readMaterialSceneItem(const RendererToolkit::IAssetCompiler::Input& input, const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector, const rapidjson::Value& rapidJsonValueSceneItem, RendererRuntime::v1Scene::MaterialItem& materialItem)
 		{
 			// Set data
 			RendererRuntime::AssetId materialAssetId;
 			RendererRuntime::AssetId materialBlueprintAssetId;
 			RendererToolkit::JsonHelper::optionalCompiledAssetId(input, rapidJsonValueSceneItem, "MaterialAssetId", materialAssetId);
-			RendererToolkit::JsonHelper::optionalStringIdProperty(rapidJsonValueSceneItem, "MaterialTechnique", skyboxItem.materialTechniqueId);
+			RendererToolkit::JsonHelper::optionalStringIdProperty(rapidJsonValueSceneItem, "MaterialTechnique", materialItem.materialTechniqueId);
 			RendererToolkit::JsonHelper::optionalCompiledAssetId(input, rapidJsonValueSceneItem, "MaterialBlueprint", materialBlueprintAssetId);
-			skyboxItem.materialAssetId = materialAssetId;
-			skyboxItem.materialBlueprintAssetId = materialBlueprintAssetId;
-			skyboxItem.numberOfMaterialProperties = static_cast<uint32_t>(sortedMaterialPropertyVector.size());
+			materialItem.materialAssetId = materialAssetId;
+			materialItem.materialBlueprintAssetId = materialBlueprintAssetId;
+			materialItem.numberOfMaterialProperties = static_cast<uint32_t>(sortedMaterialPropertyVector.size());
 
 			// Sanity checks
-			if (RendererRuntime::isUninitialized(skyboxItem.materialAssetId) && RendererRuntime::isUninitialized(skyboxItem.materialBlueprintAssetId))
+			if (RendererRuntime::isUninitialized(materialItem.materialAssetId) && RendererRuntime::isUninitialized(materialItem.materialBlueprintAssetId))
 			{
 				throw std::runtime_error("Material asset ID or material blueprint asset ID must be defined");
 			}
-			if (RendererRuntime::isInitialized(skyboxItem.materialAssetId) && RendererRuntime::isInitialized(skyboxItem.materialBlueprintAssetId))
+			if (RendererRuntime::isInitialized(materialItem.materialAssetId) && RendererRuntime::isInitialized(materialItem.materialBlueprintAssetId))
 			{
 				throw std::runtime_error("Material asset ID is defined, but material blueprint asset ID is defined as well. Only one asset ID is allowed.");
 			}
-			if (RendererRuntime::isInitialized(skyboxItem.materialAssetId) && RendererRuntime::isUninitialized(skyboxItem.materialTechniqueId))
+			if (RendererRuntime::isInitialized(materialItem.materialAssetId) && RendererRuntime::isUninitialized(materialItem.materialTechniqueId))
 			{
 				throw std::runtime_error("Material asset ID is defined, but material technique is not defined");
 			}
-			if (RendererRuntime::isInitialized(skyboxItem.materialBlueprintAssetId) && RendererRuntime::isUninitialized(skyboxItem.materialTechniqueId))
+			if (RendererRuntime::isInitialized(materialItem.materialBlueprintAssetId) && RendererRuntime::isUninitialized(materialItem.materialTechniqueId))
 			{
-				skyboxItem.materialTechniqueId = RendererRuntime::MaterialResourceManager::DEFAULT_MATERIAL_TECHNIQUE_ID;
+				materialItem.materialTechniqueId = RendererRuntime::MaterialResourceManager::DEFAULT_MATERIAL_TECHNIQUE_ID;
 			}
 		}
 
@@ -213,7 +214,8 @@ namespace RendererToolkit
 	{
 		// Let the cache manager check whether or not the files have been changed in order to speed up later checks and to support dependency tracking
 		const std::string virtualInputFilename = input.virtualAssetInputDirectory + '/' + configuration.rapidJsonDocumentAsset["Asset"]["SceneAssetCompiler"]["InputFile"].GetString();
-		return input.cacheManager.checkIfFileIsModified(configuration.rendererTarget, input.virtualAssetFilename, {virtualInputFilename}, RendererRuntime::v1Scene::FORMAT_VERSION);
+		const std::string virtualOutputAssetFilename = input.virtualAssetOutputDirectory + '/' + std_filesystem::path(input.virtualAssetFilename).stem().generic_string() + ".scene";
+		return input.cacheManager.checkIfFileIsModified(configuration.rendererTarget, input.virtualAssetFilename, {virtualInputFilename}, virtualOutputAssetFilename, RendererRuntime::v1Scene::FORMAT_VERSION);
 	}
 
 	void SceneAssetCompiler::compile(const Input& input, const Configuration& configuration, Output& output)
@@ -310,7 +312,7 @@ namespace RendererToolkit
 										numberOfBytes += sizeof(RendererRuntime::v1Scene::SkeletonMeshItem);
 									}
 								}
-								else if (RendererRuntime::SkyboxSceneItem::TYPE_ID == typeId)
+								else if (RendererRuntime::SkyboxSceneItem::TYPE_ID == typeId || RendererRuntime::TerrainSceneItem::TYPE_ID == typeId)
 								{
 									::detail::fillSortedMaterialPropertyVector(input, rapidJsonValueItem, sortedMaterialPropertyVector);
 									numberOfBytes = static_cast<uint32_t>(sizeof(RendererRuntime::v1Scene::SkyboxItem) + sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size());
@@ -442,10 +444,23 @@ namespace RendererToolkit
 									else if (RendererRuntime::SkyboxSceneItem::TYPE_ID == typeId)
 									{
 										RendererRuntime::v1Scene::SkyboxItem skyboxItem;
-										::detail::readSkyboxSceneItem(input, sortedMaterialPropertyVector, rapidJsonValueItem, skyboxItem);
+										::detail::readMaterialSceneItem(input, sortedMaterialPropertyVector, rapidJsonValueItem, skyboxItem);
 
 										// Write down
 										memoryFile.write(&skyboxItem, sizeof(RendererRuntime::v1Scene::SkyboxItem));
+										if (!sortedMaterialPropertyVector.empty())
+										{
+											// Write down all material properties
+											memoryFile.write(sortedMaterialPropertyVector.data(), sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size());
+										}
+									}
+									else if (RendererRuntime::TerrainSceneItem::TYPE_ID == typeId)
+									{
+										RendererRuntime::v1Scene::TerrainItem terrainItem;
+										::detail::readMaterialSceneItem(input, sortedMaterialPropertyVector, rapidJsonValueItem, terrainItem);
+
+										// Write down
+										memoryFile.write(&terrainItem, sizeof(RendererRuntime::v1Scene::TerrainItem));
 										if (!sortedMaterialPropertyVector.empty())
 										{
 											// Write down all material properties

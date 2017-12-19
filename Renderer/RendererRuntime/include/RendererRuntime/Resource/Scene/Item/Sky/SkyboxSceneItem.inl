@@ -19,45 +19,10 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Core/GetUninitialized.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
-
-
-	//[-------------------------------------------------------]
-	//[ Public methods                                        ]
-	//[-------------------------------------------------------]
-	inline AssetId SkyboxSceneItem::getMaterialAssetId() const
-	{
-		return mMaterialAssetId;
-	}
-
-	inline MaterialTechniqueId SkyboxSceneItem::getMaterialTechniqueId() const
-	{
-		return mMaterialTechniqueId;
-	}
-
-	inline AssetId SkyboxSceneItem::getMaterialBlueprintAssetId() const
-	{
-		return mMaterialBlueprintAssetId;
-	}
-
-	inline const MaterialProperties& SkyboxSceneItem::getMaterialProperties() const
-	{
-		return mMaterialProperties;
-	}
-
-	inline MaterialResourceId SkyboxSceneItem::getMaterialResourceId() const
-	{
-		return mMaterialResourceId;
-	}
 
 
 	//[-------------------------------------------------------]
@@ -86,8 +51,7 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	inline SkyboxSceneItem::SkyboxSceneItem(SceneResource& sceneResource) :
-		ISceneItem(sceneResource),
-		mMaterialResourceId(getUninitialized<MaterialResourceId>())
+		MaterialSceneItem(sceneResource)
 	{
 		// Nothing here
 	}

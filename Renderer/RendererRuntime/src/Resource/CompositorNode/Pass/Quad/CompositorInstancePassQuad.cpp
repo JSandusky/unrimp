@@ -237,7 +237,7 @@ namespace RendererRuntime
 		::detail::VertexArrayPtr->addReference();
 
 		// Setup renderable manager
-		mRenderableManager.getRenderables().emplace_back(mRenderableManager, ::detail::VertexArrayPtr, Renderer::PrimitiveTopology::TRIANGLE_LIST, false, 0, 3, materialResourceManager, mMaterialResourceId, getUninitialized<SkeletonResourceId>());
+		mRenderableManager.getRenderables().emplace_back(mRenderableManager, ::detail::VertexArrayPtr, false, 0, 3, materialResourceManager, mMaterialResourceId, getUninitialized<SkeletonResourceId>());
 	}
 
 

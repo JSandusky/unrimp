@@ -74,9 +74,9 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	private:
+	protected:
 		inline DdsTextureResourceLoader(IResourceManager& resourceManager, IRendererRuntime& rendererRuntime);
 		inline virtual ~DdsTextureResourceLoader() override;
 		explicit DdsTextureResourceLoader(const DdsTextureResourceLoader&) = delete;

@@ -85,7 +85,8 @@ namespace RendererToolkit
 	{
 		// Let the cache manager check whether or not the files have been changed in order to speed up later checks and to support dependency tracking
 		const std::string virtualInputFilename = input.virtualAssetInputDirectory + '/' + configuration.rapidJsonDocumentAsset["Asset"]["SkeletonAssetCompiler"]["InputFile"].GetString();
-		return input.cacheManager.checkIfFileIsModified(configuration.rendererTarget, input.virtualAssetFilename, {virtualInputFilename}, RendererRuntime::v1Skeleton::FORMAT_VERSION);
+		const std::string virtualOutputAssetFilename = input.virtualAssetOutputDirectory + '/' + std_filesystem::path(input.virtualAssetFilename).stem().generic_string() + ".skeleton";
+		return input.cacheManager.checkIfFileIsModified(configuration.rendererTarget, input.virtualAssetFilename, {virtualInputFilename}, virtualOutputAssetFilename, RendererRuntime::v1Skeleton::FORMAT_VERSION);
 	}
 
 	void SkeletonAssetCompiler::compile(const Input& input, const Configuration& configuration, Output& output)

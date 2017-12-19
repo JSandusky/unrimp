@@ -56,7 +56,7 @@ namespace
 		//[-------------------------------------------------------]
 		void getRendererToolkitCacheFilename(const RendererRuntime::IFileManager& fileManager, const std::string& projectName, std::string& virtualDirectoryName, std::string& virtualFilename)
 		{
-			virtualDirectoryName = std::string(fileManager.getLocalDataMountPoint()) + "/RendererToolkitCache";
+			virtualDirectoryName = std::string(fileManager.getLocalDataMountPoint()) + "/RendererToolkit";
 			virtualFilename = virtualDirectoryName + '/' + projectName + ".cache";
 		}
 
@@ -188,34 +188,43 @@ namespace RendererToolkit
 		storeOrUpdateCacheEntry(cacheEntries.assetCacheEntry);
 	}
 
-	bool CacheManager::checkIfFileIsModified(const std::string& rendererTarget, const std::string& virtualAssetFilename, const std::vector<std::string>& virtualSourceFilenames, uint32_t compilerVersion)
+	bool CacheManager::checkIfFileIsModified(const std::string& rendererTarget, const std::string& virtualAssetFilename, const std::vector<std::string>& virtualSourceFilenames, const std::string& virtualDestinationFilename, uint32_t compilerVersion)
 	{
 		bool result = false;
 		CacheEntry dummyEntry;
 
-		// Check the source files
-		for (const std::string& virtualSourceFilename : virtualSourceFilenames)
+		// Check if the destination file exists
+		if (mContext.getFileManager().doesFileExist(virtualDestinationFilename.c_str()))
 		{
-			if (checkIfFileChanged(rendererTarget, virtualSourceFilename.c_str(), compilerVersion, dummyEntry))
+			// Check the source files
+			for (const std::string& virtualSourceFilename : virtualSourceFilenames)
+			{
+				if (checkIfFileChanged(rendererTarget, virtualSourceFilename.c_str(), compilerVersion, dummyEntry))
+				{
+					result = true;
+				}
+			}
+		
+			// Check the asset file
+			if (checkIfFileChanged(rendererTarget, virtualAssetFilename.c_str(), ::detail::ASSET_FORMAT_VERSION, dummyEntry))
 			{
 				result = true;
 			}
-		}
-		
-		// Check the asset file
-		if (checkIfFileChanged(rendererTarget, virtualAssetFilename.c_str(), ::detail::ASSET_FORMAT_VERSION, dummyEntry))
-		{
-			result = true;
+			else
+			{
+				// We don't include this check in the above if to make sure that the function is always called
+				if (result)
+				{
+					// Asset file itself has not changed but the source file so mark the asset file as changed too
+					// Dependencies are defined via the asset file and with this change the asset which depends on this asset knows if the referenced asset has changed
+					mCheckedFilesStatus[RendererRuntime::StringId(virtualAssetFilename.c_str())].changed = true;
+				}
+			}
 		}
 		else
 		{
-			// We don't include this check in the above if to make sure that the function is always called
-			if (result)
-			{
-				// Asset file itself has not changed but the source file so mark the asset file as changed too
-				// Dependencies are defined via the asset file and with this change the asset which depends on this asset knows if the referenced asset has changed
-				mCheckedFilesStatus[RendererRuntime::StringId(virtualAssetFilename.c_str())].changed = true;
-			}
+			// Compiled destination file doesn't exist
+			result = true;
 		}
 
 		return result;

@@ -196,6 +196,8 @@ namespace RendererToolkit
 		*    Virtual UTF-8 filename of the file containing the asset metadata
 		*  @param[in] virtualSourceFilenames
 		*    Virtual UTF-8 source filenames of the assets
+		*  @param[in] virtualDestinationFilename
+		*    The virtual UTF-8 filename of the destination file of the asset which contains the compiled data of the source
 		*  @param[in] compilerVersion
 		*    Compiler version so we can detect compiler version changes and enforce compiling even if the source data has not been changed
 		*
@@ -205,7 +207,7 @@ namespace RendererToolkit
 		*  @note
 		*    - This method fills an internal cache which stores the check result in order to speed up "RendererToolkit::CacheManager::needsToBeCompiled()"-calls and support dependency tracking
 		*/
-		bool checkIfFileIsModified(const std::string& rendererTarget, const std::string& virtualAssetFilename, const std::vector<std::string>& virtualSourceFilenames, uint32_t compilerVersion);
+		bool checkIfFileIsModified(const std::string& rendererTarget, const std::string& virtualAssetFilename, const std::vector<std::string>& virtualSourceFilenames, const std::string& virtualDestinationFilename, uint32_t compilerVersion);
 
 		/**
 		*  @brief

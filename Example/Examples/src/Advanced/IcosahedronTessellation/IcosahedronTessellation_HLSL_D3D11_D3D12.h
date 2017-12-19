@@ -81,30 +81,30 @@ cbuffer UniformBlockDynamicTcs : register(b0)
 }
 
 // Program invocation per patch
-	HS_CONSTANT_DATA_OUTPUT ConstantHS(InputPatch<VS_OUTPUT, 3> input, uint PatchID : SV_PRIMITIVEID)
-	{
-		// Inform the tessellator about the desired tessellation level
-		HS_CONSTANT_DATA_OUTPUT output;
-		output.TessLevelOuter[0] = TessellationLevelOuter;
-		output.TessLevelOuter[1] = TessellationLevelOuter;
-		output.TessLevelOuter[2] = TessellationLevelOuter;
-		output.TessLevelInner[0] = TessellationLevelInner;
-		return output;
-	}
+HS_CONSTANT_DATA_OUTPUT ConstantHS(InputPatch<VS_OUTPUT, 3> input, uint PatchID : SV_PRIMITIVEID)
+{
+	// Inform the tessellator about the desired tessellation level
+	HS_CONSTANT_DATA_OUTPUT output;
+	output.TessLevelOuter[0] = TessellationLevelOuter;
+	output.TessLevelOuter[1] = TessellationLevelOuter;
+	output.TessLevelOuter[2] = TessellationLevelOuter;
+	output.TessLevelInner[0] = TessellationLevelInner;
+	return output;
+}
 
 // Program invocation per patch control point
-	[domain("tri")]
-	[partitioning("integer")]
-	[outputtopology("triangle_cw")]
-	[outputcontrolpoints(3)]
-	[patchconstantfunc("ConstantHS")]
-	HS_OUTPUT main(InputPatch<VS_OUTPUT, 3> input, uint InvocationID : SV_OutputControlPointID, uint PatchID : SV_PRIMITIVEID)
-	{
-		// Pass through the object space control point position of the patch
-		HS_OUTPUT output;
-		output.Position = input[InvocationID].Position;
-		return output;
-	}
+[domain("tri")]
+[partitioning("integer")]
+[outputtopology("triangle_cw")]
+[outputcontrolpoints(3)]
+[patchconstantfunc("ConstantHS")]
+HS_OUTPUT main(InputPatch<VS_OUTPUT, 3> input, uint InvocationID : SV_OutputControlPointID, uint PatchID : SV_PRIMITIVEID)
+{
+	// Pass through the object space control point position of the patch
+	HS_OUTPUT output;
+	output.Position = input[InvocationID].Position;
+	return output;
+}
 )";
 
 

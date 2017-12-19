@@ -489,7 +489,15 @@ namespace RendererRuntime
 				}
 				else
 				{
-					mTextureFormat = static_cast<uint8_t>(mTextureResource->isRgbHardwareGammaCorrection() ? Renderer::TextureFormat::BC1_SRGB : Renderer::TextureFormat::BC1);
+					if ((ddsHeader.ddpfPixelFormat.flags & ::detail::DDS_LUMINANCE) != 0)
+					{
+						// 16-bit height map
+						mTextureFormat = Renderer::TextureFormat::R16_UNORM;
+					}
+					else
+					{
+						mTextureFormat = static_cast<uint8_t>(mTextureResource->isRgbHardwareGammaCorrection() ? Renderer::TextureFormat::BC1_SRGB : Renderer::TextureFormat::BC1);
+					}
 				}
 			}
 

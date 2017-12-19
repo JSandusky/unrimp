@@ -389,7 +389,7 @@ namespace RendererRuntime
 										mScratchShaderProperties.setPropertyValue(SINGLE_PASS_STEREO_INSTANCING, 1);
 									}
 
-									Renderer::IPipelineStatePtr pipelineStatePtr = materialBlueprintResource->getPipelineStateCacheManager().getPipelineStateCacheByCombination(renderable.getPrimitiveTopology(), materialTechnique->getSerializedPipelineStateHash(), mScratchShaderProperties, mScratchDynamicShaderPieces, false);
+									Renderer::IPipelineStatePtr pipelineStatePtr = materialBlueprintResource->getPipelineStateCacheManager().getPipelineStateCacheByCombination(materialTechnique->getSerializedPipelineStateHash(), mScratchShaderProperties, mScratchDynamicShaderPieces, false);
 									if (nullptr != pipelineStatePtr)
 									{
 										// Set the used pipeline state object (PSO)
@@ -468,7 +468,7 @@ namespace RendererRuntime
 												// Fill indirect buffer
 												Renderer::DrawIndexedInstancedArguments* drawIndexedInstancedArguments = reinterpret_cast<Renderer::DrawIndexedInstancedArguments*>(indirectBufferData + indirectBufferOffset);
 												drawIndexedInstancedArguments->indexCountPerInstance = renderable.getNumberOfIndices();
-												drawIndexedInstancedArguments->instanceCount		 = instanceCount;
+												drawIndexedInstancedArguments->instanceCount		 = instanceCount * renderable.getInstanceCount();
 												drawIndexedInstancedArguments->startIndexLocation	 = renderable.getStartIndexLocation();
 												drawIndexedInstancedArguments->baseVertexLocation	 = 0;
 												drawIndexedInstancedArguments->startInstanceLocation = startInstanceLocation;
@@ -484,7 +484,7 @@ namespace RendererRuntime
 												// Fill indirect buffer
 												Renderer::DrawInstancedArguments* drawInstancedArguments = reinterpret_cast<Renderer::DrawInstancedArguments*>(indirectBufferData + indirectBufferOffset);
 												drawInstancedArguments->vertexCountPerInstance = renderable.getNumberOfIndices();
-												drawInstancedArguments->instanceCount		   = instanceCount;
+												drawInstancedArguments->instanceCount		   = instanceCount * renderable.getInstanceCount();
 												drawInstancedArguments->startVertexLocation	   = renderable.getStartIndexLocation();
 												drawInstancedArguments->startInstanceLocation  = startInstanceLocation;
 

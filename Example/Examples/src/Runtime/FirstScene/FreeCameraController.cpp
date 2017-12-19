@@ -42,7 +42,7 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global definitions                                    ]
 		//[-------------------------------------------------------]
-		static const float MOVEMENT_SPEED		= 2.0f;
+		static const float MOVEMENT_SPEED		= 3.0f;
 		static const float FAST_MOVEMENT_FACTOR	= 10.0f;
 		static const float SLOW_MOVEMENT_FACTOR	= 0.1f;
 		static const float MOUSE_WHEEL_FACTOR	= 2.0f;
@@ -99,16 +99,24 @@ void FreeCameraController::onUpdate(float pastSecondsSinceLastFrame)
 			// Get the movement speed
 			float movementSpeed = pastSecondsSinceLastFrame * ::detail::MOVEMENT_SPEED;
 			{
-				// Speed up = "left shift"-key
-				if (isKeyPressed(16))
+				// Ridiculous speed up = "left shift"-key and "left strg"-key both pressed
+				if (isKeyPressed(16) && isKeyPressed(17))
 				{
-					movementSpeed *= ::detail::FAST_MOVEMENT_FACTOR;
+					movementSpeed *= ::detail::FAST_MOVEMENT_FACTOR * ::detail::FAST_MOVEMENT_FACTOR;
 				}
-
-				// Slow down = "left strg"-key
-				if (isKeyPressed(17))
+				else
 				{
-					movementSpeed *= ::detail::SLOW_MOVEMENT_FACTOR;
+					// Speed up = "left shift"-key
+					if (isKeyPressed(16))
+					{
+						movementSpeed *= ::detail::FAST_MOVEMENT_FACTOR;
+					}
+
+					// Slow down = "left strg"-key
+					if (isKeyPressed(17))
+					{
+						movementSpeed *= ::detail::SLOW_MOVEMENT_FACTOR;
+					}
 				}
 			}
 
