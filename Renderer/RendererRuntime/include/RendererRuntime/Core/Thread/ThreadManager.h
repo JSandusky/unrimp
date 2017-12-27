@@ -73,9 +73,9 @@ namespace RendererRuntime
 	*    const size_t threadCount = threadPool.getThreadCountAndSplitCount(itemCount, splitCount);
 	*    Items::iterator startIterator = items.begin();
 	*    Items::iterator endIterator = items.end();
-	*    for (size_t i = 0; i < threadCount; ++i)
+	*    for (size_t threadIndex = 0; threadIndex < threadCount; ++threadIndex)
 	*    {
-	*        const size_t numberOfItemsToProcess = (i >= threadCount - 1) ? itemCount : splitCount;	// The last thread has to do all the rest of the remaining work
+	*        const size_t numberOfItemsToProcess = (threadIndex >= threadCount - 1) ? itemCount : splitCount;	// The last thread has to do all the rest of the remaining work
 	*        threadPool.queueTask(std::bind(updateItem, startIterator, startIterator + numberOfItemsToProcess));
 	*        itemCount -= splitCount;
 	*        startIterator += splitCount;

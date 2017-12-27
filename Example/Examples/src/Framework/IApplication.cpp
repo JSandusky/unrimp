@@ -46,7 +46,7 @@ int IApplication::run()
 	onInitialization();
 
 	// Main loop - Process OS messages (non-blocking) first
-	while (!mApplicationImpl->processMessages())
+	while (!mExit && !mApplicationImpl->processMessages())
 	{
 		// Update the application logic
 		onUpdate();
@@ -138,7 +138,8 @@ void IApplication::onDraw()
 //[ Protected methods                                     ]
 //[-------------------------------------------------------]
 IApplication::IApplication(const char* windowTitle) :
-	mApplicationImpl(nullptr)
+	mApplicationImpl(nullptr),
+	mExit(false)
 {
 	// We're using "this" in here, so we are not allowed to write the following within the initializer list
 	#ifdef WIN32

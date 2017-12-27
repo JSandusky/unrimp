@@ -36,6 +36,7 @@
 namespace RendererRuntime
 {
 	class SceneNode;
+	struct SceneItemSet;
 	class SceneResource;
 	class RenderableManager;
 }
@@ -64,6 +65,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
+		friend class SceneNode;		// TODO(co) Remove this
+		friend class MeshSceneItem;	// TODO(co) Remove this
 		friend class SceneResource;	// Needs to be able to destroy scene items
 
 
@@ -95,8 +98,8 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline explicit ISceneItem(SceneResource& sceneResource);
-		inline virtual ~ISceneItem();
+		ISceneItem(SceneResource& sceneResource, bool cullable = true);
+		virtual ~ISceneItem();
 		explicit ISceneItem(const ISceneItem&) = delete;
 		ISceneItem& operator=(const ISceneItem&) = delete;
 
@@ -107,6 +110,8 @@ namespace RendererRuntime
 	private:
 		SceneResource& mSceneResource;
 		SceneNode*	   mParentSceneNode;	///< Parent scene node, can be a null pointer, don't destroy the instance
+		SceneItemSet*  mSceneItemSet;		///< Scene item set, always valid, don't destroy the instance
+		uint32_t	   mSceneItemSetIndex;	///< Index inside the scene item set
 
 
 	};

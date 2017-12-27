@@ -43,6 +43,41 @@ class IApplication
 
 
 //[-------------------------------------------------------]
+//[ Public definitions                                    ]
+//[-------------------------------------------------------]
+public:
+	/**
+	*  @brief
+	*    Keyboard key definitions, but only the ones we need inside the renderer examples application
+	*
+	*  @note
+	*    - In real world applications, use a decent input library (which would be overkill for the simple renderer examples application)
+	*/
+	enum KeyboardKeys
+	{
+		LEFT_SHIFT_KEY		= 16,
+		LEFT_STRG_KEY		= 17,
+		ESCAPE_KEY			= 27,
+		SPACE_KEY			= 32,
+		PAGE_UP_KEY			= 33,
+		PAGE_DOWN_KEY		= 34,
+		ARROW_LEFT_KEY		= 37,
+		ARROW_UP_KEY		= 38,
+		ARROW_RIGHT_KEY		= 39,
+		ARROW_DOWN_KEY		= 40,
+		A_KEY				= 65,
+		D_KEY				= 68,
+		Q_KEY				= 81,
+		S_KEY				= 83,
+		W_KEY				= 87,
+		NUMPAD_PLUS_KEY		= 107,
+		NUMPAD_MINUS_KEY	= 109,
+		OEM_PLUS_KEY		= 187,	///< +*~ key
+		OEM_MINUS_KEY		= 189
+	};
+
+
+//[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
 public:
@@ -60,6 +95,12 @@ public:
 	*    Program return code, 0 to indicate that no error has occurred
 	*/
 	int run();
+
+	/**
+	*  @brief
+	*    Ask the application politely to shut down as soon as possible
+	*/
+	inline void exit();
 
 	/**
 	*  @brief
@@ -263,6 +304,7 @@ protected:
 //[-------------------------------------------------------]
 private:
 	IApplicationImpl* mApplicationImpl;	///< Application implementation instance, always valid
+	bool			  mExit;			///< If "true", the application has been asked politely to shut down as soon as possible, else "false"
 
 
 };

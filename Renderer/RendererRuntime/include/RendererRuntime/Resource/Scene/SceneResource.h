@@ -49,6 +49,7 @@ namespace RendererRuntime
 	class ISceneItem;
 	class ISceneFactory;
 	class IRendererRuntime;
+	class SceneCullingManager;
 	class SceneResourceLoader;
 	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class PackedElementManager;
 	template <class TYPE, class LOADER_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS> class ResourceManagerTemplate;
@@ -97,6 +98,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		RENDERERRUNTIME_API_EXPORT IRendererRuntime& getRendererRuntime() const;
+		inline SceneCullingManager& getSceneCullingManager() const;
 		inline void destroyAllSceneNodesAndItems();
 
 		//[-------------------------------------------------------]
@@ -131,14 +133,15 @@ namespace RendererRuntime
 		//[ "RendererRuntime::PackedElementManager" management    ]
 		//[-------------------------------------------------------]
 		void initializeElement(SceneResourceId sceneResourceId);
-		inline void deinitializeElement();
+		void deinitializeElement();
 
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		const ISceneFactory* mSceneFactory;	///< Scene factory instance, always valid, do not destroy the instance
+		const ISceneFactory* mSceneFactory;			///< Scene factory instance, always valid, do not destroy the instance
+		SceneCullingManager* mSceneCullingManager;	///< Scene culling manager, always valid, destroy the instance if you no longer need it
 		SceneNodes			 mSceneNodes;
 		SceneItems			 mSceneItems;
 

@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "PrecompiledHeader.h"
 #include "Runtime/FirstScene/FreeCameraController.h"
+#include "Framework/IApplication.h"
 
 #include <RendererRuntime/Core/Math/Math.h>
 #include <RendererRuntime/Core/Math/EulerAngles.h>
@@ -100,20 +101,20 @@ void FreeCameraController::onUpdate(float pastSecondsSinceLastFrame)
 			float movementSpeed = pastSecondsSinceLastFrame * ::detail::MOVEMENT_SPEED;
 			{
 				// Ridiculous speed up = "left shift"-key and "left strg"-key both pressed
-				if (isKeyPressed(16) && isKeyPressed(17))
+				if (isKeyPressed(IApplication::LEFT_SHIFT_KEY) && isKeyPressed(IApplication::LEFT_STRG_KEY))
 				{
 					movementSpeed *= ::detail::FAST_MOVEMENT_FACTOR * ::detail::FAST_MOVEMENT_FACTOR;
 				}
 				else
 				{
-					// Speed up = "left shift"-key
-					if (isKeyPressed(16))
+					// Speed up
+					if (isKeyPressed(IApplication::LEFT_SHIFT_KEY))
 					{
 						movementSpeed *= ::detail::FAST_MOVEMENT_FACTOR;
 					}
 
-					// Slow down = "left strg"-key
-					if (isKeyPressed(17))
+					// Slow down
+					if (isKeyPressed(IApplication::LEFT_STRG_KEY))
 					{
 						movementSpeed *= ::detail::SLOW_MOVEMENT_FACTOR;
 					}
@@ -124,41 +125,37 @@ void FreeCameraController::onUpdate(float pastSecondsSinceLastFrame)
 			glm::vec3 movementVector = RendererRuntime::Math::VEC3_ZERO;
 			{
 				// Move forward
-				if (isKeyPressed(87) ||	// "w"-key
-					isKeyPressed(38))	// "Arrow Up"-key
+				if (isKeyPressed(IApplication::W_KEY) || isKeyPressed(IApplication::ARROW_UP_KEY))
 				{
 					movementVector += transform.rotation * RendererRuntime::Math::VEC3_FORWARD;
 				}
 
 				// Strafe left
-				if (isKeyPressed(65) ||	// "a"-key
-					isKeyPressed(37))	// "Arrow Left"-key
+				if (isKeyPressed(IApplication::A_KEY) || isKeyPressed(IApplication::ARROW_LEFT_KEY))
 				{
 					movementVector -= transform.rotation * RendererRuntime::Math::VEC3_RIGHT;
 				}
 
 				// Move backward
-				if (isKeyPressed(83) ||	// "s"-key
-					isKeyPressed(40))	// "Arrow Down"-key
+				if (isKeyPressed(IApplication::S_KEY) || isKeyPressed(IApplication::ARROW_DOWN_KEY))
 				{
 					movementVector -= transform.rotation * RendererRuntime::Math::VEC3_FORWARD;
 				}
 
-				// Strafe right = "d"-key
-				if (isKeyPressed(68) ||	// "s"-key
-					isKeyPressed(39))	// "Arrow Right"-key
+				// Strafe right
+				if (isKeyPressed(IApplication::D_KEY) || isKeyPressed(IApplication::ARROW_RIGHT_KEY))
 				{
 					movementVector += transform.rotation * RendererRuntime::Math::VEC3_RIGHT;
 				}
 
-				// Strafe up = "page up"-key
-				if (isKeyPressed(33))
+				// Strafe up
+				if (isKeyPressed(IApplication::PAGE_UP_KEY))
 				{
 					movementVector += transform.rotation * RendererRuntime::Math::VEC3_UP;
 				}
 
-				// Strafe down = "page down"-key
-				if (isKeyPressed(34))
+				// Strafe down
+				if (isKeyPressed(IApplication::PAGE_DOWN_KEY))
 				{
 					movementVector -= transform.rotation * RendererRuntime::Math::VEC3_UP;
 				}
@@ -179,9 +176,9 @@ void FreeCameraController::onUpdate(float pastSecondsSinceLastFrame)
 		if (isMouseButtonPressed(1) && (0 != mMouseMoveX || 0 != mMouseMoveY))
 		{
 			// Get the rotation speed
-			// -> Slow down = "q"-key
+			// -> Slow down
 			float rotationSpeed = ::detail::ROTATION_SPEED;
-			if (isKeyPressed(81))
+			if (isKeyPressed(IApplication::Q_KEY))
 			{
 				rotationSpeed *= ::detail::SLOW_ROTATION_FACTOR;
 			}

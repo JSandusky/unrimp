@@ -38,6 +38,8 @@
 			#define NULL_HANDLE 0
 		#endif
 		#define FORCEINLINE __forceinline
+		#define RESTRICT __restrict
+		#define RESTRICT_RETURN __restrict
 		#define NOP __nop()
 		#define DEBUG_BREAK __debugbreak()
 		#define PRAGMA_WARNING_PUSH __pragma(warning(push))
@@ -50,6 +52,8 @@
 			#define NULL_HANDLE 0
 		#endif
 		#define FORCEINLINE __attribute__((always_inline))
+		#define RESTRICT __restrict__
+		#define RESTRICT_RETURN
 		#define NOP asm ("nop");
 		#define DEBUG_BREAK __builtin_trap()
 		#ifdef __clang__

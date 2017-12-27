@@ -44,6 +44,7 @@
 #include "RendererRuntime/Resource/Scene/SceneResource.h"
 #include "RendererRuntime/Resource/Scene/Item/Camera/CameraSceneItem.h"
 #include "RendererRuntime/Resource/Scene/Item/Mesh/SkeletonMeshSceneItem.h"
+#include "RendererRuntime/Resource/Scene/Culling/SceneCullingManager.h"
 #include "RendererRuntime/Core/Renderer/FramebufferManager.h"
 #include "RendererRuntime/Core/Renderer/RenderTargetTextureManager.h"
 #include "RendererRuntime/Vr/IVrManager.h"
@@ -202,10 +203,11 @@ namespace RendererRuntime
 			Renderer::IRenderer& renderer = renderTarget.getRenderer();
 			if (renderer.beginScene())
 			{
+				const CompositorContextData compositorContextData(this, cameraSceneItem, singlePassStereoInstancing, lightSceneItem, mCompositorInstancePassShadowMap);
 				if (nullptr != cameraSceneItem)
 				{
 					// Gather render queue index ranges renderable managers
-					gatherRenderQueueIndexRangesRenderableManagers(*cameraSceneItem);
+					cameraSceneItem->getSceneResource().getSceneCullingManager().gatherRenderQueueIndexRangesRenderableManagers(renderTarget, compositorContextData, mRenderQueueIndexRanges);
 
 					// Fill the light buffer manager
 					materialBlueprintResourceManager.getLightBufferManager().fillBuffer(cameraSceneItem->getSceneResource(), mCommandBuffer);
@@ -223,7 +225,6 @@ namespace RendererRuntime
 
 				{ // Fill command buffer
 					Renderer::IRenderTarget* currentRenderTarget = &renderTarget;
-					const CompositorContextData compositorContextData(this, cameraSceneItem, singlePassStereoInstancing, lightSceneItem, mCompositorInstancePassShadowMap);
 					for (const CompositorNodeInstance* compositorNodeInstance : mSequentialCompositorNodeInstances)
 					{
 						currentRenderTarget = &compositorNodeInstance->fillCommandBuffer(*currentRenderTarget, compositorContextData, mCommandBuffer);
@@ -468,47 +469,6 @@ namespace RendererRuntime
 		for (RenderQueueIndexRange& renderQueueIndexRange : mRenderQueueIndexRanges)
 		{
 			renderQueueIndexRange.renderableManagers.clear();
-		}
-	}
-
-	void CompositorWorkspaceInstance::gatherRenderQueueIndexRangesRenderableManagers(const CameraSceneItem& cameraSceneItem)
-	{
-		// TODO(co) This is just a dummy implementation, has to use high level culling including e.g. multi-threaded culling
-		const glm::vec3& cameraPosition = cameraSceneItem.getParentSceneNodeSafe().getGlobalTransform().position;
-
-		// Loop through all scene nodes and add renderables to the render queue
-		const SceneResource::SceneNodes& sceneNodes = cameraSceneItem.getSceneResource().getSceneNodes();
-		const size_t numberOfSceneNodes = sceneNodes.size();
-		for (size_t sceneNodeIndex = 0; sceneNodeIndex < numberOfSceneNodes; ++sceneNodeIndex)
-		{
-			const SceneNode* sceneNode = sceneNodes[sceneNodeIndex];
-
-			// Calculate the distance to the camera
-			const float distanceToCamera = glm::distance(cameraPosition, sceneNode->getGlobalTransform().position);
-
-			// Loop through all scene items attached to the current scene node
-			const SceneNode::AttachedSceneItems& attachedSceneItems = sceneNode->getAttachedSceneItems();
-			const size_t numberOfAttachedSceneItems = attachedSceneItems.size();
-			for (size_t attachedSceneItemIndex = 0; attachedSceneItemIndex < numberOfAttachedSceneItems; ++attachedSceneItemIndex)
-			{
-				RenderableManager* renderableManager = const_cast<RenderableManager*>(attachedSceneItems[attachedSceneItemIndex]->getRenderableManager());	// TODO(co) Get rid of the evil const-cast
-				if (nullptr != renderableManager && renderableManager->isVisible() && !renderableManager->getRenderables().empty())
-				{
-					renderableManager->setCachedDistanceToCamera(distanceToCamera);
-
-					// A renderable manager can be inside multiple render queue index ranges
-					for (RenderQueueIndexRange& renderQueueIndexRange : mRenderQueueIndexRanges)
-					{
-						const uint8_t minimumRenderQueueIndex = renderableManager->getMinimumRenderQueueIndex();
-						const uint8_t maximumRenderQueueIndex = renderableManager->getMaximumRenderQueueIndex();
-						if ((minimumRenderQueueIndex >= renderQueueIndexRange.minimumRenderQueueIndex && minimumRenderQueueIndex <= renderQueueIndexRange.maximumRenderQueueIndex) ||
-							(maximumRenderQueueIndex >= renderQueueIndexRange.minimumRenderQueueIndex && maximumRenderQueueIndex <= renderQueueIndexRange.maximumRenderQueueIndex))
-						{
-							renderQueueIndexRange.renderableManagers.push_back(renderableManager);
-						}
-					}
-				}
-			}
 		}
 	}
 

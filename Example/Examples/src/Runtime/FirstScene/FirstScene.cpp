@@ -512,7 +512,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 		{
 			// Setup GUI
 			RendererRuntime::DebugGuiManager& debugGuiManager = rendererRuntime->getDebugGuiManager();
-			debugGuiManager.newFrame(nullptr != compositorInstancePass->getRenderTarget() ? *compositorInstancePass->getRenderTarget() : mainRenderTarget);
+			debugGuiManager.newFrame(((nullptr != compositorInstancePass->getRenderTarget()) ? *compositorInstancePass->getRenderTarget() : mainRenderTarget), mCompositorWorkspaceInstance);
 			mImGuiLog->draw(rendererRuntime->getContext().getFileManager());
 			if (ImGui::Begin("Options"))
 			{

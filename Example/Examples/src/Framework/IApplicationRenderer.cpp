@@ -160,7 +160,16 @@ void IApplicationRenderer::onKeyDown(uint32_t key)
 {
 	if (nullptr != mExampleBase)
 	{
-		mExampleBase->onKeyDown(key);
+		// Application shutdown = "escape"-key
+		if (ESCAPE_KEY == key)
+		{
+			exit();
+		}
+		else
+		{
+			// Call example base
+			mExampleBase->onKeyDown(key);
+		}
 	}
 }
 

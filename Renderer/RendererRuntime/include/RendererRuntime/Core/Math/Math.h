@@ -150,6 +150,7 @@ namespace RendererRuntime
 		*    The updated value (e.g. 1.5)
 		*/
 		RENDERERRUNTIME_API_EXPORT static float makeMultipleOf(float value, float primaryValue);
+		RENDERERRUNTIME_API_EXPORT static uint32_t makeMultipleOf(uint32_t value, uint32_t primaryValue);
 
 		/**
 		*  @brief

@@ -167,7 +167,7 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	TerrainSceneItem::TerrainSceneItem(SceneResource& sceneResource) :
-		MaterialSceneItem(sceneResource),
+		MaterialSceneItem(sceneResource, false),	///< The GPU will automatically cull terrain patches	TODO(co) Later on there might be multiple smaller terrains which then would make terrain frustum culling useful, we'll take care of this as soon as it's really needed
 		mNumberOfTerrainTileRings(0),
 		mTerrainTileRings{}
 	{

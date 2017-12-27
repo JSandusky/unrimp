@@ -24,12 +24,19 @@
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/Scene/Item/Mesh/MeshSceneItem.h"
 #include "RendererRuntime/Resource/Scene/Loader/SceneFileFormat.h"
+#include "RendererRuntime/Resource/Scene/Culling/SceneItemSet.h"
 #include "RendererRuntime/Resource/Scene/SceneResource.h"
 #include "RendererRuntime/Resource/Scene/SceneNode.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
 #include "RendererRuntime/Resource/Mesh/MeshResource.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
+
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
+	#include <glm/gtx/component_wise.hpp>
+PRAGMA_WARNING_POP
 
 #include <tuple>
 #include <algorithm>
@@ -140,6 +147,54 @@ namespace RendererRuntime
 				const MeshResource* meshResource = rendererRuntime.getMeshResourceManager().tryGetById(mMeshResourceId);
 				if (nullptr != meshResource)
 				{
+					// TODO(co) The following is just for culling kickoff and won't stay this way
+					// Set scene item set bounding data
+					if (nullptr != mSceneItemSet)
+					{
+						const SceneNode* parentSceneNode = getParentSceneNode();
+
+						{ // Set minimum object space bounding box corner position
+							const glm::vec3& minimumBoundingBoxPosition = meshResource->getMinimumBoundingBoxPosition();
+							mSceneItemSet->minimumX[mSceneItemSetIndex] = minimumBoundingBoxPosition.x;
+							mSceneItemSet->minimumY[mSceneItemSetIndex] = minimumBoundingBoxPosition.y;
+							mSceneItemSet->minimumZ[mSceneItemSetIndex] = minimumBoundingBoxPosition.z;
+						}
+
+						{ // Set maximum object space bounding box corner position
+							const glm::vec3& maximumBoundingBoxPosition = meshResource->getMaximumBoundingBoxPosition();
+							mSceneItemSet->maximumX[mSceneItemSetIndex] = maximumBoundingBoxPosition.x;
+							mSceneItemSet->maximumY[mSceneItemSetIndex] = maximumBoundingBoxPosition.y;
+							mSceneItemSet->maximumZ[mSceneItemSetIndex] = maximumBoundingBoxPosition.z;
+						}
+
+						{ // Set world space center position of bounding sphere
+							const glm::vec3& boundingSpherePosition = meshResource->getBoundingSpherePosition();
+							if (nullptr != parentSceneNode)
+							{
+								const glm::vec3& position = parentSceneNode->getTransform().position;
+								const glm::vec3& scale = parentSceneNode->getTransform().scale;
+								mSceneItemSet->spherePositionX[mSceneItemSetIndex] = boundingSpherePosition.x * scale.x + position.x;
+								mSceneItemSet->spherePositionY[mSceneItemSetIndex] = boundingSpherePosition.y * scale.y + position.y;
+								mSceneItemSet->spherePositionZ[mSceneItemSetIndex] = boundingSpherePosition.z * scale.z + position.z;
+							}
+							else
+							{
+								mSceneItemSet->spherePositionX[mSceneItemSetIndex] = boundingSpherePosition.x;
+								mSceneItemSet->spherePositionY[mSceneItemSetIndex] = boundingSpherePosition.y;
+								mSceneItemSet->spherePositionZ[mSceneItemSetIndex] = boundingSpherePosition.z;
+							}
+						}
+
+						{ // Set negative world space radius of bounding sphere
+							float boundingSphereRadius = meshResource->getBoundingSphereRadius();
+							if (nullptr != parentSceneNode)
+							{
+								boundingSphereRadius *= glm::compMax(parentSceneNode->getTransform().scale);
+							}
+							mSceneItemSet->negativeRadius[mSceneItemSetIndex] = -boundingSphereRadius;
+						}
+					}
+
 					// Get vertex array instance
 					const Renderer::IVertexArrayPtr vertexArrayPtr = meshResource->getVertexArrayPtr();
 

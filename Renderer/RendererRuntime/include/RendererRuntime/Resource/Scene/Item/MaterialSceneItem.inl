@@ -63,8 +63,8 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline MaterialSceneItem::MaterialSceneItem(SceneResource& sceneResource) :
-		ISceneItem(sceneResource),
+	inline MaterialSceneItem::MaterialSceneItem(SceneResource& sceneResource, bool cullable) :
+		ISceneItem(sceneResource, cullable),
 		mMaterialResourceId(getUninitialized<MaterialResourceId>())
 	{
 		// Nothing here

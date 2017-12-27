@@ -140,7 +140,6 @@ namespace RendererRuntime
 		void createFramebuffersAndRenderTargetTextures(const Renderer::IRenderTarget& mainRenderTarget);
 		void destroyFramebuffersAndRenderTargetTextures();
 		void clearRenderQueueIndexRangesRenderableManagers();
-		void gatherRenderQueueIndexRangesRenderableManagers(const CameraSceneItem& cameraSceneItem);	// A naive method name would be "culling", this is considered to be an expensive method call
 
 
 	//[-------------------------------------------------------]

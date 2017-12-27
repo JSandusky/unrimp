@@ -26,16 +26,18 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline SceneItemMemoryManager::SceneItemMemoryManager()
+	inline SceneItemSet& SceneCullingManager::getCullableSceneItemSet() const
 	{
-		// Nothing here
+		// We know that this pointer is always valid
+		assert(nullptr != mCullableSceneItemSet);
+		return *mCullableSceneItemSet;
 	}
 
-	inline SceneItemMemoryManager::~SceneItemMemoryManager()
+	inline SceneCullingManager::SceneItems& SceneCullingManager::getUncullableSceneItems()
 	{
-		// Nothing here
+		return mUncullableSceneItems;
 	}
 
 

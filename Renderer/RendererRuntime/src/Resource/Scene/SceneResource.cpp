@@ -27,6 +27,7 @@
 #include "RendererRuntime/Resource/Scene/SceneResourceManager.h"
 #include "RendererRuntime/Resource/Scene/Item/ISceneItem.h"
 #include "RendererRuntime/Resource/Scene/Factory/ISceneFactory.h"
+#include "RendererRuntime/Resource/Scene/Culling/SceneCullingManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 
@@ -128,11 +129,27 @@ namespace RendererRuntime
 	{
 		// Sanity checks
 		assert(nullptr == mSceneFactory);
+		assert(nullptr == mSceneCullingManager);
 		assert(mSceneNodes.empty());
 		assert(mSceneItems.empty());
 
+		// Create scene culling manager
+		mSceneCullingManager = new SceneCullingManager();
+
 		// Call base implementation
 		IResource::initializeElement(sceneResourceId);
+	}
+
+	void SceneResource::deinitializeElement()
+	{
+		// Reset everything
+		destroyAllSceneNodesAndItems();
+		mSceneFactory = nullptr;
+		delete mSceneCullingManager;
+		mSceneCullingManager = nullptr;
+
+		// Call base implementation
+		IResource::deinitializeElement();
 	}
 
 

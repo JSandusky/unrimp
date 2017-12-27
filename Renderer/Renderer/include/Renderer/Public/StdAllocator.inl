@@ -48,7 +48,7 @@ namespace
 				#ifdef _MSC_VER
 					return _aligned_realloc(oldPointer, newNumberOfBytes, alignment);
 				#else
-					// TODO(co) Need aligned version, see e.g. https://github.com/philiptaylor/vulkan-sxs/blob/9cb21b3/common/AllocationCallbacks.cpp#L87
+					// TODO(co) Need aligned version, see e.g. https://github.com/philiptaylor/vulkan-sxs/blob/9cb21b3/common/AllocationCallbacks.cpp#L87 or XSIMD "xsimd_aligned_allocator"
 					return realloc(oldPointer, newNumberOfBytes);
 				#endif
 			}

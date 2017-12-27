@@ -113,6 +113,11 @@ namespace RendererRuntime
 		return std::floor(value / primaryValue + 0.5f) * primaryValue;
 	}
 
+	uint32_t Math::makeMultipleOf(uint32_t value, uint32_t primaryValue)
+	{
+		return static_cast<uint32_t>(std::ceil(static_cast<float>(value) / static_cast<float>(primaryValue))) * primaryValue;
+	}
+
 	const glm::mat4& Math::getTextureScaleBiasMatrix(const Renderer::IRenderer& renderer)
 	{
 		static const glm::mat4 SHADOW_SCALE_BIAS_MATRIX_DIRECT3D = glm::mat4(0.5f,  0.0f, 0.0f, 0.0f,

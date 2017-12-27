@@ -51,7 +51,7 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	inline SkyboxSceneItem::SkyboxSceneItem(SceneResource& sceneResource) :
-		MaterialSceneItem(sceneResource)
+		MaterialSceneItem(sceneResource, false)	///< The sky isn't allowed to be culled
 	{
 		// Nothing here
 	}

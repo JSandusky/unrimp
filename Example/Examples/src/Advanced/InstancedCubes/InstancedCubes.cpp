@@ -25,6 +25,7 @@
 #include "Advanced/InstancedCubes/InstancedCubes.h"
 #include "Advanced/InstancedCubes/CubeRendererDrawInstanced/CubeRendererDrawInstanced.h"
 #include "Advanced/InstancedCubes/CubeRendererInstancedArrays/CubeRendererInstancedArrays.h"
+#include "Framework/IApplication.h"
 #include "Framework/Color4.h"
 
 #include <RendererRuntime/IRendererRuntime.h>
@@ -116,8 +117,8 @@ void InstancedCubes::onKeyDown(uint32_t key)
 	switch (key)
 	{
 		// Add a fixed number of cubes
-		case 107:	// Numpad +
-		case 187:	// +*~ key
+		case IApplication::NUMPAD_PLUS_KEY:
+		case IApplication::OEM_PLUS_KEY:
 			// Upper limit, just in case someone tries something nasty
 			if (mNumberOfCubeInstances < UINT_MAX - NUMBER_OF_CHANGED_CUBES)
 			{
@@ -133,8 +134,8 @@ void InstancedCubes::onKeyDown(uint32_t key)
 			break;
 
 		// Subtract a fixed number of cubes
-		case 109:	// Numpad -
-		case 189:	// -_ key
+		case IApplication::NUMPAD_MINUS_KEY:
+		case IApplication::OEM_MINUS_KEY:
 			// Lower limit
 			if (mNumberOfCubeInstances > 1)
 			{
@@ -157,17 +158,17 @@ void InstancedCubes::onKeyDown(uint32_t key)
 			break;
 
 		// Scale cubes up (change the size of all cubes at the same time)
-		case 38:	// Key up
+		case IApplication::ARROW_UP_KEY:
 			mGlobalScale += 0.1f;
 			break;
 
 		// Scale cubes down (change the size of all cubes at the same time)
-		case 40:	// Key down
+		case IApplication::ARROW_DOWN_KEY:
 			mGlobalScale -= 0.1f;	// No need to check for negative values, results in entertaining inversed backface culling
 			break;
 
 		// Show/hide statistics
-		case ' ':	// Space
+		case IApplication::SPACE_KEY:
 			// Toggle display of statistics
 			mDisplayStatistics = !mDisplayStatistics;
 			break;

@@ -219,16 +219,16 @@ public:
 //[ Public virtual ExampleBase methods                    ]
 //[-------------------------------------------------------]
 public:
-	virtual void onInitialization();
-	virtual void onDeinitialization();
-	virtual void onKeyDown(uint32_t key);
-	virtual void onKeyUp(uint32_t key);
-	virtual void onMouseButtonDown(uint32_t button);
-	virtual void onMouseButtonUp(uint32_t button);
-	virtual void onMouseWheel(float delta);
-	virtual void onMouseMove(int x, int y);
-	virtual void onUpdate();
-	virtual void onDraw();
+	inline virtual void onInitialization();
+	inline virtual void onDeinitialization();
+	inline virtual void onKeyDown(uint32_t key);
+	inline virtual void onKeyUp(uint32_t key);
+	inline virtual void onMouseButtonDown(uint32_t button);
+	inline virtual void onMouseButtonUp(uint32_t button);
+	inline virtual void onMouseWheel(float delta);
+	inline virtual void onMouseMove(int x, int y);
+	inline virtual void onUpdate();
+	inline virtual void onDraw();
 
 	/**
 	*  @brief

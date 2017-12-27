@@ -31,6 +31,7 @@
 #include "RendererRuntime/Resource/Scene/Item/Mesh/SkeletonMeshSceneItem.h"
 #include "RendererRuntime/Resource/Skeleton/SkeletonResourceManager.h"
 #include "RendererRuntime/Resource/Skeleton/SkeletonResource.h"
+#include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceInstance.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <imguizmo/ImGuizmo.h>
@@ -305,7 +306,7 @@ namespace RendererRuntime
 		mDrawTextCounter = 0;
 	}
 
-	void DebugGuiHelper::drawMetricsWindow(bool& open)
+	void DebugGuiHelper::drawMetricsWindow(bool& open, CompositorWorkspaceInstance* compositorWorkspaceInstance)
 	{
 		if (ImGui::Begin("Metrics", &open))
 		{
@@ -324,6 +325,29 @@ namespace RendererRuntime
 			ImGui::PushStyleColor(ImGuiCol_Text, color);
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / framesPerSecond, framesPerSecond);
 			ImGui::PopStyleColor();
+
+			// Optional compositor workspace instance metrics
+			if (nullptr != compositorWorkspaceInstance)
+			{
+				// Please note that one renderable manager can be inside multiple render queue index ranges
+				// -> Since this metrics debugging code isn't performance critical we're using already available data to extract the
+				//    information we want to display instead of letting the core system gather additional data it doesn't need to work
+				size_t numberOfRenderables = 0;
+				std::unordered_set<const RenderableManager*> processedRenderableManager;
+				for (const CompositorWorkspaceInstance::RenderQueueIndexRange& renderQueueIndexRanges : compositorWorkspaceInstance->getRenderQueueIndexRanges())
+				{
+					for (const RenderableManager* renderableManager : renderQueueIndexRanges.renderableManagers)
+					{
+						if (processedRenderableManager.find(renderableManager) == processedRenderableManager.cend())
+						{
+							processedRenderableManager.insert(renderableManager);
+							numberOfRenderables += renderableManager->getRenderables().size();
+						}
+					}
+				}
+				ImGui::Text("Rendered renderable managers %d", processedRenderableManager.size());
+				ImGui::Text("Rendered renderables %d", numberOfRenderables);
+			}
 		}
 		ImGui::End();
 	}

@@ -420,12 +420,17 @@ namespace
 		*    Index buffer to fill
 		*  @param[in]  assimpTransformation
 		*    Current absolute Assimp transformation matrix (local to global space)
+		*  @param[out] minimumBoundingBoxPosition
+		*    Receives the minimum bounding box position
+		*  @param[out] maximumBoundingBoxPosition
+		*    Receives the maximum bounding box position
 		*  @param[out] numberOfVertices
 		*    Receives the number of processed vertices
 		*  @param[out] numberOfIndices
 		*    Receives the number of processed indices
 		*/
-		void fillMeshRecursive(const aiScene& assimpScene, const aiNode& assimpNode, const Skeleton& skeleton, uint8_t numberOfBytesPerVertex, uint8_t* vertexBuffer, uint32_t* indexBuffer, const aiMatrix4x4& assimpTransformation, uint32_t& numberOfVertices, uint32_t& numberOfIndices)
+		void fillMeshRecursive(const aiScene& assimpScene, const aiNode& assimpNode, const Skeleton& skeleton, uint8_t numberOfBytesPerVertex, uint8_t* vertexBuffer, uint32_t* indexBuffer, const aiMatrix4x4& assimpTransformation,
+							   glm::vec3& minimumBoundingBoxPosition, glm::vec3& maximumBoundingBoxPosition, uint32_t& numberOfVertices, uint32_t& numberOfIndices)
 		{
 			// Get the absolute transformation matrix of this Assimp node
 			const aiMatrix4x4 currentAssimpTransformation = assimpTransformation * assimpNode.mTransformation;
@@ -471,6 +476,12 @@ namespace
 							++currentVertexBufferFloat;
 							*currentVertexBufferFloat = assimpVertex.z;
 							currentVertex += sizeof(float) * 3;
+
+							{ // Update minimum and maximum bounding box position
+								const glm::vec3 glmVertex(assimpVertex.x, assimpVertex.y, assimpVertex.z);
+								minimumBoundingBoxPosition = glm::min(minimumBoundingBoxPosition, glmVertex);
+								maximumBoundingBoxPosition = glm::max(maximumBoundingBoxPosition, glmVertex);
+							}
 						}
 
 						// 32 bit texture coordinate
@@ -614,7 +625,7 @@ namespace
 			// Loop through all child nodes recursively
 			for (uint32_t assimpChild = 0; assimpChild < assimpNode.mNumChildren; ++assimpChild)
 			{
-				fillMeshRecursive(assimpScene, *assimpNode.mChildren[assimpChild], skeleton, numberOfBytesPerVertex, vertexBuffer, indexBuffer, currentAssimpTransformation, numberOfVertices, numberOfIndices);
+				fillMeshRecursive(assimpScene, *assimpNode.mChildren[assimpChild], skeleton, numberOfBytesPerVertex, vertexBuffer, indexBuffer, currentAssimpTransformation, minimumBoundingBoxPosition, maximumBoundingBoxPosition, numberOfVertices, numberOfIndices);
 			}
 		}
 
@@ -754,58 +765,80 @@ namespace RendererToolkit
 				const Renderer::VertexAttributes& vertexAttributes = (numberOfBones > 0) ? RendererRuntime::MeshResource::SKINNED_VERTEX_ATTRIBUTES : RendererRuntime::MeshResource::VERTEX_ATTRIBUTES;
 				const uint8_t numberOfBytesPerVertex = (numberOfBones > 0) ? ::detail::NUMBER_OF_BYTES_PER_SKINNED_VERTEX : ::detail::NUMBER_OF_BYTES_PER_VERTEX;
 
+				// Allocate memory for the local vertex and index buffer data
+				// -> Do also initialize the vertex buffer data with zero to handle not filled vertex bone weights
+				uint8_t* vertexBufferData = new uint8_t[numberOfBytesPerVertex * numberOfVertices];
+				memset(vertexBufferData, 0, numberOfBytesPerVertex * numberOfVertices);
+				uint32_t* indexBufferData = new uint32_t[numberOfIndices];
+
+				// Fill the mesh data recursively
+				glm::vec3 minimumBoundingBoxPosition(std::numeric_limits<float>::max());
+				glm::vec3 maximumBoundingBoxPosition(std::numeric_limits<float>::lowest());
+				{
+					uint32_t numberOfFilledVertices = 0;
+					uint32_t numberOfFilledIndices  = 0;
+					::detail::fillMeshRecursive(*assimpScene, *assimpScene->mRootNode, skeleton, numberOfBytesPerVertex, vertexBufferData, indexBufferData, aiMatrix4x4(), minimumBoundingBoxPosition, maximumBoundingBoxPosition, numberOfFilledVertices, numberOfFilledIndices);
+					if (numberOfVertices != numberOfFilledVertices || numberOfIndices != numberOfFilledIndices)
+					{
+						throw std::runtime_error("Error while recursively filling the mesh data");
+					}
+				}
+
 				{ // Write down the mesh header
 					RendererRuntime::v1Mesh::MeshHeader meshHeader;
+
+					// Bounding
+					meshHeader.minimumBoundingBoxPosition = minimumBoundingBoxPosition;
+					meshHeader.maximumBoundingBoxPosition = maximumBoundingBoxPosition;
+					meshHeader.boundingSpherePosition	  = (minimumBoundingBoxPosition + maximumBoundingBoxPosition) * 0.5f;
+					{ // Calculate the bounding sphere radius enclosing the bounding box (don't use the inner bounding box radius)
+						// Get the minimum/maximum squared length
+						const float minimumSquaredLength = glm::dot(minimumBoundingBoxPosition, minimumBoundingBoxPosition);
+						const float maximumSquaredLength = glm::dot(maximumBoundingBoxPosition, maximumBoundingBoxPosition);
+
+						// The greater one has to be used for the radius
+						meshHeader.boundingSphereRadius = (maximumSquaredLength > minimumSquaredLength) ? sqrt(maximumSquaredLength) : sqrt(minimumSquaredLength);
+					}
+
+					// Vertex and index data
 					meshHeader.numberOfBytesPerVertex	= numberOfBytesPerVertex;
 					meshHeader.numberOfVertices			= numberOfVertices;
 					meshHeader.indexBufferFormat		= static_cast<uint8_t>(indexBufferFormat);
 					meshHeader.numberOfIndices			= numberOfIndices;
 					meshHeader.numberOfVertexAttributes = static_cast<uint8_t>(vertexAttributes.numberOfAttributes);
-					meshHeader.numberOfSubMeshes		= static_cast<uint16_t>(subMeshes.size());
-					meshHeader.numberOfBones			= skeleton.numberOfBones;
+
+					// Sub-meshes
+					meshHeader.numberOfSubMeshes = static_cast<uint16_t>(subMeshes.size());
+
+					// Optional skeleton
+					meshHeader.numberOfBones = skeleton.numberOfBones;
+
+					// Write down
 					memoryFile.write(&meshHeader, sizeof(RendererRuntime::v1Mesh::MeshHeader));
 				}
 
-				{ // Vertex and index buffer data
-					// Allocate memory for the local vertex and index buffer data
-					// -> Do also initialize the vertex buffer data with zero to handle not filled vertex bone weights
-					uint8_t* vertexBufferData = new uint8_t[numberOfBytesPerVertex * numberOfVertices];
-					memset(vertexBufferData, 0, numberOfBytesPerVertex * numberOfVertices);
-					uint32_t* indexBufferData = new uint32_t[numberOfIndices];
-
-					{ // Fill the mesh data recursively
-						uint32_t numberOfFilledVertices = 0;
-						uint32_t numberOfFilledIndices  = 0;
-						::detail::fillMeshRecursive(*assimpScene, *assimpScene->mRootNode, skeleton, numberOfBytesPerVertex, vertexBufferData, indexBufferData, aiMatrix4x4(), numberOfFilledVertices, numberOfFilledIndices);
-						if (numberOfVertices != numberOfFilledVertices || numberOfIndices != numberOfFilledIndices)
-						{
-							throw std::runtime_error("Error while recursively filling the mesh data");
-						}
-					}
-
-					// Write down the vertex and index buffer
-					memoryFile.write(vertexBufferData, numberOfBytesPerVertex * numberOfVertices);
-					if (Renderer::IndexBufferFormat::UNSIGNED_INT == indexBufferFormat)
-					{
-						// Dump the 32-bit indices we have in memory
-						memoryFile.write(indexBufferData, sizeof(uint32_t) * numberOfIndices);
-					}
-					else
-					{
-						// Convert the 32-bit indices we have in memory to 16-bit indices
-						uint16_t* shortIndexBufferData = new uint16_t[numberOfIndices];
-						for (uint32_t i = 0; i < numberOfIndices; ++i)
-						{
-							shortIndexBufferData[i] = static_cast<uint16_t>(indexBufferData[i]);
-						}
-						memoryFile.write(shortIndexBufferData, sizeof(uint16_t) * numberOfIndices);
-						delete [] shortIndexBufferData;
-					}
-
-					// Destroy local vertex and input buffer data
-					delete [] vertexBufferData;
-					delete [] indexBufferData;
+				// Write down the vertex and index buffer
+				memoryFile.write(vertexBufferData, numberOfBytesPerVertex * numberOfVertices);
+				if (Renderer::IndexBufferFormat::UNSIGNED_INT == indexBufferFormat)
+				{
+					// Dump the 32-bit indices we have in memory
+					memoryFile.write(indexBufferData, sizeof(uint32_t) * numberOfIndices);
 				}
+				else
+				{
+					// Convert the 32-bit indices we have in memory to 16-bit indices
+					uint16_t* shortIndexBufferData = new uint16_t[numberOfIndices];
+					for (uint32_t i = 0; i < numberOfIndices; ++i)
+					{
+						shortIndexBufferData[i] = static_cast<uint16_t>(indexBufferData[i]);
+					}
+					memoryFile.write(shortIndexBufferData, sizeof(uint16_t) * numberOfIndices);
+					delete [] shortIndexBufferData;
+				}
+
+				// Destroy local vertex and input buffer data
+				delete [] vertexBufferData;
+				delete [] indexBufferData;
 
 				// Write down the vertex array attributes
 				memoryFile.write(vertexAttributes.attributes, sizeof(Renderer::VertexAttribute) * vertexAttributes.numberOfAttributes);

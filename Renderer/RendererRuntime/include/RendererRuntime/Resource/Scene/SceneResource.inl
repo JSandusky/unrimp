@@ -28,6 +28,13 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline SceneCullingManager& SceneResource::getSceneCullingManager() const
+	{
+		// We know that this pointer is always valid
+		assert(nullptr != mSceneCullingManager);
+		return *mSceneCullingManager;
+	}
+
 	inline void SceneResource::destroyAllSceneNodesAndItems()
 	{
 		destroyAllSceneNodes();
@@ -57,7 +64,8 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline SceneResource::SceneResource() :
-		mSceneFactory(nullptr)
+		mSceneFactory(nullptr),
+		mSceneCullingManager(nullptr)
 	{
 		// Nothing here
 	}
@@ -66,6 +74,7 @@ namespace RendererRuntime
 	{
 		// Sanity checks
 		assert(nullptr == mSceneFactory);
+		assert(nullptr == mSceneCullingManager);
 		assert(mSceneNodes.empty());
 		assert(mSceneItems.empty());
 	}
@@ -77,21 +86,12 @@ namespace RendererRuntime
 
 		// Swap data
 		std::swap(mSceneFactory, sceneResource.mSceneFactory);
-		std::swap(mSceneNodes,	 sceneResource.mSceneNodes);
-		std::swap(mSceneItems,	 sceneResource.mSceneItems);
+		std::swap(mSceneCullingManager, sceneResource.mSceneCullingManager);
+		std::swap(mSceneNodes, sceneResource.mSceneNodes);
+		std::swap(mSceneItems, sceneResource.mSceneItems);
 
 		// Done
 		return *this;
-	}
-
-	inline void SceneResource::deinitializeElement()
-	{
-		// Reset everything
-		destroyAllSceneNodesAndItems();
-		mSceneFactory = nullptr;
-
-		// Call base implementation
-		IResource::deinitializeElement();
 	}
 
 

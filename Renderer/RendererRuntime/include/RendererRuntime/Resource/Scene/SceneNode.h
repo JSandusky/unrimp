@@ -128,6 +128,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		RENDERERRUNTIME_API_EXPORT void updateGlobalTransformRecursive();
+		void updateSceneItemTransform(ISceneItem& sceneItem);
 
 
 	//[-------------------------------------------------------]

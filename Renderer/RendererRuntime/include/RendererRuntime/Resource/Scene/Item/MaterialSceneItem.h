@@ -95,7 +95,7 @@ namespace RendererRuntime
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:
-		inline explicit MaterialSceneItem(SceneResource& sceneResource);
+		inline MaterialSceneItem(SceneResource& sceneResource, bool cullable = true);
 		virtual ~MaterialSceneItem() override;
 		explicit MaterialSceneItem(const MaterialSceneItem&) = delete;
 		MaterialSceneItem& operator=(const MaterialSceneItem&) = delete;

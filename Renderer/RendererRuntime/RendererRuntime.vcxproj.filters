@@ -44,9 +44,6 @@
     <Filter Include="Source Files\Resource\Scene">
       <UniqueIdentifier>{24f1c7dd-750e-4781-a457-544a935b5720}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Resource\Scene\Memory">
-      <UniqueIdentifier>{95ea971e-e627-43a8-9e26-3a88a526443a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Resource\Scene\Loader">
       <UniqueIdentifier>{6711877d-d37a-4be7-b23b-b6854c62b396}</UniqueIdentifier>
     </Filter>
@@ -224,6 +221,9 @@
     <Filter Include="Source Files\Resource\Scene\Item\Terrain">
       <UniqueIdentifier>{5312d43c-2e10-4c62-bdb9-7a8fb8232406}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resource\Scene\Culling">
+      <UniqueIdentifier>{fb320af9-2c49-4ae5-a1dd-fe97da41a9ed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -395,12 +395,6 @@
     </None>
     <None Include="include\RendererRuntime\Resource\Scene\Factory\SceneFactory.inl">
       <Filter>Source Files\Resource\Scene\Factory</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\Scene\Memory\SceneItemMemoryManager.inl">
-      <Filter>Source Files\Resource\Scene\Memory</Filter>
-    </None>
-    <None Include="include\RendererRuntime\Resource\Scene\Memory\SceneNodeMemoryManager.inl">
-      <Filter>Source Files\Resource\Scene\Memory</Filter>
     </None>
     <None Include="include\RendererRuntime\Resource\CompositorWorkspace\Loader\CompositorWorkspaceResourceLoader.inl">
       <Filter>Source Files\Resource\CompositorWorkspace\Loader</Filter>
@@ -648,6 +642,15 @@
     <None Include="include\RendererRuntime\Resource\Texture\Loader\Lz4DdsTextureResourceLoader.inl">
       <Filter>Source Files\Resource\Texture\Loader</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\Scene\Culling\SceneCullingManager.inl">
+      <Filter>Source Files\Resource\Scene\Culling</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Core\Math\Frustum.inl">
+      <Filter>Source Files\Core\Math</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Core\Math\Plane.inl">
+      <Filter>Source Files\Core\Math</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -703,12 +706,6 @@
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Mesh\Loader\MeshResourceLoader.h">
       <Filter>Source Files\Resource\Mesh\Loader</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Scene\Memory\SceneNodeMemoryManager.h">
-      <Filter>Source Files\Resource\Scene\Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Scene\Memory\SceneItemMemoryManager.h">
-      <Filter>Source Files\Resource\Scene\Memory</Filter>
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Texture\TextureResourceManager.h">
       <Filter>Source Files\Resource\Texture</Filter>
@@ -1283,6 +1280,18 @@
     <ClInclude Include="include\RendererRuntime\Resource\Texture\Loader\Lz4DdsTextureResourceLoader.h">
       <Filter>Source Files\Resource\Texture\Loader</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\Culling\SceneItemSet.h">
+      <Filter>Source Files\Resource\Scene\Culling</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\Culling\SceneCullingManager.h">
+      <Filter>Source Files\Resource\Scene\Culling</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\Math\Frustum.h">
+      <Filter>Source Files\Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Core\Math\Plane.h">
+      <Filter>Source Files\Core\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
@@ -1677,6 +1686,15 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Texture\Loader\Lz4DdsTextureResourceLoader.cpp">
       <Filter>Source Files\Resource\Texture\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Scene\Culling\SceneCullingManager.cpp">
+      <Filter>Source Files\Resource\Scene\Culling</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Math\Frustum.cpp">
+      <Filter>Source Files\Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Scene\ISceneItem.cpp">
+      <Filter>Source Files\Resource\Scene\Item</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

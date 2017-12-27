@@ -42,6 +42,13 @@
 
 	/**
 	*  @brief
+	*    Restrict alias
+	*/
+	#define RESTRICT __restrict
+	#define RESTRICT_RETURN __restrict
+
+	/**
+	*  @brief
 	*    No operation macro ("_asm nop"/"__nop()")
 	*/
 	#define NOP __nop()
@@ -90,6 +97,13 @@
 	*    - Do only use this when you really have to, usually it's best to let the compiler decide by using the standard keyword "inline"
 	*/
 	#define FORCEINLINE __attribute__((always_inline))
+
+	/**
+	*  @brief
+	*    Restrict alias
+	*/
+	#define RESTRICT __restrict__
+	#define RESTRICT_RETURN
 
 	/**
 	*  @brief

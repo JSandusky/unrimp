@@ -19,18 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Header guard                                          ]
-//[-------------------------------------------------------]
-#pragma once
-
-
-//[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Core/Manager.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -38,32 +26,20 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Classes                                               ]
+	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	class SceneItemMemoryManager : private Manager
+	inline SceneFactory::SceneFactory()
 	{
+		// Nothing here
+	}
 
-
-	//[-------------------------------------------------------]
-	//[ Private methods                                       ]
-	//[-------------------------------------------------------]
-	private:
-		inline SceneItemMemoryManager();
-		inline ~SceneItemMemoryManager();
-		explicit SceneItemMemoryManager(const SceneItemMemoryManager&) = delete;
-		SceneItemMemoryManager& operator=(const SceneItemMemoryManager&) = delete;
-
-
-	};
+	inline SceneFactory::~SceneFactory()
+	{
+		// Nothing here
+	}
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 } // RendererRuntime
-
-
-//[-------------------------------------------------------]
-//[ Implementation                                        ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/Memory/SceneItemMemoryManager.inl"

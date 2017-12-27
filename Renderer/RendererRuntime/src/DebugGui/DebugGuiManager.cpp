@@ -152,7 +152,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	void DebugGuiManager::newFrame(Renderer::IRenderTarget& renderTarget)
+	void DebugGuiManager::newFrame(Renderer::IRenderTarget& renderTarget, CompositorWorkspaceInstance* compositorWorkspaceInstance)
 	{
 		// Startup the debug GUI manager now?
 		if (!mIsRunning)
@@ -171,7 +171,7 @@ namespace RendererRuntime
 		if (mOpenMetricsWindow)
 		{
 			const bool previousOpenMetricsWindow = mOpenMetricsWindow;
-			DebugGuiHelper::drawMetricsWindow(mOpenMetricsWindow);
+			DebugGuiHelper::drawMetricsWindow(mOpenMetricsWindow, compositorWorkspaceInstance);
 			if (previousOpenMetricsWindow != mOpenMetricsWindow)
 			{
 				setOpenMetricsWindowIniSetting();

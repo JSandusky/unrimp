@@ -44,6 +44,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/ImGuizmo/include/
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/OpenVR/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/crunch/inc/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/glm/include/)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/xsimd/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/lz4/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/mikktspace/include/)
 
@@ -67,6 +68,7 @@ set(SOURCE_CODES
 	src/Asset/Loader/AssetPackageLoader.cpp
 	src/Backend/RendererRuntimeImpl.cpp
 	src/Core/Math/Math.cpp
+	src/Core/Math/Frustum.cpp
 	src/Core/Math/EulerAngles.cpp
 	src/Core/Math/Transform.cpp
 	src/Core/Platform/PlatformManager.cpp
@@ -149,8 +151,10 @@ set(SOURCE_CODES
 	src/Resource/Scene/Item/Terrain/TerrainSceneItem.cpp
 	src/Resource/Scene/Loader/SceneResourceLoader.cpp
 	src/Resource/Scene/SceneNode.cpp
+	src/Resource/Scene/ISceneItem.cpp
 	src/Resource/Scene/SceneResource.cpp
 	src/Resource/Scene/SceneResourceManager.cpp
+	src/Resource/Scene/Culling/SceneCullingManager.cpp
 	src/Resource/ShaderBlueprint/Cache/Preprocessor/mojoshader_common.cpp
 	src/Resource/ShaderBlueprint/Cache/Preprocessor/mojoshader_lexer.cpp
 	src/Resource/ShaderBlueprint/Cache/Preprocessor/mojoshader_preprocessor.cpp

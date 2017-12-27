@@ -34,6 +34,38 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline const glm::vec3& MeshResource::getMinimumBoundingBoxPosition() const
+	{
+		return mMinimumBoundingBoxPosition;
+	}
+
+	inline const glm::vec3& MeshResource::getMaximumBoundingBoxPosition() const
+	{
+		return mMaximumBoundingBoxPosition;
+	}
+
+	inline void MeshResource::setBoundingBoxPosition(const glm::vec3& minimumBoundingBoxPosition, const glm::vec3& maximumBoundingBoxPosition)
+	{
+		mMinimumBoundingBoxPosition = minimumBoundingBoxPosition;
+		mMaximumBoundingBoxPosition = maximumBoundingBoxPosition;
+	}
+
+	inline const glm::vec3& MeshResource::getBoundingSpherePosition() const
+	{
+		return mBoundingSpherePosition;
+	}
+
+	inline float MeshResource::getBoundingSphereRadius() const
+	{
+		return mBoundingSphereRadius;
+	}
+
+	inline void MeshResource::setBoundingSpherePositionRadius(const glm::vec3& boundingSpherePosition, float boundingSphereRadius)
+	{
+		mBoundingSpherePosition = boundingSpherePosition;
+		mBoundingSphereRadius = boundingSphereRadius;
+	}
+
 	inline uint32_t MeshResource::getNumberOfVertices() const
 	{
 		return mNumberOfVertices;
@@ -89,8 +121,15 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline MeshResource::MeshResource() :
+		// Bounding
+		mMinimumBoundingBoxPosition(getUninitialized<float>()),
+		mMaximumBoundingBoxPosition(getUninitialized<float>()),
+		mBoundingSpherePosition(getUninitialized<float>()),
+		mBoundingSphereRadius(getUninitialized<float>()),
+		// Vertex and index data
 		mNumberOfVertices(0),
 		mNumberOfIndices(0),
+		// Optional skeleton
 		mSkeletonResourceId(getUninitialized<SkeletonResourceId>())
 	{
 		// Nothing here
@@ -99,6 +138,10 @@ namespace RendererRuntime
 	inline MeshResource::~MeshResource()
 	{
 		// Sanity checks
+		assert(isUninitialized(mMinimumBoundingBoxPosition.x) && isUninitialized(mMinimumBoundingBoxPosition.y) && isUninitialized(mMinimumBoundingBoxPosition.z));
+		assert(isUninitialized(mMaximumBoundingBoxPosition.x) && isUninitialized(mMaximumBoundingBoxPosition.y) && isUninitialized(mMaximumBoundingBoxPosition.z));
+		assert(isUninitialized(mBoundingSpherePosition.x) && isUninitialized(mBoundingSpherePosition.y) && isUninitialized(mBoundingSpherePosition.z));
+		assert(isUninitialized(mBoundingSphereRadius));
 		assert(0 == mNumberOfVertices);
 		assert(0 == mNumberOfIndices);
 		assert(nullptr == mVertexArray.getPointer());
@@ -109,6 +152,10 @@ namespace RendererRuntime
 	inline void MeshResource::initializeElement(MeshResourceId meshResourceId)
 	{
 		// Sanity checks
+		assert(isUninitialized(mMinimumBoundingBoxPosition.x) && isUninitialized(mMinimumBoundingBoxPosition.y) && isUninitialized(mMinimumBoundingBoxPosition.z));
+		assert(isUninitialized(mMaximumBoundingBoxPosition.x) && isUninitialized(mMaximumBoundingBoxPosition.y) && isUninitialized(mMaximumBoundingBoxPosition.z));
+		assert(isUninitialized(mBoundingSpherePosition.x) && isUninitialized(mBoundingSpherePosition.y) && isUninitialized(mBoundingSpherePosition.z));
+		assert(isUninitialized(mBoundingSphereRadius));
 		assert(0 == mNumberOfVertices);
 		assert(0 == mNumberOfIndices);
 		assert(nullptr == mVertexArray.getPointer());
@@ -122,6 +169,16 @@ namespace RendererRuntime
 	inline void MeshResource::deinitializeElement()
 	{
 		// Reset everything
+		setUninitialized(mMinimumBoundingBoxPosition.x);
+		setUninitialized(mMinimumBoundingBoxPosition.y);
+		setUninitialized(mMinimumBoundingBoxPosition.z);
+		setUninitialized(mMaximumBoundingBoxPosition.x);
+		setUninitialized(mMaximumBoundingBoxPosition.y);
+		setUninitialized(mMaximumBoundingBoxPosition.z);
+		setUninitialized(mBoundingSpherePosition.x);
+		setUninitialized(mBoundingSpherePosition.y);
+		setUninitialized(mBoundingSpherePosition.z);
+		setUninitialized(mBoundingSphereRadius);
 		mNumberOfVertices = 0;
 		mNumberOfIndices = 0;
 		mVertexArray = nullptr;

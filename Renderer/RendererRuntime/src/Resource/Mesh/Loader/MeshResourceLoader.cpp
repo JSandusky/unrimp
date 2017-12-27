@@ -69,6 +69,8 @@ namespace RendererRuntime
 		// Read in the mesh header
 		v1Mesh::MeshHeader meshHeader;
 		mMemoryFile.read(&meshHeader, sizeof(v1Mesh::MeshHeader));
+		mMeshResource->setBoundingBoxPosition(meshHeader.minimumBoundingBoxPosition, meshHeader.maximumBoundingBoxPosition);
+		mMeshResource->setBoundingSpherePositionRadius(meshHeader.boundingSpherePosition, meshHeader.boundingSphereRadius);
 		mMeshResource->setNumberOfVertices(meshHeader.numberOfVertices);
 		mMeshResource->setNumberOfIndices(meshHeader.numberOfIndices);
 

@@ -21,6 +21,11 @@
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
+inline void IApplication::exit()
+{
+	mExit = true;
+}
+
 inline void IApplication::getWindowSize(int& width, int& height) const
 {
 	return mApplicationImpl->getWindowSize(width, height);

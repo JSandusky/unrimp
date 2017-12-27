@@ -32,6 +32,14 @@
 
 // Disable warnings in external headers, we can't fix them
 PRAGMA_WARNING_PUSH
+	PRAGMA_WARNING_DISABLE_MSVC(4201)	// warning C4201: nonstandard extension used: nameless struct/union
+	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
+	PRAGMA_WARNING_DISABLE_MSVC(4324)	// warning C4324: '<x>': structure was padded due to alignment specifier
+	#include <glm/glm.hpp>
+PRAGMA_WARNING_POP
+
+// Disable warnings in external headers, we can't fix them
+PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4365)	// warning C4365: 'argument': conversion from 'long' to 'unsigned int', signed/unsigned mismatch
 	PRAGMA_WARNING_DISABLE_MSVC(4571)	// warning C4571: Informational: catch(...) semantics changed since Visual C++ 7.1; structured exceptions (SEH) are no longer caught
 	PRAGMA_WARNING_DISABLE_MSVC(4668)	// warning C4668: '_M_HYBRID_X86_ARM64' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
@@ -96,7 +104,17 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	public:
 		//[-------------------------------------------------------]
-		//[ Data                                                  ]
+		//[ Bounding                                              ]
+		//[-------------------------------------------------------]
+		inline const glm::vec3& getMinimumBoundingBoxPosition() const;
+		inline const glm::vec3& getMaximumBoundingBoxPosition() const;
+		inline void setBoundingBoxPosition(const glm::vec3& minimumBoundingBoxPosition, const glm::vec3& maximumBoundingBoxPosition);
+		inline const glm::vec3& getBoundingSpherePosition() const;
+		inline float getBoundingSphereRadius() const;
+		inline void setBoundingSpherePositionRadius(const glm::vec3& boundingSpherePosition, float boundingSphereRadius);
+
+		//[-------------------------------------------------------]
+		//[ Vertex and index data                                 ]
 		//[-------------------------------------------------------]
 		inline uint32_t getNumberOfVertices() const;
 		inline void setNumberOfVertices(uint32_t numberOfVertices);
@@ -104,8 +122,16 @@ namespace RendererRuntime
 		inline void setNumberOfIndices(uint32_t numberOfIndices);
 		inline Renderer::IVertexArrayPtr getVertexArrayPtr() const;
 		inline void setVertexArray(Renderer::IVertexArray* vertexArray);
+
+		//[-------------------------------------------------------]
+		//[ Sub-meshes                                            ]
+		//[-------------------------------------------------------]
 		inline const SubMeshes& getSubMeshes() const;
 		inline SubMeshes& getSubMeshes();
+
+		//[-------------------------------------------------------]
+		//[ Optional skeleton                                     ]
+		//[-------------------------------------------------------]
 		inline SkeletonResourceId getSkeletonResourceId() const;
 		inline void setSkeletonResourceId(SkeletonResourceId skeletonResourceId);
 
@@ -130,10 +156,18 @@ namespace RendererRuntime
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
+		// Bounding, the bounding sphere radius is enclosing the bounding box (don't use the inner bounding box radius)
+		glm::vec3 mMinimumBoundingBoxPosition;
+		glm::vec3 mMaximumBoundingBoxPosition;
+		glm::vec3 mBoundingSpherePosition;
+		float	  mBoundingSphereRadius;
+		// Vertex and index data
 		uint32_t				  mNumberOfVertices;	///< Number of vertices
 		uint32_t				  mNumberOfIndices;		///< Number of indices
 		Renderer::IVertexArrayPtr mVertexArray;			///< Vertex array object (VAO), can be a null pointer
+		// Sub-meshes
 		SubMeshes				  mSubMeshes;			///< Sub-meshes
+		// Optional skeleton
 		SkeletonResourceId		  mSkeletonResourceId;	///< Resource ID of the used skeleton, can be uninitialized
 
 

@@ -44,6 +44,7 @@ namespace RendererRuntime
 	class Transform;
 	class CameraSceneItem;
 	class SkeletonMeshSceneItem;
+	class CompositorWorkspaceInstance;
 }
 
 
@@ -110,7 +111,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		static void beginFrame();
-		static void drawMetricsWindow(bool& open);
+		static void drawMetricsWindow(bool& open, CompositorWorkspaceInstance* compositorWorkspaceInstance);
 
 
 	//[-------------------------------------------------------]

@@ -93,22 +93,6 @@ namespace RendererRuntime
 	}
 
 
-	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
-	//[-------------------------------------------------------]
-	inline ISceneItem::ISceneItem(SceneResource& sceneResource) :
-		mSceneResource(sceneResource),
-		mParentSceneNode(nullptr)
-	{
-		// Nothing here
-	}
-
-	inline ISceneItem::~ISceneItem()
-	{
-		// Nothing here
-	}
-
-
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
