@@ -372,7 +372,7 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
-		void getVirtualOutputAssetFilenameAndCrunchOutputTextureFileType(const RendererToolkit::IAssetCompiler::Configuration& configuration, const std::string& assetFileFormat, const std::string& assetName, const std::string& virtualAssetOutputDirectory, std::string& virtualOutputAssetFilename, crnlib::texture_file_types::format& crunchOutputTextureFileType)
+		void getVirtualOutputAssetFilenameAndCrunchOutputTextureFileType(const RendererToolkit::IAssetCompiler::Configuration& configuration, const std::string& assetFileFormat, const std::string& assetName, const std::string& virtualAssetOutputDirectory, TextureSemantic textureSemantic, std::string& virtualOutputAssetFilename, crnlib::texture_file_types::format& crunchOutputTextureFileType)
 		{
 			const rapidjson::Value& rapidJsonValueTargets = configuration.rapidJsonValueTargets;
 
@@ -404,6 +404,12 @@ namespace
 				{
 					crunchOutputTextureFileType = crnlib::texture_file_types::cFormatKTX;
 				}
+			}
+
+			// Handle DDS LZ4 compression
+			if (::detail::TextureSemantic::TERRAIN_HEIGHT_MAP == textureSemantic)
+			{
+				RendererToolkit::StringHelper::replaceFirstString(virtualOutputAssetFilename, ".dds", ".lz4dds");
 			}
 		}
 
@@ -1386,7 +1392,7 @@ namespace
 			delete [] destinationData;
 		}
 
-		void convertTerrainHeightMap(RendererRuntime::IFileManager& fileManager, RendererRuntime::VirtualFilename virtualSourceFilename, std::string& virtualDestinationFilename)
+		void convertTerrainHeightMap(RendererRuntime::IFileManager& fileManager, RendererRuntime::VirtualFilename virtualSourceFilename, RendererRuntime::VirtualFilename virtualDestinationFilename)
 		{
 			// Load the 2D source image
 			FileDataStreamSerializer fileDataStreamSerializer(fileManager, RendererRuntime::IFileManager::FileMode::READ, virtualSourceFilename);
@@ -1427,8 +1433,7 @@ namespace
 					memoryFile.write("DDS ", sizeof(uint32_t));
 					memoryFile.write(reinterpret_cast<const char*>(&ddsSurfaceDesc2), sizeof(crnlib::DDSURFACEDESC2));
 					memoryFile.write(pData, sizeof(stbi_us) * numberOfTexelsPerLayer);
-					RendererToolkit::StringHelper::replaceFirstString(virtualDestinationFilename, ".dds", ".lz4dds");
-					memoryFile.writeLz4CompressedDataByVirtualFilename(RendererRuntime::Lz4DdsTextureResourceLoader::FORMAT_TYPE, RendererRuntime::Lz4DdsTextureResourceLoader::FORMAT_VERSION, fileManager, virtualDestinationFilename.c_str());
+					memoryFile.writeLz4CompressedDataByVirtualFilename(RendererRuntime::Lz4DdsTextureResourceLoader::FORMAT_TYPE, RendererRuntime::Lz4DdsTextureResourceLoader::FORMAT_VERSION, fileManager, virtualDestinationFilename);
 
 					// Free temporary memory
 					stbi_image_free(pData);
@@ -1514,11 +1519,7 @@ namespace RendererToolkit
 		// Get output related settings
 		std::string virtualOutputAssetFilename;
 		crnlib::texture_file_types::format crunchOutputTextureFileType = crnlib::texture_file_types::cFormatCRN;
-		::detail::getVirtualOutputAssetFilenameAndCrunchOutputTextureFileType(configuration, assetFileFormat, assetName, input.virtualAssetOutputDirectory, virtualOutputAssetFilename, crunchOutputTextureFileType);
-		if (::detail::TextureSemantic::TERRAIN_HEIGHT_MAP == textureSemantic)
-		{
-			StringHelper::replaceFirstString(virtualOutputAssetFilename, ".dds", ".lz4dds");
-		}
+		::detail::getVirtualOutputAssetFilenameAndCrunchOutputTextureFileType(configuration, assetFileFormat, assetName, input.virtualAssetOutputDirectory, textureSemantic, virtualOutputAssetFilename, crunchOutputTextureFileType);
 
 		// Check if changed
 		std::vector<CacheManager::CacheEntries> cacheEntries;
@@ -1594,7 +1595,7 @@ namespace RendererToolkit
 		// Get output related settings
 		std::string virtualOutputAssetFilename;
 		crnlib::texture_file_types::format crunchOutputTextureFileType = crnlib::texture_file_types::cFormatCRN;
-		::detail::getVirtualOutputAssetFilenameAndCrunchOutputTextureFileType(configuration, assetFileFormat, assetName, input.virtualAssetOutputDirectory, virtualOutputAssetFilename, crunchOutputTextureFileType);
+		::detail::getVirtualOutputAssetFilenameAndCrunchOutputTextureFileType(configuration, assetFileFormat, assetName, input.virtualAssetOutputDirectory, textureSemantic, virtualOutputAssetFilename, crunchOutputTextureFileType);
 
 		// Ask the cache manager whether or not we need to compile the source file (e.g. source changed or target not there)
 		std::vector<CacheManager::CacheEntries> cacheEntries;
@@ -1606,7 +1607,7 @@ namespace RendererToolkit
 			}
 			else if (::detail::TextureSemantic::TERRAIN_HEIGHT_MAP == textureSemantic)
 			{
-				detail::convertTerrainHeightMap(input.context.getFileManager(), virtualInputAssetFilename.c_str(), virtualOutputAssetFilename);
+				detail::convertTerrainHeightMap(input.context.getFileManager(), virtualInputAssetFilename.c_str(), virtualOutputAssetFilename.c_str());
 			}
 			else
 			{
