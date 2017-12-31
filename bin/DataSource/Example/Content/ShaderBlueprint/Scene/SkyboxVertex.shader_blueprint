@@ -47,7 +47,10 @@ struct PassDataStruct
 	float4   HosekWilkieSkyCoefficients1[4];
 	float4   HosekWilkieSkyCoefficients2[4];
 	float3   WorldSpaceSunlightDirection;
+	float    GlobalTimeInSeconds;
 	float2   ViewportSize;
+	float	 CloudsIntensity;
+	float	 WindSpeed;
 };
 UNIFORM_BUFFER_BEGIN(0, 0, PassUniformBuffer, 0)
 	PassDataStruct PassData;

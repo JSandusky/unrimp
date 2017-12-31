@@ -31,6 +31,33 @@
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "Unrimp/Texture/DynamicByCode/BlackMapCube",
 				"Description": "Environment cube map, only used if no procedural sky is used"
+			},
+			"CloudsMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "$ProjectName/Texture/Compositor/TileableCloudPatterns.asset",
+				"Description": "Clouds map, only used if procedural sky is used"
+			},
+			"GlobalCloudsIntensity":
+			{
+				"Usage": "GLOBAL_REFERENCE_FALLBACK",
+				"ValueType": "FLOAT",
+				"Value": "1.0",
+				"MinimumValue": "0.0",
+				"MaximumValue": "1.0",
+				"StepSize": "0.01",
+				"Description": "Fallback value in case there's no clouds intensity global material property"
+			},
+			"GlobalWindSpeed":
+			{
+				"Usage": "GLOBAL_REFERENCE_FALLBACK",
+				"ValueType": "FLOAT",
+				"Value": "0.01",
+				"MinimumValue": "0.0",
+				"MaximumValue": "1.0",
+				"StepSize": "0.01",
+				"Description": "Fallback value in case there's no wind speed global material property"
 			}
 		},
 		"PipelineState":
@@ -100,11 +127,29 @@
 							"ValueType": "FLOAT_3",
 							"Value": "@WORLD_SPACE_SUNLIGHT_DIRECTION"
 						},
+						"GlobalTimeInSeconds":
+						{
+							"Usage": "GLOBAL_REFERENCE",
+							"ValueType": "FLOAT",
+							"Value": "@GlobalTimeInSeconds"
+						},
 						"ViewportSize":
 						{
 							"Usage": "PASS_REFERENCE",
 							"ValueType": "FLOAT_2",
 							"Value": "@VIEWPORT_SIZE"
+						},
+						"CloudsIntensity":
+						{
+							"Usage": "GLOBAL_REFERENCE",
+							"ValueType": "FLOAT",
+							"Value": "@GlobalCloudsIntensity"
+						},
+						"WindSpeed":
+						{
+							"Usage": "GLOBAL_REFERENCE",
+							"ValueType": "FLOAT",
+							"Value": "@GlobalWindSpeed"
 						}
 					}
 				}
@@ -122,20 +167,40 @@
 					"Value": "@EnvironmentCubeMap",
 					"FallbackTexture": "Unrimp/Texture/DynamicByCode/BlackMapCube",
 					"RgbHardwareGammaCorrection": "TRUE",
-					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
+					"SamplerStateBaseShaderRegisterName": "SamplerLinearClamp"
+				},
+				"1":
+				{
+					"BaseShaderRegisterName": "CloudsMap",
+					"BaseShaderRegister": "1",
+					"ShaderVisibility": "FRAGMENT",
+					"ResourceType": "TEXTURE",
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@CloudsMap",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/BlackMap2D",
+					"RgbHardwareGammaCorrection": "TRUE",
+					"SamplerStateBaseShaderRegisterName": "SamplerLinearWrap"
 				}
 			},
 			"2":
 			{
 				"0":
 				{
-					"BaseShaderRegisterName": "SamplerLinear",
+					"BaseShaderRegisterName": "SamplerLinearClamp",
 					"BaseShaderRegister": "0",
 					"ShaderVisibility": "FRAGMENT",
+					"ResourceType": "SAMPLER_STATE"
+				},
+				"1":
+				{
+					"BaseShaderRegisterName": "SamplerLinearWrap",
+					"BaseShaderRegister": "1",
+					"ShaderVisibility": "FRAGMENT",
 					"ResourceType": "SAMPLER_STATE",
-					"AddressU": "CLAMP",
-					"AddressV": "CLAMP",
-					"AddressW": "CLAMP"
+					"AddressU": "WRAP",
+					"AddressV": "WRAP",
+					"AddressW": "WRAP"
 				}
 			}
 		}

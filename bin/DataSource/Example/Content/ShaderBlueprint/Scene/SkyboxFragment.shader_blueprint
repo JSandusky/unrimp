@@ -49,18 +49,28 @@ struct PassDataStruct
 	float4   HosekWilkieSkyCoefficients1[4];
 	float4   HosekWilkieSkyCoefficients2[4];
 	float3   WorldSpaceSunlightDirection;
+	float    GlobalTimeInSeconds;
 	float2   ViewportSize;
+	float	 CloudsIntensity;
+	float	 WindSpeed;
 };
 UNIFORM_BUFFER_BEGIN(0, 0, PassUniformBuffer, 0)
 	PassDataStruct PassData;
 UNIFORM_BUFFER_END
 
+@property(UseProceduralSky)
+	// Textures
+	TEXTURE_2D(1, 1, CloudsMap, 1)
+
+	// Samplers
+	SAMPLER_STATE(2, 1, SamplerLinearWrap, 1)
+@end
 @property(!UseProceduralSky)
 	// Textures
 	TEXTURE_CUBE(1, 0, EnvironmentCubeMap, 0)
 
 	// Samplers
-	SAMPLER_STATE(2, 0, SamplerLinear, 0)
+	SAMPLER_STATE(2, 0, SamplerLinearClamp, 0)
 @end
 
 
@@ -136,11 +146,29 @@ UNIFORM_BUFFER_END
 MAIN_BEGIN
 	// Calculate the sky color
 	@property(UseProceduralSky)
+		// Sky
 		float3 color = CalculateHosekWilkieSkyColor(normalize(MAIN_INPUT(TexCoordVS)));
+
+		// Distance clouds
+		if (MAIN_INPUT(TexCoordVS).y > 0.0f)
+		{
+			float3 texCoord = MAIN_INPUT(TexCoordVS);
+			texCoord.y = texCoord.y * 10.0f;
+			texCoord.xz = normalize(texCoord).xz;
+			float horizonFade = SATURATE(pow(abs(texCoord.y), 1.0f));
+			float sunIntensity = (1.0f - PassData.WorldSpaceSunlightDirection.y) * SATURATE(dot(PassData.WorldSpaceSunlightDirection, MAIN_INPUT(TexCoordVS)));
+			float speed = PassData.GlobalTimeInSeconds * PassData.WindSpeed;
+			float cloudsIntensity = PassData.CloudsIntensity * horizonFade * SAMPLE_2D(CloudsMap, SamplerLinearWrap, texCoord.xz + float2(0.1f, 0.3f) * speed).r;
+			cloudsIntensity *= horizonFade * SAMPLE_2D(CloudsMap, SamplerLinearWrap, texCoord.xz + float2(0.35f, 0.45f) * speed).r;
+
+			// Color mixing basing on Shadertoy "Canyon" by Inigo Quilez ( https://www.shadertoy.com/view/MdBGzG )
+			float3 cloudsColor = LERP(float3(0.4f, 0.5f, 0.6f), float3(1.3f, 0.6f, 0.4f), pow(sunIntensity, 2.0f)) * (0.5f + 0.5f * cloudsIntensity);
+			color = LERP(color, cloudsColor, 0.5f * smoothstep(0.4f, 1.0f, cloudsIntensity));
+		}
 	@end
 	@property(!UseProceduralSky)
 		// Sample the environment cube map
-		float3 color = SAMPLE_CUBE_LOD(EnvironmentCubeMap, SamplerLinear, float4(-MAIN_INPUT(TexCoordVS), 0.0f)).rgb;
+		float3 color = SAMPLE_CUBE_LOD(EnvironmentCubeMap, SamplerLinearClamp, float4(-MAIN_INPUT(TexCoordVS), 0.0f)).rgb;
 	@end
 
 	// Calculate screen space velocity

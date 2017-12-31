@@ -50,7 +50,7 @@ namespace RendererRuntime
 			// No one likes huge time jumps
 			mPastSecondsSinceLastFrame = 0.06f;
 		}
-		mGlobalTimeInSeconds += mPastSecondsSinceLastFrame;
+		mGlobalTimeInSeconds += mPastSecondsSinceLastFrame;	// TODO(co) Add some kind of wrapping to avoid that issues with a too huge global time can come up?
 		++mNumberOfRenderedFrames;
 
 		// Start the stopwatch

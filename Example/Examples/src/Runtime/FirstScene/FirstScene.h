@@ -191,6 +191,8 @@ private:
 	int		   mCurrentTextureFiltering;
 	int		   mNumberOfTopTextureMipmapsToRemove;
 	// Environment
+	float	   mCloudsIntensity;
+	float	   mWindSpeed;
 	float	   mWetness;
 	// Post processing
 	bool	   mPerformFxaa;

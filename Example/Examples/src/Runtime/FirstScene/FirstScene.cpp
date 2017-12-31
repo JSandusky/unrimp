@@ -110,6 +110,8 @@ FirstScene::FirstScene() :
 	mCurrentTextureFiltering(TextureFiltering::ANISOTROPIC_4),
 	mNumberOfTopTextureMipmapsToRemove(0),
 	// Environment
+	mCloudsIntensity(1.0f),
+	mWindSpeed(0.01f),
 	mWetness(0.0f),
 	// Post processing
 	mPerformFxaa(false),
@@ -289,6 +291,8 @@ void FirstScene::onUpdate()
 		{ // Tell the material blueprint resource manager about our global material properties
 			RendererRuntime::MaterialProperties& globalMaterialProperties = rendererRuntime->getMaterialBlueprintResourceManager().getGlobalMaterialProperties();
 			globalMaterialProperties.setPropertyById("GlobalHighQualityLighting", RendererRuntime::MaterialPropertyValue::fromBoolean(mHighQualityLighting));
+			globalMaterialProperties.setPropertyById("GlobalCloudsIntensity", RendererRuntime::MaterialPropertyValue::fromFloat(mCloudsIntensity));
+			globalMaterialProperties.setPropertyById("GlobalWindSpeed", RendererRuntime::MaterialPropertyValue::fromFloat(mWindSpeed));
 			globalMaterialProperties.setPropertyById("GlobalWetness", RendererRuntime::MaterialPropertyValue::fromFloat(mWetness));
 		}
 
@@ -593,6 +597,8 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 						ImGui::SliderFloat("Time of Day", &timeOfDay, 0.0f, 23.59f, "%.2f");
 						mSunlightSceneItem->setTimeOfDay(timeOfDay);
 					}
+					ImGui::SliderFloat("Clouds Intensity", &mCloudsIntensity, 0.0f, 10.0f, "%.3f");
+					ImGui::SliderFloat("Wind Speed", &mWindSpeed, 0.0f, 1.0f, "%.3f");
 					ImGui::SliderFloat("Wetness", &mWetness, 0.0f, 2.0f, "%.3f");
 					ImGui::EndMenu();
 				}

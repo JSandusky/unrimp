@@ -130,9 +130,11 @@ Renderer Runtime (e.g. "The Game")
 	- Types: Directional, point and spot
 	- High-level sunlight controlled via time-of-day
 - Skeleton animation
-- Skybox
-	- Classic environment cube map
-	- Procedural Hosek-Wilkie sky which is also used to derive a sun color
+- Sky
+	- Classic environment cube map skybox
+	- Procedural sky
+		- Hosek-Wilkie sky which is also used to derive a sun color
+		- Distance clouds
 
 
 Renderer Toolkit (e.g. "The Editor")
@@ -152,7 +154,7 @@ Renderer Toolkit (e.g. "The Editor")
 	- Support for creating a cube-map out of six provided individual textures
 	- Support for 2D-LUT to 3D-LUT conversion
 	- Support for texture channel packing
-	- Toksvig specular anti-aliasing to reduce shimmering/sparkling via texture modifiations during texture asset compilation
+	- Toksvig specular anti-aliasing basing on ["Specular Showdown in the Wild West"](http://blog.selfshadow.com/2011/07/22/specular-showdown/) by Stephen Hill to reduce shimmering/sparkling via texture modifiations during texture asset compilation
 - [Sketchfab](https://sketchfab.com/) asset importer without the need to unzip the downloaded meshes first
 
 
