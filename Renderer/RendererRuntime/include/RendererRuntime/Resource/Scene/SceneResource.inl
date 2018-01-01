@@ -35,15 +35,6 @@ namespace RendererRuntime
 		return *mSceneCullingManager;
 	}
 
-	inline void SceneResource::destroyAllSceneNodesAndItems()
-	{
-		destroyAllSceneNodes();
-		destroyAllSceneItems();
-
-		// Update the resource loading state
-		setLoadingState(IResource::LoadingState::UNLOADED);
-	}
-
 	inline const SceneResource::SceneNodes& SceneResource::getSceneNodes() const
 	{
 		return mSceneNodes;

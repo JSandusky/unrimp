@@ -99,7 +99,7 @@ namespace RendererRuntime
 	public:
 		RENDERERRUNTIME_API_EXPORT IRendererRuntime& getRendererRuntime() const;
 		inline SceneCullingManager& getSceneCullingManager() const;
-		inline void destroyAllSceneNodesAndItems();
+		RENDERERRUNTIME_API_EXPORT void destroyAllSceneNodesAndItems();
 
 		//[-------------------------------------------------------]
 		//[ Node                                                  ]

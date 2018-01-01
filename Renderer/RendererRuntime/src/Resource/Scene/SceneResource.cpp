@@ -46,6 +46,20 @@ namespace RendererRuntime
 		return getResourceManager<SceneResourceManager>().getRendererRuntime();
 	}
 
+	void SceneResource::destroyAllSceneNodesAndItems()
+	{
+		destroyAllSceneNodes();
+		destroyAllSceneItems();
+
+		// TODO(co) The following is just for culling kickoff and won't stay this way
+		// Re-create scene culling manager
+		delete mSceneCullingManager;
+		mSceneCullingManager = new SceneCullingManager();
+
+		// Update the resource loading state
+		setLoadingState(IResource::LoadingState::UNLOADED);
+	}
+
 	SceneNode* SceneResource::createSceneNode(const Transform& transform)
 	{
 		SceneNode* sceneNode = new SceneNode(transform);
