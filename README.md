@@ -8,9 +8,9 @@ This project is currently still heavy under construction and not usable for prod
 
 Unrimp Description
 ======
-Unified renderer implementation ("Un r imp"). Extensive examples from basic to advanced are provided as well. Originally started as modern renderer replacement for the [PixelLight](https://github.com/PixelLightFoundation/pixellight) engine.
+Unified renderer implementation ("Un r imp"). Extensive examples from basic to advanced are provided as well. Originally started as modern renderer replacement for the [PixelLight](https://github.com/PixelLightFoundation/pixellight) engine which was in active development between 2002-2012.
 
-The first public source code release after starting the project on Friday, 1 June 2012 was on January 03, 2013.
+The first public Unrimp source code release after starting the project on Friday, 1 June 2012 was on January 03, 2013.
 
 
 Features
@@ -280,7 +280,7 @@ The unified renderer interface can't unify some graphics API behaviour differenc
 
 [MIT License](https://opensource.org/licenses/MIT)
 ======
-Copyright (c) 2012-2017 The Unrimp Team
+Copyright (c) 2012-2018 The Unrimp Team
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
