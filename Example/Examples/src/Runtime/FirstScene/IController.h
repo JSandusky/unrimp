@@ -132,6 +132,18 @@ public:
 	*/
 	void onMouseMove(int x, int y);
 
+	/**
+	*  @brief
+	*    Return whether or not mouse control is currently activily used (e.g. for looking around)
+	*
+	*  @return
+	*    "true" if the mouse control is currently activily used (e.g. for looking around), else "false"
+	*
+	*  @note
+	*    - This can be used to avoid that while looking around with the mouse the mouse is becoming considered hovering over an GUI element
+	*/
+	bool isMouseControlInProgress() const;
+
 
 //[-------------------------------------------------------]
 //[ Public virtual IController methods                    ]
@@ -186,6 +198,7 @@ protected:
 	int								  mMousePositionY;
 	int								  mMouseMoveX;
 	int								  mMouseMoveY;
+	bool							  mMouseControlInProgress;
 
 
 };

@@ -92,6 +92,11 @@ void IController::onMouseMove(int x, int y)
 	mMousePositionY = y;
 }
 
+bool IController::isMouseControlInProgress() const
+{
+	return mMouseControlInProgress;
+}
+
 
 //[-------------------------------------------------------]
 //[ Public virtual IController methods                    ]
@@ -113,7 +118,8 @@ IController::IController(RendererRuntime::CameraSceneItem& cameraSceneItem) :
 	mMousePositionX(RendererRuntime::getUninitialized<int>()),
 	mMousePositionY(RendererRuntime::getUninitialized<int>()),
 	mMouseMoveX(0),
-	mMouseMoveY(0)
+	mMouseMoveY(0),
+	mMouseControlInProgress(false)
 {
 	// Nothing here
 }

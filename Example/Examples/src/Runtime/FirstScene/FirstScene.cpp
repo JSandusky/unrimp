@@ -786,5 +786,9 @@ void FirstScene::trySetCustomMaterialResource()
 
 bool FirstScene::isControllerValid() const
 {
-	return (nullptr != mController && !ImGui::IsAnyWindowHovered());
+	// Simple GUI <-> ingame input distribution
+	// -> While the mouse is hovering over an GUI element, disable the ingame controller
+	// -> Avoid that while looking around with the mouse the mouse is becoming considered hovering over an GUI element
+	// -> Remember: Unrimp is about rendering related topics, it's not an all-in-one-framework inluding an advanced input framework, so a simple non-generic solution is sufficient in here
+	return (nullptr != mController && (mController->isMouseControlInProgress() || !ImGui::IsAnyWindowHovered()));
 }

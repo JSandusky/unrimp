@@ -81,6 +81,8 @@ FreeCameraController::~FreeCameraController()
 //[-------------------------------------------------------]
 void FreeCameraController::onUpdate(float pastSecondsSinceLastFrame)
 {
+	mMouseControlInProgress = false;
+
 	// Sanity check: No negative time, no useless update calls
 	assert(pastSecondsSinceLastFrame > 0.0f);
 
@@ -173,51 +175,57 @@ void FreeCameraController::onUpdate(float pastSecondsSinceLastFrame)
 		}
 
 		// Mouse: Camera look around = right mouse button pressed down + mouse move
-		if (isMouseButtonPressed(1) && (0 != mMouseMoveX || 0 != mMouseMoveY))
+		if (isMouseButtonPressed(1))
 		{
-			// Get the rotation speed
-			// -> Slow down
-			float rotationSpeed = ::detail::ROTATION_SPEED;
-			if (isKeyPressed(IApplication::Q_KEY))
+			mMouseControlInProgress = true;
+			if (0 != mMouseMoveX || 0 != mMouseMoveY)
 			{
-				rotationSpeed *= ::detail::SLOW_ROTATION_FACTOR;
+				// Get the rotation speed
+				// -> Slow down
+				float rotationSpeed = ::detail::ROTATION_SPEED;
+				if (isKeyPressed(IApplication::Q_KEY))
+				{
+					rotationSpeed *= ::detail::SLOW_ROTATION_FACTOR;
+				}
+
+				// Calculate yaw and pitch from transformation
+				// -> GLM 0.9.9.0 "glm::yaw()" and "glm::pitch" behave odd, so "RendererRuntime::EulerAngles::matrixToEuler()" is used instead
+				// -> See discussion at https://github.com/g-truc/glm/issues/569
+				float yaw = 0.0f, pitch = 0.0f;
+				{
+					const glm::vec3 eulerAngles = RendererRuntime::EulerAngles::matrixToEuler(glm::mat3_cast(transform.rotation));
+					yaw = glm::degrees(eulerAngles.x);
+					pitch = glm::degrees(eulerAngles.y);
+				}
+
+				// Apply rotation change
+				if (0 != mMouseMoveX)
+				{
+					// X rotation axis: Update yaw (also called 'heading', change is turning to the left or right) - in degrees
+					yaw += mMouseMoveX * rotationSpeed;
+
+					// Limit the yaw (too huge values may cause problems, so, bring them into a well known interval)
+					yaw = RendererRuntime::Math::wrapToInterval(yaw, 0.0f, 360.0f);
+				}
+				if (0 != mMouseMoveY)
+				{
+					// Y rotation axis: Update pitch (also called 'bank', change is moving the nose down and the tail up or vice-versa) - in degrees
+					pitch += mMouseMoveY * rotationSpeed;
+
+					// Limit the pitch (no full 90° to avoid dead angles)
+					pitch = glm::clamp(pitch, -89.9f, +89.9f);
+				}
+
+				// Update the camera scene node rotation
+				newRotation = glm::quat(glm::vec3(glm::radians(pitch), glm::radians(yaw), 0.0f));
 			}
-
-			// Calculate yaw and pitch from transformation
-			// -> GLM 0.9.9.0 "glm::yaw()" and "glm::pitch" behave odd, so "RendererRuntime::EulerAngles::matrixToEuler()" is used instead
-			// -> See discussion at https://github.com/g-truc/glm/issues/569
-			float yaw = 0.0f, pitch = 0.0f;
-			{
-				const glm::vec3 eulerAngles = RendererRuntime::EulerAngles::matrixToEuler(glm::mat3_cast(transform.rotation));
-				yaw = glm::degrees(eulerAngles.x);
-				pitch = glm::degrees(eulerAngles.y);
-			}
-
-			// Apply rotation change
-			if (0 != mMouseMoveX)
-			{
-				// X rotation axis: Update yaw (also called 'heading', change is turning to the left or right) - in degrees
-				yaw += mMouseMoveX * rotationSpeed;
-
-				// Limit the yaw (too huge values may cause problems, so, bring them into a well known interval)
-				yaw = RendererRuntime::Math::wrapToInterval(yaw, 0.0f, 360.0f);
-			}
-			if (0 != mMouseMoveY)
-			{
-				// Y rotation axis: Update pitch (also called 'bank', change is moving the nose down and the tail up or vice-versa) - in degrees
-				pitch += mMouseMoveY * rotationSpeed;
-
-				// Limit the pitch (no full 90° to avoid dead angles)
-				pitch = glm::clamp(pitch, -89.9f, +89.9f);
-			}
-
-			// Update the camera scene node rotation
-			newRotation = glm::quat(glm::vec3(glm::radians(pitch), glm::radians(yaw), 0.0f));
 		}
 
 		// Mouse: Zoom = middle mouse button pressed
 		if (isMouseButtonPressed(2))
 		{
+			mMouseControlInProgress = true;
+
 			// Zoom in
 			float fovY = mCameraSceneItem.getFovY();
 			if (fovY > ::detail::ZOOM_FOV_Y)
