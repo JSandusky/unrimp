@@ -50,6 +50,7 @@ PRAGMA_WARNING_PUSH
 	#include <string>
 	#include <vector>
 	#include <unordered_map>
+	#include <unordered_set>
 PRAGMA_WARNING_POP
 
 
@@ -78,9 +79,11 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef RendererRuntime::StringId AssetCompilerTypeId;								///< Asset compiler type identifier, internally just a POD "uint32_t"
-	typedef std::unordered_map<uint32_t, uint32_t> SourceAssetIdToCompiledAssetId;		///< Key = source asset ID, value = compiled asset ID ("AssetId"-type not used directly or we would need to define a hash-function for it)
+	typedef RendererRuntime::StringId				  AssetCompilerTypeId;				///< Asset compiler type identifier, internally just a POD "uint32_t"
+	typedef std::unordered_map<uint32_t, uint32_t>	  SourceAssetIdToCompiledAssetId;	///< Key = source asset ID, value = compiled asset ID ("AssetId"-type not used directly or we would need to define a hash-function for it)
+	typedef std::unordered_map<uint32_t, uint32_t>	  CompiledAssetIdToSourceAssetId;	///< Key = compiled asset ID, value = source asset ID ("AssetId"-type not used directly or we would need to define a hash-function for it)
 	typedef std::unordered_map<uint32_t, std::string> SourceAssetIdToVirtualFilename;	///< Key = source asset ID, virtual asset filename
+	typedef std::unordered_set<uint32_t>			  DefaultTextureAssetIds;			///< "RendererRuntime::AssetId"-type for compiled asset IDs
 
 	/**
 	*  @brief
@@ -125,10 +128,13 @@ namespace RendererToolkit
 			const std::string						virtualAssetInputDirectory;			///< Without "/" at the end
 			const std::string						virtualAssetOutputDirectory;		///< Without "/" at the end
 			const SourceAssetIdToCompiledAssetId&	sourceAssetIdToCompiledAssetId;
+			const CompiledAssetIdToSourceAssetId&	compiledAssetIdToSourceAssetId;
 			const SourceAssetIdToVirtualFilename&	sourceAssetIdToVirtualFilename;
+			const DefaultTextureAssetIds&			defaultTextureAssetIds;
 
 			Input() = delete;
-			Input(const Context& _context, const std::string _projectName, CacheManager& _cacheManager, const std::string& _virtualAssetPackageInputDirectory, const std::string& _virtualAssetFilename, const std::string& _virtualAssetInputDirectory, const std::string& _virtualAssetOutputDirectory, const SourceAssetIdToCompiledAssetId& _sourceAssetIdToCompiledAssetId, const SourceAssetIdToVirtualFilename& _sourceAssetIdToVirtualFilename) :
+			Input(const Context& _context, const std::string _projectName, CacheManager& _cacheManager, const std::string& _virtualAssetPackageInputDirectory, const std::string& _virtualAssetFilename, const std::string& _virtualAssetInputDirectory,
+				  const std::string& _virtualAssetOutputDirectory, const SourceAssetIdToCompiledAssetId& _sourceAssetIdToCompiledAssetId, const CompiledAssetIdToSourceAssetId& _compiledAssetIdToSourceAssetId, const SourceAssetIdToVirtualFilename& _sourceAssetIdToVirtualFilename, const DefaultTextureAssetIds& _defaultTextureAssetIds) :
 				context(_context),
 				projectName(_projectName),
 				cacheManager(_cacheManager),
@@ -137,7 +143,9 @@ namespace RendererToolkit
 				virtualAssetInputDirectory(_virtualAssetInputDirectory),
 				virtualAssetOutputDirectory(_virtualAssetOutputDirectory),
 				sourceAssetIdToCompiledAssetId(_sourceAssetIdToCompiledAssetId),
-				sourceAssetIdToVirtualFilename(_sourceAssetIdToVirtualFilename)
+				compiledAssetIdToSourceAssetId(_compiledAssetIdToSourceAssetId),
+				sourceAssetIdToVirtualFilename(_sourceAssetIdToVirtualFilename),
+				defaultTextureAssetIds(_defaultTextureAssetIds)
 			{
 				// Nothing here
 			}
@@ -168,6 +176,30 @@ namespace RendererToolkit
 					throw std::runtime_error(std::string("Source asset ID ") + std::to_string(sourceAssetId) + " is unknown");
 				}
 				return '\"' + iterator->second + "\" (ID = " + std::to_string(sourceAssetId) + ')';
+			}
+			const std::string& sourceAssetIdToVirtualAssetFilename(uint32_t sourceAssetId) const
+			{
+				SourceAssetIdToVirtualFilename::const_iterator iterator = sourceAssetIdToVirtualFilename.find(sourceAssetId);
+				if (sourceAssetIdToVirtualFilename.cend() != iterator)
+				{
+					return iterator->second;
+				}
+				else
+				{
+					throw std::runtime_error("Failed to map source asset ID " + std::to_string(sourceAssetId) + " to virtual asset filename");
+				}
+			}
+			const std::string& compiledAssetIdToVirtualAssetFilename(uint32_t compiledAssetId) const
+			{
+				// Map compiled asset ID to source asset ID
+				CompiledAssetIdToSourceAssetId::const_iterator iterator = compiledAssetIdToSourceAssetId.find(compiledAssetId);
+				if (iterator == compiledAssetIdToSourceAssetId.cend())
+				{
+					throw std::runtime_error(std::string("Compiled asset ID ") + std::to_string(compiledAssetId) + " is unknown");
+				}
+
+				// Map source asset ID to virtual asset filename
+				return sourceAssetIdToVirtualAssetFilename(iterator->second);
 			}
 
 			Input(const Input&) = delete;

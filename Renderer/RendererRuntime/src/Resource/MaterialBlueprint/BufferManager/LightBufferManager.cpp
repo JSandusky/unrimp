@@ -72,6 +72,22 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public static methods                                 ]
+	//[-------------------------------------------------------]
+	void LightBufferManager::getDefaultTextureAssetIds(AssetIds& assetIds)
+	{
+		// Define helper macros
+		#define ADD_ASSET_ID(name) assetIds.push_back(AssetId(name));
+
+		// Add asset IDs
+		ADD_ASSET_ID("Unrimp/Texture/DynamicByCode/LightClustersMap3D")
+
+		// Undefine helper macros
+		#undef ADD_ASSET_ID
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	LightBufferManager::LightBufferManager(IRendererRuntime& rendererRuntime) :

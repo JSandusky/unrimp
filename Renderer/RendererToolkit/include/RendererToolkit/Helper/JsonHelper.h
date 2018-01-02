@@ -99,7 +99,6 @@ namespace RendererToolkit
 		static void optionalCompiledAssetId(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValue, const char* propertyName, RendererRuntime::AssetId& compiledAssetId);
 		static RendererRuntime::AssetId getCompiledAssetId(const IAssetCompiler::Input& input, const rapidjson::Value& rapidJsonValue, const char* propertyName);
 		static Renderer::TextureFormat::Enum mandatoryTextureFormat(const rapidjson::Value& rapidJsonValue);
-		static const std::string& getVirtualAssetFilename(const IAssetCompiler::Input& input, uint32_t sourceAssetId);	// TODO(co) Move this elsewhere? (not JSON related)
 
 
 	//[-------------------------------------------------------]

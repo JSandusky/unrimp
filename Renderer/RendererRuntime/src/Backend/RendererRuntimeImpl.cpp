@@ -37,6 +37,8 @@
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Cache/PipelineStateCompiler.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/LightBufferManager.h"
+#include "RendererRuntime/Resource/MaterialBlueprint/Listener/MaterialBlueprintResourceListener.h"
 #include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/Skeleton/SkeletonResourceManager.h"
 #include "RendererRuntime/Resource/SkeletonAnimation/SkeletonAnimationResourceManager.h"
@@ -136,6 +138,18 @@ namespace
 //[-------------------------------------------------------]
 namespace RendererRuntime
 {
+
+
+	//[-------------------------------------------------------]
+	//[ Public static methods                                 ]
+	//[-------------------------------------------------------]
+	void RendererRuntimeImpl::getDefaultTextureAssetIds(AssetIds& assetIds)
+	{
+		TextureResourceManager::getDefaultTextureAssetIds(assetIds);
+		MaterialBlueprintResourceListener::getDefaultTextureAssetIds(assetIds);
+		LightBufferManager::getDefaultTextureAssetIds(assetIds);
+		DebugGuiManager::getDefaultTextureAssetIds(assetIds);
+	}
 
 
 	//[-------------------------------------------------------]

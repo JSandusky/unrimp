@@ -1017,19 +1017,6 @@ namespace RendererToolkit
 		#undef ELSE_IF_VALUE
 	}
 
-	const std::string& JsonHelper::getVirtualAssetFilename(const IAssetCompiler::Input& input, uint32_t sourceAssetId)
-	{
-		SourceAssetIdToVirtualFilename::const_iterator iterator = input.sourceAssetIdToVirtualFilename.find(sourceAssetId);
-		if (input.sourceAssetIdToVirtualFilename.cend() != iterator)
-		{
-			return iterator->second;
-		}
-		else
-		{
-			throw std::runtime_error("Failed to map source asset ID " + std::to_string(sourceAssetId) + " to virtual asset filename");
-		}
-	}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

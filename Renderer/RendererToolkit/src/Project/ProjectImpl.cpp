@@ -43,6 +43,7 @@
 #include "RendererToolkit/Context.h"
 
 #include <RendererRuntime/IRendererRuntime.h>
+#include <RendererRuntime/Backend/RendererRuntimeImpl.h>
 #include <RendererRuntime/Core/File/MemoryFile.h>
 #include <RendererRuntime/Core/File/IFileManager.h>
 #include <RendererRuntime/Core/File/FileSystemHelper.h>
@@ -155,6 +156,12 @@ namespace RendererToolkit
 		mAssetCompilers.emplace(CompositorNodeAssetCompiler::TYPE_ID, new CompositorNodeAssetCompiler());
 		mAssetCompilers.emplace(CompositorWorkspaceAssetCompiler::TYPE_ID, new CompositorWorkspaceAssetCompiler());
 		mAssetCompilers.emplace(VertexAttributesAssetCompiler::TYPE_ID, new VertexAttributesAssetCompiler());
+
+		{ // Gather default texture asset IDs
+			RendererRuntime::AssetIds assetIds;
+			RendererRuntime::RendererRuntimeImpl::getDefaultTextureAssetIds(assetIds);
+			std::copy(assetIds.begin(), assetIds.end(), std::inserter(mDefaultTextureAssetIds, mDefaultTextureAssetIds.end()));
+		}
 	}
 
 	ProjectImpl::~ProjectImpl()
@@ -205,7 +212,7 @@ namespace RendererToolkit
 		const std::string virtualAssetOutputDirectory = getRenderTargetDataRootDirectory(rendererTarget) + '/' + mProjectName + '/' + mAssetPackageDirectoryName + '/' + assetType + '/' + assetCategory;
 
 		// Asset compiler input
-		IAssetCompiler::Input input(mContext, mProjectName, *mCacheManager, virtualAssetPackageInputDirectory, virtualAssetFilename, virtualAssetInputDirectory, virtualAssetOutputDirectory, mSourceAssetIdToCompiledAssetId, mSourceAssetIdToVirtualFilename);
+		IAssetCompiler::Input input(mContext, mProjectName, *mCacheManager, virtualAssetPackageInputDirectory, virtualAssetFilename, virtualAssetInputDirectory, virtualAssetOutputDirectory, mSourceAssetIdToCompiledAssetId, mCompiledAssetIdToSourceAssetId, mSourceAssetIdToVirtualFilename, mDefaultTextureAssetIds);
 
 		// Asset compiler configuration
 		AssetCompilers::const_iterator iterator = mAssetCompilers.find(AssetCompilerTypeId(assetType.c_str()));
@@ -251,7 +258,7 @@ namespace RendererToolkit
 		fileManager.createDirectories(virtualAssetOutputDirectory.c_str());
 
 		// Asset compiler input
-		IAssetCompiler::Input input(mContext, mProjectName, *mCacheManager, virtualAssetPackageInputDirectory, virtualAssetFilename, virtualAssetInputDirectory, virtualAssetOutputDirectory, mSourceAssetIdToCompiledAssetId, mSourceAssetIdToVirtualFilename);
+		IAssetCompiler::Input input(mContext, mProjectName, *mCacheManager, virtualAssetPackageInputDirectory, virtualAssetFilename, virtualAssetInputDirectory, virtualAssetOutputDirectory, mSourceAssetIdToCompiledAssetId, mCompiledAssetIdToSourceAssetId, mSourceAssetIdToVirtualFilename, mDefaultTextureAssetIds);
 
 		// Asset compiler configuration
 		RENDERER_ASSERT(getContext(), nullptr != mRapidJsonDocument, "Invalid renderer toolkit Rapid JSON document")
@@ -520,6 +527,7 @@ namespace RendererToolkit
 		mAssetPackage.clear();
 		mAssetPackageDirectoryName.clear();
 		mSourceAssetIdToCompiledAssetId.clear();
+		mCompiledAssetIdToSourceAssetId.clear();
 		mSourceAssetIdToVirtualFilename.clear();
 		if (nullptr != mRapidJsonDocument)
 		{
@@ -613,7 +621,9 @@ namespace RendererToolkit
 			const std::string compiledAssetIdAsString = mProjectName + '/' + assetType + '/' + assetCategory + '/' + assetName;
 
 			// Hash the asset ID and put it into the map
-			mSourceAssetIdToCompiledAssetId.emplace(asset.assetId, RendererRuntime::StringId(compiledAssetIdAsString.c_str()));
+			const uint32_t compiledAssetId = RendererRuntime::StringId(compiledAssetIdAsString.c_str());
+			mSourceAssetIdToCompiledAssetId.emplace(asset.assetId, compiledAssetId);
+			mCompiledAssetIdToSourceAssetId.emplace(compiledAssetId, asset.assetId);
 			mSourceAssetIdToVirtualFilename.emplace(asset.assetId, virtualFilename);
 		}
 	}

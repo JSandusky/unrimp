@@ -408,7 +408,7 @@ namespace RendererToolkit
 
 		// Read material blueprint asset compiler configuration
 		std::string materialBlueprintInputFile;
-		const std::string& virtualMaterialBlueprintAssetFilename = JsonHelper::getVirtualAssetFilename(input, materialBlueprintAssetId);
+		const std::string& virtualMaterialBlueprintAssetFilename = input.sourceAssetIdToVirtualAssetFilename(materialBlueprintAssetId);
 		{
 			// Parse material blueprint asset JSON
 			rapidjson::Document rapidJsonDocumentMaterialBlueprintAsset;

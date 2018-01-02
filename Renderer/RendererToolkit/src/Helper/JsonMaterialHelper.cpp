@@ -551,7 +551,7 @@ namespace RendererToolkit
 
 		// Read material asset compiler configuration
 		std::string materialInputFile;
-		const std::string& virtualMaterialAssetFilename = JsonHelper::getVirtualAssetFilename(input, materialAssetId);
+		const std::string& virtualMaterialAssetFilename = input.sourceAssetIdToVirtualAssetFilename(materialAssetId);
 		{
 			// Parse material asset JSON
 			rapidjson::Document rapidJsonDocumentMaterialAsset;
@@ -573,37 +573,64 @@ namespace RendererToolkit
 		rapidjson::Document rapidJsonDocument;
 		JsonHelper::loadDocumentByFilename(input.context.getFileManager(), virtualInputFilename, "MaterialAsset", "1", rapidJsonDocument);
 
-		// Optional base material
-		// -> Named toolkit time base material and not parent material by intent to not intermix it with the dynamic runtime parent material
-		const rapidjson::Value& rapidJsonValueMaterialAsset = rapidJsonDocument["MaterialAsset"];
-		if (rapidJsonValueMaterialAsset.HasMember("BaseMaterial"))
-		{
-			// Sanity check
-			if (rapidJsonValueMaterialAsset.HasMember("Techniques"))
+		{ // Optional base material
+		  // -> Named toolkit time base material and not parent material by intent to not intermix it with the dynamic runtime parent material
+			const rapidjson::Value& rapidJsonValueMaterialAsset = rapidJsonDocument["MaterialAsset"];
+			if (rapidJsonValueMaterialAsset.HasMember("BaseMaterial"))
 			{
-				throw std::runtime_error("The material has a base material defined as well as techniques. There can be only one of them.");
-			}
+				// Sanity check
+				if (rapidJsonValueMaterialAsset.HasMember("Techniques"))
+				{
+					throw std::runtime_error("The material has a base material defined as well as techniques. There can be only one of them.");
+				}
 
-			// Get base material asset ID
-			const rapidjson::Value& rapidJsonValueBaseMaterial = rapidJsonValueMaterialAsset["BaseMaterial"];
-			try
-			{
-				const RendererRuntime::AssetId materialAssetId = StringHelper::getSourceAssetIdByString(rapidJsonValueBaseMaterial.GetString(), input);
-				virtualDependencyFilenames.emplace_back(JsonHelper::getVirtualAssetFilename(input, materialAssetId));
+				// Get base material asset ID
+				const rapidjson::Value& rapidJsonValueBaseMaterial = rapidJsonValueMaterialAsset["BaseMaterial"];
+				try
+				{
+					const RendererRuntime::AssetId materialAssetId = StringHelper::getSourceAssetIdByString(rapidJsonValueBaseMaterial.GetString(), input);
+					virtualDependencyFilenames.emplace_back(input.sourceAssetIdToVirtualAssetFilename(materialAssetId));
+				}
+				catch (const std::exception& e)
+				{
+					throw std::runtime_error("Failed to gather dependency files of material source asset \"" + virtualInputFilename + "\" due to unknown base material source asset \"" + std::string(rapidJsonValueBaseMaterial.GetString()) + "\": " + std::string(e.what()));
+				}
 			}
-			catch (const std::exception& e)
+			else
 			{
-				throw std::runtime_error("Failed to gather dependency files of material source asset \"" + virtualInputFilename + "\" due to unknown base material source asset \"" + std::string(rapidJsonValueBaseMaterial.GetString()) + "\": " + std::string(e.what()));
+				const rapidjson::Value& rapidJsonValueTechniques = rapidJsonValueMaterialAsset["Techniques"];
+				for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorTechniques = rapidJsonValueTechniques.MemberBegin(); rapidJsonMemberIteratorTechniques != rapidJsonValueTechniques.MemberEnd(); ++rapidJsonMemberIteratorTechniques)
+				{
+					const RendererRuntime::AssetId materialBlueprintAssetId = StringHelper::getSourceAssetIdByString(rapidJsonMemberIteratorTechniques->value.GetString(), input);
+					virtualDependencyFilenames.emplace_back(input.sourceAssetIdToVirtualAssetFilename(materialBlueprintAssetId));
+				}
 			}
 		}
-		else
+
+		// Take material property source asset references into account
+		try
 		{
-			const rapidjson::Value& rapidJsonValueTechniques = rapidJsonValueMaterialAsset["Techniques"];
-			for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorTechniques = rapidJsonValueTechniques.MemberBegin(); rapidJsonMemberIteratorTechniques != rapidJsonValueTechniques.MemberEnd(); ++rapidJsonMemberIteratorTechniques)
+			std::vector<RendererRuntime::v1Material::Technique> techniques;
+			RendererRuntime::MaterialProperties::SortedPropertyVector sortedMaterialPropertyVector;
+			JsonMaterialHelper::getTechniquesAndPropertiesByMaterialAssetId(input, rapidJsonDocument, techniques, sortedMaterialPropertyVector);
+			for (RendererRuntime::MaterialProperty& materialProperty : sortedMaterialPropertyVector)
 			{
-				const RendererRuntime::AssetId materialBlueprintAssetId = StringHelper::getSourceAssetIdByString(rapidJsonMemberIteratorTechniques->value.GetString(), input);
-				virtualDependencyFilenames.emplace_back(JsonHelper::getVirtualAssetFilename(input, materialBlueprintAssetId));
+				if (materialProperty.getValueType() == RendererRuntime::MaterialPropertyValue::ValueType::TEXTURE_ASSET_ID)
+				{
+					// The material property stores a compiled texture asset ID
+					const RendererRuntime::AssetId textureAssetId = materialProperty.getTextureAssetIdValue();
+
+					// Ignore fixed build in texture assets
+					if (input.defaultTextureAssetIds.find(textureAssetId) == input.defaultTextureAssetIds.cend())
+					{
+						virtualDependencyFilenames.emplace_back(input.compiledAssetIdToVirtualAssetFilename(textureAssetId));
+					}
+				}
 			}
+		}
+		catch (const std::exception& e)
+		{
+			throw std::runtime_error("Failed to gather dependency files of material source asset \"" + virtualInputFilename + "\" because one of the material properties is referencing an unknown source asset: " + std::string(e.what()));
 		}
 	}
 

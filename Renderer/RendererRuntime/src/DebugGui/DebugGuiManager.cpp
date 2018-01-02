@@ -150,6 +150,22 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public static methods                                 ]
+	//[-------------------------------------------------------]
+	void DebugGuiManager::getDefaultTextureAssetIds(AssetIds& assetIds)
+	{
+		// Define helper macros
+		#define ADD_ASSET_ID(name) assetIds.push_back(AssetId(name));
+
+		// Add asset IDs
+		ADD_ASSET_ID("Unrimp/Texture/DynamicByCode/ImGuiGlyphMap2D")
+
+		// Undefine helper macros
+		#undef ADD_ASSET_ID
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	void DebugGuiManager::newFrame(Renderer::IRenderTarget& renderTarget, CompositorWorkspaceInstance* compositorWorkspaceInstance)

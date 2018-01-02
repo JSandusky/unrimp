@@ -29,6 +29,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
 #include "RendererRuntime/Core/Manager.h"
+#include "RendererRuntime/Core/StringId.h"
 
 #include <Renderer/Public/Renderer.h>
 
@@ -43,6 +44,7 @@ PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(4668)	// warning C4668: '_M_HYBRID_X86_ARM64' is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
 	PRAGMA_WARNING_DISABLE_MSVC(4774)	// warning C4774: 'sprintf_s' : format string expected in argument 3 is not a string literal
 	#include <string>
+	#include <vector>
 PRAGMA_WARNING_POP
 
 
@@ -64,6 +66,13 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef StringId			 AssetId;	///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
+	typedef std::vector<AssetId> AssetIds;
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
 	/**
@@ -74,9 +83,6 @@ namespace RendererRuntime
 	*    Supports two command buffer fill modes:
 	*    - Using fixed build in renderer configuration, including shaders
 	*    - Using a material resource blueprint set by the caller
-	*
-	*    Automatically creates a texture map  with the name
-	*    - "Unrimp/Texture/DynamicByCode/ImGuiGlyphMap2D"
 	*/
 	class DebugGuiManager : private Manager
 	{
@@ -86,6 +92,24 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class RendererRuntimeImpl;
+
+
+	//[-------------------------------------------------------]
+	//[ Public static methods                                 ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Return the asset IDs of automatically generated dynamic default texture assets
+		*
+		*  @param[out] assetIds
+		*    Receives the asset IDs of automatically generated dynamic default texture assets, the list is not cleared before new entries are added
+		*
+		*  @remarks
+		*    The debug GUI manager automatically generates some dynamic default texture assets one can reference e.g. inside material blueprint resources:
+		*    - "Unrimp/Texture/DynamicByCode/ImGuiGlyphMap2D"
+		*/
+		static void getDefaultTextureAssetIds(AssetIds& assetIds);
 
 
 	//[-------------------------------------------------------]

@@ -42,6 +42,7 @@ PRAGMA_WARNING_PUSH
 	PRAGMA_WARNING_DISABLE_MSVC(5039)	// warning C5039: '_Thrd_start': pointer or reference to potentially throwing function passed to extern C function under -EHc. Undefined behavior may occur if this function throws an exception.
 	#include <thread>
 	#include <atomic>	// For "std::atomic<>"
+	#include <unordered_set>
 PRAGMA_WARNING_POP
 
 
@@ -71,8 +72,10 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef std::unordered_map<uint32_t, uint32_t> SourceAssetIdToCompiledAssetId;		///< Key = source asset ID, value = compiled asset ID ("AssetId"-type not used directly or we would need to define a hash-function for it)
+	typedef std::unordered_map<uint32_t, uint32_t>	  SourceAssetIdToCompiledAssetId;	///< Key = source asset ID, value = compiled asset ID ("AssetId"-type not used directly or we would need to define a hash-function for it)
+	typedef std::unordered_map<uint32_t, uint32_t>	  CompiledAssetIdToSourceAssetId;	///< Key = compiled asset ID, value = source asset ID ("AssetId"-type not used directly or we would need to define a hash-function for it)
 	typedef std::unordered_map<uint32_t, std::string> SourceAssetIdToVirtualFilename;	///< Key = source asset ID, virtual asset filename
+	typedef std::unordered_set<uint32_t>			  DefaultTextureAssetIds;			///< "RendererRuntime::AssetId"-type for compiled asset IDs
 
 
 	//[-------------------------------------------------------]
@@ -175,7 +178,9 @@ namespace RendererToolkit
 		RendererRuntime::AssetPackage	mAssetPackage;
 		std::string						mAssetPackageDirectoryName;	///< UTF-8 asset package name, has no "/" at the end
 		SourceAssetIdToCompiledAssetId	mSourceAssetIdToCompiledAssetId;
+		CompiledAssetIdToSourceAssetId	mCompiledAssetIdToSourceAssetId;
 		SourceAssetIdToVirtualFilename	mSourceAssetIdToVirtualFilename;
+		DefaultTextureAssetIds			mDefaultTextureAssetIds;
 		rapidjson::Document*			mRapidJsonDocument;			///< There's no real benefit in trying to store the targets data in custom data structures, so we just stick to the read in JSON object
 		ProjectAssetMonitor*			mProjectAssetMonitor;
 		std::atomic<bool>				mShutdownThread;

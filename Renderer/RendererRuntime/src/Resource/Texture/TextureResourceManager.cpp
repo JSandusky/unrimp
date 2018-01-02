@@ -140,6 +140,35 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public static methods                                 ]
+	//[-------------------------------------------------------]
+	void TextureResourceManager::getDefaultTextureAssetIds(AssetIds& assetIds)
+	{
+		// Define helper macros
+		#define ADD_ASSET_ID(name) assetIds.push_back(AssetId(name));
+
+		// Add asset IDs
+		ADD_ASSET_ID("Unrimp/Texture/DynamicByCode/WhiteMap1D")
+		ADD_ASSET_ID("Unrimp/Texture/DynamicByCode/WhiteMap2D")
+		ADD_ASSET_ID("Unrimp/Texture/DynamicByCode/WhiteMapCube")
+		ADD_ASSET_ID("Unrimp/Texture/DynamicByCode/BlackMap1D")
+		ADD_ASSET_ID("Unrimp/Texture/DynamicByCode/BlackMap2D")
+		ADD_ASSET_ID("Unrimp/Texture/DynamicByCode/BlackMapCube")
+		ADD_ASSET_ID("Unrimp/Texture/DynamicByCode/IdentityAlbedoMap2D")
+		ADD_ASSET_ID("Unrimp/Texture/DynamicByCode/IdentityAlphaMap2D")
+		ADD_ASSET_ID("Unrimp/Texture/DynamicByCode/IdentityNormalMap2D")
+		ADD_ASSET_ID("Unrimp/Texture/DynamicByCode/IdentityRoughnessMap2D")
+		ADD_ASSET_ID("Unrimp/Texture/DynamicByCode/DielectricMetallicMap2D")
+		ADD_ASSET_ID("Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D")
+		ADD_ASSET_ID("Unrimp/Texture/DynamicByCode/Identity_argb_nxa2D")
+		ADD_ASSET_ID("Unrimp/Texture/DynamicByCode/Identity_hr_rg_mb_nya2D")
+
+		// Undefine helper macros
+		#undef ADD_ASSET_ID
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	void TextureResourceManager::setNumberOfTopMipmapsToRemove(uint8_t numberOfTopMipmapsToRemove)

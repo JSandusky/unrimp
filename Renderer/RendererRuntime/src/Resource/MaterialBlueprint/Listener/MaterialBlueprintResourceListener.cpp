@@ -289,6 +289,24 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Public static methods                                 ]
+	//[-------------------------------------------------------]
+	void MaterialBlueprintResourceListener::getDefaultTextureAssetIds(AssetIds& assetIds)
+	{
+		// Define helper macros
+		#define ADD_ASSET_ID(name) assetIds.push_back(AssetId(name));
+
+		// Add asset IDs
+		ADD_ASSET_ID("Unrimp/Texture/DynamicByCode/IdentityColorCorrectionLookupTable3D")
+		ADD_ASSET_ID("Unrimp/Texture/DynamicByCode/SsaoSampleKernel")
+		ADD_ASSET_ID("Unrimp/Texture/DynamicByCode/SsaoNoise4x4")
+
+		// Undefine helper macros
+		#undef ADD_ASSET_ID
+	}
+
+
+	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	void MaterialBlueprintResourceListener::clear()

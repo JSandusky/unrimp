@@ -28,6 +28,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/Export.h"
+#include "RendererRuntime/Core/StringId.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/Listener/IMaterialBlueprintResourceListener.h"
 
 // Disable warnings in external headers, we can't fix them
@@ -58,7 +59,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef uint32_t TextureResourceId;	///< POD texture resource identifier
+	typedef uint32_t			 TextureResourceId;	///< POD texture resource identifier
+	typedef StringId			 AssetId;		///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
+	typedef std::vector<AssetId> AssetIds;
 
 
 	//[-------------------------------------------------------]
@@ -67,15 +70,29 @@ namespace RendererRuntime
 	/**
 	*  @brief
 	*    Material blueprint resource listener
-	*
-	*  @remarks
-	*    The material blueprint resource listener automatically generates some dynamic default texture assets one can reference e.g. inside material blueprint resources:
-	*    - "Unrimp/Texture/DynamicByCode/IdentityColorCorrectionLookupTable3D"
-	*    - "Unrimp/Texture/DynamicByCode/SsaoSampleKernel"
-	*    - "Unrimp/Texture/DynamicByCode/SsaoNoise4x4"
 	*/
 	class MaterialBlueprintResourceListener : public IMaterialBlueprintResourceListener
 	{
+
+
+	//[-------------------------------------------------------]
+	//[ Public static methods                                 ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Return the asset IDs of automatically generated dynamic default texture assets
+		*
+		*  @param[out] assetIds
+		*    Receives the asset IDs of automatically generated dynamic default texture assets, the list is not cleared before new entries are added
+		*
+		*  @remarks
+		*    The material blueprint resource listener automatically generates some dynamic default texture assets one can reference e.g. inside material blueprint resources:
+		*    - "Unrimp/Texture/DynamicByCode/IdentityColorCorrectionLookupTable3D"
+		*    - "Unrimp/Texture/DynamicByCode/SsaoSampleKernel"
+		*    - "Unrimp/Texture/DynamicByCode/SsaoNoise4x4"
+		*/
+		static void getDefaultTextureAssetIds(AssetIds& assetIds);
 
 
 	//[-------------------------------------------------------]

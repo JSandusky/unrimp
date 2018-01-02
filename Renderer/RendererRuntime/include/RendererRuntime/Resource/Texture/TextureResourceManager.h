@@ -56,7 +56,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Global definitions                                    ]
 	//[-------------------------------------------------------]
-	typedef uint32_t TextureResourceId;	///< POD texture resource identifier
+	typedef uint32_t			 TextureResourceId;	///< POD texture resource identifier
+	typedef StringId			 AssetId;		///< Asset identifier, internally just a POD "uint32_t", string ID scheme is "<project name>/<asset type>/<asset category>/<asset name>"
+	typedef std::vector<AssetId> AssetIds;
 
 
 	//[-------------------------------------------------------]
@@ -65,23 +67,6 @@ namespace RendererRuntime
 	/**
 	*  @brief
 	*    Texture resource manager class
-	*
-	*  @remarks
-	*    The texture manager automatically generates some dynamic default texture assets one can reference e.g. inside material blueprint resources:
-	*    - "Unrimp/Texture/DynamicByCode/WhiteMap1D"
-	*    - "Unrimp/Texture/DynamicByCode/WhiteMap2D"
-	*    - "Unrimp/Texture/DynamicByCode/WhiteMapCube"
-	*    - "Unrimp/Texture/DynamicByCode/BlackMap1D"
-	*    - "Unrimp/Texture/DynamicByCode/BlackMap2D"
-	*    - "Unrimp/Texture/DynamicByCode/BlackMapCube"
-	*    - "Unrimp/Texture/DynamicByCode/IdentityAlbedoMap2D"
-	*    - "Unrimp/Texture/DynamicByCode/IdentityAlphaMap2D"
-	*    - "Unrimp/Texture/DynamicByCode/IdentityNormalMap2D"
-	*    - "Unrimp/Texture/DynamicByCode/IdentityRoughnessMap2D"
-	*    - "Unrimp/Texture/DynamicByCode/DielectricMetallicMap2D"
-	*    - "Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D"
-	*    - "Unrimp/Texture/DynamicByCode/Identity_argb_nxa2D"
-	*    - "Unrimp/Texture/DynamicByCode/Identity_hr_rg_mb_nya2D"
 	*/
 	class TextureResourceManager : public ResourceManager<TextureResource>
 	{
@@ -91,6 +76,37 @@ namespace RendererRuntime
 	//[ Friends                                               ]
 	//[-------------------------------------------------------]
 		friend class RendererRuntimeImpl;
+
+
+	//[-------------------------------------------------------]
+	//[ Public static methods                                 ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Return the asset IDs of automatically generated dynamic default texture assets
+		*
+		*  @param[out] assetIds
+		*    Receives the asset IDs of automatically generated dynamic default texture assets, the list is not cleared before new entries are added
+		*
+		*  @remarks
+		*    The texture manager automatically generates some dynamic default texture assets one can reference e.g. inside material blueprint resources:
+		*    - "Unrimp/Texture/DynamicByCode/WhiteMap1D"
+		*    - "Unrimp/Texture/DynamicByCode/WhiteMap2D"
+		*    - "Unrimp/Texture/DynamicByCode/WhiteMapCube"
+		*    - "Unrimp/Texture/DynamicByCode/BlackMap1D"
+		*    - "Unrimp/Texture/DynamicByCode/BlackMap2D"
+		*    - "Unrimp/Texture/DynamicByCode/BlackMapCube"
+		*    - "Unrimp/Texture/DynamicByCode/IdentityAlbedoMap2D"
+		*    - "Unrimp/Texture/DynamicByCode/IdentityAlphaMap2D"
+		*    - "Unrimp/Texture/DynamicByCode/IdentityNormalMap2D"
+		*    - "Unrimp/Texture/DynamicByCode/IdentityRoughnessMap2D"
+		*    - "Unrimp/Texture/DynamicByCode/DielectricMetallicMap2D"
+		*    - "Unrimp/Texture/DynamicByCode/IdentityEmissiveMap2D"
+		*    - "Unrimp/Texture/DynamicByCode/Identity_argb_nxa2D"
+		*    - "Unrimp/Texture/DynamicByCode/Identity_hr_rg_mb_nya2D"
+		*/
+		static void getDefaultTextureAssetIds(AssetIds& assetIds);
 
 
 	//[-------------------------------------------------------]

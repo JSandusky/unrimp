@@ -27,6 +27,7 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
+#include "RendererRuntime/Export.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <mutex>
@@ -53,6 +54,12 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
+	//[ Global definitions                                    ]
+	//[-------------------------------------------------------]
+	typedef std::vector<AssetId> AssetIds;
+
+
+	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
 	/**
@@ -61,6 +68,20 @@ namespace RendererRuntime
 	*/
 	class RendererRuntimeImpl : public IRendererRuntime
 	{
+
+
+	//[-------------------------------------------------------]
+	//[ Public static methods                                 ]
+	//[-------------------------------------------------------]
+	public:
+		/**
+		*  @brief
+		*    Return the asset IDs of automatically generated dynamic default texture assets
+		*
+		*  @param[out] assetIds
+		*    Receives the asset IDs of automatically generated dynamic default texture assets, the list is not cleared before new entries are added
+		*/
+		RENDERERRUNTIME_API_EXPORT static void getDefaultTextureAssetIds(AssetIds& assetIds);
 
 
 	//[-------------------------------------------------------]
