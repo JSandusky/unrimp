@@ -339,7 +339,7 @@ namespace OpenGLRenderer
 			GL_R16,										// Renderer::TextureFormat::R16_UNORM     - 16-bit unsigned-normalized-integer format that supports 16 bits for the red channel
 			GL_R32UI,									// Renderer::TextureFormat::R32_UINT      - 32-bit unsigned integer format
 			GL_R32F,									// Renderer::TextureFormat::R32_FLOAT     - 32-bit float format
-			GL_DEPTH_COMPONENT32,						// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format
+			GL_DEPTH_COMPONENT32F,						// Renderer::TextureFormat::D32_FLOAT     - 32-bit float depth format
 			GL_RG16_SNORM,								// Renderer::TextureFormat::R16G16_SNORM  - A two-component, 32-bit signed-normalized-integer format that supports 16 bits for the red channel and 16 bits for the green channel
 			GL_RG16F,									// Renderer::TextureFormat::R16G16_FLOAT  - A two-component, 32-bit floating-point format that supports 16 bits for the red channel and 16 bits for the green channel
 			0											// Renderer::TextureFormat::UNKNOWN       - Unknown
