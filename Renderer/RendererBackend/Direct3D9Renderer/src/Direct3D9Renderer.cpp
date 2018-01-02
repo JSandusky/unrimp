@@ -1784,6 +1784,9 @@ namespace Direct3D9Renderer
 		// Maximum anisotropy (always at least 1, usually 16)
 		mCapabilities.maximumAnisotropy = 16;
 
+		// Left-handed coordinate system with clip space depth value range 0..1
+		mCapabilities.upperLeftOrigin = mCapabilities.zeroToOneClipZ = true;
+
 		// Individual uniforms ("constants" in Direct3D terminology) supported? If not, only uniform buffer objects are supported.
 		mCapabilities.individualUniforms = true;
 

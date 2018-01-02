@@ -59,6 +59,11 @@ namespace OpenGLES3Renderer
 		return mGL_EXT_base_instance;
 	}
 
+	inline bool ExtensionsRuntimeLinking::isGL_EXT_clip_control() const
+	{
+		return mGL_EXT_clip_control;
+	}
+
 	// AMD
 	inline bool ExtensionsRuntimeLinking::isGL_AMD_compressed_3DC_texture() const
 	{

@@ -25,10 +25,10 @@ Without it reconstructing the view space position would be more expensive by usi
 float3 GetViewSpacePositionByScreenSpacePosition(float2 screenSpacePosition, float depth)
 {
 	// API coordinate system related differences
-	@property(HLSL)
+	@property(UpperLeftOrigin)
 		screenSpacePosition.y = 1.0f - screenSpacePosition.y;
 	@end
-	@property(GLSL || GLSLES)
+	@property(!ZeroToOneClipZ)
 		// 0..1 -> -1..1
 		depth = depth * 2.0f - 1.0f;
 	@end
@@ -93,7 +93,7 @@ MAIN_BEGIN
 
 	// Transform the object space vertex into clip space
 	MAIN_OUTPUT_POSITION = float4(MAIN_INPUT(PositionTexCoord).xy, 0.0f, 1.0f);
-	@property(GLSL || GLSLES)
+	@property(!UpperLeftOrigin)
 		MAIN_OUTPUT_POSITION.y = -MAIN_OUTPUT_POSITION.y;
 	@end
 

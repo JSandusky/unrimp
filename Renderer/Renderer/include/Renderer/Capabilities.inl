@@ -41,6 +41,8 @@ namespace Renderer
 		maximumIndirectBufferSize(0),
 		maximumNumberOfMultisamples(1),
 		maximumAnisotropy(1),
+		upperLeftOrigin(true),
+		zeroToOneClipZ(true),
 		individualUniforms(false),
 		instancedArrays(false),
 		drawInstanced(false),

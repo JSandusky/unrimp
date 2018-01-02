@@ -54,7 +54,7 @@ MAIN_BEGIN
 
 	// Transform the object space vertex into clip space
 	MAIN_OUTPUT_POSITION = float4(MAIN_INPUT(PositionTexCoord).xy, 0.0f, 1.0f);
-	@property(GLSL || GLSLES)
+	@property(!UpperLeftOrigin)
 		MAIN_OUTPUT_POSITION.y = -MAIN_OUTPUT_POSITION.y;
 	@end
 

@@ -128,8 +128,9 @@ namespace RendererRuntime
 																		   0.0f,  0.5f, 0.0f, 0.0f,
 																		   0.0f,  0.0f, 0.5f, 0.0f,
 																		   0.5f,  0.5f, 0.5f, 1.0f);
-		const char* name = renderer.getName();
-		return (0 != strcmp(name, "OpenGL") && 0 != strcmp(name, "OpenGLES3")) ? SHADOW_SCALE_BIAS_MATRIX_DIRECT3D : SHADOW_SCALE_BIAS_MATRIX_OPENGL;
+		// TODO(co) Currently we just assume that "upperLeftOrigin" and "zeroToOneClipZ" renderer capabilities are always set together to the same value
+		const Renderer::Capabilities& capabilities = renderer.getCapabilities();
+		return (capabilities.upperLeftOrigin && capabilities.zeroToOneClipZ) ? SHADOW_SCALE_BIAS_MATRIX_DIRECT3D : SHADOW_SCALE_BIAS_MATRIX_OPENGL;
 	}
 
 	uint32_t Math::calculateFNV1a32(const uint8_t* content, uint32_t numberOfBytes, uint32_t hash)

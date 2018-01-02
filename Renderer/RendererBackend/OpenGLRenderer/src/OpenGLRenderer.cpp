@@ -430,6 +430,7 @@ namespace OpenGLRenderer
 		// Output-merger (OM) stage
 		mRenderTarget(nullptr),
 		// State cache to avoid making redundant OpenGL calls
+		mOpenGLClipControlOrigin(GL_INVALID_ENUM),
 		mOpenGLProgramPipeline(0),
 		mOpenGLProgram(0),
 		mOpenGLIndirectBuffer(0),
@@ -1055,6 +1056,7 @@ namespace OpenGLRenderer
 
 		// In OpenGL, the origin of the viewport is left bottom while Direct3D is using a left top origin. To make the
 		// Direct3D 11 implementation as efficient as possible the Direct3D convention is used and we have to convert in here.
+		// -> This isn't influenced by the "GL_ARB_clip_control"-extension
 
 		// Get the width and height of the current render target
 		uint32_t renderTargetHeight = 1;
@@ -1080,6 +1082,7 @@ namespace OpenGLRenderer
 
 		// In OpenGL, the origin of the scissor rectangle is left bottom while Direct3D is using a left top origin. To make the
 		// Direct3D 9 & 10 & 11 implementation as efficient as possible the Direct3D convention is used and we have to convert in here.
+		// -> This isn't influenced by the "GL_ARB_clip_control"-extension
 
 		// Get the width and height of the current render target
 		uint32_t renderTargetHeight = 1;
@@ -1147,11 +1150,13 @@ namespace OpenGLRenderer
 				mRenderTarget->addReference();
 
 				// Evaluate the render target type
+				GLenum clipControlOrigin = GL_UPPER_LEFT;
 				switch (mRenderTarget->getResourceType())
 				{
 					case Renderer::ResourceType::SWAP_CHAIN:
 					{
 						static_cast<SwapChain*>(mRenderTarget)->getOpenGLContext().makeCurrent();
+						clipControlOrigin = GL_LOWER_LEFT;	// Compensate OS window coordinate system y-flip
 						break;
 					}
 
@@ -1218,6 +1223,14 @@ namespace OpenGLRenderer
 				{
 					framebufferToGenerateMipmapsFor->generateMipmaps();
 					framebufferToGenerateMipmapsFor->releaseReference();
+				}
+
+				// Setup clip control
+				if (mOpenGLClipControlOrigin != clipControlOrigin && mExtensions->isGL_ARB_clip_control())
+				{
+					// OpenGL default is "GL_LOWER_LEFT" and "GL_NEGATIVE_ONE_TO_ONE", change it to match Vulkan and Direct3D
+					mOpenGLClipControlOrigin = clipControlOrigin;
+					glClipControl(mOpenGLClipControlOrigin, GL_ZERO_TO_ONE);
 				}
 			}
 			else if (nullptr != mRenderTarget)
@@ -2451,6 +2464,14 @@ namespace OpenGLRenderer
 		// -> "GL_EXT_texture_filter_anisotropic"-extension
 		glGetIntegerv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &openGLValue);
 		mCapabilities.maximumAnisotropy = static_cast<uint8_t>(openGLValue);
+
+		// Coordinate system
+		// -> If the "GL_ARB_clip_control"-extension is available: Left-handed coordinate system with clip space depth value range 0..1
+		// -> If the "GL_ARB_clip_control"-extension isn't available: Right-handed coordinate system with clip space depth value range -1..1
+		// -> For background theory see "Depth Precision Visualized" by Nathan Reed - https://developer.nvidia.com/content/depth-precision-visualized
+		// -> For practical information see "Reversed-Z in OpenGL" by Nicolas Guillemot - https://nlguillemot.wordpress.com/2016/12/07/reversed-z-in-opengl/
+		// -> Shaders might want to take the following into account: "Mac computers that use OpenCL and OpenGL graphics" - https://support.apple.com/en-us/HT202823 - "iMac (Retina 5K, 27-inch, 2017)" - OpenGL 4.1
+		mCapabilities.upperLeftOrigin = mCapabilities.zeroToOneClipZ = mExtensions->isGL_ARB_clip_control();
 
 		// Individual uniforms ("constants" in Direct3D terminology) supported? If not, only uniform buffer objects are supported.
 		mCapabilities.individualUniforms = true;

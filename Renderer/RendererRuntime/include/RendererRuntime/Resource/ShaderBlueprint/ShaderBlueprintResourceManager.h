@@ -89,7 +89,7 @@ namespace RendererRuntime
 		*    The renderer shader properties
 		*
 		*  @note
-		*    - The renderer shader properties depend on the current renderer backend, contains e.g. "OpenGL", "GLSL" etc.
+		*    - The renderer shader properties depend on the current renderer backend, contains e.g. "OpenGL", "GLSL", "ZeroToOneClipZ", "UpperLeftOrigin" etc.
 		*    - The renderer shader properties are added during shader source code building and hence are not part of the pipeline state signature
 		*/
 		inline const ShaderProperties& getRendererShaderProperties() const;

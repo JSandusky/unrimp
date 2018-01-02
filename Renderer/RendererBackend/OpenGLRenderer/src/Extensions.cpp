@@ -107,6 +107,7 @@ namespace OpenGLRenderer
 	bool Extensions::isGL_ARB_texture_storage()				const { return mGL_ARB_texture_storage;				}
 	bool Extensions::isGL_ARB_copy_image()					const { return mGL_ARB_copy_image;					}
 	bool Extensions::isGL_ARB_gl_spirv()					const { return mGL_ARB_gl_spirv;					}
+	bool Extensions::isGL_ARB_clip_control()				const { return mGL_ARB_clip_control;				}
 
 
 	//[-------------------------------------------------------]
@@ -278,6 +279,7 @@ namespace OpenGLRenderer
 		mGL_ARB_texture_storage				= false;
 		mGL_ARB_copy_image					= false;
 		mGL_ARB_gl_spirv					= false;
+		mGL_ARB_clip_control				= false;
 	}
 
 	bool Extensions::initializeUniversal()
@@ -807,6 +809,16 @@ namespace OpenGLRenderer
 
 			// TODO(co) "GL_ARB_gl_spirv"-support is under construction
 			mGL_ARB_gl_spirv = false;
+		}
+
+		// GL_ARB_clip_control
+		mGL_ARB_clip_control = isSupported("GL_ARB_clip_control");
+		if (mGL_ARB_clip_control)
+		{
+			// Load the entry points
+			bool result = true;	// Success by default
+			IMPORT_FUNC(glClipControl)
+			mGL_ARB_clip_control = result;
 		}
 
 

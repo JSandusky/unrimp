@@ -127,12 +127,10 @@ namespace RendererRuntime
 				}
 			}
 
-			// OpenGL needs some adjustments
-			// -> Direct3D: Left-handed coordinate system with clip space depth value range 0..1
-			// -> OpenGL: Right-handed coordinate system with clip space depth value range -1..1
-			const char* name = renderTarget.getRenderer().getName();
-			const bool isOpenGL = (0 == strcmp(name, "OpenGL") || 0 == strcmp(name, "OpenGLES3"));
-			const float nearZ = isOpenGL ? -1.0f : 0.0f;
+			// Coordinate system related adjustments
+			// -> Vulkan and Direct3D: Left-handed coordinate system with clip space depth value range 0..1
+			// -> OpenGL without "GL_ARB_clip_control"-extension: Right-handed coordinate system with clip space depth value range -1..1
+			const float nearZ = renderTarget.getRenderer().getCapabilities().zeroToOneClipZ ? 0.0f : -1.0f;
 
 			// Get the 8 points of the view frustum in world space
 			glm::vec4 worldSpaceFrustumCorners[8] =

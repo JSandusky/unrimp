@@ -142,13 +142,13 @@
 		#define SAMPLE_2D_ARRAY(textureObject, samplerObject, coordinate) textureObject.Sample(samplerObject, coordinate)
 		#define SAMPLE_2D_ARRAY_LOD(textureObject, samplerObject, coordinate) textureObject.SampleLevel(samplerObject, coordinate.xyz, coordinate.w)
 		#define SAMPLE_2D_ARRAY_GRAD(textureObject, samplerObject, coordinate, _ddx, _ddy) textureObject.SampleGrad(samplerObject, coordinate.xyz, _ddx, _ddy)
-		#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) textureObject.SampleLevel(samplerObject, coordinate.xy, coordinate.w).r
 		#define SAMPLE_2D_MS(textureObject, coordinate, sampleIndex) textureObject.Load(coordinate, sampleIndex)
-		#define SAMPLE_DEPTH_2D_MS(textureObject, coordinate, sampleIndex) textureObject.Load(coordinate, sampleIndex).r
 		#define SAMPLE_2D_CMP_LEVEL_ZERO(textureObject, samplerObject, coordinate) textureObject.SampleCmpLevelZero(samplerObject, coordinate.xy, coordinate.w)
 		#define SAMPLE_3D_LOD(textureObject, samplerObject, coordinate) textureObject.SampleLevel(samplerObject, coordinate.xyz, coordinate.w)
 		#define SAMPLE_CUBE(textureObject, samplerObject, coordinate) textureObject.Sample(samplerObject, coordinate)
 		#define SAMPLE_CUBE_LOD(textureObject, samplerObject, coordinate) textureObject.SampleLevel(samplerObject, coordinate.xyz, coordinate.w)
+		#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) textureObject.SampleLevel(samplerObject, coordinate.xy, coordinate.w).r
+		#define SAMPLE_DEPTH_2D_MS(textureObject, coordinate, sampleIndex) textureObject.Load(coordinate, sampleIndex).r
 
 		// Load/fetch
 		#define TEXTURE_FETCH_2D(name, texelIndex) name.Load(texelIndex)
@@ -287,13 +287,13 @@
 		#define SAMPLE_2D_ARRAY(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
 		#define SAMPLE_2D_ARRAY_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xyz, coordinate.w)
 		#define SAMPLE_2D_ARRAY_GRAD(textureObject, samplerObject, coordinate, _ddx, _ddy) textureGrad(textureObject, coordinate.xyz, _ddx, _ddy)
-		#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xy, coordinate.w).r
 		#define SAMPLE_2D_MS(textureObject, coordinate, sampleIndex) texelFetch(textureObject, coordinate, sampleIndex)
-		#define SAMPLE_DEPTH_2D_MS(textureObject, coordinate, sampleIndex) texelFetch(textureObject, coordinate, sampleIndex).r
 		#define SAMPLE_2D_CMP_LEVEL_ZERO(textureObject, samplerObject, coordinate) vec4(coordinate.w <= textureLod(textureObject, coordinate.xy, 0.0f).r, 0.0f, 0.0f, 0.0f)
 		#define SAMPLE_3D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xyz, coordinate.w)
 		#define SAMPLE_CUBE(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
 		#define SAMPLE_CUBE_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xyz, coordinate.w)
+		#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xy, coordinate.w).r
+		#define SAMPLE_DEPTH_2D_MS(textureObject, coordinate, sampleIndex) texelFetch(textureObject, coordinate, sampleIndex).r
 
 		// Fragment shader only
 		#define DECLARE_FRAGMENT_POSITION
@@ -340,7 +340,9 @@
 	@end
 @end
 
-// OpenGL: Right-handed coordinate system with clip space depth value range -1..1
+// OpenGL
+// -> If the "GL_ARB_clip_control"-extension is available: Left-handed coordinate system with clip space depth value range 0..1
+// -> If the "GL_ARB_clip_control"-extension isn't available: Right-handed coordinate system with clip space depth value range -1..1
 @property(OpenGL)
 	@piece(SetCrossPlatformSettings)
 		#version 410 core	// This is what Mac OS X 10.11 and similar support, no fancy 420, no "#extension GL_ARB_shading_language_420pack : enable" and hence no "layout(binding)" usage possible (no problem, we're using material blueprints with a root signature)
@@ -437,13 +439,19 @@
 		#define SAMPLE_2D_ARRAY(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
 		#define SAMPLE_2D_ARRAY_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xyz, coordinate.w)
 		#define SAMPLE_2D_ARRAY_GRAD(textureObject, samplerObject, coordinate, _ddx, _ddy) textureGrad(textureObject, coordinate.xyz, _ddx, _ddy)
-		#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) (textureLod(textureObject, coordinate.xy, coordinate.w).r * 2.0f - 1.0f)	// 0..1 -> -1..1
 		#define SAMPLE_2D_MS(textureObject, coordinate, sampleIndex) texelFetch(textureObject, coordinate, sampleIndex)
-		#define SAMPLE_DEPTH_2D_MS(textureObject, coordinate, sampleIndex) (texelFetch(textureObject, coordinate, sampleIndex).r * 2.0f - 1.0f)	// 0..1 -> -1..1
 		#define SAMPLE_2D_CMP_LEVEL_ZERO(textureObject, samplerObject, coordinate) vec4(coordinate.w <= textureLod(textureObject, coordinate.xy, 0.0f).r, 0.0f, 0.0f, 0.0f)
 		#define SAMPLE_3D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xyz, coordinate.w)
 		#define SAMPLE_CUBE(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
 		#define SAMPLE_CUBE_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xyz, coordinate.w)
+		@property(ZeroToOneClipZ)
+			#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xy, coordinate.w).r
+			#define SAMPLE_DEPTH_2D_MS(textureObject, coordinate, sampleIndex) texelFetch(textureObject, coordinate, sampleIndex).r
+		@end
+		@property(!ZeroToOneClipZ)
+			#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) (textureLod(textureObject, coordinate.xy, coordinate.w).r * 2.0f - 1.0f)	// 0..1 -> -1..1
+			#define SAMPLE_DEPTH_2D_MS(textureObject, coordinate, sampleIndex) (texelFetch(textureObject, coordinate, sampleIndex).r * 2.0f - 1.0f)	// 0..1 -> -1..1
+		@end
 
 		// Fragment shader only
 		#define DECLARE_FRAGMENT_POSITION
@@ -490,7 +498,9 @@
 	@end
 @end
 
-// OpenGL ES 3: Right-handed coordinate system with clip space depth value range -1..1
+// OpenGL ES 3
+// -> If the "GL_EXT_clip_control"-extension is available: Left-handed coordinate system with clip space depth value range 0..1
+// -> If the "GL_EXT_clip_control"-extension isn't available: Right-handed coordinate system with clip space depth value range -1..1
 @property(OpenGLES3)
 	@piece(SetCrossPlatformSettings)
 		#version 300 es	// OpenGL ES 3.1. We need at least OpenGL ES 3.1 support due texture buffer handling	- TODO(co) But currently we can only use OpenGL ES 3.0 inside our test
@@ -593,13 +603,19 @@
 		#define SAMPLE_2D_ARRAY(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
 		#define SAMPLE_2D_ARRAY_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xyz, coordinate.w)
 		#define SAMPLE_2D_ARRAY_GRAD(textureObject, samplerObject, coordinate, _ddx, _ddy) textureGrad(textureObject, coordinate.xyz, _ddx, _ddy)
-		#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) (textureLod(textureObject, coordinate.xy, coordinate.w).r * 2.0f - 1.0f)	// 0..1 -> -1..1
 		#define SAMPLE_2D_MS(textureObject, coordinate, sampleIndex) texelFetch(textureObject, coordinate, sampleIndex)
-		#define SAMPLE_DEPTH_2D_MS(textureObject, coordinate, sampleIndex) (texelFetch(textureObject, coordinate, sampleIndex).r * 2.0f - 1.0f)	// 0..1 -> -1..1
 		#define SAMPLE_2D_CMP_LEVEL_ZERO(textureObject, samplerObject, coordinate) vec4(coordinate.w <= textureLod(textureObject, coordinate.xy, 0.0f).r, 0.0f, 0.0f, 0.0f)
 		#define SAMPLE_3D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xyz, coordinate.w)
 		#define SAMPLE_CUBE(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
 		#define SAMPLE_CUBE_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xyz, coordinate.w)
+		@property(ZeroToOneClipZ)
+			#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xy, coordinate.w).r
+			#define SAMPLE_DEPTH_2D_MS(textureObject, coordinate, sampleIndex) texelFetch(textureObject, coordinate, sampleIndex).r
+		@end
+		@property(!ZeroToOneClipZ)
+			#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) (textureLod(textureObject, coordinate.xy, coordinate.w).r * 2.0f - 1.0f)	// 0..1 -> -1..1
+			#define SAMPLE_DEPTH_2D_MS(textureObject, coordinate, sampleIndex) (texelFetch(textureObject, coordinate, sampleIndex).r * 2.0f - 1.0f)	// 0..1 -> -1..1
+		@end
 
 		// Fragment shader only
 		#define DECLARE_FRAGMENT_POSITION

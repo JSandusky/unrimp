@@ -1373,6 +1373,9 @@ namespace VulkanRenderer
 		// -> One element = float4 = 16 bytes
 		mCapabilities.maximumUniformBufferSize = 4096 * 16;
 
+		// Left-handed coordinate system with clip space depth value range 0..1
+		mCapabilities.upperLeftOrigin = mCapabilities.zeroToOneClipZ = true;
+
 		// Individual uniforms ("constants" in Direct3D terminology) supported? If not, only uniform buffer objects are supported.
 		mCapabilities.individualUniforms = false;
 

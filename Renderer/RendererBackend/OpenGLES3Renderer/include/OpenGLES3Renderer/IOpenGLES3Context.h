@@ -39,7 +39,7 @@ PRAGMA_WARNING_PUSH
 PRAGMA_WARNING_POP
 
 // Get rid of some nasty OS macros
-#undef None	// Linux: Undefine "None", this name is used inside enums defined by Unrimp (which gets defined inside Xlib.h pulled in by egl.h)
+#undef None	// Linux: Undefine "None", this name is used inside enums defined by Unrimp (which gets defined inside "Xlib.h" pulled in by "egl.h")
 #undef max
 
 

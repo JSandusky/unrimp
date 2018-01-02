@@ -31,13 +31,11 @@
 @piece(DefineGetLinearDepthByFragmentDepth)
 	float GetLinearDepthByFragmentDepth(float fragmentDepth)
 	{
-		@property(HLSL)
+		@property(ZeroToOneClipZ)
 			return PassData.ProjectionParameters.y / (fragmentDepth - PassData.ProjectionParameters.x);
 		@end
-		@property(!HLSL)
-			// OpenGL needs some adjustments
-			// -> Direct3D: Left-handed coordinate system with clip space depth value range 0..1
-			// -> OpenGL: Right-handed coordinate system with clip space depth value range -1..1
+		@property(!ZeroToOneClipZ)
+			// 0..1 -> -1..1
 			return PassData.ProjectionParameters.y / ((fragmentDepth * 2.0f - 1.0f) - PassData.ProjectionParameters.x);
 		@end
 	}

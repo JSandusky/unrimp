@@ -68,6 +68,8 @@ namespace Renderer
 		uint32_t			maximumIndirectBufferSize;						///< Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
 		uint8_t				maximumNumberOfMultisamples;					///< Maximum number of multisamples (always at least 1, usually 8)
 		uint8_t				maximumAnisotropy;								///< Maximum anisotropy (always at least 1, usually 16)
+		bool				upperLeftOrigin;								///< Upper left origin (true for Vulkan, Direct3D, OpenGL with "GL_ARB_clip_control"-extension)
+		bool				zeroToOneClipZ;									///< Zero-to-one clip Z (true for Vulkan, Direct3D, OpenGL with "GL_ARB_clip_control"-extension)
 		bool				individualUniforms;								///< Individual uniforms ("constants" in Direct3D terminology) supported? If not, only uniform buffer objects are supported.
 		bool				instancedArrays;								///< Instanced arrays supported? (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 		bool				drawInstanced;									///< Draw instanced supported? (shader model 4 feature, build in shader variable holding the current instance ID)

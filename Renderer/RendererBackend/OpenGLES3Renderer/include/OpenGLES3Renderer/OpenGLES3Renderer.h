@@ -282,7 +282,8 @@ namespace OpenGLES3Renderer
 		// Output-merger (OM) stage
 		Renderer::IRenderTarget* mRenderTarget;	///< Currently set render target (we keep a reference to it), can be a null pointer
 		// State cache to avoid making redundant OpenGL ES 3 calls
-		uint32_t mOpenGLES3Program;	///< Currently set OpenGL ES 3 program, can be zero if no resource is set (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t mOpenGLES3ClipControlOrigin;	///< Currently set OpenGL ES 3 clip control origin (type "GLenum" not used in here in order to keep the header slim)
+		uint32_t mOpenGLES3Program;				///< Currently set OpenGL ES 3 program, can be zero if no resource is set (type "GLuint" not used in here in order to keep the header slim)
 		// Draw ID uniform location for "GL_EXT_base_instance"-emulation (see "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html)
 		int		 mDrawIdUniformLocation;		///< Draw ID uniform location (type "GLuint" not used in here in order to keep the header slim)
 		uint32_t mCurrentStartInstanceLocation;	///< Currently set start instance location

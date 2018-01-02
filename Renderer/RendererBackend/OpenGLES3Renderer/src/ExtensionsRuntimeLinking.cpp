@@ -52,6 +52,7 @@ namespace OpenGLES3Renderer
 		mGL_EXT_texture_buffer(false),
 		mGL_EXT_draw_elements_base_vertex(false),
 		mGL_EXT_base_instance(false),
+		mGL_EXT_clip_control(false),
 		// AMD
 		mGL_AMD_compressed_3DC_texture(false),
 		// NV
@@ -133,6 +134,15 @@ namespace OpenGLES3Renderer
 			IMPORT_FUNC(glDrawElementsInstancedBaseInstanceEXT)
 			IMPORT_FUNC(glDrawElementsInstancedBaseVertexBaseInstanceEXT)
 			mGL_EXT_base_instance = result;
+		}
+
+		mGL_EXT_clip_control = (nullptr != strstr(extensions, "GL_EXT_clip_control"));
+		if (mGL_EXT_clip_control)
+		{
+			// Load the entry points
+			bool result = true;	// Success by default
+			IMPORT_FUNC(glClipControlEXT)
+			mGL_EXT_clip_control = result;
 		}
 
 

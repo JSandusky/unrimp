@@ -187,7 +187,7 @@ namespace
 		{
 			// Transform the OpenGL style transform matrix into a Direct3D style transform matrix as described at http://cv4mar.blogspot.de/2009/03/transformation-matrices-between-opengl.html
 			// -> Direct3D: Left-handed coordinate system
-			// -> OpenGL: Right-handed coordinate system
+			// -> OpenGL without "GL_ARB_clip_control"-extension: Right-handed coordinate system
 			return glm::mat4(
 				 vrHmdMatrix34.m[0][0],  vrHmdMatrix34.m[1][0], -vrHmdMatrix34.m[2][0], 0.0f,
 				 vrHmdMatrix34.m[0][1],  vrHmdMatrix34.m[1][1], -vrHmdMatrix34.m[2][1], 0.0f,
@@ -671,7 +671,7 @@ namespace RendererRuntime
 	{
 		// Transform the OpenGL style projection matrix into a Direct3D style projection matrix as described at http://cv4mar.blogspot.de/2009/03/transformation-matrices-between-opengl.html
 		// -> Direct3D: Left-handed coordinate system with clip space depth value range 0..1
-		// -> OpenGL: Right-handed coordinate system with clip space depth value range -1..1
+		// -> OpenGL without "GL_ARB_clip_control"-extension: Right-handed coordinate system with clip space depth value range -1..1
 		assert(nullptr != mVrSystem);
 		const vr::HmdMatrix44_t vrHmdMatrix34 = mVrSystem->GetProjectionMatrix(static_cast<vr::Hmd_Eye>(vrEye), nearZ, farZ);
 		return glm::mat4(

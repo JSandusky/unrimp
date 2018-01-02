@@ -1971,6 +1971,8 @@ namespace Renderer
 			uint32_t			maximumIndirectBufferSize;
 			uint8_t				maximumNumberOfMultisamples;
 			uint8_t				maximumAnisotropy;
+			bool				upperLeftOrigin;
+			bool				zeroToOneClipZ;
 			bool				individualUniforms;
 			bool				instancedArrays;
 			bool				drawInstanced;
@@ -1995,6 +1997,8 @@ namespace Renderer
 				maximumIndirectBufferSize(0),
 				maximumNumberOfMultisamples(1),
 				maximumAnisotropy(1),
+				upperLeftOrigin(true),
+				zeroToOneClipZ(true),
 				individualUniforms(false),
 				instancedArrays(false),
 				drawInstanced(false),

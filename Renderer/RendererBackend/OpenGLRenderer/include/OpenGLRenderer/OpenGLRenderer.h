@@ -313,6 +313,7 @@ namespace OpenGLRenderer
 		// Output-merger (OM) stage
 		Renderer::IRenderTarget* mRenderTarget;	///< Currently set render target (we keep a reference to it), can be a null pointer
 		// State cache to avoid making redundant OpenGL calls
+		uint32_t mOpenGLClipControlOrigin;	///< Currently set OpenGL clip control origin (type "GLenum" not used in here in order to keep the header slim)
 		uint32_t mOpenGLProgramPipeline;	///< Currently set OpenGL program pipeline, can be zero if no resource is set (type "GLuint" not used in here in order to keep the header slim)
 		uint32_t mOpenGLProgram;			///< Currently set OpenGL program, can be zero if no resource is set (type "GLuint" not used in here in order to keep the header slim)
 		uint32_t mOpenGLIndirectBuffer;		///< Currently set OpenGL indirect buffer, can be zero if no resource is set (type "GLuint" not used in here in order to keep the header slim)

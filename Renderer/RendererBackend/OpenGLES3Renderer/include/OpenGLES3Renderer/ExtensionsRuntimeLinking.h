@@ -102,6 +102,7 @@ namespace OpenGLES3Renderer
 		inline virtual bool isGL_EXT_texture_buffer() const override;
 		inline virtual bool isGL_EXT_draw_elements_base_vertex() const override;
 		inline virtual bool isGL_EXT_base_instance() const override;
+		inline virtual bool isGL_EXT_clip_control() const override;
 		// AMD
 		inline virtual bool isGL_AMD_compressed_3DC_texture() const override;
 		// NV
@@ -135,6 +136,7 @@ namespace OpenGLES3Renderer
 		bool mGL_EXT_texture_buffer;
 		bool mGL_EXT_draw_elements_base_vertex;
 		bool mGL_EXT_base_instance;
+		bool mGL_EXT_clip_control;
 		// AMD
 		bool mGL_AMD_compressed_3DC_texture;
 		// NV
@@ -199,6 +201,10 @@ namespace OpenGLES3Renderer
 	#define glDrawArraysInstancedBaseInstanceEXT				FNPTR(glDrawArraysInstancedBaseInstanceEXT)
 	#define glDrawElementsInstancedBaseInstanceEXT				FNPTR(glDrawElementsInstancedBaseInstanceEXT)
 	#define glDrawElementsInstancedBaseVertexBaseInstanceEXT	FNPTR(glDrawElementsInstancedBaseVertexBaseInstanceEXT)
+
+	// GL_EXT_clip_control
+	FNDEF_EX(void,	glClipControlEXT,	(GLenum origin, GLenum depth));
+	#define glClipControlEXT			FNPTR(glClipControlEXT)
 
 
 	//[-------------------------------------------------------]

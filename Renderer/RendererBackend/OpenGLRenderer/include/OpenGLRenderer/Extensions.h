@@ -49,7 +49,7 @@
 
 // Get rid of some nasty OS macros
 #undef max
-#undef None	// Linux: Undefine "None", this name is used inside enums defined by Unrimp (which gets defined inside Xlib.h pulled in by glx.h)
+#undef None	// Linux: Undefine "None", this name is used inside enums defined by Unrimp (which gets defined inside "Xlib.h" pulled in by "glx.h")
 
 
 //[-------------------------------------------------------]
@@ -166,6 +166,7 @@ namespace OpenGLRenderer
 		bool isGL_ARB_texture_storage() const;
 		bool isGL_ARB_copy_image() const;
 		bool isGL_ARB_gl_spirv() const;
+		bool isGL_ARB_clip_control() const;
 
 
 	//[-------------------------------------------------------]
@@ -283,6 +284,7 @@ namespace OpenGLRenderer
 		bool mGL_ARB_texture_storage;
 		bool mGL_ARB_copy_image;
 		bool mGL_ARB_gl_spirv;
+		bool mGL_ARB_clip_control;
 
 
 	};
@@ -543,6 +545,9 @@ namespace OpenGLRenderer
 
 	// GL_ARB_gl_spirv
 	FNDEF_EX(glSpecializeShaderARB,	PFNGLSPECIALIZESHADERARBPROC);
+
+	// GL_ARB_clip_control
+	FNDEF_EX(glClipControl,	PFNGLCLIPCONTROLPROC);
 
 
 	//[-------------------------------------------------------]

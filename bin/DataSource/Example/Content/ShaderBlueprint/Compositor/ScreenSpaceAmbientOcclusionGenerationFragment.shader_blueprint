@@ -126,7 +126,7 @@ float CalculateOcclusion(float3 viewRay, float2 textureCoordinate, int sampleInd
 		offset = MATRIX_MUL(PassData.ViewSpaceToClipSpaceMatrix, offset);
 		offset /= offset.w;	// To normalized device space (NDC)
 		offset.xy = offset.xy * 0.5f + 0.5f;
-		@property(HLSL)
+		@property(UpperLeftOrigin)
 			offset.y = 1.0f - offset.y;
 		@end
 		if (offset.x >= 0.0f && offset.y >= 0.0f && offset.x <= 1.0f && offset.y <= 1.0f)
