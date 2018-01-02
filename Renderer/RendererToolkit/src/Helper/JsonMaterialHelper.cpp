@@ -585,8 +585,16 @@ namespace RendererToolkit
 			}
 
 			// Get base material asset ID
-			const RendererRuntime::AssetId materialAssetId = StringHelper::getSourceAssetIdByString(rapidJsonValueMaterialAsset["BaseMaterial"].GetString(), input);
-			virtualDependencyFilenames.emplace_back(JsonHelper::getVirtualAssetFilename(input, materialAssetId));
+			const rapidjson::Value& rapidJsonValueBaseMaterial = rapidJsonValueMaterialAsset["BaseMaterial"];
+			try
+			{
+				const RendererRuntime::AssetId materialAssetId = StringHelper::getSourceAssetIdByString(rapidJsonValueBaseMaterial.GetString(), input);
+				virtualDependencyFilenames.emplace_back(JsonHelper::getVirtualAssetFilename(input, materialAssetId));
+			}
+			catch (const std::exception& e)
+			{
+				throw std::runtime_error("Failed to gather dependency files of material source asset \"" + virtualInputFilename + "\" due to unknown base material source asset \"" + std::string(rapidJsonValueBaseMaterial.GetString()) + "\": " + std::string(e.what()));
+			}
 		}
 		else
 		{
