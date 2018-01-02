@@ -548,7 +548,7 @@ namespace RendererToolkit
 
 			case RendererRuntime::MaterialPropertyValue::ValueType::COMPARISON_FUNC:
 			{
-				Renderer::ComparisonFunc value = Renderer::ComparisonFunc::LESS;
+				Renderer::ComparisonFunc value = Renderer::ComparisonFunc::GREATER;	// "Renderer::ComparisonFunc::GREATER" instead of "Renderer::ComparisonFunc::LESS" due to usage of Reversed-Z (see e.g. https://developer.nvidia.com/content/depth-precision-visualized and https://nlguillemot.wordpress.com/2016/12/07/reversed-z-in-opengl/)
 				JsonMaterialHelper::optionalComparisonFuncProperty(rapidJsonValue, propertyName, value);
 				return RendererRuntime::MaterialPropertyValue::fromComparisonFunc(value);
 			}

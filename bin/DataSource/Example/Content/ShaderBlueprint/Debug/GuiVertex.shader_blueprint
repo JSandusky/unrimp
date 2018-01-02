@@ -55,7 +55,7 @@ UNIFORM_BUFFER_END
 //[-------------------------------------------------------]
 MAIN_BEGIN
 	// Calculate the clip space vertex position, lower/left is (-1,-1) and upper/right is (1,1)
-	MAIN_OUTPUT_POSITION = MATRIX_MUL(PassData.ObjectSpaceToClipSpaceMatrix, float4(MAIN_INPUT(Position), 0.0f, 1.0f));
+	MAIN_OUTPUT_POSITION = MATRIX_MUL(PassData.ObjectSpaceToClipSpaceMatrix, float4(MAIN_INPUT(Position), 0.5f, 1.0f));
 
 	// Pass through the texture coordinates
 	@property(UpperLeftOrigin)

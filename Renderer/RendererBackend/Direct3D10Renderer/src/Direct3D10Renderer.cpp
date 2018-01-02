@@ -973,7 +973,7 @@ namespace Direct3D10Renderer
 	//[-------------------------------------------------------]
 	void Direct3D10Renderer::clear(uint32_t flags, const float color[4], float z, uint32_t stencil)
 	{
-		// Unlike Direct3D 9, OpenGL or OpenGL ES 2, Direct3D 10 clears a given render target view and not the currently bound
+		// Unlike Direct3D 9, OpenGL or OpenGL ES 3, Direct3D 10 clears a given render target view and not the currently bound
 
 		// Begin debug event
 		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(this)

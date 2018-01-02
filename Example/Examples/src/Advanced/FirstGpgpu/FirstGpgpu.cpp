@@ -78,7 +78,7 @@ int FirstGpgpu::run()
 
 		// Begin scene rendering
 		// -> Required for Direct3D 9 and Direct3D 12
-		// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
+		// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 3
 		if (mRenderer->beginScene())
 		{
 			// Let the application to its job
@@ -86,7 +86,7 @@ int FirstGpgpu::run()
 
 			// End scene rendering
 			// -> Required for Direct3D 9 and Direct3D 12
-			// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
+			// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 3
 			mRenderer->endScene();
 		}
 
@@ -138,7 +138,7 @@ void FirstGpgpu::onInitialization()
 		// Create the texture instance, but without providing texture data (we use the texture as render target)
 		// -> Use the "Renderer::TextureFlag::RENDER_TARGET"-flag to mark this texture as a render target
 		// -> Required for Vulkan, Direct3D 9, Direct3D 10, Direct3D 11 and Direct3D 12
-		// -> Not required for OpenGL and OpenGL ES 2
+		// -> Not required for OpenGL and OpenGL ES 3
 		// -> The optimized texture clear value is a Direct3D 12 related option
 		Renderer::ITexture* texture2D = mTexture2D[i] = mTextureManager->createTexture2D(64, 64, textureFormat, nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT, 1, reinterpret_cast<const Renderer::OptimizedTextureClearValue*>(&Color4::BLUE));
 
@@ -309,7 +309,7 @@ void FirstGpgpu::fillCommandBufferContentGeneration()
 	Renderer::Command::SetRenderTarget::create(mCommandBufferContentGeneration, mFramebuffer[0]);
 
 	// Clear the color buffer of the current render target with blue
-	Renderer::Command::Clear::create(mCommandBufferContentGeneration, Renderer::ClearFlag::COLOR, Color4::BLUE, 1.0f, 0);
+	Renderer::Command::Clear::create(mCommandBufferContentGeneration, Renderer::ClearFlag::COLOR, Color4::BLUE);
 
 	// Set the used graphics root signature
 	Renderer::Command::SetGraphicsRootSignature::create(mCommandBufferContentGeneration, mRootSignature);

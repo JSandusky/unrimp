@@ -89,7 +89,7 @@ void FirstRenderToTexture::onInitialization()
 			// Create the texture instance, but without providing texture data (we use the texture as render target)
 			// -> Use the "Renderer::TextureFlag::RENDER_TARGET"-flag to mark this texture as a render target
 			// -> Required for Vulkan, Direct3D 9, Direct3D 10, Direct3D 11 and Direct3D 12
-			// -> Not required for OpenGL and OpenGL ES 2
+			// -> Not required for OpenGL and OpenGL ES 3
 			// -> The optimized texture clear value is a Direct3D 12 related option
 			const Renderer::TextureFormat::Enum textureFormat = Renderer::TextureFormat::Enum::R8G8B8A8;
 			Renderer::ITexture* texture2D = mTextureManager->createTexture2D(16, 16, textureFormat, nullptr, Renderer::TextureFlag::RENDER_TARGET, Renderer::TextureUsage::DEFAULT, 1, reinterpret_cast<const Renderer::OptimizedTextureClearValue*>(&Color4::GREEN));
@@ -242,7 +242,7 @@ void FirstRenderToTexture::fillCommandBuffer()
 		Renderer::Command::SetRenderTarget::create(mCommandBuffer, mFramebuffer);
 
 		// Clear the color buffer of the current render target with green
-		Renderer::Command::Clear::create(mCommandBuffer, Renderer::ClearFlag::COLOR, Color4::GREEN, 1.0f, 0);
+		Renderer::Command::Clear::create(mCommandBuffer, Renderer::ClearFlag::COLOR, Color4::GREEN);
 
 		// Restore main swap chain as current render target
 		Renderer::Command::SetRenderTarget::create(mCommandBuffer, getMainRenderTarget());
@@ -256,7 +256,7 @@ void FirstRenderToTexture::fillCommandBuffer()
 		COMMAND_BEGIN_DEBUG_EVENT(mCommandBuffer, "Use the render to texture result")
 
 		// Clear the color buffer of the current render target with gray, do also clear the depth buffer
-		Renderer::Command::Clear::create(mCommandBuffer, Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
+		Renderer::Command::Clear::create(mCommandBuffer, Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY);
 
 		// Set the used graphics root signature
 		Renderer::Command::SetGraphicsRootSignature::create(mCommandBuffer, mRootSignature);

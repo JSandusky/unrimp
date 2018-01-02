@@ -38,6 +38,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	DepthStencilState::DepthStencilState(const Renderer::DepthStencilState& depthStencilState) :
 		mDepthStencilState(depthStencilState),
+		mOpenGLDepthMaskEnabled(static_cast<GLboolean>((Renderer::DepthWriteMask::ALL == mDepthStencilState.depthWriteMask) ? GL_TRUE : GL_FALSE)),
 		mOpenGLDepthFunc(Mapping::getOpenGLComparisonFunc(depthStencilState.depthFunc))
 	{
 		// Nothing here
@@ -56,7 +57,7 @@ namespace OpenGLRenderer
 		}
 
 		// Renderer::DepthStencilState::depthWriteMask
-		glDepthMask(static_cast<GLboolean>((Renderer::DepthWriteMask::ALL == mDepthStencilState.depthWriteMask) ? GL_TRUE : GL_FALSE));
+		glDepthMask(mOpenGLDepthMaskEnabled);
 
 		// Renderer::DepthStencilState::depthFunc
 		glDepthFunc(static_cast<GLenum>(mOpenGLDepthFunc));

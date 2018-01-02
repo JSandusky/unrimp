@@ -75,7 +75,7 @@
 			"DepthStencilState":
 			{
 				"DepthWriteMask": "ZERO",
-				"DepthFunc": "LESS_EQUAL"
+				"DepthFunc": "GREATER_EQUAL"
 			}
 		},
 		"ResourceGroups":

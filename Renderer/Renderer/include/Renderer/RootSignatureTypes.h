@@ -102,7 +102,7 @@ namespace Renderer
 
 		// The rest is not part of "D3D12_DESCRIPTOR_RANGE" and was added to support OpenGL and Direct3D 9 as well
 		static const uint32_t NAME_LENGTH = 32;
-		char				  baseShaderRegisterName[NAME_LENGTH];	///< When not using explicit binding locations (OpenGL ES 2, legacy GLSL profiles)
+		char				  baseShaderRegisterName[NAME_LENGTH];	///< When not using explicit binding locations (OpenGL ES 3, legacy GLSL profiles)
 		ShaderVisibility	  shaderVisibility;
 	};
 	struct DescriptorRangeBuilder : public DescriptorRange

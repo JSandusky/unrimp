@@ -292,7 +292,7 @@ void FirstMesh::onDraw()
 		}
 
 		// Clear the color buffer of the current render target with gray, do also clear the depth buffer
-		Renderer::Command::Clear::create(mCommandBuffer, Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
+		Renderer::Command::Clear::create(mCommandBuffer, Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY);
 
 		// Set the used graphics root signature
 		Renderer::Command::SetGraphicsRootSignature::create(mCommandBuffer, mRootSignature);
@@ -306,7 +306,7 @@ void FirstMesh::onDraw()
 
 		{ // Set uniform
 			// Calculate the object space to clip space matrix
-			const glm::mat4 viewSpaceToClipSpace	= glm::perspective(45.0f, aspectRatio, 0.1f, 100.f);
+			const glm::mat4 viewSpaceToClipSpace	= glm::perspective(45.0f, aspectRatio, 100.0f, 0.1f);	// Near and far flipped due to usage of Reversed-Z (see e.g. https://developer.nvidia.com/content/depth-precision-visualized and https://nlguillemot.wordpress.com/2016/12/07/reversed-z-in-opengl/)
 			const glm::mat4 viewTranslate			= glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -7.0f, 25.0f));
 			const glm::mat4 worldSpaceToViewSpace	= glm::rotate(viewTranslate, mGlobalTimer, glm::vec3(0.0f, 1.0f, 0.0f));
 			const glm::mat4 objectSpaceToWorldSpace	= glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));

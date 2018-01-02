@@ -54,7 +54,7 @@ namespace OpenGLRenderer
 		glGenBuffersARB(1, &mOpenGLUniformBuffer);
 
 		// Bind this OpenGL uniform buffer and upload the data
-		// -> Usage: These constants directly map to GL_ARB_vertex_buffer_object and OpenGL ES 2 constants, do not change them
+		// -> Usage: These constants directly map to GL_ARB_vertex_buffer_object and OpenGL ES 3 constants, do not change them
 		glBindBufferARB(GL_UNIFORM_BUFFER, mOpenGLUniformBuffer);
 		glBufferDataARB(GL_UNIFORM_BUFFER, static_cast<GLsizeiptrARB>(numberOfBytes), data, static_cast<GLenum>(bufferUsage));
 

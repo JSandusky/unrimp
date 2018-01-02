@@ -193,7 +193,7 @@ namespace RendererRuntime
 					// Create the texture instance, but without providing texture data (we use the texture as render target)
 					// -> Use the "Renderer::TextureFlag::RENDER_TARGET"-flag to mark this texture as a render target
 					// -> Required for Vulkan, Direct3D 9, Direct3D 10, Direct3D 11 and Direct3D 12
-					// -> Not required for OpenGL and OpenGL ES 2
+					// -> Not required for OpenGL and OpenGL ES 3
 					// -> The optimized texture clear value is a Direct3D 12 related option
 					renderTargetTextureElement.texture = mRendererRuntime.getTextureManager().createTexture2D(width, height, renderTargetTextureSignature.getTextureFormat(), nullptr, textureFlags, Renderer::TextureUsage::DEFAULT, renderTargetTextureSignature.getAllowMultisample() ? numberOfMultisamples : 1u);
 					RENDERER_SET_RESOURCE_DEBUG_NAME(renderTargetTextureElement.texture, "Render target texture manager")

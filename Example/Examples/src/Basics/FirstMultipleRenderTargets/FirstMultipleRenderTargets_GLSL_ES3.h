@@ -29,26 +29,53 @@ if (0 == strcmp(renderer->getName(), "OpenGLES3"))
 //[-------------------------------------------------------]
 //[ Vertex shader source code                             ]
 //[-------------------------------------------------------]
-// One vertex shader invocation per vertex
-vertexShaderSourceCode = R"(#version 300 es	// OpenGL ES 3.0
-
-// Attribute input/output
-in  highp vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
-out highp vec2 TexCoord;	// Normalized texture coordinate as output
-
-// Programs
-void main()
+if (renderer->getCapabilities().upperLeftOrigin)
 {
-	// Pass through the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
-	gl_Position = vec4(Position, 0.0, 1.0);
+	// One vertex shader invocation per vertex
+	vertexShaderSourceCode = R"(#version 300 es	// OpenGL ES 3.0
 
-	// Calculate the texture coordinate by mapping the clip space coordinate to a texture space coordinate
-	// -> In OpenGL ES 2, the texture origin is left/bottom which maps well to clip space coordinates
-	// -> (-1,-1) -> (0,0)
-	// -> (1,1) -> (1,1)
-	TexCoord = Position.xy * 0.5 + 0.5;
+	// Attribute input/output
+	in  highp vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
+	out highp vec2 TexCoord;	// Normalized texture coordinate as output
+
+	// Programs
+	void main()
+	{
+		// Pass through the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
+		gl_Position = vec4(Position, 0.5, 1.0);
+
+		// Calculate the texture coordinate by mapping the clip space coordinate to a texture space coordinate
+		// -> In OpenGL ES 3 with "GL_EXT_clip_control"-extension, the texture origin is left/top which does not map well to clip space coordinates
+		// -> We have to flip the y-axis to map the coordinate system to the texture coordinate system
+		// -> (-1,-1) -> (0,1)
+		// -> (1,1) -> (1,0)
+		TexCoord = vec2(Position.x * 0.5f + 0.5f, 1.0f - (Position.y * 0.5f + 0.5f));
+	}
+	)";
 }
-)";
+else
+{
+	// One vertex shader invocation per vertex
+	vertexShaderSourceCode = R"(#version 300 es	// OpenGL ES 3.0
+
+	// Attribute input/output
+	in  highp vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
+	out highp vec2 TexCoord;	// Normalized texture coordinate as output
+
+	// Programs
+	void main()
+	{
+		// Pass through the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
+		gl_Position = vec4(Position, 0.5, 1.0);
+
+		// Calculate the texture coordinate by mapping the clip space coordinate to a texture space coordinate
+		// -> In OpenGL ES 3 without "GL_EXT_clip_control"-extension, the texture origin is left/bottom which maps well to clip space coordinates
+		// -> (-1,-1) -> (0,0)
+		// -> (1,1) -> (1,1)
+		TexCoord = Position.xy * 0.5 + 0.5;
+	}
+	)";
+}
 
 
 //[-------------------------------------------------------]
@@ -59,14 +86,14 @@ fragmentShaderSourceCode_MultipleRenderTargets = R"(#version 300 es	// OpenGL ES
 precision highp float; // Default precision to high for floating points
 
 // Attribute input/output
-in mediump vec2 TexCoord;			// Normalized texture coordinate as input
-out highp vec4 FragmentColor[2];	// Output variable for fragment color
+in  mediump vec2 TexCoord;			// Normalized texture coordinate as input
+out highp   vec4 OutputColor[2];	// Output variable for fragment color
 
 // Programs
 void main()
 {
-	FragmentColor[0] = vec4(1.0f, 0.0f, 0.0f, 0.0f);	// Red
-	FragmentColor[1] = vec4(0.0f, 0.0f, 1.0f, 0.0f);	// Blue
+	OutputColor[0] = vec4(1.0f, 0.0f, 0.0f, 0.0f);	// Red
+	OutputColor[1] = vec4(0.0f, 0.0f, 1.0f, 0.0f);	// Blue
 }
 )";
 
@@ -79,8 +106,8 @@ fragmentShaderSourceCode = R"(#version 300 es	// OpenGL ES 3.0
 precision highp float; // Default precision to high for floating points
 
 // Attribute input/output
-in mediump vec2 TexCoord;		// Normalized texture coordinate as input
-out highp vec4 FragmentColor;	// Output variable for fragment color
+in  mediump vec2 TexCoord;		// Normalized texture coordinate as input
+out highp   vec4 OutputColor;	// Output variable for fragment color
 
 // Uniforms
 uniform mediump sampler2D AlbedoMap0;
@@ -97,7 +124,7 @@ void main()
 
 	// Calculate the final color by subtracting the colors of the both render targets from white
 	// -> The result should be white or green
-	FragmentColor = vec4(1.0, 1.0, 1.0, 1.0) - color0 - color1;
+	OutputColor = vec4(1.0, 1.0, 1.0, 1.0) - color0 - color1;
 }
 )";
 

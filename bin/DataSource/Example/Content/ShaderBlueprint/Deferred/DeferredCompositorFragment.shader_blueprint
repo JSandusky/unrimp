@@ -110,6 +110,7 @@ SAMPLER_STATE(2, 1, SamplerLinear, 1)
 	@insertpiece(DefineExponentialShadow)
 @includepiece($ProjectName/ShaderPiece/Shadow.asset)
 	@insertpiece(DefineCalculateShadowVisibility)
+	@insertpiece(DefineShadowDebugging)
 
 float3 CalculateColorByGBuffer(float3 viewRay, float2 screenSpacePosition, float4 gbuffer0Value, float4 gbuffer1Value, float4 gbuffer2Value, float depth, float screenSpaceAmbientOcclusion)
 {
@@ -155,6 +156,9 @@ float3 CalculateColorByGBuffer(float3 viewRay, float2 screenSpacePosition, float
 
 	// Apply fog
 	color = CalculateFoggedColor(viewSpacePosition, color);
+
+	// Don't remove the following commented code: Shadow map debugging
+	// color *= GetShadowCascadeColor(linearDepth);
 
 	// Done
 	return color;

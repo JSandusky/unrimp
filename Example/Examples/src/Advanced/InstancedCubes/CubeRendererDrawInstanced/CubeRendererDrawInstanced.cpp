@@ -405,7 +405,7 @@ void CubeRendererDrawInstanced::fillCommandBuffer(float globalTimer, float globa
 		else
 		{
 			// Set individual program uniforms
-			// -> Using uniform buffers (aka constant buffers in Direct3D) would be more efficient, but Direct3D 9 doesn't support it (neither does e.g. OpenGL ES 2.0)
+			// -> Using uniform buffers (aka constant buffers in Direct3D) would be more efficient, but Direct3D 9 doesn't support it (neither does e.g. OpenGL ES 3.0)
 			// -> To keep it simple in here, I just use a less efficient string to identity the uniform (does not really hurt in here)
 			// TODO(co) Update
 			// mProgram->setUniform2fv(mProgram->getUniformHandle("TimerAndGlobalScale"), timerAndGlobalScale);

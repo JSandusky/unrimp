@@ -69,7 +69,7 @@ struct PassDataStruct
 	float3	 LightClustersScale;
 	float3	 LightClustersBias;
 	float2   ViewportSize;
-	float2   ProjectionParameters;
+	float2   ProjectionParametersReversedZ;
 	uint	 FullCoverageMask;
 	float	 TessellatedTriangleWidth;
 };

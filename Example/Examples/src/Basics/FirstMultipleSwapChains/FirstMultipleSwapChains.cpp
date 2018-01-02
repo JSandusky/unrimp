@@ -359,7 +359,7 @@ void FirstMultipleSwapChains::onDrawRequest()
 			{
 				// Begin scene rendering
 				// -> Required for Direct3D 9 and Direct3D 12
-				// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
+				// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 3
 				if (renderer->beginScene())
 				{
 					{ // Fill the command buffer
@@ -391,7 +391,7 @@ void FirstMultipleSwapChains::onDrawRequest()
 
 					// End scene rendering
 					// -> Required for Direct3D 9 and Direct3D 12
-					// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
+					// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 3
 					renderer->endScene();
 
 					// Present the content of the current back buffer
@@ -405,7 +405,7 @@ void FirstMultipleSwapChains::onDrawRequest()
 
 		// Render to the swap chain created in this example, but only if it's valid: Begin scene rendering
 		// -> Required for Direct3D 9 and Direct3D 12
-		// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
+		// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 3
 		if (nullptr != mSwapChain && renderer->beginScene())
 		{
 			{ // Fill the command buffer
@@ -418,7 +418,7 @@ void FirstMultipleSwapChains::onDrawRequest()
 				{ // Set the viewport
 					// Please note that for some graphics APIs its really important that the viewport
 					// is inside the bounds of the currently used render target
-					// -> For Direct3D 10 and Direct3D 11 TODO(co)(Check OpenGL and OpenGL ES 2 behaviour) it's OK
+					// -> For Direct3D 10 and Direct3D 11 TODO(co)(Check OpenGL and OpenGL ES 3 behaviour) it's OK
 					//    when using a viewport which is outside the bounds of the currently used render target.
 					//    Within this example you can intentionally set no new viewport in order to see what
 					//    happens when using a viewport other than one covering the whole native OS window.
@@ -448,7 +448,7 @@ void FirstMultipleSwapChains::onDrawRequest()
 
 			// End scene rendering
 			// -> Required for Direct3D 9 and Direct3D 12
-			// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
+			// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 3
 			renderer->endScene();
 
 			// Present the content of the current back buffer
@@ -472,7 +472,7 @@ void FirstMultipleSwapChains::fillCommandBuffer(const float color[4], Renderer::
 	COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
 
 	// Clear the color buffer of the current render target with the provided color, do also clear the depth buffer
-	Renderer::Command::Clear::create(commandBuffer, Renderer::ClearFlag::COLOR_DEPTH, color, 1.0f, 0);
+	Renderer::Command::Clear::create(commandBuffer, Renderer::ClearFlag::COLOR_DEPTH, color);
 
 	// Set the used graphics root signature
 	Renderer::Command::SetGraphicsRootSignature::create(commandBuffer, mRootSignature);

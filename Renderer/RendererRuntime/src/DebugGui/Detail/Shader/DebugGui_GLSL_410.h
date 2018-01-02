@@ -53,7 +53,7 @@ layout(std140) uniform UniformBlockDynamicVs
 void main()
 {
 	// Calculate the clip space vertex position, lower/left is (-1,-1) and upper/right is (1,1)
-	gl_Position = ObjectSpaceToClipSpaceMatrix * vec4(Position, 0.0, 1.0);
+	gl_Position = ObjectSpaceToClipSpaceMatrix * vec4(Position, 0.5, 1.0);
 
 	// Pass through the vertex texture coordinate
 	TexCoordVs = TexCoord;
@@ -71,8 +71,9 @@ void main()
 fragmentShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
 
 // Attribute input/output
-in vec2 TexCoordVs;	// Normalized texture coordinate as input
-in vec4 ColorVs;
+in  vec2 TexCoordVs;	// Normalized texture coordinate as input
+in  vec4 ColorVs;
+out vec4 OutputColor;	// Output variable for fragment color
 
 // Uniforms
 uniform sampler2D GlyphMap;	// Glyph atlas texture map
@@ -81,7 +82,7 @@ uniform sampler2D GlyphMap;	// Glyph atlas texture map
 void main()
 {
 	// Fetch the texel at the given texture coordinate and return its color
-	gl_FragColor = ColorVs * texture2D(GlyphMap, TexCoordVs).rrrr;
+	OutputColor = ColorVs * texture2D(GlyphMap, TexCoordVs).rrrr;
 }
 )";
 

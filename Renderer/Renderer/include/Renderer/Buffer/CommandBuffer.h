@@ -778,7 +778,8 @@ namespace Renderer
 		struct Clear
 		{
 			// Static methods
-			inline static void create(CommandBuffer& commandBuffer, uint32_t flags, const float color[4], float z, uint32_t stencil)
+			// -> z = 0 instead of 1 due to usage of Reversed-Z (see e.g. https://developer.nvidia.com/content/depth-precision-visualized and https://nlguillemot.wordpress.com/2016/12/07/reversed-z-in-opengl/)
+			inline static void create(CommandBuffer& commandBuffer, uint32_t flags, const float color[4], float z = 0.0f, uint32_t stencil = 0)
 			{
 				*commandBuffer.addCommand<Clear>() = Clear(flags, color, z, stencil);
 			}

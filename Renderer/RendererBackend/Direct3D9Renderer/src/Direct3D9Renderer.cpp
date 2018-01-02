@@ -827,7 +827,7 @@ namespace Direct3D9Renderer
 			// The "IDirect3DDevice9::SetRenderTarget method"-documentation at MSDN http://msdn.microsoft.com/en-us/library/windows/desktop/bb174455%28v=vs.85%29.aspx states:
 			//   "Setting a new render target will cause the viewport (see Viewports and Clipping (Direct3D 9)) to be set to the full size of the new render target."
 			// -> Although it's not mentioned within the documentation, the same behaviour is true for the scissor rectangle
-			// -> This behaviour is different from Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
+			// -> This behaviour is different from Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 3
 			// -> We have to compensate the Direct3D 9 behaviour in here
 
 			// Backup the currently set Direct3D 9 viewport and scissor rectangle
@@ -974,7 +974,7 @@ namespace Direct3D9Renderer
 			}
 		#endif
 
-		// Unlike Direct3D 9, when using Direct3D 10, Direct3D 11, OpenGL or OpenGL ES 2, the viewport(s) and scissor rectangle(s) do not affect the clear operation
+		// Unlike Direct3D 9, when using Direct3D 10, Direct3D 11, OpenGL or OpenGL ES 3, the viewport(s) and scissor rectangle(s) do not affect the clear operation
 		// -> We have to compensate the Direct3D 9 behaviour in here
 
 		// Backup the currently set Direct3D 9 viewport

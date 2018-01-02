@@ -129,7 +129,6 @@ namespace Direct3D9Renderer
 		//[-------------------------------------------------------]
 		//[ Renderer::ComparisonFunc                              ]
 		//[-------------------------------------------------------]
-		// TODO(co)
 		/**
 		*  @brief
 		*    "Renderer::ComparisonFunc" to Direct3D 9 comparison function
@@ -138,9 +137,9 @@ namespace Direct3D9Renderer
 		*    "Renderer::ComparisonFunc" to map
 		*
 		*  @return
-		*    Direct3D 9 comparison function
+		*    Direct3D 9 comparison function (type "DWORD" not used in here in order to keep the header slim)
 		*/
-	//	static GLint getDirect3D9ComparisonFunc(Renderer::ComparisonFunc comparisonFunc);
+		static uint32_t getDirect3D9ComparisonFunc(Renderer::ComparisonFunc comparisonFunc);
 
 		//[-------------------------------------------------------]
 		//[ Renderer::VertexAttributeFormat and semantic          ]

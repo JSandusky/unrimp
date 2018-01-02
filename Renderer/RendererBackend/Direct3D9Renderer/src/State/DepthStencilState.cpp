@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "Direct3D9Renderer/State/DepthStencilState.h"
+#include "Direct3D9Renderer/Mapping.h"
 #include "Direct3D9Renderer/d3d9.h"
 
 
@@ -54,7 +55,10 @@ namespace Direct3D9Renderer
 		// Renderer::DepthStencilState::depthWriteMask
 		direct3DDevice9.SetRenderState(D3DRS_ZWRITEENABLE, static_cast<DWORD>((Renderer::DepthWriteMask::ALL == mDepthStencilState.depthWriteMask) ? TRUE : FALSE));
 
-		// TODO(co) Map the rest of the depth stencil states
+		// Renderer::DepthStencilState::depthFunc
+		direct3DDevice9.SetRenderState(D3DRS_ZFUNC, Mapping::getDirect3D9ComparisonFunc(mDepthStencilState.depthFunc));
+
+		// TODO(co) Map the rest of the depth stencil states, store mapped values instead of mapping over and over again during runtime
 	}
 
 

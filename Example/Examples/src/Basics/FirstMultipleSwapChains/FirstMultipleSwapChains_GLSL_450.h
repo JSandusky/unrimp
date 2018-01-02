@@ -43,7 +43,7 @@ layout(location = 0) out gl_PerVertex
 void main()
 {
 	// Pass through the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
-	gl_Position = vec4(Position, 0.0, 1.0);
+	gl_Position = vec4(Position, 0.5, 1.0);
 }
 )";
 
@@ -55,7 +55,7 @@ void main()
 fragmentShaderSourceCode = R"(#version 450 core	// OpenGL 4.5
 
 // Attribute input/output
-layout(location = 0) out vec4 OutputColor;
+layout(location = 0) out vec4 OutputColor;	// Output variable for fragment color
 
 // Programs
 void main()

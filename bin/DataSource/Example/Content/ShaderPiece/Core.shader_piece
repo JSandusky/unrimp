@@ -31,6 +31,17 @@
 		// - https://bitbucket.org/sinbad/ogre/commits/cf46287f17faeed4a47d411e911787c164d296ba
 		#define FAST_SHADER_BUILD_HACK(numberOfElements) 2
 
+		/**
+		*  @brief
+		*    Apply Reversed-Z
+		*
+		*  @note
+		*    - This macro is used to make it easy to search for Reversed-Z relevant places
+		*    - For background theory see "Depth Precision Visualized" by Nathan Reed - https://developer.nvidia.com/content/depth-precision-visualized
+		*    - For practical information see "Reversed-Z in OpenGL" by Nicolas Guillemot - https://nlguillemot.wordpress.com/2016/12/07/reversed-z-in-opengl/
+		*/
+		#define REVERSED_Z(z) (1.0f - z)
+
 		// Shader attribute input
 		#define INPUT_BEGIN struct SHADER_INPUT {
 			#define INPUT_VERTEX_ID uint vertexId : SV_VERTEXID;
@@ -147,8 +158,8 @@
 		#define SAMPLE_3D_LOD(textureObject, samplerObject, coordinate) textureObject.SampleLevel(samplerObject, coordinate.xyz, coordinate.w)
 		#define SAMPLE_CUBE(textureObject, samplerObject, coordinate) textureObject.Sample(samplerObject, coordinate)
 		#define SAMPLE_CUBE_LOD(textureObject, samplerObject, coordinate) textureObject.SampleLevel(samplerObject, coordinate.xyz, coordinate.w)
-		#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) textureObject.SampleLevel(samplerObject, coordinate.xy, coordinate.w).r
-		#define SAMPLE_DEPTH_2D_MS(textureObject, coordinate, sampleIndex) textureObject.Load(coordinate, sampleIndex).r
+		#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) REVERSED_Z(textureObject.SampleLevel(samplerObject, coordinate.xy, coordinate.w).r)
+		#define SAMPLE_DEPTH_2D_MS(textureObject, coordinate, sampleIndex) REVERSED_Z(textureObject.Load(coordinate, sampleIndex).r)
 
 		// Load/fetch
 		#define TEXTURE_FETCH_2D(name, texelIndex) name.Load(texelIndex)
@@ -197,6 +208,17 @@
 		// - https://bitbucket.org/sinbad/ogre/commits/cf46287f17faeed4a47d411e911787c164d296ba
 		// -> Not relevant for GLSL
 		#define FAST_SHADER_BUILD_HACK(numberOfElements) numberOfElements
+
+		/**
+		*  @brief
+		*    Apply Reversed-Z
+		*
+		*  @note
+		*    - This macro is used to make it easy to search for Reversed-Z relevant places
+		*    - For background theory see "Depth Precision Visualized" by Nathan Reed - https://developer.nvidia.com/content/depth-precision-visualized
+		*    - For practical information see "Reversed-Z in OpenGL" by Nicolas Guillemot - https://nlguillemot.wordpress.com/2016/12/07/reversed-z-in-opengl/
+		*/
+		#define REVERSED_Z(z) (1.0f - z)
 
 		// Shader attribute input
 		#define INPUT_BEGIN
@@ -292,8 +314,8 @@
 		#define SAMPLE_3D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xyz, coordinate.w)
 		#define SAMPLE_CUBE(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
 		#define SAMPLE_CUBE_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xyz, coordinate.w)
-		#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xy, coordinate.w).r
-		#define SAMPLE_DEPTH_2D_MS(textureObject, coordinate, sampleIndex) texelFetch(textureObject, coordinate, sampleIndex).r
+		#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) REVERSED_Z(textureLod(textureObject, coordinate.xy, coordinate.w).r)
+		#define SAMPLE_DEPTH_2D_MS(textureObject, coordinate, sampleIndex) REVERSED_Z(texelFetch(textureObject, coordinate, sampleIndex).r)
 
 		// Fragment shader only
 		#define DECLARE_FRAGMENT_POSITION
@@ -353,6 +375,17 @@
 		// - https://bitbucket.org/sinbad/ogre/commits/cf46287f17faeed4a47d411e911787c164d296ba
 		// -> Not relevant for GLSL
 		#define FAST_SHADER_BUILD_HACK(numberOfElements) numberOfElements
+
+		/**
+		*  @brief
+		*    Apply Reversed-Z
+		*
+		*  @note
+		*    - This macro is used to make it easy to search for Reversed-Z relevant places
+		*    - For background theory see "Depth Precision Visualized" by Nathan Reed - https://developer.nvidia.com/content/depth-precision-visualized
+		*    - For practical information see "Reversed-Z in OpenGL" by Nicolas Guillemot - https://nlguillemot.wordpress.com/2016/12/07/reversed-z-in-opengl/
+		*/
+		#define REVERSED_Z(z) (1.0f - z)
 
 		// Shader attribute input
 		#define INPUT_BEGIN
@@ -445,12 +478,12 @@
 		#define SAMPLE_CUBE(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
 		#define SAMPLE_CUBE_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xyz, coordinate.w)
 		@property(ZeroToOneClipZ)
-			#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xy, coordinate.w).r
-			#define SAMPLE_DEPTH_2D_MS(textureObject, coordinate, sampleIndex) texelFetch(textureObject, coordinate, sampleIndex).r
+			#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) REVERSED_Z(textureLod(textureObject, coordinate.xy, coordinate.w).r)
+			#define SAMPLE_DEPTH_2D_MS(textureObject, coordinate, sampleIndex) REVERSED_Z(texelFetch(textureObject, coordinate, sampleIndex).r)
 		@end
 		@property(!ZeroToOneClipZ)
-			#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) (textureLod(textureObject, coordinate.xy, coordinate.w).r * 2.0f - 1.0f)	// 0..1 -> -1..1
-			#define SAMPLE_DEPTH_2D_MS(textureObject, coordinate, sampleIndex) (texelFetch(textureObject, coordinate, sampleIndex).r * 2.0f - 1.0f)	// 0..1 -> -1..1
+			#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) (REVERSED_Z(textureLod(textureObject, coordinate.xy, coordinate.w).r) * 2.0f - 1.0f)	// 0..1 -> -1..1
+			#define SAMPLE_DEPTH_2D_MS(textureObject, coordinate, sampleIndex) (REVERSED_Z(texelFetch(textureObject, coordinate, sampleIndex).r) * 2.0f - 1.0f)	// 0..1 -> -1..1
 		@end
 
 		// Fragment shader only
@@ -514,6 +547,17 @@
 		// - https://bitbucket.org/sinbad/ogre/commits/cf46287f17faeed4a47d411e911787c164d296ba
 		// -> Not relevant for GLSL
 		#define FAST_SHADER_BUILD_HACK(numberOfElements) numberOfElements
+
+		/**
+		*  @brief
+		*    Apply Reversed-Z
+		*
+		*  @note
+		*    - This macro is used to make it easy to search for Reversed-Z relevant places
+		*    - For background theory see "Depth Precision Visualized" by Nathan Reed - https://developer.nvidia.com/content/depth-precision-visualized
+		*    - For practical information see "Reversed-Z in OpenGL" by Nicolas Guillemot - https://nlguillemot.wordpress.com/2016/12/07/reversed-z-in-opengl/
+		*/
+		#define REVERSED_Z(z) (1.0f - z)
 
 		// Shader attribute input// Shader attribute input
 		#define INPUT_BEGIN
@@ -609,12 +653,12 @@
 		#define SAMPLE_CUBE(textureObject, samplerObject, coordinate) texture(textureObject, coordinate)
 		#define SAMPLE_CUBE_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xyz, coordinate.w)
 		@property(ZeroToOneClipZ)
-			#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) textureLod(textureObject, coordinate.xy, coordinate.w).r
-			#define SAMPLE_DEPTH_2D_MS(textureObject, coordinate, sampleIndex) texelFetch(textureObject, coordinate, sampleIndex).r
+			#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) REVERSED_Z(textureLod(textureObject, coordinate.xy, coordinate.w).r)
+			#define SAMPLE_DEPTH_2D_MS(textureObject, coordinate, sampleIndex) REVERSED_Z(texelFetch(textureObject, coordinate, sampleIndex).r)
 		@end
 		@property(!ZeroToOneClipZ)
-			#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) (textureLod(textureObject, coordinate.xy, coordinate.w).r * 2.0f - 1.0f)	// 0..1 -> -1..1
-			#define SAMPLE_DEPTH_2D_MS(textureObject, coordinate, sampleIndex) (texelFetch(textureObject, coordinate, sampleIndex).r * 2.0f - 1.0f)	// 0..1 -> -1..1
+			#define SAMPLE_DEPTH_2D_LOD(textureObject, samplerObject, coordinate) (REVERSED_Z(textureLod(textureObject, coordinate.xy, coordinate.w).r) * 2.0f - 1.0f)	// 0..1 -> -1..1
+			#define SAMPLE_DEPTH_2D_MS(textureObject, coordinate, sampleIndex) (REVERSED_Z(texelFetch(textureObject, coordinate, sampleIndex).r) * 2.0f - 1.0f)	// 0..1 -> -1..1
 		@end
 
 		// Fragment shader only

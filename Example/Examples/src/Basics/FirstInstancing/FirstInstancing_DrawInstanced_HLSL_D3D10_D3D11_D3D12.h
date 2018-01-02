@@ -47,7 +47,7 @@ VS_OUTPUT main(VS_INPUT input)
 {
 	// Pass through the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
 	VS_OUTPUT output;
-	output.Position = float4(input.Position.x, input.Position.y - float(input.InstanceID), 0.0f, 1.0f);
+	output.Position = float4(input.Position.x, input.Position.y - float(input.InstanceID), 0.5f, 1.0f);
 	return output;
 }
 )";

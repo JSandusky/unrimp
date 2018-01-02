@@ -107,6 +107,7 @@ namespace RendererRuntime
 		// View space to clip space matrix (aka "projection matrix")
 		inline const glm::mat4& getViewSpaceToClipSpaceMatrix() const;	// No matrix update, just returning that's there
 		RENDERERRUNTIME_API_EXPORT const glm::mat4& getViewSpaceToClipSpaceMatrix(float aspectRatio) const;
+		RENDERERRUNTIME_API_EXPORT const glm::mat4& getViewSpaceToClipSpaceMatrixReversedZ(float aspectRatio) const;
 		inline bool hasCustomViewSpaceToClipSpaceMatrix() const;
 		inline void unsetCustomViewSpaceToClipSpaceMatrix();
 		inline void setCustomViewSpaceToClipSpaceMatrix(const glm::mat4& customViewSpaceToClipSpaceMatrix);

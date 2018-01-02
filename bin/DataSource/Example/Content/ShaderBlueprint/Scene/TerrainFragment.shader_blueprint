@@ -67,7 +67,7 @@ struct PassDataStruct
 	float3	 LightClustersScale;
 	float3	 LightClustersBias;
 	float2   ViewportSize;
-	float2   ProjectionParameters;
+	float2   ProjectionParametersReversedZ;
 	uint	 FullCoverageMask;
 };
 UNIFORM_BUFFER_BEGIN(0, 0, PassUniformBuffer, 0)
@@ -103,7 +103,7 @@ SAMPLER_STATE(3, 2, SamplerLinearClamp, 2)
 		@insertpiece(DefineBlinnPhongBasedShading)
 	@end
 @includepiece($ProjectName/ShaderPiece/Depth.asset)
-	@insertpiece(DefineGetLinearDepthByFragmentDepth)
+	@insertpiece(DefineGetLinearDepthReversedZ)
 @includepiece($ProjectName/ShaderPiece/ExponentialShadow.asset)
 	@insertpiece(DefineExponentialShadow)
 @includepiece($ProjectName/ShaderPiece/Shadow.asset)
@@ -180,7 +180,7 @@ MAIN_BEGIN
 	float3 color = (reflectionColor * metallic + albedo) * (PassData.AmbientColor.rgb + CalculateHemisphereLighting(worldSpaceNormal.xyz, PassData.AmbientColor.rgb * 0.7f, PassData.AmbientColor.rgb * 0.2f));
 
 	// Directional sunlight, our primary light
-	float shadowVisibility = CalculateShadowVisibility(worldSpacePosition, GetLinearDepthByFragmentDepth(FRAGMENT_POSITION.z));
+	float shadowVisibility = CalculateShadowVisibility(worldSpacePosition, GetLinearDepthReversedZ(FRAGMENT_POSITION.z));
 	if (shadowVisibility > 0.0f)
 	{
 		color += shadowVisibility * CalculateLighting(albedo, roughness, metallic, viewSpaceNormal, viewSpaceIncident, reflectionColor, PassData.ViewSpaceSunlightDirection, PassData.SunlightColor);
@@ -198,6 +198,9 @@ MAIN_BEGIN
 
 	// Calculate screen space velocity
 	@insertpiece(DefineCalculateScreenSpaceVelocity)
+
+	// Don't remove the following commented code: Shadow map debugging
+	// color *= GetShadowCascadeColor(GetLinearDepthReversedZ(FRAGMENT_POSITION.z));
 
 	// Done
 	MAIN_OUTPUT_COLOR(0) = float4(color, edgePixel);

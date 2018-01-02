@@ -43,7 +43,7 @@ VS_OUTPUT main(float2 Position : POSITION)	// Clip space vertex position as inpu
 {
 	// Pass through the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
 	VS_OUTPUT output;
-	output.Position = float4(Position, 0.0f, 1.0f);
+	output.Position = float4(Position, 0.5f, 1.0f);
 	output.TexCoord = Position.xy;
 	return output;
 }

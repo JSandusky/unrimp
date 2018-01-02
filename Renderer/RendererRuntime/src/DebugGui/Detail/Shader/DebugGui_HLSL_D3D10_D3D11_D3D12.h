@@ -53,7 +53,7 @@ VS_OUTPUT main(float2 Position : POSITION,	// Clip space vertex position as inpu
 	VS_OUTPUT output;
 
 	// Calculate the clip space vertex position, lower/left is (-1,-1) and upper/right is (1,1)
-	output.Position = mul(ObjectSpaceToClipSpaceMatrix, float4(Position, 0.0f, 1.0f));
+	output.Position = mul(ObjectSpaceToClipSpaceMatrix, float4(Position, 0.5f, 1.0f));
 
 	// Pass through the vertex texture coordinate
 	output.TexCoord = TexCoord;

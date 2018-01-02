@@ -54,7 +54,7 @@ namespace OpenGLRenderer
 			glGenBuffersARB(1, &mOpenGLTextureBuffer);
 
 			// Bind this OpenGL texture buffer and upload the data
-			// -> Usage: These constants directly map to "GL_ARB_vertex_buffer_object" and OpenGL ES 2 constants, do not change them
+			// -> Usage: These constants directly map to "GL_ARB_vertex_buffer_object" and OpenGL ES 3 constants, do not change them
 			glBindBufferARB(GL_TEXTURE_BUFFER_ARB, mOpenGLTextureBuffer);
 			glBufferDataARB(GL_TEXTURE_BUFFER_ARB, static_cast<GLsizeiptrARB>(numberOfBytes), data, static_cast<GLenum>(bufferUsage));
 

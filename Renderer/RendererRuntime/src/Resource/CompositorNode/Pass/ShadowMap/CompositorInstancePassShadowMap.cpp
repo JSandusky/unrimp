@@ -100,7 +100,10 @@ namespace RendererRuntime
 			mPassData.shadowMapSize = static_cast<int>(shadowMapSize);
 			const uint8_t numberOfShadowCascades = compositorResourcePassShadowMap.getNumberOfShadowCascades();
 			const float shadowFilterSize = compositorResourcePassShadowMap.getShadowFilterSize();
-			const bool stabilizeCascades = compositorResourcePassShadowMap.getStabilizeCascades();
+
+			// TODO(co) Stabilize cascades Reversed-Z update
+			const bool stabilizeCascades = false;
+//			const bool stabilizeCascades = compositorResourcePassShadowMap.getStabilizeCascades();
 
 			// TODO(co) The minimum and maximum distance need to be calculated dynamically via depth buffer reduction as seen inside e.g. https://github.com/TheRealMJP/MSAAFilter/tree/master/MSAAFilter
 			const float minimumDistance = 0.0f;
@@ -169,6 +172,9 @@ namespace RendererRuntime
 				// Compute the MVP matrix from the light's point of view
 				glm::mat4 depthProjectionMatrix;
 				glm::mat4 depthViewMatrix;
+				glm::vec3 minimumExtents;
+				glm::vec3 maximumExtents;
+				glm::vec3 cascadeExtents;
 				const float splitDistance = cascadeSplits[cascadeIndex];
 				{
 					const float previousSplitDistance = (0 == cascadeIndex) ? minimumDistance : cascadeSplits[cascadeIndex - 1];
@@ -196,8 +202,6 @@ namespace RendererRuntime
 					const glm::vec3 rightDirection = stabilizeCascades ? Math::VEC3_RIGHT : (cameraSceneItem->getParentSceneNodeSafe().getTransform().rotation * Math::VEC3_RIGHT);
 
 					// Calculate the minimum and maximum extents
-					glm::vec3 minimumExtents;
-					glm::vec3 maximumExtents;
 					if (stabilizeCascades)
 					{
 						// Calculate the radius of a bounding sphere surrounding the frustum corners
@@ -237,7 +241,7 @@ namespace RendererRuntime
 						maximumExtents.x *= scale;
 						maximumExtents.x *= scale;
 					}
-					const glm::vec3 cascadeExtents = maximumExtents - minimumExtents;
+					cascadeExtents = maximumExtents - minimumExtents;
 
 					// Get position of the shadow camera
 					const glm::vec3 shadowCameraPosition = frustumCenter + worldSpaceSunlightDirection * -minimumExtents.z;
@@ -265,6 +269,10 @@ namespace RendererRuntime
 					viewSpaceToClipSpace = depthProjectionMatrix * depthViewMatrix;
 				}
 
+				// Come up with a new orthographic camera for the shadow caster
+				// -> Near and far flipped due to usage of Reversed-Z (see e.g. https://developer.nvidia.com/content/depth-precision-visualized and https://nlguillemot.wordpress.com/2016/12/07/reversed-z-in-opengl/)
+				depthProjectionMatrix = glm::ortho(minimumExtents.x, maximumExtents.x, minimumExtents.y, maximumExtents.y, cascadeExtents.z, 0.0f);
+
 				// Set custom camera matrices
 				const_cast<CameraSceneItem*>(cameraSceneItem)->setCustomWorldSpaceToViewSpaceMatrix(depthViewMatrix);
 				const_cast<CameraSceneItem*>(cameraSceneItem)->setCustomViewSpaceToClipSpaceMatrix(depthProjectionMatrix);
@@ -280,7 +288,7 @@ namespace RendererRuntime
 
 					{ // Clear the depth buffer of the current render target
 						const float color[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-						Renderer::Command::Clear::create(commandBuffer, Renderer::ClearFlag::DEPTH, color, 1.0f, 0);
+						Renderer::Command::Clear::create(commandBuffer, Renderer::ClearFlag::DEPTH, color);
 					}
 
 					// Render shadow casters

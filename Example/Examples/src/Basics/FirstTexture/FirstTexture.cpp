@@ -283,7 +283,7 @@ void FirstTexture::fillCommandBuffer()
 	COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(mCommandBuffer)
 
 	// Clear the color buffer of the current render target with gray, do also clear the depth buffer
-	Renderer::Command::Clear::create(mCommandBuffer, Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
+	Renderer::Command::Clear::create(mCommandBuffer, Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY);
 
 	// Set the used graphics root signature
 	Renderer::Command::SetGraphicsRootSignature::create(mCommandBuffer, mRootSignature);

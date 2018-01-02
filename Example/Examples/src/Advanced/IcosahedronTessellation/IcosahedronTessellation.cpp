@@ -169,12 +169,12 @@ void IcosahedronTessellation::onInitialization()
 			resources[0] = mUniformBufferDynamicTcs = mBufferManager->createUniformBuffer(sizeof(float) * 2, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 			{ // "ObjectSpaceToClipSpaceMatrix"
 				glm::mat4 worldSpaceToViewSpaceMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 3.0f));		// Also known as "view matrix"
-				glm::mat4 viewSpaceToClipSpaceMatrix = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.001f, 1000.0f);	// Also known as "projection matrix"
+				glm::mat4 viewSpaceToClipSpaceMatrix = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 1000.0f, 0.001f);	// Also known as "projection matrix", near and far flipped due to usage of Reversed-Z (see e.g. https://developer.nvidia.com/content/depth-precision-visualized and https://nlguillemot.wordpress.com/2016/12/07/reversed-z-in-opengl/)
 				glm::mat4 objectSpaceToClipSpaceMatrix = viewSpaceToClipSpaceMatrix * worldSpaceToViewSpaceMatrix;			// Also known as "model view projection matrix"
 				resources[1] = mBufferManager->createUniformBuffer(sizeof(float) * 4 * 4, glm::value_ptr(objectSpaceToClipSpaceMatrix), Renderer::BufferUsage::STATIC_DRAW);
 				{ // "NormalMatrix"
 					worldSpaceToViewSpaceMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-					viewSpaceToClipSpaceMatrix = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.001f, 1000.0f);
+					viewSpaceToClipSpaceMatrix = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 1000.0f, 0.001f);	// Near and far flipped due to usage of Reversed-Z (see e.g. https://developer.nvidia.com/content/depth-precision-visualized and https://nlguillemot.wordpress.com/2016/12/07/reversed-z-in-opengl/)
 					objectSpaceToClipSpaceMatrix = viewSpaceToClipSpaceMatrix * worldSpaceToViewSpaceMatrix;
 					glm::mat3 nMVP(objectSpaceToClipSpaceMatrix);
 					glm::mat4 tMVP(nMVP);
@@ -295,7 +295,7 @@ void IcosahedronTessellation::fillCommandBuffer()
 	COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(mCommandBuffer)
 
 	// Clear the color buffer of the current render target with gray, do also clear the depth buffer
-	Renderer::Command::Clear::create(mCommandBuffer, Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
+	Renderer::Command::Clear::create(mCommandBuffer, Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY);
 
 	// Set the used graphics root signature
 	Renderer::Command::SetGraphicsRootSignature::create(mCommandBuffer, mRootSignature);

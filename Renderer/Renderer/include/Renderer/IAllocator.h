@@ -112,7 +112,7 @@ namespace Renderer
 //[-------------------------------------------------------]
 // Malloc and free
 #define RENDERER_MALLOC(context, newNumberOfBytes) (context).getAllocator().reallocate(nullptr, 0, newNumberOfBytes, 1)
-#define RENDERER_MALLOC_TYPED(context, type, newNumberOfElements) reinterpret_cast<type*>((context).getAllocator().reallocate(nullptr, 0, sizeof(type) * newNumberOfElements, 1))
+#define RENDERER_MALLOC_TYPED(context, type, newNumberOfElements) reinterpret_cast<type*>((context).getAllocator().reallocate(nullptr, 0, sizeof(type) * (newNumberOfElements), 1))
 #define RENDERER_FREE(context, oldPointer) (context).getAllocator().reallocate(oldPointer, 0, 0, 1)
 
 // New and delete

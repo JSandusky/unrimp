@@ -141,7 +141,7 @@ void IApplicationRenderer::onResize()
 	{
 		// Inform the swap chain that the size of the native window was changed
 		// -> Required for Direct3D 9, Direct3D 10, Direct3D 11
-		// -> Not required for OpenGL and OpenGL ES 2
+		// -> Not required for OpenGL and OpenGL ES 3
 		mMainSwapChain->resizeBuffers();
 	}
 }
@@ -226,7 +226,7 @@ void IApplicationRenderer::onDrawRequest()
 	{
 		// Begin scene rendering
 		// -> Required for Direct3D 9 and Direct3D 12
-		// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
+		// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 3
 		if (mRenderer->beginScene())
 		{
 			// Begin debug event
@@ -263,7 +263,7 @@ void IApplicationRenderer::onDrawRequest()
 
 			// End scene rendering
 			// -> Required for Direct3D 9 and Direct3D 12
-			// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
+			// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 3
 			mRenderer->endScene();
 		}
 

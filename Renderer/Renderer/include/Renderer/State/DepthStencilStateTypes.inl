@@ -35,14 +35,14 @@ namespace Renderer
 		// - Direct3D 11 "D3D11_DEPTH_STENCIL_DESC structure"-documentation at MSDN: http://msdn.microsoft.com/en-us/library/windows/desktop/ff476110%28v=vs.85%29.aspx
 		// - Direct3D 10 "D3D10_DEPTH_STENCIL_DESC structure"-documentation at MSDN: http://msdn.microsoft.com/en-us/library/windows/desktop/bb205036%28v=vs.85%29.aspx
 		// - Direct3D 9 "D3DRENDERSTATETYPE enumeration"-documentation at MSDN: http://msdn.microsoft.com/en-us/library/windows/desktop/bb172599%28v=vs.85%29.aspx
-		// - OpenGL & OpenGL ES 2: The official specifications (unlike Direct3D, OpenGL versions are more compatible to each other)
+		// - OpenGL & OpenGL ES 3: The official specifications (unlike Direct3D, OpenGL versions are more compatible to each other)
 
 		// Return default values
 		static const DepthStencilState DEPTH_STENCIL_STATE =
 		{																				//	Direct3D 11		Direct3D 10	Direct3D 9				OpenGL
 			true,						// depthEnable (int)							"true"			"true"		"true"					TODO(co)
 			DepthWriteMask::ALL,		// depthWriteMask (Renderer::DepthWriteMask)	"ALL"			"ALL"		"ALL"					TODO(co)
-			ComparisonFunc::LESS,		// depthFunc (Renderer::ComparisonFunc)			"LESS"			"LESS"		"LESS_EQUAL"			TODO(co)
+			ComparisonFunc::GREATER,	// depthFunc (Renderer::ComparisonFunc)			"LESS"			"LESS"		"LESS_EQUAL"			TODO(co)	- Default: "Renderer::ComparisonFunc::GREATER" instead of "Renderer::ComparisonFunc::LESS" due to usage of Reversed-Z (see e.g. https://developer.nvidia.com/content/depth-precision-visualized and https://nlguillemot.wordpress.com/2016/12/07/reversed-z-in-opengl/)
 			false,						// stencilEnable (int)							"false"			"false"		"false"					TODO(co)
 			0xff,						// stencilReadMask (uint8_t)					"0xff"			"0xff"		"0xffffffff"			TODO(co)
 			0xff,						// stencilWriteMask (uint8_t)					"0xff"			"0xff"		"0xffffffff"			TODO(co)

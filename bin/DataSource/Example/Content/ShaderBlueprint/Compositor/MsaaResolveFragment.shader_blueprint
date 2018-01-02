@@ -153,7 +153,7 @@ float3 Reproject(float2 fragmentPosition)
 				for (int sampleIndex = 0; sampleIndex < NUMBER_OF_MSAA_SAMPLES; ++sampleIndex)
 				{
 					float2 neighborVelocity = MSAA_LOAD(VelocityMap, int2(fragmentPosition) + int2(vx, vy), sampleIndex).xy;
-					float neighborDepth = MSAA_LOAD(DepthMap, int2(fragmentPosition) + int2(vx, vy), sampleIndex).r;
+					float neighborDepth = REVERSED_Z(MSAA_LOAD(DepthMap, int2(fragmentPosition) + int2(vx, vy), sampleIndex).r);
 					if (neighborDepth < closestDepth)
 					{
 						velocity = neighborVelocity;

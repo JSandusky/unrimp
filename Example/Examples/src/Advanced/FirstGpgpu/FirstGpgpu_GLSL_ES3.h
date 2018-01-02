@@ -33,17 +33,17 @@ if (0 == strcmp(mRenderer->getName(), "OpenGLES3"))
 vertexShaderSourceCode = R"(#version 300 es	// OpenGL ES 3.0
 
 // Attribute input/output
-attribute highp vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
-varying   highp vec2 TexCoord;	// Normalized texture coordinate as output
+in  highp vec2 Position;	// Clip space vertex position as input, left/bottom is (-1,-1) and right/top is (1,1)
+out highp vec2 TexCoord;	// Normalized texture coordinate as output
 
 // Programs
 void main()
 {
 	// Pass through the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
-	gl_Position = vec4(Position, 0.0, 1.0);
+	gl_Position = vec4(Position, 0.5, 1.0);
 
 	// Calculate the texture coordinate by mapping the clip space coordinate to a texture space coordinate
-	// -> In OpenGL ES 2, the texture origin is left/bottom which maps well to clip space coordinates
+	// -> In OpenGL ES 3, the texture origin is left/bottom which maps well to clip space coordinates
 	// -> (-1,-1) -> (0,0)
 	// -> (1,1) -> (1,1)
 	TexCoord = Position.xy * 0.5 + 0.5;
@@ -58,13 +58,14 @@ void main()
 fragmentShaderSourceCode_ContentGeneration = R"(#version 300 es	// OpenGL ES 3.0
 
 // Attribute input/output
-varying mediump vec2 TexCoord;	// Normalized texture coordinate as input
+in  mediump vec2 TexCoord;		// Normalized texture coordinate as input
+out highp   vec4 OutputColor;	// Output variable for fragment color
 
 // Programs
 void main()
 {
 	// Return the color green
-	gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+	OutputColor = vec4(0.0, 1.0, 0.0, 1.0);
 }
 )";
 
@@ -76,7 +77,8 @@ void main()
 fragmentShaderSourceCode_ContentProcessing = R"(#version 300 es	// OpenGL ES 3.0
 
 // Attribute input/output
-varying mediump vec2 TexCoord;	// Normalized texture coordinate as input
+in  mediump vec2 TexCoord;		// Normalized texture coordinate as input
+out highp   vec4 OutputColor;	// Output variable for fragment color
 
 // Uniforms
 uniform mediump sampler2D ContentMap;
@@ -86,7 +88,7 @@ void main()
 {
 	// Fetch the texel at the given texture coordinate and return its color
 	// -> Apply a simple wobble to the texture coordinate so we can see that content processing is up and running
-	gl_FragColor = texture(ContentMap, vec2(TexCoord.x + sin(TexCoord.x * 100.0) * 0.01, TexCoord.y + cos(TexCoord.y * 100.0) * 0.01));
+	OutputColor = texture(ContentMap, vec2(TexCoord.x + sin(TexCoord.x * 100.0) * 0.01, TexCoord.y + cos(TexCoord.y * 100.0) * 0.01));
 }
 )";
 

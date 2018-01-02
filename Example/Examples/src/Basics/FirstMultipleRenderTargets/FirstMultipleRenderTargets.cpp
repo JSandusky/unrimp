@@ -97,7 +97,7 @@ void FirstMultipleRenderTargets::onInitialization()
 				// Create the texture instances, but without providing texture data (we use the texture as render target)
 				// -> Use the "Renderer::TextureFlag::RENDER_TARGET"-flag to mark this texture as a render target
 				// -> Required for Vulkan, Direct3D 9, Direct3D 10, Direct3D 11 and Direct3D 12
-				// -> Not required for OpenGL and OpenGL ES 2
+				// -> Not required for OpenGL and OpenGL ES 3
 				// -> The optimized texture clear value is a Direct3D 12 related option
 				Renderer::TextureFormat::Enum textureFormats[NUMBER_OF_TEXTURES];
 				Renderer::IResource* textureResource[NUMBER_OF_TEXTURES] = {};
@@ -274,7 +274,7 @@ void FirstMultipleRenderTargets::fillCommandBuffer()
 		Renderer::Command::SetViewportAndScissorRectangle::create(mCommandBuffer, 0, 0, TEXTURE_SIZE, TEXTURE_SIZE);
 
 		// Clear the color buffer of the current render targets with black
-		Renderer::Command::Clear::create(mCommandBuffer, Renderer::ClearFlag::COLOR, Color4::BLACK, 1.0f, 0);
+		Renderer::Command::Clear::create(mCommandBuffer, Renderer::ClearFlag::COLOR, Color4::BLACK);
 
 		// Set the used graphics root signature
 		Renderer::Command::SetGraphicsRootSignature::create(mCommandBuffer, mRootSignature);
@@ -314,7 +314,7 @@ void FirstMultipleRenderTargets::fillCommandBuffer()
 		}
 
 		// Clear the color buffer of the current render target with gray, do also clear the depth buffer
-		Renderer::Command::Clear::create(mCommandBuffer, Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY, 1.0f, 0);
+		Renderer::Command::Clear::create(mCommandBuffer, Renderer::ClearFlag::COLOR_DEPTH, Color4::GRAY);
 
 		// Set the used graphics root signature
 		Renderer::Command::SetGraphicsRootSignature::create(mCommandBuffer, mRootSignature);

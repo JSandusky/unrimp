@@ -101,7 +101,7 @@ void main()
 	vec2 p2 = gl_TessCoord.z * tcPosition[2];
 
 	// Calculate the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
-	gl_Position = vec4(p0 + p1 + p2, 0.0f, 1.0);
+	gl_Position = vec4(p0 + p1 + p2, 0.5f, 1.0);
 }
 )";
 

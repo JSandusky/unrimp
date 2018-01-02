@@ -40,7 +40,7 @@ out highp vec2 TexCoord;	// Normalized texture coordinate as output
 void main()
 {
 	// Pass through the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
-	gl_Position = vec4(Position, 0.0, 1.0);
+	gl_Position = vec4(Position, 0.5, 1.0);
 	TexCoord = Position.xy;
 }
 )";
@@ -53,8 +53,8 @@ void main()
 fragmentShaderSourceCode = R"(#version 300 es	// OpenGL ES 3.0
 
 // Attribute input/output
-in mediump vec2 TexCoord;		// Normalized texture coordinate as input
-out highp vec4 FragmentColor;	// Output variable for fragment color
+in  mediump vec2 TexCoord;		// Normalized texture coordinate as input
+out highp   vec4 OutputColor;	// Output variable for fragment color
 
 // Uniforms
 uniform mediump sampler2D AlbedoMap;
@@ -63,7 +63,7 @@ uniform mediump sampler2D AlbedoMap;
 void main()
 {
 	// Fetch the texel at the given texture coordinate and return its color
-	FragmentColor = texture(AlbedoMap, TexCoord);
+	OutputColor = texture(AlbedoMap, TexCoord);
 }
 )";
 

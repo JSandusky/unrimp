@@ -132,7 +132,7 @@ DS_OUTPUT main(HS_CONSTANT_DATA_OUTPUT inputTess, float3 TessCoord : SV_DOMAINLO
 	float2 p0 = TessCoord.x * input[0].Position;
 	float2 p1 = TessCoord.y * input[1].Position;
 	float2 p2 = TessCoord.z * input[2].Position;
-	output.Position = float4(p0 + p1 + p2, 0.0f, 1.0f);
+	output.Position = float4(p0 + p1 + p2, 0.5f, 1.0f);
 
 	// Done
 	return output;

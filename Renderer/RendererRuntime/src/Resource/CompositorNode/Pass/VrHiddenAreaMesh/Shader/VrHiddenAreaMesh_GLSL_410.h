@@ -43,7 +43,7 @@ out gl_PerVertex
 void main()
 {
 	// Calculate the clip space vertex position, lower/left is (-1,-1) and upper/right is (1,1)
-	gl_Position = vec4(Position * vec2(2.0f, 2.0f) - vec2(1.0f, 1.0f), 0.0, 1.0);
+	gl_Position = vec4(Position * vec2(2.0f, 2.0f) - vec2(1.0f, 1.0f), 0.5, 1.0);
 }
 )";
 
@@ -53,11 +53,15 @@ void main()
 //[-------------------------------------------------------]
 // One fragment shader invocation per fragment
 fragmentShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
+
+// Attribute input/output
+out vec4 OutputColor;	// Output variable for fragment color
+
 // Programs
 void main()
 {
 	// Grey so the VR hidden area mesh doesn't influence the adaptive luminance
-	gl_FragColor = vec4(0.5f, 0.5f, 0.5f, 0.0f);
+	OutputColor = vec4(0.5f, 0.5f, 0.5f, 0.0f);
 }
 )";
 

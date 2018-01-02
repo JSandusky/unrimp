@@ -110,8 +110,9 @@ Renderer Runtime (e.g. "The Game")
 	- Asyncrounous pipeline state compilation, including a fallback system to reduce visual artefacts in case of pipeline cache misses
 - Compositor: Setup your overal rendering flow without a single line of C++ source code
 	- The compositor is using the material blueprint system, meaning compact C++ implementation while offering mighty possibilities
-	- Supports resolution scale
+	- Using [Reversed-Z](https://developer.nvidia.com/content/depth-precision-visualized) for improved depth buffer precision
 	- Blurred stabilized cascaded (CSM) exponential variance (EVSM) shadow mapping
+	- Resolution scale support
 - Scene as most top-level concept: Fancy-feature set kept simple because more complex applications / games usually add an entity-component-system
 - Render queue fed with generic renderables to decouple concrete constructs like meshes, particles, terrain etc. from the generic rendering
 - Using mathematics library [GLM](https://glm.g-truc.net/) with the C-preprocessor definitions "GLM_FORCE_RADIANS", "GLM_FORCE_LEFT_HANDED", "GLM_FORCE_DEPTH_ZERO_TO_ONE" and "GLM_ENABLE_EXPERIMENTAL"
@@ -267,9 +268,9 @@ The unified renderer interface can't unify some graphics API behaviour differenc
 		- See ["Coordinate Systems (Direct3D 10)"](http://msdn.microsoft.com/en-us/library/windows/desktop/cc308049%28v=vs.85%29.aspx) at MSDN
 - Pixel coordinate system 
 	- Direct3D: See ["Coordinate Systems (Direct3D 10)"](http://msdn.microsoft.com/en-us/library/windows/desktop/cc308049%28v=vs.85%29.aspx) at MSDN
-- Clip space coordinate system
-	- OpenGL: [-1, -1, -1] ... [1, 1, 1]
-	- Direct3D: [-1, -1, 0] ... [1, 1, 1]
+- Clip space coordinate system [-1, -1] ... [1, 1]
+	- Vulkan, Direct3D, OpenGL with "GL_ARB_clip_control"-extension: Left-handed coordinate system with clip space depth value range 0..1
+	- OpenGL without "GL_ARB_clip_control"-extension: Right-handed coordinate system with clip space depth value range -1..1
 	- Additional information: ["The Cg Tutorial"-book, section "4.1.8 The Projection Transform"](http://http.developer.nvidia.com/CgTutorial/cg_tutorial_chapter04.html)
 - Physically based shading (PBS)
 	- ["Physically-Based Rendering, And You Can Too!"](https://www.marmoset.co/posts/physically-based-rendering-and-you-can-too/) - By Joe "EarthQuake" Wilson

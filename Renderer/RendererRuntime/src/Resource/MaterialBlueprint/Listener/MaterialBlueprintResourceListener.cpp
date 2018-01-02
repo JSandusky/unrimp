@@ -89,6 +89,7 @@ namespace
 			DEFINE_CONSTANT(IMGUI_OBJECT_SPACE_TO_CLIP_SPACE_MATRIX)
 			DEFINE_CONSTANT(WORLD_SPACE_SUNLIGHT_DIRECTION)
 			DEFINE_CONSTANT(PROJECTION_PARAMETERS)
+			DEFINE_CONSTANT(PROJECTION_PARAMETERS_REVERSED_Z)
 			DEFINE_CONSTANT(SUNLIGHT_COLOR)
 			DEFINE_CONSTANT(VIEWPORT_SIZE)
 			DEFINE_CONSTANT(INVERSE_VIEWPORT_SIZE)
@@ -393,7 +394,7 @@ namespace RendererRuntime
 					cameraSceneItem->getPreviousWorldSpaceToViewSpaceMatrix(previousWorldSpaceToViewSpaceMatrix);
 
 					// Get view space to clip space matrix (aka "projection matrix")
-					viewSpaceToClipSpaceMatrix = cameraSceneItem->getViewSpaceToClipSpaceMatrix(static_cast<float>(mRenderTargetWidth) / mRenderTargetHeight);
+					viewSpaceToClipSpaceMatrix = cameraSceneItem->getViewSpaceToClipSpaceMatrixReversedZ(static_cast<float>(mRenderTargetWidth) / mRenderTargetHeight);
 				}
 			}
 			else
@@ -404,7 +405,8 @@ namespace RendererRuntime
 				mPassData->worldSpaceToViewSpaceMatrix[eyeIndex] = previousWorldSpaceToViewSpaceMatrix = glm::lookAt(Transform::IDENTITY.position, Transform::IDENTITY.position + Transform::IDENTITY.rotation * Math::VEC3_FORWARD, Math::VEC3_UP);
 
 				// Get view space to clip space matrix (aka "projection matrix")
-				viewSpaceToClipSpaceMatrix = glm::perspective(CameraSceneItem::DEFAULT_FOV_Y, static_cast<float>(mRenderTargetWidth) / mRenderTargetHeight, CameraSceneItem::DEFAULT_NEAR_Z, CameraSceneItem::DEFAULT_FAR_Z);
+				// -> Near and far flipped due to usage of Reversed-Z (see e.g. https://developer.nvidia.com/content/depth-precision-visualized and https://nlguillemot.wordpress.com/2016/12/07/reversed-z-in-opengl/)
+				viewSpaceToClipSpaceMatrix = glm::perspective(CameraSceneItem::DEFAULT_FOV_Y, static_cast<float>(mRenderTargetWidth) / mRenderTargetHeight, CameraSceneItem::DEFAULT_FAR_Z, CameraSceneItem::DEFAULT_NEAR_Z);
 			}
 			mPassData->worldSpaceToViewSpaceQuaternion[eyeIndex] = glm::quat(mPassData->worldSpaceToViewSpaceMatrix[eyeIndex]);
 			mPassData->worldSpaceToClipSpaceMatrix[eyeIndex] = viewSpaceToClipSpaceMatrix * mPassData->worldSpaceToViewSpaceMatrix[eyeIndex];
@@ -494,20 +496,22 @@ namespace RendererRuntime
 			// -> Vulkan and Direct3D: Left-handed coordinate system with clip space depth value range 0..1
 			// -> OpenGL without "GL_ARB_clip_control"-extension: Right-handed coordinate system with clip space depth value range -1..1
 			const float nearZ = mRendererRuntime->getRenderer().getCapabilities().zeroToOneClipZ ? 0.0f : -1.0f;
+			static const float FAR_Z = 1.0f;
 
 			// Calculate the view space frustum corners
+			// -> Near and far flipped due to usage of Reversed-Z (see e.g. https://developer.nvidia.com/content/depth-precision-visualized and https://nlguillemot.wordpress.com/2016/12/07/reversed-z-in-opengl/)
 			glm::vec4 viewSpaceFrustumCorners[8] =
 			{
 				// Near
-				{-1.0f,  1.0f, nearZ, 1.0f},	// 0: Near top left
-				{ 1.0f,  1.0f, nearZ, 1.0f},	// 1: Near top right
-				{-1.0f, -1.0f, nearZ, 1.0f},	// 2: Near bottom left
-				{ 1.0f, -1.0f, nearZ, 1.0f},	// 3: Near bottom right
+				{-1.0f,  1.0f, FAR_Z, 1.0f},	// 0: Near top left
+				{ 1.0f,  1.0f, FAR_Z, 1.0f},	// 1: Near top right
+				{-1.0f, -1.0f, FAR_Z, 1.0f},	// 2: Near bottom left
+				{ 1.0f, -1.0f, FAR_Z, 1.0f},	// 3: Near bottom right
 				// Far
-				{-1.0f,  1.0f, 1.0f, 1.0f},		// 4: Far top left
-				{ 1.0f,  1.0f, 1.0f, 1.0f},		// 5: Far top right
-				{-1.0f, -1.0f, 1.0f, 1.0f},		// 6: Far bottom left
-				{ 1.0f, -1.0f, 1.0f, 1.0f}		// 7: Far bottom right
+				{-1.0f,  1.0f, nearZ, 1.0f},	// 4: Far top left
+				{ 1.0f,  1.0f, nearZ, 1.0f},	// 5: Far top right
+				{-1.0f, -1.0f, nearZ, 1.0f},	// 6: Far bottom left
+				{ 1.0f, -1.0f, nearZ, 1.0f}		// 7: Far bottom right
 			};
 			const glm::mat4 clipSpaceToViewSpaceMatrix = glm::inverse(mPassData->viewSpaceToClipSpaceMatrix[0]);
 			for (int i = 0; i < 8; ++i)
@@ -570,6 +574,14 @@ namespace RendererRuntime
 			// For details see "The Danger Zone" - "Position From Depth 3: Back In The Habit" - "Written by MJPSeptember 5, 2010" - https://mynameismjp.wordpress.com/2010/09/05/position-from-depth-3/
 			assert(sizeof(float) * 2 == numberOfBytes);
 			const float projectionParameters[2] = { mFarZ / (mFarZ - mNearZ), (-mFarZ * mNearZ) / (mFarZ - mNearZ) };
+			memcpy(buffer, &projectionParameters[0], numberOfBytes);
+		}
+		else if (::detail::PROJECTION_PARAMETERS_REVERSED_Z == referenceValue)
+		{
+			// For details see "The Danger Zone" - "Position From Depth 3: Back In The Habit" - "Written by MJPSeptember 5, 2010" - https://mynameismjp.wordpress.com/2010/09/05/position-from-depth-3/
+			// -> Near and far flipped due to usage of Reversed-Z (see e.g. https://developer.nvidia.com/content/depth-precision-visualized and https://nlguillemot.wordpress.com/2016/12/07/reversed-z-in-opengl/)
+			assert(sizeof(float) * 2 == numberOfBytes);
+			const float projectionParameters[2] = { mNearZ / (mNearZ - mFarZ), (-mNearZ * mFarZ) / (mNearZ - mFarZ) };
 			memcpy(buffer, &projectionParameters[0], numberOfBytes);
 		}
 		else if (::detail::SUNLIGHT_COLOR == referenceValue)

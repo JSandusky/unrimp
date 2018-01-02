@@ -96,10 +96,11 @@ void main()
 fragmentShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
 
 // Attribute input/output
-in vec2 TexCoordVs;	// Texture coordinate
-in vec3 TangentVs;	// Tangent space to view space, x-axis
-in vec3 BinormalVs;	// Tangent space to view space, y-axis
-in vec3 NormalVs;	// Tangent space to view space, z-axis
+in  vec2 TexCoordVs;	// Texture coordinate
+in  vec3 TangentVs;		// Tangent space to view space, x-axis
+in  vec3 BinormalVs;	// Tangent space to view space, y-axis
+in  vec3 NormalVs;		// Tangent space to view space, z-axis
+out vec4 OutputColor;	// Output variable for fragment color
 
 // Uniforms
 uniform sampler2D _argb_nxa;
@@ -144,7 +145,7 @@ void main()
 	color.rgb += texture2D(EmissiveMap, TexCoordVs).rgb;		// Emissive term
 
 	// Done
-	gl_FragColor = min(color, vec4(1.0, 1.0, 1.0, 1.0));
+	OutputColor = min(color, vec4(1.0, 1.0, 1.0, 1.0));
 }
 )";
 

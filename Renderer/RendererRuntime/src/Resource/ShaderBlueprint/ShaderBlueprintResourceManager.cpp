@@ -102,8 +102,8 @@ namespace RendererRuntime
 		Renderer::IRenderer& renderer = mRendererRuntime.getRenderer();
 		const Renderer::Capabilities& capabilities = mRendererRuntime.getRenderer().getCapabilities();
 		mRendererShaderProperties.setPropertyValue(StringId(renderer.getName()), 1);
-		mRendererShaderProperties.setPropertyValue(StringId("ZeroToOneClipZ"), capabilities.upperLeftOrigin ? 1 : 0);
-		mRendererShaderProperties.setPropertyValue(StringId("UpperLeftOrigin"), capabilities.zeroToOneClipZ ? 1 : 0);
+		mRendererShaderProperties.setPropertyValue(StringId("ZeroToOneClipZ"), capabilities.zeroToOneClipZ ? 1 : 0);
+		mRendererShaderProperties.setPropertyValue(StringId("UpperLeftOrigin"), capabilities.upperLeftOrigin ? 1 : 0);
 		const Renderer::IShaderLanguage* shaderLanguage = renderer.getShaderLanguage();
 		if (nullptr != shaderLanguage)
 		{

@@ -101,6 +101,19 @@ namespace RendererRuntime
 		return mViewSpaceToClipSpaceMatrix;
 	}
 
+	const glm::mat4& CameraSceneItem::getViewSpaceToClipSpaceMatrixReversedZ(float aspectRatio) const
+	{
+		// Calculate the view space to clip space matrix (aka "projection matrix")
+		if (!mHasCustomViewSpaceToClipSpaceMatrix)
+		{
+			// Near and far flipped due to usage of Reversed-Z (see e.g. https://developer.nvidia.com/content/depth-precision-visualized and https://nlguillemot.wordpress.com/2016/12/07/reversed-z-in-opengl/)
+			mViewSpaceToClipSpaceMatrix = glm::perspective(mFovY, aspectRatio, mFarZ, mNearZ);
+		}
+
+		// Done
+		return mViewSpaceToClipSpaceMatrix;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Public RendererRuntime::ISceneItem methods            ]

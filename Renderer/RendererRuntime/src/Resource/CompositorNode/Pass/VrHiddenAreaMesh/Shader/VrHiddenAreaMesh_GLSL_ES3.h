@@ -39,7 +39,7 @@ in highp vec2 Position;	// Object space vertex position as input, left/bottom is
 void main()
 {
 	// Calculate the clip space vertex position, lower/left is (-1,-1) and upper/right is (1,1)
-	gl_Position = vec4(Position * vec2(2.0f, 2.0f) - vec2(1.0f, 1.0f), 0.0f, 1.0f);
+	gl_Position = vec4(Position * vec2(2.0f, 2.0f) - vec2(1.0f, 1.0f), 0.5f, 1.0f);
 }
 )";
 
@@ -51,13 +51,13 @@ void main()
 fragmentShaderSourceCode = R"(#version 300 es	// OpenGL ES 3.0
 
 // Attribute input/output
-out highp vec4 FragmentColor;	// Output variable for fragment color
+out highp vec4 OutputColor;	// Output variable for fragment color
 
 // Programs
 void main()
 {
 	// Grey so the VR hidden area mesh doesn't influence the adaptive luminance
-	FragmentColor = vec4(0.5f, 0.5f, 0.5f, 0.0f);
+	OutputColor = vec4(0.5f, 0.5f, 0.5f, 0.0f);
 }
 )";
 

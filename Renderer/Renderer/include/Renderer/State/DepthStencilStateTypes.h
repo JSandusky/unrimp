@@ -117,7 +117,7 @@ namespace Renderer
 	{
 		int					depthEnable;		///< Boolean value. Default: "true"
 		DepthWriteMask		depthWriteMask;		///< Default: "Renderer::DepthWriteMask::ALL"
-		ComparisonFunc		depthFunc;			///< Default: "Renderer::ComparisonFunc::LESS"
+		ComparisonFunc		depthFunc;			///< Default: "Renderer::ComparisonFunc::GREATER" instead of "Renderer::ComparisonFunc::LESS" due to usage of Reversed-Z (see e.g. https://developer.nvidia.com/content/depth-precision-visualized and https://nlguillemot.wordpress.com/2016/12/07/reversed-z-in-opengl/)
 		int					stencilEnable;		///< Boolean value. Default: "false"
 		uint8_t				stencilReadMask;	///< Default: "0xff"
 		uint8_t				stencilWriteMask;	///< Default: "0xff"

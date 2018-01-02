@@ -45,7 +45,7 @@ VS_OUTPUT main(float2 Position : POSITION,	// Clip space vertex position as inpu
 	VS_OUTPUT output;
 
 	// Pass through the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
-	output.Position = float4(Position, 0.0f, 1.0f);
+	output.Position = float4(Position, 0.5f, 1.0f);
 
 	// Pass through the color
 	output.Color = Color;

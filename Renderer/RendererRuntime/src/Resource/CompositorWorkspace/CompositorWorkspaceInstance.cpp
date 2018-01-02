@@ -199,7 +199,7 @@ namespace RendererRuntime
 
 			// Begin scene rendering
 			// -> Required for Direct3D 9 and Direct3D 12
-			// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
+			// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 3
 			Renderer::IRenderer& renderer = renderTarget.getRenderer();
 			if (renderer.beginScene())
 			{
@@ -261,7 +261,7 @@ namespace RendererRuntime
 
 				// End scene rendering
 				// -> Required for Direct3D 9 and Direct3D 12
-				// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 2
+				// -> Not required for Direct3D 10, Direct3D 11, OpenGL and OpenGL ES 3
 				renderer.endScene();
 			}
 

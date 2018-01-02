@@ -65,7 +65,7 @@ namespace RendererRuntime
 		ICompositorResourcePass(compositorTarget),
 		mFlags(0),
 		mColor(0.0f, 0.0f, 0.0f, 0.0f),
-		mZ(1.0f),
+		mZ(0.0f),	// 0 instead of 1 due to usage of Reversed-Z (see e.g. https://developer.nvidia.com/content/depth-precision-visualized and https://nlguillemot.wordpress.com/2016/12/07/reversed-z-in-opengl/)
 		mStencil(0)
 	{
 		// Nothing here

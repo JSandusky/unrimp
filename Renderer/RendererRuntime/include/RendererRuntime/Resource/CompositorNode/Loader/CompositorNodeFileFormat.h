@@ -60,7 +60,7 @@ namespace RendererRuntime
 		//[ Definitions                                           ]
 		//[-------------------------------------------------------]
 		static const uint32_t FORMAT_TYPE	 = StringId("CompositorNode");
-		static const uint32_t FORMAT_VERSION = 7;
+		static const uint32_t FORMAT_VERSION = 8;
 
 		#pragma pack(push)
 		#pragma pack(1)
@@ -114,9 +114,9 @@ namespace RendererRuntime
 
 			struct PassClear : public Pass
 			{
-				uint32_t flags	  = 0;	///< Combination of "Renderer::ClearFlag"
+				uint32_t flags	  = 0;		///< Combination of "Renderer::ClearFlag"
 				float	 color[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-				float	 z		  = 1.0f;
+				float	 z		  = 0.0f;	///< 0 instead of 1 due to usage of Reversed-Z (see e.g. https://developer.nvidia.com/content/depth-precision-visualized and https://nlguillemot.wordpress.com/2016/12/07/reversed-z-in-opengl/)
 				uint32_t stencil  = 0;
 			};
 

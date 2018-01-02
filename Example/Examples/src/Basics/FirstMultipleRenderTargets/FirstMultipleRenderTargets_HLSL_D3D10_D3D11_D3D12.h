@@ -44,10 +44,10 @@ VS_OUTPUT main(float2 Position : POSITION)	// Clip space vertex position as inpu
 	VS_OUTPUT output;
 
 	// Pass through the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
-	output.Position = float4(Position, 0.0f, 1.0f);
+	output.Position = float4(Position, 0.5f, 1.0f);
 
 	// Calculate the texture coordinate by mapping the clip space coordinate to a texture space coordinate
-	// -> Unlike OpenGL or OpenGL ES 2, in Direct3D 9 & 10 & 11 the texture origin is left/top which does not map well to clip space coordinates
+	// -> Unlike OpenGL or OpenGL ES 3, in Direct3D 9 & 10 & 11 the texture origin is left/top which does not map well to clip space coordinates
 	// -> We have to flip the y-axis to map the coordinate system to the Direct3D 9 & 10 & 11 texture coordinate system
 	// -> (-1,-1) -> (0,1)
 	// -> (1,1) -> (1,0)

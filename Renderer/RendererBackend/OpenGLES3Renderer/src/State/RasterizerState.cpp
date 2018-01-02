@@ -37,7 +37,8 @@ namespace OpenGLES3Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	RasterizerState::RasterizerState(const Renderer::RasterizerState& rasterizerState) :
-		mRasterizerState(rasterizerState)
+		mRasterizerState(rasterizerState),
+		mOpenGLES3FrontFaceMode(static_cast<GLenum>(mRasterizerState.frontCounterClockwise ? GL_CCW : GL_CW))
 	{
 		// Nothing here
 	}
@@ -84,7 +85,7 @@ namespace OpenGLES3Renderer
 		}
 
 		// Renderer::RasterizerState::frontCounterClockwise
-		glFrontFace(static_cast<GLenum>(mRasterizerState.frontCounterClockwise ? GL_CCW : GL_CW));
+		glFrontFace(mOpenGLES3FrontFaceMode);
 
 		// TODO(co) Map the rest of the rasterizer states
 

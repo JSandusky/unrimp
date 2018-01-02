@@ -72,15 +72,15 @@ void main(point GS_INPUT input[1], inout TriangleStream<GS_OUTPUT> OutputStream)
 	// -0.5f, 0.0f	// 2		  2.......1
 
 	// Emit vertex 0 clip space position, left/bottom is (-1,-1) and right/top is (1,1)
-	output.Position = float4(0.0f, 1.0f, 0.0f, 1.0f);
+	output.Position = float4(0.0f, 1.0f, 0.5f, 1.0f);
 	OutputStream.Append(output);
 
 	// Emit vertex 1 clip space position, left/bottom is (-1,-1) and right/top is (1,1)
-	output.Position = float4(1.0f, 0.0f, 0.0f, 1.0f);
+	output.Position = float4(1.0f, 0.0f, 0.5f, 1.0f);
 	OutputStream.Append(output);
 
 	// Emit vertex 2 clip space position, left/bottom is (-1,-1) and right/top is (1,1)
-	output.Position= float4(-0.5f, 0.0f, 0.0f, 1.0f);
+	output.Position= float4(-0.5f, 0.0f, 0.5f, 1.0f);
 	OutputStream.Append(output);
 
 	// Done

@@ -96,11 +96,11 @@ void main()
 fragmentShaderSourceCode = R"(#version 450 core	// OpenGL 4.5
 
 // Attribute input/output
-layout(location = 1) in vec2 TexCoordVs;	// Texture coordinate
-layout(location = 2) in vec3 TangentVs;		// Tangent space to view space, x-axis
-layout(location = 3) in vec3 BinormalVs;	// Tangent space to view space, y-axis
-layout(location = 4) in vec3 NormalVs;		// Tangent space to view space, z-axis
-layout(location = 0) out vec4 OutputColor;
+layout(location = 1) in  vec2 TexCoordVs;	// Texture coordinate
+layout(location = 2) in  vec3 TangentVs;	// Tangent space to view space, x-axis
+layout(location = 3) in  vec3 BinormalVs;	// Tangent space to view space, y-axis
+layout(location = 4) in  vec3 NormalVs;		// Tangent space to view space, z-axis
+layout(location = 0) out vec4 OutputColor;	// Output variable for fragment color
 
 // Uniforms
 layout(set = 0, binding = 1) uniform sampler2D _argb_nxa;

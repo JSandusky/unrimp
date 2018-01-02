@@ -107,7 +107,7 @@ namespace Renderer
 	*    == About mipmapping ==
 	*    The texture filter mode does not support explicitly disabling mipmapping. In case our texture does not have
 	*    any mipmaps, set "Renderer::SamplerState::maxLOD" to zero in order to ensure a correct behaviour across the
-	*    difference graphics APIs. When not doing this you usually have no issues when using OpenGL, OpenGL ES 2, Direct 10,
+	*    difference graphics APIs. When not doing this you usually have no issues when using OpenGL, OpenGL ES 3, Direct 10,
 	*    Direct3D 11 or Direct3D 9 with the "ps_2_0"-profile, but when using Direct3D 9 with the "ps_3_0"-profile you might
 	*    get into trouble due to another internal graphics API behaviour.
 	*

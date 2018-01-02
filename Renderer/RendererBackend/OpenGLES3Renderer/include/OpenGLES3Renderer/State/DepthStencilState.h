@@ -98,8 +98,9 @@ namespace OpenGLES3Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Renderer::DepthStencilState mDepthStencilState;		///< Depth stencil state
-		int							mOpenGLES3DepthFunc;	///< OpenGL ES 3 depth function (type "GLenum" not used in here in order to keep the header slim)
+		Renderer::DepthStencilState mDepthStencilState;			///< Depth stencil state
+		uint8_t						mOpenGLES3DepthMaskEnabled;	///< OpenGL ES 3 depth mask enabled state (type "GLboolean" not used in here in order to keep the header slim)
+		int							mOpenGLES3DepthFunc;		///< OpenGL ES 3 depth function (type "GLenum" not used in here in order to keep the header slim)
 
 
 	};

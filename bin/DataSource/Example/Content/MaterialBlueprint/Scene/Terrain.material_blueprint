@@ -236,11 +236,11 @@
 							"ValueType": "FLOAT_2",
 							"Value": "@VIEWPORT_SIZE"
 						},
-						"ProjectionParameters":
+						"ProjectionParametersReversedZ":
 						{
 							"Usage": "PASS_REFERENCE",
 							"ValueType": "FLOAT_2",
-							"Value": "@PROJECTION_PARAMETERS"
+							"Value": "@PROJECTION_PARAMETERS_REVERSED_Z"
 						},
 						"FullCoverageMask":
 						{

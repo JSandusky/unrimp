@@ -92,7 +92,7 @@ ExampleRunner::ExampleRunner()
 	:
 	// Case sensitive name of the renderer to instance, might be ignored in case e.g. "RENDERER_ONLY_DIRECT3D12" was set as preprocessor definition
 	// -> Example renderer names: "Null", "OpenGL", "OpenGLES3", "Vulkan", "Direct3D9", "Direct3D10", "Direct3D11", "Direct3D12"
-	// -> In case the graphics driver supports it, the OpenGL ES 2 renderer can automatically also run on a desktop PC without an emulator (perfect for testing/debugging)
+	// -> In case the graphics driver supports it, the OpenGL ES 3 renderer can automatically also run on a desktop PC without an emulator (perfect for testing/debugging)
 	m_defaultRendererName(
 		#ifdef RENDERER_ONLY_NULL
 			"Null"

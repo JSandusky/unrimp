@@ -409,7 +409,7 @@ namespace Renderer
 			ReallocateFuntion mReallocateFuntion;
 		};
 		#define RENDERER_MALLOC(context, newNumberOfBytes) (context).getAllocator().reallocate(nullptr, 0, newNumberOfBytes, 1)
-		#define RENDERER_MALLOC_TYPED(context, type, newNumberOfElements) reinterpret_cast<type*>((context).getAllocator().reallocate(nullptr, 0, sizeof(type) * newNumberOfElements, 1))
+		#define RENDERER_MALLOC_TYPED(context, type, newNumberOfElements) reinterpret_cast<type*>((context).getAllocator().reallocate(nullptr, 0, sizeof(type) * (newNumberOfElements), 1))
 		#define RENDERER_FREE(context, oldPointer) (context).getAllocator().reallocate(oldPointer, 0, 0, 1)
 		#define RENDERER_NEW(context, type) new ((context).getAllocator().reallocate(nullptr, 0, sizeof(type), 1)) type
 		#define RENDERER_DELETE(context, type, oldPointer) \
@@ -1605,7 +1605,7 @@ namespace Renderer
 				{
 					true,
 					DepthWriteMask::ALL,
-					ComparisonFunc::LESS,
+					ComparisonFunc::GREATER,
 					false,
 					0xff,
 					0xff,
@@ -3302,7 +3302,7 @@ namespace Renderer
 			};
 			struct Clear
 			{
-				inline static void create(CommandBuffer& commandBuffer, uint32_t flags, const float color[4], float z, uint32_t stencil)
+				inline static void create(CommandBuffer& commandBuffer, uint32_t flags, const float color[4], float z = 0.0f, uint32_t stencil = 0)
 				{
 					*commandBuffer.addCommand<Clear>() = Clear(flags, color, z, stencil);
 				}

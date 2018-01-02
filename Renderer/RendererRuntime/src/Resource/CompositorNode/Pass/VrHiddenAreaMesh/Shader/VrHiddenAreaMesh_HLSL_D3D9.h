@@ -43,7 +43,7 @@ VS_OUTPUT main(float2 Position : POSITION)	// Clip space vertex position as inpu
 	VS_OUTPUT output;
 
 	// Calculate the clip space vertex position, lower/left is (-1,-1) and upper/right is (1,1)
-	output.Position = float4(Position * float2(2.0f, 2.0f) - float2(1.0f, 1.0f), 0.0f, 1.0f);
+	output.Position = float4(Position * float2(2.0f, 2.0f) - float2(1.0f, 1.0f), 0.5f, 1.0f);
 
 	// Done
 	return output;

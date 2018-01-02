@@ -67,7 +67,7 @@ namespace
 			if (uniformLocation >= 0)
 			{
 				// OpenGL/GLSL is not automatically assigning texture units to samplers, so, we have to take over this job
-				// -> When using OpenGL or OpenGL ES 2 this is required
+				// -> When using OpenGL or OpenGL ES 3 this is required
 				// -> OpenGL 4.2 or the "GL_ARB_explicit_uniform_location"-extension supports explicit binding points ("layout(binding = 0)"
 				//    in GLSL shader) , for backward compatibility we don't use it in here
 				// -> When using Direct3D 9, 10, 11 or 12, the texture unit

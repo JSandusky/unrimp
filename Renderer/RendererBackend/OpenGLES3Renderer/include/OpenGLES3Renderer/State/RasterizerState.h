@@ -29,6 +29,7 @@
 //[-------------------------------------------------------]
 #include "OpenGLES3Renderer/State/IState.h"
 
+#include <Renderer/PlatformTypes.h>
 #include <Renderer/State/RasterizerStateTypes.h>
 
 
@@ -98,7 +99,8 @@ namespace OpenGLES3Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		Renderer::RasterizerState mRasterizerState;	///< Rasterizer state
+		Renderer::RasterizerState mRasterizerState;			///< Rasterizer state
+		uint32_t				  mOpenGLES3FrontFaceMode;	///< OpenGL ES 3 front face mode (type "GLenum" not used in here in order to keep the header slim)
 
 
 	};

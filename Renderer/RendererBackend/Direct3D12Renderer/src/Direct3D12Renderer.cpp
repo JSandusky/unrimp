@@ -941,7 +941,7 @@ namespace Direct3D12Renderer
 	//[-------------------------------------------------------]
 	void Direct3D12Renderer::clear(uint32_t flags, const float color[4], float z, uint32_t stencil)
 	{
-		// Unlike Direct3D 9, OpenGL or OpenGL ES 2, Direct3D 12 clears a given render target view and not the currently bound
+		// Unlike Direct3D 9, OpenGL or OpenGL ES 3, Direct3D 12 clears a given render target view and not the currently bound
 		// -> No resource transition required in here, it's handled inside "Direct3D12Renderer::omSetRenderTarget()"
 
 		// Begin debug event

@@ -274,7 +274,7 @@
 				"Scene":
 				{
 					"Description": "Render skybox",
-					"MinimumDepth": "1.0",
+					"MaximumDepth": "0.0",
 					"MinimumRenderQueueIndex": "254",
 					"MaximumRenderQueueIndex": "254",
 					"MaterialTechnique": "Default"

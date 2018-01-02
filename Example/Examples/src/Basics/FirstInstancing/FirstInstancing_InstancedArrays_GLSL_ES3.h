@@ -42,7 +42,7 @@ in highp float InstanceID;	// Simple instance ID in order to keep it similar to 
 void main()
 {
 	// Pass through the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
-	gl_Position = vec4(Position.x, Position.y - float(gl_InstanceID), 0.0, 1.0);
+	gl_Position = vec4(Position.x, Position.y - float(gl_InstanceID), 0.5, 1.0);
 }
 )";
 
@@ -54,13 +54,13 @@ void main()
 fragmentShaderSourceCode = R"(#version 300 es	// OpenGL ES 3.0
 
 // Attribute input/output
-out highp vec4 FragmentColor;	// Output variable for fragment color
+out highp vec4 OutputColor;	// Output variable for fragment color
 
 // Programs
 void main()
 {
 	// Return green
-	FragmentColor = vec4(0.0, 1.0, 0.0, 1.0);
+	OutputColor = vec4(0.0, 1.0, 0.0, 1.0);
 }
 )";
 

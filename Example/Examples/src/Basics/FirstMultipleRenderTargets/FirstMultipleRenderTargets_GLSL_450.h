@@ -44,10 +44,10 @@ layout(location = 1) out vec2 TexCoord;	// Normalized texture coordinate as outp
 void main()
 {
 	// Pass through the clip space vertex position, left/bottom is (-1,-1) and right/top is (1,1)
-	gl_Position = vec4(Position, 0.0, 1.0);
+	gl_Position = vec4(Position, 0.5, 1.0);
 
 	// Calculate the texture coordinate by mapping the clip space coordinate to a texture space coordinate
-	// -> Unlike OpenGL or OpenGL ES 2, in Vulkan the texture origin is left/top which does not map well to clip space coordinates
+	// -> Unlike OpenGL or OpenGL ES 3, in Vulkan the texture origin is left/top which does not map well to clip space coordinates
 	// -> We have to flip the y-axis to map the coordinate system to the Vulkan texture coordinate system
 	// -> (-1,-1) -> (0,1)
 	// -> (1,1) -> (1,0)
@@ -83,8 +83,8 @@ void main()
 fragmentShaderSourceCode = R"(#version 450 core	// OpenGL 4.5
 
 // Attribute input/output
-layout(location = 1) in vec2 TexCoord;	// Normalized texture coordinate as input
-layout(location = 0) out vec4 OutputColor;
+layout(location = 1) in  vec2 TexCoord;		// Normalized texture coordinate as input
+layout(location = 0) out vec4 OutputColor;	// Output variable for fragment color
 
 // Uniforms
 layout(set = 0, binding = 0) uniform sampler2D AlbedoMap0;

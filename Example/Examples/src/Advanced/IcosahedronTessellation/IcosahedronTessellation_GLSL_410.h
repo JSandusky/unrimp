@@ -199,7 +199,7 @@ fragmentShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
 in vec3 gFacetNormal;	// Normalized normal of the primitive we received from the geometry shader (GS) as input
 in vec3 gPatchDistance;	// The barycentric coordinate inside the patch from the tessellator we received from the geometry shader (GS) as input
 in vec3 gTriDistance;	// Local triangle vertex position we received from the geometry shader (GS) as input
-layout(location = 0) out vec4 OutFragmentColor;
+layout(location = 0) out vec4 OutputColor;	// Output variable for fragment color
 
 // Uniforms
 layout(std140) uniform UniformBlockStaticFs
@@ -237,7 +237,7 @@ void main()
 	color = Amplify(d1, 40.0, -0.5) * Amplify(d2, 60.0, -0.5) * color;
 
 	// Return the calculated color
-	OutFragmentColor = vec4(color, 1.0);
+	OutputColor = vec4(color, 1.0);
 }
 )";
 

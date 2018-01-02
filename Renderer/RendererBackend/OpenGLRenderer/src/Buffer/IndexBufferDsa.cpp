@@ -46,7 +46,7 @@ namespace OpenGLRenderer
 			glCreateBuffers(1, &mOpenGLElementArrayBuffer);
 
 			// Upload the data
-			// -> Usage: These constants directly map to "GL_ARB_vertex_buffer_object" and OpenGL ES 2 constants, do not change them
+			// -> Usage: These constants directly map to "GL_ARB_vertex_buffer_object" and OpenGL ES 3 constants, do not change them
 			glNamedBufferData(mOpenGLElementArrayBuffer, static_cast<GLsizeiptr>(numberOfBytes), data, static_cast<GLenum>(bufferUsage));
 		}
 		else
@@ -55,7 +55,7 @@ namespace OpenGLRenderer
 			glGenBuffersARB(1, &mOpenGLElementArrayBuffer);
 
 			// Upload the data
-			// -> Usage: These constants directly map to "GL_ARB_vertex_buffer_object" and OpenGL ES 2 constants, do not change them
+			// -> Usage: These constants directly map to "GL_ARB_vertex_buffer_object" and OpenGL ES 3 constants, do not change them
 			glNamedBufferDataEXT(mOpenGLElementArrayBuffer, static_cast<GLsizeiptr>(numberOfBytes), data, static_cast<GLenum>(bufferUsage));
 		}
 	}

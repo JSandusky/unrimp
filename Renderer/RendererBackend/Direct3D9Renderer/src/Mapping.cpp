@@ -253,22 +253,21 @@ namespace Direct3D9Renderer
 		return MAPPING[static_cast<int>(textureAddressMode) - 1];	// Lookout! The "Renderer::TextureAddressMode"-values start with 1, not 0
 	}
 
-	/*TODO(co)
-	GLint Mapping::getDirect3D9ComparisonFunc(Renderer::ComparisonFunc comparisonFunc)
+	uint32_t Mapping::getDirect3D9ComparisonFunc(Renderer::ComparisonFunc comparisonFunc)
 	{
-		static const GLint MAPPING[] =
+		static const uint32_t MAPPING[] =
 		{
-			GL_NEVER,		// Renderer::ComparisonFunc::NEVER
-			GL_LESS,		// Renderer::ComparisonFunc::LESS
-			GL_EQUAL,		// Renderer::ComparisonFunc::EQUAL
-			GL_LEQUAL,		// Renderer::ComparisonFunc::LESS_EQUAL
-			GL_GREATER,		// Renderer::ComparisonFunc::GREATER
-			GL_NOTEQUAL,	// Renderer::ComparisonFunc::NOT_EQUAL
-			GL_GEQUAL,		// Renderer::ComparisonFunc::GREATER_EQUAL
-			GL_ALWAYS		// Renderer::ComparisonFunc::ALWAYS
+			D3DCMP_NEVER,			// Renderer::ComparisonFunc::NEVER
+			D3DCMP_LESS,			// Renderer::ComparisonFunc::LESS
+			D3DCMP_EQUAL,			// Renderer::ComparisonFunc::EQUAL
+			D3DCMP_LESSEQUAL,		// Renderer::ComparisonFunc::LESS_EQUAL
+			D3DCMP_GREATER,			// Renderer::ComparisonFunc::GREATER
+			D3DCMP_NOTEQUAL,		// Renderer::ComparisonFunc::NOT_EQUAL
+			D3DCMP_GREATEREQUAL,	// Renderer::ComparisonFunc::GREATER_EQUAL
+			D3DCMP_ALWAYS			// Renderer::ComparisonFunc::ALWAYS
 		};
-		return MAPPING[comparisonFunc];
-	}*/
+		return MAPPING[static_cast<int>(comparisonFunc) - 1];	// Lookout! The "Renderer::ComparisonFunc"-values start with 1, not 0
+	}
 
 	uint8_t Mapping::getDirect3D9Type(Renderer::VertexAttributeFormat vertexAttributeFormat)
 	{
