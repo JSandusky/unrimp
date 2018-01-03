@@ -144,6 +144,8 @@ namespace RendererRuntime
 		VertexBufferData		mVertexBufferData;
 		IndexBufferData			mIndexBufferData;
 		Renderer::IVertexArray*	mVertexArray;
+		glm::vec3				mMinimumBoundingBoxPosition;
+		glm::vec3				mMaximumBoundingBoxPosition;
 
 
 	};

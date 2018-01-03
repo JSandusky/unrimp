@@ -788,17 +788,11 @@ namespace RendererToolkit
 					RendererRuntime::v1Mesh::MeshHeader meshHeader;
 
 					// Bounding
+					// -> Calculate the bounding sphere radius enclosing the bounding box (don't use the inner bounding box radius)
 					meshHeader.minimumBoundingBoxPosition = minimumBoundingBoxPosition;
 					meshHeader.maximumBoundingBoxPosition = maximumBoundingBoxPosition;
 					meshHeader.boundingSpherePosition	  = (minimumBoundingBoxPosition + maximumBoundingBoxPosition) * 0.5f;
-					{ // Calculate the bounding sphere radius enclosing the bounding box (don't use the inner bounding box radius)
-						// Get the minimum/maximum squared length
-						const float minimumSquaredLength = glm::dot(minimumBoundingBoxPosition, minimumBoundingBoxPosition);
-						const float maximumSquaredLength = glm::dot(maximumBoundingBoxPosition, maximumBoundingBoxPosition);
-
-						// The greater one has to be used for the radius
-						meshHeader.boundingSphereRadius = (maximumSquaredLength > minimumSquaredLength) ? sqrt(maximumSquaredLength) : sqrt(minimumSquaredLength);
-					}
+					meshHeader.boundingSphereRadius		  = RendererRuntime::Math::calculateInnerBoundingSphereRadius(minimumBoundingBoxPosition, maximumBoundingBoxPosition);
 
 					// Vertex and index data
 					meshHeader.numberOfBytesPerVertex	= numberOfBytesPerVertex;

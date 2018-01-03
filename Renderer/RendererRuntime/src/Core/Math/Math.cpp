@@ -98,6 +98,18 @@ namespace RendererRuntime
 		return tangentFrameQuaternion;
 	}
 
+	float Math::calculateInnerBoundingSphereRadius(const glm::vec3& minimumBoundingBoxPosition, const glm::vec3& maximumBoundingBoxPosition)
+	{
+		// Get the minimum/maximum squared length
+		const float minimumSquaredLength = glm::dot(minimumBoundingBoxPosition, minimumBoundingBoxPosition);
+		const float maximumSquaredLength = glm::dot(maximumBoundingBoxPosition, maximumBoundingBoxPosition);
+		assert(0 != minimumSquaredLength);
+		assert(0 != maximumSquaredLength);
+
+		// The greater one has to be used for the radius
+		return (maximumSquaredLength > minimumSquaredLength) ? sqrt(maximumSquaredLength) : sqrt(minimumSquaredLength);
+	}
+
 	float Math::wrapToInterval(float value, float minimum, float maximum)
 	{
 		// Wrap as described at http://en.wikipedia.org/wiki/Wrapping_%28graphics%29

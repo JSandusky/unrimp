@@ -120,6 +120,20 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
+		*    Calculate inner bounding sphere radius
+		*
+		*  @param[in] minimumBoundingBoxPosition
+		*    The minimum bounding box position
+		*  @param[in] maximumBoundingBoxPosition
+		*    The maximum bounding box position
+		*
+		*  @return
+		*    Inner bounding sphere radius
+		*/
+		RENDERERRUNTIME_API_EXPORT static float calculateInnerBoundingSphereRadius(const glm::vec3& minimumBoundingBoxPosition, const glm::vec3& maximumBoundingBoxPosition);
+
+		/**
+		*  @brief
 		*    Ensure that the given value is within the given interval [minimum, maximum] by wrapping the value
 		*
 		*  @param[in] value

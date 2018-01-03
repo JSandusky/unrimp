@@ -32,6 +32,7 @@
 #include "RendererRuntime/Core/Thread/ThreadManager.h"
 #include "RendererRuntime/Core/Math/Math.h"
 #include "RendererRuntime/Core/Math/Frustum.h"
+#include "RendererRuntime/Vr/IVrManager.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
 #include <Renderer/Public/Renderer.h>
@@ -559,22 +560,43 @@ namespace RendererRuntime
 		//   - For each frustum plane, test plane vs OOBB
 		// - Wait for OOBB culling to finish
 
-		// Get the render target with and height
-		uint32_t renderTargetWidth = 0;
-		uint32_t renderTargetHeight = 0;
-		renderTarget.getWidthAndHeight(renderTargetWidth, renderTargetHeight);
-		if (compositorContextData.getSinglePassStereoInstancing())
-		{
-			renderTargetWidth /= 2;
-		}
-
 		// Get the camera scene item
 		const CameraSceneItem* cameraSceneItem = compositorContextData.getCameraSceneItem();
 		assert(nullptr != cameraSceneItem);
 
+		// Get view space to clip space matrix
+		assert(nullptr != compositorContextData.getCompositorWorkspaceInstance());
+		const IRendererRuntime& rendererRuntime = compositorContextData.getCompositorWorkspaceInstance()->getRendererRuntime();
+		glm::mat4 viewSpaceToClipSpaceMatrix;
+		{
+			const IVrManager& vrManager = rendererRuntime.getVrManager();
+			if (compositorContextData.getSinglePassStereoInstancing() && vrManager.isRunning() && !cameraSceneItem->hasCustomWorldSpaceToViewSpaceMatrix() && !cameraSceneItem->hasCustomViewSpaceToClipSpaceMatrix())
+			{
+				// TODO(co) There are currently multiple culling issues notable when using stereo rendering, so disabled culling for now until this has been resolved
+				// Fill render queue index ranges with the visible stuff
+				const glm::vec3& cameraPosition = cameraSceneItem->getParentSceneNodeSafe().getGlobalTransform().position;
+				for (uint32_t i = 0; i < mCullableSceneItemSet->numberOfSceneItems; ++i)
+				{
+					::detail::gatherRenderQueueIndexRangesRenderableManagersBySceneItem(*mCullableSceneItemSet->sceneItemVector[i], cameraPosition, renderQueueIndexRanges);
+				}
+				return;
+
+				// TODO(co) Single pass stereo rendering: "You must conservatively cull on the CPU by about 5 degrees": http://media.steampowered.com/apps/valve/2015/Alex_Vlachos_Advanced_VR_Rendering_GDC2015.pdf
+				// viewSpaceToClipSpaceMatrix = vrManager.getHmdViewSpaceToClipSpaceMatrix(IVrManager::VrEye::LEFT, cameraSceneItem->getNearZ(), cameraSceneItem->getFarZ());
+			}
+			else
+			{
+				// Get the render target with and height
+				uint32_t renderTargetWidth = 0;
+				uint32_t renderTargetHeight = 0;
+				renderTarget.getWidthAndHeight(renderTargetWidth, renderTargetHeight);
+
+				// Get view space to clip space matrix
+				viewSpaceToClipSpaceMatrix = cameraSceneItem->getViewSpaceToClipSpaceMatrix(static_cast<float>(renderTargetWidth) / renderTargetHeight);
+			}
+		}
+
 		// Calculate frustum using a world space to clip space matrix
-		// TODO(co) Single pass stereo rendering: "You must conservatively cull on the CPU by about 5 degrees": http://media.steampowered.com/apps/valve/2015/Alex_Vlachos_Advanced_VR_Rendering_GDC2015.pdf
-		const glm::mat4 viewSpaceToClipSpaceMatrix = cameraSceneItem->getViewSpaceToClipSpaceMatrix(static_cast<float>(renderTargetWidth) / renderTargetHeight);
 		const Frustum frustum(viewSpaceToClipSpaceMatrix * cameraSceneItem->getWorldSpaceToViewSpaceMatrix());
 
 		// Splat out the planes to be able to do plane-sphere test with SIMD
@@ -667,8 +689,7 @@ namespace RendererRuntime
 		}
 
 		// Get the thread pool instance
-		assert(nullptr != compositorContextData.getCompositorWorkspaceInstance());
-		ThreadPool<void>& threadPool = compositorContextData.getCompositorWorkspaceInstance()->getRendererRuntime().getThreadManager().getDataParallelThreadPool();
+		ThreadPool<void>& threadPool = rendererRuntime.getThreadManager().getDataParallelThreadPool();
 
 		{ // Do SIMD multi-threaded frustum-sphere culling
 			size_t itemCount = mCullableSceneItemSet->numberOfSceneItems;

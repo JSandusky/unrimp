@@ -241,6 +241,9 @@ namespace RendererRuntime
 		mikktspace::g_MikkTSpaceContext.m_pUserData  = this;
 
 		{ // Get the vertex buffer and index buffer data
+			mMinimumBoundingBoxPosition = glm::vec3(std::numeric_limits<float>::max());
+			mMaximumBoundingBoxPosition = glm::vec3(std::numeric_limits<float>::lowest());
+
 			// Tell the mesh resource about the number of vertices and indices
 			const uint32_t numberOfVertices = mVrRenderModel->unVertexCount;
 			const uint32_t numberOfIndices = mVrRenderModel->unTriangleCount * 3;
@@ -261,11 +264,19 @@ namespace RendererRuntime
 				}
 				for (uint32_t i = 0; i < numberOfVertices; ++i, ++currentVrRenderModelVertex)
 				{
+					const float* vrRenderModelVertexPosition = currentVrRenderModelVertex->vPosition.v;
+
+					{ // Update minimum and maximum bounding box position
+						const glm::vec3 glmVertex(vrRenderModelVertexPosition[0], vrRenderModelVertexPosition[1], -vrRenderModelVertexPosition[2]);
+						mMinimumBoundingBoxPosition = glm::min(mMinimumBoundingBoxPosition, glmVertex);
+						mMaximumBoundingBoxPosition = glm::max(mMaximumBoundingBoxPosition, glmVertex);
+					}
+
 					{ // 32 bit position
 						float* position = reinterpret_cast<float*>(currentVertexBufferData);
-						position[0] = currentVrRenderModelVertex->vPosition.v[0];
-						position[1] = currentVrRenderModelVertex->vPosition.v[1];
-						position[2] = -currentVrRenderModelVertex->vPosition.v[2];
+						position[0] = vrRenderModelVertexPosition[0];
+						position[1] = vrRenderModelVertexPosition[1];
+						position[2] = -vrRenderModelVertexPosition[2];
 						currentVertexBufferData += sizeof(float) * 3;
 					}
 
@@ -326,6 +337,11 @@ namespace RendererRuntime
 
 	bool OpenVRMeshResourceLoader::onDispatch()
 	{
+		// Bounding
+		// -> Calculate the bounding sphere radius enclosing the bounding box (don't use the inner bounding box radius)
+		mMeshResource->setBoundingBoxPosition(mMinimumBoundingBoxPosition, mMaximumBoundingBoxPosition);
+		mMeshResource->setBoundingSpherePositionRadius((mMinimumBoundingBoxPosition + mMaximumBoundingBoxPosition) * 0.5f, Math::calculateInnerBoundingSphereRadius(mMinimumBoundingBoxPosition, mMaximumBoundingBoxPosition));
+
 		// Create vertex array object (VAO)
 		mMeshResource->setVertexArray(mRendererRuntime.getRenderer().getCapabilities().nativeMultiThreading ? mVertexArray : createVertexArray());
 
