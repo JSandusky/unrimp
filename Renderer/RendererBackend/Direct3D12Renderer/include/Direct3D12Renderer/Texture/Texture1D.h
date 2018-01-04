@@ -79,7 +79,7 @@ namespace Direct3D12Renderer
 		*  @param[in] flags
 		*    Texture flags, see "Renderer::TextureFlag::Enum"
 		*  @param[in] textureUsage
-		*    Indication of the texture usage (only relevant for Direct3D, OpenGL has no texture usage indication)
+		*    Indication of the texture usage
 		*/
 		Texture1D(Direct3D12Renderer& direct3D12Renderer, uint32_t width, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, Renderer::TextureUsage textureUsage);
 

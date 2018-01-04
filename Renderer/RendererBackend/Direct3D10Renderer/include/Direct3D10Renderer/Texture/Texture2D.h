@@ -81,7 +81,7 @@ namespace Direct3D10Renderer
 		*  @param[in] flags
 		*    Texture flags, see "Renderer::TextureFlag::Enum"
 		*  @param[in] textureUsage
-		*    Indication of the texture usage (only relevant for Direct3D, OpenGL has no texture usage indication)
+		*    Indication of the texture usage
 		*  @param[in] numberOfMultisamples
 		*    The number of multisamples per pixel (valid values: 1, 2, 4, 6, 8)
 		*/

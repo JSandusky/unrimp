@@ -111,7 +111,7 @@ namespace Renderer
 		*  @param[in] flags
 		*    Texture flags, see "Renderer::TextureFlag::Enum"
 		*  @param[in] textureUsage
-		*    Indication of the texture usage, (only relevant for Direct3D, OpenGL has no texture usage indication)
+		*    Indication of the texture usage
 		*
 		*  @return
 		*    The created 1D texture instance, null pointer on error. Release the returned instance if you no longer need it.
@@ -136,7 +136,7 @@ namespace Renderer
 		*  @param[in] flags
 		*    Texture flags, see "Renderer::TextureFlag::Enum"
 		*  @param[in] textureUsage
-		*    Indication of the texture usage (only relevant for Direct3D, OpenGL has no texture usage indication)
+		*    Indication of the texture usage
 		*  @param[in] numberOfMultisamples
 		*    The number of multisamples per pixel (valid values: 1, 2, 4, 8)
 		*  @param[in] optimizedTextureClearValue
@@ -167,7 +167,7 @@ namespace Renderer
 		*  @param[in] flags
 		*    Texture flags, see "Renderer::TextureFlag::Enum"
 		*  @param[in] textureUsage
-		*    Indication of the texture usage, (only relevant for Direct3D, OpenGL has no texture usage indication)
+		*    Indication of the texture usage
 		*
 		*  @return
 		*    The created 2D array texture instance, null pointer on error. Release the returned instance if you no longer need it.
@@ -201,7 +201,7 @@ namespace Renderer
 		*  @param[in] flags
 		*    Texture flags, see "Renderer::TextureFlag::Enum"
 		*  @param[in] textureUsage
-		*    Indication of the texture usage, (only relevant for Direct3D, OpenGL has no texture usage indication)
+		*    Indication of the texture usage
 		*
 		*  @return
 		*    The created 3D texture instance, null pointer on error. Release the returned instance if you no longer need it.
@@ -229,7 +229,7 @@ namespace Renderer
 		*  @param[in] flags
 		*    Texture flags, see "Renderer::TextureFlag::Enum"
 		*  @param[in] textureUsage
-		*    Indication of the texture usage, (only relevant for Direct3D, OpenGL has no texture usage indication)
+		*    Indication of the texture usage
 		*
 		*  @return
 		*    The created cube texture instance, null pointer on error. Release the returned instance if you no longer need it.

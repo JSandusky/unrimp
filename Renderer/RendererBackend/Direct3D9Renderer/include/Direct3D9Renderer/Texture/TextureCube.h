@@ -80,7 +80,7 @@ namespace Direct3D9Renderer
 		*  @param[in] flags
 		*    Texture flags, see "Renderer::TextureFlag::Enum"
 		*  @param[in] textureUsage
-		*    Indication of the texture usage (only relevant for Direct3D, OpenGL has no texture usage indication)
+		*    Indication of the texture usage
 		*/
 		TextureCube(Direct3D9Renderer& direct3D9Renderer, uint32_t width, uint32_t height, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, Renderer::TextureUsage textureUsage = Renderer::TextureUsage::DEFAULT);
 
