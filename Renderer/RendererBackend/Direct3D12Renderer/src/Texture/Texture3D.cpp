@@ -97,15 +97,6 @@ namespace Direct3D12Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::ITexture3D methods           ]
-	//[-------------------------------------------------------]
-	void Texture3D::copyDataFrom(uint32_t, const void*)
-	{
-		// TODO(co) Implement me
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Protected virtual Renderer::RefCount methods          ]
 	//[-------------------------------------------------------]
 	void Texture3D::selfDestruct()

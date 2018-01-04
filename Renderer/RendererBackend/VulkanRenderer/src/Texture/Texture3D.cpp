@@ -57,15 +57,6 @@ namespace VulkanRenderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::ITexture3D methods           ]
-	//[-------------------------------------------------------]
-	void Texture3D::copyDataFrom(uint32_t, const void*)
-	{
-		// TODO(co) Implement me
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	DEFINE_SET_DEBUG_NAME_TEXTURE(Texture3D)	// void Texture3D::setDebugName(const char* name)

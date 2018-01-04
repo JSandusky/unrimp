@@ -198,29 +198,6 @@ namespace Direct3D11Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::ITexture3D methods           ]
-	//[-------------------------------------------------------]
-	void Texture3D::copyDataFrom(uint32_t numberOfBytes, const void* data)
-	{
-		// Sanity checks
-		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid Direct3D 11 texture data")
-		RENDERER_ASSERT(getRenderer().getContext(), nullptr != mD3D11ShaderResourceViewTexture, "Invalid Direct3D 11 shader resource view texture")
-
-		// Copy data
-		Direct3D11Renderer& direct3D11Renderer = static_cast<Direct3D11Renderer&>(getRenderer());
-		RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D11Renderer)
-		D3D11_MAPPED_SUBRESOURCE d3d11MappedSubresource = {};
-		ID3D11DeviceContext* d3d11DeviceContext = direct3D11Renderer.getD3D11DeviceContext();
-		if (S_OK == d3d11DeviceContext->Map(mD3D11Texture3D, 0, D3D11_MAP_WRITE_DISCARD, 0, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&d3d11MappedSubresource)))
-		{
-			memcpy(d3d11MappedSubresource.pData, data, numberOfBytes);
-			d3d11DeviceContext->Unmap(mD3D11Texture3D, 0);
-		}
-		RENDERER_END_DEBUG_EVENT(&direct3D11Renderer)
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	void Texture3D::setDebugName(const char* name)

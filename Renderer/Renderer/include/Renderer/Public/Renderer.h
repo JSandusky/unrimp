@@ -2754,8 +2754,6 @@ namespace Renderer
 			{
 				return mDepth;
 			}
-		public:
-			virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) = 0;
 		protected:
 			ITexture3D(IRenderer& renderer, uint32_t width, uint32_t height, uint32_t depth);
 			explicit ITexture3D(const ITexture3D& source) = delete;

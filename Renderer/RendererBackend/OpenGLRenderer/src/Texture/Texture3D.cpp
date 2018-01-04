@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Texture/Texture3D.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
+#include "OpenGLRenderer/Extensions.h"
 
 #include <Renderer/IRenderer.h>
 #include <Renderer/IAllocator.h>
@@ -43,6 +44,7 @@ namespace OpenGLRenderer
 		// Destroy the OpenGL texture instance
 		// -> Silently ignores 0's and names that do not correspond to existing textures
 		glDeleteTextures(1, &mOpenGLTexture);
+		glDeleteBuffersARB(1, &mOpenGLPixelUnpackBuffer);
 	}
 
 
@@ -62,6 +64,7 @@ namespace OpenGLRenderer
 		ITexture3D(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer), width, height, depth),
 		mTextureFormat(textureFormat),
 		mOpenGLTexture(0),
+		mOpenGLPixelUnpackBuffer(0),
 		mGenerateMipmaps(false)
 	{
 		// Nothing here

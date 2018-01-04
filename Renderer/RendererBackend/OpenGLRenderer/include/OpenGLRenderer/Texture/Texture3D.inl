@@ -28,9 +28,19 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
+	inline Renderer::TextureFormat::Enum Texture3D::getTextureFormat() const
+	{
+		return mTextureFormat;
+	}
+
 	inline uint32_t Texture3D::getOpenGLTexture() const
 	{
 		return mOpenGLTexture;
+	}
+
+	inline uint32_t Texture3D::getOpenGLPixelUnpackBuffer() const
+	{
+		return mOpenGLPixelUnpackBuffer;
 	}
 
 	inline bool Texture3D::getGenerateMipmaps() const

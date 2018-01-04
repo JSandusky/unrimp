@@ -40,7 +40,7 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	Texture3DBind::Texture3DBind(OpenGLRenderer& openGLRenderer, uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags) :
+	Texture3DBind::Texture3DBind(OpenGLRenderer& openGLRenderer, uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat, const void* data, uint32_t flags, Renderer::TextureUsage textureUsage) :
 		Texture3D(openGLRenderer, width, height, depth, textureFormat)
 	{
 		// Sanity checks
@@ -63,9 +63,36 @@ namespace OpenGLRenderer
 		// Set correct unpack alignment
 		glPixelStorei(GL_UNPACK_ALIGNMENT, (Renderer::TextureFormat::getNumberOfBytesPerElement(textureFormat) & 3) ? 1 : 4);
 
+		// Create OpenGL pixel unpack buffer for dynamic textures, if necessary
+		if (Renderer::TextureUsage::IMMUTABLE != textureUsage)
+		{
+			// Backup the currently bound OpenGL pixel unpack buffer
+			#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+				GLint openGLUnpackBufferBackup = 0;
+				glGetIntegerv(GL_PIXEL_UNPACK_BUFFER_BINDING_ARB, &openGLUnpackBufferBackup);
+			#endif
+
+			// Create the OpenGL pixel unpack buffer
+			glGenBuffersARB(1, &mOpenGLPixelUnpackBuffer);
+
+			// Bind this OpenGL pixel unpack buffer, the OpenGL pixel unpack buffer must be able to hold the top-level mipmap
+			// TODO(co) Or must the OpenGL pixel unpack buffer able to hold the entire texture including all mipmaps? Depends on the later usage I assume.
+			const uint32_t numberOfBytes = Renderer::TextureFormat::getNumberOfBytesPerSlice(textureFormat, width, height) * depth;
+			glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, mOpenGLPixelUnpackBuffer);
+			glBufferDataARB(GL_PIXEL_UNPACK_BUFFER_ARB, static_cast<GLsizeiptrARB>(numberOfBytes), nullptr, static_cast<GLenum>(GL_STREAM_DRAW));
+
+			// Be polite and restore the previous bound OpenGL pixel unpack buffer
+			#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+				glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, static_cast<GLuint>(openGLUnpackBufferBackup));
+			#else
+				glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
+			#endif
+		}
+
 		// Calculate the number of mipmaps
 		const bool dataContainsMipmaps = (flags & Renderer::TextureFlag::DATA_CONTAINS_MIPMAPS);
 		const bool generateMipmaps = (!dataContainsMipmaps && (flags & Renderer::TextureFlag::GENERATE_MIPMAPS));
+		RENDERER_ASSERT(openGLRenderer.getContext(), Renderer::TextureUsage::IMMUTABLE != textureUsage || !generateMipmaps, "OpenGL immutable texture usage can't be combined with automatic mipmap generation")
 		const uint32_t numberOfMipmaps = (dataContainsMipmaps || generateMipmaps) ? getNumberOfMipmaps(width, height, depth) : 1;
 		mGenerateMipmaps = (generateMipmaps && (flags & Renderer::TextureFlag::RENDER_TARGET));
 
@@ -164,40 +191,6 @@ namespace OpenGLRenderer
 	Texture3DBind::~Texture3DBind()
 	{
 		// Nothing here
-	}
-
-
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::ITexture3D methods           ]
-	//[-------------------------------------------------------]
-	void Texture3DBind::copyDataFrom(uint32_t, const void* data)
-	{
-		// Sanity check
-		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid OpenGL texture data")
-
-		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-			// Backup the currently set alignment
-			GLint openGLAlignmentBackup = 0;
-			glGetIntegerv(GL_UNPACK_ALIGNMENT, &openGLAlignmentBackup);
-
-			// Backup the currently bound OpenGL texture
-			GLint openGLTextureBackup = 0;
-			glGetIntegerv(GL_TEXTURE_BINDING_3D, &openGLTextureBackup);
-		#endif
-
-		// Make this OpenGL texture instance to the currently used one
-		glBindTexture(GL_TEXTURE_3D, mOpenGLTexture);
-
-		// Copy data
-		glTexImage3DEXT(GL_TEXTURE_3D, 0, static_cast<GLenum>(Mapping::getOpenGLInternalFormat(mTextureFormat)), static_cast<GLsizei>(getWidth()), static_cast<GLsizei>(getHeight()), static_cast<GLsizei>(getDepth()), 0, Mapping::getOpenGLFormat(mTextureFormat), Mapping::getOpenGLType(mTextureFormat), data);
-
-		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-			// Be polite and restore the previous bound OpenGL texture
-			glBindTexture(GL_TEXTURE_3D, static_cast<GLuint>(openGLTextureBackup));
-
-			// Restore previous alignment
-			glPixelStorei(GL_UNPACK_ALIGNMENT, openGLAlignmentBackup);
-		#endif
 	}
 
 

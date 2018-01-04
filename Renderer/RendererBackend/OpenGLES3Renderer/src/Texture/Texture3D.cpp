@@ -173,19 +173,6 @@ namespace OpenGLES3Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::ITexture3D methods           ]
-	//[-------------------------------------------------------]
-	void Texture3D::copyDataFrom(uint32_t, const void* data)
-	{
-		// Sanity check
-		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid OpenGL ES 3 texture data")
-
-		// Copy data
-		glTexImage3D(GL_TEXTURE_3D, 0, Mapping::getOpenGLES3InternalFormat(mTextureFormat), static_cast<GLsizei>(getWidth()), static_cast<GLsizei>(getHeight()), static_cast<GLsizei>(getDepth()), 0, Mapping::getOpenGLES3Format(mTextureFormat), Mapping::getOpenGLES3Type(mTextureFormat), data);
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Protected virtual Renderer::RefCount methods          ]
 	//[-------------------------------------------------------]
 	void Texture3D::selfDestruct()

@@ -316,7 +316,8 @@ namespace OpenGLRenderer
 	//[ EXT                                                   ]
 	//[-------------------------------------------------------]
 	// GL_EXT_texture3D
-	FNDEF_EX(glTexImage3DEXT,	PFNGLTEXIMAGE3DEXTPROC);
+	FNDEF_EX(glTexImage3DEXT,		PFNGLTEXIMAGE3DEXTPROC);
+	FNDEF_EX(glTexSubImage3DEXT,	PFNGLTEXSUBIMAGE3DEXTPROC);
 
 	// GL_EXT_direct_state_access
 	FNDEF_EX(glNamedBufferDataEXT,					PFNGLNAMEDBUFFERDATAEXTPROC);
@@ -334,6 +335,7 @@ namespace OpenGLRenderer
 	FNDEF_EX(glTextureImage1DEXT,					PFNGLTEXTUREIMAGE1DEXTPROC);
 	FNDEF_EX(glTextureImage2DEXT,					PFNGLTEXTUREIMAGE2DEXTPROC);
 	FNDEF_EX(glTextureImage3DEXT,					PFNGLTEXTUREIMAGE3DEXTPROC);
+	FNDEF_EX(glTextureSubImage3DEXT,				PFNGLTEXTURESUBIMAGE3DEXTPROC);
 	FNDEF_EX(glTextureParameteriEXT,				PFNGLTEXTUREPARAMETERIEXTPROC);
 	FNDEF_EX(glGenerateTextureMipmapEXT,			PFNGLGENERATETEXTUREMIPMAPEXTPROC);
 	FNDEF_EX(glCompressedTextureImage1DEXT,			PFNGLCOMPRESSEDTEXTUREIMAGE1DEXTPROC);

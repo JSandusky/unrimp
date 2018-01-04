@@ -2030,10 +2030,7 @@ namespace OpenGLRenderer
 			}
 
 			case Renderer::ResourceType::TEXTURE_3D:
-			{
-				// TODO(co) Implement me
-				return false;
-			}
+				return ::detail::mapBuffer(mContext, *mExtensions, GL_PIXEL_UNPACK_BUFFER_ARB, GL_PIXEL_UNPACK_BUFFER_BINDING_ARB, static_cast<Texture3D&>(resource).getOpenGLPixelUnpackBuffer(), mapType, mappedSubresource);
 
 			case Renderer::ResourceType::TEXTURE_CUBE:
 			{
@@ -2143,7 +2140,62 @@ namespace OpenGLRenderer
 
 			case Renderer::ResourceType::TEXTURE_3D:
 			{
-				// TODO(co) Implement me
+				// Unmap pixel unpack buffer
+				const Texture3D& texture3D = static_cast<Texture3D&>(resource);
+				const Renderer::TextureFormat::Enum textureFormat = texture3D.getTextureFormat();
+				const uint32_t openGLPixelUnpackBuffer = texture3D.getOpenGLPixelUnpackBuffer();
+				::detail::unmapBuffer(*mExtensions, GL_PIXEL_UNPACK_BUFFER_ARB, GL_PIXEL_UNPACK_BUFFER_BINDING_ARB, openGLPixelUnpackBuffer);
+
+				// Backup the currently set alignment and currently bound OpenGL pixel unpack buffer
+				#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+					GLint openGLAlignmentBackup = 0;
+					glGetIntegerv(GL_UNPACK_ALIGNMENT, &openGLAlignmentBackup);
+					GLint openGLUnpackBufferBackup = 0;
+					glGetIntegerv(GL_PIXEL_UNPACK_BUFFER_BINDING_ARB, &openGLUnpackBufferBackup);
+				#endif
+				glPixelStorei(GL_UNPACK_ALIGNMENT, (Renderer::TextureFormat::getNumberOfBytesPerElement(textureFormat) & 3) ? 1 : 4);
+
+				// Copy pixel unpack buffer to texture
+				glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, openGLPixelUnpackBuffer);
+				if (mExtensions->isGL_EXT_direct_state_access() || mExtensions->isGL_ARB_direct_state_access())
+				{
+					// Effective direct state access (DSA)
+					if (mExtensions->isGL_ARB_direct_state_access())
+					{
+						glTextureSubImage3D(texture3D.getOpenGLTexture(), 0, 0, 0, 0, static_cast<GLsizei>(texture3D.getWidth()), static_cast<GLsizei>(texture3D.getHeight()), static_cast<GLsizei>(texture3D.getDepth()), Mapping::getOpenGLFormat(textureFormat), Mapping::getOpenGLType(textureFormat), 0);
+					}
+					else
+					{
+						glTextureSubImage3DEXT(texture3D.getOpenGLTexture(), GL_TEXTURE_3D, 0, 0, 0, 0, static_cast<GLsizei>(texture3D.getWidth()), static_cast<GLsizei>(texture3D.getHeight()), static_cast<GLsizei>(texture3D.getDepth()), Mapping::getOpenGLFormat(textureFormat), Mapping::getOpenGLType(textureFormat), 0);
+					}
+				}
+				else
+				{
+					// Traditional bind version
+
+					// Backup the currently bound OpenGL texture
+					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+						GLint openGLTextureBackup = 0;
+						glGetIntegerv(GL_TEXTURE_BINDING_3D, &openGLTextureBackup);
+					#endif
+
+					// Copy pixel unpack buffer to texture
+					glBindTexture(GL_TEXTURE_3D, texture3D.getOpenGLTexture());
+					glTexSubImage3DEXT(GL_TEXTURE_3D, 0, 0, 0, 0, static_cast<GLsizei>(texture3D.getWidth()), static_cast<GLsizei>(texture3D.getHeight()), static_cast<GLsizei>(texture3D.getDepth()), Mapping::getOpenGLFormat(textureFormat), Mapping::getOpenGLType(textureFormat), 0);
+
+					// Be polite and restore the previous bound OpenGL texture
+					#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+						glBindTexture(GL_TEXTURE_3D, static_cast<GLuint>(openGLTextureBackup));
+					#endif
+				}
+
+				// Restore previous alignment and pixel unpack buffer
+				#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
+					glPixelStorei(GL_UNPACK_ALIGNMENT, openGLAlignmentBackup);
+					glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, static_cast<GLuint>(openGLUnpackBufferBackup));
+				#else
+					glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
+				#endif
 				break;
 			}
 

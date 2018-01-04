@@ -366,6 +366,7 @@ namespace OpenGLRenderer
 			// Load the entry points
 			bool result = true;	// Success by default
 			IMPORT_FUNC(glTexImage3DEXT)
+			IMPORT_FUNC(glTexSubImage3DEXT)
 			mGL_EXT_texture3D = result;
 		}
 
@@ -390,6 +391,7 @@ namespace OpenGLRenderer
 			IMPORT_FUNC(glTextureImage1DEXT)
 			IMPORT_FUNC(glTextureImage2DEXT)
 			IMPORT_FUNC(glTextureImage3DEXT)
+			IMPORT_FUNC(glTextureSubImage3DEXT)
 			IMPORT_FUNC(glTextureParameteriEXT)
 			IMPORT_FUNC(glGenerateTextureMipmapEXT)
 			IMPORT_FUNC(glCompressedTextureImage1DEXT)

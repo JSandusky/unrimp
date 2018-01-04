@@ -70,12 +70,30 @@ namespace OpenGLRenderer
 
 		/**
 		*  @brief
+		*    Return the texture format
+		*
+		*  @return
+		*    The texture format
+		*/
+		inline Renderer::TextureFormat::Enum getTextureFormat() const;
+
+		/**
+		*  @brief
 		*    Return the OpenGL texture
 		*
 		*  @return
 		*    The OpenGL texture, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
 		*/
 		inline uint32_t getOpenGLTexture() const;
+
+		/**
+		*  @brief
+		*    Return the OpenGL pixel unpack buffer for dynamic textures
+		*
+		*  @return
+		*    The OpenGL pixel unpack buffer for dynamic textures, can be zero if no resource is allocated, do not destroy the returned resource (type "GLuint" not used in here in order to keep the header slim)
+		*/
+		inline uint32_t getOpenGLPixelUnpackBuffer() const;
 
 		/**
 		*  @brief
@@ -128,7 +146,8 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	protected:
 		Renderer::TextureFormat::Enum mTextureFormat;
-		uint32_t					  mOpenGLTexture;	///< OpenGL texture, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t					  mOpenGLTexture;			///< OpenGL texture, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t					  mOpenGLPixelUnpackBuffer;	///< OpenGL pixel unpack buffer for dynamic textures, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 		bool						  mGenerateMipmaps;
 
 

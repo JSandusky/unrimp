@@ -302,7 +302,14 @@ namespace RendererRuntime
 		Renderer::ITexturePtr texturePtr = mRendererRuntime.getTextureResourceManager().getById(mClusters3DTextureResourceId).getTexture();
 		assert(nullptr != texturePtr.getPointer());
 		assert(Renderer::ResourceType::TEXTURE_3D == texturePtr.getPointer()->getResourceType());
-		static_cast<Renderer::ITexture3D*>(texturePtr.getPointer())->copyDataFrom(::detail::CLUSTER_X * ::detail::CLUSTER_Y * ::detail::CLUSTER_Z * sizeof(uint32_t), lights);
+		Renderer::ITexture3D* texture3D = static_cast<Renderer::ITexture3D*>(texturePtr.getPointer());
+		Renderer::MappedSubresource mappedSubresource;
+		Renderer::IRenderer& renderer = mRendererRuntime.getRenderer();
+		if (renderer.map(*texture3D, 0, Renderer::MapType::WRITE_DISCARD, 0, mappedSubresource))
+		{
+			memcpy(mappedSubresource.data, lights, ::detail::CLUSTER_X * ::detail::CLUSTER_Y * ::detail::CLUSTER_Z * sizeof(uint32_t));
+			renderer.unmap(*texture3D, 0);
+		}
 	}
 
 
