@@ -1,9 +1,9 @@
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/cofenberg/unrimp/master/LICENSE)
 
 
-Warning
+Foreword
 ======
-This project is currently still heavy under construction and not usable for productive projects.
+This is a spare time project. There's no support. API changes are done in an time efficient way, meaning without thinking about backward compatibility.
 
 
 Unrimp Description
@@ -42,14 +42,14 @@ Features
 Renderer API and Backends
 ======
 - Renderer implementations for
-	- Direct3D 9 (legacy, still maintained for curiosity reasons)
-	- Direct3D 10 (legacy, still maintained for curiosity reasons)
-	- Direct3D 11
-	- Direct3D 12 (early phase)
 	- Vulkan (not feature complete, yet)
+	- Direct3D 12 (early phase)
+	- Direct3D 11
 	- OpenGL (by default a OpenGL 4.1 context is created, the best OpenGL version Mac OS X 10.11 supports, so lowest version we have to support)
 	- OpenGL ES 3
-	(legacy = critical features like uniform buffer, texture buffer and/or compute shaders are missing which are required for modern efficient renderers which provide e.g. automatic instancing or clustered deferred rendering)
+	- Legacy = critical features like uniform buffer, texture buffer and/or compute shaders are missing which are required for modern efficient renderers which provide e.g. automatic instancing or clustered deferred rendering, still maintained for curiosity reasons
+		- Direct3D 10
+		- Direct3D 9
 - Render targets
 	- Swap chains, render into one or multiple operation system windows
 	- Framebuffer object (FBO) used for render to texture, support for multiple render targets (MRT), support for multisample (MSAA)
@@ -111,7 +111,7 @@ Renderer Runtime (e.g. "The Game")
 - Compositor: Setup your overal rendering flow without a single line of C++ source code
 	- The compositor is using the material blueprint system, meaning compact C++ implementation while offering mighty possibilities
 	- Using [Reversed-Z](https://developer.nvidia.com/content/depth-precision-visualized) for improved depth buffer precision
-	- Blurred stabilized cascaded (CSM) exponential variance (EVSM) shadow mapping
+	- Blurred stabilized cascaded (CSM) exponential variance (EVSM) shadow mapping basing on ["A Sampling of Shadow Techniques"](https://mynameismjp.wordpress.com/2013/09/10/shadow-maps/) by Matt Pettineo
 	- Resolution scale support
 - Scene as most top-level concept: Fancy-feature set kept simple because more complex applications / games usually add an entity-component-system
 - Render queue fed with generic renderables to decouple concrete constructs like meshes, particles, terrain etc. from the generic rendering
@@ -243,6 +243,7 @@ Useful MS Windows Developer Tools
 		- As of October 14, 2017: Doesn't work with Visual Studio 2017 (v141), compile for Visual Studio 2015 (v140) if you want to analys the binaries using Sizer
 - When shipping a product, use a static build and e.g. [UPX](https://upx.github.io/) to get executables even more compact on end-user-systems
 - OpenGL ES 3 development: PowerVR (SDK 2017 R1 or newer) works well. Just copy "libEGL.dll" and "libGLESv2.dll" e.g. into "unrimp\bin\x86d_dynamic".
+- ["Visual Studio Spell Checker"](https://marketplace.visualstudio.com/items?itemName=EWoodruff.VisualStudioSpellCheckerVS2017andLater) extension to reduce the risk automatically detectable typos get into APIs were they might stay forever
 
 
 Useful Asset Sources
