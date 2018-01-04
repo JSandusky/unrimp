@@ -80,13 +80,6 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::ITextureBuffer methods       ]
-	//[-------------------------------------------------------]
-	public:
-		virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) override;
-
-
-	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:

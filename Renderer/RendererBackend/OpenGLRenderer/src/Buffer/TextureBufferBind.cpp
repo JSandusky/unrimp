@@ -93,31 +93,6 @@ namespace OpenGLRenderer
 	}
 
 
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::ITextureBuffer methods       ]
-	//[-------------------------------------------------------]
-	void TextureBufferBind::copyDataFrom(uint32_t numberOfBytes, const void* data)
-	{
-		// Sanity check
-		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid OpenGL texture buffer data")
-
-		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-			// Backup the currently bound OpenGL texture buffer
-			GLint openGLTextureBufferBackup = 0;
-			glGetIntegerv(GL_TEXTURE_BINDING_BUFFER_ARB, &openGLTextureBufferBackup);
-		#endif
-
-		// Bind this OpenGL texture buffer and upload the data
-		glBindBufferARB(GL_TEXTURE_BUFFER_ARB, mOpenGLTextureBuffer);
-		glBufferSubDataARB(GL_TEXTURE_BUFFER_ARB, 0, static_cast<GLsizeiptrARB>(numberOfBytes), data);
-
-		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-			// Be polite and restore the previous bound OpenGL texture buffer
-			glBindBufferARB(GL_TEXTURE_BUFFER_ARB, static_cast<GLuint>(openGLTextureBufferBackup));
-		#endif
-	}
-
-
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

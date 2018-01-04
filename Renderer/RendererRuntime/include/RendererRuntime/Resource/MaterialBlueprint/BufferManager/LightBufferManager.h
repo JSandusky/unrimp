@@ -175,7 +175,7 @@ namespace RendererRuntime
 	private:
 		explicit LightBufferManager(const LightBufferManager&) = delete;
 		LightBufferManager& operator=(const LightBufferManager&) = delete;
-		void fillTextureBuffer(SceneResource& sceneResource, Renderer::CommandBuffer& commandBuffer);
+		void fillTextureBuffer(SceneResource& sceneResource);
 		void fillClusters3DTexture(SceneResource& sceneResource, Renderer::CommandBuffer& commandBuffer);
 
 

@@ -74,22 +74,6 @@ namespace Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual ITextureBuffer methods                 ]
-	//[-------------------------------------------------------]
-	public:
-		/**
-		*  @brief
-		*    Copy data into the texture buffer object
-		*
-		*  @param[in] numberOfBytes
-		*    Number of bytes within the texture buffer, must be valid
-		*  @param[in] data
-		*    Texture buffer data, must be valid
-		*/
-		virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) = 0;
-
-
-	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:

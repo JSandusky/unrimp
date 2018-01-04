@@ -66,17 +66,6 @@ namespace Direct3D9Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IIndirectBuffer methods      ]
-	//[-------------------------------------------------------]
-	void IndirectBuffer::copyDataFrom(uint32_t numberOfBytes, const void* data)
-	{
-		RENDERER_ASSERT(getRenderer().getContext(), numberOfBytes <= mNumberOfBytes, "Invalid Direct3D 9 indirect buffer data")
-		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid Direct3D 9 indirect buffer data")
-		memcpy(mData, data, numberOfBytes);
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Protected virtual Renderer::RefCount methods          ]
 	//[-------------------------------------------------------]
 	void IndirectBuffer::selfDestruct()

@@ -153,39 +153,6 @@ namespace Direct3D12Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::ITextureBuffer methods       ]
-	//[-------------------------------------------------------]
-	void TextureBuffer::copyDataFrom(uint32_t, const void*)
-	{
-		// TODO(co) Direct3D 12 update
-		/*
-		// Check resource pointers
-		if (nullptr != mD3D12Buffer && nullptr != data)
-		{
-			// Begin debug event
-			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&getRenderer())
-
-			// Get the Direct3D 12 device context
-			ID3D12DeviceContext *d3d12DeviceContext = static_cast<Direct3D12Renderer&>(getRenderer()).getD3D12DeviceContext();
-
-			// Update Direct3D 12 subresource data
-			// -> Don't use (might fail): d3d12DeviceContext->UpdateSubresource(mD3D12Buffer, 0, nullptr, data, 0, 0);
-			D3D12_MAPPED_SUBRESOURCE d3d12MappedSubresource;
-			const HRESULT hResult = d3d12DeviceContext->Map(mD3D12Buffer, 0, D3D12_MAP_WRITE_DISCARD, 0, &d3d12MappedSubresource);
-			if (S_OK == hResult)
-			{
-				memcpy(d3d12MappedSubresource.pData, data, numberOfBytes);
-				d3d12DeviceContext->Unmap(mD3D12Buffer, 0);
-			}
-
-			// End debug event
-			RENDERER_END_DEBUG_EVENT(&getRenderer())
-		}
-		*/
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Protected virtual Renderer::RefCount methods          ]
 	//[-------------------------------------------------------]
 	void TextureBuffer::selfDestruct()

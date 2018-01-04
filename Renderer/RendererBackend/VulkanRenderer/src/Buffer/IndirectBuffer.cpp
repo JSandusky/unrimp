@@ -59,32 +59,6 @@ namespace VulkanRenderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IIndirectBuffer methods      ]
-	//[-------------------------------------------------------]
-	void IndirectBuffer::copyDataFrom(uint32_t numberOfBytes, const void* data)
-	{
-		// Sanity checks
-		RENDERER_ASSERT(getRenderer().getContext(), 0 != numberOfBytes, "Invalid Vulkan indirect buffer data")
-		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid Vulkan indirect buffer data")
-		RENDERER_ASSERT(getRenderer().getContext(), VK_NULL_HANDLE != mVkDeviceMemory, "Invalid Vulkan device memory")
-
-		// Upload data
-		const VulkanRenderer& vulkanRenderer = static_cast<const VulkanRenderer&>(getRenderer());
-		const VkDevice vkDevice = vulkanRenderer.getVulkanContext().getVkDevice();
-		void* mappedData = nullptr;
-		if (vkMapMemory(vkDevice, mVkDeviceMemory, 0, numberOfBytes, 0, &mappedData) == VK_SUCCESS)
-		{
-			memcpy(mappedData, data, numberOfBytes);
-			vkUnmapMemory(vkDevice, mVkDeviceMemory);
-		}
-		else
-		{
-			RENDERER_LOG(vulkanRenderer.getContext(), CRITICAL, "Failed to map the Vulkan memory")
-		}
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	DEFINE_SET_DEBUG_NAME_VKBUFFER_VKDEVICEMEMORY(IndirectBuffer, "IndirectBufferObject", 23)	// void IndirectBuffer::setDebugName(const char* name)

@@ -99,7 +99,6 @@ namespace
 				renderer.submitCommandBuffer(*realData->commandBufferToExecute);
 			}
 
-
 			//[-------------------------------------------------------]
 			//[ Resource handling                                     ]
 			//[-------------------------------------------------------]
@@ -107,12 +106,6 @@ namespace
 			{
 				// Not supported by Direct3D 9
 				RENDERER_ASSERT(renderer.getContext(), false, "Uniform buffer isn't supported by Direct3D 9")
-			}
-
-			void CopyTextureBufferData(const void*, Renderer::IRenderer& renderer)
-			{
-				// Not supported by Direct3D 9
-				RENDERER_ASSERT(renderer.getContext(), false, "Texture buffer isn't supported by Direct3D 9")
 			}
 
 			//[-------------------------------------------------------]
@@ -257,7 +250,6 @@ namespace
 			&BackendDispatch::ExecuteCommandBuffer,
 			// Resource handling
 			&BackendDispatch::CopyUniformBufferData,
-			&BackendDispatch::CopyTextureBufferData,
 			// Graphics root
 			&BackendDispatch::SetGraphicsRootSignature,
 			&BackendDispatch::SetGraphicsResourceGroup,

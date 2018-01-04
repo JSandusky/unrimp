@@ -68,26 +68,6 @@ namespace OpenGLRenderer
 	}
 
 
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IIndirectBuffer methods      ]
-	//[-------------------------------------------------------]
-	void IndirectBufferDsa::copyDataFrom(uint32_t numberOfBytes, const void* data)
-	{
-		// Sanity check
-		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid OpenGL indirect buffer data")
-
-		// Upload the data
-		if (static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_ARB_direct_state_access())
-		{
-			glNamedBufferSubData(mOpenGLIndirectBuffer, 0, static_cast<GLsizeiptr>(numberOfBytes), data);
-		}
-		else
-		{
-			glNamedBufferSubDataEXT(mOpenGLIndirectBuffer, 0, static_cast<GLsizeiptr>(numberOfBytes), data);
-		}
-	}
-
-
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

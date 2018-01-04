@@ -57,11 +57,6 @@ namespace NullRenderer
 		return nullptr;
 	}
 
-	void IndirectBuffer::copyDataFrom(uint32_t, const void*)
-	{
-		// Nothing here
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Protected virtual Renderer::RefCount methods          ]

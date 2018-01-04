@@ -156,7 +156,6 @@ namespace
 				renderer.submitCommandBuffer(*realData->commandBufferToExecute);
 			}
 
-
 			//[-------------------------------------------------------]
 			//[ Resource handling                                     ]
 			//[-------------------------------------------------------]
@@ -164,12 +163,6 @@ namespace
 			{
 				const Renderer::Command::CopyUniformBufferData* realData = static_cast<const Renderer::Command::CopyUniformBufferData*>(data);
 				realData->uniformBuffer->copyDataFrom(realData->numberOfBytes, (nullptr != realData->data) ? realData->data : Renderer::CommandPacketHelper::getAuxiliaryMemory(realData));
-			}
-
-			void CopyTextureBufferData(const void* data, Renderer::IRenderer&)
-			{
-				const Renderer::Command::CopyTextureBufferData* realData = static_cast<const Renderer::Command::CopyTextureBufferData*>(data);
-				realData->textureBuffer->copyDataFrom(realData->numberOfBytes, (nullptr != realData->data) ? realData->data : Renderer::CommandPacketHelper::getAuxiliaryMemory(realData));
 			}
 
 			//[-------------------------------------------------------]
@@ -314,7 +307,6 @@ namespace
 			&BackendDispatch::ExecuteCommandBuffer,
 			// Resource handling
 			&BackendDispatch::CopyUniformBufferData,
-			&BackendDispatch::CopyTextureBufferData,
 			// Graphics root
 			&BackendDispatch::SetGraphicsRootSignature,
 			&BackendDispatch::SetGraphicsResourceGroup,

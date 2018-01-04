@@ -66,17 +66,6 @@ namespace OpenGLES3Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IIndirectBuffer methods      ]
-	//[-------------------------------------------------------]
-	void IndirectBuffer::copyDataFrom(uint32_t numberOfBytes, const void* data)
-	{
-		RENDERER_ASSERT(getRenderer().getContext(), numberOfBytes <= mNumberOfBytes, "Invalid OpenGL ES 3 indirect buffer data")
-		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid OpenGL ES 3 indirect buffer data")
-		memcpy(mData, data, numberOfBytes);
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Protected virtual Renderer::RefCount methods          ]
 	//[-------------------------------------------------------]
 	void IndirectBuffer::selfDestruct()

@@ -141,33 +141,6 @@ namespace Direct3D10Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::ITextureBuffer methods       ]
-	//[-------------------------------------------------------]
-	void TextureBuffer::copyDataFrom(uint32_t numberOfBytes, const void* data)
-	{
-		// Check resource pointers
-		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid Direct3D 10 texture buffer data")
-		if (nullptr != mD3D10Buffer)
-		{
-			// Begin debug event
-			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&static_cast<Direct3D10Renderer&>(getRenderer()))
-
-			// Update Direct3D 10 subresource data
-			void* direct3D10Data = nullptr;
-			const HRESULT hResult = mD3D10Buffer->Map(D3D10_MAP_WRITE_DISCARD, 0, &direct3D10Data);
-			if (S_OK == hResult)
-			{
-				memcpy(direct3D10Data, data, numberOfBytes);
-				mD3D10Buffer->Unmap();
-			}
-
-			// End debug event
-			RENDERER_END_DEBUG_EVENT(&static_cast<Direct3D10Renderer&>(getRenderer()))
-		}
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Protected virtual Renderer::RefCount methods          ]
 	//[-------------------------------------------------------]
 	void TextureBuffer::selfDestruct()

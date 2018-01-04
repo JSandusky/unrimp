@@ -68,31 +68,6 @@ namespace OpenGLRenderer
 	}
 
 
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IIndirectBuffer methods      ]
-	//[-------------------------------------------------------]
-	void IndirectBufferBind::copyDataFrom(uint32_t numberOfBytes, const void* data)
-	{
-		// Sanity check
-		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid OpenGL indirect buffer data")
-
-		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-			// Backup the currently bound OpenGL indirect buffer
-			GLint openGLIndirectBufferBackup = 0;
-			glGetIntegerv(GL_DRAW_INDIRECT_BUFFER_BINDING, &openGLIndirectBufferBackup);
-		#endif
-
-		// Bind this OpenGL indirect buffer and upload the data
-		glBindBufferARB(GL_DRAW_INDIRECT_BUFFER, mOpenGLIndirectBuffer);
-		glBufferSubDataARB(GL_DRAW_INDIRECT_BUFFER, 0, static_cast<GLsizeiptrARB>(numberOfBytes), data);
-
-		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-			// Be polite and restore the previous bound OpenGL indirect buffer
-			glBindBufferARB(GL_DRAW_INDIRECT_BUFFER, static_cast<GLuint>(openGLIndirectBufferBackup));
-		#endif
-	}
-
-
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

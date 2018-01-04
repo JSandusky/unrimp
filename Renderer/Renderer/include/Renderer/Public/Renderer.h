@@ -2584,8 +2584,6 @@ namespace Renderer
 		{
 		public:
 			virtual ~ITextureBuffer() override;
-		public:
-			virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) = 0;
 		protected:
 			explicit ITextureBuffer(IRenderer& renderer);
 			explicit ITextureBuffer(const ITextureBuffer& source) = delete;
@@ -2604,7 +2602,6 @@ namespace Renderer
 			{}
 		public:
 			virtual const uint8_t* getEmulationData() const = 0;
-			virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) = 0;
 		protected:
 			inline IIndirectBuffer() :
 				IBuffer(ResourceType::INDIRECT_BUFFER)
@@ -2964,7 +2961,6 @@ namespace Renderer
 		{
 			ExecuteCommandBuffer = 0,
 			CopyUniformBufferData,
-			CopyTextureBufferData,
 			SetGraphicsRootSignature,
 			SetGraphicsResourceGroup,
 			SetPipelineState,
@@ -3157,26 +3153,6 @@ namespace Renderer
 				uint32_t		numberOfBytes;
 				void*			data;
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::CopyUniformBufferData;
-			};
-			struct CopyTextureBufferData
-			{
-				inline static void create(CommandBuffer& commandBuffer, ITextureBuffer* textureBuffer, uint32_t numberOfBytes, void* data)
-				{
-					Command::CopyTextureBufferData* copyTextureBufferDataCommand = commandBuffer.addCommand<Command::CopyTextureBufferData>(numberOfBytes);
-					copyTextureBufferDataCommand->textureBuffer	= textureBuffer;
-					copyTextureBufferDataCommand->numberOfBytes	= numberOfBytes;
-					copyTextureBufferDataCommand->data			= nullptr;
-					memcpy(CommandPacketHelper::getAuxiliaryMemory(copyTextureBufferDataCommand), data, numberOfBytes);
-				}
-				inline CopyTextureBufferData(ITextureBuffer* _textureBuffer, uint32_t _numberOfBytes, void* _data) :
-					textureBuffer(_textureBuffer),
-					numberOfBytes(_numberOfBytes),
-					data(_data)
-				{}
-				ITextureBuffer* textureBuffer;
-				uint32_t		numberOfBytes;
-				void*			data;
-				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::CopyTextureBufferData;
 			};
 			struct SetGraphicsRootSignature
 			{

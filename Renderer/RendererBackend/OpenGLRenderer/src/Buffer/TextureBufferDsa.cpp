@@ -103,26 +103,6 @@ namespace OpenGLRenderer
 	}
 
 
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::ITextureBuffer methods       ]
-	//[-------------------------------------------------------]
-	void TextureBufferDsa::copyDataFrom(uint32_t numberOfBytes, const void* data)
-	{
-		// Sanity check
-		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid OpenGL texture buffer data")
-
-		// Upload the data
-		if (static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_ARB_direct_state_access())
-		{
-			glNamedBufferSubData(mOpenGLTextureBuffer, 0, static_cast<GLsizeiptr>(numberOfBytes), data);
-		}
-		else
-		{
-			glNamedBufferSubDataEXT(mOpenGLTextureBuffer, 0, static_cast<GLsizeiptr>(numberOfBytes), data);
-		}
-	}
-
-
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

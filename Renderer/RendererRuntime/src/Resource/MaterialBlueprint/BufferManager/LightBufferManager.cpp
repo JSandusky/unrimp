@@ -126,7 +126,7 @@ namespace RendererRuntime
 
 	void LightBufferManager::fillBuffer(SceneResource& sceneResource, Renderer::CommandBuffer& commandBuffer)
 	{
-		fillTextureBuffer(sceneResource, commandBuffer);
+		fillTextureBuffer(sceneResource);
 		fillClusters3DTexture(sceneResource, commandBuffer);
 	}
 
@@ -167,7 +167,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	void LightBufferManager::fillTextureBuffer(SceneResource& sceneResource, Renderer::CommandBuffer& commandBuffer)
+	void LightBufferManager::fillTextureBuffer(SceneResource& sceneResource)
 	{
 		// TODO(co) This is just a placeholder implementation until "RendererRuntime::LightBufferManager" is ready (containing e.g. reasonable optimizations)
 
@@ -201,7 +201,13 @@ namespace RendererRuntime
 		const uint32_t numberOfBytes = static_cast<uint32_t>(scratchBufferPointer - mTextureScratchBuffer.data());
 		if (0 != numberOfBytes)
 		{
-			Renderer::Command::CopyTextureBufferData::create(commandBuffer, mTextureBuffer, numberOfBytes, mTextureScratchBuffer.data());
+			Renderer::MappedSubresource mappedSubresource;
+			Renderer::IRenderer& renderer = mRendererRuntime.getRenderer();
+			if (renderer.map(*mTextureBuffer, 0, Renderer::MapType::WRITE_DISCARD, 0, mappedSubresource))
+			{
+				memcpy(mappedSubresource.data, mTextureScratchBuffer.data(), numberOfBytes);
+				renderer.unmap(*mTextureBuffer, 0);
+			}
 		}
 	}
 

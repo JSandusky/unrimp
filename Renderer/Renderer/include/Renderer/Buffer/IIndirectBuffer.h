@@ -77,17 +77,6 @@ namespace Renderer
 		*/
 		virtual const uint8_t* getEmulationData() const = 0;
 
-		/**
-		*  @brief
-		*    Copy data into the indirect buffer object
-		*
-		*  @param[in] numberOfBytes
-		*    Number of bytes within the indirect buffer, must be valid
-		*  @param[in] data
-		*    Indirect buffer data, must be valid
-		*/
-		virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) = 0;
-
 
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]

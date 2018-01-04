@@ -144,39 +144,6 @@ namespace Direct3D11Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::ITextureBuffer methods       ]
-	//[-------------------------------------------------------]
-	void TextureBuffer::copyDataFrom(uint32_t numberOfBytes, const void* data)
-	{
-		// Check resource pointers
-		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid Direct3D 11 texture buffer data")
-		if (nullptr != mD3D11Buffer)
-		{
-			Direct3D11Renderer& direct3D11Renderer = static_cast<Direct3D11Renderer&>(getRenderer());
-
-			// Begin debug event
-			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&direct3D11Renderer)
-
-			// Get the Direct3D 11 device context
-			ID3D11DeviceContext* d3d11DeviceContext = direct3D11Renderer.getD3D11DeviceContext();
-
-			// Update Direct3D 11 subresource data
-			// -> Don't use (might fail): d3d11DeviceContext->UpdateSubresource(mD3D11Buffer, 0, nullptr, data, 0, 0);
-			D3D11_MAPPED_SUBRESOURCE d3d11MappedSubresource;
-			const HRESULT hResult = d3d11DeviceContext->Map(mD3D11Buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &d3d11MappedSubresource);
-			if (S_OK == hResult)
-			{
-				memcpy(d3d11MappedSubresource.pData, data, numberOfBytes);
-				d3d11DeviceContext->Unmap(mD3D11Buffer, 0);
-			}
-
-			// End debug event
-			RENDERER_END_DEBUG_EVENT(&direct3D11Renderer)
-		}
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Protected virtual Renderer::RefCount methods          ]
 	//[-------------------------------------------------------]
 	void TextureBuffer::selfDestruct()

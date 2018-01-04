@@ -67,32 +67,6 @@ namespace OpenGLES3Renderer
 	}
 
 
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::ITextureBuffer methods       ]
-	//[-------------------------------------------------------]
-	void TextureBufferBindEmulation::copyDataFrom(uint32_t numberOfBytes, const void* data)
-	{
-		// Sanity check
-		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid OpenGL ES 3 texture buffer data")
-
-		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
-			// Backup the currently bound OpenGL ES 3 uniform buffer
-			GLint openGLES3UniformBufferBackup = 0;
-			glGetIntegerv(GL_UNIFORM_BUFFER_BINDING, &openGLES3UniformBufferBackup);
-		#endif
-
-		// Bind this OpenGL ES 3 uniform buffer and upload the data
-		// -> Subdata is quite optimized for uniform buffers, see http://on-demand.gputechconf.com/siggraph/2014/presentation/SG4117-OpenGL-Scene-Rendering-Techniques.pdf
-		glBindBuffer(GL_UNIFORM_BUFFER, mOpenGLES3TextureBuffer);
-		glBufferSubData(GL_UNIFORM_BUFFER, 0, static_cast<GLsizeiptr>(numberOfBytes), data);
-
-		#ifndef OPENGLES3RENDERER_NO_STATE_CLEANUP
-			// Be polite and restore the previous bound OpenGL ES 3 uniform buffer
-			glBindBuffer(GL_UNIFORM_BUFFER, static_cast<GLuint>(openGLES3UniformBufferBackup));
-		#endif
-	}
-
-
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

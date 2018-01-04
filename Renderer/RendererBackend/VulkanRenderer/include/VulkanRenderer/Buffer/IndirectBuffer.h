@@ -119,7 +119,6 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	public:
 		inline virtual const uint8_t* getEmulationData() const override;
-		virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) override;
 
 
 	//[-------------------------------------------------------]
