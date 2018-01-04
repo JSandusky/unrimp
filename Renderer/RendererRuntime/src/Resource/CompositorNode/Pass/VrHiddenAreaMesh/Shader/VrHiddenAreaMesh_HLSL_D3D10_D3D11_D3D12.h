@@ -43,7 +43,8 @@ VS_OUTPUT main(float2 Position : POSITION)	// Clip space vertex position as inpu
 	VS_OUTPUT output;
 
 	// Calculate the clip space vertex position, lower/left is (-1,-1) and upper/right is (1,1)
-	output.Position = float4(Position * float2(2.0f, 2.0f) - float2(1.0f, 1.0f), 0.5f, 1.0f);
+	// -> z = 1 instead of 0 due to usage of Reversed-Z (see e.g. https://developer.nvidia.com/content/depth-precision-visualized and https://nlguillemot.wordpress.com/2016/12/07/reversed-z-in-opengl/)
+	output.Position = float4(Position * float2(2.0f, 2.0f) - float2(1.0f, 1.0f), 1.0f, 1.0f);
 
 	// Done
 	return output;
