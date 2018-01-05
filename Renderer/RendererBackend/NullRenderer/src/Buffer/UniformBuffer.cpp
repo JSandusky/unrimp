@@ -50,15 +50,6 @@ namespace NullRenderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IUniformBuffer methods       ]
-	//[-------------------------------------------------------]
-	void UniformBuffer::copyDataFrom(uint32_t, const void*)
-	{
-		// Nothing here
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Protected virtual Renderer::RefCount methods          ]
 	//[-------------------------------------------------------]
 	void UniformBuffer::selfDestruct()

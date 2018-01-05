@@ -73,22 +73,6 @@ namespace Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual IUniformBuffer methods                 ]
-	//[-------------------------------------------------------]
-	public:
-		/**
-		*  @brief
-		*    Copy data into the uniform buffer object
-		*
-		*  @param[in] numberOfBytes
-		*    Number of bytes within the uniform buffer, must be valid
-		*  @param[in] data
-		*    Uniform buffer data, must be valid
-		*/
-		virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) = 0;
-
-
-	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	protected:

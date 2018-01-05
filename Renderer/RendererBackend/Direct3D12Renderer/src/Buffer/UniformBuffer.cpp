@@ -164,26 +164,6 @@ namespace Direct3D12Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IUniformBuffer methods       ]
-	//[-------------------------------------------------------]
-	void UniformBuffer::copyDataFrom(uint32_t numberOfBytes, const void* data)
-	{
-		// Check resource pointers
-		if (nullptr != mMappedData && nullptr != data)
-		{
-			// Begin debug event
-			RENDERER_BEGIN_DEBUG_EVENT_FUNCTION(&static_cast<Direct3D12Renderer&>(getRenderer()))
-
-			// Copy data
-			memcpy(mMappedData, data, numberOfBytes);
-
-			// End debug event
-			RENDERER_END_DEBUG_EVENT(&static_cast<Direct3D12Renderer&>(getRenderer()))
-		}
-	}
-
-
-	//[-------------------------------------------------------]
 	//[ Protected virtual Renderer::RefCount methods          ]
 	//[-------------------------------------------------------]
 	void UniformBuffer::selfDestruct()

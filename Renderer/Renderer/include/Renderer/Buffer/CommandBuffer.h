@@ -65,8 +65,6 @@ namespace Renderer
 	{
 		// Command buffer
 		ExecuteCommandBuffer = 0,
-		// Resource handling
-		CopyUniformBufferData,
 		// Graphics root
 		SetGraphicsRootSignature,
 		SetGraphicsResourceGroup,
@@ -422,34 +420,6 @@ namespace Renderer
 			CommandBuffer* commandBufferToExecute;
 			// Static data
 			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::ExecuteCommandBuffer;
-		};
-
-		//[-------------------------------------------------------]
-		//[ Resource handling                                     ]
-		//[-------------------------------------------------------]
-		struct CopyUniformBufferData
-		{
-			// Static methods
-			inline static void create(CommandBuffer& commandBuffer, IUniformBuffer* uniformBuffer, uint32_t numberOfBytes, void* data)
-			{
-				Command::CopyUniformBufferData* copyUniformBufferDataCommand = commandBuffer.addCommand<Command::CopyUniformBufferData>(numberOfBytes);
-				copyUniformBufferDataCommand->uniformBuffer	= uniformBuffer;
-				copyUniformBufferDataCommand->numberOfBytes	= numberOfBytes;
-				copyUniformBufferDataCommand->data			= nullptr;
-				memcpy(CommandPacketHelper::getAuxiliaryMemory(copyUniformBufferDataCommand), data, numberOfBytes);
-			}
-			// Constructor
-			inline CopyUniformBufferData(IUniformBuffer* _uniformBuffer, uint32_t _numberOfBytes, void* _data) :
-				uniformBuffer(_uniformBuffer),
-				numberOfBytes(_numberOfBytes),
-				data(_data)
-			{}
-			// Data
-			IUniformBuffer* uniformBuffer;
-			uint32_t		numberOfBytes;
-			void*			data;	///< If null pointer, command auxiliary memory is used instead
-			// Static data
-			static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::CopyUniformBufferData;
 		};
 
 		//[-------------------------------------------------------]

@@ -70,27 +70,6 @@ namespace OpenGLRenderer
 	}
 
 
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IUniformBuffer methods       ]
-	//[-------------------------------------------------------]
-	void UniformBufferDsa::copyDataFrom(uint32_t numberOfBytes, const void* data)
-	{
-		// Sanity check
-		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid OpenGL uniform buffer data")
-
-		// Upload the data
-		// -> Subdata is quite optimized for uniform buffers, see http://on-demand.gputechconf.com/siggraph/2014/presentation/SG4117-OpenGL-Scene-Rendering-Techniques.pdf
-		if (static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_ARB_direct_state_access())
-		{
-			glNamedBufferSubData(mOpenGLUniformBuffer, 0, static_cast<GLsizeiptr>(numberOfBytes), data);
-		}
-		else
-		{
-			glNamedBufferSubDataEXT(mOpenGLUniformBuffer, 0, static_cast<GLsizeiptr>(numberOfBytes), data);
-		}
-	}
-
-
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

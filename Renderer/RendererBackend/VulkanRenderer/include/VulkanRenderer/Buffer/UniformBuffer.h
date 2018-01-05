@@ -106,13 +106,6 @@ namespace VulkanRenderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IUniformBuffer methods       ]
-	//[-------------------------------------------------------]
-	public:
-		virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) override;
-
-
-	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:

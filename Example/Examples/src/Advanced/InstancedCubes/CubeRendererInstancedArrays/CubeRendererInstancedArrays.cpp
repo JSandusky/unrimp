@@ -408,11 +408,16 @@ void CubeRendererInstancedArrays::fillCommandBuffer(float globalTimer, float glo
 		if (nullptr != mUniformBufferDynamicVs)
 		{
 			// Copy data into the uniform buffer
-			mUniformBufferDynamicVs->copyDataFrom(sizeof(timerAndGlobalScale), timerAndGlobalScale);
-			if (nullptr != mUniformBufferDynamicFs)
+			Renderer::MappedSubresource mappedSubresource;
+			if (mRenderer->map(*mUniformBufferDynamicVs, 0, Renderer::MapType::WRITE_DISCARD, 0, mappedSubresource))
 			{
-				// Copy data into the uniform buffer
-				mUniformBufferDynamicFs->copyDataFrom(sizeof(lightPosition), lightPosition);
+				memcpy(mappedSubresource.data, timerAndGlobalScale, sizeof(timerAndGlobalScale));
+				mRenderer->unmap(*mUniformBufferDynamicVs, 0);
+			}
+			if (nullptr != mUniformBufferDynamicFs && mRenderer->map(*mUniformBufferDynamicFs, 0, Renderer::MapType::WRITE_DISCARD, 0, mappedSubresource))
+			{
+				memcpy(mappedSubresource.data, lightPosition, sizeof(lightPosition));
+				mRenderer->unmap(*mUniformBufferDynamicFs, 0);
 			}
 		}
 		else

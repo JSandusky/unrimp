@@ -70,32 +70,6 @@ namespace OpenGLRenderer
 	}
 
 
-	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IUniformBuffer methods       ]
-	//[-------------------------------------------------------]
-	void UniformBufferBind::copyDataFrom(uint32_t numberOfBytes, const void* data)
-	{
-		// Sanity check
-		RENDERER_ASSERT(getRenderer().getContext(), nullptr != data, "Invalid OpenGL uniform buffer data")
-
-		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-			// Backup the currently bound OpenGL uniform buffer
-			GLint openGLUniformBufferBackup = 0;
-			glGetIntegerv(GL_UNIFORM_BUFFER_BINDING, &openGLUniformBufferBackup);
-		#endif
-
-		// Bind this OpenGL uniform buffer and upload the data
-		// -> Subdata is quite optimized for uniform buffers, see http://on-demand.gputechconf.com/siggraph/2014/presentation/SG4117-OpenGL-Scene-Rendering-Techniques.pdf
-		glBindBufferARB(GL_UNIFORM_BUFFER, mOpenGLUniformBuffer);
-		glBufferSubDataARB(GL_UNIFORM_BUFFER, 0, static_cast<GLsizeiptrARB>(numberOfBytes), data);
-
-		#ifndef OPENGLRENDERER_NO_STATE_CLEANUP
-			// Be polite and restore the previous bound OpenGL uniform buffer
-			glBindBufferARB(GL_UNIFORM_BUFFER, static_cast<GLuint>(openGLUniformBufferBackup));
-		#endif
-	}
-
-
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

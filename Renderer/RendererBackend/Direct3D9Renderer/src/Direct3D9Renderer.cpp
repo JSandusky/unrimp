@@ -100,15 +100,6 @@ namespace
 			}
 
 			//[-------------------------------------------------------]
-			//[ Resource handling                                     ]
-			//[-------------------------------------------------------]
-			void CopyUniformBufferData(const void*, Renderer::IRenderer& renderer)
-			{
-				// Not supported by Direct3D 9
-				RENDERER_ASSERT(renderer.getContext(), false, "Uniform buffer isn't supported by Direct3D 9")
-			}
-
-			//[-------------------------------------------------------]
 			//[ Graphics root                                         ]
 			//[-------------------------------------------------------]
 			void SetGraphicsRootSignature(const void* data, Renderer::IRenderer& renderer)
@@ -248,8 +239,6 @@ namespace
 		{
 			// Command buffer
 			&BackendDispatch::ExecuteCommandBuffer,
-			// Resource handling
-			&BackendDispatch::CopyUniformBufferData,
 			// Graphics root
 			&BackendDispatch::SetGraphicsRootSignature,
 			&BackendDispatch::SetGraphicsResourceGroup,

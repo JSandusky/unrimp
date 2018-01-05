@@ -175,18 +175,26 @@ namespace RendererRuntime
 				}
 			}
 
-			// Update the uniform buffer by using our scratch buffer
+			// Create new uniform buffer, if necessary
 			if (mCurrentUniformBufferIndex >= static_cast<uint32_t>(mUniformBuffers.size()))
 			{
-				Renderer::IResource* uniformBuffer = mBufferManager.createUniformBuffer(passUniformBuffer->uniformBufferNumberOfBytes, mScratchBuffer.data(), Renderer::BufferUsage::DYNAMIC_DRAW);
+				// Don't directly pass along data or the GPU driver might get confused about the usage and might output performance warnings
+				Renderer::IResource* uniformBuffer = mBufferManager.createUniformBuffer(passUniformBuffer->uniformBufferNumberOfBytes, nullptr, Renderer::BufferUsage::DYNAMIC_DRAW);
 				RENDERER_SET_RESOURCE_DEBUG_NAME(uniformBuffer, "Pass buffer manager")
 				Renderer::IResourceGroup* resourceGroup = mMaterialBlueprintResource.getRootSignaturePtr()->createResourceGroup(passUniformBuffer->rootParameterIndex, 1, &uniformBuffer);
 				RENDERER_SET_RESOURCE_DEBUG_NAME(resourceGroup, "Pass buffer manager")
 				mUniformBuffers.emplace_back(static_cast<Renderer::IUniformBuffer*>(uniformBuffer), resourceGroup);
 			}
-			else
-			{
-				mUniformBuffers[mCurrentUniformBufferIndex].uniformBuffer->copyDataFrom(static_cast<uint32_t>(mScratchBuffer.size()), mScratchBuffer.data());
+
+			{ // Update the uniform buffer by using our scratch buffer
+				Renderer::IUniformBuffer* uniformBuffer = mUniformBuffers[mCurrentUniformBufferIndex].uniformBuffer;
+				Renderer::MappedSubresource mappedSubresource;
+				Renderer::IRenderer& renderer = mRendererRuntime.getRenderer();
+				if (renderer.map(*uniformBuffer, 0, Renderer::MapType::WRITE_DISCARD, 0, mappedSubresource))
+				{
+					memcpy(mappedSubresource.data, mScratchBuffer.data(), static_cast<uint32_t>(mScratchBuffer.size()));
+					renderer.unmap(*uniformBuffer, 0);
+				}
 			}
 			++mCurrentUniformBufferIndex;
 		}

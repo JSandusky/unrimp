@@ -331,7 +331,12 @@ void FirstMesh::onDraw()
 				memcpy(uniformBlockDynamicVS.objectSpaceToViewSpaceMatrix, glm::value_ptr(objectSpaceToViewSpace), sizeof(float) * 4 * 4);
 
 				// Copy data
-				Renderer::Command::CopyUniformBufferData::create(mCommandBuffer, mUniformBuffer, sizeof(UniformBlockDynamicVs), &uniformBlockDynamicVS);
+				Renderer::MappedSubresource mappedSubresource;
+				if (renderer->map(*mUniformBuffer, 0, Renderer::MapType::WRITE_DISCARD, 0, mappedSubresource))
+				{
+					memcpy(mappedSubresource.data, &uniformBlockDynamicVS, sizeof(UniformBlockDynamicVs));
+					renderer->unmap(*mUniformBuffer, 0);
+				}
 			}
 			else
 			{

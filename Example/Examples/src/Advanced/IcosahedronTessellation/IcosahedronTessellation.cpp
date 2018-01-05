@@ -256,22 +256,27 @@ void IcosahedronTessellation::onDeinitialization()
 
 void IcosahedronTessellation::onDraw()
 {
-	// Update the uniform buffer content
-	if (nullptr != mUniformBufferDynamicTcs)
-	{
-		// Copy data into the uniform buffer
-		const float data[] =
-		{
-			mTessellationLevelOuter,	// "TessellationLevelOuter"
-			mTessellationLevelInner		// "TessellationLevelInner"
-		};
-		mUniformBufferDynamicTcs->copyDataFrom(sizeof(data), data);
-	}
-
 	// Get and check the renderer instance
 	Renderer::IRendererPtr renderer(getRenderer());
 	if (nullptr != renderer)
 	{
+		// Update the uniform buffer content
+		if (nullptr != mUniformBufferDynamicTcs)
+		{
+			// Copy data into the uniform buffer
+			Renderer::MappedSubresource mappedSubresource;
+			if (renderer->map(*mUniformBufferDynamicTcs, 0, Renderer::MapType::WRITE_DISCARD, 0, mappedSubresource))
+			{
+				const float data[] =
+				{
+					mTessellationLevelOuter,	// "TessellationLevelOuter"
+					mTessellationLevelInner		// "TessellationLevelInner"
+				};
+				memcpy(mappedSubresource.data, data, sizeof(data));
+				renderer->unmap(*mUniformBufferDynamicTcs, 0);
+			}
+		}
+
 		// Submit command buffer to the renderer backend
 		mCommandBuffer.submit(*renderer);
 	}

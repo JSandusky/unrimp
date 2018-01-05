@@ -329,9 +329,16 @@ namespace RendererRuntime
 				};
 
 				// Copy data
+				// TODO(co) Since the data copy isn't performed via commands, we better manage it somehow to ensure no problems come up when the following is executed multiple times per frame (which usually isn't the case)
 				if (nullptr != mVertexShaderUniformBuffer)
 				{
-					Renderer::Command::CopyUniformBufferData::create(commandBuffer, mVertexShaderUniformBuffer, sizeof(objectSpaceToClipSpaceMatrix), objectSpaceToClipSpaceMatrix);
+					Renderer::MappedSubresource mappedSubresource;
+					Renderer::IRenderer& renderer = mRendererRuntime.getRenderer();
+					if (renderer.map(*mVertexShaderUniformBuffer, 0, Renderer::MapType::WRITE_DISCARD, 0, mappedSubresource))
+					{
+						memcpy(mappedSubresource.data, objectSpaceToClipSpaceMatrix, sizeof(objectSpaceToClipSpaceMatrix));
+						renderer.unmap(*mVertexShaderUniformBuffer, 0);
+					}
 				}
 				else
 				{

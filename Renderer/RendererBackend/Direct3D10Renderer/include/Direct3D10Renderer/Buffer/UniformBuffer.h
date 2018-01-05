@@ -102,13 +102,6 @@ namespace Direct3D10Renderer
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IUniformBuffer methods       ]
-	//[-------------------------------------------------------]
-	public:
-		virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) override;
-
-
-	//[-------------------------------------------------------]
 	//[ Protected virtual Renderer::RefCount methods          ]
 	//[-------------------------------------------------------]
 	protected:

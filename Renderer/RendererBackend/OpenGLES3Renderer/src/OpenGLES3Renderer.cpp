@@ -157,15 +157,6 @@ namespace
 			}
 
 			//[-------------------------------------------------------]
-			//[ Resource handling                                     ]
-			//[-------------------------------------------------------]
-			void CopyUniformBufferData(const void* data, Renderer::IRenderer&)
-			{
-				const Renderer::Command::CopyUniformBufferData* realData = static_cast<const Renderer::Command::CopyUniformBufferData*>(data);
-				realData->uniformBuffer->copyDataFrom(realData->numberOfBytes, (nullptr != realData->data) ? realData->data : Renderer::CommandPacketHelper::getAuxiliaryMemory(realData));
-			}
-
-			//[-------------------------------------------------------]
 			//[ Graphics root                                         ]
 			//[-------------------------------------------------------]
 			void SetGraphicsRootSignature(const void* data, Renderer::IRenderer& renderer)
@@ -305,8 +296,6 @@ namespace
 		{
 			// Command buffer
 			&BackendDispatch::ExecuteCommandBuffer,
-			// Resource handling
-			&BackendDispatch::CopyUniformBufferData,
 			// Graphics root
 			&BackendDispatch::SetGraphicsRootSignature,
 			&BackendDispatch::SetGraphicsResourceGroup,

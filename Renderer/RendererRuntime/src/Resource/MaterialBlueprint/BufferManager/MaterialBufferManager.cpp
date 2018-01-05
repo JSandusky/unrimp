@@ -289,7 +289,13 @@ namespace RendererRuntime
 		// Update the uniform buffer by using our scratch buffer
 		if (nullptr != uniformBuffer)
 		{
-			uniformBuffer->copyDataFrom(static_cast<uint32_t>(mScratchBuffer.size()), mScratchBuffer.data());
+			Renderer::MappedSubresource mappedSubresource;
+			Renderer::IRenderer& renderer = mRendererRuntime.getRenderer();
+			if (renderer.map(*uniformBuffer, 0, Renderer::MapType::WRITE_DISCARD, 0, mappedSubresource))
+			{
+				memcpy(mappedSubresource.data, mScratchBuffer.data(), static_cast<uint32_t>(mScratchBuffer.size()));
+				renderer.unmap(*uniformBuffer, 0);
+			}
 		}
 
 		// Done

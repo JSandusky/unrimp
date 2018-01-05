@@ -2567,8 +2567,6 @@ namespace Renderer
 		{
 		public:
 			virtual ~IUniformBuffer() override;
-		public:
-			virtual void copyDataFrom(uint32_t numberOfBytes, const void* data) = 0;
 		protected:
 			explicit IUniformBuffer(IRenderer& renderer);
 			explicit IUniformBuffer(const IUniformBuffer& source) = delete;
@@ -2958,7 +2956,6 @@ namespace Renderer
 		enum CommandDispatchFunctionIndex : uint8_t
 		{
 			ExecuteCommandBuffer = 0,
-			CopyUniformBufferData,
 			SetGraphicsRootSignature,
 			SetGraphicsResourceGroup,
 			SetPipelineState,
@@ -3131,26 +3128,6 @@ namespace Renderer
 				{}
 				CommandBuffer* commandBufferToExecute;
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::ExecuteCommandBuffer;
-			};
-			struct CopyUniformBufferData
-			{
-				inline static void create(CommandBuffer& commandBuffer, IUniformBuffer* uniformBuffer, uint32_t numberOfBytes, void* data)
-				{
-					Command::CopyUniformBufferData* copyUniformBufferDataCommand = commandBuffer.addCommand<Command::CopyUniformBufferData>(numberOfBytes);
-					copyUniformBufferDataCommand->uniformBuffer	= uniformBuffer;
-					copyUniformBufferDataCommand->numberOfBytes	= numberOfBytes;
-					copyUniformBufferDataCommand->data			= nullptr;
-					memcpy(CommandPacketHelper::getAuxiliaryMemory(copyUniformBufferDataCommand), data, numberOfBytes);
-				}
-				inline CopyUniformBufferData(IUniformBuffer* _uniformBuffer, uint32_t _numberOfBytes, void* _data) :
-					uniformBuffer(_uniformBuffer),
-					numberOfBytes(_numberOfBytes),
-					data(_data)
-				{}
-				IUniformBuffer* uniformBuffer;
-				uint32_t		numberOfBytes;
-				void*			data;
-				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::CopyUniformBufferData;
 			};
 			struct SetGraphicsRootSignature
 			{
