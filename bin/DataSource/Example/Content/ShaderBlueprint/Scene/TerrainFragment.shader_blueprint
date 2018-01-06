@@ -133,6 +133,18 @@ float4 SampleTriPlanar(in Texture2D<float4> textureMap, in SamplerState samplerS
 }
 */
 
+// TODO(co) Use "Advanced Terrain Texture Splatting" by Andrey Mishkinis - https://www.gamedev.net/articles/programming/graphics/advanced-terrain-texture-splatting-r3287/
+/*
+float3 blend(float4 texture1, float a1, float4 texture2, float a2)
+{
+	float depth = 0.2f;
+	float ma = max(texture1.a + a1, texture2.a + a2) - depth;
+	float b1 = max(texture1.a + a1 - ma, 0.0f);
+	float b2 = max(texture2.a + a2 - ma, 0.0f);
+	return (texture1.rgb * b1 + texture2.rgb * b2) / (b1 + b2);
+}
+*/
+
 
 //[-------------------------------------------------------]
 //[ Main                                                  ]

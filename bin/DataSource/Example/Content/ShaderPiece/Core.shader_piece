@@ -44,9 +44,11 @@
 
 		// Shader attribute input
 		#define INPUT_BEGIN struct SHADER_INPUT {
+		#define INPUT_BEGIN_PATCH struct SHADER_INPUT_PATCH {
 			#define INPUT_VERTEX_ID uint vertexId : SV_VERTEXID;
 			#define INPUT_VERTEX_DRAW_ID(attributeIndex) uint drawId : DRAWID;	// "DRAWID" is a special vertex attribute semantic introduced, see "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html
 			#define INPUT_VERTEX_POSITION(attributeIndex, type, name) type name : POSITION;
+			#define INPUT_POSITION(attributeIndex, type, name) type name : SV_POSITION;
 			#define INPUT_VERTEX_COLOR(attributeIndex, type, name) type name : COLOR;
 			#define INPUT_VERTEX_NORMAL(attributeIndex, type, name) type name : NORMAL;
 			#define INPUT_VERTEX_TANGENT(attributeIndex, type, name) type name : TANGENT;
@@ -54,15 +56,22 @@
 			#define INPUT_TEXTURE_COORDINATE_NOINTERPOLATION(attributeIndex, type, name, semanticIndex) nointerpolation type name : TEXCOORD##semanticIndex;
 			#define INPUT_VERTEX_BLEND_INDICES(attributeIndex, type, name) type name : BLENDINDICES;
 			#define INPUT_VERTEX_BLEND_WEIGHTS(attributeIndex, type, name) type name : BLENDWEIGHT;
+			#define INPUT_TESS_LEVEL_INNER(numberOfComponents) float TessLevelInner[numberOfComponents] : SV_INSIDETESSFACTOR;
+			#define INPUT_TESS_LEVEL_OUTER(numberOfComponents) float TessLevelOuter[numberOfComponents] : SV_TESSFACTOR;
 		#define INPUT_END };
+		#define INPUT_END_PATCH };
 
 		// Shader attribute output
 		#define OUTPUT_BEGIN struct SHADER_OUTPUT {
-			#define OUTPUT_POSITION(attributeIndex) float4 OutputClipSpacePosition : SV_POSITION;
+		#define OUTPUT_BEGIN_PATCH struct SHADER_OUTPUT_PATCH {
+			#define OUTPUT_POSITION(attributeIndex) float4 OutputPosition : SV_POSITION;
 			#define OUTPUT_TEXTURE_COORDINATE(attributeIndex, type, name, semanticIndex) type name : TEXCOORD##semanticIndex;
 			#define OUTPUT_TEXTURE_COORDINATE_NOINTERPOLATION(attributeIndex, type, name, semanticIndex) nointerpolation type name : TEXCOORD##semanticIndex;
 			#define OUTPUT_COLOR(semanticIndex) float4 OutputColor##semanticIndex : SV_TARGET##semanticIndex;
+			#define OUTPUT_TESS_LEVEL_INNER(numberOfComponents)	float TessLevelInner[numberOfComponents] : SV_INSIDETESSFACTOR;
+			#define OUTPUT_TESS_LEVEL_OUTER(numberOfComponents)	float TessLevelOuter[numberOfComponents] : SV_TESSFACTOR;
 		#define OUTPUT_END };
+		#define OUTPUT_END_PATCH };
 
 		// Main
 		#define MAIN_BEGIN SHADER_OUTPUT main(SHADER_INPUT ShaderInput) { SHADER_OUTPUT shaderOutput;
@@ -71,8 +80,10 @@
 			#define MAIN_INPUT_VERTEX_ID ShaderInput.vertexId
 			#define MAIN_INPUT_DRAW_ID ShaderInput.drawId
 			#define MAIN_OUTPUT(name) shaderOutput.name
-			#define MAIN_OUTPUT_POSITION shaderOutput.OutputClipSpacePosition
+			#define MAIN_OUTPUT_POSITION shaderOutput.OutputPosition
 			#define MAIN_OUTPUT_COLOR(semanticIndex) shaderOutput.OutputColor##semanticIndex
+			#define MAIN_OUTPUT_TESS_LEVEL_INNER shaderOutputPatch.TessLevelInner
+			#define MAIN_OUTPUT_TESS_LEVEL_OUTER shaderOutputPatch.TessLevelOuter
 			#define MAIN_RETURN return shaderOutput;
 		#define MAIN_END return shaderOutput; }
 		#define MAIN_END_NO_OUTPUT }
@@ -171,6 +182,10 @@
 		#define FRAGMENT_POSITION ShaderInput.FragmentPosition
 		#define DECLARE_IS_FRONT_FACE bool IsFrontFace : SV_ISFRONTFACE;
 		#define IS_FRONT_FACE ShaderInput.IsFrontFace
+		#define DECLARE_CONTROL_POINT_ID uint OutputControlPointId : SV_OutputControlPointID;
+		#define CONTROL_POINT_ID ShaderInputPatch.OutputControlPointId
+		#define DECLARE_TESS_COORD(type) type TessCoord : SV_DOMAINLOCATION;
+		#define TESS_COORD ShaderInputPatch.TessCoord
 		@property(Direct3D10)
 			#define DECLARE_COVERAGE_MASK
 			#define COVERAGE_MASK 0
@@ -225,6 +240,7 @@
 			#define INPUT_VERTEX_ID
 			#define INPUT_VERTEX_DRAW_ID(attributeIndex) layout(location = attributeIndex) in uint drawId;	// See "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html
 			#define INPUT_VERTEX_POSITION(attributeIndex, type, name) layout(location = attributeIndex) in type name;
+			#define INPUT_POSITION(attributeIndex, type, name) layout(location = attributeIndex) in type name;
 			#define INPUT_VERTEX_COLOR(attributeIndex, type, name) layout(location = attributeIndex) in type name;
 			#define INPUT_VERTEX_NORMAL(attributeIndex, type, name) layout(location = attributeIndex) in type name;
 			#define INPUT_VERTEX_TANGENT(attributeIndex, type, name) layout(location = attributeIndex) in type name;
@@ -232,15 +248,22 @@
 			#define INPUT_TEXTURE_COORDINATE_NOINTERPOLATION(attributeIndex, type, name, semanticIndex) layout(location = attributeIndex) flat in type name;
 			#define INPUT_VERTEX_BLEND_INDICES(attributeIndex, type, name) layout(location = attributeIndex) in type name;
 			#define INPUT_VERTEX_BLEND_WEIGHTS(attributeIndex, type, name) layout(location = attributeIndex) in type name;
+			#define INPUT_TESS_LEVEL_INNER(numberOfComponents)
+			#define INPUT_TESS_LEVEL_OUTER(numberOfComponents)
 		#define INPUT_END
+		#define INPUT_END_PATCH
 
 		// Shader attribute output
 		#define OUTPUT_BEGIN
+		#define OUTPUT_BEGIN_PATCH
 			#define OUTPUT_POSITION(attributeIndex) layout(location = attributeIndex) out gl_PerVertex { vec4 gl_Position; };
 			#define OUTPUT_TEXTURE_COORDINATE(attributeIndex, type, name, semanticIndex) layout(location = attributeIndex) out type name;
 			#define OUTPUT_TEXTURE_COORDINATE_NOINTERPOLATION(attributeIndex, type, name, semanticIndex) layout(location = attributeIndex) flat out type name;
 			#define OUTPUT_COLOR(semanticIndex) layout(location = ##semanticIndex) out vec4 OutputColor##semanticIndex;
+			#define OUTPUT_TESS_LEVEL_INNER(numberOfComponents)
+			#define OUTPUT_TESS_LEVEL_OUTER(numberOfComponents)
 		#define OUTPUT_END
+		#define OUTPUT_END_PATCH
 
 		// Main
 		#define MAIN_BEGIN void main() {
@@ -255,6 +278,8 @@
 			#define MAIN_OUTPUT(name) name
 			#define MAIN_OUTPUT_POSITION gl_Position
 			#define MAIN_OUTPUT_COLOR(semanticIndex) OutputColor##semanticIndex
+			#define MAIN_OUTPUT_TESS_LEVEL_INNER gl_TessLevelInner
+			#define MAIN_OUTPUT_TESS_LEVEL_OUTER gl_TessLevelOuter
 			#define MAIN_RETURN
 		#define MAIN_END }
 		#define MAIN_END_NO_OUTPUT }
@@ -322,6 +347,10 @@
 		#define FRAGMENT_POSITION gl_FragCoord
 		#define DECLARE_IS_FRONT_FACE
 		#define IS_FRONT_FACE gl_FrontFacing
+		#define DECLARE_CONTROL_POINT_ID
+		#define CONTROL_POINT_ID ((uint)gl_InvocationID)
+		#define DECLARE_TESS_COORD(type)
+		#define TESS_COORD gl_TessCoord
 		#define DECLARE_COVERAGE_MASK
 		#define COVERAGE_MASK gl_SampleMaskIn[0]
 
@@ -392,6 +421,7 @@
 			#define INPUT_VERTEX_ID
 			#define INPUT_VERTEX_DRAW_ID(attributeIndex) in uint drawId; uniform uint drawIdUniform;	// See "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html - "drawIdUniform" is used in case "GL_ARB_base_instance" isn't supported (Mac OS X 10.11 for example)
 			#define INPUT_VERTEX_POSITION(attributeIndex, type, name) in type name;
+			#define INPUT_POSITION(attributeIndex, type, name) in type name;
 			#define INPUT_VERTEX_COLOR(attributeIndex, type, name) in type name;
 			#define INPUT_VERTEX_NORMAL(attributeIndex, type, name) in type name;
 			#define INPUT_VERTEX_TANGENT(attributeIndex, type, name) in type name;
@@ -399,15 +429,22 @@
 			#define INPUT_TEXTURE_COORDINATE_NOINTERPOLATION(attributeIndex, type, name, semanticIndex) flat in type name;
 			#define INPUT_VERTEX_BLEND_INDICES(attributeIndex, type, name) in type name;
 			#define INPUT_VERTEX_BLEND_WEIGHTS(attributeIndex, type, name) in type name;
+			#define INPUT_TESS_LEVEL_INNER(numberOfComponents)
+			#define INPUT_TESS_LEVEL_OUTER(numberOfComponents)
 		#define INPUT_END
+		#define INPUT_END_PATCH
 
 		// Shader attribute output
 		#define OUTPUT_BEGIN
+		#define OUTPUT_BEGIN_PATCH
 			#define OUTPUT_POSITION(attributeIndex) out gl_PerVertex { vec4 gl_Position; };
 			#define OUTPUT_TEXTURE_COORDINATE(attributeIndex, type, name, semanticIndex) out type name;
 			#define OUTPUT_TEXTURE_COORDINATE_NOINTERPOLATION(attributeIndex, type, name, semanticIndex) flat out type name;
 			#define OUTPUT_COLOR(semanticIndex) layout(location = ##semanticIndex) out vec4 OutputColor##semanticIndex;
+			#define OUTPUT_TESS_LEVEL_INNER(numberOfComponents)
+			#define OUTPUT_TESS_LEVEL_OUTER(numberOfComponents)
 		#define OUTPUT_END
+		#define OUTPUT_END_PATCH
 
 		// Main
 		#define MAIN_BEGIN void main() {
@@ -418,6 +455,8 @@
 			#define MAIN_OUTPUT(name) name
 			#define MAIN_OUTPUT_POSITION gl_Position
 			#define MAIN_OUTPUT_COLOR(semanticIndex) OutputColor##semanticIndex
+			#define MAIN_OUTPUT_TESS_LEVEL_INNER gl_TessLevelInner
+			#define MAIN_OUTPUT_TESS_LEVEL_OUTER gl_TessLevelOuter
 			#define MAIN_RETURN
 		#define MAIN_END }
 		#define MAIN_END_NO_OUTPUT }
@@ -491,6 +530,10 @@
 		#define FRAGMENT_POSITION gl_FragCoord
 		#define DECLARE_IS_FRONT_FACE
 		#define IS_FRONT_FACE gl_FrontFacing
+		#define DECLARE_CONTROL_POINT_ID
+		#define CONTROL_POINT_ID ((uint)gl_InvocationID)
+		#define DECLARE_TESS_COORD(type)
+		#define TESS_COORD gl_TessCoord
 		#define DECLARE_COVERAGE_MASK
 		#define COVERAGE_MASK gl_SampleMaskIn[0]
 
@@ -564,6 +607,7 @@
 			#define INPUT_VERTEX_ID
 			#define INPUT_VERTEX_DRAW_ID(attributeIndex) in uint drawId; uniform uint drawIdUniform;	// See "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html - "drawIdUniform" is used in case "GL_EXT_base_instance" isn't supported
 			#define INPUT_VERTEX_POSITION(attributeIndex, type, name) in highp type name;
+			#define INPUT_POSITION(attributeIndex, type, name) in highp type name;
 			#define INPUT_VERTEX_COLOR(attributeIndex, type, name) in highp type name;
 			#define INPUT_VERTEX_NORMAL(attributeIndex, type, name) in highp type name;
 			#define INPUT_VERTEX_TANGENT(attributeIndex, type, name) in highp type name;
@@ -571,15 +615,22 @@
 			#define INPUT_TEXTURE_COORDINATE_NOINTERPOLATION(attributeIndex, type, name, semanticIndex) flat in highp type name;
 			#define INPUT_VERTEX_BLEND_INDICES(attributeIndex, type, name) in highp type name;
 			#define INPUT_VERTEX_BLEND_WEIGHTS(attributeIndex, type, name) in highp type name;
+			#define INPUT_TESS_LEVEL_INNER(numberOfComponents)
+			#define INPUT_TESS_LEVEL_OUTER(numberOfComponents)
 		#define INPUT_END
+		#define INPUT_END_PATCH
 
 		// Shader attribute output
 		#define OUTPUT_BEGIN
+		#define OUTPUT_BEGIN_PATCH
 			#define OUTPUT_POSITION(attributeIndex) // gl_Position is still defined in OpenGL ES 300 GLSL
 			#define OUTPUT_TEXTURE_COORDINATE(attributeIndex, type, name, semanticIndex) out highp type name;
 			#define OUTPUT_TEXTURE_COORDINATE_NOINTERPOLATION(attributeIndex, type, name, semanticIndex) flat out highp type name;
 			#define OUTPUT_COLOR(semanticIndex) layout(location = ##semanticIndex) out highp vec4 OutputColor##semanticIndex;
+			#define OUTPUT_TESS_LEVEL_INNER(numberOfComponents)
+			#define OUTPUT_TESS_LEVEL_OUTER(numberOfComponents)
 		#define OUTPUT_END
+		#define OUTPUT_END_PATCH
 
 		// Main
 		#define MAIN_BEGIN void main() {
@@ -590,6 +641,8 @@
 			#define MAIN_OUTPUT(name) name
 			#define MAIN_OUTPUT_POSITION gl_Position
 			#define MAIN_OUTPUT_COLOR(semanticIndex) OutputColor##semanticIndex
+			#define MAIN_OUTPUT_TESS_LEVEL_INNER gl_TessLevelInner
+			#define MAIN_OUTPUT_TESS_LEVEL_OUTER gl_TessLevelOuter
 			#define MAIN_RETURN
 		#define MAIN_END }
 		#define MAIN_END_NO_OUTPUT }
@@ -666,6 +719,10 @@
 		#define FRAGMENT_POSITION gl_FragCoord
 		#define DECLARE_IS_FRONT_FACE
 		#define IS_FRONT_FACE gl_FrontFacing
+		#define DECLARE_CONTROL_POINT_ID
+		#define CONTROL_POINT_ID ((uint)gl_InvocationID)
+		#define DECLARE_TESS_COORD(type)
+		#define TESS_COORD gl_TessCoord
 		#define DECLARE_COVERAGE_MASK
 		#define COVERAGE_MASK 0u	// OpenGL ES shading language version 3.20 needed
 

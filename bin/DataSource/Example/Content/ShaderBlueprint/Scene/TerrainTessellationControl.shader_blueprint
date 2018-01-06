@@ -31,20 +31,21 @@
 //[-------------------------------------------------------]
 //[ Input / output                                        ]
 //[-------------------------------------------------------]
-struct VS_OUTPUT
-{
+// Attribute input / output
+INPUT_BEGIN_PATCH
+	DECLARE_CONTROL_POINT_ID
+INPUT_END_PATCH
+INPUT_BEGIN
+	INPUT_POSITION			(0, float4, Position)		// World space control point position of the patch we received from the vertex shader (VS) as input
 	INPUT_TEXTURE_COORDINATE(1, float4, AdjacencyVS, 0)	// These are the size of the neighbours along +/- x or y axes. For interior tiles this is 1. For edge tiles it is 0.5 or 2.0. x = neighbour minus x, y = neighbour minus y, z = neighbour plus x, w = neighbour plus y.
-	float4 Position : SV_POSITION;	// World space control point position of the patch we received from the vertex shader (VS) as input
-};
-struct HS_CONSTANT_DATA_OUTPUT
-{
-	float TessLevelInner[2] : SV_INSIDETESSFACTOR;	// Inner tessellation level
-	float TessLevelOuter[4] : SV_TESSFACTOR;		// Outer tessellation level
-};
-struct HS_OUTPUT
-{
-	float4 PositionTC : SV_POSITION;	// World space control point position of the patch as output
-};
+INPUT_END
+OUTPUT_BEGIN_PATCH
+	OUTPUT_TESS_LEVEL_INNER(2)	// Inner tessellation level
+	OUTPUT_TESS_LEVEL_OUTER(4)	// Outer tessellation level
+OUTPUT_END_PATCH
+OUTPUT_BEGIN
+	OUTPUT_POSITION(0)	// World space control point position of the patch as output
+OUTPUT_END
 
 // Uniform buffers
 struct PassDataStruct
@@ -216,9 +217,9 @@ float LargerNeighbourAdjacencyFix(float3 p0, float3 p1, int patchIndex, float di
 	//[-------------------------------------------------------]
 	//[ Program invocation per patch                          ]
 	//[-------------------------------------------------------]
-	HS_CONSTANT_DATA_OUTPUT ConstantHS(InputPatch<VS_OUTPUT, 4> input, uint primitiveId : SV_PRIMITIVEID)
+	SHADER_OUTPUT_PATCH ConstantHS(InputPatch<SHADER_INPUT, 4> input, uint primitiveId : SV_PRIMITIVEID)
 	{
-		HS_CONSTANT_DATA_OUTPUT output;
+		SHADER_OUTPUT_PATCH shaderOutputPatch;
 
 		// Reject patches which are outside the height map
 		if (IsInsideHeightMap(input[0].Position.xz) && IsInsideHeightMap(input[1].Position.xz) && IsInsideHeightMap(input[2].Position.xz) && IsInsideHeightMap(input[3].Position.xz))
@@ -235,8 +236,8 @@ float LargerNeighbourAdjacencyFix(float3 p0, float3 p1, int patchIndex, float di
 				// Edges that need adjacency adjustment are identified by the per-instance input[0].adjacency
 				// scalars, in conjunction with a patch ID that puts them on the edge of a tile
 				int2 patchXY;
-				patchXY.y = primitiveId / PATCHES_PER_TILE_EDGE;
-				patchXY.x = primitiveId - patchXY.y * PATCHES_PER_TILE_EDGE;
+				patchXY.y = primitiveId / TERRAIN_PATCHES_PER_TILE_EDGE;
+				patchXY.x = primitiveId - patchXY.y * TERRAIN_PATCHES_PER_TILE_EDGE;
 
 				// Identify patch edges that are adjacent to a patch of a different size. The size difference
 				// is encoded in input[n].adjacency, either 0.5, 1.0 or 2.0.
@@ -244,60 +245,60 @@ float LargerNeighbourAdjacencyFix(float3 p0, float3 p1, int patchIndex, float di
 				// is the neighbour's size relative to ours. Similarly for plus and Y, etc. You really
 				// need a diagram to make sense of the adjacency conditions in the if statements.
 				// These four ifs deal with neighbours that are smaller.
-				if (input[0].AdjacencyVS.x < 0.55f && patchXY.x == 0)
+				if (input[0].AdjacencyVS.x < 0.55f && 0 == patchXY.x)
 				{
-					output.TessLevelOuter[0] = SmallerNeighbourAdjacencyFix(input[0].Position.xyz, input[1].Position.xyz, sideLength);
+					MAIN_OUTPUT_TESS_LEVEL_OUTER[0] = SmallerNeighbourAdjacencyFix(input[0].Position.xyz, input[1].Position.xyz, sideLength);
 				}
-				if (input[0].AdjacencyVS.y < 0.55f && patchXY.y == 0)
+				if (input[0].AdjacencyVS.y < 0.55f && 0 == patchXY.y)
 				{
-					output.TessLevelOuter[1] = SmallerNeighbourAdjacencyFix(input[3].Position.xyz, input[0].Position.xyz, sideLength);
+					MAIN_OUTPUT_TESS_LEVEL_OUTER[1] = SmallerNeighbourAdjacencyFix(input[3].Position.xyz, input[0].Position.xyz, sideLength);
 				}
-				if (input[0].AdjacencyVS.z < 0.55f && patchXY.x == PATCHES_PER_TILE_EDGE - 1)
+				if (input[0].AdjacencyVS.z < 0.55f && TERRAIN_PATCHES_PER_TILE_EDGE - 1 == patchXY.x)
 				{
-					output.TessLevelOuter[2] = SmallerNeighbourAdjacencyFix(input[2].Position.xyz, input[3].Position.xyz, sideLength);
+					MAIN_OUTPUT_TESS_LEVEL_OUTER[2] = SmallerNeighbourAdjacencyFix(input[2].Position.xyz, input[3].Position.xyz, sideLength);
 				}
-				if (input[0].AdjacencyVS.w < 0.55f && patchXY.y == PATCHES_PER_TILE_EDGE - 1)
+				if (input[0].AdjacencyVS.w < 0.55f && TERRAIN_PATCHES_PER_TILE_EDGE - 1 == patchXY.y)
 				{
-					output.TessLevelOuter[3] = SmallerNeighbourAdjacencyFix(input[1].Position.xyz, input[2].Position.xyz, sideLength);
+					MAIN_OUTPUT_TESS_LEVEL_OUTER[3] = SmallerNeighbourAdjacencyFix(input[1].Position.xyz, input[2].Position.xyz, sideLength);
 				}
 
 				// Deal with neighbours that are larger than us
-				if (input[0].AdjacencyVS.x > 1.0f && patchXY.x == 0)
+				if (input[0].AdjacencyVS.x > 1.0f && 0 == patchXY.x)
 				{
-					output.TessLevelOuter[0] = LargerNeighbourAdjacencyFix(input[0].Position.xyz, input[1].Position.xyz, patchXY.y, sideLength);
+					MAIN_OUTPUT_TESS_LEVEL_OUTER[0] = LargerNeighbourAdjacencyFix(input[0].Position.xyz, input[1].Position.xyz, patchXY.y, sideLength);
 				}
-				if (input[0].AdjacencyVS.y > 1.0f && patchXY.y == 0)
+				if (input[0].AdjacencyVS.y > 1.0f && 0 == patchXY.y)
 				{
-					output.TessLevelOuter[1] = LargerNeighbourAdjacencyFix(input[0].Position.xyz, input[3].Position.xyz, patchXY.x, sideLength);	// Irregular index pattern - it's correct
+					MAIN_OUTPUT_TESS_LEVEL_OUTER[1] = LargerNeighbourAdjacencyFix(input[0].Position.xyz, input[3].Position.xyz, patchXY.x, sideLength);	// Irregular index pattern - it's correct
 				}
-				if (input[0].AdjacencyVS.z > 1.0f && patchXY.x == PATCHES_PER_TILE_EDGE - 1)
+				if (input[0].AdjacencyVS.z > 1.0f && TERRAIN_PATCHES_PER_TILE_EDGE - 1 == patchXY.x)
 				{
-					output.TessLevelOuter[2] = LargerNeighbourAdjacencyFix(input[3].Position.xyz, input[2].Position.xyz, patchXY.y, sideLength);
+					MAIN_OUTPUT_TESS_LEVEL_OUTER[2] = LargerNeighbourAdjacencyFix(input[3].Position.xyz, input[2].Position.xyz, patchXY.y, sideLength);
 				}
-				if (input[0].AdjacencyVS.w > 1.0f && patchXY.y == PATCHES_PER_TILE_EDGE - 1)
+				if (input[0].AdjacencyVS.w > 1.0f && TERRAIN_PATCHES_PER_TILE_EDGE - 1 == patchXY.y)
 				{
-					output.TessLevelOuter[3] = LargerNeighbourAdjacencyFix(input[1].Position.xyz, input[2].Position.xyz, patchXY.x, sideLength);	// Irregular index pattern - it's correct
+					MAIN_OUTPUT_TESS_LEVEL_OUTER[3] = LargerNeighbourAdjacencyFix(input[1].Position.xyz, input[2].Position.xyz, patchXY.x, sideLength);	// Irregular index pattern - it's correct
 				}
 
 				// Use average of edge points for interior - visually looks OK.
 				// fxc bug if we assign different complex expressions to Inside[0] and [1].
-				output.TessLevelInner[1] = 0.5f * (output.TessLevelOuter[0] + output.TessLevelOuter[2]);
-				output.TessLevelInner[0] = 0.5f * (output.TessLevelOuter[1] + output.TessLevelOuter[3]);
+				MAIN_OUTPUT_TESS_LEVEL_INNER[1] = 0.5f * (MAIN_OUTPUT_TESS_LEVEL_OUTER[0] + MAIN_OUTPUT_TESS_LEVEL_OUTER[2]);
+				MAIN_OUTPUT_TESS_LEVEL_INNER[0] = 0.5f * (MAIN_OUTPUT_TESS_LEVEL_OUTER[1] + MAIN_OUTPUT_TESS_LEVEL_OUTER[3]);
 			}
 			else
 			{
 				// Reject patches which are outside the camera frustum
-				output.TessLevelOuter[0] = output.TessLevelOuter[1] = output.TessLevelOuter[2] = output.TessLevelOuter[3] = output.TessLevelInner[0] = output.TessLevelInner[1] = -1.0f;
+				MAIN_OUTPUT_TESS_LEVEL_OUTER[0] = MAIN_OUTPUT_TESS_LEVEL_OUTER[1] = MAIN_OUTPUT_TESS_LEVEL_OUTER[2] = MAIN_OUTPUT_TESS_LEVEL_OUTER[3] = MAIN_OUTPUT_TESS_LEVEL_INNER[0] = MAIN_OUTPUT_TESS_LEVEL_INNER[1] = -1.0f;
 			}
 		}
 		else
 		{
 			// Reject patches which are outside the height map
-			output.TessLevelOuter[0] = output.TessLevelOuter[1] = output.TessLevelOuter[2] = output.TessLevelOuter[3] = output.TessLevelInner[0] = output.TessLevelInner[1] = -1.0f;
+			MAIN_OUTPUT_TESS_LEVEL_OUTER[0] = MAIN_OUTPUT_TESS_LEVEL_OUTER[1] = MAIN_OUTPUT_TESS_LEVEL_OUTER[2] = MAIN_OUTPUT_TESS_LEVEL_OUTER[3] = MAIN_OUTPUT_TESS_LEVEL_INNER[0] = MAIN_OUTPUT_TESS_LEVEL_INNER[1] = -1.0f;
 		}
 
 		// Done
-		return output;
+		return shaderOutputPatch;
 	}
 
 
@@ -309,11 +310,11 @@ float LargerNeighbourAdjacencyFix(float3 p0, float3 p1, int patchIndex, float di
 	[outputtopology("triangle_cw")]
 	[outputcontrolpoints(4)]
 	[patchconstantfunc("ConstantHS")]
-	HS_OUTPUT main(InputPatch<VS_OUTPUT, 4> input, uint outputControlPointId : SV_OutputControlPointID)
+	SHADER_OUTPUT main(SHADER_INPUT_PATCH ShaderInputPatch, InputPatch<SHADER_INPUT, 4> ShaderInput)
 	{
+		SHADER_OUTPUT shaderOutput;
+
 		// Pass through the world space control point position of the patch
-		HS_OUTPUT output;
-		output.PositionTC = input[outputControlPointId].Position;
-		return output;
-	}
+		shaderOutput.OutputPosition = ShaderInput[CONTROL_POINT_ID].Position;
+	MAIN_END
 @end

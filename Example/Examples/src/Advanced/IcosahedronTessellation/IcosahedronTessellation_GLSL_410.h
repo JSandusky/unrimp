@@ -55,7 +55,6 @@ void main()
 tessellationControlShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
 
 // Attribute input/output
-layout(vertices = 3) out;
 in  vec3 vPosition[];	// Object space control point position of the patch we received from the vertex shader (VS) as input
 out vec3 tcPosition[];	// Object space control point position of the patch as output
 
@@ -67,6 +66,7 @@ layout(std140) uniform UniformBlockDynamicTcs
 };
 
 // Programs
+layout(vertices = 3) out;
 void main()
 {
 	// Pass through the object space control point position of the patch
@@ -91,7 +91,6 @@ void main()
 tessellationEvaluationShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
 
 // Attribute input/output
-layout(triangles, equal_spacing, cw) in;
 in  vec3 tcPosition[];		// Object space control point position of the patch we received from the tessellation control shader (TCS) as input
 out gl_PerVertex
 {
@@ -107,6 +106,7 @@ layout(std140) uniform UniformBlockStaticTes
 };
 
 // Programs
+layout(triangles, equal_spacing, cw) in;
 void main()
 {
 	// The barycentric coordinate "gl_TessCoord" we received from the tessellator defines a location
@@ -135,8 +135,6 @@ void main()
 geometryShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
 
 // Attribute input/output
-layout(triangles) in;
-layout(triangle_strip, max_vertices = 3) out;
 in gl_PerVertex
 {
 	vec4 gl_Position;
@@ -159,6 +157,8 @@ layout(std140) uniform UniformBlockStaticGs
 };
 
 // Programs
+layout(triangles) in;
+layout(triangle_strip, max_vertices = 3) out;
 void main()
 {
 	vec3 A = tePosition[2] - tePosition[0];

@@ -55,14 +55,14 @@ void main()
 geometryShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
 
 // Attribute input/output
-layout(points) in;
-layout(triangle_strip, max_vertices = 3) out;
 out gl_PerVertex
 {
 	vec4 gl_Position;
 };
 
 // Programs
+layout(points) in;
+layout(triangle_strip, max_vertices = 3) out;
 void main()
 {
 	//				Vertex ID	Triangle on screen

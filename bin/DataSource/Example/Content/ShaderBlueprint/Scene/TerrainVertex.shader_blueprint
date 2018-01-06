@@ -38,8 +38,8 @@ INPUT_BEGIN_VERTEX
 	INPUT_TEXTURE_COORDINATE(1, float4, Adjacency, 0)	// These are the size of the neighbours along +/- x or y axes. For interior tiles this is 1. For edge tiles it is 0.5 or 2.0. x = neighbour minus x, y = neighbour minus y, z = neighbour plus x, w = neighbour plus y.
 INPUT_END_VERTEX
 OUTPUT_BEGIN_VERTEX
-	OUTPUT_TEXTURE_COORDINATE(1, float4, AdjacencyVS, 0)	// These are the size of the neighbours along +/- x or y axes. For interior tiles this is 1. For edge tiles it is 0.5 or 2.0. x = neighbour minus x, y = neighbour minus y, z = neighbour plus x, w = neighbour plus y.
 	OUTPUT_POSITION			 (0)							// World space control point position of the patch
+	OUTPUT_TEXTURE_COORDINATE(1, float4, AdjacencyVS, 0)	// These are the size of the neighbours along +/- x or y axes. For interior tiles this is 1. For edge tiles it is 0.5 or 2.0. x = neighbour minus x, y = neighbour minus y, z = neighbour plus x, w = neighbour plus y.
 OUTPUT_END_VERTEX
 
 // Uniform buffers
@@ -88,10 +88,10 @@ SAMPLER_STATE(3, 1, SamplerLinearClamp, 1)
 
 void ReconstructPosition(int vertexId, float3 vertexPosition, out float3 position)
 {
-	float iv = floor(vertexId * RECIP_CONTROL_VTX_PER_TILE_EDGE);
-	float iu = vertexId - iv * CONTROL_VTX_PER_TILE_EDGE;
-	float u = iu / (CONTROL_VTX_PER_TILE_EDGE - 1.0f);
-	float v = iv / (CONTROL_VTX_PER_TILE_EDGE - 1.0f);
+	float iv = floor(vertexId * TERRAIN_RECIP_CONTROL_VTX_PER_TILE_EDGE);
+	float iu = vertexId - iv * TERRAIN_CONTROL_VTX_PER_TILE_EDGE;
+	float u = iu / (TERRAIN_CONTROL_VTX_PER_TILE_EDGE - 1.0f);
+	float v = iv / (TERRAIN_CONTROL_VTX_PER_TILE_EDGE - 1.0f);
 
 	// Shrink tiles slightly to show gaps between them
 	float size = vertexPosition.z;
@@ -110,7 +110,7 @@ void ReconstructPosition(int vertexId, float3 vertexPosition, out float3 positio
 		// -> Don't bias the terrain contentiously or there's a constant minor wobbling as the terrain mesh slides over the height map
 		// TODO(co) Move parts to the CPU
 		float tileSize = 0.125f;
-		float3 SNAP_GRID_SIZE = PassData.WorldSize * tileSize / PATCHES_PER_TILE_EDGE;
+		float3 SNAP_GRID_SIZE = PassData.WorldSize * tileSize / TERRAIN_PATCHES_PER_TILE_EDGE;
 		float3 snapPosition;
 		snapPosition.x = floor(PassData.CameraWorldSpacePosition.x / SNAP_GRID_SIZE.x) * SNAP_GRID_SIZE.x;
 		snapPosition.z = floor(PassData.CameraWorldSpacePosition.z / SNAP_GRID_SIZE.z) * SNAP_GRID_SIZE.z;

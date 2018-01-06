@@ -52,11 +52,11 @@ void main()
 tessellationControlShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
 
 // Attribute input/output
-layout(vertices = 3) out;
 in  vec2 vPosition[];	// Clip space control point position of the patch we received from the vertex shader (VS) as input
 out vec2 tcPosition[];	// Clip space control point position of the patch as output
 
 // Programs
+layout(vertices = 3) out;
 void main()
 {
 	// Pass through the clip space control point position of the patch
@@ -81,7 +81,6 @@ void main()
 tessellationEvaluationShaderSourceCode = R"(#version 410 core	// OpenGL 4.1
 
 // Attribute input/output
-layout(triangles, equal_spacing, ccw) in;
 in vec2 tcPosition[];	// Clip space control point position of the patch we received from the tessellation control shader (TCS) as input
 out gl_PerVertex
 {
@@ -89,6 +88,7 @@ out gl_PerVertex
 };
 
 // Programs
+layout(triangles, equal_spacing, ccw) in;
 void main()
 {
 	// The barycentric coordinate "gl_TessCoord" we received from the tessellator defines a location

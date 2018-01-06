@@ -31,22 +31,20 @@
 //[-------------------------------------------------------]
 //[ Input / output                                        ]
 //[-------------------------------------------------------]
-struct HS_CONSTANT_DATA_OUTPUT
-{
-	float  TessLevelInner[2] : SV_INSIDETESSFACTOR;	// Inner tessellation level
-	float  TessLevelOuter[4] : SV_TESSFACTOR;		// Outer tessellation level
-};
-struct HS_OUTPUT
-{
-	float4 PositionTC : SV_POSITION;	// World space control point position of the patch we received from the tessellation control shader (TCS) as input
-};
-struct DS_OUTPUT
-{
-	float4 Position 				   : SV_POSITION;	// Interpolated world space vertex position inside the patch as output
-	float2 TexCoord 				   : TEXCOORD0;		// Texture coordinate
-	float3 PreviousClipSpacePositionVS : TEXCOORD1;		// Previous clip space position
-	float3 WorldSpacePosition		   : TEXCOORD2;		// World space position
-};
+INPUT_BEGIN_PATCH
+	INPUT_TESS_LEVEL_INNER(2)	// Inner tessellation level
+	INPUT_TESS_LEVEL_OUTER(4)	// Outer tessellation level
+	DECLARE_TESS_COORD(float2)
+INPUT_END_PATCH
+INPUT_BEGIN
+	INPUT_POSITION(0, float4, Position)	// World space control point position of the patch we received from the tessellation control shader (TCS) as input
+INPUT_END
+OUTPUT_BEGIN
+	OUTPUT_POSITION			 (0)											// Interpolated world space vertex position inside the patch as output
+	OUTPUT_TEXTURE_COORDINATE(1, float2, TexCoord, 					  0)	// Texture coordinate
+	OUTPUT_TEXTURE_COORDINATE(2, float3, PreviousClipSpacePositionVS, 1)	// Previous clip space position
+	OUTPUT_TEXTURE_COORDINATE(3, float3, WorldSpacePosition, 		  2)	// World space position
+OUTPUT_END
 
 // Uniform buffers
 struct PassDataStruct
@@ -105,32 +103,29 @@ float4 Bilerp(float4 v0, float4 v1, float4 v2, float4 v3, float2 i)
 //[-------------------------------------------------------]
 @property(HLSL)
 	[domain("quad")]
-	DS_OUTPUT main(HS_CONSTANT_DATA_OUTPUT inputTessellation, float2 inputTessellationCoordinate : SV_DOMAINLOCATION, const OutputPatch<HS_OUTPUT, 4> input)
+	SHADER_OUTPUT main(SHADER_INPUT_PATCH ShaderInputPatch, const OutputPatch<SHADER_INPUT, 4> ShaderInput)
 	{
-		DS_OUTPUT output;
+		SHADER_OUTPUT shaderOutput;
 
 		// Bilerp the position
-		float4 worldSpacePosition = Bilerp(input[0].PositionTC, input[1].PositionTC, input[2].PositionTC, input[3].PositionTC, inputTessellationCoordinate);
+		float4 worldSpacePosition = Bilerp(ShaderInput[0].Position, ShaderInput[1].Position, ShaderInput[2].Position, ShaderInput[3].Position, TESS_COORD.xy);
 		worldSpacePosition.w = 1.0f;
 
 		// Apply height map
 		worldSpacePosition.y = SampleHeightMap(worldSpacePosition.xz);
 
 		// Transform to clip-space
-		output.Position = MATRIX_MUL(PassData.WorldSpaceToClipSpaceMatrix, worldSpacePosition);
+		MAIN_OUTPUT_POSITION = MATRIX_MUL(PassData.WorldSpaceToClipSpaceMatrix, worldSpacePosition);
 
 		// Texture coordinate
-		output.TexCoord = WorldXZToHeightUV(worldSpacePosition.xz);
+		MAIN_OUTPUT(TexCoord) = WorldXZToHeightUV(worldSpacePosition.xz);
 
 		{ // Previous clip space position
 			float4 previousPiewSpacePosition = MATRIX_MUL(PassData.PreviousWorldSpaceToViewSpaceMatrix, worldSpacePosition);
-			output.PreviousClipSpacePositionVS = MATRIX_MUL(PassData.ViewSpaceToClipSpaceMatrix, previousPiewSpacePosition).xyw;
+			MAIN_OUTPUT(PreviousClipSpacePositionVS) = MATRIX_MUL(PassData.ViewSpaceToClipSpaceMatrix, previousPiewSpacePosition).xyw;
 		}
 
 		// World space position
-		output.WorldSpacePosition = worldSpacePosition.xyz;
-
-		// Done
-		return output;
-	}
+		MAIN_OUTPUT(WorldSpacePosition) = worldSpacePosition.xyz;
+	MAIN_END
 @end
