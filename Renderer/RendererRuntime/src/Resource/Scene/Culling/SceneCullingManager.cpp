@@ -29,7 +29,7 @@
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorContextData.h"
 #include "RendererRuntime/Resource/CompositorWorkspace/CompositorWorkspaceInstance.h"
 #include "RendererRuntime/RenderQueue/RenderableManager.h"
-#include "RendererRuntime/Core/Thread/ThreadManager.h"
+#include "RendererRuntime/Core/Thread/ThreadPool.h"
 #include "RendererRuntime/Core/Math/Math.h"
 #include "RendererRuntime/Core/Math/Frustum.h"
 #include "RendererRuntime/Vr/IVrManager.h"
@@ -689,12 +689,12 @@ namespace RendererRuntime
 		}
 
 		// Get the thread pool instance
-		ThreadPool<void>& threadPool = rendererRuntime.getThreadManager().getDataParallelThreadPool();
+		DefaultThreadPool& defaultThreadPool = rendererRuntime.getDefaultThreadPool();
 
 		{ // Do SIMD multi-threaded frustum-sphere culling
 			size_t itemCount = mCullableSceneItemSet->numberOfSceneItems;
 			size_t splitCount = ::detail::SCENE_ITEMS_SPLIT_COUNT;	// Package size for each thread to work on (will change when maximum number of threads is reached)
-			const size_t threadCount = threadPool.getThreadCountAndSplitCount(itemCount, splitCount);
+			const size_t threadCount = defaultThreadPool.getThreadCountAndSplitCount(itemCount, splitCount);
 			if (1 == threadCount)
 			{
 				// Just execute it directly inside the current thread, not worth the additional threading effort
@@ -707,13 +707,13 @@ namespace RendererRuntime
 				for (size_t threadIndex = 0; threadIndex < threadCount; ++threadIndex)
 				{
 					const size_t numberOfItemsToProcess = (threadIndex >= threadCount - 1) ? itemCount : splitCount;	// The last thread has to do all the rest of the remaining work
-					threadPool.queueTask(std::bind(::detail::simdSphereCulling, planes, *mCullableSceneItemSet, threadSceneItemIndexOffset, threadSceneItemIndexOffset + numberOfItemsToProcess, mCullableSceneItemSet->visibilityFlag.data()));
+					defaultThreadPool.queueTask(std::bind(::detail::simdSphereCulling, planes, *mCullableSceneItemSet, threadSceneItemIndexOffset, threadSceneItemIndexOffset + numberOfItemsToProcess, mCullableSceneItemSet->visibilityFlag.data()));
 					itemCount -= splitCount;
 					threadSceneItemIndexOffset += splitCount;
 				}
 
 				// Wait that all worker threads have done their part of the calculation
-				threadPool.process();
+				defaultThreadPool.process();
 			}
 		}
 
@@ -748,7 +748,7 @@ namespace RendererRuntime
 		{ // Do SIMD multi-threaded frustum-OOBB culling
 			size_t itemCount = numberOfVisibleItems;
 			size_t splitCount = ::detail::SCENE_ITEMS_SPLIT_COUNT;	// Package size for each thread to work on (will change when maximum number of threads is reached)
-			const size_t threadCount = threadPool.getThreadCountAndSplitCount(itemCount, splitCount);
+			const size_t threadCount = defaultThreadPool.getThreadCountAndSplitCount(itemCount, splitCount);
 			if (1 == threadCount)
 			{
 				// Just execute it directly inside the current thread, not worth the additional threading effort
@@ -761,13 +761,13 @@ namespace RendererRuntime
 				for (size_t threadIndex = 0; threadIndex < threadCount; ++threadIndex)
 				{
 					const size_t numberOfItemsToProcess = (threadIndex >= threadCount - 1) ? itemCount : splitCount;	// The last thread has to do all the rest of the remaining work
-					threadPool.queueTask(std::bind(::detail::simdOobbCulling, simd_view_proj, *mCullableSceneItemSet, mIndirection.data(), threadSceneItemIndexOffset, threadSceneItemIndexOffset + numberOfItemsToProcess, mCullableSceneItemSet->visibilityFlag.data()));
+					defaultThreadPool.queueTask(std::bind(::detail::simdOobbCulling, simd_view_proj, *mCullableSceneItemSet, mIndirection.data(), threadSceneItemIndexOffset, threadSceneItemIndexOffset + numberOfItemsToProcess, mCullableSceneItemSet->visibilityFlag.data()));
 					itemCount -= splitCount;
 					threadSceneItemIndexOffset += splitCount;
 				}
 
 				// Wait that all worker threads have done their part of the calculation
-				threadPool.process();
+				defaultThreadPool.process();
 			}
 		}
 

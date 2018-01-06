@@ -50,7 +50,6 @@ namespace RendererRuntime
 	class TimeManager;
 	class IFileManager;
 	class AssetManager;
-	class ThreadManager;
 	class DebugGuiManager;
 	class IRendererRuntime;
 	class ResourceStreamer;
@@ -68,6 +67,8 @@ namespace RendererRuntime
 	class SkeletonAnimationResourceManager;
 	class MaterialBlueprintResourceManager;
 	class CompositorWorkspaceResourceManager;
+	template <typename ReturnType> class ThreadPool;
+	typedef ThreadPool<void> DefaultThreadPool;
 }
 
 
@@ -162,12 +163,12 @@ namespace RendererRuntime
 
 		/**
 		*  @brief
-		*    Return the thread manager instance
+		*    Return the default thread pool instance
 		*
 		*  @return
-		*    The thread manager instance, do not release the returned instance
+		*    The default thread pool instance, do not release the returned instance
 		*/
-		inline ThreadManager& getThreadManager() const;
+		inline DefaultThreadPool& getDefaultThreadPool() const;
 
 		/**
 		*  @brief
@@ -410,7 +411,7 @@ namespace RendererRuntime
 		Renderer::IBufferManager*  mBufferManager;	///< The used buffer manager instance (we keep a reference to it), always valid
 		Renderer::ITextureManager* mTextureManager;	///< The used texture manager instance (we keep a reference to it), always valid
 		IFileManager*			   mFileManager;	///< The used file manager instance, always valid
-		ThreadManager*			   mThreadManager;
+		DefaultThreadPool*		   mDefaultThreadPool;
 		AssetManager*			   mAssetManager;
 		TimeManager*			   mTimeManager;
 		// Resource

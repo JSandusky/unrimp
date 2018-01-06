@@ -27,7 +27,7 @@
 #include "RendererRuntime/Core/File/MemoryFile.h"
 #include "RendererRuntime/Core/Time/TimeManager.h"
 #include "RendererRuntime/Core/File/IFileManager.h"
-#include "RendererRuntime/Core/Thread/ThreadManager.h"
+#include "RendererRuntime/Core/Thread/ThreadPool.h"
 #include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
 #include "RendererRuntime/Resource/Scene/SceneResourceManager.h"
@@ -172,7 +172,7 @@ namespace RendererRuntime
 		mFileManager = &context.getFileManager();
 
 		// Create the core manager instances
-		mThreadManager = new ThreadManager();
+		mDefaultThreadPool = new DefaultThreadPool();
 		mAssetManager = new AssetManager(*this);
 		mTimeManager = new TimeManager();
 
@@ -257,7 +257,7 @@ namespace RendererRuntime
 		// Destroy the core manager instances
 		delete mTimeManager;
 		delete mAssetManager;
-		delete mThreadManager;
+		delete mDefaultThreadPool;
 
 		// Release the texture and buffer manager instance
 		mTextureManager->releaseReference();

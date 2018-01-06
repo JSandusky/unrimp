@@ -56,7 +56,6 @@
     <None Include="include\RendererRuntime\Core\Renderer\RenderTargetTextureManager.inl" />
     <None Include="include\RendererRuntime\Core\Renderer\RenderTargetTextureSignature.inl" />
     <None Include="include\RendererRuntime\Core\StringId.inl" />
-    <None Include="include\RendererRuntime\Core\Thread\ThreadManager.inl" />
     <None Include="include\RendererRuntime\Core\Thread\ThreadPool.inl" />
     <None Include="include\RendererRuntime\Core\Time\Stopwatch.inl" />
     <None Include="include\RendererRuntime\Core\Time\TimeManager.inl" />
@@ -229,7 +228,6 @@
     <ClInclude Include="include\RendererRuntime\Core\String.h" />
     <ClInclude Include="include\RendererRuntime\Core\StringId.h" />
     <ClInclude Include="include\RendererRuntime\Core\SwizzleVectorElementRemove.h" />
-    <ClInclude Include="include\RendererRuntime\Core\Thread\ThreadManager.h" />
     <ClInclude Include="include\RendererRuntime\Core\Thread\ThreadPool.h" />
     <ClInclude Include="include\RendererRuntime\Core\Time\Stopwatch.h" />
     <ClInclude Include="include\RendererRuntime\Core\Time\TimeManager.h" />

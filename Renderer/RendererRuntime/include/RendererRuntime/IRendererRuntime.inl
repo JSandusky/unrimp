@@ -58,9 +58,9 @@ namespace RendererRuntime
 		return *mFileManager;
 	}
 
-	inline ThreadManager& IRendererRuntime::getThreadManager() const
+	inline DefaultThreadPool& IRendererRuntime::getDefaultThreadPool() const
 	{
-		return *mThreadManager;
+		return *mDefaultThreadPool;
 	}
 
 	inline AssetManager& IRendererRuntime::getAssetManager() const
@@ -169,7 +169,7 @@ namespace RendererRuntime
 		mBufferManager(nullptr),
 		mTextureManager(nullptr),
 		mFileManager(nullptr),
-		mThreadManager(nullptr),
+		mDefaultThreadPool(nullptr),
 		mAssetManager(nullptr),
 		mTimeManager(nullptr),
 		// Resource
