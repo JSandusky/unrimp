@@ -53,8 +53,8 @@
 	// Wrappers for displacement map sampling allow us to substitute a 100% procedural surface.
 	// VS and DS sampling have to agree and use common code.
 	#define TERRAIN_CONTROL_VTX_PER_TILE_EDGE 		9
-	#define TERRAIN_RECIP_CONTROL_VTX_PER_TILE_EDGE 1.0f / TERRAIN_CONTROL_VTX_PER_TILE_EDGE
-	#define TERRAIN_PATCHES_PER_TILE_EDGE 			TERRAIN_CONTROL_VTX_PER_TILE_EDGE - 1
+	#define TERRAIN_RECIP_CONTROL_VTX_PER_TILE_EDGE (1.0f / TERRAIN_CONTROL_VTX_PER_TILE_EDGE)
+	#define TERRAIN_PATCHES_PER_TILE_EDGE 			(TERRAIN_CONTROL_VTX_PER_TILE_EDGE - 1)
 	float2 WorldXZToHeightUV(float2 worldXZ)
 	{
 		// Apply terrain world position

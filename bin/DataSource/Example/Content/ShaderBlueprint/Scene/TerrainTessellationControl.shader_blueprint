@@ -105,7 +105,7 @@ float ClipToScreenSpaceTessellation(float4 clip0, float4 clip1)
 	clip0.xy *= PassData.ViewportSize;
 	clip1.xy *= PassData.ViewportSize;
 
-	const float d = distance(clip0, clip1);
+	float d = distance(clip0, clip1);
 
 	// "PassData.TessellatedTriangleWidth" is desired pixels per triangle edge
 	return clamp(d / PassData.TessellatedTriangleWidth, 0.0f, 64.0f);
@@ -171,7 +171,7 @@ float LargerNeighbourAdjacencyFix(float3 p0, float3 p1, int patchIndex, float di
 	// +  <----  p0   Us   p1		Move p0
 	// |    0    |    1    |		patchIndex % 2
 	//
-	if (uint(patchIndex) % 2)
+	if ((uint(patchIndex) % 2) != 0)
 	{
 		p0 += (p0 - p1);
 	}
@@ -203,9 +203,9 @@ float LargerNeighbourAdjacencyFix(float3 p0, float3 p1, int patchIndex, float di
 		// Reject patches which are outside the height map
 		if (IsInsideHeightMap(ShaderInput[0].Position.xz) && IsInsideHeightMap(ShaderInput[1].Position.xz) && IsInsideHeightMap(ShaderInput[2].Position.xz) && IsInsideHeightMap(ShaderInput[3].Position.xz))
 		{
-			const float3 centre = 0.25f * (ShaderInput[0].Position.xyz + ShaderInput[1].Position.xyz + ShaderInput[2].Position.xyz + ShaderInput[3].Position.xyz);
-			const float  sideLength = max(abs(ShaderInput[1].Position.x - ShaderInput[0].Position.x), abs(ShaderInput[1].Position.x - ShaderInput[2].Position.x));	// Assume square and uniform
-			const float  diagonalLength = sqrt(2 * sideLength * sideLength);
+			float3 centre = 0.25f * (ShaderInput[0].Position.xyz + ShaderInput[1].Position.xyz + ShaderInput[2].Position.xyz + ShaderInput[3].Position.xyz);
+			float  sideLength = max(abs(ShaderInput[1].Position.x - ShaderInput[0].Position.x), abs(ShaderInput[1].Position.x - ShaderInput[2].Position.x));	// Assume square and uniform
+			float  diagonalLength = sqrt(2 * sideLength * sideLength);
 
 			// Reject patches which are outside the camera frustum
 			// TODO(co) Optimize: Add world space camera direction vector parameter
