@@ -229,7 +229,7 @@ namespace RendererRuntime
 			ImGuizmo::MODE mode = (operation == ImGuizmo::SCALE) ? ImGuizmo::LOCAL : static_cast<ImGuizmo::MODE>(gizmoSettings.currentGizmoMode);
 			const ImGuiIO& imGuiIO = ImGui::GetIO();
 			ImGuizmo::SetRect(0, 0, imGuiIO.DisplaySize.x, imGuiIO.DisplaySize.y);
-			ImGuizmo::Manipulate(glm::value_ptr(cameraSceneItem.getWorldSpaceToViewSpaceMatrix()), glm::value_ptr(cameraSceneItem.getViewSpaceToClipSpaceMatrix()), operation, mode, glm::value_ptr(matrix), nullptr, gizmoSettings.useSnap ? &gizmoSettings.snap[0] : nullptr);
+			ImGuizmo::Manipulate(glm::value_ptr(cameraSceneItem.getWorldSpaceToViewSpaceMatrix()), glm::value_ptr(cameraSceneItem.getViewSpaceToClipSpaceMatrix(static_cast<float>(imGuiIO.DisplaySize.x) / imGuiIO.DisplaySize.y)), operation, mode, glm::value_ptr(matrix), nullptr, gizmoSettings.useSnap ? &gizmoSettings.snap[0] : nullptr);
 			transform = Transform(matrix);
 		}
 	}
@@ -243,7 +243,8 @@ namespace RendererRuntime
 			// Get transform data
 			glm::mat4 objectSpaceToWorldSpace;
 			skeletonMeshSceneItem.getParentSceneNodeSafe().getGlobalTransform().getAsMatrix(objectSpaceToWorldSpace);
-			const glm::mat4 objectSpaceToClipSpaceMatrix = cameraSceneItem.getViewSpaceToClipSpaceMatrix() * cameraSceneItem.getWorldSpaceToViewSpaceMatrix() * objectSpaceToWorldSpace;
+			const ImGuiIO& imGuiIO = ImGui::GetIO();
+			const glm::mat4 objectSpaceToClipSpaceMatrix = cameraSceneItem.getViewSpaceToClipSpaceMatrix(static_cast<float>(imGuiIO.DisplaySize.x) / imGuiIO.DisplaySize.y) * cameraSceneItem.getWorldSpaceToViewSpaceMatrix() * objectSpaceToWorldSpace;
 
 			// Get skeleton data
 			const uint8_t numberOfBones = skeletonResource->getNumberOfBones();
@@ -273,7 +274,8 @@ namespace RendererRuntime
 			const int32_t NUMBER_OF_LINES_PER_DIRECTION = 10;
 			static const ImColor GREY_COLOR(0.5f, 0.5f, 0.5f, 1.0f);
 			ImDrawList* imDrawList = ImGui::GetWindowDrawList();
-			const glm::mat4 objectSpaceToClipSpaceMatrix = cameraSceneItem.getViewSpaceToClipSpaceMatrix() * cameraSceneItem.getWorldSpaceToViewSpaceMatrix();
+			const ImGuiIO& imGuiIO = ImGui::GetIO();
+			const glm::mat4 objectSpaceToClipSpaceMatrix = cameraSceneItem.getViewSpaceToClipSpaceMatrix(static_cast<float>(imGuiIO.DisplaySize.x) / imGuiIO.DisplaySize.y) * cameraSceneItem.getWorldSpaceToViewSpaceMatrix();
 
 			// Keep the grid fixed at camera
 			const glm::vec3& cameraPosition = cameraSceneItem.getParentSceneNodeSafe().getTransform().position;

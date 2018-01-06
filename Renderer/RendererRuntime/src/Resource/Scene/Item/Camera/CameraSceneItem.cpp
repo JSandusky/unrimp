@@ -107,11 +107,11 @@ namespace RendererRuntime
 		if (!mHasCustomViewSpaceToClipSpaceMatrix)
 		{
 			// Near and far flipped due to usage of Reversed-Z (see e.g. https://developer.nvidia.com/content/depth-precision-visualized and https://nlguillemot.wordpress.com/2016/12/07/reversed-z-in-opengl/)
-			mViewSpaceToClipSpaceMatrix = glm::perspective(mFovY, aspectRatio, mFarZ, mNearZ);
+			mViewSpaceToClipSpaceMatrixReversedZ = glm::perspective(mFovY, aspectRatio, mFarZ, mNearZ);
 		}
 
 		// Done
-		return mViewSpaceToClipSpaceMatrix;
+		return mViewSpaceToClipSpaceMatrixReversedZ;
 	}
 
 
@@ -137,6 +137,7 @@ namespace RendererRuntime
 		mFarZ(DEFAULT_FAR_Z),
 		mWorldSpaceToViewSpaceMatrix(Math::MAT4_IDENTITY),
 		mViewSpaceToClipSpaceMatrix(Math::MAT4_IDENTITY),
+		mViewSpaceToClipSpaceMatrixReversedZ(Math::MAT4_IDENTITY),
 		mHasCustomWorldSpaceToViewSpaceMatrix(false),
 		mHasCustomViewSpaceToClipSpaceMatrix(false)
 	{

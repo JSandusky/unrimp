@@ -105,12 +105,11 @@ namespace RendererRuntime
 		inline void setCustomWorldSpaceToViewSpaceMatrix(const glm::mat4& customWorldSpaceToViewSpaceMatrix);
 
 		// View space to clip space matrix (aka "projection matrix")
-		inline const glm::mat4& getViewSpaceToClipSpaceMatrix() const;	// No matrix update, just returning that's there
 		RENDERERRUNTIME_API_EXPORT const glm::mat4& getViewSpaceToClipSpaceMatrix(float aspectRatio) const;
 		RENDERERRUNTIME_API_EXPORT const glm::mat4& getViewSpaceToClipSpaceMatrixReversedZ(float aspectRatio) const;
 		inline bool hasCustomViewSpaceToClipSpaceMatrix() const;
 		inline void unsetCustomViewSpaceToClipSpaceMatrix();
-		inline void setCustomViewSpaceToClipSpaceMatrix(const glm::mat4& customViewSpaceToClipSpaceMatrix);
+		inline void setCustomViewSpaceToClipSpaceMatrix(const glm::mat4& customViewSpaceToClipSpaceMatrix, const glm::mat4& customViewSpaceToClipSpaceMatrixReversedZ);
 
 
 	//[-------------------------------------------------------]
@@ -142,6 +141,7 @@ namespace RendererRuntime
 		// Derived or custom data
 		mutable glm::mat4 mWorldSpaceToViewSpaceMatrix;				// Aka "view matrix"
 		mutable glm::mat4 mViewSpaceToClipSpaceMatrix;				// Aka "projection matrix"
+		mutable glm::mat4 mViewSpaceToClipSpaceMatrixReversedZ;		// Aka "projection matrix"
 		bool			  mHasCustomWorldSpaceToViewSpaceMatrix;	// Aka "view matrix"
 		bool			  mHasCustomViewSpaceToClipSpaceMatrix;		// Aka "projection matrix"
 

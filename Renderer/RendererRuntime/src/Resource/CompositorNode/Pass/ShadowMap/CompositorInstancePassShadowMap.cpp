@@ -271,13 +271,9 @@ namespace RendererRuntime
 					viewSpaceToClipSpace = depthProjectionMatrix * depthViewMatrix;
 				}
 
-				// Come up with a new orthographic camera for the shadow caster
-				// -> Near and far flipped due to usage of Reversed-Z (see e.g. https://developer.nvidia.com/content/depth-precision-visualized and https://nlguillemot.wordpress.com/2016/12/07/reversed-z-in-opengl/)
-				depthProjectionMatrix = glm::ortho(minimumExtents.x, maximumExtents.x, minimumExtents.y, maximumExtents.y, cascadeExtents.z, 0.0f);
-
 				// Set custom camera matrices
 				const_cast<CameraSceneItem*>(cameraSceneItem)->setCustomWorldSpaceToViewSpaceMatrix(depthViewMatrix);
-				const_cast<CameraSceneItem*>(cameraSceneItem)->setCustomViewSpaceToClipSpaceMatrix(depthProjectionMatrix);
+				const_cast<CameraSceneItem*>(cameraSceneItem)->setCustomViewSpaceToClipSpaceMatrix(depthProjectionMatrix, glm::ortho(minimumExtents.x, maximumExtents.x, minimumExtents.y, maximumExtents.y, cascadeExtents.z, 0.0f));
 
 				{ // Render shadow casters
 					COMMAND_BEGIN_DEBUG_EVENT(commandBuffer, "Render shadow casters")

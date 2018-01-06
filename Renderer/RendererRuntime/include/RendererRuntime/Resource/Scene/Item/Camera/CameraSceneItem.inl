@@ -74,11 +74,6 @@ namespace RendererRuntime
 		mHasCustomWorldSpaceToViewSpaceMatrix = true;
 	}
 
-	inline const glm::mat4& CameraSceneItem::getViewSpaceToClipSpaceMatrix() const
-	{
-		return mViewSpaceToClipSpaceMatrix;
-	}
-
 	inline bool CameraSceneItem::hasCustomViewSpaceToClipSpaceMatrix() const
 	{
 		return mHasCustomViewSpaceToClipSpaceMatrix;
@@ -89,9 +84,10 @@ namespace RendererRuntime
 		mHasCustomViewSpaceToClipSpaceMatrix = false;
 	}
 
-	inline void CameraSceneItem::setCustomViewSpaceToClipSpaceMatrix(const glm::mat4& customViewSpaceToClipSpaceMatrix)
+	inline void CameraSceneItem::setCustomViewSpaceToClipSpaceMatrix(const glm::mat4& customViewSpaceToClipSpaceMatrix, const glm::mat4& customViewSpaceToClipSpaceMatrixReversedZ)
 	{
 		mViewSpaceToClipSpaceMatrix = customViewSpaceToClipSpaceMatrix;
+		mViewSpaceToClipSpaceMatrixReversedZ = customViewSpaceToClipSpaceMatrixReversedZ;
 		mHasCustomViewSpaceToClipSpaceMatrix = true;
 	}
 
