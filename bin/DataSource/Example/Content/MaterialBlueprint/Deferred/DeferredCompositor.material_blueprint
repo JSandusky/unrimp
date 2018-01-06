@@ -340,7 +340,7 @@
 					"Value": "@ShadowMap",
 					"FallbackTexture": "Unrimp/Texture/DynamicByCode/BlackMap2D",
 					"MipmapsUsed": "FALSE",
-					"SamplerStateBaseShaderRegisterName": "SamplerPoint"
+					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
 				},
 				"5":
 				{
