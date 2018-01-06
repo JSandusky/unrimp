@@ -21,6 +21,34 @@
 //[-------------------------------------------------------]
 //[ Pieces                                                ]
 //[-------------------------------------------------------]
+@piece(DefineTerrainPassDataStruct)
+	struct TerrainPassDataStruct
+	{
+		float4x4 WorldSpaceToClipSpaceMatrix;
+		float4x4 WorldSpaceToViewSpaceMatrix;
+		float4x4 PreviousWorldSpaceToViewSpaceMatrix;
+		float4x4 ShadowMatrix;
+		float4   ShadowCascadeOffsets[4];
+		float4   ShadowCascadeScales[4];
+		float4   ShadowCascadeSplits;
+		float4x4 ViewSpaceToClipSpaceMatrix;
+		float4	 ViewSpaceToWorldSpaceQuaternion;
+		float4	 WorldSpaceToViewSpaceQuaternion;
+		float3	 ViewSpaceSunlightDirection;
+		float	 Wetness;
+		float3	 WorldPosition;
+		float3	 WorldSize;
+		float3	 AmbientColor;
+		float3	 SunlightColor;
+		float3   CameraWorldSpacePosition;
+		float3	 LightClustersScale;
+		float3	 LightClustersBias;
+		float2   ViewportSize;
+		float2   ProjectionParametersReversedZ;
+		uint	 FullCoverageMask;
+		float	 TessellatedTriangleWidth;
+	};
+@end
 @piece(DefineWorldXZToHeightUV)
 	// Wrappers for displacement map sampling allow us to substitute a 100% procedural surface.
 	// VS and DS sampling have to agree and use common code.

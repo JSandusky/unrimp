@@ -98,7 +98,7 @@ HS_CONSTANT_DATA_OUTPUT ConstantHS(InputPatch<VS_OUTPUT, 3> input, uint PatchID 
 [outputtopology("triangle_cw")]
 [outputcontrolpoints(3)]
 [patchconstantfunc("ConstantHS")]
-HS_OUTPUT main(InputPatch<VS_OUTPUT, 3> input, uint InvocationID : SV_OutputControlPointID, uint PatchID : SV_PRIMITIVEID)
+HS_OUTPUT main(InputPatch<VS_OUTPUT, 3> input, uint InvocationID : SV_OutputControlPointID)
 {
 	// Pass through the object space control point position of the patch
 	HS_OUTPUT output;
@@ -139,7 +139,7 @@ cbuffer UniformBlockStaticTes : register(b0)
 
 // Programs
 [domain("tri")]
-DS_OUTPUT main(HS_CONSTANT_DATA_OUTPUT inputTess, float3 TessCoord : SV_DOMAINLOCATION, const OutputPatch<HS_OUTPUT, 3> input)
+DS_OUTPUT main(HS_CONSTANT_DATA_OUTPUT inputTess, const OutputPatch<HS_OUTPUT, 3> input, float3 TessCoord : SV_DOMAINLOCATION)
 {
 	DS_OUTPUT output;
 

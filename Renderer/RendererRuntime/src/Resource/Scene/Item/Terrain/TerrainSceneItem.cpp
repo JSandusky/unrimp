@@ -268,22 +268,22 @@ namespace RendererRuntime
 							{
 								if (y >= ringWidth && y < (outerWidth - ringWidth))
 								{
-									if (x == ringWidth - 1)
+									if (ringWidth - 1 == x)
 									{
 										adjacency.neighbourPlusX = innerNeighbourSize;
 									}
-									else if (x == outerWidth - ringWidth)
+									else if (outerWidth - ringWidth == x)
 									{
 										adjacency.neighbourMinusX = innerNeighbourSize;
 									}
 								}
 								if (x >= ringWidth && x < (outerWidth - ringWidth))
 								{
-									if (y == ringWidth - 1)
+									if (ringWidth - 1 == y)
 									{
 										adjacency.neighbourPlusY = innerNeighbourSize;
 									}
-									else if (y == outerWidth - ringWidth)
+									else if (outerWidth - ringWidth == y)
 									{
 										adjacency.neighbourMinusY = innerNeighbourSize;
 									}
@@ -299,11 +299,11 @@ namespace RendererRuntime
 							{
 								adjacency.neighbourMinusY = outerNeighbourSize;
 							}
-							if (x == outerWidth - 1)
+							if (outerWidth - 1 == x)
 							{
 								adjacency.neighbourPlusX  = outerNeighbourSize;
 							}
-							if (y == outerWidth - 1)
+							if (outerWidth - 1 == y)
 							{
 								adjacency.neighbourPlusY  = outerNeighbourSize;
 							}

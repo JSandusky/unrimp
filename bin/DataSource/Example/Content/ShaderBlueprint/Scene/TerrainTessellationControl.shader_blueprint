@@ -26,6 +26,8 @@
 //[-------------------------------------------------------]
 @includepiece($ProjectName/ShaderPiece/Core.asset)
 	@insertpiece(SetCrossPlatformSettings)
+@includepiece($ProjectName/ShaderPiece/Terrain.asset)
+	@insertpiece(DefineTerrainPassDataStruct)
 
 
 //[-------------------------------------------------------]
@@ -33,8 +35,11 @@
 //[-------------------------------------------------------]
 // Attribute input / output
 INPUT_BEGIN_PATCH
-	DECLARE_CONTROL_POINT_ID
+	DECLARE_PRIMITIVE_ID
 INPUT_END_PATCH
+INPUT_BEGIN_CONTROL_POINT
+	DECLARE_CONTROL_POINT_ID
+INPUT_END_CONTROL_POINT
 INPUT_BEGIN
 	INPUT_POSITION			(0, float4, Position)		// World space control point position of the patch we received from the vertex shader (VS) as input
 	INPUT_TEXTURE_COORDINATE(1, float4, AdjacencyVS, 0)	// These are the size of the neighbours along +/- x or y axes. For interior tiles this is 1. For edge tiles it is 0.5 or 2.0. x = neighbour minus x, y = neighbour minus y, z = neighbour plus x, w = neighbour plus y.
@@ -48,41 +53,15 @@ OUTPUT_BEGIN
 OUTPUT_END
 
 // Uniform buffers
-struct PassDataStruct
-{
-	float4x4 WorldSpaceToClipSpaceMatrix;
-	float4x4 WorldSpaceToViewSpaceMatrix;
-	float4x4 PreviousWorldSpaceToViewSpaceMatrix;
-	float4x4 ShadowMatrix;
-	float4   ShadowCascadeOffsets[4];
-	float4   ShadowCascadeScales[4];
-	float4   ShadowCascadeSplits;
-	float4x4 ViewSpaceToClipSpaceMatrix;
-	float4	 ViewSpaceToWorldSpaceQuaternion;
-	float4	 WorldSpaceToViewSpaceQuaternion;
-	float3	 ViewSpaceSunlightDirection;
-	float	 Wetness;
-	float3	 WorldPosition;
-	float3	 WorldSize;
-	float3	 AmbientColor;
-	float3	 SunlightColor;
-	float3   CameraWorldSpacePosition;
-	float3	 LightClustersScale;
-	float3	 LightClustersBias;
-	float2   ViewportSize;
-	float2   ProjectionParametersReversedZ;
-	uint	 FullCoverageMask;
-	float	 TessellatedTriangleWidth;
-};
 UNIFORM_BUFFER_BEGIN(0, 0, PassUniformBuffer, 0)
-	PassDataStruct PassData;
+	TerrainPassDataStruct PassData;
 UNIFORM_BUFFER_END
 
 
 //[-------------------------------------------------------]
 //[ Functions                                             ]
 //[-------------------------------------------------------]
-@includepiece($ProjectName/ShaderPiece/Terrain.asset)
+// From shader piece "$ProjectName/ShaderPiece/Terrain.asset"
 	@insertpiece(DefineWorldXZToHeightUV)
 @includepiece($ProjectName/ShaderPiece/TangentFrame.asset)
 	@insertpiece(DefineGetTangentFrame)
@@ -217,15 +196,15 @@ float LargerNeighbourAdjacencyFix(float3 p0, float3 p1, int patchIndex, float di
 	//[-------------------------------------------------------]
 	//[ Program invocation per patch                          ]
 	//[-------------------------------------------------------]
-	SHADER_OUTPUT_PATCH ConstantHS(InputPatch<SHADER_INPUT, 4> input, uint primitiveId : SV_PRIMITIVEID)
+	SHADER_OUTPUT_PATCH ConstantHS(SHADER_INPUT_PATCH ShaderInputPatch, InputPatch<SHADER_INPUT, 4> ShaderInput)
 	{
 		SHADER_OUTPUT_PATCH shaderOutputPatch;
 
 		// Reject patches which are outside the height map
-		if (IsInsideHeightMap(input[0].Position.xz) && IsInsideHeightMap(input[1].Position.xz) && IsInsideHeightMap(input[2].Position.xz) && IsInsideHeightMap(input[3].Position.xz))
+		if (IsInsideHeightMap(ShaderInput[0].Position.xz) && IsInsideHeightMap(ShaderInput[1].Position.xz) && IsInsideHeightMap(ShaderInput[2].Position.xz) && IsInsideHeightMap(ShaderInput[3].Position.xz))
 		{
-			const float3 centre = 0.25f * (input[0].Position.xyz + input[1].Position.xyz + input[2].Position.xyz + input[3].Position.xyz);
-			const float  sideLength = max(abs(input[1].Position.x - input[0].Position.x), abs(input[1].Position.x - input[2].Position.x));	// Assume square and uniform
+			const float3 centre = 0.25f * (ShaderInput[0].Position.xyz + ShaderInput[1].Position.xyz + ShaderInput[2].Position.xyz + ShaderInput[3].Position.xyz);
+			const float  sideLength = max(abs(ShaderInput[1].Position.x - ShaderInput[0].Position.x), abs(ShaderInput[1].Position.x - ShaderInput[2].Position.x));	// Assume square and uniform
 			const float  diagonalLength = sqrt(2 * sideLength * sideLength);
 
 			// Reject patches which are outside the camera frustum
@@ -233,51 +212,51 @@ float LargerNeighbourAdjacencyFix(float3 p0, float3 p1, int patchIndex, float di
 			float3 worldSpaceCameraDirection = MultiplyQuaternionVector(PassData.ViewSpaceToWorldSpaceQuaternion, float3(0.0f, 0.0f, -1.0f));
 			if (IsInsideFrustum(centre, PassData.CameraWorldSpacePosition, worldSpaceCameraDirection, diagonalLength))
 			{
-				// Edges that need adjacency adjustment are identified by the per-instance input[0].adjacency
+				// Edges that need adjacency adjustment are identified by the per-instance ShaderInput[0].adjacency
 				// scalars, in conjunction with a patch ID that puts them on the edge of a tile
 				int2 patchXY;
-				patchXY.y = primitiveId / TERRAIN_PATCHES_PER_TILE_EDGE;
-				patchXY.x = primitiveId - patchXY.y * TERRAIN_PATCHES_PER_TILE_EDGE;
+				patchXY.y = PRIMITIVE_ID / TERRAIN_PATCHES_PER_TILE_EDGE;
+				patchXY.x = PRIMITIVE_ID - patchXY.y * TERRAIN_PATCHES_PER_TILE_EDGE;
 
 				// Identify patch edges that are adjacent to a patch of a different size. The size difference
-				// is encoded in input[n].adjacency, either 0.5, 1.0 or 2.0.
+				// is encoded in ShaderInput[n].adjacency, either 0.5, 1.0 or 2.0.
 				// neighbourMinusX refers to our adjacent neighbour in the direction of -ve x. The value
 				// is the neighbour's size relative to ours. Similarly for plus and Y, etc. You really
 				// need a diagram to make sense of the adjacency conditions in the if statements.
 				// These four ifs deal with neighbours that are smaller.
-				if (input[0].AdjacencyVS.x < 0.55f && 0 == patchXY.x)
+				if (ShaderInput[0].AdjacencyVS.x < 0.55f && 0 == patchXY.x)
 				{
-					MAIN_OUTPUT_TESS_LEVEL_OUTER[0] = SmallerNeighbourAdjacencyFix(input[0].Position.xyz, input[1].Position.xyz, sideLength);
+					MAIN_OUTPUT_TESS_LEVEL_OUTER[0] = SmallerNeighbourAdjacencyFix(ShaderInput[0].Position.xyz, ShaderInput[1].Position.xyz, sideLength);
 				}
-				if (input[0].AdjacencyVS.y < 0.55f && 0 == patchXY.y)
+				if (ShaderInput[0].AdjacencyVS.y < 0.55f && 0 == patchXY.y)
 				{
-					MAIN_OUTPUT_TESS_LEVEL_OUTER[1] = SmallerNeighbourAdjacencyFix(input[3].Position.xyz, input[0].Position.xyz, sideLength);
+					MAIN_OUTPUT_TESS_LEVEL_OUTER[1] = SmallerNeighbourAdjacencyFix(ShaderInput[3].Position.xyz, ShaderInput[0].Position.xyz, sideLength);
 				}
-				if (input[0].AdjacencyVS.z < 0.55f && TERRAIN_PATCHES_PER_TILE_EDGE - 1 == patchXY.x)
+				if (ShaderInput[0].AdjacencyVS.z < 0.55f && TERRAIN_PATCHES_PER_TILE_EDGE - 1 == patchXY.x)
 				{
-					MAIN_OUTPUT_TESS_LEVEL_OUTER[2] = SmallerNeighbourAdjacencyFix(input[2].Position.xyz, input[3].Position.xyz, sideLength);
+					MAIN_OUTPUT_TESS_LEVEL_OUTER[2] = SmallerNeighbourAdjacencyFix(ShaderInput[2].Position.xyz, ShaderInput[3].Position.xyz, sideLength);
 				}
-				if (input[0].AdjacencyVS.w < 0.55f && TERRAIN_PATCHES_PER_TILE_EDGE - 1 == patchXY.y)
+				if (ShaderInput[0].AdjacencyVS.w < 0.55f && TERRAIN_PATCHES_PER_TILE_EDGE - 1 == patchXY.y)
 				{
-					MAIN_OUTPUT_TESS_LEVEL_OUTER[3] = SmallerNeighbourAdjacencyFix(input[1].Position.xyz, input[2].Position.xyz, sideLength);
+					MAIN_OUTPUT_TESS_LEVEL_OUTER[3] = SmallerNeighbourAdjacencyFix(ShaderInput[1].Position.xyz, ShaderInput[2].Position.xyz, sideLength);
 				}
 
 				// Deal with neighbours that are larger than us
-				if (input[0].AdjacencyVS.x > 1.0f && 0 == patchXY.x)
+				if (ShaderInput[0].AdjacencyVS.x > 1.0f && 0 == patchXY.x)
 				{
-					MAIN_OUTPUT_TESS_LEVEL_OUTER[0] = LargerNeighbourAdjacencyFix(input[0].Position.xyz, input[1].Position.xyz, patchXY.y, sideLength);
+					MAIN_OUTPUT_TESS_LEVEL_OUTER[0] = LargerNeighbourAdjacencyFix(ShaderInput[0].Position.xyz, ShaderInput[1].Position.xyz, patchXY.y, sideLength);
 				}
-				if (input[0].AdjacencyVS.y > 1.0f && 0 == patchXY.y)
+				if (ShaderInput[0].AdjacencyVS.y > 1.0f && 0 == patchXY.y)
 				{
-					MAIN_OUTPUT_TESS_LEVEL_OUTER[1] = LargerNeighbourAdjacencyFix(input[0].Position.xyz, input[3].Position.xyz, patchXY.x, sideLength);	// Irregular index pattern - it's correct
+					MAIN_OUTPUT_TESS_LEVEL_OUTER[1] = LargerNeighbourAdjacencyFix(ShaderInput[0].Position.xyz, ShaderInput[3].Position.xyz, patchXY.x, sideLength);	// Irregular index pattern - it's correct
 				}
-				if (input[0].AdjacencyVS.z > 1.0f && TERRAIN_PATCHES_PER_TILE_EDGE - 1 == patchXY.x)
+				if (ShaderInput[0].AdjacencyVS.z > 1.0f && TERRAIN_PATCHES_PER_TILE_EDGE - 1 == patchXY.x)
 				{
-					MAIN_OUTPUT_TESS_LEVEL_OUTER[2] = LargerNeighbourAdjacencyFix(input[3].Position.xyz, input[2].Position.xyz, patchXY.y, sideLength);
+					MAIN_OUTPUT_TESS_LEVEL_OUTER[2] = LargerNeighbourAdjacencyFix(ShaderInput[3].Position.xyz, ShaderInput[2].Position.xyz, patchXY.y, sideLength);
 				}
-				if (input[0].AdjacencyVS.w > 1.0f && TERRAIN_PATCHES_PER_TILE_EDGE - 1 == patchXY.y)
+				if (ShaderInput[0].AdjacencyVS.w > 1.0f && TERRAIN_PATCHES_PER_TILE_EDGE - 1 == patchXY.y)
 				{
-					MAIN_OUTPUT_TESS_LEVEL_OUTER[3] = LargerNeighbourAdjacencyFix(input[1].Position.xyz, input[2].Position.xyz, patchXY.x, sideLength);	// Irregular index pattern - it's correct
+					MAIN_OUTPUT_TESS_LEVEL_OUTER[3] = LargerNeighbourAdjacencyFix(ShaderInput[1].Position.xyz, ShaderInput[2].Position.xyz, patchXY.x, sideLength);	// Irregular index pattern - it's correct
 				}
 
 				// Use average of edge points for interior - visually looks OK.
@@ -310,7 +289,7 @@ float LargerNeighbourAdjacencyFix(float3 p0, float3 p1, int patchIndex, float di
 	[outputtopology("triangle_cw")]
 	[outputcontrolpoints(4)]
 	[patchconstantfunc("ConstantHS")]
-	SHADER_OUTPUT main(SHADER_INPUT_PATCH ShaderInputPatch, InputPatch<SHADER_INPUT, 4> ShaderInput)
+	SHADER_OUTPUT main(SHADER_INPUT_CONTROL_POINT ShaderInputControlPoint, InputPatch<SHADER_INPUT, 4> ShaderInput)
 	{
 		SHADER_OUTPUT shaderOutput;
 

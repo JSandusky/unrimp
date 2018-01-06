@@ -45,6 +45,7 @@
 		// Shader attribute input
 		#define INPUT_BEGIN struct SHADER_INPUT {
 		#define INPUT_BEGIN_PATCH struct SHADER_INPUT_PATCH {
+		#define INPUT_BEGIN_CONTROL_POINT struct SHADER_INPUT_CONTROL_POINT {
 			#define INPUT_VERTEX_ID uint vertexId : SV_VERTEXID;
 			#define INPUT_VERTEX_DRAW_ID(attributeIndex) uint drawId : DRAWID;	// "DRAWID" is a special vertex attribute semantic introduced, see "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html
 			#define INPUT_VERTEX_POSITION(attributeIndex, type, name) type name : POSITION;
@@ -60,6 +61,7 @@
 			#define INPUT_TESS_LEVEL_OUTER(numberOfComponents) float TessLevelOuter[numberOfComponents] : SV_TESSFACTOR;
 		#define INPUT_END };
 		#define INPUT_END_PATCH };
+		#define INPUT_END_CONTROL_POINT };
 
 		// Shader attribute output
 		#define OUTPUT_BEGIN struct SHADER_OUTPUT {
@@ -182,8 +184,10 @@
 		#define FRAGMENT_POSITION ShaderInput.FragmentPosition
 		#define DECLARE_IS_FRONT_FACE bool IsFrontFace : SV_ISFRONTFACE;
 		#define IS_FRONT_FACE ShaderInput.IsFrontFace
+		#define DECLARE_PRIMITIVE_ID uint PrimitiveId : SV_PrimitiveID;
+		#define PRIMITIVE_ID ShaderInputPatch.PrimitiveId
 		#define DECLARE_CONTROL_POINT_ID uint OutputControlPointId : SV_OutputControlPointID;
-		#define CONTROL_POINT_ID ShaderInputPatch.OutputControlPointId
+		#define CONTROL_POINT_ID ShaderInputControlPoint.OutputControlPointId
 		#define DECLARE_TESS_COORD(type) type TessCoord : SV_DOMAINLOCATION;
 		#define TESS_COORD ShaderInputPatch.TessCoord
 		@property(Direct3D10)
@@ -237,6 +241,8 @@
 
 		// Shader attribute input
 		#define INPUT_BEGIN
+		#define INPUT_BEGIN_PATCH
+		#define INPUT_BEGIN_CONTROL_POINT
 			#define INPUT_VERTEX_ID
 			#define INPUT_VERTEX_DRAW_ID(attributeIndex) layout(location = attributeIndex) in uint drawId;	// See "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html
 			#define INPUT_VERTEX_POSITION(attributeIndex, type, name) layout(location = attributeIndex) in type name;
@@ -252,6 +258,7 @@
 			#define INPUT_TESS_LEVEL_OUTER(numberOfComponents)
 		#define INPUT_END
 		#define INPUT_END_PATCH
+		#define INPUT_END_CONTROL_POINT
 
 		// Shader attribute output
 		#define OUTPUT_BEGIN
@@ -347,6 +354,8 @@
 		#define FRAGMENT_POSITION gl_FragCoord
 		#define DECLARE_IS_FRONT_FACE
 		#define IS_FRONT_FACE gl_FrontFacing
+		#define DECLARE_PRIMITIVE_ID
+		#define PRIMITIVE_ID ((uint)gl_PrimitiveID)
 		#define DECLARE_CONTROL_POINT_ID
 		#define CONTROL_POINT_ID ((uint)gl_InvocationID)
 		#define DECLARE_TESS_COORD(type)
@@ -418,6 +427,8 @@
 
 		// Shader attribute input
 		#define INPUT_BEGIN
+		#define INPUT_BEGIN_PATCH
+		#define INPUT_BEGIN_CONTROL_POINT
 			#define INPUT_VERTEX_ID
 			#define INPUT_VERTEX_DRAW_ID(attributeIndex) in uint drawId; uniform uint drawIdUniform;	// See "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html - "drawIdUniform" is used in case "GL_ARB_base_instance" isn't supported (Mac OS X 10.11 for example)
 			#define INPUT_VERTEX_POSITION(attributeIndex, type, name) in type name;
@@ -433,6 +444,7 @@
 			#define INPUT_TESS_LEVEL_OUTER(numberOfComponents)
 		#define INPUT_END
 		#define INPUT_END_PATCH
+		#define INPUT_END_CONTROL_POINT
 
 		// Shader attribute output
 		#define OUTPUT_BEGIN
@@ -530,6 +542,8 @@
 		#define FRAGMENT_POSITION gl_FragCoord
 		#define DECLARE_IS_FRONT_FACE
 		#define IS_FRONT_FACE gl_FrontFacing
+		#define DECLARE_PRIMITIVE_ID
+		#define PRIMITIVE_ID ((uint)gl_PrimitiveID)
 		#define DECLARE_CONTROL_POINT_ID
 		#define CONTROL_POINT_ID ((uint)gl_InvocationID)
 		#define DECLARE_TESS_COORD(type)
@@ -604,6 +618,8 @@
 
 		// Shader attribute input// Shader attribute input
 		#define INPUT_BEGIN
+		#define INPUT_BEGIN_PATCH
+		#define INPUT_BEGIN_CONTROL_POINT
 			#define INPUT_VERTEX_ID
 			#define INPUT_VERTEX_DRAW_ID(attributeIndex) in uint drawId; uniform uint drawIdUniform;	// See "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html - "drawIdUniform" is used in case "GL_EXT_base_instance" isn't supported
 			#define INPUT_VERTEX_POSITION(attributeIndex, type, name) in highp type name;
@@ -619,6 +635,7 @@
 			#define INPUT_TESS_LEVEL_OUTER(numberOfComponents)
 		#define INPUT_END
 		#define INPUT_END_PATCH
+		#define INPUT_END_CONTROL_POINT
 
 		// Shader attribute output
 		#define OUTPUT_BEGIN
@@ -719,6 +736,8 @@
 		#define FRAGMENT_POSITION gl_FragCoord
 		#define DECLARE_IS_FRONT_FACE
 		#define IS_FRONT_FACE gl_FrontFacing
+		#define DECLARE_PRIMITIVE_ID
+		#define PRIMITIVE_ID ((uint)gl_PrimitiveID)
 		#define DECLARE_CONTROL_POINT_ID
 		#define CONTROL_POINT_ID ((uint)gl_InvocationID)
 		#define DECLARE_TESS_COORD(type)

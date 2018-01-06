@@ -70,30 +70,30 @@ struct HS_OUTPUT
 };
 
 // Program invocation per patch
-	HS_CONSTANT_DATA_OUTPUT ConstantHS(InputPatch<VS_OUTPUT, 3> input, uint PatchID : SV_PRIMITIVEID)
-	{
-		// Inform the tessellator about the desired tessellation level
-		HS_CONSTANT_DATA_OUTPUT output;
-		output.TessLevelOuter[0] = 1.0f;
-		output.TessLevelOuter[1] = 2.0f;
-		output.TessLevelOuter[2] = 3.0f;
-		output.TessLevelInner[0] = 4.0f;
-		return output;
-	}
+HS_CONSTANT_DATA_OUTPUT ConstantHS(InputPatch<VS_OUTPUT, 3> input)
+{
+	// Inform the tessellator about the desired tessellation level
+	HS_CONSTANT_DATA_OUTPUT output;
+	output.TessLevelOuter[0] = 1.0f;
+	output.TessLevelOuter[1] = 2.0f;
+	output.TessLevelOuter[2] = 3.0f;
+	output.TessLevelInner[0] = 4.0f;
+	return output;
+}
 
 // Program invocation per patch control point
-	[domain("tri")]
-	[partitioning("integer")]
-	[outputtopology("triangle_cw")]
-	[outputcontrolpoints(3)]
-	[patchconstantfunc("ConstantHS")]
-	HS_OUTPUT main(InputPatch<VS_OUTPUT, 3> input, uint InvocationID : SV_OutputControlPointID, uint PatchID : SV_PRIMITIVEID)
-	{
-		// Pass through the clip space control point position of the patch
-		HS_OUTPUT output;
-		output.Position = input[InvocationID].Position;
-		return output;
-	}
+[domain("tri")]
+[partitioning("integer")]
+[outputtopology("triangle_cw")]
+[outputcontrolpoints(3)]
+[patchconstantfunc("ConstantHS")]
+HS_OUTPUT main(InputPatch<VS_OUTPUT, 3> input, uint InvocationID : SV_OutputControlPointID)
+{
+	// Pass through the clip space control point position of the patch
+	HS_OUTPUT output;
+	output.Position = input[InvocationID].Position;
+	return output;
+}
 )";
 
 
