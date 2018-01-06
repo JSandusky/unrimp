@@ -78,6 +78,9 @@
 		// Main
 		#define MAIN_BEGIN SHADER_OUTPUT main(SHADER_INPUT ShaderInput) { SHADER_OUTPUT shaderOutput;
 		#define MAIN_BEGIN_NO_OUTPUT void main(SHADER_INPUT ShaderInput) {
+		#define MAIN_BEGIN_TESSELLATION_CONTROL_PATCH(numberOfInputControlPoints) SHADER_OUTPUT_PATCH mainPerPatchInvocation(SHADER_INPUT_PATCH ShaderInputPatch, InputPatch<SHADER_INPUT, numberOfInputControlPoints> ShaderInput) { SHADER_OUTPUT_PATCH shaderOutputPatch;
+		#define MAIN_BEGIN_TESSELLATION_CONTROL(numberOfInputControlPoints, numberOfOutputControlPoints) [outputcontrolpoints(numberOfOutputControlPoints)] [patchconstantfunc("mainPerPatchInvocation")] SHADER_OUTPUT main(SHADER_INPUT_CONTROL_POINT ShaderInputControlPoint, InputPatch<SHADER_INPUT, numberOfInputControlPoints> ShaderInput) { SHADER_OUTPUT shaderOutput;
+		#define MAIN_BEGIN_TESSELLATION_EVALUATION(numberOfInputControlPoints) SHADER_OUTPUT main(SHADER_INPUT_PATCH ShaderInputPatch, const OutputPatch<SHADER_INPUT, numberOfInputControlPoints> ShaderInput) { SHADER_OUTPUT shaderOutput;
 			#define MAIN_INPUT(name) ShaderInput.name
 			#define MAIN_INPUT_VERTEX_ID ShaderInput.vertexId
 			#define MAIN_INPUT_DRAW_ID ShaderInput.drawId
@@ -88,6 +91,7 @@
 			#define MAIN_OUTPUT_TESS_LEVEL_OUTER shaderOutputPatch.TessLevelOuter
 			#define MAIN_RETURN return shaderOutput;
 		#define MAIN_END return shaderOutput; }
+		#define MAIN_END_TESSELLATION_CONTROL_PATCH return shaderOutputPatch; }
 		#define MAIN_END_NO_OUTPUT }
 
 		// Shader vertex attribute input, output and main with build in support for single pass stereo rendering via instancing as described in "High Performance Stereo Rendering For VR", Timothy Wilson, San Diego, Virtual Reality Meetup
@@ -185,9 +189,9 @@
 		#define DECLARE_IS_FRONT_FACE bool IsFrontFace : SV_ISFRONTFACE;
 		#define IS_FRONT_FACE ShaderInput.IsFrontFace
 		#define DECLARE_PRIMITIVE_ID uint PrimitiveId : SV_PrimitiveID;
-		#define PRIMITIVE_ID ShaderInputPatch.PrimitiveId
+		#define PRIMITIVE_ID ((int)ShaderInputPatch.PrimitiveId)
 		#define DECLARE_CONTROL_POINT_ID uint OutputControlPointId : SV_OutputControlPointID;
-		#define CONTROL_POINT_ID ShaderInputControlPoint.OutputControlPointId
+		#define CONTROL_POINT_ID ((int)ShaderInputControlPoint.OutputControlPointId)
 		#define DECLARE_TESS_COORD(type) type TessCoord : SV_DOMAINLOCATION;
 		#define TESS_COORD ShaderInputPatch.TessCoord
 		@property(Direct3D10)
@@ -274,7 +278,10 @@
 
 		// Main
 		#define MAIN_BEGIN void main() {
-		#define MAIN_BEGIN_NO_OUTPUT void main() {
+		#define MAIN_BEGIN_NO_OUTPUT void mainPerPatchInvocation() {
+		#define MAIN_BEGIN_TESSELLATION_CONTROL_PATCH(numberOfInputControlPoints) void mainPerPatchInvocation() {
+		#define MAIN_BEGIN_TESSELLATION_CONTROL(numberOfInputControlPoints, numberOfOutputControlPoints) layout(vertices = numberOfOutputControlPoints) out; void main() {
+		#define MAIN_BEGIN_TESSELLATION_EVALUATION(numberOfInputControlPoints) void main() {
 			#define MAIN_INPUT(name) name
 			#define MAIN_INPUT_VERTEX_ID gl_VertexIndex						// "gl_VertexIndex" is equivalent to OpenGL's "gl_VertexID"
 
@@ -289,6 +296,7 @@
 			#define MAIN_OUTPUT_TESS_LEVEL_OUTER gl_TessLevelOuter
 			#define MAIN_RETURN
 		#define MAIN_END }
+		#define MAIN_END_TESSELLATION_CONTROL_PATCH }
 		#define MAIN_END_NO_OUTPUT }
 
 		// Shader vertex attribute input, output and main with build in support for single pass stereo rendering via instancing as described in "High Performance Stereo Rendering For VR", Timothy Wilson, San Diego, Virtual Reality Meetup
@@ -355,9 +363,9 @@
 		#define DECLARE_IS_FRONT_FACE
 		#define IS_FRONT_FACE gl_FrontFacing
 		#define DECLARE_PRIMITIVE_ID
-		#define PRIMITIVE_ID ((uint)gl_PrimitiveID)
+		#define PRIMITIVE_ID gl_PrimitiveID
 		#define DECLARE_CONTROL_POINT_ID
-		#define CONTROL_POINT_ID ((uint)gl_InvocationID)
+		#define CONTROL_POINT_ID gl_InvocationID
 		#define DECLARE_TESS_COORD(type)
 		#define TESS_COORD gl_TessCoord
 		#define DECLARE_COVERAGE_MASK
@@ -461,6 +469,9 @@
 		// Main
 		#define MAIN_BEGIN void main() {
 		#define MAIN_BEGIN_NO_OUTPUT void main() {
+		#define MAIN_BEGIN_TESSELLATION_CONTROL_PATCH(numberOfInputControlPoints) void mainPerPatchInvocation() {
+		#define MAIN_BEGIN_TESSELLATION_CONTROL(numberOfInputControlPoints, numberOfOutputControlPoints) layout(vertices = numberOfOutputControlPoints) out; void main() {
+		#define MAIN_BEGIN_TESSELLATION_EVALUATION(numberOfInputControlPoints) void main() {
 			#define MAIN_INPUT(name) name
 			#define MAIN_INPUT_VERTEX_ID gl_VertexID
 			#define MAIN_INPUT_DRAW_ID (drawId + drawIdUniform + uint(gl_InstanceID))
@@ -471,6 +482,7 @@
 			#define MAIN_OUTPUT_TESS_LEVEL_OUTER gl_TessLevelOuter
 			#define MAIN_RETURN
 		#define MAIN_END }
+		#define MAIN_END_TESSELLATION_CONTROL_PATCH }
 		#define MAIN_END_NO_OUTPUT }
 
 		// Shader vertex attribute input, output and main with build in support for single pass stereo rendering via instancing as described in "High Performance Stereo Rendering For VR", Timothy Wilson, San Diego, Virtual Reality Meetup
@@ -543,9 +555,9 @@
 		#define DECLARE_IS_FRONT_FACE
 		#define IS_FRONT_FACE gl_FrontFacing
 		#define DECLARE_PRIMITIVE_ID
-		#define PRIMITIVE_ID ((uint)gl_PrimitiveID)
+		#define PRIMITIVE_ID gl_PrimitiveID
 		#define DECLARE_CONTROL_POINT_ID
-		#define CONTROL_POINT_ID ((uint)gl_InvocationID)
+		#define CONTROL_POINT_ID gl_InvocationID
 		#define DECLARE_TESS_COORD(type)
 		#define TESS_COORD gl_TessCoord
 		#define DECLARE_COVERAGE_MASK
@@ -652,6 +664,9 @@
 		// Main
 		#define MAIN_BEGIN void main() {
 		#define MAIN_BEGIN_NO_OUTPUT void main() {
+		#define MAIN_BEGIN_TESSELLATION_CONTROL_PATCH(numberOfInputControlPoints) void mainPerPatchInvocation() {
+		#define MAIN_BEGIN_TESSELLATION_CONTROL(numberOfInputControlPoints, numberOfOutputControlPoints) layout(vertices = numberOfOutputControlPoints) out; void main() {
+		#define MAIN_BEGIN_TESSELLATION_EVALUATION(numberOfInputControlPoints) void main() {
 			#define MAIN_INPUT(name) name
 			#define MAIN_INPUT_VERTEX_ID gl_VertexID
 			#define MAIN_INPUT_DRAW_ID (drawId + drawIdUniform + uint(gl_InstanceID))
@@ -662,6 +677,7 @@
 			#define MAIN_OUTPUT_TESS_LEVEL_OUTER gl_TessLevelOuter
 			#define MAIN_RETURN
 		#define MAIN_END }
+		#define MAIN_END_TESSELLATION_CONTROL_PATCH }
 		#define MAIN_END_NO_OUTPUT }
 
 		// Shader vertex attribute input, output and main with build in support for single pass stereo rendering via instancing as described in "High Performance Stereo Rendering For VR", Timothy Wilson, San Diego, Virtual Reality Meetup
@@ -737,9 +753,9 @@
 		#define DECLARE_IS_FRONT_FACE
 		#define IS_FRONT_FACE gl_FrontFacing
 		#define DECLARE_PRIMITIVE_ID
-		#define PRIMITIVE_ID ((uint)gl_PrimitiveID)
+		#define PRIMITIVE_ID gl_PrimitiveID
 		#define DECLARE_CONTROL_POINT_ID
-		#define CONTROL_POINT_ID ((uint)gl_InvocationID)
+		#define CONTROL_POINT_ID gl_InvocationID
 		#define DECLARE_TESS_COORD(type)
 		#define TESS_COORD gl_TessCoord
 		#define DECLARE_COVERAGE_MASK
