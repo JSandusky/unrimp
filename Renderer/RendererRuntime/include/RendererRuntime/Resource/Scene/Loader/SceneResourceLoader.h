@@ -88,7 +88,7 @@ namespace RendererRuntime
 		inline virtual bool hasDeserialization() const override;
 		virtual void onDeserialization(IFile& file) override;
 		virtual void onProcessing() override;
-		inline virtual bool onDispatch() override;
+		virtual bool onDispatch() override;
 		inline virtual bool isFullyLoaded() override;
 
 

@@ -26,6 +26,7 @@
 #include "RendererRuntime/Resource/Scene/Loader/SceneFileFormat.h"
 #include "RendererRuntime/Resource/Scene/Item/ISceneItem.h"
 #include "RendererRuntime/Resource/Scene/SceneResource.h"
+#include "RendererRuntime/IRendererRuntime.h"
 
 
 // TODO(co) Error handling
@@ -151,8 +152,27 @@ namespace RendererRuntime
 		v1Scene::SceneHeader sceneHeader;
 		mMemoryFile.read(&sceneHeader, sizeof(v1Scene::SceneHeader));
 
-		// Read in the scene resource nodes
-		::detail::nodesDeserialization(mMemoryFile, *mSceneResource);
+		// Can we create the renderer resource asynchronous as well?
+		// -> For example scene items might create renderer resources, so we have to check for native renderer multi threading support in here
+		if (mRendererRuntime.getRenderer().getCapabilities().nativeMultiThreading)
+		{
+			// Read in the scene resource nodes
+			::detail::nodesDeserialization(mMemoryFile, *mSceneResource);
+		}
+	}
+
+	bool SceneResourceLoader::onDispatch()
+	{
+		// Can we create the renderer resource asynchronous as well?
+		// -> For example scene items might create renderer resources, so we have to check for native renderer multi threading support in here
+		if (!mRendererRuntime.getRenderer().getCapabilities().nativeMultiThreading)
+		{
+			// Read in the scene resource nodes
+			::detail::nodesDeserialization(mMemoryFile, *mSceneResource);
+		}
+
+		// Fully loaded
+		return true;
 	}
 
 
