@@ -73,36 +73,6 @@ inline void ExampleBase::onDeinitialization()
 	// Base does nothing
 }
 
-inline void ExampleBase::onKeyDown(uint32_t)
-{
-	// Base does nothing
-}
-
-inline void ExampleBase::onKeyUp(uint32_t)
-{
-	// Base does nothing
-}
-
-inline void ExampleBase::onMouseButtonDown(uint32_t)
-{
-	// Base does nothing
-}
-
-inline void ExampleBase::onMouseButtonUp(uint32_t)
-{
-	// Base does nothing
-}
-
-inline void ExampleBase::onMouseWheel(float)
-{
-	// Base does nothing
-}
-
-inline void ExampleBase::onMouseMove(int, int)
-{
-	// Base does nothing
-}
-
 inline void ExampleBase::onUpdate()
 {
 	// Base does nothing

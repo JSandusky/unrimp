@@ -40,72 +40,9 @@ RendererRuntime::CameraSceneItem& IController::getCameraSceneItem()
 	return mCameraSceneItem;
 }
 
-void IController::onKeyDown(uint32_t key)
-{
-	mPressedKeys.insert(key);
-}
-
-void IController::onKeyUp(uint32_t key)
-{
-	mPressedKeys.erase(key);
-}
-
-void IController::onMouseButtonDown(uint32_t button)
-{
-	mPressedMouseButtons.insert(button);
-}
-
-void IController::onMouseButtonUp(uint32_t button)
-{
-	mPressedMouseButtons.erase(button);
-}
-
-void IController::onMouseWheel(float delta)
-{
-	mMouseWheelDelta = delta;
-}
-
-void IController::onMouseMove(int x, int y)
-{
-	const static int MAXIMUM = 100;
-
-	// X
-	if (RendererRuntime::isInitialized(mMousePositionX))
-	{
-		mMouseMoveX = x - mMousePositionX;
-		if (mMouseMoveX > MAXIMUM)
-		{
-			mMouseMoveX = MAXIMUM;
-		}
-	}
-	mMousePositionX = x;
-
-	// Y
-	if (RendererRuntime::isInitialized(mMousePositionY))
-	{
-		mMouseMoveY = y - mMousePositionY;
-		if (mMouseMoveY > MAXIMUM)
-		{
-			mMouseMoveY = MAXIMUM;
-		}
-	}
-	mMousePositionY = y;
-}
-
 bool IController::isMouseControlInProgress() const
 {
 	return mMouseControlInProgress;
-}
-
-
-//[-------------------------------------------------------]
-//[ Public virtual IController methods                    ]
-//[-------------------------------------------------------]
-void IController::onUpdate(float)
-{
-	// "Jedi gesture": There was no mouse movement
-	mMouseMoveX = 0;
-	mMouseMoveY = 0;
 }
 
 
@@ -114,26 +51,7 @@ void IController::onUpdate(float)
 //[-------------------------------------------------------]
 IController::IController(RendererRuntime::CameraSceneItem& cameraSceneItem) :
 	mCameraSceneItem(cameraSceneItem),
-	mMouseWheelDelta(0.0f),
-	mMousePositionX(RendererRuntime::getUninitialized<int>()),
-	mMousePositionY(RendererRuntime::getUninitialized<int>()),
-	mMouseMoveX(0),
-	mMouseMoveY(0),
 	mMouseControlInProgress(false)
 {
 	// Nothing here
-}
-
-
-//[-------------------------------------------------------]
-//[ Private methods                                       ]
-//[-------------------------------------------------------]
-bool IController::isKeyPressed(uint32_t key) const
-{
-	return (mPressedKeys.find(key) != mPressedKeys.cend());
-}
-
-bool IController::isMouseButtonPressed(uint32_t button) const
-{
-	return (mPressedMouseButtons.find(button) != mPressedMouseButtons.cend());
 }

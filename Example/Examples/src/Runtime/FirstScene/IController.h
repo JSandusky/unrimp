@@ -75,69 +75,10 @@ public:
 
 	/**
 	*  @brief
-	*    Called in case a key is now pressed
-	*
-	*  @param[in] key
-	*    Pressed key
-	*/
-	void onKeyDown(uint32_t key);
-
-	/**
-	*  @brief
-	*    Called in case a key was released
-	*
-	*  @param[in] key
-	*    Released key
-	*/
-	void onKeyUp(uint32_t key);
-
-	/**
-	*  @brief
-	*    Called in case a mouse button is now pressed
-	*
-	*  @param[in] button
-	*    Pressed mouse button
-	*/
-	void onMouseButtonDown(uint32_t button);
-
-	/**
-	*  @brief
-	*    Called in case a mouse button was released
-	*
-	*  @param[in] button
-	*    Released mouse button
-	*/
-	void onMouseButtonUp(uint32_t button);
-
-	/**
-	*  @brief
-	*    Called in case a mouse wheel was used
-	*
-	*  @param[in] delta
-	*    Mouse wheel delta
-	*
-	*  @note
-	*    - The base implementation is empty
-	*/
-	virtual void onMouseWheel(float delta);
-
-	/**
-	*  @brief
-	*    Called in case the mouse moved
-	*
-	*  @param[in] x
-	*    Mouse position along the x-axis
-	*  @param[in] y
-	*    Mouse position along the y-axis
-	*/
-	void onMouseMove(int x, int y);
-
-	/**
-	*  @brief
-	*    Return whether or not mouse control is currently activily used (e.g. for looking around)
+	*    Return whether or not mouse control is currently actively used (e.g. for looking around)
 	*
 	*  @return
-	*    "true" if the mouse control is currently activily used (e.g. for looking around), else "false"
+	*    "true" if the mouse control is currently actively used (e.g. for looking around), else "false"
 	*
 	*  @note
 	*    - This can be used to avoid that while looking around with the mouse the mouse is becoming considered hovering over an GUI element
@@ -156,7 +97,7 @@ public:
 	*  @param[in] pastSecondsSinceLastFrame
 	*    Past seconds since last frame
 	*/
-	virtual void onUpdate(float pastSecondsSinceLastFrame);
+	virtual void onUpdate(float pastSecondsSinceLastFrame) = 0;
 
 
 //[-------------------------------------------------------]
@@ -174,16 +115,6 @@ protected:
 
 	explicit IController(const IController&) = delete;
 	IController& operator=(const IController&) = delete;
-	bool isKeyPressed(uint32_t key) const;
-	bool isMouseButtonPressed(uint32_t button) const;
-
-
-//[-------------------------------------------------------]
-//[ Protected definitions                                 ]
-//[-------------------------------------------------------]
-protected:
-	typedef std::unordered_set<uint32_t> PressedKeys;
-	typedef std::unordered_set<uint32_t> PressedMouseButtons;
 
 
 //[-------------------------------------------------------]
@@ -191,13 +122,6 @@ protected:
 //[-------------------------------------------------------]
 protected:
 	RendererRuntime::CameraSceneItem& mCameraSceneItem;
-	PressedKeys						  mPressedKeys;
-	PressedMouseButtons				  mPressedMouseButtons;
-	float							  mMouseWheelDelta;
-	int								  mMousePositionX;
-	int								  mMousePositionY;
-	int								  mMouseMoveX;
-	int								  mMouseMoveY;
 	bool							  mMouseControlInProgress;
 
 

@@ -71,6 +71,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/utf8cpp)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/ImGui/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/OpenVR/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/PhysicsFS/include/)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../External/PLInput/include/)
 
 
 ##################################################
@@ -85,6 +86,8 @@ set(SOURCE_CODES
 	${CMAKE_CURRENT_SOURCE_DIR}/../../External/PhysicsFS/src/physfs_archiver_unpacked.c
 	${CMAKE_CURRENT_SOURCE_DIR}/../../External/PhysicsFS/src/physfs_byteorder.c
 	${CMAKE_CURRENT_SOURCE_DIR}/../../External/PhysicsFS/src/physfs_unicode.c
+	# PLInput external library
+	${CMAKE_CURRENT_SOURCE_DIR}/../../External/PLInput/src/Input.cpp
 	# Cross-platform source codes
 	src/Advanced/FirstGpgpu/FirstGpgpu.cpp
 	src/Advanced/IcosahedronTessellation/IcosahedronTessellation.cpp

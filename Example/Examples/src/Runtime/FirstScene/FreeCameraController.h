@@ -31,6 +31,16 @@
 
 
 //[-------------------------------------------------------]
+//[ Forward declarations                                  ]
+//[-------------------------------------------------------]
+namespace PLInput
+{
+	class InputManager;
+	class VirtualStandardController;
+}
+
+
+//[-------------------------------------------------------]
 //[ Classes                                               ]
 //[-------------------------------------------------------]
 /**
@@ -49,10 +59,12 @@ public:
 	*  @brief
 	*    Constructor
 	*
+	*  @param[in] inputManager
+	*    Owner input manager
 	*  @param[in] cameraSceneItem
 	*    Camera scene item to control, instance must stay valid as long as this controller instance exists
 	*/
-	explicit FreeCameraController(RendererRuntime::CameraSceneItem& cameraSceneItem);
+	FreeCameraController(PLInput::InputManager& inputManager, RendererRuntime::CameraSceneItem& cameraSceneItem);
 
 	/**
 	*  @brief
@@ -80,7 +92,8 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
-	float mOriginalFovY;
+	PLInput::VirtualStandardController* mVirtualStandardController;
+	float								mOriginalFovY;
 
 
 };

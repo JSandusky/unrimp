@@ -35,6 +35,10 @@
 //[-------------------------------------------------------]
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
+namespace PLInput
+{
+	class InputManager;
+}
 class ICubeRenderer;
 
 
@@ -88,7 +92,6 @@ public:
 public:
 	virtual void onInitialization() override;
 	virtual void onDeinitialization() override;
-	virtual void onKeyDown(uint32_t key) override;
 	virtual void onUpdate() override;
 	virtual void onDraw() override;
 
@@ -106,6 +109,7 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
+	PLInput::InputManager*	mInputManager;			///< Input manager instance, always valid
 	ICubeRenderer*			mCubeRenderer;			///< Cube renderer instance, can be a null pointer
 	uint32_t				mNumberOfCubeInstances;	///< Number of cube instances
 	Renderer::CommandBuffer mCommandBuffer;			///< Command buffer

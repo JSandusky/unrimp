@@ -79,6 +79,9 @@
     <Filter Include="Source Files\Advanced\FirstGpgpu">
       <UniqueIdentifier>{85b032da-a251-4708-91d6-d23bc4ca2cb4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="External\PLInput">
+      <UniqueIdentifier>{bc9ce1c0-310d-409c-921b-c7c1dde9172c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Framework\IApplication.h">
@@ -489,6 +492,9 @@
     <ClInclude Include="src\PrecompiledHeader.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\External\PLInput\include\PLInput\Input.h">
+      <Filter>External\PLInput</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Framework\IApplication.cpp">
@@ -658,6 +664,9 @@
     </ClCompile>
     <ClCompile Include="src\PrecompiledHeader.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\External\PLInput\src\Input.cpp">
+      <Filter>External\PLInput</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

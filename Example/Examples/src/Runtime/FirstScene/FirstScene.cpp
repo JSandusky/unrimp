@@ -54,6 +54,8 @@
 #include <RendererRuntime/Resource/Detail/ResourceStreamer.h>
 #include <RendererRuntime/Context.h>
 
+#include <PLInput/Input.h>
+
 #include <imgui/imgui.h>
 
 
@@ -84,6 +86,7 @@ namespace
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
 FirstScene::FirstScene() :
+	mInputManager(new PLInput::InputManager()),
 	mImGuiLog(new RendererRuntime::ImGuiLog()),
 	mCompositorWorkspaceInstance(nullptr),
 	mSceneResourceId(RendererRuntime::getUninitialized<RendererRuntime::SceneResourceId>()),
@@ -137,8 +140,9 @@ FirstScene::~FirstScene()
 {
 	// The resources are released within "onDeinitialization()"
 
-	// Destroy our ImGui log instance
+	// Destroy our ImGui log and input manager instance
 	delete mImGuiLog;
+	delete mInputManager;
 }
 
 
@@ -232,54 +236,6 @@ void FirstScene::onDeinitialization()
 	ExampleBase::onDeinitialization();
 }
 
-void FirstScene::onKeyDown(uint32_t key)
-{
-	if (isControllerValid())
-	{
-		mController->onKeyDown(key);
-	}
-}
-
-void FirstScene::onKeyUp(uint32_t key)
-{
-	if (nullptr != mController)
-	{
-		mController->onKeyUp(key);
-	}
-}
-
-void FirstScene::onMouseButtonDown(uint32_t button)
-{
-	if (isControllerValid())
-	{
-		mController->onMouseButtonDown(button);
-	}
-}
-
-void FirstScene::onMouseButtonUp(uint32_t button)
-{
-	if (nullptr != mController)
-	{
-		mController->onMouseButtonUp(button);
-	}
-}
-
-void FirstScene::onMouseWheel(float delta)
-{
-	if (isControllerValid())
-	{
-		mController->onMouseWheel(delta);
-	}
-}
-
-void FirstScene::onMouseMove(int x, int y)
-{
-	if (isControllerValid())
-	{
-		mController->onMouseMove(x, y);
-	}
-}
-
 void FirstScene::onUpdate()
 {
 	// Call the base implementation
@@ -341,6 +297,9 @@ void FirstScene::onUpdate()
 
 	// TODO(co) We need to get informed when the mesh scene item received the mesh resource loading finished signal
 	trySetCustomMaterialResource();
+
+	// Update the input system
+	mInputManager->Update();
 }
 
 void FirstScene::onDraw()
@@ -445,7 +404,7 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 					else
 				#endif
 				{
-					mController = new FreeCameraController(*mCameraSceneItem);
+					mController = new FreeCameraController(*mInputManager, *mCameraSceneItem);
 
 					// Restore camera position and rotation from a previous session if virtual reality is disabled
 					if (!mHasCameraTransformBackup)

@@ -43,41 +43,6 @@ class IApplication
 
 
 //[-------------------------------------------------------]
-//[ Public definitions                                    ]
-//[-------------------------------------------------------]
-public:
-	/**
-	*  @brief
-	*    Keyboard key definitions, but only the ones we need inside the renderer examples application
-	*
-	*  @note
-	*    - In real world applications, use a decent input library (which would be overkill for the simple renderer examples application)
-	*/
-	enum KeyboardKeys
-	{
-		LEFT_SHIFT_KEY		= 16,
-		LEFT_STRG_KEY		= 17,
-		ESCAPE_KEY			= 27,
-		SPACE_KEY			= 32,
-		PAGE_UP_KEY			= 33,
-		PAGE_DOWN_KEY		= 34,
-		ARROW_LEFT_KEY		= 37,
-		ARROW_UP_KEY		= 38,
-		ARROW_RIGHT_KEY		= 39,
-		ARROW_DOWN_KEY		= 40,
-		A_KEY				= 65,
-		D_KEY				= 68,
-		Q_KEY				= 81,
-		S_KEY				= 83,
-		W_KEY				= 87,
-		NUMPAD_PLUS_KEY		= 107,
-		NUMPAD_MINUS_KEY	= 109,
-		OEM_PLUS_KEY		= 187,	///< +*~ key
-		OEM_MINUS_KEY		= 189
-	};
-
-
-//[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
 public:
@@ -179,80 +144,6 @@ public:
 	*    - The base implementation is empty
 	*/
 	virtual void onToggleFullscreenState();
-
-	/**
-	*  @brief
-	*    Called in case a key is now pressed
-	*
-	*  @param[in] key
-	*    Pressed key
-	*
-	*  @note
-	*    - The base implementation is empty
-	*/
-	virtual void onKeyDown(uint32_t key);
-
-	/**
-	*  @brief
-	*    Called in case a key was released
-	*
-	*  @param[in] key
-	*    Released key
-	*
-	*  @note
-	*    - The base implementation is empty
-	*/
-	virtual void onKeyUp(uint32_t key);
-
-	/**
-	*  @brief
-	*    Called in case a mouse button is now pressed
-	*
-	*  @param[in] button
-	*    Pressed mouse button
-	*
-	*  @note
-	*    - The base implementation is empty
-	*/
-	virtual void onMouseButtonDown(uint32_t button);
-
-	/**
-	*  @brief
-	*    Called in case a mouse button was released
-	*
-	*  @param[in] button
-	*    Released mouse button
-	*
-	*  @note
-	*    - The base implementation is empty
-	*/
-	virtual void onMouseButtonUp(uint32_t button);
-
-	/**
-	*  @brief
-	*    Called in case a mouse wheel was used
-	*
-	*  @param[in] delta
-	*    Mouse wheel delta
-	*
-	*  @note
-	*    - The base implementation is empty
-	*/
-	virtual void onMouseWheel(float delta);
-
-	/**
-	*  @brief
-	*    Called in case the mouse moved
-	*
-	*  @param[in] x
-	*    Mouse position along the x-axis
-	*  @param[in] y
-	*    Mouse position along the y-axis
-	*
-	*  @note
-	*    - The base implementation is empty
-	*/
-	virtual void onMouseMove(int x, int y);
 
 	/**
 	*  @brief

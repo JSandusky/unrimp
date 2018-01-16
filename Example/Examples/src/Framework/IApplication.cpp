@@ -88,36 +88,6 @@ void IApplication::onToggleFullscreenState()
 	// Nothing here
 }
 
-void IApplication::onKeyDown(uint32_t)
-{
-	// Nothing here
-}
-
-void IApplication::onKeyUp(uint32_t)
-{
-	// Nothing here
-}
-
-void IApplication::onMouseButtonDown(uint32_t)
-{
-	// Nothing here
-}
-
-void IApplication::onMouseButtonUp(uint32_t)
-{
-	// Nothing here
-}
-
-void IApplication::onMouseWheel(float)
-{
-	// Nothing here
-}
-
-void IApplication::onMouseMove(int, int)
-{
-	// Nothing here
-}
-
 void IApplication::onUpdate()
 {
 	// Nothing here

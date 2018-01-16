@@ -174,7 +174,7 @@
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\openvr\include\;..\..\External\PhysicsFS\include\;..\..\External\utf8cpp\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\openvr\include\;..\..\External\PhysicsFS\include\;..\..\External\utf8cpp\;..\..\External\PLInput\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;UNICODE;_CRT_SECURE_NO_WARNINGS;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;GLM_ENABLE_EXPERIMENTAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -203,7 +203,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\openvr\include\;..\..\External\PhysicsFS\include\;..\..\External\utf8cpp\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\openvr\include\;..\..\External\PhysicsFS\include\;..\..\External\utf8cpp\;..\..\External\PLInput\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;X64_ARCHITECTURE;UNICODE;_CRT_SECURE_NO_WARNINGS;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;GLM_ENABLE_EXPERIMENTAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -232,7 +232,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\openvr\include\;..\..\External\PhysicsFS\include\;..\..\External\utf8cpp\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\openvr\include\;..\..\External\PhysicsFS\include\;..\..\External\utf8cpp\;..\..\External\PLInput\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;UNICODE;_CRT_SECURE_NO_WARNINGS;SHARED_LIBRARIES;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;GLM_ENABLE_EXPERIMENTAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -261,7 +261,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
     <ClCompile>
       <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\openvr\include\;..\..\External\PhysicsFS\include\;..\..\External\utf8cpp\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\openvr\include\;..\..\External\PhysicsFS\include\;..\..\External\utf8cpp\;..\..\External\PLInput\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;X64_ARCHITECTURE;UNICODE;_CRT_SECURE_NO_WARNINGS;SHARED_LIBRARIES;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;GLM_ENABLE_EXPERIMENTAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -292,7 +292,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\openvr\include\;..\..\External\PhysicsFS\include\;..\..\External\utf8cpp\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\openvr\include\;..\..\External\PhysicsFS\include\;..\..\External\utf8cpp\;..\..\External\PLInput\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;UNICODE;_CRT_SECURE_NO_WARNINGS;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;GLM_ENABLE_EXPERIMENTAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -332,7 +332,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\openvr\include\;..\..\External\PhysicsFS\include\;..\..\External\utf8cpp\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\openvr\include\;..\..\External\PhysicsFS\include\;..\..\External\utf8cpp\;..\..\External\PLInput\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;X64_ARCHITECTURE;UNICODE;_CRT_SECURE_NO_WARNINGS;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;GLM_ENABLE_EXPERIMENTAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -371,7 +371,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\openvr\include\;..\..\External\PhysicsFS\include\;..\..\External\utf8cpp\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\openvr\include\;..\..\External\PhysicsFS\include\;..\..\External\utf8cpp\;..\..\External\PLInput\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;UNICODE;_CRT_SECURE_NO_WARNINGS;SHARED_LIBRARIES;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;GLM_ENABLE_EXPERIMENTAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -411,7 +411,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\openvr\include\;..\..\External\PhysicsFS\include\;..\..\External\utf8cpp\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\;..\..\Renderer\Renderer\include\;..\..\Renderer\RendererRuntime\include\;..\..\Renderer\RendererToolkit\include\;..\..\External\glm\include\;..\..\External\imgui\include\;..\..\External\openvr\include\;..\..\External\PhysicsFS\include\;..\..\External\utf8cpp\;..\..\External\PLInput\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;X64_ARCHITECTURE;UNICODE;_CRT_SECURE_NO_WARNINGS;SHARED_LIBRARIES;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;GLM_ENABLE_EXPERIMENTAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -451,6 +451,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
     <ClInclude Include="..\..\External\PhysicsFS\include\physicsfs\physfs_lzmasdk.h" />
     <ClInclude Include="..\..\External\PhysicsFS\include\physicsfs\physfs_miniz.h" />
     <ClInclude Include="..\..\External\PhysicsFS\include\physicsfs\physfs_platforms.h" />
+    <ClInclude Include="..\..\External\PLInput\include\PLInput\Input.h" />
     <ClInclude Include="src\Advanced\FirstGpgpu\FirstGpgpu.h" />
     <ClInclude Include="src\Advanced\FirstGpgpu\FirstGpgpu_GLSL_410.h" />
     <ClInclude Include="src\Advanced\FirstGpgpu\FirstGpgpu_GLSL_ES3.h" />
@@ -768,6 +769,16 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">Level2</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">Level2</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">Level2</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\External\PLInput\src\Input.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Static|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Static|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Static|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Dynamic|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Dynamic|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Static|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Advanced\FirstGpgpu\FirstGpgpu.cpp" />
     <ClCompile Include="src\Advanced\IcosahedronTessellation\IcosahedronTessellation.cpp" />

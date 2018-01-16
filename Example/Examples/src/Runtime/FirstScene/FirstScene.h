@@ -38,6 +38,10 @@
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 class IController;
+namespace PLInput
+{
+	class InputManager;
+}
 namespace RendererRuntime
 {
 	class ImGuiLog;
@@ -99,12 +103,6 @@ public:
 public:
 	virtual void onInitialization() override;
 	virtual void onDeinitialization() override;
-	virtual void onKeyDown(uint32_t key) override;
-	virtual void onKeyUp(uint32_t key) override;
-	virtual void onMouseButtonDown(uint32_t button) override;
-	virtual void onMouseButtonUp(uint32_t button) override;
-	virtual void onMouseWheel(float delta) override;
-	virtual void onMouseMove(int x, int y) override;
 	virtual void onUpdate() override;
 	virtual void onDraw() override;
 	virtual bool doesCompleteOwnDrawing() const override;
@@ -163,6 +161,7 @@ private:
 //[ Private data                                          ]
 //[-------------------------------------------------------]
 private:
+	PLInput::InputManager*						  mInputManager;
 	RendererRuntime::ImGuiLog*					  mImGuiLog;
 	RendererRuntime::CompositorWorkspaceInstance* mCompositorWorkspaceInstance;
 	RendererRuntime::SceneResourceId			  mSceneResourceId;

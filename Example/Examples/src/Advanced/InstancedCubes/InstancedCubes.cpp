@@ -35,6 +35,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include <PLInput/Input.h>
+
 #include <math.h>
 #include <stdio.h>
 #include <limits.h>
@@ -44,6 +46,7 @@
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
 InstancedCubes::InstancedCubes() :
+	mInputManager(new PLInput::InputManager()),
 	mCubeRenderer(nullptr),
 	mNumberOfCubeInstances(1000),
 	mGlobalTimer(0.0f),
@@ -58,8 +61,9 @@ InstancedCubes::InstancedCubes() :
 
 InstancedCubes::~InstancedCubes()
 {
+	delete mInputManager;
+
 	// The resources are released within "onDeinitialization()"
-	// Nothing here
 }
 
 
@@ -111,70 +115,6 @@ void InstancedCubes::onDeinitialization()
 	ExampleBase::onDeinitialization();
 }
 
-void InstancedCubes::onKeyDown(uint32_t key)
-{
-	// Evaluate the key
-	switch (key)
-	{
-		// Add a fixed number of cubes
-		case IApplication::NUMPAD_PLUS_KEY:
-		case IApplication::OEM_PLUS_KEY:
-			// Upper limit, just in case someone tries something nasty
-			if (mNumberOfCubeInstances < UINT_MAX - NUMBER_OF_CHANGED_CUBES)
-			{
-				// Update the number of cubes
-				mNumberOfCubeInstances += NUMBER_OF_CHANGED_CUBES;
-
-				// Tell the cube renderer about the number of cubes
-				if (nullptr != mCubeRenderer)
-				{
-					mCubeRenderer->setNumberOfCubes(mNumberOfCubeInstances);
-				}
-			}
-			break;
-
-		// Subtract a fixed number of cubes
-		case IApplication::NUMPAD_MINUS_KEY:
-		case IApplication::OEM_MINUS_KEY:
-			// Lower limit
-			if (mNumberOfCubeInstances > 1)
-			{
-				// Update the number of cubes
-				if (mNumberOfCubeInstances > NUMBER_OF_CHANGED_CUBES)
-				{
-					mNumberOfCubeInstances -= NUMBER_OF_CHANGED_CUBES;
-				}
-				else
-				{
-					mNumberOfCubeInstances = 1;
-				}
-
-				// Tell the cube renderer about the number of cubes
-				if (nullptr != mCubeRenderer)
-				{
-					mCubeRenderer->setNumberOfCubes(mNumberOfCubeInstances);
-				}
-			}
-			break;
-
-		// Scale cubes up (change the size of all cubes at the same time)
-		case IApplication::ARROW_UP_KEY:
-			mGlobalScale += 0.1f;
-			break;
-
-		// Scale cubes down (change the size of all cubes at the same time)
-		case IApplication::ARROW_DOWN_KEY:
-			mGlobalScale -= 0.1f;	// No need to check for negative values, results in entertaining inversed backface culling
-			break;
-
-		// Show/hide statistics
-		case IApplication::SPACE_KEY:
-			// Toggle display of statistics
-			mDisplayStatistics = !mDisplayStatistics;
-			break;
-	}
-}
-
 void InstancedCubes::onUpdate()
 {
 	// Stop the stopwatch
@@ -196,6 +136,73 @@ void InstancedCubes::onUpdate()
 
 	// Start the stopwatch
 	mStopwatch.start();
+
+	{ // Input
+		const PLInput::Keyboard* keyboard = mInputManager->GetKeyboard();
+		if (keyboard->HasChanged())
+		{
+			// Add a fixed number of cubes
+			if (keyboard->NumpadAdd.isHit() || keyboard->Add.isHit())
+			{
+				// Upper limit, just in case someone tries something nasty
+				if (mNumberOfCubeInstances < UINT_MAX - NUMBER_OF_CHANGED_CUBES)
+				{
+					// Update the number of cubes
+					mNumberOfCubeInstances += NUMBER_OF_CHANGED_CUBES;
+
+					// Tell the cube renderer about the number of cubes
+					if (nullptr != mCubeRenderer)
+					{
+						mCubeRenderer->setNumberOfCubes(mNumberOfCubeInstances);
+					}
+				}
+			}
+
+			// Subtract a fixed number of cubes
+			if (keyboard->NumpadSubtract.isHit() || keyboard->Subtract.isHit())
+			{
+				// Lower limit
+				if (mNumberOfCubeInstances > 1)
+				{
+					// Update the number of cubes
+					if (mNumberOfCubeInstances > NUMBER_OF_CHANGED_CUBES)
+					{
+						mNumberOfCubeInstances -= NUMBER_OF_CHANGED_CUBES;
+					}
+					else
+					{
+						mNumberOfCubeInstances = 1;
+					}
+
+					// Tell the cube renderer about the number of cubes
+					if (nullptr != mCubeRenderer)
+					{
+						mCubeRenderer->setNumberOfCubes(mNumberOfCubeInstances);
+					}
+				}
+			}
+
+			// Scale cubes up (change the size of all cubes at the same time)
+			if (keyboard->Up.isHit())
+			{
+				mGlobalScale += 0.1f;
+			}
+
+			// Scale cubes down (change the size of all cubes at the same time)
+			if (keyboard->Down.isHit())
+			{
+				mGlobalScale -= 0.1f;	// No need to check for negative values, results in entertaining inversed backface culling
+			}
+
+			// Show/hide statistics
+			if (keyboard->Space.isHit())
+			{
+				// Toggle display of statistics
+				mDisplayStatistics = !mDisplayStatistics;
+			}
+		}
+		mInputManager->Update();
+	}
 }
 
 void InstancedCubes::onDraw()

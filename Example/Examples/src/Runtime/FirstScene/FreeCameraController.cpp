@@ -30,6 +30,8 @@
 #include <RendererRuntime/Resource/Scene/SceneNode.h>
 #include <RendererRuntime/Resource/Scene/Item/Camera/CameraSceneItem.h>
 
+#include <PLInput/Input.h>
+
 
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]
@@ -46,7 +48,7 @@ namespace
 		static const float MOVEMENT_SPEED		= 3.0f;
 		static const float FAST_MOVEMENT_FACTOR	= 10.0f;
 		static const float SLOW_MOVEMENT_FACTOR	= 0.1f;
-		static const float MOUSE_WHEEL_FACTOR	= 2.0f;
+		static const float MOUSE_WHEEL_FACTOR	= 0.02f;
 		static const float ROTATION_SPEED		= 0.2f;
 		static const float SLOW_ROTATION_FACTOR	= 0.2f;
 		static const float ZOOM_SPEED			= 4.0f;
@@ -63,8 +65,9 @@ namespace
 //[-------------------------------------------------------]
 //[ Public methods                                        ]
 //[-------------------------------------------------------]
-FreeCameraController::FreeCameraController(RendererRuntime::CameraSceneItem& cameraSceneItem) :
+FreeCameraController::FreeCameraController(PLInput::InputManager& inputManager, RendererRuntime::CameraSceneItem& cameraSceneItem) :
 	IController(cameraSceneItem),
+	mVirtualStandardController(new PLInput::VirtualStandardController(inputManager)),
 	mOriginalFovY(cameraSceneItem.getFovY())
 {
 	// Nothing here
@@ -72,7 +75,7 @@ FreeCameraController::FreeCameraController(RendererRuntime::CameraSceneItem& cam
 
 FreeCameraController::~FreeCameraController()
 {
-	// Nothing here
+	delete mVirtualStandardController;
 }
 
 
@@ -87,8 +90,6 @@ void FreeCameraController::onUpdate(float pastSecondsSinceLastFrame)
 	assert(pastSecondsSinceLastFrame > 0.0f);
 
 	RendererRuntime::SceneNode* sceneNode = mCameraSceneItem.getParentSceneNode();
-	// TODO(co) Currently disabled early escape tests for velocity buffer (used e.g. for motion blur) kickoff. Need a general strategy how to update scene graph related data (also considering multi-threading, maybe communicate exclusively over a command buffer here as well?).
-	// if (nullptr != sceneNode && (!mPressedKeys.empty() || !mPressedMouseButtons.empty()))
 	if (nullptr != sceneNode)
 	{
 		// Get the current local transform
@@ -96,27 +97,25 @@ void FreeCameraController::onUpdate(float pastSecondsSinceLastFrame)
 		glm::vec3 newPosition = transform.position;
 		glm::quat newRotation = transform.rotation;
 
-		// Keyboard
-		if (!mPressedKeys.empty() || 0.0f != mMouseWheelDelta)
-		{
+		{ // Movement
 			// Get the movement speed
 			float movementSpeed = pastSecondsSinceLastFrame * ::detail::MOVEMENT_SPEED;
 			{
-				// Ridiculous speed up = "left shift"-key and "left strg"-key both pressed
-				if (isKeyPressed(IApplication::LEFT_SHIFT_KEY) && isKeyPressed(IApplication::LEFT_STRG_KEY))
+				// Ridiculous speed up
+				if (mVirtualStandardController->Run.isPressed() && mVirtualStandardController->Sneak.isPressed())
 				{
 					movementSpeed *= ::detail::FAST_MOVEMENT_FACTOR * ::detail::FAST_MOVEMENT_FACTOR;
 				}
 				else
 				{
 					// Speed up
-					if (isKeyPressed(IApplication::LEFT_SHIFT_KEY))
+					if (mVirtualStandardController->Run.isPressed())
 					{
 						movementSpeed *= ::detail::FAST_MOVEMENT_FACTOR;
 					}
 
 					// Slow down
-					if (isKeyPressed(IApplication::LEFT_STRG_KEY))
+					if (mVirtualStandardController->Sneak.isPressed())
 					{
 						movementSpeed *= ::detail::SLOW_MOVEMENT_FACTOR;
 					}
@@ -126,91 +125,107 @@ void FreeCameraController::onUpdate(float pastSecondsSinceLastFrame)
 			// Get the movement vector
 			glm::vec3 movementVector = RendererRuntime::Math::VEC3_ZERO;
 			{
-				// Move forward
-				if (isKeyPressed(IApplication::W_KEY) || isKeyPressed(IApplication::ARROW_UP_KEY))
-				{
-					movementVector += transform.rotation * RendererRuntime::Math::VEC3_FORWARD;
+				{ // Move forward/backward
+					const glm::vec3 forwardVector = transform.rotation * RendererRuntime::Math::VEC3_FORWARD;
+					if (mVirtualStandardController->Forward.isPressed())
+					{
+						movementVector += forwardVector * movementSpeed;
+					}
+					if (mVirtualStandardController->Backward.isPressed())
+					{
+						movementVector -= forwardVector * movementSpeed;
+					}
+					if (0.0f != mVirtualStandardController->MouseWheel.getValue())
+					{
+						movementVector += forwardVector * mVirtualStandardController->MouseWheel.getValue() * ::detail::MOUSE_WHEEL_FACTOR * movementSpeed;
+					}
+					movementVector += forwardVector * (mVirtualStandardController->TransZ.isRelativeValue() ? mVirtualStandardController->TransZ.getValue() : mVirtualStandardController->TransZ.getValue() * movementSpeed);
 				}
 
-				// Strafe left
-				if (isKeyPressed(IApplication::A_KEY) || isKeyPressed(IApplication::ARROW_LEFT_KEY))
-				{
-					movementVector -= transform.rotation * RendererRuntime::Math::VEC3_RIGHT;
+				{ // Strafe left/right
+					const glm::vec3 rightVector = transform.rotation * RendererRuntime::Math::VEC3_RIGHT;
+					if (mVirtualStandardController->StrafeLeft.isPressed())
+					{
+						movementVector -= rightVector * movementSpeed;
+					}
+					if (mVirtualStandardController->StrafeRight.isPressed())
+					{
+						movementVector += rightVector * movementSpeed;
+					}
+					movementVector -= rightVector * (mVirtualStandardController->TransX.isRelativeValue() ? mVirtualStandardController->TransX.getValue() : mVirtualStandardController->TransX.getValue() * movementSpeed);
 				}
 
-				// Move backward
-				if (isKeyPressed(IApplication::S_KEY) || isKeyPressed(IApplication::ARROW_DOWN_KEY))
-				{
-					movementVector -= transform.rotation * RendererRuntime::Math::VEC3_FORWARD;
-				}
-
-				// Strafe right
-				if (isKeyPressed(IApplication::D_KEY) || isKeyPressed(IApplication::ARROW_RIGHT_KEY))
-				{
-					movementVector += transform.rotation * RendererRuntime::Math::VEC3_RIGHT;
-				}
-
-				// Strafe up
-				if (isKeyPressed(IApplication::PAGE_UP_KEY))
-				{
-					movementVector += transform.rotation * RendererRuntime::Math::VEC3_UP;
-				}
-
-				// Strafe down
-				if (isKeyPressed(IApplication::PAGE_DOWN_KEY))
-				{
-					movementVector -= transform.rotation * RendererRuntime::Math::VEC3_UP;
-				}
-
-				// Mouse wheel: Move forward/backward
-				if (0.0f != mMouseWheelDelta)
-				{
-					movementVector += transform.rotation * RendererRuntime::Math::VEC3_FORWARD * mMouseWheelDelta * ::detail::MOUSE_WHEEL_FACTOR;
-					mMouseWheelDelta = 0.0f;
+				{ // Strafe up/down
+					const glm::vec3 upVector = transform.rotation * RendererRuntime::Math::VEC3_UP;
+					if (mVirtualStandardController->Up.isPressed())
+					{
+						movementVector += upVector * movementSpeed;
+					}
+					if (mVirtualStandardController->Down.isPressed())
+					{
+						movementVector -= upVector * movementSpeed;
+					}
+					movementVector += upVector * (mVirtualStandardController->TransY.isRelativeValue() ? mVirtualStandardController->TransY.getValue() : mVirtualStandardController->TransY.getValue() * movementSpeed);
 				}
 			}
 
 			// Update the camera scene node position
-			newPosition += movementVector * movementSpeed;
+			newPosition += movementVector;
 		}
 
-		// Mouse: Camera look around = right mouse button pressed down + mouse move
-		if (isMouseButtonPressed(1))
+		// Look around
+		const bool absoluteRotation = (!mVirtualStandardController->RotX.isRelativeValue() && !mVirtualStandardController->RotY.isRelativeValue());
+		if (mVirtualStandardController->Rotate.isPressed() || absoluteRotation)
 		{
 			mMouseControlInProgress = true;
-			if (0 != mMouseMoveX || 0 != mMouseMoveY)
+			const float rotateX = mVirtualStandardController->RotX.getValue();
+			const float rotateY = mVirtualStandardController->RotY.getValue();
+			if (0.0f != rotateX || 0.0f != rotateY)
 			{
 				// Get the rotation speed
 				// -> Slow down
 				float rotationSpeed = ::detail::ROTATION_SPEED;
-				if (isKeyPressed(IApplication::Q_KEY))
+				if (mVirtualStandardController->RotateSlow.isPressed())
 				{
 					rotationSpeed *= ::detail::SLOW_ROTATION_FACTOR;
+				}
+
+				// Do we need to take the current time difference into account?
+				float rotationSpeedX = rotationSpeed;
+				float rotationSpeedY = rotationSpeed;
+				if (!mVirtualStandardController->RotX.isRelativeValue())
+				{
+					rotationSpeedX *= pastSecondsSinceLastFrame;
+				}
+				if (!mVirtualStandardController->RotY.isRelativeValue())
+				{
+					rotationSpeedY *= pastSecondsSinceLastFrame;
 				}
 
 				// Calculate yaw and pitch from transformation
 				// -> GLM 0.9.9.0 "glm::yaw()" and "glm::pitch" behave odd, so "RendererRuntime::EulerAngles::matrixToEuler()" is used instead
 				// -> See discussion at https://github.com/g-truc/glm/issues/569
-				float yaw = 0.0f, pitch = 0.0f;
+				float yaw = 0.0f, pitch = 0.0f, roll = 0.0f;
 				{
 					const glm::vec3 eulerAngles = RendererRuntime::EulerAngles::matrixToEuler(glm::mat3_cast(transform.rotation));
 					yaw = glm::degrees(eulerAngles.x);
 					pitch = glm::degrees(eulerAngles.y);
+					roll = glm::degrees(eulerAngles.z);
 				}
 
 				// Apply rotation change
-				if (0 != mMouseMoveX)
+				if (0.0f != rotateX)
 				{
 					// X rotation axis: Update yaw (also called 'heading', change is turning to the left or right) - in degrees
-					yaw += mMouseMoveX * rotationSpeed;
+					yaw += rotateX * rotationSpeedX;
 
 					// Limit the yaw (too huge values may cause problems, so, bring them into a well known interval)
 					yaw = RendererRuntime::Math::wrapToInterval(yaw, 0.0f, 360.0f);
 				}
-				if (0 != mMouseMoveY)
+				if (0.0f != rotateY)
 				{
 					// Y rotation axis: Update pitch (also called 'bank', change is moving the nose down and the tail up or vice-versa) - in degrees
-					pitch += mMouseMoveY * rotationSpeed;
+					pitch += rotateY * rotationSpeedY;
 
 					// Limit the pitch (no full 90° to avoid dead angles)
 					pitch = glm::clamp(pitch, -89.9f, +89.9f);
@@ -221,8 +236,8 @@ void FreeCameraController::onUpdate(float pastSecondsSinceLastFrame)
 			}
 		}
 
-		// Mouse: Zoom = middle mouse button pressed
-		if (isMouseButtonPressed(2))
+		// Zoom
+		if (mVirtualStandardController->Zoom.isPressed())
 		{
 			mMouseControlInProgress = true;
 
@@ -256,7 +271,4 @@ void FreeCameraController::onUpdate(float pastSecondsSinceLastFrame)
 		// Tell the camera scene node about the new transform
 		sceneNode->setPositionRotation(newPosition, newRotation);
 	}
-
-	// Call the base implementation
-	IController::onUpdate(pastSecondsSinceLastFrame);
 }

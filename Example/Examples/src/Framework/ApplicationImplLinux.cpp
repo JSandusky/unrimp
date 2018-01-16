@@ -84,84 +84,17 @@ public:
 
 			case KeyPress:
 			{
+				// Application shutdown = "escape"-key = for all examples
 				const uint32_t key = XLookupKeysym(&event.xkey, 0);
 				auto keyIterator = mX11KeySymToKeyMap.find(key);
-				if (keyIterator != mX11KeySymToKeyMap.end())
+				if (keyIterator != mX11KeySymToKeyMap.end() && 27 == keyIterator->second)
 				{
-					mApplication.onKeyDown(keyIterator->second);
+					mApplication.exit();
 				}
-				break;
-			}
-
-			case KeyRelease:
-			{
-				bool is_retriggered = false;
-
-				if (XEventsQueued(event.xany.display, QueuedAfterReading))
-				{
-					XEvent nev;
-					XPeekEvent(event.xany.display, &nev);
-
-					// Filter out key repeats. This is simulated by a key press directly after an key release
-					// Ignore the key release in this case
-					if (nev.type == KeyPress && nev.xkey.time == event.xkey.time &&
-						nev.xkey.keycode == event.xkey.keycode)
-					{
-						is_retriggered = true;
-					}
-				}
-
- 				if (!is_retriggered)
-				{
-					const uint32_t key = XLookupKeysym(&event.xkey, 0);
-					auto keyIterator = mX11KeySymToKeyMap.find(key);
-					if (keyIterator != mX11KeySymToKeyMap.end())
-					{
-						mApplication.onKeyUp(keyIterator->second);
-					}
-				}
-				break;
-			}
-
-			case ButtonPress:
-			{
-				if (event.xbutton.button == 1)
-				{
-					mApplication.onMouseButtonDown(0);
-				}
-				else if (event.xbutton.button == 3)
-				{
-					mApplication.onMouseButtonDown(1);
-				}
-				else if (event.xbutton.button == 4 || event.xbutton.button == 5) // Wheel buttons
-				{
-					// TODO(sw)MouseWheel?
-					// TODO(co) mApplication.onMouseWheel(<float>);
-					//imGuiIo.MouseWheel += (event.xbutton.button == 4) ? 1.0f : -1.0f;
-				}
-				break;
-			}
-
-			case ButtonRelease:
-			{
-				if (event.xbutton.button == 1)
-				{
-					mApplication.onMouseButtonUp(0);
-				}
-				else if (event.xbutton.button == 3)
-				{
-					mApplication.onMouseButtonUp(1);
-				}
-				break;
-			}
-
-			case MotionNotify:
-			{
-				mApplication.onMouseMove(event.xmotion.x, event.xmotion.y);
 				break;
 			}
 		}
-		
+
 #ifndef RENDERER_NO_RUNTIME
 
 		// TODO(co) Evil cast ahead. Maybe simplify the example application framework? After all, it's just an example framework for Unrimp and nothing too generic.

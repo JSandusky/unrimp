@@ -156,63 +156,6 @@ void IApplicationRenderer::onToggleFullscreenState()
 	}
 }
 
-void IApplicationRenderer::onKeyDown(uint32_t key)
-{
-	if (nullptr != mExampleBase)
-	{
-		// Application shutdown = "escape"-key
-		if (ESCAPE_KEY == key)
-		{
-			exit();
-		}
-		else
-		{
-			// Call example base
-			mExampleBase->onKeyDown(key);
-		}
-	}
-}
-
-void IApplicationRenderer::onKeyUp(uint32_t key)
-{
-	if (nullptr != mExampleBase)
-	{
-		mExampleBase->onKeyUp(key);
-	}
-}
-
-void IApplicationRenderer::onMouseButtonDown(uint32_t button)
-{
-	if (nullptr != mExampleBase)
-	{
-		mExampleBase->onMouseButtonDown(button);
-	}
-}
-
-void IApplicationRenderer::onMouseButtonUp(uint32_t button)
-{
-	if (nullptr != mExampleBase)
-	{
-		mExampleBase->onMouseButtonUp(button);
-	}
-}
-
-void IApplicationRenderer::onMouseWheel(float delta)
-{
-	if (nullptr != mExampleBase)
-	{
-		mExampleBase->onMouseWheel(delta);
-	}
-}
-
-void IApplicationRenderer::onMouseMove(int x, int y)
-{
-	if (nullptr != mExampleBase)
-	{
-		mExampleBase->onMouseMove(x, y);
-	}
-}
-
 void IApplicationRenderer::onDrawRequest()
 {
 	if (nullptr != mExampleBase && mExampleBase->doesCompleteOwnDrawing())

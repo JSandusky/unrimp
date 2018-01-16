@@ -221,12 +221,6 @@ public:
 public:
 	inline virtual void onInitialization();
 	inline virtual void onDeinitialization();
-	inline virtual void onKeyDown(uint32_t key);
-	inline virtual void onKeyUp(uint32_t key);
-	inline virtual void onMouseButtonDown(uint32_t button);
-	inline virtual void onMouseButtonUp(uint32_t button);
-	inline virtual void onMouseWheel(float delta);
-	inline virtual void onMouseMove(int x, int y);
 	inline virtual void onUpdate();
 	inline virtual void onDraw();
 
