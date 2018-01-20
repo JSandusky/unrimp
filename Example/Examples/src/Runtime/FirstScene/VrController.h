@@ -82,7 +82,7 @@ public:
 //[ Public virtual IController methods                    ]
 //[-------------------------------------------------------]
 public:
-	virtual void onUpdate(float pastSecondsSinceLastFrame) override;
+	virtual void onUpdate(float pastSecondsSinceLastFrame, bool inputEnabled) override;
 
 
 //[-------------------------------------------------------]

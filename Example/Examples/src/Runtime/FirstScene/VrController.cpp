@@ -336,7 +336,7 @@ const RendererRuntime::LightSceneItem& VrController::getTeleportIndicationLightS
 //[-------------------------------------------------------]
 //[ Public virtual IController methods                    ]
 //[-------------------------------------------------------]
-void VrController::onUpdate(float)
+void VrController::onUpdate(float, bool)
 {
 	// The first VR controller is used for teleporting
 	// -> A green light indicates the position one will end up

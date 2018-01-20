@@ -263,7 +263,17 @@ void FirstScene::onUpdate()
 		// Update controller
 		if (nullptr != mController)
 		{
-			mController->onUpdate(rendererRuntime->getTimeManager().getPastSecondsSinceLastFrame());
+			// Simple GUI <-> ingame input distribution
+			// -> Do only enable input as long as this example application has the operation system window focus
+			// -> While the mouse is hovering over an GUI element, disable the ingame controller
+			// -> Avoid that while looking around with the mouse the mouse is becoming considered hovering over an GUI element
+			// -> Remember: Unrimp is about rendering related topics, it's not an all-in-one-framework including an advanced input framework, so a simple non-generic solution is sufficient in here
+			#ifdef WIN32
+				const bool hasWindowFocus = (::GetFocus() == reinterpret_cast<HWND>(rendererRuntime->getRenderer().getContext().getNativeWindowHandle()));
+			#else
+				bool hasWindowFocus = true;
+			#endif
+			mController->onUpdate(rendererRuntime->getTimeManager().getPastSecondsSinceLastFrame(), hasWindowFocus && (mController->isMouseControlInProgress() || !ImGui::IsAnyWindowHovered()));
 		}
 
 		// Scene hot-reloading memory
@@ -741,13 +751,4 @@ void FirstScene::trySetCustomMaterialResource()
 			}
 		}
 	}
-}
-
-bool FirstScene::isControllerValid() const
-{
-	// Simple GUI <-> ingame input distribution
-	// -> While the mouse is hovering over an GUI element, disable the ingame controller
-	// -> Avoid that while looking around with the mouse the mouse is becoming considered hovering over an GUI element
-	// -> Remember: Unrimp is about rendering related topics, it's not an all-in-one-framework inluding an advanced input framework, so a simple non-generic solution is sufficient in here
-	return (nullptr != mController && (mController->isMouseControlInProgress() || !ImGui::IsAnyWindowHovered()));
 }

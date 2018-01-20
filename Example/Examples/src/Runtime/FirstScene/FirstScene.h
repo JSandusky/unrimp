@@ -124,7 +124,6 @@ private:
 	void createCompositorWorkspace();
 	void createDebugGui(Renderer::IRenderTarget& mainRenderTarget);
 	void trySetCustomMaterialResource();
-	bool isControllerValid() const;
 
 
 //[-------------------------------------------------------]

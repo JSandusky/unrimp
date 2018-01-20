@@ -96,8 +96,10 @@ public:
 	*
 	*  @param[in] pastSecondsSinceLastFrame
 	*    Past seconds since last frame
+	*  @param[in] inputEnabled
+	*    "true" if input is enabled, else "false"
 	*/
-	virtual void onUpdate(float pastSecondsSinceLastFrame) = 0;
+	virtual void onUpdate(float pastSecondsSinceLastFrame, bool inputEnabled) = 0;
 
 
 //[-------------------------------------------------------]
