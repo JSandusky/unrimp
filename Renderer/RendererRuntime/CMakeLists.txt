@@ -81,7 +81,6 @@ set(SOURCE_CODES
 	src/Core/Renderer/FramebufferSignature.cpp
 	src/Core/Renderer/RenderTargetTextureManager.cpp
 	src/Core/Renderer/RenderTargetTextureSignature.cpp
-	src/Core/String.cpp
 	src/DebugGui/DebugGuiManager.cpp
 	src/DebugGui/DebugGuiHelper.cpp
 	src/RenderQueue/Renderable.cpp

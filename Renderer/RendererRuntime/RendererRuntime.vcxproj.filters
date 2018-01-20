@@ -671,9 +671,6 @@
     <ClInclude Include="include\RendererRuntime\Backend\RendererBackendManager.h">
       <Filter>Source Files\Backend</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Core\String.h">
-      <Filter>Source Files\Core</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererRuntime\Core\Manager.h">
       <Filter>Source Files\Core</Filter>
     </ClInclude>
@@ -1290,9 +1287,6 @@
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
       <Filter>Source Files\Backend</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\String.cpp">
-      <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Asset\AssetManager.cpp">
       <Filter>Source Files\Asset</Filter>
