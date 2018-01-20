@@ -284,13 +284,13 @@ namespace RendererRuntime
 			const double sy = std::sqrt(mRot[j][i] * mRot[j][i] + mRot[k][i] * mRot[k][i]);
 			if (sy > 16*floatEpsilon)
 			{
-				eulerAngles.x = static_cast<float>(std::atan2(mRot[j][i], mRot[k][i]));
+				eulerAngles.x = std::atan2(mRot[j][i], mRot[k][i]);
 				eulerAngles.y = static_cast<float>(std::atan2(sy, static_cast<double>(mRot[i][i])));
-				eulerAngles.z = static_cast<float>(std::atan2(mRot[i][j], -mRot[i][k]));
+				eulerAngles.z = std::atan2(mRot[i][j], -mRot[i][k]);
 			}
 			else
 			{
-				eulerAngles.x = static_cast<float>(std::atan2(-mRot[k][j], mRot[j][j]));
+				eulerAngles.x = std::atan2(-mRot[k][j], mRot[j][j]);
 				eulerAngles.y = static_cast<float>(std::atan2(sy, static_cast<double>(mRot[i][i])));
 				eulerAngles.z = 0.0f;
 			}
@@ -300,13 +300,13 @@ namespace RendererRuntime
 			const double cy = std::sqrt(mRot[i][i] * mRot[i][i] + mRot[i][j] * mRot[i][j]);
 			if (cy > 16 * floatEpsilon)
 			{
-				eulerAngles.x = static_cast<float>(std::atan2(mRot[j][k], mRot[k][k]));
+				eulerAngles.x = std::atan2(mRot[j][k], mRot[k][k]);
 				eulerAngles.y = static_cast<float>(std::atan2(static_cast<double>(-mRot[i][k]), cy));
-				eulerAngles.z = static_cast<float>(std::atan2(mRot[i][j], mRot[i][i]));
+				eulerAngles.z = std::atan2(mRot[i][j], mRot[i][i]);
 			}
 			else
 			{
-				eulerAngles.x = static_cast<float>(std::atan2(-mRot[k][j], mRot[j][j]));
+				eulerAngles.x = std::atan2(-mRot[k][j], mRot[j][j]);
 				eulerAngles.y = static_cast<float>(std::atan2(static_cast<double>(-mRot[i][k]), cy));
 				eulerAngles.z = 0.0f;
 			}
@@ -340,13 +340,13 @@ namespace RendererRuntime
 			const double sy = std::sqrt(mRot[j][i] * mRot[j][i] + mRot[k][i] * mRot[k][i]);
 			if (sy > 16 * floatEpsilon)
 			{
-				eulerAngles.x = static_cast<float>(std::atan2(mRot[j][i], mRot[k][i]));
+				eulerAngles.x = std::atan2(mRot[j][i], mRot[k][i]);
 				eulerAngles.y = static_cast<float>(std::atan2(sy, static_cast<double>(mRot[i][i])));
-				eulerAngles.z = static_cast<float>(std::atan2(mRot[i][j], -mRot[i][k]));
+				eulerAngles.z = std::atan2(mRot[i][j], -mRot[i][k]);
 			}
 			else
 			{
-				eulerAngles.x = static_cast<float>(std::atan2(-mRot[k][j], mRot[j][j]));
+				eulerAngles.x = std::atan2(-mRot[k][j], mRot[j][j]);
 				eulerAngles.y = static_cast<float>(std::atan2(sy, static_cast<double>(mRot[i][i])));
 				eulerAngles.z = 0.0f;
 			}
@@ -356,13 +356,13 @@ namespace RendererRuntime
 			const double cy = std::sqrt(mRot[i][i] * mRot[i][i] + mRot[i][j] * mRot[i][j]);
 			if (cy > 16*floatEpsilon)
 			{
-				eulerAngles.x = static_cast<float>(std::atan2(mRot[j][k], mRot[k][k]));
+				eulerAngles.x = std::atan2(mRot[j][k], mRot[k][k]);
 				eulerAngles.y = static_cast<float>(std::atan2(static_cast<double>(-mRot[i][k]), cy));
-				eulerAngles.z = static_cast<float>(std::atan2(mRot[i][j], mRot[i][i]));
+				eulerAngles.z = std::atan2(mRot[i][j], mRot[i][i]);
 			}
 			else
 			{
-				eulerAngles.x = static_cast<float>(std::atan2(-mRot[k][j], mRot[j][j]));
+				eulerAngles.x = std::atan2(-mRot[k][j], mRot[j][j]);
 				eulerAngles.y = static_cast<float>(std::atan2(static_cast<double>(-mRot[i][k]), cy));
 				eulerAngles.z = 0.0f;
 			}
@@ -396,13 +396,13 @@ namespace RendererRuntime
 			const double sy = std::sqrt(mRot[j][i] * mRot[j][i] + mRot[k][i] * mRot[k][i]);
 			if (sy > 16 * floatEpsilon)
 			{
-				eulerAngles.x = static_cast<float>(std::atan2(mRot[j][i], mRot[k][i]));
+				eulerAngles.x = std::atan2(mRot[j][i], mRot[k][i]);
 				eulerAngles.y = static_cast<float>(std::atan2(sy, static_cast<double>(mRot[i][i])));
-				eulerAngles.z = static_cast<float>(std::atan2(mRot[i][j], -mRot[i][k]));
+				eulerAngles.z = std::atan2(mRot[i][j], -mRot[i][k]);
 			}
 			else
 			{
-				eulerAngles.x = static_cast<float>(std::atan2(-mRot[k][j], mRot[j][j]));
+				eulerAngles.x = std::atan2(-mRot[k][j], mRot[j][j]);
 				eulerAngles.y = static_cast<float>(std::atan2(sy, static_cast<double>(mRot[i][i])));
 				eulerAngles.z = 0.0f;
 			}
@@ -412,13 +412,13 @@ namespace RendererRuntime
 			const double cy = std::sqrt(mRot[i][i]*mRot[i][i] + mRot[i][j]*mRot[i][j]);
 			if (cy > 16 * floatEpsilon)
 			{
-				eulerAngles.x = static_cast<float>(std::atan2(mRot[j][k], mRot[k][k]));
+				eulerAngles.x = std::atan2(mRot[j][k], mRot[k][k]);
 				eulerAngles.y = static_cast<float>(std::atan2(static_cast<double>(-mRot[i][k]), cy));
-				eulerAngles.z = static_cast<float>(std::atan2(mRot[i][j], mRot[i][i]));
+				eulerAngles.z = std::atan2(mRot[i][j], mRot[i][i]);
 			}
 			else
 			{
-				eulerAngles.x = static_cast<float>(std::atan2(-mRot[k][j], mRot[j][j]));
+				eulerAngles.x = std::atan2(-mRot[k][j], mRot[j][j]);
 				eulerAngles.y = static_cast<float>(std::atan2(static_cast<double>(-mRot[i][k]), cy));
 				eulerAngles.z = 0.0f;
 			}
