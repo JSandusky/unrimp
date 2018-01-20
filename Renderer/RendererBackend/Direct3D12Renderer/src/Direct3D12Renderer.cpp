@@ -1118,6 +1118,7 @@ namespace Direct3D12Renderer
 		{
 			if (nullptr != mD3D12GraphicsCommandList)
 			{
+				RENDERER_ASSERT(mContext, nullptr != name, "Direct3D 12 debug marker names must not be a null pointer")
 				const UINT size = static_cast<UINT>((strlen(name) + 1) * sizeof(name[0]));
 				mD3D12GraphicsCommandList->SetMarker(PIX_EVENT_ANSI_VERSION, name, size);
 			}
@@ -1127,6 +1128,7 @@ namespace Direct3D12Renderer
 		{
 			if (nullptr != mD3D12GraphicsCommandList)
 			{
+				RENDERER_ASSERT(mContext, nullptr != name, "Direct3D 12 debug event names must not be a null pointer")
 				const UINT size = static_cast<UINT>((strlen(name) + 1) * sizeof(name[0]));
 				mD3D12GraphicsCommandList->BeginEvent(PIX_EVENT_ANSI_VERSION, name, size);
 			}

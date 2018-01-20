@@ -331,6 +331,26 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifdef RENDERER_DEBUG
+		void ProgramSeparate::setDebugName(const char* name)
+		{
+			// Valid OpenGL program pipeline and "GL_KHR_debug"-extension available?
+			if (0 != mOpenGLProgramPipeline && static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_KHR_debug())
+			{
+				glObjectLabel(GL_PROGRAM_PIPELINE, mOpenGLProgramPipeline, -1, name);
+			}
+		}
+	#else
+		void ProgramSeparate::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
 	handle ProgramSeparate::getUniformHandle(const char* uniformName)

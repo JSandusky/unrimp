@@ -195,7 +195,7 @@ namespace
 				// Output the debug string
 				if (context.getLog().print(Renderer::ILog::Type::CRITICAL, sourceCode, __FILE__, static_cast<uint32_t>(__LINE__), informationLog))
 				{
-					DEBUG_BREAK;
+				//	DEBUG_BREAK;
 				}
 
 				// Cleanup information memory

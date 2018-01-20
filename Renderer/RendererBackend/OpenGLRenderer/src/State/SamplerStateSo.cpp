@@ -93,6 +93,26 @@ namespace OpenGLRenderer
 	}
 
 
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifdef RENDERER_DEBUG
+		void SamplerStateSo::setDebugName(const char* name)
+		{
+			// Valid OpenGL sampler and "GL_KHR_debug"-extension available?
+			if (0 != mOpenGLSampler && static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_KHR_debug())
+			{
+				glObjectLabel(GL_SAMPLER, mOpenGLSampler, -1, name);
+			}
+		}
+	#else
+		void SamplerStateSo::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
+
+
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]

@@ -250,6 +250,26 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifdef RENDERER_DEBUG
+		void ProgramMonolithic::setDebugName(const char* name)
+		{
+			// Valid OpenGL program and "GL_KHR_debug"-extension available?
+			if (0 != mOpenGLProgram && static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_KHR_debug())
+			{
+				glObjectLabel(GL_PROGRAM, mOpenGLProgram, -1, name);
+			}
+		}
+	#else
+		void ProgramMonolithic::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
 	handle ProgramMonolithic::getUniformHandle(const char* uniformName)

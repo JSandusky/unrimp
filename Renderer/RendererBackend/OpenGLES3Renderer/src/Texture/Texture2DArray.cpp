@@ -101,6 +101,26 @@ namespace OpenGLES3Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifdef RENDERER_DEBUG
+		void Texture2DArray::setDebugName(const char* name)
+		{
+			// Valid OpenGL ES 3 texture and "GL_KHR_debug"-extension available?
+			if (0 != mOpenGLES3Texture && static_cast<OpenGLES3Renderer&>(getRenderer()).getOpenGLES3Context().getExtensions().isGL_KHR_debug())
+			{
+				glObjectLabelKHR(GL_TEXTURE, mOpenGLES3Texture, -1, name);
+			}
+		}
+	#else
+		void Texture2DArray::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
+
+
+	//[-------------------------------------------------------]
 	//[ Protected virtual Renderer::RefCount methods          ]
 	//[-------------------------------------------------------]
 	void Texture2DArray::selfDestruct()

@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Shader/Monolithic/VertexShaderMonolithic.h"
 #include "OpenGLRenderer/Shader/Monolithic/ShaderLanguageMonolithic.h"
+#include "OpenGLRenderer/OpenGLRenderer.h"
 #include "OpenGLRenderer/Extensions.h"
 
 #include <Renderer/IRenderer.h>
@@ -40,7 +41,7 @@ namespace OpenGLRenderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	VertexShaderMonolithic::VertexShaderMonolithic(OpenGLRenderer& openGLRenderer, const char* sourceCode) :
-		IVertexShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
+		IVertexShader(static_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShader(ShaderLanguageMonolithic::loadShaderFromSourcecode(openGLRenderer, GL_VERTEX_SHADER_ARB, sourceCode))
 	{
 		// Nothing here
@@ -52,6 +53,26 @@ namespace OpenGLRenderer
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
 		glDeleteObjectARB(mOpenGLShader);
 	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifdef RENDERER_DEBUG
+		void VertexShaderMonolithic::setDebugName(const char* name)
+		{
+			// Valid OpenGL shader and "GL_KHR_debug"-extension available?
+			if (0 != mOpenGLShader && static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_KHR_debug())
+			{
+				glObjectLabel(GL_SHADER, mOpenGLShader, -1, name);
+			}
+		}
+	#else
+		void VertexShaderMonolithic::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 
 	//[-------------------------------------------------------]

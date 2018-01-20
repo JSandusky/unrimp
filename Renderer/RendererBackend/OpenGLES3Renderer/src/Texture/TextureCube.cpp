@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "OpenGLES3Renderer/Texture/TextureCube.h"
 #include "OpenGLES3Renderer/Mapping.h"
+#include "OpenGLES3Renderer/IExtensions.h"
 #include "OpenGLES3Renderer/IOpenGLES3Context.h"	// We need to include this header, else the linker won't find our defined OpenGL ES 3 functions
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
 
@@ -191,6 +192,26 @@ namespace OpenGLES3Renderer
 		// -> Silently ignores 0's and names that do not correspond to existing textures
 		glDeleteTextures(1, &mOpenGLES3Texture);
 	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifdef RENDERER_DEBUG
+		void TextureCube::setDebugName(const char* name)
+		{
+			// Valid OpenGL ES 3 texture and "GL_KHR_debug"-extension available?
+			if (0 != mOpenGLES3Texture && static_cast<OpenGLES3Renderer&>(getRenderer()).getOpenGLES3Context().getExtensions().isGL_KHR_debug())
+			{
+				glObjectLabelKHR(GL_TEXTURE, mOpenGLES3Texture, -1, name);
+			}
+		}
+	#else
+		void TextureCube::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 
 	//[-------------------------------------------------------]

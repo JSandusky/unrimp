@@ -455,10 +455,7 @@ namespace OpenGLRenderer
 						// -> Makes it easier to find the place causing the issue
 						glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
 
-						// We don't need to configure the debug output by using "glDebugMessageControlARB()",
-						// by default all messages are enabled and this is good this way
-
-						// Disable severity​ notifications, most drivers print many things with this severity
+						// Disable severity notifications, most drivers print many things with this severity
 						glDebugMessageControlARB(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, 0, false);
 
 						// Set the debug message callback function
@@ -1691,29 +1688,51 @@ namespace OpenGLRenderer
 	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
-	void OpenGLRenderer::setDebugMarker(const char*)
-	{
-		// TODO(co) Implement me. See
-		// - https://www.opengl.org/registry/specs/EXT/EXT_debug_marker.txt
-		// - https://www.opengl.org/registry/specs/EXT/EXT_debug_label.txt
-		// - https://www.opengl.org/registry/specs/KHR/debug.txt
-	}
+	#ifdef RENDERER_DEBUG
+		void OpenGLRenderer::setDebugMarker(const char* name)
+		{
+			// "GL_KHR_debug"-extension required
+			if (mExtensions->isGL_KHR_debug())
+			{
+				RENDERER_ASSERT(mContext, nullptr != name, "OpenGL debug marker names must not be a null pointer")
+				glDebugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_MARKER, 1, GL_DEBUG_SEVERITY_NOTIFICATION, -1, name);
+			}
+		}
 
-	void OpenGLRenderer::beginDebugEvent(const char*)
-	{
-		// TODO(co) Implement me. See
-		// - https://www.opengl.org/registry/specs/EXT/EXT_debug_marker.txt
-		// - https://www.opengl.org/registry/specs/EXT/EXT_debug_label.txt
-		// - https://www.opengl.org/registry/specs/KHR/debug.txt
-	}
+		void OpenGLRenderer::beginDebugEvent(const char* name)
+		{
+			// "GL_KHR_debug"-extension required
+			if (mExtensions->isGL_KHR_debug())
+			{
+				RENDERER_ASSERT(mContext, nullptr != name, "OpenGL debug event names must not be a null pointer")
+				glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, 1, -1, name);
+			}
+		}
 
-	void OpenGLRenderer::endDebugEvent()
-	{
-		// TODO(co) Implement me. See
-		// - https://www.opengl.org/registry/specs/EXT/EXT_debug_marker.txt
-		// - https://www.opengl.org/registry/specs/EXT/EXT_debug_label.txt
-		// - https://www.opengl.org/registry/specs/KHR/debug.txt
-	}
+		void OpenGLRenderer::endDebugEvent()
+		{
+			// "GL_KHR_debug"-extension required
+			if (mExtensions->isGL_KHR_debug())
+			{
+				glPopDebugGroup();
+			}
+		}
+	#else
+		void OpenGLRenderer::setDebugMarker(const char*)
+		{
+			// Nothing here
+		}
+
+		void OpenGLRenderer::beginDebugEvent(const char*)
+		{
+			// Nothing here
+		}
+
+		void OpenGLRenderer::endDebugEvent()
+		{
+			// Nothing here
+		}
+	#endif
 
 
 	//[-------------------------------------------------------]
@@ -2348,6 +2367,18 @@ namespace OpenGLRenderer
 
 				case GL_DEBUG_TYPE_OTHER_ARB:
 					strncpy(debugType, "Other", 25);
+					break;
+
+				case GL_DEBUG_TYPE_MARKER:
+					strncpy(debugType, "Marker", 25);
+					break;
+
+				case GL_DEBUG_TYPE_PUSH_GROUP:
+					strncpy(debugType, "Push group", 25);
+					break;
+
+				case GL_DEBUG_TYPE_POP_GROUP:
+					strncpy(debugType, "Pop group", 25);
 					break;
 
 				default:

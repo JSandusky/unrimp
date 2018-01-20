@@ -135,6 +135,8 @@ namespace OpenGLRenderer
 		bool isGL_EXT_texture_array() const;
 		bool isGL_EXT_texture3D() const;
 		bool isGL_EXT_direct_state_access() const;
+		// KHR
+		bool isGL_KHR_debug() const;
 		// ARB
 		bool isGL_ARB_framebuffer_object() const;
 		bool isGL_ARB_multitexture() const;
@@ -253,6 +255,8 @@ namespace OpenGLRenderer
 		bool mGL_EXT_texture_array;
 		bool mGL_EXT_texture3D;
 		bool mGL_EXT_direct_state_access;
+		// KHR
+		bool mGL_KHR_debug;
 		// ARB
 		bool mGL_ARB_framebuffer_object;
 		bool mGL_ARB_multitexture;
@@ -349,6 +353,13 @@ namespace OpenGLRenderer
 	FNDEF_EX(glCheckNamedFramebufferStatusEXT,		PFNGLCHECKNAMEDFRAMEBUFFERSTATUSEXTPROC);
 	FNDEF_EX(glNamedRenderbufferStorageEXT,			PFNGLNAMEDRENDERBUFFERSTORAGEEXTPROC);	
 	FNDEF_EX(glNamedFramebufferRenderbufferEXT,		PFNGLNAMEDFRAMEBUFFERRENDERBUFFEREXTPROC);
+
+	// GL_KHR_debug
+	FNDEF_EX(glDebugMessageInsert,	PFNGLDEBUGMESSAGEINSERTPROC);
+	FNDEF_EX(glPushDebugGroup,		PFNGLPUSHDEBUGGROUPPROC);
+	FNDEF_EX(glPopDebugGroup,		PFNGLPOPDEBUGGROUPPROC);
+	FNDEF_EX(glObjectLabel,			PFNGLOBJECTLABELPROC);
+	FNDEF_EX(glGetObjectLabel,		PFNGLGETOBJECTLABELPROC);
 
 
 	//[-------------------------------------------------------]

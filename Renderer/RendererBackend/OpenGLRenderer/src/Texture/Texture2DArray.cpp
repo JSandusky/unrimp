@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Texture/Texture2DArray.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
+#include "OpenGLRenderer/OpenGLRenderer.h"
+#include "OpenGLRenderer/Extensions.h"
 
 #include <Renderer/IRenderer.h>
 #include <Renderer/IAllocator.h>
@@ -47,6 +49,26 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifdef RENDERER_DEBUG
+		void Texture2DArray::setDebugName(const char* name)
+		{
+			// Valid OpenGL texture and "GL_KHR_debug"-extension available?
+			if (0 != mOpenGLTexture && static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_KHR_debug())
+			{
+				glObjectLabel(GL_TEXTURE, mOpenGLTexture, -1, name);
+			}
+		}
+	#else
+		void Texture2DArray::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
+
+
+	//[-------------------------------------------------------]
 	//[ Protected virtual Renderer::RefCount methods          ]
 	//[-------------------------------------------------------]
 	void Texture2DArray::selfDestruct()
@@ -59,7 +81,7 @@ namespace OpenGLRenderer
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	Texture2DArray::Texture2DArray(OpenGLRenderer& openGLRenderer, uint32_t width, uint32_t height, uint32_t numberOfSlices) :
-		ITexture2DArray(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer), width, height, numberOfSlices),
+		ITexture2DArray(static_cast<Renderer::IRenderer&>(openGLRenderer), width, height, numberOfSlices),
 		mNumberOfMultisamples(1),	// TODO(co) Currently no MSAA support for 2D array textures
 		mOpenGLTexture(0)
 	{

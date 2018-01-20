@@ -206,6 +206,26 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifdef RENDERER_DEBUG
+		void VertexShaderSeparate::setDebugName(const char* name)
+		{
+			// Valid OpenGL shader program and "GL_KHR_debug"-extension available?
+			if (0 != mOpenGLShaderProgram && static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_KHR_debug())
+			{
+				glObjectLabel(GL_PROGRAM, mOpenGLShaderProgram, -1, name);
+			}
+		}
+	#else
+		void VertexShaderSeparate::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
 	const char* VertexShaderSeparate::getShaderLanguageName() const

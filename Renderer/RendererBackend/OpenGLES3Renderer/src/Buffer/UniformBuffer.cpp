@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "OpenGLES3Renderer/Buffer/UniformBuffer.h"
 #include "OpenGLES3Renderer/ExtensionsRuntimeLinking.h"
+#include "OpenGLES3Renderer/OpenGLES3Renderer.h"
+#include "OpenGLES3Renderer/IExtensions.h"
 
 #include <Renderer/IAssert.h>
 #include <Renderer/IRenderer.h>
@@ -40,7 +42,7 @@ namespace OpenGLES3Renderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	UniformBuffer::UniformBuffer(OpenGLES3Renderer& openGLES3Renderer, uint32_t numberOfBytes, const void* data, Renderer::BufferUsage bufferUsage) :
-		IUniformBuffer(reinterpret_cast<Renderer::IRenderer&>(openGLES3Renderer)),
+		IUniformBuffer(static_cast<Renderer::IRenderer&>(openGLES3Renderer)),
 		mOpenGLES3UniformBuffer(0),
 		mBufferSize(numberOfBytes)
 	{
@@ -72,6 +74,26 @@ namespace OpenGLES3Renderer
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
 		glDeleteBuffers(1, &mOpenGLES3UniformBuffer);
 	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifdef RENDERER_DEBUG
+		void UniformBuffer::setDebugName(const char* name)
+		{
+			// Valid OpenGL ES 3 uniform buffer and "GL_KHR_debug"-extension available?
+			if (0 != mOpenGLES3UniformBuffer && static_cast<OpenGLES3Renderer&>(getRenderer()).getOpenGLES3Context().getExtensions().isGL_KHR_debug())
+			{
+				glObjectLabelKHR(GL_BUFFER_KHR, mOpenGLES3UniformBuffer, -1, name);
+			}
+		}
+	#else
+		void UniformBuffer::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 
 	//[-------------------------------------------------------]

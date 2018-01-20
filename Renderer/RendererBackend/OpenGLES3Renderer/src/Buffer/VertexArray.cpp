@@ -174,6 +174,26 @@ namespace OpenGLES3Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifdef RENDERER_DEBUG
+		void VertexArray::setDebugName(const char* name)
+		{
+			// Valid OpenGL ES 3 vertex array buffer and "GL_KHR_debug"-extension available?
+			if (0 != mOpenGLES3VertexArray && static_cast<OpenGLES3Renderer&>(getRenderer()).getOpenGLES3Context().getExtensions().isGL_KHR_debug())
+			{
+				glObjectLabelKHR(GL_BUFFER_KHR, mOpenGLES3VertexArray, -1, name);
+			}
+		}
+	#else
+		void VertexArray::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
+
+
+	//[-------------------------------------------------------]
 	//[ Protected virtual Renderer::RefCount methods          ]
 	//[-------------------------------------------------------]
 	void VertexArray::selfDestruct()

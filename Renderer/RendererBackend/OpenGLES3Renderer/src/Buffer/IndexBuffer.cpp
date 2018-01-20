@@ -87,6 +87,26 @@ namespace OpenGLES3Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifdef RENDERER_DEBUG
+		void IndexBuffer::setDebugName(const char* name)
+		{
+			// Valid OpenGL ES 3 element array buffer and "GL_KHR_debug"-extension available?
+			if (0 != mOpenGLES3ElementArrayBuffer && static_cast<OpenGLES3Renderer&>(getRenderer()).getOpenGLES3Context().getExtensions().isGL_KHR_debug())
+			{
+				glObjectLabelKHR(GL_BUFFER_KHR, mOpenGLES3ElementArrayBuffer, -1, name);
+			}
+		}
+	#else
+		void IndexBuffer::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
+
+
+	//[-------------------------------------------------------]
 	//[ Protected virtual Renderer::RefCount methods          ]
 	//[-------------------------------------------------------]
 	void IndexBuffer::selfDestruct()

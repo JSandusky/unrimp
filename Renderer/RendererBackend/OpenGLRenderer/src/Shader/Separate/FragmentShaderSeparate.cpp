@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Shader/Separate/FragmentShaderSeparate.h"
 #include "OpenGLRenderer/Shader/Separate/ShaderLanguageSeparate.h"
+#include "OpenGLRenderer/OpenGLRenderer.h"
 #include "OpenGLRenderer/Extensions.h"
 
 #include <Renderer/IRenderer.h>
@@ -40,14 +41,14 @@ namespace OpenGLRenderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	FragmentShaderSeparate::FragmentShaderSeparate(OpenGLRenderer& openGLRenderer, const Renderer::ShaderBytecode& shaderBytecode) :
-		IFragmentShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
+		IFragmentShader(static_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShaderProgram(ShaderLanguageSeparate::loadShaderProgramFromBytecode(openGLRenderer, GL_FRAGMENT_SHADER_ARB, shaderBytecode))
 	{
 		// Nothing here
 	}
 
 	FragmentShaderSeparate::FragmentShaderSeparate(OpenGLRenderer& openGLRenderer, const char* sourceCode, Renderer::ShaderBytecode* shaderBytecode) :
-		IFragmentShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
+		IFragmentShader(static_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShaderProgram(ShaderLanguageSeparate::loadShaderProgramFromSourceCode(openGLRenderer, GL_FRAGMENT_SHADER_ARB, sourceCode))
 	{
 		// Return shader bytecode, if requested do to so
@@ -63,6 +64,26 @@ namespace OpenGLRenderer
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
 		glDeleteProgram(mOpenGLShaderProgram);
 	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifdef RENDERER_DEBUG
+		void FragmentShaderSeparate::setDebugName(const char* name)
+		{
+			// Valid OpenGL shader program and "GL_KHR_debug"-extension available?
+			if (0 != mOpenGLShaderProgram && static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_KHR_debug())
+			{
+				glObjectLabel(GL_PROGRAM, mOpenGLShaderProgram, -1, name);
+			}
+		}
+	#else
+		void FragmentShaderSeparate::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 
 	//[-------------------------------------------------------]

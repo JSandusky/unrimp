@@ -215,6 +215,26 @@ namespace OpenGLES3Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifdef RENDERER_DEBUG
+		void ProgramGlsl::setDebugName(const char* name)
+		{
+			// Valid OpenGL ES 3 program and "GL_KHR_debug"-extension available?
+			if (0 != mOpenGLES3Program && static_cast<OpenGLES3Renderer&>(getRenderer()).getOpenGLES3Context().getExtensions().isGL_KHR_debug())
+			{
+				glObjectLabelKHR(GL_PROGRAM_KHR, mOpenGLES3Program, -1, name);
+			}
+		}
+	#else
+		void ProgramGlsl::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IProgram methods             ]
 	//[-------------------------------------------------------]
 	handle ProgramGlsl::getUniformHandle(const char* uniformName)

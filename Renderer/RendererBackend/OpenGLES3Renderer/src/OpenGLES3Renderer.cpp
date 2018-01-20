@@ -372,8 +372,8 @@ namespace OpenGLES3Renderer
 					// -> Makes it easier to find the place causing the issue
 					glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_KHR);
 
-					// We don't need to configure the debug output by using "glDebugMessageControlARB()",
-					// by default all messages are enabled and this is good this way
+					// Disable severity notifications, most drivers print many things with this severity
+					glDebugMessageControlKHR(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION_KHR, 0, 0, false);
 
 					// Set the debug message callback function
 					glDebugMessageCallbackKHR(&OpenGLES3Renderer::debugMessageCallback, this);
@@ -1229,29 +1229,51 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
-	void OpenGLES3Renderer::setDebugMarker(const char*)
-	{
-		// TODO(co) Implement me. See
-		// - https://www.opengl.org/registry/specs/EXT/EXT_debug_marker.txt
-		// - https://www.opengl.org/registry/specs/EXT/EXT_debug_label.txt
-		// - https://www.opengl.org/registry/specs/KHR/debug.txt
-	}
+	#ifdef RENDERER_DEBUG
+		void OpenGLES3Renderer::setDebugMarker(const char* name)
+		{
+			// "GL_KHR_debug"-extension required
+			if (mOpenGLES3Context->getExtensions().isGL_KHR_debug())
+			{
+				RENDERER_ASSERT(mContext, nullptr != name, "OpenGL ES 3 debug marker names must not be a null pointer")
+				glDebugMessageInsertKHR(GL_DEBUG_SOURCE_APPLICATION_KHR, GL_DEBUG_TYPE_MARKER_KHR, 1, GL_DEBUG_SEVERITY_NOTIFICATION_KHR, -1, name);
+			}
+		}
 
-	void OpenGLES3Renderer::beginDebugEvent(const char*)
-	{
-		// TODO(co) Implement me. See
-		// - https://www.opengl.org/registry/specs/EXT/EXT_debug_marker.txt
-		// - https://www.opengl.org/registry/specs/EXT/EXT_debug_label.txt
-		// - https://www.opengl.org/registry/specs/KHR/debug.txt
-	}
+		void OpenGLES3Renderer::beginDebugEvent(const char* name)
+		{
+			// "GL_KHR_debug"-extension required
+			if (mOpenGLES3Context->getExtensions().isGL_KHR_debug())
+			{
+				RENDERER_ASSERT(mContext, nullptr != name, "OpenGL ES 3 debug event names must not be a null pointer")
+				glPushDebugGroupKHR(GL_DEBUG_SOURCE_APPLICATION_KHR, 1, -1, name);
+			}
+		}
 
-	void OpenGLES3Renderer::endDebugEvent()
-	{
-		// TODO(co) Implement me. See
-		// - https://www.opengl.org/registry/specs/EXT/EXT_debug_marker.txt
-		// - https://www.opengl.org/registry/specs/EXT/EXT_debug_label.txt
-		// - https://www.opengl.org/registry/specs/KHR/debug.txt
-	}
+		void OpenGLES3Renderer::endDebugEvent()
+		{
+			// "GL_KHR_debug"-extension required
+			if (mOpenGLES3Context->getExtensions().isGL_KHR_debug())
+			{
+				glPopDebugGroupKHR();
+			}
+		}
+	#else
+		void OpenGLES3Renderer::setDebugMarker(const char*)
+		{
+			// Nothing here
+		}
+
+		void OpenGLES3Renderer::beginDebugEvent(const char*)
+		{
+			// Nothing here
+		}
+
+		void OpenGLES3Renderer::endDebugEvent()
+		{
+			// Nothing here
+		}
+	#endif
 
 
 	//[-------------------------------------------------------]
@@ -1754,6 +1776,22 @@ namespace OpenGLES3Renderer
 				case GL_DEBUG_TYPE_OTHER_KHR:
 					strncpy(debugType, "Other", 25);
 					break;
+
+				case GL_DEBUG_TYPE_MARKER_KHR:
+					strncpy(debugType, "Marker", 25);
+					break;
+
+				case GL_DEBUG_TYPE_PUSH_GROUP_KHR:
+					// TODO(co) How to ignore "glPushDebugGroupKHR()" via "glDebugMessageControlKHR()" by default in here to have the same behaviour as OpenGL "glPushDebugGroup()"?
+					return;
+					// strncpy(debugType, "Push group", 25);
+					// break;
+
+				case GL_DEBUG_TYPE_POP_GROUP_KHR:
+					// TODO(co) How to ignore "glPopDebugGroupKHR()" via "glDebugMessageControlKHR()" by default in here to have the same behaviour as OpenGL "glPopDebugGroup()"?
+					return;
+					// strncpy(debugType, "Pop group", 25);
+					// break;
 
 				default:
 					strncpy(debugType, "?", 25);

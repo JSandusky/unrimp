@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Texture/Texture1D.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
+#include "OpenGLRenderer/OpenGLRenderer.h"
+#include "OpenGLRenderer/Extensions.h"
 
 #include <Renderer/IRenderer.h>
 #include <Renderer/IAllocator.h>
@@ -47,6 +49,26 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifdef RENDERER_DEBUG
+		void Texture1D::setDebugName(const char* name)
+		{
+			// Valid OpenGL texture and "GL_KHR_debug"-extension available?
+			if (0 != mOpenGLTexture && static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_KHR_debug())
+			{
+				glObjectLabel(GL_TEXTURE, mOpenGLTexture, -1, name);
+			}
+		}
+	#else
+		void Texture1D::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
+
+
+	//[-------------------------------------------------------]
 	//[ Protected virtual Renderer::RefCount methods          ]
 	//[-------------------------------------------------------]
 	void Texture1D::selfDestruct()
@@ -59,7 +81,7 @@ namespace OpenGLRenderer
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	Texture1D::Texture1D(OpenGLRenderer& openGLRenderer, uint32_t width) :
-		ITexture1D(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer), width),
+		ITexture1D(static_cast<Renderer::IRenderer&>(openGLRenderer), width),
 		mOpenGLTexture(0),
 		mGenerateMipmaps(false)
 	{

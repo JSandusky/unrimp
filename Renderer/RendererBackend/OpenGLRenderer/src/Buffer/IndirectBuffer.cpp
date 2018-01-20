@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Buffer/IndirectBuffer.h"
+#include "OpenGLRenderer/OpenGLRenderer.h"
 #include "OpenGLRenderer/Extensions.h"
 
 #include <Renderer/IRenderer.h>
@@ -47,6 +48,26 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifdef RENDERER_DEBUG
+		void IndirectBuffer::setDebugName(const char* name)
+		{
+			// Valid OpenGL indirect buffer and "GL_KHR_debug"-extension available?
+			if (0 != mOpenGLIndirectBuffer && static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_KHR_debug())
+			{
+				glObjectLabel(GL_BUFFER, mOpenGLIndirectBuffer, -1, name);
+			}
+		}
+	#else
+		void IndirectBuffer::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
+
+
+	//[-------------------------------------------------------]
 	//[ Protected virtual Renderer::RefCount methods          ]
 	//[-------------------------------------------------------]
 	void IndirectBuffer::selfDestruct()
@@ -59,7 +80,7 @@ namespace OpenGLRenderer
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	IndirectBuffer::IndirectBuffer(OpenGLRenderer& openGLRenderer) :
-		IIndirectBuffer(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
+		IIndirectBuffer(static_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLIndirectBuffer(0)
 	{
 		// Nothing here

@@ -22,8 +22,9 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Buffer/IndexBuffer.h"
-#include "OpenGLRenderer/Mapping.h"
+#include "OpenGLRenderer/OpenGLRenderer.h"
 #include "OpenGLRenderer/Extensions.h"
+#include "OpenGLRenderer/Mapping.h"
 
 #include <Renderer/IRenderer.h>
 #include <Renderer/IAllocator.h>
@@ -48,6 +49,26 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifdef RENDERER_DEBUG
+		void IndexBuffer::setDebugName(const char* name)
+		{
+			// Valid OpenGL element array buffer and "GL_KHR_debug"-extension available?
+			if (0 != mOpenGLElementArrayBuffer && static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_KHR_debug())
+			{
+				glObjectLabel(GL_BUFFER, mOpenGLElementArrayBuffer, -1, name);
+			}
+		}
+	#else
+		void IndexBuffer::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
+
+
+	//[-------------------------------------------------------]
 	//[ Protected virtual Renderer::RefCount methods          ]
 	//[-------------------------------------------------------]
 	void IndexBuffer::selfDestruct()
@@ -60,7 +81,7 @@ namespace OpenGLRenderer
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	IndexBuffer::IndexBuffer(OpenGLRenderer& openGLRenderer, Renderer::IndexBufferFormat::Enum indexBufferFormat) :
-		IIndexBuffer(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
+		IIndexBuffer(static_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLElementArrayBuffer(0),
 		mOpenGLType(Mapping::getOpenGLType(indexBufferFormat)),
 		mIndexSizeInBytes(Renderer::IndexBufferFormat::getNumberOfBytesPerElement(indexBufferFormat))

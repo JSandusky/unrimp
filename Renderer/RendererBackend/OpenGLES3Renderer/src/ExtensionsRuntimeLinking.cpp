@@ -173,6 +173,12 @@ namespace OpenGLES3Renderer
 			// Load the entry points
 			bool result = true;	// Success by default
 			IMPORT_FUNC(glDebugMessageCallbackKHR)
+			IMPORT_FUNC(glDebugMessageControlKHR)
+			IMPORT_FUNC(glDebugMessageInsertKHR)
+			IMPORT_FUNC(glPushDebugGroupKHR)
+			IMPORT_FUNC(glPopDebugGroupKHR)
+			IMPORT_FUNC(glObjectLabelKHR)
+			IMPORT_FUNC(glGetObjectLabelKHR)
 			mGL_KHR_debug = result;
 		}
 

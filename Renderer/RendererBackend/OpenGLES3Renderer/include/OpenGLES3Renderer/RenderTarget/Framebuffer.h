@@ -113,6 +113,7 @@ namespace OpenGLES3Renderer
 	//[ Public virtual Renderer::IResource methods            ]
 	//[-------------------------------------------------------]
 	public:
+		virtual void setDebugName(const char* name) override;
 		inline virtual void* getInternalResourceHandle() const override;
 
 

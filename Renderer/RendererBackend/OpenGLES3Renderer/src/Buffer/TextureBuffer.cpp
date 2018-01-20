@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "OpenGLES3Renderer/Buffer/TextureBuffer.h"
 #include "OpenGLES3Renderer/ExtensionsRuntimeLinking.h"
+#include "OpenGLES3Renderer/OpenGLES3Renderer.h"
+#include "OpenGLES3Renderer/IExtensions.h"
 
 #include <Renderer/IRenderer.h>
 #include <Renderer/IAllocator.h>
@@ -51,6 +53,33 @@ namespace OpenGLES3Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifdef RENDERER_DEBUG
+		void TextureBuffer::setDebugName(const char* name)
+		{
+			// "GL_KHR_debug"-extension available?
+			if (static_cast<OpenGLES3Renderer&>(getRenderer()).getOpenGLES3Context().getExtensions().isGL_KHR_debug())
+			{
+				if (0 != mOpenGLES3Texture)
+				{
+					glObjectLabelKHR(GL_TEXTURE, mOpenGLES3Texture, -1, name);
+				}
+				if (0 != mOpenGLES3TextureBuffer)
+				{
+					glObjectLabelKHR(GL_BUFFER_KHR, mOpenGLES3TextureBuffer, -1, name);
+				}
+			}
+		}
+	#else
+		void TextureBuffer::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
+
+
+	//[-------------------------------------------------------]
 	//[ Protected virtual Renderer::RefCount methods          ]
 	//[-------------------------------------------------------]
 	void TextureBuffer::selfDestruct()
@@ -63,7 +92,7 @@ namespace OpenGLES3Renderer
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	TextureBuffer::TextureBuffer(OpenGLES3Renderer& openGLES3Renderer, uint32_t numberOfBytes) :
-		ITextureBuffer(reinterpret_cast<Renderer::IRenderer&>(openGLES3Renderer)),
+		ITextureBuffer(static_cast<Renderer::IRenderer&>(openGLES3Renderer)),
 		mOpenGLES3TextureBuffer(0),
 		mOpenGLES3Texture(0),
 		mBufferSize(numberOfBytes)

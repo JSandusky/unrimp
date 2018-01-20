@@ -76,6 +76,8 @@ namespace OpenGLRenderer
 	bool Extensions::isGL_EXT_texture_array()				const { return mGL_EXT_texture_array;				}
 	bool Extensions::isGL_EXT_texture3D()					const { return mGL_EXT_texture3D;					}
 	bool Extensions::isGL_EXT_direct_state_access()			const { return mGL_EXT_direct_state_access;			}
+	// KHR
+	bool Extensions::isGL_KHR_debug()						const { return mGL_KHR_debug;						}
 	// ARB
 	bool Extensions::isGL_ARB_framebuffer_object()			const { return mGL_ARB_framebuffer_object;			}
 	bool Extensions::isGL_ARB_multitexture()				const { return mGL_ARB_multitexture;				}
@@ -248,6 +250,8 @@ namespace OpenGLRenderer
 		mGL_EXT_texture_array				= false;
 		mGL_EXT_texture3D					= false;
 		mGL_EXT_direct_state_access			= false;
+		// KHR
+		mGL_KHR_debug						= false;
 		// ARB
 		mGL_ARB_framebuffer_object			= false;
 		mGL_ARB_multitexture				= false;
@@ -406,6 +410,24 @@ namespace OpenGLRenderer
 			IMPORT_FUNC(glNamedRenderbufferStorageEXT);
 			IMPORT_FUNC(glNamedFramebufferRenderbufferEXT);
 			mGL_EXT_direct_state_access = result;
+		}
+
+
+		//[-------------------------------------------------------]
+		//[ KHR                                                   ]
+		//[-------------------------------------------------------]
+		// GL_KHR_debug
+		mGL_KHR_debug = isSupported("GL_KHR_debug");
+		if (mGL_KHR_debug)
+		{
+			// Load the entry points
+			bool result = true;	// Success by default
+			IMPORT_FUNC(glDebugMessageInsert)
+			IMPORT_FUNC(glPushDebugGroup)
+			IMPORT_FUNC(glPopDebugGroup)
+			IMPORT_FUNC(glObjectLabel)
+			IMPORT_FUNC(glGetObjectLabel)
+			mGL_KHR_debug = result;
 		}
 
 

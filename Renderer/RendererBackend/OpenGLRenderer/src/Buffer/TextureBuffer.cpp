@@ -22,8 +22,9 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Buffer/TextureBuffer.h"
-#include "OpenGLRenderer/Extensions.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
+#include "OpenGLRenderer/OpenGLRenderer.h"
+#include "OpenGLRenderer/Extensions.h"
 
 #include <Renderer/IRenderer.h>
 #include <Renderer/IAllocator.h>
@@ -52,6 +53,33 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifdef RENDERER_DEBUG
+		void TextureBuffer::setDebugName(const char* name)
+		{
+			// "GL_KHR_debug"-extension available?
+			if (static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_KHR_debug())
+			{
+				if (0 != mOpenGLTexture)
+				{
+					glObjectLabel(GL_TEXTURE, mOpenGLTexture, -1, name);
+				}
+				if (0 != mOpenGLTextureBuffer)
+				{
+					glObjectLabel(GL_BUFFER, mOpenGLTextureBuffer, -1, name);
+				}
+			}
+		}
+	#else
+		void TextureBuffer::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
+
+
+	//[-------------------------------------------------------]
 	//[ Protected virtual Renderer::RefCount methods          ]
 	//[-------------------------------------------------------]
 	void TextureBuffer::selfDestruct()
@@ -64,7 +92,7 @@ namespace OpenGLRenderer
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	TextureBuffer::TextureBuffer(OpenGLRenderer& openGLRenderer) :
-		ITextureBuffer(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
+		ITextureBuffer(static_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLTextureBuffer(0),
 		mOpenGLTexture(0)
 	{

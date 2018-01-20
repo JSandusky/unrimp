@@ -260,7 +260,19 @@ namespace OpenGLES3Renderer
 	//[-------------------------------------------------------]
 	// GL_KHR_debug
 	FNDEF_EX(void,	glDebugMessageCallbackKHR,	(GLDEBUGPROCKHR callback, const void* userParam));
+	FNDEF_EX(void,	glDebugMessageControlKHR,	(GLenum source, GLenum type, GLenum severity, GLsizei count, const GLuint* ids, GLboolean enabled));
+	FNDEF_EX(void,	glDebugMessageInsertKHR,	(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* buf));
+	FNDEF_EX(void,	glPushDebugGroupKHR,		(GLenum source, GLuint id, GLsizei length, const GLchar* message));
+	FNDEF_EX(void,	glPopDebugGroupKHR,			(void));
+	FNDEF_EX(void,	glObjectLabelKHR,			(GLenum identifier, GLuint name, GLsizei length, const GLchar* label));
+	FNDEF_EX(void,	glGetObjectLabelKHR,		(GLenum identifier, GLuint name, GLsizei bufSize, GLsizei* length, GLchar* label));
 	#define glDebugMessageCallbackKHR	FNPTR(glDebugMessageCallbackKHR)
+	#define glDebugMessageControlKHR	FNPTR(glDebugMessageControlKHR)
+	#define glDebugMessageInsertKHR		FNPTR(glDebugMessageInsertKHR)
+	#define glPushDebugGroupKHR			FNPTR(glPushDebugGroupKHR)
+	#define glPopDebugGroupKHR			FNPTR(glPopDebugGroupKHR)
+	#define glObjectLabelKHR			FNPTR(glObjectLabelKHR)
+	#define glGetObjectLabelKHR			FNPTR(glGetObjectLabelKHR)
 
 
 	//[-------------------------------------------------------]

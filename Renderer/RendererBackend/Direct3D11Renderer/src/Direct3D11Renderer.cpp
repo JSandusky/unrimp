@@ -1322,6 +1322,7 @@ namespace Direct3D11Renderer
 		{
 			if (nullptr != mD3DUserDefinedAnnotation)
 			{
+				RENDERER_ASSERT(mContext, nullptr != name, "Direct3D 11 debug marker names must not be a null pointer")
 				RENDERER_ASSERT(mContext, strlen(name) < 256, "Direct3D 11 debug marker names must not have more than 255 characters")
 				wchar_t unicodeName[256];
 				std::mbstowcs(unicodeName, name, 256);
@@ -1333,6 +1334,7 @@ namespace Direct3D11Renderer
 		{
 			if (nullptr != mD3DUserDefinedAnnotation)
 			{
+				RENDERER_ASSERT(mContext, nullptr != name, "Direct3D 11 debug event names must not be a null pointer")
 				RENDERER_ASSERT(mContext, strlen(name) < 256, "Direct3D 11 debug event names must not have more than 255 characters")
 				wchar_t unicodeName[256];
 				std::mbstowcs(unicodeName, name, 256);

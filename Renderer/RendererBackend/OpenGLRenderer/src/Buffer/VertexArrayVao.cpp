@@ -63,6 +63,26 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifdef RENDERER_DEBUG
+		void VertexArrayVao::setDebugName(const char* name)
+		{
+			// Valid OpenGL vertex array buffer and "GL_KHR_debug"-extension available?
+			if (0 != mOpenGLVertexArray && static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_KHR_debug())
+			{
+				glObjectLabel(GL_BUFFER, mOpenGLVertexArray, -1, name);
+			}
+		}
+	#else
+		void VertexArrayVao::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
+
+
+	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	VertexArrayVao::VertexArrayVao(OpenGLRenderer& openGLRenderer, uint32_t numberOfVertexBuffers, const Renderer::VertexArrayVertexBuffer* vertexBuffers, IndexBuffer* indexBuffer) :

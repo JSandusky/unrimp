@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Buffer/UniformBuffer.h"
+#include "OpenGLRenderer/OpenGLRenderer.h"
 #include "OpenGLRenderer/Extensions.h"
 
 #include <Renderer/IRenderer.h>
@@ -47,6 +48,26 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifdef RENDERER_DEBUG
+		void UniformBuffer::setDebugName(const char* name)
+		{
+			// Valid OpenGL uniform buffer and "GL_KHR_debug"-extension available?
+			if (0 != mOpenGLUniformBuffer && static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_KHR_debug())
+			{
+				glObjectLabel(GL_BUFFER, mOpenGLUniformBuffer, -1, name);
+			}
+		}
+	#else
+		void UniformBuffer::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
+
+
+	//[-------------------------------------------------------]
 	//[ Protected virtual Renderer::RefCount methods          ]
 	//[-------------------------------------------------------]
 	void UniformBuffer::selfDestruct()
@@ -59,7 +80,7 @@ namespace OpenGLRenderer
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	UniformBuffer::UniformBuffer(OpenGLRenderer& openGLRenderer) :
-		IUniformBuffer(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
+		IUniformBuffer(static_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLUniformBuffer(0)
 	{
 		// Nothing here

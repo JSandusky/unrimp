@@ -55,6 +55,26 @@ namespace OpenGLES3Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifdef RENDERER_DEBUG
+		void FragmentShaderGlsl::setDebugName(const char* name)
+		{
+			// Valid OpenGL ES 3 shader and "GL_KHR_debug"-extension available?
+			if (0 != mOpenGLES3Shader && static_cast<OpenGLES3Renderer&>(getRenderer()).getOpenGLES3Context().getExtensions().isGL_KHR_debug())
+			{
+				glObjectLabelKHR(GL_SHADER_KHR, mOpenGLES3Shader, -1, name);
+			}
+		}
+	#else
+		void FragmentShaderGlsl::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
+
+
+	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IShader methods              ]
 	//[-------------------------------------------------------]
 	const char* FragmentShaderGlsl::getShaderLanguageName() const

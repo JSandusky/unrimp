@@ -23,6 +23,8 @@
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Texture/TextureCube.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
+#include "OpenGLRenderer/OpenGLRenderer.h"
+#include "OpenGLRenderer/Extensions.h"
 
 #include <Renderer/IRenderer.h>
 #include <Renderer/IAllocator.h>
@@ -47,6 +49,26 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifdef RENDERER_DEBUG
+		void TextureCube::setDebugName(const char* name)
+		{
+			// Valid OpenGL texture and "GL_KHR_debug"-extension available?
+			if (0 != mOpenGLTexture && static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_KHR_debug())
+			{
+				glObjectLabel(GL_TEXTURE, mOpenGLTexture, -1, name);
+			}
+		}
+	#else
+		void TextureCube::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
+
+
+	//[-------------------------------------------------------]
 	//[ Protected virtual Renderer::RefCount methods          ]
 	//[-------------------------------------------------------]
 	void TextureCube::selfDestruct()
@@ -59,7 +81,7 @@ namespace OpenGLRenderer
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	TextureCube::TextureCube(OpenGLRenderer& openGLRenderer, uint32_t width, uint32_t height) :
-		ITextureCube(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer), width, height),
+		ITextureCube(static_cast<Renderer::IRenderer&>(openGLRenderer), width, height),
 		mOpenGLTexture(0),
 		mGenerateMipmaps(false)
 	{

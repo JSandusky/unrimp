@@ -27,6 +27,7 @@
 #include "OpenGLES3Renderer/Texture/Texture2D.h"
 #include "OpenGLES3Renderer/IOpenGLES3Context.h"	// We need to include this header, else the linker won't find our defined OpenGL ES 3 functions
 #include "OpenGLES3Renderer/OpenGLES3Renderer.h"
+#include "OpenGLES3Renderer/IExtensions.h"
 
 #include <Renderer/ILog.h>
 #include <Renderer/IAssert.h>
@@ -370,6 +371,26 @@ namespace OpenGLES3Renderer
 			}
 		}
 	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifdef RENDERER_DEBUG
+		void Framebuffer::setDebugName(const char* name)
+		{
+			// Valid OpenGL ES 3 framebuffer and "GL_KHR_debug"-extension available?
+			if (0 != mOpenGLES3Framebuffer && static_cast<OpenGLES3Renderer&>(getRenderer()).getOpenGLES3Context().getExtensions().isGL_KHR_debug())
+			{
+				glObjectLabelKHR(GL_FRAMEBUFFER, mOpenGLES3Framebuffer, -1, name);
+			}
+		}
+	#else
+		void Framebuffer::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 
 	//[-------------------------------------------------------]

@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Shader/Separate/GeometryShaderSeparate.h"
 #include "OpenGLRenderer/Shader/Separate/ShaderLanguageSeparate.h"
+#include "OpenGLRenderer/OpenGLRenderer.h"
 #include "OpenGLRenderer/Extensions.h"
 
 #include <Renderer/IRenderer.h>
@@ -40,14 +41,14 @@ namespace OpenGLRenderer
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	GeometryShaderSeparate::GeometryShaderSeparate(OpenGLRenderer& openGLRenderer, const Renderer::ShaderBytecode& shaderBytecode, Renderer::GsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology, uint32_t) :
-		IGeometryShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
+		IGeometryShader(static_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShaderProgram(ShaderLanguageSeparate::loadShaderProgramFromBytecode(openGLRenderer, GL_GEOMETRY_SHADER_ARB, shaderBytecode))
 	{
 		// Nothing here
 	}
 
 	GeometryShaderSeparate::GeometryShaderSeparate(OpenGLRenderer& openGLRenderer, const char* sourceCode, Renderer::GsInputPrimitiveTopology gsInputPrimitiveTopology, Renderer::GsOutputPrimitiveTopology gsOutputPrimitiveTopology, uint32_t numberOfOutputVertices, Renderer::ShaderBytecode* shaderBytecode) :
-		IGeometryShader(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
+		IGeometryShader(static_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLShaderProgram(ShaderLanguageSeparate::loadShaderProgramFromSourceCode(openGLRenderer, GL_GEOMETRY_SHADER_ARB, sourceCode))
 	{
 		// In modern GLSL, "geometry shader input primitive topology" & "geometry shader output primitive topology" & "number of output vertices" can be directly set within GLSL by writing e.g.
@@ -71,6 +72,26 @@ namespace OpenGLRenderer
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
 		glDeleteProgram(mOpenGLShaderProgram);
 	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifdef RENDERER_DEBUG
+		void GeometryShaderSeparate::setDebugName(const char* name)
+		{
+			// Valid OpenGL shader program and "GL_KHR_debug"-extension available?
+			if (0 != mOpenGLShaderProgram && static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_KHR_debug())
+			{
+				glObjectLabel(GL_PROGRAM, mOpenGLShaderProgram, -1, name);
+			}
+		}
+	#else
+		void GeometryShaderSeparate::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 
 	//[-------------------------------------------------------]

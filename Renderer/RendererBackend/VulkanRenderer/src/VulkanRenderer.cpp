@@ -799,6 +799,7 @@ namespace VulkanRenderer
 	{
 		if (nullptr != vkCmdDebugMarkerInsertEXT)
 		{
+			RENDERER_ASSERT(mContext, nullptr != name, "Vulkan debug marker names must not be a null pointer")
 			const VkDebugMarkerMarkerInfoEXT vkDebugMarkerMarkerInfoEXT =
 			{
 				VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT,	// sType (VkStructureType)
@@ -819,6 +820,7 @@ namespace VulkanRenderer
 	{
 		if (nullptr != vkCmdDebugMarkerBeginEXT)
 		{
+			RENDERER_ASSERT(mContext, nullptr != name, "Vulkan debug event names must not be a null pointer")
 			const VkDebugMarkerMarkerInfoEXT vkDebugMarkerMarkerInfoEXT =
 			{
 				VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT,	// sType (VkStructureType)

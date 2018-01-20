@@ -23,6 +23,7 @@
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Texture/Texture3D.h"
 #include "OpenGLRenderer/OpenGLRuntimeLinking.h"
+#include "OpenGLRenderer/OpenGLRenderer.h"
 #include "OpenGLRenderer/Extensions.h"
 
 #include <Renderer/IRenderer.h>
@@ -49,6 +50,26 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifdef RENDERER_DEBUG
+		void Texture3D::setDebugName(const char* name)
+		{
+			// Valid OpenGL texture and "GL_KHR_debug"-extension available?
+			if (0 != mOpenGLTexture && static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_KHR_debug())
+			{
+				glObjectLabel(GL_TEXTURE, mOpenGLTexture, -1, name);
+			}
+		}
+	#else
+		void Texture3D::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
+
+
+	//[-------------------------------------------------------]
 	//[ Protected virtual Renderer::RefCount methods          ]
 	//[-------------------------------------------------------]
 	void Texture3D::selfDestruct()
@@ -61,7 +82,7 @@ namespace OpenGLRenderer
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	Texture3D::Texture3D(OpenGLRenderer& openGLRenderer, uint32_t width, uint32_t height, uint32_t depth, Renderer::TextureFormat::Enum textureFormat) :
-		ITexture3D(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer), width, height, depth),
+		ITexture3D(static_cast<Renderer::IRenderer&>(openGLRenderer), width, height, depth),
 		mTextureFormat(textureFormat),
 		mOpenGLTexture(0),
 		mOpenGLPixelUnpackBuffer(0),

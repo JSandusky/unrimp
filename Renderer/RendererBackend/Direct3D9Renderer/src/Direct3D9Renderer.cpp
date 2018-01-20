@@ -1235,6 +1235,7 @@ namespace Direct3D9Renderer
 		{
 			if (nullptr != D3DPERF_SetMarker)
 			{
+				RENDERER_ASSERT(mContext, nullptr != name, "Direct3D 9 debug marker names must not be a null pointer")
 				RENDERER_ASSERT(mContext, strlen(name) < 256, "Direct3D 9 debug marker names must not have more than 255 characters")
 				wchar_t unicodeName[256];
 				std::mbstowcs(unicodeName, name, 256);
@@ -1246,6 +1247,7 @@ namespace Direct3D9Renderer
 		{
 			if (nullptr != D3DPERF_BeginEvent)
 			{
+				RENDERER_ASSERT(mContext, nullptr != name, "Direct3D 9 debug event names must not be a null pointer")
 				RENDERER_ASSERT(mContext, strlen(name) < 256, "Direct3D 9 debug event names must not have more than 255 characters")
 				wchar_t unicodeName[256];
 				std::mbstowcs(unicodeName, name, 256);

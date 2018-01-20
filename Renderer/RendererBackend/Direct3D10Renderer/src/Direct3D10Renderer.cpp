@@ -1303,6 +1303,7 @@ namespace Direct3D10Renderer
 			// Call the Direct3D 9 PIX function
 			if (mDirect3D9RuntimeLinking->isDirect3D9Avaiable())
 			{
+				RENDERER_ASSERT(mContext, nullptr != name, "Direct3D 10 debug marker names must not be a null pointer")
 				RENDERER_ASSERT(mContext, strlen(name) < 256, "Direct3D 10 debug marker names must not have more than 255 characters")
 				wchar_t unicodeName[256];
 				std::mbstowcs(unicodeName, name, 256);
@@ -1321,6 +1322,7 @@ namespace Direct3D10Renderer
 			// Call the Direct3D 9 PIX function
 			if (mDirect3D9RuntimeLinking->isDirect3D9Avaiable())
 			{
+				RENDERER_ASSERT(mContext, nullptr != name, "Direct3D 10 debug event names must not be a null pointer")
 				RENDERER_ASSERT(mContext, strlen(name) < 256, "Direct3D 10 debug event names must not have more than 255 characters")
 				wchar_t unicodeName[256];
 				std::mbstowcs(unicodeName, name, 256);

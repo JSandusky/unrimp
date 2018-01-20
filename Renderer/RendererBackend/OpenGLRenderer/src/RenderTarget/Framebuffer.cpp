@@ -25,6 +25,7 @@
 #include "OpenGLRenderer/RenderTarget/RenderPass.h"
 #include "OpenGLRenderer/Texture/Texture2DArray.h"
 #include "OpenGLRenderer/Texture/Texture2D.h"
+#include "OpenGLRenderer/OpenGLRenderer.h"
 #include "OpenGLRenderer/Extensions.h"
 
 #include <Renderer/IAssert.h>
@@ -267,6 +268,26 @@ namespace OpenGLRenderer
 			mHeight = 1;
 		}
 	}
+
+
+	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifdef RENDERER_DEBUG
+		void Framebuffer::setDebugName(const char* name)
+		{
+			// Valid OpenGL framebuffer and "GL_KHR_debug"-extension available?
+			if (0 != mOpenGLFramebuffer && static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_KHR_debug())
+			{
+				glObjectLabel(GL_FRAMEBUFFER, mOpenGLFramebuffer, -1, name);
+			}
+		}
+	#else
+		void Framebuffer::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
 
 
 	//[-------------------------------------------------------]

@@ -22,6 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "OpenGLRenderer/Buffer/VertexBuffer.h"
+#include "OpenGLRenderer/OpenGLRenderer.h"
 #include "OpenGLRenderer/Extensions.h"
 
 #include <Renderer/IRenderer.h>
@@ -47,6 +48,26 @@ namespace OpenGLRenderer
 
 
 	//[-------------------------------------------------------]
+	//[ Public virtual Renderer::IResource methods            ]
+	//[-------------------------------------------------------]
+	#ifdef RENDERER_DEBUG
+		void VertexBuffer::setDebugName(const char* name)
+		{
+			// Valid OpenGL array buffer and "GL_KHR_debug"-extension available?
+			if (0 != mOpenGLArrayBuffer && static_cast<OpenGLRenderer&>(getRenderer()).getExtensions().isGL_KHR_debug())
+			{
+				glObjectLabel(GL_BUFFER, mOpenGLArrayBuffer, -1, name);
+			}
+		}
+	#else
+		void VertexBuffer::setDebugName(const char*)
+		{
+			// Nothing here
+		}
+	#endif
+
+
+	//[-------------------------------------------------------]
 	//[ Protected virtual Renderer::RefCount methods          ]
 	//[-------------------------------------------------------]
 	void VertexBuffer::selfDestruct()
@@ -59,7 +80,7 @@ namespace OpenGLRenderer
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
 	VertexBuffer::VertexBuffer(OpenGLRenderer& openGLRenderer) :
-		IVertexBuffer(reinterpret_cast<Renderer::IRenderer&>(openGLRenderer)),
+		IVertexBuffer(static_cast<Renderer::IRenderer&>(openGLRenderer)),
 		mOpenGLArrayBuffer(0)
 	{
 		// Nothing here
