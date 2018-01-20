@@ -53,7 +53,7 @@ namespace Direct3D12Renderer
 	*  @brief
 	*    Direct3D 12 buffer manager interface
 	*/
-	class BufferManager : public Renderer::IBufferManager
+	class BufferManager final : public Renderer::IBufferManager
 	{
 
 

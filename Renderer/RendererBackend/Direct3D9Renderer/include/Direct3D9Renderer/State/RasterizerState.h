@@ -58,7 +58,7 @@ namespace Direct3D9Renderer
 	*  @brief
 	*    Direct3D 9 rasterizer state class
 	*/
-	class RasterizerState : public IState
+	class RasterizerState final : public IState
 	{
 
 

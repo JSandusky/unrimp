@@ -58,7 +58,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class VertexAttributesResourceLoader : public IResourceLoader
+	class VertexAttributesResourceLoader final : public IResourceLoader
 	{
 
 

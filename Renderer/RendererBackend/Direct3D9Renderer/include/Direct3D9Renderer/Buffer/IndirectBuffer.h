@@ -53,7 +53,7 @@ namespace Direct3D9Renderer
 	*  @brief
 	*    Direct3D 9 indirect buffer object emulation class
 	*/
-	class IndirectBuffer : public Renderer::IIndirectBuffer
+	class IndirectBuffer final : public Renderer::IIndirectBuffer
 	{
 
 

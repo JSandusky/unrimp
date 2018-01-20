@@ -58,7 +58,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CameraSceneItem : public ISceneItem
+	class CameraSceneItem final : public ISceneItem
 	{
 
 

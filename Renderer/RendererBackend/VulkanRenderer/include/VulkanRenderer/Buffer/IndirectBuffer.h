@@ -57,7 +57,7 @@ namespace VulkanRenderer
 	*  @brief
 	*    Vulkan indirect buffer object interface
 	*/
-	class IndirectBuffer : public Renderer::IIndirectBuffer
+	class IndirectBuffer final : public Renderer::IIndirectBuffer
 	{
 
 

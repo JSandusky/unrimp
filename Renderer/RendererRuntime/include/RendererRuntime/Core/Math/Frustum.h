@@ -45,7 +45,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Frustum
 	*/
-	class Frustum
+	class Frustum final
 	{
 
 

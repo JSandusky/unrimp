@@ -56,7 +56,7 @@ namespace RendererRuntime
 	*    - "An Analytic Model for Full Spectral Sky-Dome Radiance (Lukas Hosek, Alexander Wilkie)"
 	*    - The implementation is basing on https://github.com/ddiakopoulos/sandbox/blob/master/assets/shaders/sky_hosek_frag.glsl (has also a Preetham implementation)
 	*/
-	class HosekWilkieSky
+	class HosekWilkieSky final
 	{
 
 
@@ -64,7 +64,7 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		struct Coefficients
+		struct Coefficients final
 		{
 			glm::vec3 A, B, C, D, E, F, G, H, I;
 			glm::vec3 Z;

@@ -44,7 +44,7 @@ namespace NullRenderer
 	*  @brief
 	*    Null framebuffer class
 	*/
-	class Framebuffer : public Renderer::IFramebuffer
+	class Framebuffer final : public Renderer::IFramebuffer
 	{
 
 

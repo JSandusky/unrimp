@@ -51,7 +51,7 @@ PRAGMA_WARNING_POP
 *  @brief
 *    Holds the command line arguments of an program (as UTF-8 strings)
 */
-class CommandLineArguments
+class CommandLineArguments final
 {
 
 

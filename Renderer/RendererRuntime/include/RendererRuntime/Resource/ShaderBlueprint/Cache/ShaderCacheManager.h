@@ -81,7 +81,7 @@ namespace RendererRuntime
 	*  @see
 	*    - See "RendererRuntime::PipelineStateCacheManager" for additional information
 	*/
-	class ShaderCacheManager : private Manager
+	class ShaderCacheManager final : private Manager
 	{
 
 

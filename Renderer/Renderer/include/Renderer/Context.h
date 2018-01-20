@@ -210,7 +210,7 @@ namespace Renderer
 	*  @brief
 	*    X11 version of the context class
 	*/
-	class X11Context : public Context
+	class X11Context final : public Context
 	{
 
 
@@ -260,7 +260,7 @@ namespace Renderer
 	*  @brief
 	*    Wayland version of the context class
 	*/
-	class WaylandContext : public Context
+	class WaylandContext final : public Context
 	{
 
 

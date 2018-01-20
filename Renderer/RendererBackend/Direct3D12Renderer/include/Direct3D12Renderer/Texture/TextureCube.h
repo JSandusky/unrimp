@@ -56,7 +56,7 @@ namespace Direct3D12Renderer
 	*  @brief
 	*    Direct3D 12 cube texture class
 	*/
-	class TextureCube : public Renderer::ITextureCube
+	class TextureCube final : public Renderer::ITextureCube
 	{
 
 

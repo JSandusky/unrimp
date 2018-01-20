@@ -60,7 +60,7 @@ namespace VulkanRenderer
 	*  @brief
 	*    Vulkan resource group class
 	*/
-	class ResourceGroup : public Renderer::IResourceGroup
+	class ResourceGroup final : public Renderer::IResourceGroup
 	{
 
 

@@ -62,7 +62,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorNodeResourceLoader : public IResourceLoader
+	class CompositorNodeResourceLoader final : public IResourceLoader
 	{
 
 

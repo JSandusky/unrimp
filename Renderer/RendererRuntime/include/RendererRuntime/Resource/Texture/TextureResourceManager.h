@@ -68,7 +68,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Texture resource manager class
 	*/
-	class TextureResourceManager : public ResourceManager<TextureResource>
+	class TextureResourceManager final : public ResourceManager<TextureResource>
 	{
 
 

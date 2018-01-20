@@ -75,7 +75,7 @@ namespace RendererRuntime
 	*  @see
 	*    - See "RendererRuntime::PipelineStateCacheManager" for additional information
 	*/
-	class PipelineStateSignature
+	class PipelineStateSignature final
 	{
 
 

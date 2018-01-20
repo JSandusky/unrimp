@@ -45,7 +45,7 @@ namespace OpenGLES3Renderer
 	*  @brief
 	*    OpenGL ES 3 swap chain class
 	*/
-	class SwapChain : public Renderer::ISwapChain
+	class SwapChain final : public Renderer::ISwapChain
 	{
 
 

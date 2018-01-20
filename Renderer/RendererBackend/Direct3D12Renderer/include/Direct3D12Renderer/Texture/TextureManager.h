@@ -53,7 +53,7 @@ namespace Direct3D12Renderer
 	*  @brief
 	*    Direct3D 12 texture manager interface
 	*/
-	class TextureManager : public Renderer::ITextureManager
+	class TextureManager final : public Renderer::ITextureManager
 	{
 
 

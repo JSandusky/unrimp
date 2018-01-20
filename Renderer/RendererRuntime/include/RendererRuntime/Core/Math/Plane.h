@@ -52,7 +52,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Plane
 	*/
-	class Plane
+	class Plane final
 	{
 
 

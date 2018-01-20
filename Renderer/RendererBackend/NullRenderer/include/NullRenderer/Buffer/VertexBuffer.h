@@ -53,7 +53,7 @@ namespace NullRenderer
 	*  @brief
 	*    Null vertex buffer object (VBO, "array buffer" in OpenGL terminology) class
 	*/
-	class VertexBuffer : public Renderer::IVertexBuffer
+	class VertexBuffer final : public Renderer::IVertexBuffer
 	{
 
 

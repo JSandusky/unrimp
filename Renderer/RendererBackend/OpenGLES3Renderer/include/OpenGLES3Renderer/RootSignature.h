@@ -54,7 +54,7 @@ namespace OpenGLES3Renderer
 	*  @brief
 	*    OpenGL ES 3 root signature ("pipeline layout" in Vulkan terminology) class
 	*/
-	class RootSignature : public Renderer::IRootSignature
+	class RootSignature final : public Renderer::IRootSignature
 	{
 
 

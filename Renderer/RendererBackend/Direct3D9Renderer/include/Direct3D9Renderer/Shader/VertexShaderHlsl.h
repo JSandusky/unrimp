@@ -59,7 +59,7 @@ namespace Direct3D9Renderer
 	*  @brief
 	*    HLSL vertex shader class
 	*/
-	class VertexShaderHlsl : public Renderer::IVertexShader
+	class VertexShaderHlsl final : public Renderer::IVertexShader
 	{
 
 

@@ -49,7 +49,7 @@
 *    - Framebuffer object (FBO) used for render to texture
 *    - Multiple render targets (MRT)
 */
-class FirstMultipleRenderTargets : public ExampleBase
+class FirstMultipleRenderTargets final : public ExampleBase
 {
 
 

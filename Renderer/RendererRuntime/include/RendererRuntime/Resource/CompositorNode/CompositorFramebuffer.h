@@ -51,7 +51,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Compositor framebuffer; used for compositor workspace and nodes intermediate rendering results
 	*/
-	class CompositorFramebuffer
+	class CompositorFramebuffer final
 	{
 
 

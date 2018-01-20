@@ -59,7 +59,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class MaterialResourceManager : public ResourceManager<MaterialResource>
+	class MaterialResourceManager final : public ResourceManager<MaterialResource>
 	{
 
 

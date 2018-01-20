@@ -48,7 +48,7 @@ namespace RendererRuntime
 	*  @note
 	*    - It's highly recommended to only render the debug GUI into the main render target, for example the swap chain of an operation system window
 	*/
-	class CompositorResourcePassDebugGui : public CompositorResourcePassQuad
+	class CompositorResourcePassDebugGui final : public CompositorResourcePassQuad
 	{
 
 

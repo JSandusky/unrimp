@@ -53,7 +53,7 @@ namespace NullRenderer
 	*  @brief
 	*    Null vertex shader class
 	*/
-	class VertexShader : public Renderer::IVertexShader
+	class VertexShader final : public Renderer::IVertexShader
 	{
 
 

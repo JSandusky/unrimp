@@ -52,7 +52,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Framebuffer signature
 	*/
-	class FramebufferSignature
+	class FramebufferSignature final
 	{
 
 

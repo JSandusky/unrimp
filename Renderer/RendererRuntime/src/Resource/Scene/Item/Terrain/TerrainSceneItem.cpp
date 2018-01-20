@@ -47,7 +47,7 @@ namespace
 		*  @brief
 		*    These are the size of the neighbours along +/- x or y axes. For interior tiles this is 1. For edge tiles it is 0.5 or 2.0.
 		*/
-		struct Adjacency
+		struct Adjacency final
 		{
 			float neighbourMinusX;
 			float neighbourMinusY;
@@ -55,7 +55,7 @@ namespace
 			float neighbourPlusY;
 		};
 
-		struct InstanceData
+		struct InstanceData final
 		{
 			float	  x, y;
 			float	  tileSize;

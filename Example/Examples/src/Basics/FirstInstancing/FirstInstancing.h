@@ -48,7 +48,7 @@
 *    - Instanced arrays (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 *    - Draw instanced (shader model 4 feature, build in shader variable holding the current instance ID)
 */
-class FirstInstancing : public ExampleBase
+class FirstInstancing final : public ExampleBase
 {
 
 

@@ -37,7 +37,7 @@
 *  @brief
 *    Batch of instanced cubes using draw instanced
 */
-class BatchDrawInstanced
+class BatchDrawInstanced final
 {
 
 

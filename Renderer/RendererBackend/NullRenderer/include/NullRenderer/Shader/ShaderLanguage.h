@@ -53,7 +53,7 @@ namespace NullRenderer
 	*  @brief
 	*    Null shader language class
 	*/
-	class ShaderLanguage : public Renderer::IShaderLanguage
+	class ShaderLanguage final : public Renderer::IShaderLanguage
 	{
 
 

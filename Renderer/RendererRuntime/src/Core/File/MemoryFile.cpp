@@ -46,7 +46,7 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global definitions                                    ]
 		//[-------------------------------------------------------]
-		struct FileFormatHeader
+		struct FileFormatHeader final
 		{
 			// Format
 			uint32_t formatType;

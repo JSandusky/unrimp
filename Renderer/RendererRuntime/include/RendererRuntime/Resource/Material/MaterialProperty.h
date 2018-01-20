@@ -44,7 +44,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Material property
 	*/
-	class MaterialProperty : public MaterialPropertyValue
+	class MaterialProperty final : public MaterialPropertyValue
 	{
 
 

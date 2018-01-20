@@ -317,7 +317,7 @@ void FirstMesh::onDraw()
 			// -> Two versions: One using an uniform buffer and one setting an individual uniform
 			if (nullptr != mUniformBuffer)
 			{
-				struct UniformBlockDynamicVs
+				struct UniformBlockDynamicVs final
 				{
 					float objectSpaceToClipSpaceMatrix[4 * 4];	// Object space to clip space matrix
 					float objectSpaceToViewSpaceMatrix[4 * 4];	// Object space to view space matrix

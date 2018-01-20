@@ -61,7 +61,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    Linux OpenGL context class
 	*/
-	class OpenGLContextLinux : public IOpenGLContext
+	class OpenGLContextLinux final : public IOpenGLContext
 	{
 
 

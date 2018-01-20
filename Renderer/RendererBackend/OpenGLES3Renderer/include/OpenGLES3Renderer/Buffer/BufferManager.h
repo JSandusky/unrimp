@@ -54,7 +54,7 @@ namespace OpenGLES3Renderer
 	*  @brief
 	*    OpenGL ES 3 buffer manager interface
 	*/
-	class BufferManager : public Renderer::IBufferManager
+	class BufferManager final : public Renderer::IBufferManager
 	{
 
 

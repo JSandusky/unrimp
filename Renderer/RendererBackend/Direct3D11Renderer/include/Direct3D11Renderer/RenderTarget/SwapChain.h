@@ -54,7 +54,7 @@ namespace Direct3D11Renderer
 	*  @brief
 	*    Direct3D 11 swap chain class
 	*/
-	class SwapChain : public Renderer::ISwapChain
+	class SwapChain final : public Renderer::ISwapChain
 	{
 
 

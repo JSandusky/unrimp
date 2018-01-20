@@ -88,7 +88,7 @@ namespace
 		static const std::string TEXTURE_TYPE = "Texture";
 		static const std::string MATERIAL_TYPE = "Material";
 		static const std::string MESH_TYPE = "Mesh";
-		struct ImporterContext
+		struct ImporterContext final
 		{
 			std::string			  meshFilename;
 			bool				  hasSkeleton			   = false;

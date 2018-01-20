@@ -44,7 +44,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    Separate program class, effective direct state access (DSA)
 	*/
-	class ProgramSeparateDsa : public ProgramSeparate
+	class ProgramSeparateDsa final : public ProgramSeparate
 	{
 
 

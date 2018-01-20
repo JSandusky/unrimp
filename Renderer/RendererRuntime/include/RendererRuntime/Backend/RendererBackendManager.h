@@ -58,7 +58,7 @@ namespace RendererRuntime
 	*    - Finalize resource streaming
 	*    - Dispatch command buffers
 	*/
-	class RendererBackendManager : private Manager
+	class RendererBackendManager final : private Manager
 	{
 
 

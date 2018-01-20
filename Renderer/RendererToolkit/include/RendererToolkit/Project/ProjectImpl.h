@@ -85,7 +85,7 @@ namespace RendererToolkit
 	*  @brief
 	*    Project class implementation
 	*/
-	class ProjectImpl : public IProject
+	class ProjectImpl final : public IProject
 	{
 
 

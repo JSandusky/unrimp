@@ -40,7 +40,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CrnTextureResourceLoader : public ITextureResourceLoader
+	class CrnTextureResourceLoader final : public ITextureResourceLoader
 	{
 
 

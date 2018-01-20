@@ -51,7 +51,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Platform specific functionality
 	*/
-	class PlatformManager : private Manager
+	class PlatformManager final : private Manager
 	{
 
 

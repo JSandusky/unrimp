@@ -72,7 +72,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Material technique
 	*/
-	class MaterialTechnique : public MaterialBufferSlot, public IResourceListener
+	class MaterialTechnique final : public MaterialBufferSlot, public IResourceListener
 	{
 
 
@@ -87,7 +87,7 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		struct Texture
+		struct Texture final
 		{
 			uint32_t		  rootParameterIndex;
 			MaterialProperty  materialProperty;

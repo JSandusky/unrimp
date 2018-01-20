@@ -44,7 +44,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    Monolithic program class, effective direct state access (DSA)
 	*/
-	class ProgramMonolithicDsa : public ProgramMonolithic
+	class ProgramMonolithicDsa final : public ProgramMonolithic
 	{
 
 

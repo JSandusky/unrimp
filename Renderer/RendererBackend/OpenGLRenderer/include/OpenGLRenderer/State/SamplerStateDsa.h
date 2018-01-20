@@ -46,7 +46,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL sampler state class, direct state access (DSA) version to emulate a sampler object
 	*/
-	class SamplerStateDsa : public SamplerState
+	class SamplerStateDsa final : public SamplerState
 	{
 
 

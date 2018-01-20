@@ -43,7 +43,7 @@ namespace RendererRuntime
 			*    String hash helper template
 			*/
 			template <uint32_t N, uint32_t I>
-			struct FnvHash
+			struct FnvHash final
 			{
 				/**
 				*  @brief
@@ -66,7 +66,7 @@ namespace RendererRuntime
 			*    String hash helper template
 			*/
 			template <uint32_t N>
-			struct FnvHash<N, 1>
+			struct FnvHash<N, 1> final
 			{
 				/**
 				*  @brief
@@ -86,7 +86,7 @@ namespace RendererRuntime
 			*    Specialization for empty strings, which we force to always use "MAXIMUM_UINT32_T_VALUE" as string hash
 			*/
 			template <>
-			struct FnvHash<1, 1>
+			struct FnvHash<1, 1> final
 			{
 				/**
 				*  @brief

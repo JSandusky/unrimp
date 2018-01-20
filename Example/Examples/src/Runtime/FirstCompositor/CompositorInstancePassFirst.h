@@ -39,7 +39,7 @@ class CompositorResourcePassFirst;
 //[-------------------------------------------------------]
 //[ Classes                                               ]
 //[-------------------------------------------------------]
-class CompositorInstancePassFirst : public RendererRuntime::ICompositorInstancePass
+class CompositorInstancePassFirst final : public RendererRuntime::ICompositorInstancePass
 {
 
 

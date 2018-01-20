@@ -70,7 +70,7 @@ namespace RendererRuntime
 
 		#pragma pack(push)
 		#pragma pack(1)
-			struct SkeletonAnimationHeader
+			struct SkeletonAnimationHeader final
 			{
 				uint8_t  numberOfChannels;			///< The number of bone animation channels; each channel affects a single node
 				float	 durationInTicks;			///< Duration of the animation in ticks

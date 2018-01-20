@@ -93,7 +93,7 @@ namespace VulkanRenderer
 	*  @brief
 	*    Vulkan renderer class
 	*/
-	class VulkanRenderer : public Renderer::IRenderer
+	class VulkanRenderer final : public Renderer::IRenderer
 	{
 
 

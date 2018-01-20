@@ -55,7 +55,7 @@ namespace VulkanRenderer
 	*  @brief
 	*    Vulkan context class
 	*/
-	class VulkanContext
+	class VulkanContext final
 	{
 
 

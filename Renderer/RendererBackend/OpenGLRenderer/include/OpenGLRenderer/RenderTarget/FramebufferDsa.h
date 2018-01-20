@@ -44,7 +44,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL framebuffer class, effective direct state access (DSA)
 	*/
-	class FramebufferDsa : public Framebuffer
+	class FramebufferDsa final : public Framebuffer
 	{
 
 

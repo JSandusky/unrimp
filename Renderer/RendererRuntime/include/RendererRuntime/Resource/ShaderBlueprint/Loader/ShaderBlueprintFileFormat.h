@@ -60,7 +60,7 @@ namespace RendererRuntime
 
 		#pragma pack(push)
 		#pragma pack(1)
-			struct ShaderBlueprintHeader
+			struct ShaderBlueprintHeader final
 			{
 				uint16_t numberOfIncludeShaderPieceAssetIds;
 				uint16_t numberReferencedShaderProperties;

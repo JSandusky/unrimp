@@ -77,7 +77,7 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~RasterizerState() override;
+		inline ~RasterizerState();
 
 		/**
 		*  @brief

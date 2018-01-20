@@ -59,7 +59,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class SceneResourceManager : public ResourceManager<SceneResource>
+	class SceneResourceManager final : public ResourceManager<SceneResource>
 	{
 
 

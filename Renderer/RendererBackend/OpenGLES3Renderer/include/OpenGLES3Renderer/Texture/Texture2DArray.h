@@ -54,7 +54,7 @@ namespace OpenGLES3Renderer
 	*  @brief
 	*    OpenGL ES 3 2D array texture class
 	*/
-	class Texture2DArray : public Renderer::ITexture2DArray
+	class Texture2DArray final : public Renderer::ITexture2DArray
 	{
 
 

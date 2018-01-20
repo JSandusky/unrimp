@@ -57,7 +57,7 @@ namespace Direct3D12Renderer
 	*  @brief
 	*    Direct3D 12 index buffer object (IBO, "element array buffer" in OpenGL terminology) class
 	*/
-	class IndexBuffer : public Renderer::IIndexBuffer
+	class IndexBuffer final : public Renderer::IIndexBuffer
 	{
 
 

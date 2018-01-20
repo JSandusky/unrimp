@@ -79,7 +79,7 @@ namespace Renderer
 	*/
 	#pragma pack(push)
 	#pragma pack(1)
-		struct VertexAttribute
+		struct VertexAttribute final
 		{
 			// Data destination
 			VertexAttributeFormat vertexAttributeFormat;	///< Vertex attribute format
@@ -107,7 +107,7 @@ namespace Renderer
 	*/
 	#pragma pack(push)
 	#pragma pack(1)
-		struct VertexAttributes
+		struct VertexAttributes final
 		{
 				  uint32_t		   numberOfAttributes;	///< Number of attributes (position, color, texture coordinate, normal...), having zero attributes is valid
 			const VertexAttribute* attributes;			///< At least "numberOfAttributes" instances of vertex array attributes, can be a null pointer in case there are zero attributes, the data is internally copied and you have to free your memory if you no longer need it
@@ -134,7 +134,7 @@ namespace Renderer
 	*  @see
 	*    - "Renderer::IVertexArray" class documentation
 	*/
-	struct VertexArrayVertexBuffer
+	struct VertexArrayVertexBuffer final
 	{
 		IVertexBuffer* vertexBuffer;	///< Vertex buffer used at this vertex input slot (vertex array instances keep a reference to the vertex buffers used by the vertex array attributes, see "Renderer::IRenderer::createVertexArray()" for details)
 	};

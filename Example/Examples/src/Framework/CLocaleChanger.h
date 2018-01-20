@@ -49,7 +49,7 @@ PRAGMA_WARNING_POP
 *    When this instance gets destroyed the old locale setting is restored
 *    => Not possible to forget the restore anymore ;)
 */
-class CLocaleChanger
+class CLocaleChanger final
 {
 
 //[-------------------------------------------------------]

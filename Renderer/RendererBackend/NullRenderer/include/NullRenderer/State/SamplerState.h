@@ -53,7 +53,7 @@ namespace NullRenderer
 	*  @brief
 	*    Null sampler state class
 	*/
-	class SamplerState : public Renderer::ISamplerState
+	class SamplerState final : public Renderer::ISamplerState
 	{
 
 

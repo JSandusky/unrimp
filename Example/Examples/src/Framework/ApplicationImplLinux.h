@@ -46,7 +46,7 @@ class X11Application;
 *  @brief
 *    Linux application implementation class
 */
-class ApplicationImplLinux : public IApplicationImpl
+class ApplicationImplLinux final : public IApplicationImpl
 {
 
 

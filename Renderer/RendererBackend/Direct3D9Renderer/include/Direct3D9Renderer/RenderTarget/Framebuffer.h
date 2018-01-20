@@ -50,7 +50,7 @@ namespace Direct3D9Renderer
 	*  @brief
 	*    Direct3D 9 framebuffer class
 	*/
-	class Framebuffer : public Renderer::IFramebuffer
+	class Framebuffer final : public Renderer::IFramebuffer
 	{
 
 

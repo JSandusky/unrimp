@@ -61,7 +61,7 @@ namespace Direct3D11Renderer
 	*  @brief
 	*    Direct3D 11 renderer class
 	*/
-	class Direct3D11Renderer : public Renderer::IRenderer
+	class Direct3D11Renderer final : public Renderer::IRenderer
 	{
 
 

@@ -61,7 +61,7 @@ namespace Direct3D12Renderer
 	*  @brief
 	*    Direct3D 12 pipeline state class
 	*/
-	class PipelineState : public Renderer::IPipelineState
+	class PipelineState final : public Renderer::IPipelineState
 	{
 
 

@@ -90,7 +90,7 @@ namespace RendererRuntime
 	*  @note
 	*    - Takes care of asynchronous pipeline state compilation
 	*/
-	class PipelineStateCompiler
+	class PipelineStateCompiler final
 	{
 
 
@@ -120,7 +120,7 @@ namespace RendererRuntime
 	//[ Private definitions                                   ]
 	//[-------------------------------------------------------]
 	private:
-		struct CompilerRequest
+		struct CompilerRequest final
 		{
 			// Input
 			PipelineStateCache& pipelineStateCache;

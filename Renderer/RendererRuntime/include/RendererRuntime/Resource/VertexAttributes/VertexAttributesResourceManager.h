@@ -62,7 +62,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Vertex attributes resource manager
 	*/
-	class VertexAttributesResourceManager : public ResourceManager<VertexAttributesResource>
+	class VertexAttributesResourceManager final : public ResourceManager<VertexAttributesResource>
 	{
 
 

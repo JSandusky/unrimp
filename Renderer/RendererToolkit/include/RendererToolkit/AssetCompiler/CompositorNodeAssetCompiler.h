@@ -40,7 +40,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorNodeAssetCompiler : public IAssetCompiler
+	class CompositorNodeAssetCompiler final : public IAssetCompiler
 	{
 
 

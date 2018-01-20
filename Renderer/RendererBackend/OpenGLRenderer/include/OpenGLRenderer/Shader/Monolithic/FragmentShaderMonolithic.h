@@ -53,7 +53,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    Monolithic fragment shader ("pixel shader" in Direct3D terminology) class
 	*/
-	class FragmentShaderMonolithic : public Renderer::IFragmentShader
+	class FragmentShaderMonolithic final : public Renderer::IFragmentShader
 	{
 
 

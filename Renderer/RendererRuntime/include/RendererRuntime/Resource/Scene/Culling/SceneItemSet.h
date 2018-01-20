@@ -66,7 +66,7 @@ namespace RendererRuntime
 	*  @note
 	*    - Basing on "The Implementation of Frustum Culling in Stingray" - http://bitsquid.blogspot.de/2016/10/the-implementation-of-frustum-culling.html
 	*/
-	struct SceneItemSet
+	struct SceneItemSet final
 	{
 
 

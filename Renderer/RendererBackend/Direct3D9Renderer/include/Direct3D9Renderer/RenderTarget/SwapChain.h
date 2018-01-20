@@ -52,7 +52,7 @@ namespace Direct3D9Renderer
 	*  @brief
 	*    Direct3D 9 swap chain class
 	*/
-	class SwapChain : public Renderer::ISwapChain
+	class SwapChain final : public Renderer::ISwapChain
 	{
 
 

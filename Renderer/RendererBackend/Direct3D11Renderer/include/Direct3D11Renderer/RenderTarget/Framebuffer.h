@@ -52,7 +52,7 @@ namespace Direct3D11Renderer
 	*  @brief
 	*    Direct3D 11 framebuffer class
 	*/
-	class Framebuffer : public Renderer::IFramebuffer
+	class Framebuffer final : public Renderer::IFramebuffer
 	{
 
 

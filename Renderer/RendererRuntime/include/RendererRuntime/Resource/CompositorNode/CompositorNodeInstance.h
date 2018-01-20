@@ -68,7 +68,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorNodeInstance
+	class CompositorNodeInstance final
 	{
 
 
@@ -91,7 +91,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	protected:
 		inline CompositorNodeInstance(CompositorNodeResourceId compositorNodeResourceId, const CompositorWorkspaceInstance& compositorWorkspaceInstance);
-		virtual ~CompositorNodeInstance();
+		~CompositorNodeInstance();
 		explicit CompositorNodeInstance(const CompositorNodeInstance&) = delete;
 		CompositorNodeInstance& operator=(const CompositorNodeInstance&) = delete;
 		void compositorWorkspaceInstanceLoadingFinished() const;

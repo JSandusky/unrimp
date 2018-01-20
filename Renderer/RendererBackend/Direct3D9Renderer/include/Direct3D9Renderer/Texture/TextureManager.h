@@ -53,7 +53,7 @@ namespace Direct3D9Renderer
 	*  @brief
 	*    Direct3D 9 texture manager interface
 	*/
-	class TextureManager : public Renderer::ITextureManager
+	class TextureManager final : public Renderer::ITextureManager
 	{
 
 

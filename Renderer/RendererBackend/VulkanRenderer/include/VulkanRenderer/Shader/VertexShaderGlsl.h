@@ -60,7 +60,7 @@ namespace VulkanRenderer
 	*  @brief
 	*    GLSL vertex shader class
 	*/
-	class VertexShaderGlsl : public Renderer::IVertexShader
+	class VertexShaderGlsl final : public Renderer::IVertexShader
 	{
 
 

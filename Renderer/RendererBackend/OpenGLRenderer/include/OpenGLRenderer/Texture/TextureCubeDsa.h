@@ -46,7 +46,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL cube texture class, effective direct state access (DSA)
 	*/
-	class TextureCubeDsa : public TextureCube
+	class TextureCubeDsa final : public TextureCube
 	{
 
 

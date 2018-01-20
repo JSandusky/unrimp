@@ -65,7 +65,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Material resource
 	*/
-	class MaterialResource : public IResource
+	class MaterialResource final : public IResource
 	{
 
 

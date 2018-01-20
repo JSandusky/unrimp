@@ -66,7 +66,7 @@ namespace RendererRuntime
 	*  @note
 	*    - Example: Abstract representation of a sub-mesh which is part of an mesh scene item
 	*/
-	class Renderable
+	class Renderable final
 	{
 
 

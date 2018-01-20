@@ -51,7 +51,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Compositor context data used during compositor execution
 	*/
-	class CompositorContextData
+	class CompositorContextData final
 	{
 
 

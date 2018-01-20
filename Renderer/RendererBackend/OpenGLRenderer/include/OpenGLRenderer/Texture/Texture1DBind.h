@@ -46,7 +46,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL 1D texture class, traditional bind version
 	*/
-	class Texture1DBind : public Texture1D
+	class Texture1DBind final : public Texture1D
 	{
 
 

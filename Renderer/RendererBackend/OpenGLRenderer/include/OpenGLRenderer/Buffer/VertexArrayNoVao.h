@@ -60,7 +60,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL vertex array class, traditional version
 	*/
-	class VertexArrayNoVao : public VertexArray
+	class VertexArrayNoVao final : public VertexArray
 	{
 
 

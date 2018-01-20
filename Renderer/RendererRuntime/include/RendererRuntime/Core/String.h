@@ -69,7 +69,7 @@ namespace RendererRuntime
 	*    - Due to "wall" compiler warnings, we need to disable warnings when including external headers
 	*   which are a problem for large scale projects. Additionally, there are handy default instances.
 	*/
-	class RENDERERRUNTIME_API_EXPORT String : public std::string
+	class RENDERERRUNTIME_API_EXPORT String final : public std::string
 	{
 
 

@@ -54,7 +54,7 @@ namespace Direct3D9Renderer
 	*  @brief
 	*    Direct3D 9 sampler state class
 	*/
-	class SamplerState : public Renderer::ISamplerState
+	class SamplerState final : public Renderer::ISamplerState
 	{
 
 

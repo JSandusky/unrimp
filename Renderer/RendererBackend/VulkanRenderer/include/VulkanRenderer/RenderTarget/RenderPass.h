@@ -56,7 +56,7 @@ namespace VulkanRenderer
 	*  @brief
 	*    Vulkan render pass interface
 	*/
-	class RenderPass : public Renderer::IRenderPass
+	class RenderPass final : public Renderer::IRenderPass
 	{
 
 

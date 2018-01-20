@@ -44,7 +44,7 @@ namespace Renderer
 	*  @brief
 	*    Index buffer data format
 	*/
-	struct IndexBufferFormat
+	struct IndexBufferFormat final
 	{
 		enum Enum
 		{

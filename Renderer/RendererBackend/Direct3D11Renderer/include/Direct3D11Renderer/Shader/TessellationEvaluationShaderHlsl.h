@@ -58,7 +58,7 @@ namespace Direct3D11Renderer
 	*  @brief
 	*    HLSL tessellation evaluation shader ("domain shader" in Direct3D terminology) class
 	*/
-	class TessellationEvaluationShaderHlsl : public Renderer::ITessellationEvaluationShader
+	class TessellationEvaluationShaderHlsl final : public Renderer::ITessellationEvaluationShader
 	{
 
 

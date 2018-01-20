@@ -91,7 +91,7 @@ namespace RendererRuntime
 	*
 	*    The sole purpose of the render queue is to fill sorted commands into a given command buffer.
 	*/
-	class RenderQueue
+	class RenderQueue final
 	{
 
 
@@ -137,7 +137,7 @@ namespace RendererRuntime
 	//[ Private definitions                                   ]
 	//[-------------------------------------------------------]
 	private:
-		struct QueuedRenderable
+		struct QueuedRenderable final
 		{
 			const Renderable* renderable;	///< Always valid, don't destroy the instance
 			uint64_t		  sortingKey;	///< Key used for sorting
@@ -157,7 +157,7 @@ namespace RendererRuntime
 		};
 		typedef std::vector<QueuedRenderable> QueuedRenderables;
 
-		struct Queue
+		struct Queue final
 		{
 			QueuedRenderables queuedRenderables;
 			bool			  sorted;

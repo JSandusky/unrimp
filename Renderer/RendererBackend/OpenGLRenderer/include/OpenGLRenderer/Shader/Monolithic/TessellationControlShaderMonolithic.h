@@ -53,7 +53,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    Monolithic tessellation control shader ("hull shader" in Direct3D terminology) class
 	*/
-	class TessellationControlShaderMonolithic : public Renderer::ITessellationControlShader
+	class TessellationControlShaderMonolithic final : public Renderer::ITessellationControlShader
 	{
 
 

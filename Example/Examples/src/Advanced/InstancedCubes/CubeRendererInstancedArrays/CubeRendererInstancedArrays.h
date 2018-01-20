@@ -47,7 +47,7 @@ class BatchInstancedArrays;
 *    Required renderer features:
 *    - Instanced arrays (shader model 3 feature, vertex array element advancing per-instance instead of per-vertex)
 */
-class CubeRendererInstancedArrays : public ICubeRenderer
+class CubeRendererInstancedArrays final : public ICubeRenderer
 {
 
 

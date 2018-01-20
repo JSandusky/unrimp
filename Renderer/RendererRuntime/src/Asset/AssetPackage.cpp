@@ -44,7 +44,7 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Structures                                            ]
 		//[-------------------------------------------------------]
-		struct OrderByAssetId
+		struct OrderByAssetId final
 		{
 			inline bool operator()(const RendererRuntime::Asset& left, RendererRuntime::AssetId right) const
 			{

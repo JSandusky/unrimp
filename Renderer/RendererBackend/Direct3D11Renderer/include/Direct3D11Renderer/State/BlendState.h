@@ -58,7 +58,7 @@ namespace Direct3D11Renderer
 	*  @brief
 	*    Direct3D 11 blend state class
 	*/
-	class BlendState : public IState
+	class BlendState final : public IState
 	{
 
 

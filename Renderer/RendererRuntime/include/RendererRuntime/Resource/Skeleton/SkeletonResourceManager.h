@@ -62,7 +62,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Skeleton resource manager
 	*/
-	class SkeletonResourceManager : public ResourceManager<SkeletonResource>
+	class SkeletonResourceManager final : public ResourceManager<SkeletonResource>
 	{
 
 

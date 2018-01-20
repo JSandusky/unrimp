@@ -91,7 +91,7 @@ namespace RendererRuntime
 	*  @todo
 	*    - TODO(co) It might make sense to use lock-free-queues in here
 	*/
-	class ResourceStreamer
+	class ResourceStreamer final
 	{
 
 
@@ -105,7 +105,7 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		struct LoadRequest
+		struct LoadRequest final
 		{
 			// Data provided from the outside
 			const Asset*		 asset;					///< Used asset, must be valid
@@ -168,7 +168,7 @@ namespace RendererRuntime
 	private:
 		typedef std::vector<IResourceLoader*> ResourceLoaders;
 		typedef std::deque<LoadRequest> LoadRequests;
-		struct ResourceLoaderType
+		struct ResourceLoaderType final
 		{
 			uint32_t		numberOfInstances;
 			ResourceLoaders	freeResourceLoaders;

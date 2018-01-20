@@ -62,7 +62,7 @@ namespace Direct3D9Renderer
 	*  @brief
 	*    Direct3D 9 vertex array class
 	*/
-	class VertexArray : public Renderer::IVertexArray
+	class VertexArray final : public Renderer::IVertexArray
 	{
 
 

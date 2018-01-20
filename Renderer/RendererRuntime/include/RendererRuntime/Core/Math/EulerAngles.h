@@ -65,7 +65,7 @@ namespace RendererRuntime
 	*    - When dealing with Euler angles keep care of 'gimbal lock', at http://www.sjbaker.org/steve/omniv/eulers_are_evil.html
 	*      you will find some good information about this topic.
 	*/
-	class RENDERERRUNTIME_API_EXPORT EulerAngles
+	class RENDERERRUNTIME_API_EXPORT EulerAngles final
 	{
 
 

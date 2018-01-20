@@ -58,7 +58,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL resource group class
 	*/
-	class ResourceGroup : public Renderer::IResourceGroup
+	class ResourceGroup final : public Renderer::IResourceGroup
 	{
 
 

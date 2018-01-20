@@ -45,7 +45,7 @@ namespace NullRenderer
 	*  @brief
 	*    Null render pass interface
 	*/
-	class RenderPass : public Renderer::IRenderPass
+	class RenderPass final : public Renderer::IRenderPass
 	{
 
 

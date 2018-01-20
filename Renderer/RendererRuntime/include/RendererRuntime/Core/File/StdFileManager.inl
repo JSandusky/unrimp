@@ -88,7 +88,7 @@ namespace
 
 		};
 
-		class StdReadFile : public StdFile
+		class StdReadFile final : public StdFile
 		{
 
 
@@ -168,7 +168,7 @@ namespace
 
 		};
 
-		class StdWriteFile : public StdFile
+		class StdWriteFile final : public StdFile
 		{
 
 

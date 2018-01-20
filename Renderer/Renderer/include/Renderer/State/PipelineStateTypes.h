@@ -145,7 +145,7 @@ namespace Renderer
 		VertexAttributes vertexAttributes;	///< Vertex attributes
 		IRenderPass*	 renderPass;		///< Render pass, the pipeline state keeps a reference
 	};
-	struct PipelineStateBuilder : public PipelineState
+	struct PipelineStateBuilder final : public PipelineState
 	{
 
 

@@ -123,7 +123,7 @@ namespace Renderer
 	*  @note
 	*    - Designed to be instanced and used inside a single C++ file
 	*/
-	class RendererInstance
+	class RendererInstance final
 	{
 
 

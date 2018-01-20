@@ -41,7 +41,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorResourcePassVrHiddenAreaMesh : public ICompositorResourcePass
+	class CompositorResourcePassVrHiddenAreaMesh final : public ICompositorResourcePass
 	{
 
 

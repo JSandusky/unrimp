@@ -53,7 +53,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    Separate shader language class
 	*/
-	class ShaderLanguageSeparate : public Renderer::IShaderLanguage
+	class ShaderLanguageSeparate final : public Renderer::IShaderLanguage
 	{
 
 

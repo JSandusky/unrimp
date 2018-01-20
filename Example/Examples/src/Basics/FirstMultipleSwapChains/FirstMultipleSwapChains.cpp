@@ -71,7 +71,7 @@
 		}
 	}
 #elif defined LINUX
-	class SwapChainWindow : public X11Window
+	class SwapChainWindow final : public X11Window
 	{
 	public:
 		SwapChainWindow() :

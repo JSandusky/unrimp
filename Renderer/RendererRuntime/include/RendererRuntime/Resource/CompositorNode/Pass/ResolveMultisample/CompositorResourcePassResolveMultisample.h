@@ -47,7 +47,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorResourcePassResolveMultisample : public ICompositorResourcePass
+	class CompositorResourcePassResolveMultisample final : public ICompositorResourcePass
 	{
 
 

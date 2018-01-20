@@ -47,7 +47,7 @@ namespace Renderer
 	*  @note
 	*    - Designed to be instanced and used inside a single C++ file
 	*/
-	class StdAllocator : public IAllocator
+	class StdAllocator final : public IAllocator
 	{
 
 

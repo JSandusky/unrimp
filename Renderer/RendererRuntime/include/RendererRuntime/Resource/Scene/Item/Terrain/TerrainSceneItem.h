@@ -63,7 +63,7 @@ namespace RendererRuntime
 	*    ###################
 	*    ###################
 	*/
-	class TerrainSceneItem : public MaterialSceneItem
+	class TerrainSceneItem final : public MaterialSceneItem
 	{
 
 
@@ -104,7 +104,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	private:
 		static const int MAXIMUM_NUMBER_OF_TERRAIN_TILE_RINGS = 6;
-		struct TerrainTileRing
+		struct TerrainTileRing final
 		{
 			int						  numberOfTiles;
 			Renderer::IVertexArrayPtr vertexArrayPtr;	///< Vertex array object (VAO), considered to be always valid

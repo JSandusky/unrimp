@@ -50,7 +50,7 @@ namespace RendererRuntime
 *    Demonstrates:
 *    - Compositor
 */
-class FirstCompositor : public ExampleBase
+class FirstCompositor final : public ExampleBase
 {
 
 

@@ -49,7 +49,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorInstancePassDebugGui : public CompositorInstancePassQuad
+	class CompositorInstancePassDebugGui final : public CompositorInstancePassQuad
 	{
 
 

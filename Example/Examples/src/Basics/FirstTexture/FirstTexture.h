@@ -47,7 +47,7 @@
 *    - Root signature
 *    - Pipeline state object (PSO)
 */
-class FirstTexture : public ExampleBase
+class FirstTexture final : public ExampleBase
 {
 
 

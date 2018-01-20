@@ -58,7 +58,7 @@ namespace NullRenderer
 	*  @brief
 	*    Null program class
 	*/
-	class Program : public Renderer::IProgram
+	class Program final : public Renderer::IProgram
 	{
 
 

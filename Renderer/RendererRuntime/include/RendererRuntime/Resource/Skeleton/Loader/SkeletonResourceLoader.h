@@ -57,7 +57,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class SkeletonResourceLoader : public IResourceLoader
+	class SkeletonResourceLoader final : public IResourceLoader
 	{
 
 

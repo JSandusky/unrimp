@@ -42,7 +42,7 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Structures                                            ]
 		//[-------------------------------------------------------]
-		struct OrderByMaterialResourceId
+		struct OrderByMaterialResourceId final
 		{
 			inline bool operator()(RendererRuntime::MaterialResourceId left, RendererRuntime::MaterialResourceId right) const
 			{
@@ -50,7 +50,7 @@ namespace
 			}
 		};
 
-		struct OrderByMaterialTechniqueId
+		struct OrderByMaterialTechniqueId final
 		{
 			inline bool operator()(const RendererRuntime::MaterialTechnique* left, RendererRuntime::MaterialTechniqueId right) const
 			{

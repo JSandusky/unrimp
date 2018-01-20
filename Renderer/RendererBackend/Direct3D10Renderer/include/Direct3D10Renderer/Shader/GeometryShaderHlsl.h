@@ -58,7 +58,7 @@ namespace Direct3D10Renderer
 	*  @brief
 	*    HLSL geometry shader class
 	*/
-	class GeometryShaderHlsl : public Renderer::IGeometryShader
+	class GeometryShaderHlsl final : public Renderer::IGeometryShader
 	{
 
 

@@ -65,7 +65,7 @@ namespace RendererRuntime
 	*  @note
 	*    - Example: Abstract representation of an mesh scene item containing sub-meshes
 	*/
-	class RenderableManager : private Manager
+	class RenderableManager final : private Manager
 	{
 
 

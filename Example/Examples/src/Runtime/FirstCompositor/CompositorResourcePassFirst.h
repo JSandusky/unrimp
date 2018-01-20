@@ -33,7 +33,7 @@
 //[-------------------------------------------------------]
 //[ Classes                                               ]
 //[-------------------------------------------------------]
-class CompositorResourcePassFirst : public RendererRuntime::ICompositorResourcePass
+class CompositorResourcePassFirst final : public RendererRuntime::ICompositorResourcePass
 {
 
 

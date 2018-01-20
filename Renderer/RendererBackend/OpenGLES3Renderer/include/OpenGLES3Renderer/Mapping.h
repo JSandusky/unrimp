@@ -60,7 +60,7 @@ namespace OpenGLES3Renderer
 	*  @brief
 	*    OpenGL ES 3 mapping
 	*/
-	class Mapping
+	class Mapping final
 	{
 
 

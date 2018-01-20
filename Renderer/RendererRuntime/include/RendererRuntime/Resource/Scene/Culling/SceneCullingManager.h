@@ -63,7 +63,7 @@ namespace RendererRuntime
 	*  @note
 	*    - The implementation is basing on "The Implementation of Frustum Culling in Stingray" - http://bitsquid.blogspot.de/2016/10/the-implementation-of-frustum-culling.html
 	*/
-	class SceneCullingManager : public Manager
+	class SceneCullingManager final : public Manager
 	{
 
 

@@ -53,7 +53,7 @@ namespace NullRenderer
 	*  @brief
 	*    Null tessellation control shader ("hull shader" in Direct3D terminology) class
 	*/
-	class TessellationControlShader : public Renderer::ITessellationControlShader
+	class TessellationControlShader final : public Renderer::ITessellationControlShader
 	{
 
 

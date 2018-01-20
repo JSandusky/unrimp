@@ -55,7 +55,7 @@ namespace Direct3D9Renderer
 	*  @brief
 	*    Direct3D 9 cube texture class
 	*/
-	class TextureCube : public Renderer::ITextureCube
+	class TextureCube final : public Renderer::ITextureCube
 	{
 
 

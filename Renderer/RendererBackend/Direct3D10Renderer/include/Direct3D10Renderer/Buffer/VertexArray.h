@@ -62,7 +62,7 @@ namespace Direct3D10Renderer
 	*  @brief
 	*    Direct3D 10 vertex array class
 	*/
-	class VertexArray : public Renderer::IVertexArray
+	class VertexArray final : public Renderer::IVertexArray
 	{
 
 

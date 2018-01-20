@@ -72,7 +72,7 @@ namespace RendererRuntime
 	*    - Supports LZ4 compression ( http://lz4.github.io/lz4/ )
 	*    - Designed for instance re-usage
 	*/
-	class MemoryFile : public IFile
+	class MemoryFile final : public IFile
 	{
 
 

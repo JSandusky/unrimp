@@ -125,7 +125,7 @@ namespace RendererRuntime
 		*  @brief
 		*    Light data packed into a form which can be directly 1:1 copied into a GPU buffer; don't change the layout in here without updating the shaders using the data
 		*/
-		struct PackedShaderData
+		struct PackedShaderData final
 		{
 			// float4 0: xyz = world space light position, w = light radius
 			glm::vec3 position{0.0f, 0.0f, 0.0f};	///< Parent scene node world space position

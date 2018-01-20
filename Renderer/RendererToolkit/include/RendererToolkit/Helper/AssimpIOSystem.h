@@ -62,7 +62,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class AssimpIOSystem : public Assimp::IOSystem
+	class AssimpIOSystem final : public Assimp::IOSystem
 	{
 
 

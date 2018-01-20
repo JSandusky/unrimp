@@ -79,7 +79,7 @@ namespace OpenGLES3Renderer
 	*  @brief
 	*    OpenGL ES 3 renderer class
 	*/
-	class OpenGLES3Renderer : public Renderer::IRenderer
+	class OpenGLES3Renderer final : public Renderer::IRenderer
 	{
 
 

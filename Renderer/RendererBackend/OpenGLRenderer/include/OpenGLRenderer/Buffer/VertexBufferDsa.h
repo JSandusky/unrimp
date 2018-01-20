@@ -46,7 +46,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL vertex buffer object (VBO, "array buffer" in OpenGL terminology) class, effective direct state access (DSA)
 	*/
-	class VertexBufferDsa : public VertexBuffer
+	class VertexBufferDsa final : public VertexBuffer
 	{
 
 

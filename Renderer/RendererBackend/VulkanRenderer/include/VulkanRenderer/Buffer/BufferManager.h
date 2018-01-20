@@ -53,7 +53,7 @@ namespace VulkanRenderer
 	*  @brief
 	*    Vulkan buffer manager interface
 	*/
-	class BufferManager : public Renderer::IBufferManager
+	class BufferManager final : public Renderer::IBufferManager
 	{
 
 

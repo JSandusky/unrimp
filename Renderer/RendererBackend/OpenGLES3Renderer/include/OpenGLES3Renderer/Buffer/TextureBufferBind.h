@@ -47,7 +47,7 @@ namespace OpenGLES3Renderer
 	*  @brief
 	*    OpenGL ES 3 texture buffer object (TBO) class, traditional bind version
 	*/
-	class TextureBufferBind : public TextureBuffer
+	class TextureBufferBind final : public TextureBuffer
 	{
 
 

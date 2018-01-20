@@ -56,7 +56,7 @@ namespace VulkanRenderer
 	*  @brief
 	*    Vulkan sampler state interface
 	*/
-	class SamplerState : public Renderer::ISamplerState
+	class SamplerState final : public Renderer::ISamplerState
 	{
 
 

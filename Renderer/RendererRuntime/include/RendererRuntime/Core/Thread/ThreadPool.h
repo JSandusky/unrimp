@@ -110,7 +110,7 @@ namespace RendererRuntime
 	*    - Implementation from https://github.com/netromdk/threadpool
 	*/
 	template <typename RetType> ///< Return type of tasks
-	class ThreadPool
+	class ThreadPool final
 	{
 
 

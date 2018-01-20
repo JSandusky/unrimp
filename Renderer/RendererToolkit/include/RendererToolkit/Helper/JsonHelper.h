@@ -63,7 +63,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class JsonHelper
+	class JsonHelper final
 	{
 
 

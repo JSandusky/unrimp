@@ -53,7 +53,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    Monolithic shader language class
 	*/
-	class ShaderLanguageMonolithic : public Renderer::IShaderLanguage
+	class ShaderLanguageMonolithic final : public Renderer::IShaderLanguage
 	{
 
 

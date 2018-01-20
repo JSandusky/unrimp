@@ -46,7 +46,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL indirect buffer object class, traditional bind version
 	*/
-	class IndirectBufferBind : public IndirectBuffer
+	class IndirectBufferBind final : public IndirectBuffer
 	{
 
 

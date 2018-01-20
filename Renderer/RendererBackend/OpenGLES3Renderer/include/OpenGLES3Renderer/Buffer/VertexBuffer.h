@@ -54,7 +54,7 @@ namespace OpenGLES3Renderer
 	*  @brief
 	*    OpenGL ES 3 vertex buffer object (VBO, "array buffer" in OpenGL terminology) class
 	*/
-	class VertexBuffer : public Renderer::IVertexBuffer
+	class VertexBuffer final : public Renderer::IVertexBuffer
 	{
 
 

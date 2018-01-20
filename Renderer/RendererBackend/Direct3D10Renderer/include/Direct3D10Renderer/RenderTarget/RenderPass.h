@@ -45,7 +45,7 @@ namespace Direct3D10Renderer
 	*  @brief
 	*    Direct3D 10 render pass interface
 	*/
-	class RenderPass : public Renderer::IRenderPass
+	class RenderPass final : public Renderer::IRenderPass
 	{
 
 

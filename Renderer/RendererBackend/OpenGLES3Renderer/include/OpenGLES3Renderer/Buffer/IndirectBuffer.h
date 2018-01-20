@@ -53,7 +53,7 @@ namespace OpenGLES3Renderer
 	*  @brief
 	*    OpenGL ES 3 indirect buffer object emulation class
 	*/
-	class IndirectBuffer : public Renderer::IIndirectBuffer
+	class IndirectBuffer final : public Renderer::IIndirectBuffer
 	{
 
 

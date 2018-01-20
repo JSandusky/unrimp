@@ -60,7 +60,7 @@ namespace OpenGLES3Renderer
 	*  @brief
 	*    GLSL program class
 	*/
-	class ProgramGlsl : public Renderer::IProgram
+	class ProgramGlsl final : public Renderer::IProgram
 	{
 
 

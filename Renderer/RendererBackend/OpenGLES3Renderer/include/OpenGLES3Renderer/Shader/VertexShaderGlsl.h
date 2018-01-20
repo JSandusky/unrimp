@@ -53,7 +53,7 @@ namespace OpenGLES3Renderer
 	*  @brief
 	*    GLSL vertex shader class
 	*/
-	class VertexShaderGlsl : public Renderer::IVertexShader
+	class VertexShaderGlsl final : public Renderer::IVertexShader
 	{
 
 

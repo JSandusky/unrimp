@@ -57,7 +57,7 @@ namespace VulkanRenderer
 	*  @brief
 	*    Vulkan vertex buffer object (VBO) interface
 	*/
-	class VertexBuffer : public Renderer::IVertexBuffer
+	class VertexBuffer final : public Renderer::IVertexBuffer
 	{
 
 

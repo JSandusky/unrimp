@@ -80,7 +80,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Mesh resource class
 	*/
-	class MeshResource : public IResource
+	class MeshResource final : public IResource
 	{
 
 

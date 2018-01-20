@@ -53,7 +53,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    Monolithic vertex shader class
 	*/
-	class VertexShaderMonolithic : public Renderer::IVertexShader
+	class VertexShaderMonolithic final : public Renderer::IVertexShader
 	{
 
 

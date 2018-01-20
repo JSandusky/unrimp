@@ -52,7 +52,7 @@ namespace Direct3D10Renderer
 	*  @brief
 	*    Direct3D 10 framebuffer class
 	*/
-	class Framebuffer : public Renderer::IFramebuffer
+	class Framebuffer final : public Renderer::IFramebuffer
 	{
 
 

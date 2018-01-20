@@ -75,7 +75,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Shader blueprint resource
 	*/
-	class ShaderBlueprintResource : public IResource
+	class ShaderBlueprintResource final : public IResource
 	{
 
 

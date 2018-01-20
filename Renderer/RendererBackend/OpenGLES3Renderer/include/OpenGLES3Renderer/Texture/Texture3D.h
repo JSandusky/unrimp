@@ -54,7 +54,7 @@ namespace OpenGLES3Renderer
 	*  @brief
 	*    OpenGL ES 3 3D texture class
 	*/
-	class Texture3D : public Renderer::ITexture3D
+	class Texture3D final : public Renderer::ITexture3D
 	{
 
 

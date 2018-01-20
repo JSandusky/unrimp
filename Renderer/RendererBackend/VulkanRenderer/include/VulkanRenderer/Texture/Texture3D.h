@@ -57,7 +57,7 @@ namespace VulkanRenderer
 	*  @brief
 	*    Vulkan 3D texture interface
 	*/
-	class Texture3D : public Renderer::ITexture3D
+	class Texture3D final : public Renderer::ITexture3D
 	{
 
 

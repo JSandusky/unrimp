@@ -60,7 +60,7 @@ namespace VulkanRenderer
 	*  @brief
 	*    GLSL tessellation evaluation shader ("domain shader" in Direct3D terminology) class
 	*/
-	class TessellationEvaluationShaderGlsl : public Renderer::ITessellationEvaluationShader
+	class TessellationEvaluationShaderGlsl final : public Renderer::ITessellationEvaluationShader
 	{
 
 

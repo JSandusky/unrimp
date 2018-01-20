@@ -58,7 +58,7 @@ namespace OpenGLES3Renderer
 	*  @brief
 	*    OpenGL ES 3 pipeline state class
 	*/
-	class PipelineState : public Renderer::IPipelineState
+	class PipelineState final : public Renderer::IPipelineState
 	{
 
 

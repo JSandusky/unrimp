@@ -69,7 +69,7 @@ namespace RendererRuntime
 
 		#pragma pack(push)
 		#pragma pack(1)
-			struct MeshHeader
+			struct MeshHeader final
 			{
 				// Bounding, the bounding sphere radius is enclosing the bounding box (don't use the inner bounding box radius)
 				glm::vec3 minimumBoundingBoxPosition;
@@ -88,7 +88,7 @@ namespace RendererRuntime
 				uint8_t  numberOfBones;
 			};
 
-			struct SubMesh
+			struct SubMesh final
 			{
 				AssetId  materialAssetId;
 				uint32_t startIndexLocation;

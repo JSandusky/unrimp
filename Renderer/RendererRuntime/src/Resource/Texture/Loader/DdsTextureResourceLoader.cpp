@@ -69,7 +69,7 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Structures                                            ]
 		//[-------------------------------------------------------]
-		struct DdsHeader
+		struct DdsHeader final
 		{
 			uint8_t magic[4];
 			uint32_t size;
@@ -100,7 +100,7 @@ namespace
 			uint32_t reserved2;
 		};
 
-		struct DdsHeaderDX10
+		struct DdsHeaderDX10 final
 		{
 			uint32_t DXGIFormat; // See http://msdn.microsoft.com/en-us/library/bb173059.aspx
 			uint32_t resourceDimension;

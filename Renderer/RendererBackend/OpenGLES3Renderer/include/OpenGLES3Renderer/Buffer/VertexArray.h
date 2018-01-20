@@ -60,7 +60,7 @@ namespace OpenGLES3Renderer
 	*  @brief
 	*    OpenGL ES 3 vertex array class, effective vertex array object (VAO)
 	*/
-	class VertexArray : public Renderer::IVertexArray
+	class VertexArray final : public Renderer::IVertexArray
 	{
 
 

@@ -87,7 +87,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Light buffer manager
 	*/
-	class LightBufferManager : private Manager
+	class LightBufferManager final : private Manager
 	{
 
 

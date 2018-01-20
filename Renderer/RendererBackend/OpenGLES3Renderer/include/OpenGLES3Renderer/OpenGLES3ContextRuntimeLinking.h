@@ -71,7 +71,7 @@ namespace OpenGLES3Renderer
 	*      a OpenGL ES 3 capable graphics driver, you may want to use the "ContextNative"-implementation
 	*      instead.
 	*/
-	class OpenGLES3ContextRuntimeLinking : public IOpenGLES3Context
+	class OpenGLES3ContextRuntimeLinking final : public IOpenGLES3Context
 	{
 
 

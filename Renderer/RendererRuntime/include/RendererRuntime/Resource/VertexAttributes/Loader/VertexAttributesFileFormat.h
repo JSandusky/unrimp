@@ -59,7 +59,7 @@ namespace RendererRuntime
 		#pragma pack(push)
 		#pragma pack(1)
 			// TODO(co) Implement vertex attributes file format
-			struct VertexAttributesHeader
+			struct VertexAttributesHeader final
 			{
 				uint8_t  numberOfVertexAttributes;
 			};

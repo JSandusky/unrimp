@@ -49,7 +49,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Transform class containing position, rotation and scale
 	*/
-	class RENDERERRUNTIME_API_EXPORT Transform
+	class RENDERERRUNTIME_API_EXPORT Transform final
 	{
 
 

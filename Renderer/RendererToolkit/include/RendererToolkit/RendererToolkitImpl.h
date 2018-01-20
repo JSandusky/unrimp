@@ -59,7 +59,7 @@ namespace RendererToolkit
 	*  @brief
 	*    Renderer toolkit class implementation
 	*/
-	class RendererToolkitImpl : public IRendererToolkit
+	class RendererToolkitImpl final : public IRendererToolkit
 	{
 
 

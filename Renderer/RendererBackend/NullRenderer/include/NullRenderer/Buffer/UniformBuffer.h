@@ -53,7 +53,7 @@ namespace NullRenderer
 	*  @brief
 	*    Null uniform buffer object (UBO, "constant buffer" in Direct3D terminology) class
 	*/
-	class UniformBuffer : public Renderer::IUniformBuffer
+	class UniformBuffer final : public Renderer::IUniformBuffer
 	{
 
 

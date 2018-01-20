@@ -65,7 +65,7 @@ namespace Direct3D9Renderer
 	*  @brief
 	*    Direct3D 9 renderer class
 	*/
-	class Direct3D9Renderer : public Renderer::IRenderer
+	class Direct3D9Renderer final : public Renderer::IRenderer
 	{
 
 

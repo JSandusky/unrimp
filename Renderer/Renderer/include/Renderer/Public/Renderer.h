@@ -264,7 +264,7 @@ namespace Renderer
 		};
 
 		#ifdef LINUX
-			class X11Context : public Context
+			class X11Context final : public Context
 			{
 			public:
 				inline X11Context(ILog& log, IAssert& assert, IAllocator& allocator, _XDisplay* display, handle nativeWindowHandle = 0, bool useExternalContext = false) :
@@ -278,7 +278,7 @@ namespace Renderer
 			private:
 				_XDisplay* mDisplay;
 			};
-			class WaylandContext : public Context
+			class WaylandContext final : public Context
 			{
 			public:
 				inline WaylandContext(ILog& log, IAssert& assert, IAllocator& allocator, wl_display* display, wl_surface* surface = 0, bool useExternalContext = false) :
@@ -439,7 +439,7 @@ namespace Renderer
 	// Renderer/RendererTypes.h
 	#ifndef __RENDERER_RENDERER_TYPES_H__
 	#define __RENDERER_RENDERER_TYPES_H__
-		struct WindowHandle
+		struct WindowHandle final
 		{
 			handle nativeWindowHandle;
 			IRenderWindow* renderWindow;
@@ -457,14 +457,14 @@ namespace Renderer
 			WRITE_DISCARD	   = 4,
 			WRITE_NO_OVERWRITE = 5
 		};
-		struct MapFlag
+		struct MapFlag final
 		{
 			enum Enum
 			{
 				DO_NOT_WAIT = 0x100000L
 			};
 		};
-		struct ClearFlag
+		struct ClearFlag final
 		{
 			enum Enum
 			{
@@ -485,7 +485,7 @@ namespace Renderer
 			GREATER_EQUAL = 7,
 			ALWAYS		  = 8
 		};
-		struct ColorWriteEnableFlag
+		struct ColorWriteEnableFlag final
 		{
 			enum Enum
 			{
@@ -496,13 +496,13 @@ namespace Renderer
 				ALL   = (((RED | GREEN)  | BLUE)  | ALPHA)
 			};
 		};
-		struct MappedSubresource
+		struct MappedSubresource final
 		{
 			void*	  data;
 			uint32_t  rowPitch;
 			uint32_t  depthPitch;
 		};
-		struct Viewport
+		struct Viewport final
 		{
 			float topLeftX;
 			float topLeftY;
@@ -511,7 +511,7 @@ namespace Renderer
 			float minDepth;
 			float maxDepth;
 		};
-		struct ScissorRectangle
+		struct ScissorRectangle final
 		{
 			long topLeftX;
 			long topLeftY;
@@ -585,7 +585,7 @@ namespace Renderer
 			BORDER		= 4,
 			MIRROR_ONCE	= 5
 		};
-		struct SamplerState
+		struct SamplerState final
 		{
 			FilterMode		   filter;
 			TextureAddressMode addressU;
@@ -631,7 +631,7 @@ namespace Renderer
 			char				  baseShaderRegisterName[NAME_LENGTH];
 			ShaderVisibility	  shaderVisibility;
 		};
-		struct DescriptorRangeBuilder : public DescriptorRange
+		struct DescriptorRangeBuilder final : public DescriptorRange
 		{
 			static const uint32_t OFFSET_APPEND	= 0xffffffff;
 			DescriptorRangeBuilder()
@@ -693,7 +693,7 @@ namespace Renderer
 			uint32_t numberOfDescriptorRanges;
 			uint64_t descriptorRanges;
 		};
-		struct RootDescriptorTableBuilder : public RootDescriptorTable
+		struct RootDescriptorTableBuilder final : public RootDescriptorTable
 		{
 			RootDescriptorTableBuilder()
 			{}
@@ -734,7 +734,7 @@ namespace Renderer
 			uint32_t registerSpace;
 			uint32_t numberOf32BitValues;
 		};
-		struct RootConstantsBuilder : public RootConstants
+		struct RootConstantsBuilder final : public RootConstants
 		{
 			RootConstantsBuilder()
 			{}
@@ -770,7 +770,7 @@ namespace Renderer
 			uint32_t shaderRegister;
 			uint32_t registerSpace;
 		};
-		struct RootDescriptorBuilder : public RootDescriptor
+		struct RootDescriptorBuilder final : public RootDescriptor
 		{
 			RootDescriptorBuilder()
 			{}
@@ -804,12 +804,12 @@ namespace Renderer
 				RootDescriptor		descriptor;
 			};
 		};
-		struct RootParameterData
+		struct RootParameterData final
 		{
 			RootParameterType parameterType;
 			uint32_t		  numberOfDescriptorRanges;
 		};
-		struct RootParameterBuilder : public RootParameter
+		struct RootParameterBuilder final : public RootParameter
 		{
 			RootParameterBuilder()
 			{}
@@ -888,7 +888,7 @@ namespace Renderer
 				initializeAsUnorderedAccessView(*this, shaderRegister, registerSpace);
 			}
 		};
-		struct RootSignatureFlags
+		struct RootSignatureFlags final
 		{
 			enum Enum
 			{
@@ -908,7 +908,7 @@ namespace Renderer
 			OPAQUE_BLACK      = TRANSPARENT_BLACK + 1,
 			OPAQUE_WHITE      = OPAQUE_BLACK + 1
 		};
-		struct StaticSampler
+		struct StaticSampler final
 		{
 			FilterMode			filter;
 			TextureAddressMode	addressU;
@@ -932,7 +932,7 @@ namespace Renderer
 			const StaticSampler*	 staticSamplers;
 			RootSignatureFlags::Enum flags;
 		};
-		struct RootSignatureBuilder : public RootSignature
+		struct RootSignatureBuilder final : public RootSignature
 		{
 			RootSignatureBuilder()
 			{}
@@ -977,7 +977,7 @@ namespace Renderer
 	// Renderer/Texture/TextureTypes.h
 	#ifndef __RENDERER_TEXTURE_TYPES_H__
 	#define __RENDERER_TEXTURE_TYPES_H__
-		struct TextureFormat
+		struct TextureFormat final
 		{
 			enum Enum
 			{
@@ -1206,7 +1206,7 @@ namespace Renderer
 				}
 			}
 		};
-		struct TextureFlag
+		struct TextureFlag final
 		{
 			enum Enum
 			{
@@ -1222,7 +1222,7 @@ namespace Renderer
 			DYNAMIC   = 2,
 			STAGING   = 3
 		};
-		struct OptimizedTextureClearValue
+		struct OptimizedTextureClearValue final
 		{
 			union
 			{
@@ -1267,7 +1267,7 @@ namespace Renderer
 			MIN			 = 4,
 			MAX			 = 5
 		};
-		struct RenderTargetBlendDesc
+		struct RenderTargetBlendDesc final
 		{
 			int		blendEnable;
 			Blend	srcBlend;
@@ -1278,13 +1278,13 @@ namespace Renderer
 			BlendOp	blendOpAlpha;
 			uint8_t	renderTargetWriteMask;
 		};
-		struct BlendState
+		struct BlendState final
 		{
 			int					  alphaToCoverageEnable;
 			int					  independentBlendEnable;
 			RenderTargetBlendDesc renderTarget[8];
 		};
-		struct BlendStateBuilder
+		struct BlendStateBuilder final
 		{
 			static inline const BlendState& getDefaultBlendState()
 			{
@@ -1414,7 +1414,7 @@ namespace Renderer
 		};
 		#pragma pack(push)
 		#pragma pack(1)
-			struct VertexAttribute
+			struct VertexAttribute final
 			{
 				VertexAttributeFormat vertexAttributeFormat;
 				char				  name[32];
@@ -1425,7 +1425,7 @@ namespace Renderer
 				uint32_t			  strideInBytes;
 				uint32_t			  instancesPerElement;
 			};
-			struct VertexAttributes
+			struct VertexAttributes final
 			{
 				uint32_t				numberOfAttributes;
 				const VertexAttribute*	attributes;
@@ -1439,7 +1439,7 @@ namespace Renderer
 				{}
 			};
 		#pragma pack(pop)
-		struct VertexArrayVertexBuffer
+		struct VertexArrayVertexBuffer final
 		{
 			IVertexBuffer* vertexBuffer;
 		};
@@ -1448,7 +1448,7 @@ namespace Renderer
 	// Renderer/Buffer/IndexBufferTypes.h
 	#ifndef __RENDERER_INDEXBUFFER_TYPES_H__
 	#define __RENDERER_INDEXBUFFER_TYPES_H__
-		struct IndexBufferFormat
+		struct IndexBufferFormat final
 		{
 			enum Enum
 			{
@@ -1472,7 +1472,7 @@ namespace Renderer
 	// Renderer/Buffer/IndirectBufferTypes.h
 	#ifndef __RENDERER_INDIRECTBUFFER_TYPES_H__
 	#define __RENDERER_INDIRECTBUFFER_TYPES_H__
-		struct DrawInstancedArguments
+		struct DrawInstancedArguments final
 		{
 			uint32_t vertexCountPerInstance;
 			uint32_t instanceCount;
@@ -1485,7 +1485,7 @@ namespace Renderer
 				startInstanceLocation(_startInstanceLocation)
 			{}
 		};
-		struct DrawIndexedInstancedArguments
+		struct DrawIndexedInstancedArguments final
 		{
 			uint32_t indexCountPerInstance;
 			uint32_t instanceCount;
@@ -1521,7 +1521,7 @@ namespace Renderer
 			OFF	= 0,
 			ON	= 1
 		};
-		struct RasterizerState
+		struct RasterizerState final
 		{
 			FillMode						fillMode;
 			CullMode						cullMode;
@@ -1536,7 +1536,7 @@ namespace Renderer
 			ConservativeRasterizationMode	conservativeRasterizationMode;
 			int								scissorEnable;
 		};
-		struct RasterizerStateBuilder
+		struct RasterizerStateBuilder final
 		{
 			static inline const RasterizerState& getDefaultRasterizerState()
 			{
@@ -1579,14 +1579,14 @@ namespace Renderer
 			INCREASE = 7,
 			DECREASE = 8
 		};
-		struct DepthStencilOpDesc
+		struct DepthStencilOpDesc final
 		{
 			StencilOp		stencilFailOp;
 			StencilOp		stencilDepthFailOp;
 			StencilOp		stencilPassOp;
 			ComparisonFunc	stencilFunc;
 		};
-		struct DepthStencilState
+		struct DepthStencilState final
 		{
 			int					depthEnable;
 			DepthWriteMask		depthWriteMask;
@@ -1597,7 +1597,7 @@ namespace Renderer
 			DepthStencilOpDesc	frontFace;
 			DepthStencilOpDesc	backFace;
 		};
-		struct DepthStencilStateBuilder
+		struct DepthStencilStateBuilder final
 		{
 			static inline const DepthStencilState& getDefaultDepthStencilState()
 			{
@@ -1697,7 +1697,7 @@ namespace Renderer
 			VertexAttributes vertexAttributes;
 			IRenderPass*	 renderPass;
 		};
-		struct PipelineStateBuilder : public PipelineState
+		struct PipelineStateBuilder final : public PipelineState
 		{
 			PipelineStateBuilder()
 			{
@@ -1764,7 +1764,7 @@ namespace Renderer
 			LINES		   = 0x0001,
 			TRIANGLE_STRIP = 0x0005
 		};
-		class ShaderBytecode
+		class ShaderBytecode final
 		{
 		public:
 			inline ShaderBytecode() :
@@ -1794,7 +1794,7 @@ namespace Renderer
 			uint32_t mNumberOfBytes;
 			uint8_t* mBytecode;
 		};
-		struct ShaderSourceCode
+		struct ShaderSourceCode final
 		{
 			const char* sourceCode	= nullptr;
 			const char* profile		= nullptr;
@@ -1956,7 +1956,7 @@ namespace Renderer
 	// Renderer/Capabilities.h
 	#ifndef __RENDERER_CAPABILITIES_H__
 	#define __RENDERER_CAPABILITIES_H__
-		class Capabilities
+		class Capabilities final
 		{
 		public:
 			char				deviceName[128];
@@ -2022,7 +2022,7 @@ namespace Renderer
 	#ifndef RENDERER_NO_STATISTICS
 		#ifndef __RENDERER_STATISTICS_H__
 		#define __RENDERER_STATISTICS_H__
-		class Statistics
+		class Statistics final
 		{
 		public:
 			std::atomic<uint32_t> currentNumberOfRootSignatures;
@@ -2438,7 +2438,7 @@ namespace Renderer
 	// Renderer/RenderTarget/IFramebuffer.h
 	#ifndef __RENDERER_IFRAMEBUFFER_H__
 	#define __RENDERER_IFRAMEBUFFER_H__
-		struct FramebufferAttachment
+		struct FramebufferAttachment final
 		{
 			ITexture* texture;
 			uint32_t  mipmapIndex;
@@ -3025,7 +3025,7 @@ namespace Renderer
 				return reinterpret_cast<const uint8_t*>(command) + sizeof(T);
 			}
 		};
-		class CommandBuffer
+		class CommandBuffer final
 		{
 		public:
 			inline CommandBuffer() :
@@ -3114,7 +3114,7 @@ namespace Renderer
 		};
 		namespace Command
 		{
-			struct ExecuteCommandBuffer
+			struct ExecuteCommandBuffer final
 			{
 				inline static void create(CommandBuffer& commandBuffer, CommandBuffer* commandBufferToExecute)
 				{
@@ -3129,7 +3129,7 @@ namespace Renderer
 				CommandBuffer* commandBufferToExecute;
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::ExecuteCommandBuffer;
 			};
-			struct SetGraphicsRootSignature
+			struct SetGraphicsRootSignature final
 			{
 				inline static void create(CommandBuffer& commandBuffer, IRootSignature* rootSignature)
 				{
@@ -3141,7 +3141,7 @@ namespace Renderer
 				IRootSignature* rootSignature;
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetGraphicsRootSignature;
 			};
-			struct SetGraphicsResourceGroup
+			struct SetGraphicsResourceGroup final
 			{
 				inline static void create(CommandBuffer& commandBuffer, uint32_t rootParameterIndex, IResourceGroup* resourceGroup)
 				{
@@ -3155,7 +3155,7 @@ namespace Renderer
 				IResourceGroup* resourceGroup;
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetGraphicsResourceGroup;
 			};
-			struct SetPipelineState
+			struct SetPipelineState final
 			{
 				inline static void create(CommandBuffer& commandBuffer, IPipelineState* pipelineState)
 				{
@@ -3167,7 +3167,7 @@ namespace Renderer
 				IPipelineState* pipelineState;
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetPipelineState;
 			};
-			struct SetVertexArray
+			struct SetVertexArray final
 			{
 				inline static void create(CommandBuffer& commandBuffer, IVertexArray* vertexArray)
 				{
@@ -3179,7 +3179,7 @@ namespace Renderer
 				IVertexArray* vertexArray;
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetVertexArray;
 			};
-			struct SetViewports
+			struct SetViewports final
 			{
 				inline static void create(CommandBuffer& commandBuffer, uint32_t numberOfViewports, const Viewport* viewports)
 				{
@@ -3206,7 +3206,7 @@ namespace Renderer
 				const Viewport* viewports;
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetViewports;
 			};
-			struct SetScissorRectangles
+			struct SetScissorRectangles final
 			{
 				inline static void create(CommandBuffer& commandBuffer, uint32_t numberOfScissorRectangles, const ScissorRectangle* scissorRectangles)
 				{
@@ -3231,7 +3231,7 @@ namespace Renderer
 				const ScissorRectangle* scissorRectangles;
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetScissorRectangles;
 			};
-			struct SetViewportAndScissorRectangle
+			struct SetViewportAndScissorRectangle final
 			{
 				inline static void create(CommandBuffer& commandBuffer, uint32_t topLeftX, uint32_t topLeftY, uint32_t width, uint32_t height, float minimumDepth = 0.0f, float maximumDepth = 1.0f)
 				{
@@ -3239,7 +3239,7 @@ namespace Renderer
 					SetScissorRectangles::create(commandBuffer, static_cast<long>(topLeftX), static_cast<long>(topLeftY), static_cast<long>(topLeftX + width), static_cast<long>(topLeftY + height));
 				}
 			};
-			struct SetRenderTarget
+			struct SetRenderTarget final
 			{
 				inline static void create(CommandBuffer& commandBuffer, IRenderTarget* renderTarget)
 				{
@@ -3251,7 +3251,7 @@ namespace Renderer
 				IRenderTarget* renderTarget;
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetRenderTarget;
 			};
-			struct Clear
+			struct Clear final
 			{
 				inline static void create(CommandBuffer& commandBuffer, uint32_t flags, const float color[4], float z = 0.0f, uint32_t stencil = 0)
 				{
@@ -3269,7 +3269,7 @@ namespace Renderer
 				uint32_t stencil;
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::Clear;
 			};
-			struct ResolveMultisampleFramebuffer
+			struct ResolveMultisampleFramebuffer final
 			{
 				inline static void create(CommandBuffer& commandBuffer, IRenderTarget& destinationRenderTarget, IFramebuffer& sourceMultisampleFramebuffer)
 				{
@@ -3283,7 +3283,7 @@ namespace Renderer
 				IFramebuffer* sourceMultisampleFramebuffer;
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::ResolveMultisampleFramebuffer;
 			};
-			struct CopyResource
+			struct CopyResource final
 			{
 				inline static void create(CommandBuffer& commandBuffer, IResource& destinationResource, IResource& sourceResource)
 				{
@@ -3297,7 +3297,7 @@ namespace Renderer
 				IResource* sourceResource;
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::CopyResource;
 			};
-			struct Draw
+			struct Draw final
 			{
 				inline static void create(CommandBuffer& commandBuffer, const IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1)
 				{
@@ -3322,7 +3322,7 @@ namespace Renderer
 				uint32_t			   numberOfDraws;
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::Draw;
 			};
-			struct DrawIndexed
+			struct DrawIndexed final
 			{
 				inline static void create(CommandBuffer& commandBuffer, const IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1)
 				{
@@ -3347,7 +3347,7 @@ namespace Renderer
 				uint32_t			   numberOfDraws;
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::DrawIndexed;
 			};
-			struct SetDebugMarker
+			struct SetDebugMarker final
 			{
 				inline static void create(CommandBuffer& commandBuffer, const char* name)
 				{
@@ -3364,7 +3364,7 @@ namespace Renderer
 				char name[128];
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::SetDebugMarker;
 			};
-			struct BeginDebugEvent
+			struct BeginDebugEvent final
 			{
 				inline static void create(CommandBuffer& commandBuffer, const char* name)
 				{
@@ -3381,7 +3381,7 @@ namespace Renderer
 				char name[128];
 				static const CommandDispatchFunctionIndex COMMAND_DISPATCH_FUNCTION_INDEX = CommandDispatchFunctionIndex::BeginDebugEvent;
 			};
-			struct EndDebugEvent
+			struct EndDebugEvent final
 			{
 				inline static void create(CommandBuffer& commandBuffer)
 				{

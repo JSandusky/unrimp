@@ -82,7 +82,7 @@ namespace VulkanRenderer
 	*  @brief
 	*    Vulkan 2D texture interface
 	*/
-	class Texture2D : public Renderer::ITexture2D
+	class Texture2D final : public Renderer::ITexture2D
 	{
 
 

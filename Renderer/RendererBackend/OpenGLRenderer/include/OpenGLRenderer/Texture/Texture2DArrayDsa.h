@@ -46,7 +46,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL 2D array texture class, effective direct state access (DSA)
 	*/
-	class Texture2DArrayDsa : public Texture2DArray
+	class Texture2DArrayDsa final : public Texture2DArray
 	{
 
 

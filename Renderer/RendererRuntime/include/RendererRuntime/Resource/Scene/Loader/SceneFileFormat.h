@@ -62,33 +62,33 @@ namespace RendererRuntime
 
 		#pragma pack(push)
 		#pragma pack(1)
-			struct SceneHeader
+			struct SceneHeader final
 			{
 				uint32_t unused;	// TODO(co) Currently the scene header is unused
 			};
 
-			struct Nodes
+			struct Nodes final
 			{
 				uint32_t numberOfNodes;
 			};
 
-			struct Node
+			struct Node final
 			{
 				Transform transform;
 				uint32_t  numberOfItems;
 			};
 
-			struct ItemHeader
+			struct ItemHeader final
 			{
 				SceneItemTypeId typeId;
 				uint32_t		numberOfBytes;
 			};
 
-			struct CameraItem
+			struct CameraItem final
 			{
 			};
 
-			struct LightItem
+			struct LightItem final
 			{
 				LightSceneItem::LightType lightType		   = LightSceneItem::LightType::POINT;
 				float					  color[3]		   = { 1.0f, 1.0f, 1.0f };
@@ -98,7 +98,7 @@ namespace RendererRuntime
 				float					  nearClipDistance = 0.0f;
 			};
 
-			struct SunlightItem
+			struct SunlightItem final
 			{
 				// Usually fixed
 				float sunriseTime	   = 07.50f;	// O'clock
@@ -108,13 +108,13 @@ namespace RendererRuntime
 				float timeOfDay		   = 10.00f;	// O'clock
 			};
 
-			struct MeshItem
+			struct MeshItem final
 			{
 				AssetId  meshAssetId;
 				uint32_t numberOfSubMeshMaterialAssetIds = 0;
 			};
 
-			struct SkeletonMeshItem	// : public MeshItem -> Not derived by intent to be able to reuse the mesh item serialization 1:1
+			struct SkeletonMeshItem final	// : public MeshItem -> Not derived by intent to be able to reuse the mesh item serialization 1:1
 			{
 				AssetId skeletonAnimationAssetId;
 			};
@@ -127,12 +127,12 @@ namespace RendererRuntime
 				uint32_t			numberOfMaterialProperties = 0;
 			};
 
-			struct SkyboxItem : public MaterialItem
+			struct SkyboxItem final : public MaterialItem
 			{
 				// Nothing here
 			};
 
-			struct TerrainItem : public MaterialItem
+			struct TerrainItem final : public MaterialItem
 			{
 				// Nothing here
 			};

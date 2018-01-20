@@ -56,7 +56,7 @@ namespace Direct3D12Renderer
 	*  @todo
 	*    - TODO(co) Looks like there's no "D3DX12", so we stick to "D3DX11" for now
 	*/
-	class Direct3D12RuntimeLinking
+	class Direct3D12RuntimeLinking final
 	{
 
 

@@ -50,7 +50,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Sub-mesh class
 	*/
-	class SubMesh
+	class SubMesh final
 	{
 
 

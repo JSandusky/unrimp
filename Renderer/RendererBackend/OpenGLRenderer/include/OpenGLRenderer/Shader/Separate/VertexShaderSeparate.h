@@ -59,7 +59,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    Separate vertex shader class
 	*/
-	class VertexShaderSeparate : public Renderer::IVertexShader
+	class VertexShaderSeparate final : public Renderer::IVertexShader
 	{
 
 

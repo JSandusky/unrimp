@@ -49,7 +49,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorInstancePassVrHiddenAreaMesh : public ICompositorInstancePass
+	class CompositorInstancePassVrHiddenAreaMesh final : public ICompositorInstancePass
 	{
 
 

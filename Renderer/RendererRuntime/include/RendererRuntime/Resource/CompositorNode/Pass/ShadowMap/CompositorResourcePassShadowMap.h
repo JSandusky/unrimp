@@ -50,7 +50,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Compositor resource pass shadow map
 	*/
-	class CompositorResourcePassShadowMap : public CompositorResourcePassScene
+	class CompositorResourcePassShadowMap final : public CompositorResourcePassScene
 	{
 
 

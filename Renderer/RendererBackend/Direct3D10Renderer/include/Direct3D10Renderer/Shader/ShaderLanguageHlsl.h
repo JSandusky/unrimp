@@ -55,7 +55,7 @@ namespace Direct3D10Renderer
 	*  @brief
 	*    HLSL shader language class
 	*/
-	class ShaderLanguageHlsl : public Renderer::IShaderLanguage
+	class ShaderLanguageHlsl final : public Renderer::IShaderLanguage
 	{
 
 

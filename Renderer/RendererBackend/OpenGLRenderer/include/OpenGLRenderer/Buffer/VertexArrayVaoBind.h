@@ -57,7 +57,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL vertex array class, effective vertex array object (VAO), traditional bind version
 	*/
-	class VertexArrayVaoBind : public VertexArrayVao
+	class VertexArrayVaoBind final : public VertexArrayVao
 	{
 
 

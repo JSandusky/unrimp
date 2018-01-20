@@ -71,7 +71,7 @@ namespace RendererRuntime
 	*    - Designed to be instanced and used inside a single C++ file
 	*    - Primarily for renderer runtime with restricted write access
 	*/
-	class PhysicsFSFileManager : public IFileManager
+	class PhysicsFSFileManager final : public IFileManager
 	{
 
 

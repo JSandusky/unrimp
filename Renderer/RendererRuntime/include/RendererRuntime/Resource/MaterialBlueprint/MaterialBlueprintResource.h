@@ -92,7 +92,7 @@ namespace RendererRuntime
 	*    - Automatic handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
 	*    - When writing new material blueprint resources, you might want to take the packing rules for uniform variables into account for an efficient data layout
 	*/
-	class MaterialBlueprintResource : public IResource
+	class MaterialBlueprintResource final : public IResource
 	{
 
 
@@ -129,7 +129,7 @@ namespace RendererRuntime
 
 		typedef std::vector<MaterialProperty> UniformBufferElementProperties;
 
-		struct UniformBuffer
+		struct UniformBuffer final
 		{
 			uint32_t					   rootParameterIndex;			///< Root parameter index = resource group index
 			BufferUsage					   bufferUsage;
@@ -139,7 +139,7 @@ namespace RendererRuntime
 		};
 		typedef std::vector<UniformBuffer> UniformBuffers;
 
-		struct TextureBuffer
+		struct TextureBuffer final
 		{
 			uint32_t			  rootParameterIndex;	///< Root parameter index = resource group index
 			BufferUsage			  bufferUsage;
@@ -164,7 +164,7 @@ namespace RendererRuntime
 		};
 		typedef std::vector<TextureBuffer> TextureBuffers;
 
-		struct SamplerState
+		struct SamplerState final
 		{
 			Renderer::SamplerState	   rendererSamplerState;
 			uint32_t				   rootParameterIndex;	///< Root parameter index = resource group index
@@ -172,7 +172,7 @@ namespace RendererRuntime
 		};
 		typedef std::vector<SamplerState> SamplerStates;
 
-		struct Texture
+		struct Texture final
 		{
 			// Loaded from material blueprint
 			uint32_t		  rootParameterIndex;	///< Root parameter index = resource group index

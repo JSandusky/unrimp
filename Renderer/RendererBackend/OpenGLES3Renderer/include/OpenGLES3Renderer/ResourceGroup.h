@@ -58,7 +58,7 @@ namespace OpenGLES3Renderer
 	*  @brief
 	*    OpenGL ES 3 resource group class
 	*/
-	class ResourceGroup : public Renderer::IResourceGroup
+	class ResourceGroup final : public Renderer::IResourceGroup
 	{
 
 

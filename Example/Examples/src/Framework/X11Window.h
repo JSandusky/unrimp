@@ -40,7 +40,7 @@
 *  @todo
 *    - TODO(co) Code style cleanup and documentation
 */
-class X11Window
+class X11Window final
 {
 
 

@@ -44,7 +44,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL 3D texture class, traditional bind version
 	*/
-	class Texture3DBind : public Texture3D
+	class Texture3DBind final : public Texture3D
 	{
 
 

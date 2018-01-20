@@ -68,7 +68,7 @@ namespace OpenGLRenderer
 			}
 		}
 	#else
-		void FragmentShaderSeparate::setDebugName(const char*)
+		void FragmentShaderMonolithic::setDebugName(const char*)
 		{
 			// Nothing here
 		}

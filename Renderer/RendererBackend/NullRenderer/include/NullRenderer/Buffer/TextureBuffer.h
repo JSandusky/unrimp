@@ -53,7 +53,7 @@ namespace NullRenderer
 	*  @brief
 	*    Null texture buffer object (TBO) class
 	*/
-	class TextureBuffer : public Renderer::ITextureBuffer
+	class TextureBuffer final : public Renderer::ITextureBuffer
 	{
 
 

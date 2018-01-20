@@ -81,7 +81,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class FileSystemHelper
+	class FileSystemHelper final
 	{
 
 

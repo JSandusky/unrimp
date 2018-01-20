@@ -60,7 +60,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class MeshResourceManager : public ResourceManager<MeshResource>
+	class MeshResourceManager final : public ResourceManager<MeshResource>
 	{
 
 
@@ -86,7 +86,7 @@ namespace RendererRuntime
 	public:
 		virtual uint32_t getNumberOfResources() const override;
 		virtual IResource& getResourceByIndex(uint32_t index) const override;
-		virtual IResource& getResourceByResourceId(ResourceId resourceId) const override;
+		RENDERERRUNTIME_API_EXPORT virtual IResource& getResourceByResourceId(ResourceId resourceId) const override;
 		virtual IResource* tryGetResourceByResourceId(ResourceId resourceId) const override;
 		virtual void reloadResourceByAssetId(AssetId assetId) override;
 		virtual void update() override;

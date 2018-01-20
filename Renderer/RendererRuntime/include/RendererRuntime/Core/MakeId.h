@@ -62,7 +62,7 @@ Notes:
 #include <cstdlib>
 #include <cstring>
 
-class MakeID
+class MakeID final
 {
 private:
 	// Change to uint16_t here for a more compact implementation if 16bit or less IDs work for you.

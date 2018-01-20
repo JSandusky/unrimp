@@ -56,7 +56,7 @@ namespace Direct3D9Renderer
 	*  @brief
 	*    Direct3D 9 blend state class
 	*/
-	class BlendState : public IState
+	class BlendState final : public IState
 	{
 
 

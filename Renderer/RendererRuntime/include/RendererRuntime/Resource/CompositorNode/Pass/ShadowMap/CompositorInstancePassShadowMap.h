@@ -73,7 +73,7 @@ namespace RendererRuntime
 	*  @note
 	*    - Basing on https://mynameismjp.wordpress.com/2013/09/10/shadow-maps/ - https://github.com/TheRealMJP/Shadows
 	*/
-	class CompositorInstancePassShadowMap : public CompositorInstancePassScene
+	class CompositorInstancePassShadowMap final : public CompositorInstancePassScene
 	{
 
 
@@ -87,7 +87,7 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		struct PassData
+		struct PassData final
 		{
 			int			shadowMapSize = 0;
 			glm::mat4	shadowMatrix;

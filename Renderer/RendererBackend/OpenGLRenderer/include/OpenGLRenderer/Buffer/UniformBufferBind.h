@@ -46,7 +46,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL uniform buffer object (UBO, "constant buffer" in Direct3D terminology) class, traditional bind version
 	*/
-	class UniformBufferBind : public UniformBuffer
+	class UniformBufferBind final : public UniformBuffer
 	{
 
 

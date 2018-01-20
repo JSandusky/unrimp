@@ -54,7 +54,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class AssimpLogStream : public Assimp::LogStream
+	class AssimpLogStream final : public Assimp::LogStream
 	{
 
 

@@ -50,7 +50,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class StringHelper
+	class StringHelper final
 	{
 
 

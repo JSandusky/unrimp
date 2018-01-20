@@ -44,7 +44,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL sampler state class, effective sampler object (SO)
 	*/
-	class SamplerStateSo : public SamplerState
+	class SamplerStateSo final : public SamplerState
 	{
 
 

@@ -58,7 +58,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class ShaderPieceResourceLoader : public IResourceLoader
+	class ShaderPieceResourceLoader final : public IResourceLoader
 	{
 
 

@@ -66,7 +66,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Renderer runtime class implementation
 	*/
-	class RendererRuntimeImpl : public IRendererRuntime
+	class RendererRuntimeImpl final : public IRendererRuntime
 	{
 
 

@@ -46,7 +46,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL index buffer object (IBO, "element array buffer" in OpenGL terminology) class, traditional bind version
 	*/
-	class IndexBufferBind : public IndexBuffer
+	class IndexBufferBind final : public IndexBuffer
 	{
 
 

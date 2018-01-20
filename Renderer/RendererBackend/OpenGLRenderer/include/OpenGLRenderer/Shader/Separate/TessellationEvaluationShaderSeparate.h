@@ -57,7 +57,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    Separate tessellation evaluation shader ("domain shader" in Direct3D terminology) class
 	*/
-	class TessellationEvaluationShaderSeparate : public Renderer::ITessellationEvaluationShader
+	class TessellationEvaluationShaderSeparate final : public Renderer::ITessellationEvaluationShader
 	{
 
 

@@ -191,7 +191,7 @@ namespace Renderer
 	*    - Each command can have an additional auxiliary buffer, e.g. to store uniform buffer data to submit to the renderer
 	*    - It's valid to record a command buffer only once, and submit it multiple times to the renderer
 	*/
-	class CommandBuffer
+	class CommandBuffer final
 	{
 
 
@@ -404,7 +404,7 @@ namespace Renderer
 		//[-------------------------------------------------------]
 		//[ Command buffer                                        ]
 		//[-------------------------------------------------------]
-		struct ExecuteCommandBuffer
+		struct ExecuteCommandBuffer final
 		{
 			// Static methods
 			inline static void create(CommandBuffer& commandBuffer, CommandBuffer* commandBufferToExecute)
@@ -432,7 +432,7 @@ namespace Renderer
 		*  @param[in] rootSignature
 		*    Graphics root signature to use, can be an null pointer (default: "nullptr")
 		*/
-		struct SetGraphicsRootSignature
+		struct SetGraphicsRootSignature final
 		{
 			// Static methods
 			inline static void create(CommandBuffer& commandBuffer, IRootSignature* rootSignature)
@@ -458,7 +458,7 @@ namespace Renderer
 		*  @param[in] resourceGroup
 		*    Resource group to set
 		*/
-		struct SetGraphicsResourceGroup
+		struct SetGraphicsResourceGroup final
 		{
 			// Static methods
 			inline static void create(CommandBuffer& commandBuffer, uint32_t rootParameterIndex, IResourceGroup* resourceGroup)
@@ -487,7 +487,7 @@ namespace Renderer
 		*  @param[in] pipelineState
 		*    Pipeline state to use, can be an null pointer (default: "nullptr")
 		*/
-		struct SetPipelineState
+		struct SetPipelineState final
 		{
 			// Static methods
 			inline static void create(CommandBuffer& commandBuffer, IPipelineState* pipelineState)
@@ -514,7 +514,7 @@ namespace Renderer
 		*  @param[in] vertexArray
 		*    Vertex array to use, can be an null pointer (default: "nullptr")
 		*/
-		struct SetVertexArray
+		struct SetVertexArray final
 		{
 			// Static methods
 			inline static void create(CommandBuffer& commandBuffer, IVertexArray* vertexArray)
@@ -548,7 +548,7 @@ namespace Renderer
 		*    - Lookout! In Direct3D 12 the scissor test can't be deactivated and hence one always needs to set a valid scissor rectangle.
 		*      Use the convenience "Renderer::Command::SetViewportAndScissorRectangle"-command if possible to not walk into this Direct3D 12 trap.
 		*/
-		struct SetViewports
+		struct SetViewports final
 		{
 			// Static methods
 			inline static void create(CommandBuffer& commandBuffer, uint32_t numberOfViewports, const Viewport* viewports)
@@ -597,7 +597,7 @@ namespace Renderer
 		*    - Scissor rectangles are only used when "Renderer::RasterizerState::scissorEnable" is true
 		*    - The current scissor rectangle(s) does not affect the clear operation
 		*/
-		struct SetScissorRectangles
+		struct SetScissorRectangles final
 		{
 			// Static methods
 			inline static void create(CommandBuffer& commandBuffer, uint32_t numberOfScissorRectangles, const ScissorRectangle* scissorRectangles)
@@ -652,7 +652,7 @@ namespace Renderer
 		*    - Lookout! In Direct3D 12 the scissor test can't be deactivated and hence one always needs to set a valid scissor rectangle.
 		*      Use the convenience "Renderer::Command::SetViewportAndScissorRectangle"-command if possible to not walk into this Direct3D 12 trap.
 		*/
-		struct SetViewportAndScissorRectangle
+		struct SetViewportAndScissorRectangle final
 		{
 			// Static methods
 			inline static void create(CommandBuffer& commandBuffer, uint32_t topLeftX, uint32_t topLeftY, uint32_t width, uint32_t height, float minimumDepth = 0.0f, float maximumDepth = 1.0f)
@@ -675,7 +675,7 @@ namespace Renderer
 		*  @param[in] renderTarget
 		*    Render target to render into by binding it to the output-merger state, can be an null pointer to render into the primary window
 		*/
-		struct SetRenderTarget
+		struct SetRenderTarget final
 		{
 			// Static methods
 			inline static void create(CommandBuffer& commandBuffer, IRenderTarget* renderTarget)
@@ -719,7 +719,7 @@ namespace Renderer
 		*    - The current scissor rectangle(s) (see "Renderer::IRenderer::rsSetScissorRectangles()") does not affect the clear operation
 		*    - In case there are multiple active render targets, all render targets are cleared
 		*/
-		struct Clear
+		struct Clear final
 		{
 			// Static methods
 			// -> z = 0 instead of 1 due to usage of Reversed-Z (see e.g. https://developer.nvidia.com/content/depth-precision-visualized and https://nlguillemot.wordpress.com/2016/12/07/reversed-z-in-opengl/)
@@ -752,7 +752,7 @@ namespace Renderer
 		*  @param[in] sourceMultisampleFramebuffer
 		*    Source multisample framebuffer
 		*/
-		struct ResolveMultisampleFramebuffer
+		struct ResolveMultisampleFramebuffer final
 		{
 			// Static methods
 			inline static void create(CommandBuffer& commandBuffer, IRenderTarget& destinationRenderTarget, IFramebuffer& sourceMultisampleFramebuffer)
@@ -780,7 +780,7 @@ namespace Renderer
 		*  @param[in] sourceResource
 		*    Source Resource
 		*/
-		struct CopyResource
+		struct CopyResource final
 		{
 			// Static methods
 			inline static void create(CommandBuffer& commandBuffer, IResource& destinationResource, IResource& sourceResource)
@@ -821,7 +821,7 @@ namespace Renderer
 		*    - If the multi-draw indirect feature is not supported this parameter, multiple draw calls are emitted
 		*    - If the draw indirect feature is not supported, a software indirect buffer is used and multiple draw calls are emitted
 		*/
-		struct Draw
+		struct Draw final
 		{
 			// Static methods
 			inline static void create(CommandBuffer& commandBuffer, const IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1)
@@ -875,7 +875,7 @@ namespace Renderer
 		*    - If the multi-draw indirect feature is not supported this parameter, multiple draw calls are emitted
 		*    - If the draw indirect feature is not supported, a software indirect buffer is used and multiple draw calls are emitted
 		*/
-		struct DrawIndexed
+		struct DrawIndexed final
 		{
 			// Static methods
 			inline static void create(CommandBuffer& commandBuffer, const IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset = 0, uint32_t numberOfDraws = 1)
@@ -922,7 +922,7 @@ namespace Renderer
 		*  @see
 		*    - "isDebugEnabled()"
 		*/
-		struct SetDebugMarker
+		struct SetDebugMarker final
 		{
 			// Static methods
 			inline static void create(CommandBuffer& commandBuffer, const char* name)
@@ -952,7 +952,7 @@ namespace Renderer
 		*  @see
 		*    - "isDebugEnabled()"
 		*/
-		struct BeginDebugEvent
+		struct BeginDebugEvent final
 		{
 			// Static methods
 			inline static void create(CommandBuffer& commandBuffer, const char* name)
@@ -979,7 +979,7 @@ namespace Renderer
 		*  @see
 		*    - "isDebugEnabled()"
 		*/
-		struct EndDebugEvent
+		struct EndDebugEvent final
 		{
 			// Static methods
 			inline static void create(CommandBuffer& commandBuffer)

@@ -46,7 +46,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL cube texture class, traditional bind version
 	*/
-	class TextureCubeBind : public TextureCube
+	class TextureCubeBind final : public TextureCube
 	{
 
 

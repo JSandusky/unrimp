@@ -51,7 +51,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class JsonMaterialHelper
+	class JsonMaterialHelper final
 	{
 
 

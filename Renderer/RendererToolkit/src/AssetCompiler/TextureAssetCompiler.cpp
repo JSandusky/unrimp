@@ -218,7 +218,7 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global classes                                        ]
 		//[-------------------------------------------------------]
-		class FileStream : public crnlib::data_stream
+		class FileStream final : public crnlib::data_stream
 		{
 
 
@@ -340,7 +340,7 @@ namespace
 
 		};
 
-		class FileDataStreamSerializer : public crnlib::data_stream_serializer
+		class FileDataStreamSerializer final : public crnlib::data_stream_serializer
 		{
 
 
@@ -535,7 +535,7 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global classes                                        ]
 		//[-------------------------------------------------------]
-		class TextureChannelPacking
+		class TextureChannelPacking final
 		{
 
 
@@ -543,7 +543,7 @@ namespace
 		//[ Public definitions                                    ]
 		//[-------------------------------------------------------]
 		public:
-			struct Source
+			struct Source final
 			{
 				TextureSemantic			  textureSemantic  = TextureSemantic::UNKNOWN;
 				uint8_t					  numberOfChannels = RendererRuntime::getUninitialized<uint8_t>();
@@ -552,7 +552,7 @@ namespace
 			};
 			typedef std::vector<Source> Sources;
 
-			struct Destination
+			struct Destination final
 			{
 				uint8_t sourceIndex	  = RendererRuntime::getUninitialized<uint8_t>();
 				uint8_t sourceChannel = RendererRuntime::getUninitialized<uint8_t>();

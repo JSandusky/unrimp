@@ -76,7 +76,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class MaterialResourceLoader : public IResourceLoader
+	class MaterialResourceLoader final : public IResourceLoader
 	{
 
 

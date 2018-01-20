@@ -57,7 +57,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    Separate fragment shader ("pixel shader" in Direct3D terminology) class
 	*/
-	class FragmentShaderSeparate : public Renderer::IFragmentShader
+	class FragmentShaderSeparate final : public Renderer::IFragmentShader
 	{
 
 

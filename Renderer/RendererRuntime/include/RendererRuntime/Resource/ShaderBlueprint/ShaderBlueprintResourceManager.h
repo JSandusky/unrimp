@@ -65,7 +65,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Shader blueprint resource manager
 	*/
-	class ShaderBlueprintResourceManager : public ResourceManager<ShaderBlueprintResource>
+	class ShaderBlueprintResourceManager final : public ResourceManager<ShaderBlueprintResource>
 	{
 
 

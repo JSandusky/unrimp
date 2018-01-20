@@ -108,7 +108,7 @@ namespace
 
 		};
 
-		class PhysicsFSReadFile : public PhysicsFSFile
+		class PhysicsFSReadFile final : public PhysicsFSFile
 		{
 
 
@@ -197,7 +197,7 @@ namespace
 
 		};
 
-		class PhysicsFSWriteFile : public PhysicsFSFile
+		class PhysicsFSWriteFile final : public PhysicsFSFile
 		{
 
 

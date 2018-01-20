@@ -44,7 +44,7 @@ class IApplication;
 *  @brief
 *    Windows application implementation class
 */
-class ApplicationImplWindows : public IApplicationImpl
+class ApplicationImplWindows final : public IApplicationImpl
 {
 
 

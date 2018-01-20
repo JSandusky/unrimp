@@ -63,7 +63,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class VrManagerOpenVR : public IVrManager, public IResourceListener
+	class VrManagerOpenVR final : public IVrManager, public IResourceListener
 	{
 
 
@@ -146,7 +146,7 @@ namespace RendererRuntime
 	//[ Private definitions                                   ]
 	//[-------------------------------------------------------]
 	private:
-		struct Component
+		struct Component final
 		{
 			std::string name;
 			SceneNode* sceneNode = nullptr;	// TODO(co) No crazy raw-pointers
@@ -156,7 +156,7 @@ namespace RendererRuntime
 			{};
 		};
 		typedef std::vector<Component> Components;
-		struct TrackedDeviceInformation
+		struct TrackedDeviceInformation final
 		{
 			std::string renderModelName;
 			Components  components;

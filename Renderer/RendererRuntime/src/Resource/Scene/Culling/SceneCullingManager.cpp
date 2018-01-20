@@ -56,21 +56,21 @@ namespace
 		static const float4 FLOAT4_ALL_ZERO(0.0f);
 		static const bool4 BOOL4_ALL_FALSE(false);
 		static const bool4 BOOL4_ALL_TRUE(true);
-		struct SimdPlane
+		struct SimdPlane final
 		{
 			float4 normalX;	///< The normal's x value replicted 4 times
 			float4 normalY;	///< The normal's y value replicted 4 times
 			float4 normalZ;	///< etc.
 			float4 d;
 		};
-		struct SimdVector
+		struct SimdVector final
 		{
 			float4 x;	///< Stores x0, x1, x2, x3
 			float4 y;	///< Stores y0, y1, y2, y3
 			float4 z;	///< etc.
 			float4 w;
 		};
-		struct SimdMatrix
+		struct SimdMatrix final
 		{
 			SimdVector x;
 			SimdVector y;

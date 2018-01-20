@@ -40,7 +40,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class DebugGuiManagerLinux : public DebugGuiManager
+	class DebugGuiManagerLinux final : public DebugGuiManager
 	{
 
 

@@ -67,7 +67,7 @@ namespace RendererRuntime
 *    - Optimization: Cache data to not bother the renderer API to much
 *    - Compact vertex format (32 bit texture coordinate, QTangent, 56 bytes vs. 28 bytes per vertex)
 */
-class FirstMesh : public ExampleBase, public RendererRuntime::IResourceListener
+class FirstMesh final : public ExampleBase, public RendererRuntime::IResourceListener
 {
 
 

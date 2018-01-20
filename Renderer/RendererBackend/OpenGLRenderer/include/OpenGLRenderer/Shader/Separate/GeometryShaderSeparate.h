@@ -58,7 +58,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    Separate geometry shader class
 	*/
-	class GeometryShaderSeparate : public Renderer::IGeometryShader
+	class GeometryShaderSeparate final : public Renderer::IGeometryShader
 	{
 
 

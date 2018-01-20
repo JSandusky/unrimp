@@ -73,7 +73,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class SceneResource : public IResource
+	class SceneResource final : public IResource
 	{
 
 

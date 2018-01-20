@@ -54,7 +54,7 @@ namespace OpenGLES3Renderer
 	*  @brief
 	*    Abstract OpenGL ES uniform buffer object (UBO, "constant buffer" in Direct3D terminology) interface
 	*/
-	class UniformBuffer : public Renderer::IUniformBuffer
+	class UniformBuffer final : public Renderer::IUniformBuffer
 	{
 
 

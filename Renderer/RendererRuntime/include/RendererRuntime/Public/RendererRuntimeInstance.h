@@ -83,7 +83,7 @@ namespace RendererRuntime
 	*  @note
 	*    - Designed to be instanced and used inside a single C++ file
 	*/
-	class RendererRuntimeInstance
+	class RendererRuntimeInstance final
 	{
 
 

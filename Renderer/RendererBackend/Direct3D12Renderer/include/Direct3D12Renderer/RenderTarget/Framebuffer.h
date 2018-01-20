@@ -53,7 +53,7 @@ namespace Direct3D12Renderer
 	*  @todo
 	*    - TODO(co) "D3D12GraphicsCommandList::OMSetRenderTargets()" supports using a single Direct3D 12 render target view descriptor heap instance with multiple targets in it, use it
 	*/
-	class Framebuffer : public Renderer::IFramebuffer
+	class Framebuffer final : public Renderer::IFramebuffer
 	{
 
 

@@ -69,7 +69,7 @@ namespace
 			*  @brief
 			*    Read in the image header
 			*/
-			struct KtxHeader
+			struct KtxHeader final
 			{
 				uint8_t  identifier[12];
 				uint32_t endianness;
@@ -89,7 +89,7 @@ namespace
 		#pragma pack(pop)
 
 		// TODO(sw) cleanup and simplify it when possible
-		struct KTX_texinfo
+		struct KTX_texinfo final
 		{
 			// Data filled in by _ktxCheckHeader()
 			uint32_t textureDimensions;

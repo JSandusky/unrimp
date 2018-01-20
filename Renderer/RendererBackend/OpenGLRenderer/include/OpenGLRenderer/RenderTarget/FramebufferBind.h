@@ -44,7 +44,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL framebuffer class, traditional bind version
 	*/
-	class FramebufferBind : public Framebuffer
+	class FramebufferBind final : public Framebuffer
 	{
 
 

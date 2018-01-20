@@ -81,7 +81,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL renderer class
 	*/
-	class OpenGLRenderer : public Renderer::IRenderer
+	class OpenGLRenderer final : public Renderer::IRenderer
 	{
 
 

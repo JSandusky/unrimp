@@ -80,7 +80,7 @@ namespace RendererRuntime
 	*  @note
 	*    - Basing on "AssimpView::AnimEvaluator" ( https://github.com/assimp/assimp/blob/master/tools/assimp_view/AnimEvaluator.cpp )
 	*/
-	class SkeletonAnimationEvaluator
+	class SkeletonAnimationEvaluator final
 	{
 
 

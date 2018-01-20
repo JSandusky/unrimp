@@ -116,7 +116,7 @@ namespace
 			return std::max(op1, op2);
 		}
 
-		struct Operation
+		struct Operation final
 		{
 			const char*	opName;
 			size_t		length;
@@ -165,7 +165,7 @@ namespace
 			EXPR_VAR
 		};
 
-		struct Expression
+		struct Expression final
 		{
 			bool					result;
 			bool					negated;

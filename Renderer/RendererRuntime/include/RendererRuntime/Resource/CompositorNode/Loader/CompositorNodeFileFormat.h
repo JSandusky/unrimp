@@ -64,7 +64,7 @@ namespace RendererRuntime
 
 		#pragma pack(push)
 		#pragma pack(1)
-			struct CompositorNodeHeader
+			struct CompositorNodeHeader final
 			{
 				uint32_t numberOfInputChannels;
 				uint32_t numberOfRenderTargetTextures;
@@ -73,31 +73,31 @@ namespace RendererRuntime
 				uint32_t numberOfOutputChannels;
 			};
 
-			struct Channel
+			struct Channel final
 			{
 				CompositorChannelId id;
 			};
 
-			struct RenderTargetTexture
+			struct RenderTargetTexture final
 			{
 				AssetId						 assetId;
 				RenderTargetTextureSignature renderTargetTextureSignature;
 			};
 
-			struct Framebuffer
+			struct Framebuffer final
 			{
 				CompositorFramebufferId compositorFramebufferId;
 				FramebufferSignature	framebufferSignature;
 			};
 
-			struct Target
+			struct Target final
 			{
 				CompositorChannelId		compositorChannelId;
 				CompositorFramebufferId compositorFramebufferId;
 				uint32_t				numberOfPasses;
 			};
 
-			struct PassHeader
+			struct PassHeader final
 			{
 				CompositorPassTypeId compositorPassTypeId;
 				uint32_t			 numberOfBytes;
@@ -112,7 +112,7 @@ namespace RendererRuntime
 				bool	 skipFirstExecution	= false;
 			};
 
-			struct PassClear : public Pass
+			struct PassClear final : public Pass
 			{
 				uint32_t flags	  = 0;		///< Combination of "Renderer::ClearFlag"
 				float	 color[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
@@ -120,7 +120,7 @@ namespace RendererRuntime
 				uint32_t stencil  = 0;
 			};
 
-			struct PassVrHiddenAreaMesh : public Pass
+			struct PassVrHiddenAreaMesh final : public Pass
 			{
 				uint32_t flags	 = 0;	///< Combination of "Renderer::ClearFlag", except for color-flag
 				uint32_t stencil = 0;
@@ -134,19 +134,19 @@ namespace RendererRuntime
 				MaterialTechniqueId	materialTechniqueId;
 			};
 
-			struct PassShadowMap : public PassScene
+			struct PassShadowMap final : public PassScene
 			{
 				AssetId textureAssetId;
 				AssetId depthToExponentialVarianceMaterialBlueprintAssetId;
 				AssetId blurMaterialBlueprintAssetId;
 			};
 
-			struct PassResolveMultisample : public Pass
+			struct PassResolveMultisample final : public Pass
 			{
 				CompositorFramebufferId sourceMultisampleCompositorFramebufferId;
 			};
 
-			struct PassCopy : public Pass
+			struct PassCopy final : public Pass
 			{
 				AssetId destinationTextureAssetId;
 				AssetId sourceTextureAssetId;
@@ -161,7 +161,7 @@ namespace RendererRuntime
 			};
 
 			// The material definition is not mandatory for the debug GUI, if nothing is defined the fixed build in renderer configuration resources will be used instead
-			struct PassDebugGui : public PassQuad
+			struct PassDebugGui final : public PassQuad
 			{
 			};
 		#pragma pack(pop)

@@ -57,7 +57,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    Separate tessellation control shader ("hull shader" in Direct3D terminology) class
 	*/
-	class TessellationControlShaderSeparate : public Renderer::ITessellationControlShader
+	class TessellationControlShaderSeparate final : public Renderer::ITessellationControlShader
 	{
 
 

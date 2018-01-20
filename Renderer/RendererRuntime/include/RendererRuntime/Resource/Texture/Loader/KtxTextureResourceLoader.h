@@ -40,7 +40,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class KtxTextureResourceLoader : public ITextureResourceLoader
+	class KtxTextureResourceLoader final : public ITextureResourceLoader
 	{
 
 

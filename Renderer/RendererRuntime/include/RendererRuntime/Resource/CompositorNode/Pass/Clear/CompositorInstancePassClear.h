@@ -49,7 +49,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorInstancePassClear : public ICompositorInstancePass
+	class CompositorInstancePassClear final : public ICompositorInstancePass
 	{
 
 

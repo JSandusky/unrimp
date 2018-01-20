@@ -71,7 +71,7 @@ namespace VulkanRenderer
 	*  @todo
 	*    - TODO(co) Add support for debug name (not that important while at the same time more complex to implement here, but lets keep the TODO here to know there's room for improvement)
 	*/
-	class SwapChain : public Renderer::ISwapChain
+	class SwapChain final : public Renderer::ISwapChain
 	{
 
 

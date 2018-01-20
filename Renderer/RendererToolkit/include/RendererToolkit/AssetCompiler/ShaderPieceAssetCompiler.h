@@ -40,7 +40,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class ShaderPieceAssetCompiler : public IAssetCompiler
+	class ShaderPieceAssetCompiler final : public IAssetCompiler
 	{
 
 

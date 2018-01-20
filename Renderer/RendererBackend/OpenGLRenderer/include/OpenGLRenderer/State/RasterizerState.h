@@ -56,7 +56,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL rasterizer state class
 	*/
-	class RasterizerState : public IState
+	class RasterizerState final : public IState
 	{
 
 
@@ -77,7 +77,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~RasterizerState() override;
+		inline ~RasterizerState();
 
 		/**
 		*  @brief

@@ -53,7 +53,7 @@ namespace NullRenderer
 	*  @brief
 	*    Null index buffer object (IBO, "element array buffer" in OpenGL terminology) class
 	*/
-	class IndexBuffer : public Renderer::IIndexBuffer
+	class IndexBuffer final : public Renderer::IIndexBuffer
 	{
 
 

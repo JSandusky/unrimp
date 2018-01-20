@@ -49,7 +49,7 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global definitions                                    ]
 		//[-------------------------------------------------------]
-		struct MaterialBlueprintCacheEntry
+		struct MaterialBlueprintCacheEntry final
 		{
 			RendererRuntime::AssetId materialBlueprintAssetId;
 			uint32_t				 numberOfBytes;

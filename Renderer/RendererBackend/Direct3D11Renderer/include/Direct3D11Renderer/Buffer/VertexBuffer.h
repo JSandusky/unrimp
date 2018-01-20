@@ -55,7 +55,7 @@ namespace Direct3D11Renderer
 	*  @brief
 	*    Direct3D 11 vertex buffer object (VBO, "array buffer" in OpenGL terminology) class
 	*/
-	class VertexBuffer : public Renderer::IVertexBuffer
+	class VertexBuffer final : public Renderer::IVertexBuffer
 	{
 
 

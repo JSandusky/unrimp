@@ -56,7 +56,7 @@ namespace Renderer
 	*  @see
 	*    - "D3D12_DRAW_ARGUMENTS"-documentation for details
 	*/
-	struct DrawInstancedArguments
+	struct DrawInstancedArguments final
 	{
 		uint32_t vertexCountPerInstance;
 		uint32_t instanceCount;
@@ -86,7 +86,7 @@ namespace Renderer
 	*  @see
 	*    - "D3D12_DRAW_INDEXED_ARGUMENTS"-documentation for details
 	*/
-	struct DrawIndexedInstancedArguments
+	struct DrawIndexedInstancedArguments final
 	{
 		uint32_t indexCountPerInstance;
 		uint32_t instanceCount;

@@ -49,7 +49,7 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	struct FramebufferAttachment
+	struct FramebufferAttachment final
 	{
 		ITexture* texture;
 		uint32_t  mipmapIndex;

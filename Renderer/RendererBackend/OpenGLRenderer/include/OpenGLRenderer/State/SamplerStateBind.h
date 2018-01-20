@@ -44,7 +44,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL sampler state class, traditional bind version to emulate a sampler object
 	*/
-	class SamplerStateBind : public SamplerState
+	class SamplerStateBind final : public SamplerState
 	{
 
 

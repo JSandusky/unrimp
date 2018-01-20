@@ -54,7 +54,7 @@ namespace Direct3D9Renderer
 	*  @brief
 	*    Direct3D 9 resource group class
 	*/
-	class ResourceGroup : public Renderer::IResourceGroup
+	class ResourceGroup final : public Renderer::IResourceGroup
 	{
 
 

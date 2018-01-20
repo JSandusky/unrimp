@@ -54,7 +54,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL buffer manager interface
 	*/
-	class BufferManager : public Renderer::IBufferManager
+	class BufferManager final : public Renderer::IBufferManager
 	{
 
 

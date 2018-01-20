@@ -60,7 +60,7 @@ namespace Direct3D10Renderer
 	*  @brief
 	*    HLSL vertex shader class
 	*/
-	class VertexShaderHlsl : public Renderer::IVertexShader
+	class VertexShaderHlsl final : public Renderer::IVertexShader
 	{
 
 

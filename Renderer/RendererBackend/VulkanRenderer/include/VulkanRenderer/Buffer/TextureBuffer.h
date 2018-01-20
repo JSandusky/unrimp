@@ -58,7 +58,7 @@ namespace VulkanRenderer
 	*  @brief
 	*    Vulkan texture buffer object (TBO) interface
 	*/
-	class TextureBuffer : public Renderer::ITextureBuffer
+	class TextureBuffer final : public Renderer::ITextureBuffer
 	{
 
 

@@ -55,7 +55,7 @@ namespace Direct3D9Renderer
 	*  @brief
 	*    Direct3D 9 3D texture class
 	*/
-	class Texture3D : public Renderer::ITexture3D
+	class Texture3D final : public Renderer::ITexture3D
 	{
 
 

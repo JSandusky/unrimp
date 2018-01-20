@@ -54,7 +54,7 @@ namespace Direct3D11Renderer
 	*  @brief
 	*    Direct3D 11 resource group class
 	*/
-	class ResourceGroup : public Renderer::IResourceGroup
+	class ResourceGroup final : public Renderer::IResourceGroup
 	{
 
 

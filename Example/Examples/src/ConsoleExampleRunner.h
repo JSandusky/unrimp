@@ -27,7 +27,7 @@
 #include "ExampleRunner.h"
 
 
-class ConsoleExampleRunner :  ExampleRunner
+class ConsoleExampleRunner final :  ExampleRunner
 {
 public:
 	virtual int run(const CommandLineArguments& commandLineArguments) override;

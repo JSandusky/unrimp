@@ -54,7 +54,7 @@ namespace OpenGLES3Renderer
 	*  @brief
 	*    OpenGL ES 3 texture manager interface
 	*/
-	class TextureManager : public Renderer::ITextureManager
+	class TextureManager final : public Renderer::ITextureManager
 	{
 
 

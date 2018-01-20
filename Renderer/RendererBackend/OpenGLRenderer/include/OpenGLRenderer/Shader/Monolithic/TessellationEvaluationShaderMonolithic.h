@@ -53,7 +53,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    Monolithic tessellation evaluation shader ("domain shader" in Direct3D terminology) class
 	*/
-	class TessellationEvaluationShaderMonolithic : public Renderer::ITessellationEvaluationShader
+	class TessellationEvaluationShaderMonolithic final : public Renderer::ITessellationEvaluationShader
 	{
 
 

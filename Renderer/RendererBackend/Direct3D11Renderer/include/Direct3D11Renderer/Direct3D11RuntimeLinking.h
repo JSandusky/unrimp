@@ -53,7 +53,7 @@ namespace Direct3D11Renderer
 	*  @brief
 	*    Direct3D 11 runtime linking
 	*/
-	class Direct3D11RuntimeLinking
+	class Direct3D11RuntimeLinking final
 	{
 
 

@@ -53,7 +53,7 @@ namespace NullRenderer
 	*  @brief
 	*    Null fragment shader class (FS, "pixel shader" in Direct3D terminology)
 	*/
-	class FragmentShader : public Renderer::IFragmentShader
+	class FragmentShader final : public Renderer::IFragmentShader
 	{
 
 

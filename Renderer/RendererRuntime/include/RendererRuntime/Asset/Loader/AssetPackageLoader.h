@@ -50,7 +50,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class AssetPackageLoader : protected Loader
+	class AssetPackageLoader final : protected Loader
 	{
 
 

@@ -61,7 +61,7 @@ namespace RendererRuntime
 	*    - Designed to be instanced and used inside a single C++ file
 	*    - Basing on "Tip/Demo: Log example as helper class. #300" - https://github.com/ocornut/imgui/issues/300
 	*/
-	class ImGuiLog : public Renderer::StdLog
+	class ImGuiLog final : public Renderer::StdLog
 	{
 
 
@@ -95,7 +95,7 @@ namespace RendererRuntime
 	//[ Private definitions                                   ]
 	//[-------------------------------------------------------]
 	private:
-		struct Entry
+		struct Entry final
 		{
 			int			lineOffsets;	///< Index to lines offset
 			Type		type;

@@ -46,7 +46,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL vertex buffer object (VBO, "array buffer" in OpenGL terminology) class, traditional bind version
 	*/
-	class VertexBufferBind : public VertexBuffer
+	class VertexBufferBind final : public VertexBuffer
 	{
 
 

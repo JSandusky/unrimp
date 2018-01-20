@@ -62,7 +62,7 @@ namespace Direct3D12Renderer
 	*  @brief
 	*    Direct3D 12 vertex array class
 	*/
-	class VertexArray : public Renderer::IVertexArray
+	class VertexArray final : public Renderer::IVertexArray
 	{
 
 

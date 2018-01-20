@@ -53,7 +53,7 @@ namespace RendererRuntime
 
 		#pragma pack(push)
 		#pragma pack(1)
-			struct AssetPackageHeader
+			struct AssetPackageHeader final
 			{
 				uint32_t numberOfAssets;
 			};

@@ -55,7 +55,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL blend state class
 	*/
-	class BlendState : public IState
+	class BlendState final : public IState
 	{
 
 
@@ -76,7 +76,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~BlendState() override;
+		inline ~BlendState();
 
 		/**
 		*  @brief

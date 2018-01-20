@@ -44,7 +44,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Skybox scene item
 	*/
-	class SkyboxSceneItem : public MaterialSceneItem
+	class SkyboxSceneItem final : public MaterialSceneItem
 	{
 
 

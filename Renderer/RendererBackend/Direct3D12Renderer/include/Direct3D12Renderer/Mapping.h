@@ -47,7 +47,7 @@ namespace Direct3D12Renderer
 	*  @brief
 	*    Direct3D 12 mapping
 	*/
-	class Mapping
+	class Mapping final
 	{
 
 

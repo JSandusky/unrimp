@@ -60,7 +60,7 @@ namespace VulkanRenderer
 	*  @brief
 	*    GLSL fragment shader ("pixel shader" in Direct3D terminology) class
 	*/
-	class FragmentShaderGlsl : public Renderer::IFragmentShader
+	class FragmentShaderGlsl final : public Renderer::IFragmentShader
 	{
 
 

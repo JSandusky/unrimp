@@ -55,7 +55,7 @@ namespace OpenGLES3Renderer
 	*  @brief
 	*    OpenGL ES 3 depth stencil state class
 	*/
-	class DepthStencilState : public IState
+	class DepthStencilState final : public IState
 	{
 
 
@@ -76,7 +76,7 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~DepthStencilState() override;
+		inline ~DepthStencilState();
 
 		/**
 		*  @brief

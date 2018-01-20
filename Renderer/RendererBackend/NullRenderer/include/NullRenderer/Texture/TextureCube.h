@@ -53,7 +53,7 @@ namespace NullRenderer
 	*  @brief
 	*    Null cube texture class
 	*/
-	class TextureCube : public Renderer::ITextureCube
+	class TextureCube final : public Renderer::ITextureCube
 	{
 
 

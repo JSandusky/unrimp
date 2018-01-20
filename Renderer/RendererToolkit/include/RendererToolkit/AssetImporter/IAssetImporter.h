@@ -86,7 +86,7 @@ namespace RendererToolkit
 	//[ Public structures                                     ]
 	//[-------------------------------------------------------]
 	public:
-		struct Input
+		struct Input final
 		{
 			const Context&	  context;
 			const std::string projectName;

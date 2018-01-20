@@ -57,7 +57,7 @@ namespace VulkanRenderer
 	*  @brief
 	*    Vulkan 2D array texture interface
 	*/
-	class Texture2DArray : public Renderer::ITexture2DArray
+	class Texture2DArray final : public Renderer::ITexture2DArray
 	{
 
 

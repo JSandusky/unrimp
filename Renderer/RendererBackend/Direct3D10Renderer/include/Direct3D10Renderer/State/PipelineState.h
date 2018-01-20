@@ -59,7 +59,7 @@ namespace Direct3D10Renderer
 	*  @brief
 	*    Direct3D 10 pipeline state class
 	*/
-	class PipelineState : public Renderer::IPipelineState
+	class PipelineState final : public Renderer::IPipelineState
 	{
 
 

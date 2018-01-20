@@ -59,7 +59,7 @@ namespace Direct3D12Renderer
 	*  @brief
 	*    HLSL fragment shader class (FS, "pixel shader" in Direct3D terminology)
 	*/
-	class FragmentShaderHlsl : public Renderer::IFragmentShader
+	class FragmentShaderHlsl final : public Renderer::IFragmentShader
 	{
 
 

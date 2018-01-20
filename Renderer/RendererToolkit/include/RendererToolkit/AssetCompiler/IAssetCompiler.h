@@ -118,7 +118,7 @@ namespace RendererToolkit
 	//[ Public structures                                     ]
 	//[-------------------------------------------------------]
 	public:
-		struct Input
+		struct Input final
 		{
 			const Context&							context;
 			const std::string						projectName;
@@ -205,7 +205,7 @@ namespace RendererToolkit
 			Input(const Input&) = delete;
 			Input& operator=(const Input&) = delete;
 		};
-		struct Configuration
+		struct Configuration final
 		{
 			const rapidjson::Document& rapidJsonDocumentAsset;
 			const rapidjson::Value&    rapidJsonValueTargets;
@@ -222,7 +222,7 @@ namespace RendererToolkit
 			Configuration(const Configuration&) = delete;
 			Configuration& operator =(const Configuration&) = delete;
 		};
-		struct Output
+		struct Output final
 		{
 			RendererRuntime::AssetPackage* outputAssetPackage;
 		};

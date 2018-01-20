@@ -83,7 +83,7 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		struct ResourceConnection
+		struct ResourceConnection final
 		{
 			IResourceManager* resourceManager;	///< Owner resource manager, always valid
 			ResourceId		  resourceId;		///< Unique resource ID inside the resource manager

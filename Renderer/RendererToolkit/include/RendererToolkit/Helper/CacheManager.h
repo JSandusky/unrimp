@@ -76,7 +76,7 @@ namespace RendererToolkit
 	*  @note
 	*    - This manager caches the content hash of source assets to speed up project compilation when the source doesn't changes
 	*/
-	class CacheManager
+	class CacheManager final
 	{
 
 
@@ -84,7 +84,7 @@ namespace RendererToolkit
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		struct CacheEntry
+		struct CacheEntry final
 		{
 			// Combined 64 bit key
 			uint32_t fileId			  = 0;	///< ID of the file (string hash of the filename)
@@ -105,7 +105,7 @@ namespace RendererToolkit
 			}
 		};
 
-		struct CacheEntries
+		struct CacheEntries final
 		{
 			std::vector<CacheEntry>	sourceCacheEntries;
 			CacheEntry				assetCacheEntry;
@@ -300,7 +300,7 @@ namespace RendererToolkit
 	private:
 		typedef std::unordered_map<uint64_t, CacheEntry> StoredCacheEntries;
 
-		struct CheckedFile
+		struct CheckedFile final
 		{
 			bool	   changed;
 			CacheEntry cacheEntry;

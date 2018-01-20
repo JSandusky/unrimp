@@ -57,7 +57,7 @@ namespace Direct3D12Renderer
 	*  @brief
 	*    Direct3D 12 indirect buffer object class
 	*/
-	class IndirectBuffer : public Renderer::IIndirectBuffer
+	class IndirectBuffer final : public Renderer::IIndirectBuffer
 	{
 
 

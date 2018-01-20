@@ -54,7 +54,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    Monolithic geometry shader class
 	*/
-	class GeometryShaderMonolithic : public Renderer::IGeometryShader
+	class GeometryShaderMonolithic final : public Renderer::IGeometryShader
 	{
 
 

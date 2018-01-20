@@ -46,7 +46,7 @@
 *    - Pipeline state object (PSO)
 *    - Attribute less rendering (aka "drawing without data")
 */
-class FirstGeometryShader : public ExampleBase
+class FirstGeometryShader final : public ExampleBase
 {
 
 

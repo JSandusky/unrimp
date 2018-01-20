@@ -66,7 +66,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL runtime linking
 	*/
-	class OpenGLRuntimeLinking
+	class OpenGLRuntimeLinking final
 	{
 
 

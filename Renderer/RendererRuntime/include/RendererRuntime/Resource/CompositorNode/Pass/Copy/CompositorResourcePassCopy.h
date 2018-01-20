@@ -47,7 +47,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorResourcePassCopy : public ICompositorResourcePass
+	class CompositorResourcePassCopy final : public ICompositorResourcePass
 	{
 
 

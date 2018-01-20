@@ -62,7 +62,7 @@ namespace VulkanRenderer
 	*  @brief
 	*    Vulkan vertex array interface
 	*/
-	class VertexArray : public Renderer::IVertexArray
+	class VertexArray final : public Renderer::IVertexArray
 	{
 
 

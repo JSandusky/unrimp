@@ -58,7 +58,7 @@ namespace Direct3D11Renderer
 	*  @brief
 	*    Direct3D 11 rasterizer state class
 	*/
-	class RasterizerState : public IState
+	class RasterizerState final : public IState
 	{
 
 

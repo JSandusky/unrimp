@@ -41,7 +41,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class SceneFactory : public ISceneFactory
+	class SceneFactory final : public ISceneFactory
 	{
 
 

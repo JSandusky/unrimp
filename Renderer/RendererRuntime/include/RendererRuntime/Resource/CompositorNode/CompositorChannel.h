@@ -41,7 +41,7 @@ namespace RendererRuntime
 	*  @note
 	*    - Named in short just compositor channel because there's no instance variant
 	*/
-	class CompositorChannel
+	class CompositorChannel final
 	{
 
 

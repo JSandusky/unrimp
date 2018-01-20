@@ -49,7 +49,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class OpenVRTextureResourceLoader : public ITextureResourceLoader
+	class OpenVRTextureResourceLoader final : public ITextureResourceLoader
 	{
 
 

@@ -56,7 +56,7 @@ namespace Direct3D10Renderer
 	*  @brief
 	*    Direct3D 10 1D texture class
 	*/
-	class Texture1D : public Renderer::ITexture1D
+	class Texture1D final : public Renderer::ITexture1D
 	{
 
 

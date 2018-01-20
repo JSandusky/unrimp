@@ -59,7 +59,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL mapping
 	*/
-	class Mapping
+	class Mapping final
 	{
 
 

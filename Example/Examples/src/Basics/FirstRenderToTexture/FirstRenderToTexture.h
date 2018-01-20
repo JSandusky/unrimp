@@ -48,7 +48,7 @@
 *    - Pipeline state object (PSO)
 *    - Framebuffer object (FBO) used for render to texture
 */
-class FirstRenderToTexture : public ExampleBase
+class FirstRenderToTexture final : public ExampleBase
 {
 
 

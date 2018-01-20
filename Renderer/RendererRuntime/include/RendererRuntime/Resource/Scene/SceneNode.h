@@ -58,7 +58,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class SceneNode
+	class SceneNode final
 	{
 
 

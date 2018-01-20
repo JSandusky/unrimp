@@ -41,7 +41,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class Lz4DdsTextureResourceLoader : public DdsTextureResourceLoader
+	class Lz4DdsTextureResourceLoader final : public DdsTextureResourceLoader
 	{
 
 

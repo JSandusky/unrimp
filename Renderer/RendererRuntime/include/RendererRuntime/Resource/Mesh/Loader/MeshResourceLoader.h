@@ -65,7 +65,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class MeshResourceLoader : public IMeshResourceLoader
+	class MeshResourceLoader final : public IMeshResourceLoader
 	{
 
 

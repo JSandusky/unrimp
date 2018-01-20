@@ -58,17 +58,17 @@ namespace RendererRuntime
 
 		#pragma pack(push)
 		#pragma pack(1)
-			struct CompositorWorkspaceHeader
+			struct CompositorWorkspaceHeader final
 			{
 				uint32_t unused;	// TODO(co) Currently the compositor workspace header is unused
 			};
 
-			struct Nodes
+			struct Nodes final
 			{
 				uint32_t numberOfNodes;
 			};
 
-			struct Node
+			struct Node final
 			{
 				AssetId compositorNodeAssetId;
 			};

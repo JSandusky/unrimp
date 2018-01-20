@@ -46,7 +46,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL 2D array texture class, traditional bind version
 	*/
-	class Texture2DArrayBind : public Texture2DArray
+	class Texture2DArrayBind final : public Texture2DArray
 	{
 
 

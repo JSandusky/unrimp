@@ -54,7 +54,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL root signature ("pipeline layout" in Vulkan terminology) class
 	*/
-	class RootSignature : public Renderer::IRootSignature
+	class RootSignature final : public Renderer::IRootSignature
 	{
 
 

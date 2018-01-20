@@ -47,7 +47,7 @@ namespace PLInput
 *  @brief
 *    Free camera controller
 */
-class FreeCameraController : public IController
+class FreeCameraController final : public IController
 {
 
 

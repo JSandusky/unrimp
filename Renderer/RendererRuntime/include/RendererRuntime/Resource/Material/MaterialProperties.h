@@ -52,7 +52,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Material properties
 	*/
-	class MaterialProperties
+	class MaterialProperties final
 	{
 
 
@@ -136,7 +136,7 @@ namespace RendererRuntime
 
 	namespace detail
 	{
-		struct OrderByMaterialPropertyId
+		struct OrderByMaterialPropertyId final
 		{
 			inline bool operator()(const MaterialProperty& left, MaterialPropertyId right) const
 			{

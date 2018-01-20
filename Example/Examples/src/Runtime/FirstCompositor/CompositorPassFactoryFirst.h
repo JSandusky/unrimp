@@ -33,7 +33,7 @@
 //[-------------------------------------------------------]
 //[ Classes                                               ]
 //[-------------------------------------------------------]
-class CompositorPassFactoryFirst : public RendererRuntime::CompositorPassFactory
+class CompositorPassFactoryFirst final : public RendererRuntime::CompositorPassFactory
 {
 
 

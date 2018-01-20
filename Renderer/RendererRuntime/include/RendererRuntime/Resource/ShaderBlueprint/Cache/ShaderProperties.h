@@ -60,7 +60,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Shader properties
 	*/
-	class ShaderProperties
+	class ShaderProperties final
 	{
 
 
@@ -68,7 +68,7 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		struct Property
+		struct Property final
 		{
 			ShaderPropertyId shaderPropertyId;
 			int32_t			 value;

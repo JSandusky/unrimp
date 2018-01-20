@@ -63,7 +63,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Vertex attributes resource
 	*/
-	class VertexAttributesResource : public IResource
+	class VertexAttributesResource final : public IResource
 	{
 
 

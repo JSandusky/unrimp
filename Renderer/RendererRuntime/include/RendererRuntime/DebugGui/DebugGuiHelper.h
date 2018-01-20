@@ -62,7 +62,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Debug GUI helper generating ImGui ( https://github.com/ocornut/imgui ) commands
 	*/
-	class DebugGuiHelper
+	class DebugGuiHelper final
 	{
 
 
@@ -87,7 +87,7 @@ namespace RendererRuntime
 			LOCAL,
 			WORLD
 		};
-		struct GizmoSettings
+		struct GizmoSettings final
 		{
 			GizmoOperation	currentGizmoOperation = GizmoOperation::TRANSLATE;
 			GizmoMode		currentGizmoMode	  = GizmoMode::WORLD;

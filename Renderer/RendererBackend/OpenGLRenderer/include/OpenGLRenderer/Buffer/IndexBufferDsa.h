@@ -46,7 +46,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL index buffer object (IBO, "element array buffer" in OpenGL terminology) class, effective direct state access (DSA)
 	*/
-	class IndexBufferDsa : public IndexBuffer
+	class IndexBufferDsa final : public IndexBuffer
 	{
 
 

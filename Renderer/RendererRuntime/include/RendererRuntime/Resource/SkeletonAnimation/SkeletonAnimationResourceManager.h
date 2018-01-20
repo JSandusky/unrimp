@@ -63,7 +63,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Skeleton animation resource manager
 	*/
-	class SkeletonAnimationResourceManager : public ResourceManager<SkeletonAnimationResource>
+	class SkeletonAnimationResourceManager final : public ResourceManager<SkeletonAnimationResource>
 	{
 
 

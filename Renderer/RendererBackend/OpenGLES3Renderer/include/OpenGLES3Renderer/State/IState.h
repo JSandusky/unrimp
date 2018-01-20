@@ -56,7 +56,7 @@ namespace OpenGLES3Renderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~IState();
+		inline ~IState();
 
 
 	};

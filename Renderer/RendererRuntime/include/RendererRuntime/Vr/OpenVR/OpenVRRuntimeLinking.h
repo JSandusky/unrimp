@@ -53,7 +53,7 @@ namespace RendererRuntime
 	*  @brief
 	*    OpenVR runtime linking
 	*/
-	class OpenVRRuntimeLinking
+	class OpenVRRuntimeLinking final
 	{
 
 

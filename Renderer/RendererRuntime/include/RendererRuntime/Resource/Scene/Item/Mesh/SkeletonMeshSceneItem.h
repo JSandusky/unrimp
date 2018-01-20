@@ -59,7 +59,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Skeleton mesh scene item class
 	*/
-	class SkeletonMeshSceneItem : public MeshSceneItem
+	class SkeletonMeshSceneItem final : public MeshSceneItem
 	{
 
 

@@ -61,13 +61,13 @@ namespace RendererRuntime
 
 		#pragma pack(push)
 		#pragma pack(1)
-			struct MaterialHeader
+			struct MaterialHeader final
 			{
 				uint32_t numberOfTechniques;
 				uint32_t numberOfProperties;
 			};
 
-			struct Technique
+			struct Technique final
 			{
 				MaterialTechniqueId materialTechniqueId;
 				AssetId				materialBlueprintAssetId;

@@ -54,7 +54,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL texture manager interface
 	*/
-	class TextureManager : public Renderer::ITextureManager
+	class TextureManager final : public Renderer::ITextureManager
 	{
 
 

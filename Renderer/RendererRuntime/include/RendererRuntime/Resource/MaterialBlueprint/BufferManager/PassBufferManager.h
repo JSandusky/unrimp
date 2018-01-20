@@ -78,7 +78,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Pass buffer manager
 	*/
-	class PassBufferManager : private Manager
+	class PassBufferManager final : private Manager
 	{
 
 
@@ -90,7 +90,7 @@ namespace RendererRuntime
 		*  @brief
 		*    Pass data to each stereo rendering eye
 		*/
-		struct PassData
+		struct PassData final
 		{
 			glm::mat4 worldSpaceToClipSpaceMatrix[2];
 			glm::mat4 previousWorldSpaceToClipSpaceMatrix[2];
@@ -172,7 +172,7 @@ namespace RendererRuntime
 	//[ Private definitions                                   ]
 	//[-------------------------------------------------------]
 	private:
-		struct UniformBuffer
+		struct UniformBuffer final
 		{
 			Renderer::IUniformBuffer* uniformBuffer;
 			Renderer::IResourceGroup* resourceGroup;

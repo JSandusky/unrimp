@@ -56,7 +56,7 @@ namespace Direct3D10Renderer
 	*  @brief
 	*    Direct3D 10 2D array texture class
 	*/
-	class Texture2DArray : public Renderer::ITexture2DArray
+	class Texture2DArray final : public Renderer::ITexture2DArray
 	{
 
 

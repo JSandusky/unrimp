@@ -71,7 +71,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class FramebufferManager : private Manager
+	class FramebufferManager final : private Manager
 	{
 
 
@@ -79,7 +79,7 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		struct FramebufferElement
+		struct FramebufferElement final
 		{
 			FramebufferSignature    framebufferSignature;
 			Renderer::IFramebuffer* framebuffer;		///< Can be a null pointer, no "Renderer::IFramebufferPtr" to not have overhead when internally reallocating

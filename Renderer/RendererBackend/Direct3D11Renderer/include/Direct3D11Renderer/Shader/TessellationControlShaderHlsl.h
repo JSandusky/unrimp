@@ -58,7 +58,7 @@ namespace Direct3D11Renderer
 	*  @brief
 	*    HLSL tessellation control shader ("hull shader" in Direct3D terminology) class
 	*/
-	class TessellationControlShaderHlsl : public Renderer::ITessellationControlShader
+	class TessellationControlShaderHlsl final : public Renderer::ITessellationControlShader
 	{
 
 

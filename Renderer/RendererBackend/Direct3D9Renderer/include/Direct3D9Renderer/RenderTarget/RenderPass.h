@@ -45,7 +45,7 @@ namespace Direct3D9Renderer
 	*  @brief
 	*    Direct3D 9 render pass interface
 	*/
-	class RenderPass : public Renderer::IRenderPass
+	class RenderPass final : public Renderer::IRenderPass
 	{
 
 

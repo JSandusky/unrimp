@@ -74,7 +74,7 @@ namespace RendererRuntime
 	*    - Designed to be instanced and used inside a single C++ file
 	*    - Primarily for renderer toolkit with more relaxed write access
 	*/
-	class StdFileManager : public IFileManager
+	class StdFileManager final : public IFileManager
 	{
 
 

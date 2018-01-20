@@ -62,7 +62,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Texture resource class
 	*/
-	class TextureResource : public IResource
+	class TextureResource final : public IResource
 	{
 
 

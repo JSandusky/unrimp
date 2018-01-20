@@ -58,7 +58,7 @@ namespace RendererRuntime
 	*    float elapsedSeconds = stopwatch.getSeconds();
 	*  @endverbatim
 	*/
-	class Stopwatch
+	class Stopwatch final
 	{
 
 

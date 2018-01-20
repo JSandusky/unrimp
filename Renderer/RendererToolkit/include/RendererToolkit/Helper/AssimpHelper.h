@@ -52,7 +52,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class AssimpHelper
+	class AssimpHelper final
 	{
 
 

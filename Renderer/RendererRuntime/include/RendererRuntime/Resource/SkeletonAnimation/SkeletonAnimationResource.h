@@ -70,7 +70,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Skeleton animation resource
 	*/
-	class SkeletonAnimationResource : public IResource
+	class SkeletonAnimationResource final : public IResource
 	{
 
 
@@ -88,19 +88,19 @@ namespace RendererRuntime
 	public:
 		typedef std::vector<uint32_t> ChannelByteOffsets;
 		typedef std::vector<uint8_t>  ChannelData;
-		struct ChannelHeader
+		struct ChannelHeader final
 		{
 			uint32_t boneId;				///< Bone ID ("RendererRuntime::StringId" on bone name)
 			uint32_t numberOfPositionKeys;	///< Number of position keys, must be at least one
 			uint32_t numberOfRotationKeys;	///< Number of rotation keys, must be at least one
 			uint32_t numberOfScaleKeys;		///< Number of optional scale keys, can be zero
 		};
-		struct Vector3Key
+		struct Vector3Key final
 		{
 			float	  timeInTicks;	///< The time of this key in ticks
 			glm::vec3 value;		///< The value of this key
 		};
-		struct QuaternionKey
+		struct QuaternionKey final
 		{
 			float timeInTicks;	///< The time of this key in ticks
 			float value[3];		///< The xyz quaternion value of this key, w will be reconstructed during runtime

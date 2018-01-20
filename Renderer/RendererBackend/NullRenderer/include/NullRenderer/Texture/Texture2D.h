@@ -53,7 +53,7 @@ namespace NullRenderer
 	*  @brief
 	*    Null 2D texture class
 	*/
-	class Texture2D : public Renderer::ITexture2D
+	class Texture2D final : public Renderer::ITexture2D
 	{
 
 

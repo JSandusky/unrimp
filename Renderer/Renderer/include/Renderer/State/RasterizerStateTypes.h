@@ -101,7 +101,7 @@ namespace Renderer
 	*  @see
 	*    - "D3D12_RASTERIZER_DESC"-documentation for details
 	*/
-	struct RasterizerState
+	struct RasterizerState final
 	{
 		FillMode						fillMode;						///< Default: "Renderer::FillMode::SOLID"
 		CullMode						cullMode;						///< Default: "Renderer::CullMode::BACK"
@@ -116,7 +116,7 @@ namespace Renderer
 		ConservativeRasterizationMode	conservativeRasterizationMode;	///< Boolean value. >= Direct3D 12 only. Default: "false"
 		int								scissorEnable;					///< Boolean value. Not available in Vulkan or Direct3D 12 (scissor testing is always enabled). Default: "false"
 	};
-	struct RasterizerStateBuilder
+	struct RasterizerStateBuilder final
 	{
 
 

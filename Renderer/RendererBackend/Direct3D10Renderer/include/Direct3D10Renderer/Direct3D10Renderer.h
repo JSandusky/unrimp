@@ -62,7 +62,7 @@ namespace Direct3D10Renderer
 	*  @brief
 	*    Direct3D 10 renderer class
 	*/
-	class Direct3D10Renderer : public Renderer::IRenderer
+	class Direct3D10Renderer final : public Renderer::IRenderer
 	{
 
 

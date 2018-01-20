@@ -66,7 +66,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class RenderTargetTextureManager : private Manager
+	class RenderTargetTextureManager final : private Manager
 	{
 
 
@@ -74,7 +74,7 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		struct RenderTargetTextureElement
+		struct RenderTargetTextureElement final
 		{
 			AssetId						 assetId;
 			RenderTargetTextureSignature renderTargetTextureSignature;

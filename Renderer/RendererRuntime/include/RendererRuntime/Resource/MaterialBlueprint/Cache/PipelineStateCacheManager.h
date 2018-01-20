@@ -113,7 +113,7 @@ namespace RendererRuntime
 	*    - TODO(co) For Vulkan, DirectX 12 and Apple Metal the pipeline state object instance will be managed in here
 	*    - TODO(co) Direct3D 12: Pipeline state object: Add support for "GetCachedBlob" (super efficient material cache), see https://github.com/Microsoft/DirectX-Graphics-Samples/blob/master/Samples/D3D12PipelineStateCache/src/PSOLibrary.cpp
 	*/
-	class PipelineStateCacheManager : private Manager
+	class PipelineStateCacheManager final : private Manager
 	{
 
 

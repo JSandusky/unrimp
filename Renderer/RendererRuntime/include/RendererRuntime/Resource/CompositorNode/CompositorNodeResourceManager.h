@@ -62,7 +62,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorNodeResourceManager : public ResourceManager<CompositorNodeResource>
+	class CompositorNodeResourceManager final : public ResourceManager<CompositorNodeResource>
 	{
 
 

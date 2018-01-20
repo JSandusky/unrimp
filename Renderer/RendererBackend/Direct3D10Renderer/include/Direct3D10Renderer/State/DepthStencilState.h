@@ -58,7 +58,7 @@ namespace Direct3D10Renderer
 	*  @brief
 	*    Direct3D 10 depth stencil state class
 	*/
-	class DepthStencilState : public IState
+	class DepthStencilState final : public IState
 	{
 
 

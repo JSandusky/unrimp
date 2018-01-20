@@ -53,7 +53,7 @@ namespace NullRenderer
 	*  @brief
 	*    Null tessellation evaluation shader ("domain shader" in Direct3D terminology) class
 	*/
-	class TessellationEvaluationShader : public Renderer::ITessellationEvaluationShader
+	class TessellationEvaluationShader final : public Renderer::ITessellationEvaluationShader
 	{
 
 

@@ -37,7 +37,7 @@
 *  @brief
 *    Batch of instanced cubes using instanced arrays
 */
-class BatchInstancedArrays
+class BatchInstancedArrays final
 {
 
 

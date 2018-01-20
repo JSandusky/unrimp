@@ -118,7 +118,7 @@ namespace Renderer
 	*  @see
 	*    - "D3D12_SAMPLER_DESC"-documentation for details
 	*/
-	struct SamplerState
+	struct SamplerState final
 	{
 		FilterMode		   filter;			///< Default: "Renderer::FilterMode::MIN_MAG_MIP_LINEAR"
 		TextureAddressMode addressU;		///< (also known as "S"), Default: "Renderer::TextureAddressMode::CLAMP"

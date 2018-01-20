@@ -1213,7 +1213,7 @@ namespace RendererToolkit
 					// Start with the default sampler state
 					RendererRuntime::v1MaterialBlueprint::SamplerState materialBlueprintSamplerState;
 					materialBlueprintSamplerState.rootParameterIndex = 0;
-					Renderer::SamplerState& samplerState = materialBlueprintSamplerState;
+					Renderer::SamplerState& samplerState = materialBlueprintSamplerState.samplerState;
 					samplerState = Renderer::ISamplerState::getDefaultSamplerState();
 
 					{ // Mandatory base shader register name

@@ -74,7 +74,7 @@ namespace RendererRuntime
 	*    - For material batching
 	*    - Concept basing on OGRE 2.1 "Ogre::ConstBufferPool", but more generic and simplified thanks to the material blueprint concept
 	*/
-	class MaterialBufferManager : private Manager
+	class MaterialBufferManager final : private Manager
 	{
 
 
@@ -151,7 +151,7 @@ namespace RendererRuntime
 	//[ Private definitions                                   ]
 	//[-------------------------------------------------------]
 	private:
-		struct BufferPool
+		struct BufferPool final
 		{
 			std::vector<uint32_t>	  freeSlots;
 			Renderer::IUniformBuffer* uniformBuffer;	///< Memory is managed by this buffer pool instance

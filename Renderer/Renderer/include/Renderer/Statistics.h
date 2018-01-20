@@ -67,7 +67,7 @@ namespace Renderer
 	*    - The data is public by intent in order to make it easier to use this class,
 	*      no issues involved because the user only gets a constant instance
 	*/
-	class Statistics
+	class Statistics final
 	{
 
 

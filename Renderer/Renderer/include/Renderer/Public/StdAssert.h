@@ -60,7 +60,7 @@ namespace Renderer
 	*    - On MS Windows it will print to the Visual Studio output console and the debugger will break
 	*    - On Linux it will print on the console
 	*/
-	class StdAssert : public IAssert
+	class StdAssert final : public IAssert
 	{
 
 

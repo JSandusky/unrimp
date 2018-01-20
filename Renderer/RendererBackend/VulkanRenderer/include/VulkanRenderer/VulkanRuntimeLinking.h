@@ -55,7 +55,7 @@ namespace VulkanRenderer
 	*  @brief
 	*    Vulkan runtime linking for creating and managing the Vulkan instance ("VkInstance")
 	*/
-	class VulkanRuntimeLinking
+	class VulkanRuntimeLinking final
 	{
 
 

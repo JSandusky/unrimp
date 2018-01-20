@@ -57,7 +57,7 @@ namespace VulkanRenderer
 	*  @brief
 	*    Vulkan cube texture interface
 	*/
-	class TextureCube : public Renderer::ITextureCube
+	class TextureCube final : public Renderer::ITextureCube
 	{
 
 

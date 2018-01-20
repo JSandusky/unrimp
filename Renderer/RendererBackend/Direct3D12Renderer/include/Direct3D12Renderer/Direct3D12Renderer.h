@@ -60,7 +60,7 @@ namespace Direct3D12Renderer
 	*  @brief
 	*    Direct3D 12 renderer class
 	*/
-	class Direct3D12Renderer : public Renderer::IRenderer
+	class Direct3D12Renderer final : public Renderer::IRenderer
 	{
 
 

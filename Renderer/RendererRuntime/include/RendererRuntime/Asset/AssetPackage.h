@@ -66,7 +66,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class AssetPackage
+	class AssetPackage final
 	{
 
 

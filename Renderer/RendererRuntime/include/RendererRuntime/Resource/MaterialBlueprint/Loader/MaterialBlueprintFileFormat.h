@@ -62,7 +62,7 @@ namespace RendererRuntime
 
 		#pragma pack(push)
 		#pragma pack(1)
-			struct MaterialBlueprintHeader
+			struct MaterialBlueprintHeader final
 			{
 				uint32_t numberOfProperties;
 				uint32_t numberOfShaderCombinationProperties;
@@ -73,7 +73,7 @@ namespace RendererRuntime
 				uint32_t numberOfTextures;
 			};
 
-			struct RootSignatureHeader
+			struct RootSignatureHeader final
 			{
 				uint32_t numberOfRootParameters;
 				uint32_t numberOfDescriptorRanges;
@@ -81,7 +81,7 @@ namespace RendererRuntime
 				uint32_t flags;
 			};
 
-			struct UniformBufferHeader
+			struct UniformBufferHeader final
 			{
 				uint32_t							   rootParameterIndex;			///< Root parameter index = resource group index
 				MaterialBlueprintResource::BufferUsage bufferUsage;
@@ -90,19 +90,20 @@ namespace RendererRuntime
 				uint32_t							   uniformBufferNumberOfBytes;	///< Includes handling of packing rules for uniform variables (see "Reference for HLSL - Shader Models vs Shader Profiles - Shader Model 4 - Packing Rules for Constant Variables" at https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx )
 			};
 
-			struct TextureBufferHeader
+			struct TextureBufferHeader final
 			{
 				MaterialPropertyValue				   materialPropertyValue = MaterialPropertyValue::fromUnknown();
 				uint32_t							   rootParameterIndex	 = getUninitialized<uint32_t>();	///< Root parameter index = resource group index
 				MaterialBlueprintResource::BufferUsage bufferUsage			 = MaterialBlueprintResource::BufferUsage::UNKNOWN;
 			};
 
-			struct SamplerState : public Renderer::SamplerState
+			struct SamplerState final
 			{
-				uint32_t rootParameterIndex;	///< Root parameter index = resource group index
+				Renderer::SamplerState samplerState;
+				uint32_t			   rootParameterIndex;	///< Root parameter index = resource group index
 			};
 
-			struct Texture
+			struct Texture final
 			{
 				uint32_t		 rootParameterIndex;	///< Root parameter index = resource group index
 				MaterialProperty materialProperty;

@@ -45,7 +45,7 @@ namespace Direct3D12Renderer
 	*  @brief
 	*    Direct3D 12 render pass interface
 	*/
-	class RenderPass : public Renderer::IRenderPass
+	class RenderPass final : public Renderer::IRenderPass
 	{
 
 

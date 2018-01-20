@@ -53,7 +53,7 @@ namespace NullRenderer
 	*  @brief
 	*    Null vertex array class
 	*/
-	class VertexArray : public Renderer::IVertexArray
+	class VertexArray final : public Renderer::IVertexArray
 	{
 
 

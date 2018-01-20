@@ -68,7 +68,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class AssetManager : private Manager
+	class AssetManager final : private Manager
 	{
 
 

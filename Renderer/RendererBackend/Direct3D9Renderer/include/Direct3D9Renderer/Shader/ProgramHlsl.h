@@ -57,7 +57,7 @@ namespace Direct3D9Renderer
 	*  @brief
 	*    HLSL program class
 	*/
-	class ProgramHlsl : public Renderer::IProgram
+	class ProgramHlsl final : public Renderer::IProgram
 	{
 
 

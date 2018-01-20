@@ -82,7 +82,7 @@ namespace RendererToolkit
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
 	// RendererToolkit/Context.h
-	class Context
+	class Context final
 	{
 	public:
 		inline Context(Renderer::ILog& log, Renderer::IAssert& assert, Renderer::IAllocator& allocator, RendererRuntime::IFileManager& fileManager) :
@@ -126,7 +126,7 @@ namespace RendererToolkit
 	*  @note
 	*    - Designed to be instanced and used inside a single C++ file
 	*/
-	class RendererToolkitInstance
+	class RendererToolkitInstance final
 	{
 
 

@@ -47,7 +47,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL texture buffer object (UBO, "constant buffer" in Direct3D terminology) class, effective direct state access (DSA)
 	*/
-	class TextureBufferDsa : public TextureBuffer
+	class TextureBufferDsa final : public TextureBuffer
 	{
 
 

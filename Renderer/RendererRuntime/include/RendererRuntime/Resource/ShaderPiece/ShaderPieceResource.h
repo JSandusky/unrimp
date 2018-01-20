@@ -73,7 +73,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Shader piece resource
 	*/
-	class ShaderPieceResource : public IResource
+	class ShaderPieceResource final : public IResource
 	{
 
 

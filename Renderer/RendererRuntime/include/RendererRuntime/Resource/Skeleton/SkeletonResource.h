@@ -72,7 +72,7 @@ namespace RendererRuntime
 	*    - Bone data is cache friendly depth-first rolled up, see "Molecular Musings" - "Adventures in data-oriented design – Part 2: Hierarchical data" - https://blog.molecular-matters.com/2013/02/22/adventures-in-data-oriented-design-part-2-hierarchical-data/
 	*    - The complete skeleton data is sequential in memory
 	*/
-	class SkeletonResource : public IResource
+	class SkeletonResource final : public IResource
 	{
 
 

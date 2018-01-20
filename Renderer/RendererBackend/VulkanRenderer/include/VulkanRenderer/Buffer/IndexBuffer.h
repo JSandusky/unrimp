@@ -58,7 +58,7 @@ namespace VulkanRenderer
 	*  @brief
 	*    Vulkan index buffer object (IBO) interface
 	*/
-	class IndexBuffer : public Renderer::IIndexBuffer
+	class IndexBuffer final : public Renderer::IIndexBuffer
 	{
 
 

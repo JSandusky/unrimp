@@ -93,7 +93,7 @@ namespace Renderer
 	*  @see
 	*    - "D3D12_DEPTH_STENCILOP_DESC"-documentation for details
 	*/
-	struct DepthStencilOpDesc
+	struct DepthStencilOpDesc final
 	{
 		StencilOp		stencilFailOp;		///< Default: "Renderer::StencilOp::KEEP"
 		StencilOp		stencilDepthFailOp;	///< Default: "Renderer::StencilOp::KEEP"
@@ -113,7 +113,7 @@ namespace Renderer
 	*  @see
 	*    - "D3D12_DEPTH_STENCIL_DESC"-documentation for details
 	*/
-	struct DepthStencilState
+	struct DepthStencilState final
 	{
 		int					depthEnable;		///< Boolean value. Default: "true"
 		DepthWriteMask		depthWriteMask;		///< Default: "Renderer::DepthWriteMask::ALL"
@@ -124,7 +124,7 @@ namespace Renderer
 		DepthStencilOpDesc	frontFace;			///< Default: See "Renderer::DepthStencilOpDesc"
 		DepthStencilOpDesc	backFace;			///< Default: See "Renderer::DepthStencilOpDesc"
 	};
-	struct DepthStencilStateBuilder
+	struct DepthStencilStateBuilder final
 	{
 
 

@@ -57,7 +57,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Instance buffer manager
 	*/
-	class InstanceBufferManager : private Manager
+	class InstanceBufferManager final : private Manager
 	{
 
 
@@ -135,7 +135,7 @@ namespace RendererRuntime
 	//[ Private definitions                                   ]
 	//[-------------------------------------------------------]
 	private:
-		struct InstanceBuffer
+		struct InstanceBuffer final
 		{
 			Renderer::IUniformBuffer* uniformBuffer;	///< Uniform buffer instance, always valid
 			Renderer::ITextureBuffer* textureBuffer;	///< Texture buffer instance, always valid

@@ -73,7 +73,7 @@ namespace RendererRuntime
 	*  @see
 	*    - See "RendererRuntime::PipelineStateCacheManager" for additional information
 	*/
-	class ProgramCacheManager : private Manager
+	class ProgramCacheManager final : private Manager
 	{
 
 

@@ -58,7 +58,7 @@ namespace Direct3D10Renderer
 	*  @brief
 	*    HLSL fragment shader ("pixel shader" in Direct3D terminology) class
 	*/
-	class FragmentShaderHlsl : public Renderer::IFragmentShader
+	class FragmentShaderHlsl final : public Renderer::IFragmentShader
 	{
 
 

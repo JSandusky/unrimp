@@ -85,7 +85,7 @@ namespace OpenGLRenderer
 	*    - OpenGL extension registry at http://oss.sgi.com/projects/ogl-sample/registry/ for more information about
 	*      the different extensions
 	*/
-	class Extensions
+	class Extensions final
 	{
 
 

@@ -61,7 +61,7 @@ namespace Renderer
 	*  @note
 	*    - One of those members must be valid
 	*/
-	struct WindowHandle
+	struct WindowHandle final
 	{
 		handle			nativeWindowHandle;	///< The native window handle
 		IRenderWindow*	renderWindow;		///< A pointer to an "Renderer::IRenderWindow"-instance, can be a null pointer
@@ -96,7 +96,7 @@ namespace Renderer
 	*  @note
 	*    - These constants directly map to Direct3D 11 constants, do not change them
 	*/
-	struct MapFlag
+	struct MapFlag final
 	{
 		enum Enum
 		{
@@ -108,7 +108,7 @@ namespace Renderer
 	*  @brief
 	*    Clear flags
 	*/
-	struct ClearFlag
+	struct ClearFlag final
 	{
 		enum Enum
 		{
@@ -151,7 +151,7 @@ namespace Renderer
 	*/
 	// TODO(co) Renderer::ColorWriteEnableFlag, document
 	// TODO(co) A flags-class would be nice to avoid invalid flags
-	struct ColorWriteEnableFlag
+	struct ColorWriteEnableFlag final
 	{
 		enum Enum
 		{
@@ -175,7 +175,7 @@ namespace Renderer
 	*    - This structure directly maps to Direct3D 11, do not change it
 	*/
 	// TODO(co) Comments
-	struct MappedSubresource
+	struct MappedSubresource final
 	{
 		void*	 data;
 		uint32_t rowPitch;
@@ -192,7 +192,7 @@ namespace Renderer
 	*  @see
 	*    - "D3D12_VIEWPORT" or "VkViewport" documentation for details
 	*/
-	struct Viewport
+	struct Viewport final
 	{
 		float topLeftX;	///< Top left x start position
 		float topLeftY;	///< Top left y start position
@@ -212,7 +212,7 @@ namespace Renderer
 	*  @see
 	*    - "D3D12_RECT"-documentation for details
 	*/
-	struct ScissorRectangle
+	struct ScissorRectangle final
 	{
 		long topLeftX;		///< Top left x-coordinate of the scissor rectangle
 		long topLeftY;		///< Top left y-coordinate of the scissor rectangle

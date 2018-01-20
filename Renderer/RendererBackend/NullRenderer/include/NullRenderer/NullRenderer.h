@@ -61,7 +61,7 @@ namespace NullRenderer
 	*  @brief
 	*    Null renderer class
 	*/
-	class NullRenderer : public Renderer::IRenderer
+	class NullRenderer final : public Renderer::IRenderer
 	{
 
 

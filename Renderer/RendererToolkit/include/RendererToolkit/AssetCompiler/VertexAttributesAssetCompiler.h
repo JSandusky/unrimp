@@ -40,7 +40,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class VertexAttributesAssetCompiler : public IAssetCompiler
+	class VertexAttributesAssetCompiler final : public IAssetCompiler
 	{
 
 

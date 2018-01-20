@@ -41,7 +41,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class DebugGuiManagerWindows : public DebugGuiManager
+	class DebugGuiManagerWindows final : public DebugGuiManager
 	{
 
 

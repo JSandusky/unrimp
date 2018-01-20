@@ -54,7 +54,7 @@ namespace OpenGLES3Renderer
 	*  @brief
 	*    OpenGL ES 3 extensions runtime linking
 	*/
-	class ExtensionsRuntimeLinking : public IExtensions
+	class ExtensionsRuntimeLinking final : public IExtensions
 	{
 
 

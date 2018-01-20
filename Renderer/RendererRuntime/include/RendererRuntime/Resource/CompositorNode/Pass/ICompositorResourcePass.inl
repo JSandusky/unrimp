@@ -76,7 +76,7 @@ namespace RendererRuntime
 		// -> Don't include "RendererRuntime/Resource/CompositorNode/Loader/CompositorNodeFileFormat.h" here to keep the header complexity low (compile times matter)
 		#pragma pack(push)
 		#pragma pack(1)
-			struct PassData
+			struct PassData final
 			{
 				float	 minimumDepth		= 0.0f;
 				float	 maximumDepth		= 1.0f;

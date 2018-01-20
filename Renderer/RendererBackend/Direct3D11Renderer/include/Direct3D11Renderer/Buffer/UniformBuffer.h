@@ -55,7 +55,7 @@ namespace Direct3D11Renderer
 	*  @brief
 	*    Direct3D 11 uniform buffer object (UBO, "constant buffer" in Direct3D terminology) interface
 	*/
-	class UniformBuffer : public Renderer::IUniformBuffer
+	class UniformBuffer final : public Renderer::IUniformBuffer
 	{
 
 

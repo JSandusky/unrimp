@@ -56,7 +56,7 @@ namespace RendererRuntime
 	*    140 bytes per asset might sound not much, but when having e.g. 30.000 assets which is not unusual for a
 	*    more complex project, you end up in having a 4 MiB asset reference table in memory.
 	*/
-	struct Asset
+	struct Asset final
 	{
 		static const uint32_t MAXIMUM_ASSET_FILENAME_LENGTH = 127;
 

@@ -47,7 +47,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL texture buffer object (TBO) class, traditional bind version
 	*/
-	class TextureBufferBind : public TextureBuffer
+	class TextureBufferBind final : public TextureBuffer
 	{
 
 

@@ -49,7 +49,7 @@ typedef Window WindowHandle;
 *  @todo
 *    - TODO(co) Code style cleanup and documentation
 */
-class X11Application
+class X11Application final
 {
 
 
@@ -99,7 +99,7 @@ private:
 //[ Private definitions                                   ]
 //[-------------------------------------------------------]
 private:
-	struct WindowEntry
+	struct WindowEntry final
 	{
 		WindowHandle window;
 		X11Window* x11Window;

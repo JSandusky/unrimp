@@ -61,7 +61,7 @@ namespace VulkanRenderer
 	*  @brief
 	*    GLSL geometry shader class
 	*/
-	class GeometryShaderGlsl : public Renderer::IGeometryShader
+	class GeometryShaderGlsl final : public Renderer::IGeometryShader
 	{
 
 

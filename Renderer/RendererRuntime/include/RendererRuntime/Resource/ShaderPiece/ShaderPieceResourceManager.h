@@ -62,7 +62,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Shader piece resource manager
 	*/
-	class ShaderPieceResourceManager : public ResourceManager<ShaderPieceResource>
+	class ShaderPieceResourceManager final : public ResourceManager<ShaderPieceResource>
 	{
 
 

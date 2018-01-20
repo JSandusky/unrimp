@@ -80,7 +80,7 @@ namespace RendererToolkit
 	*
 	*   The rest of the textures are not getting packed since those are more special and not that often used textures.
 	*/
-	class TextureAssetCompiler : public IAssetCompiler
+	class TextureAssetCompiler final : public IAssetCompiler
 	{
 
 

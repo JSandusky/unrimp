@@ -79,7 +79,7 @@ namespace RendererRuntime
 	*  @note
 	*   - Heavily basing on the OGRE 2.1 HLMS shader builder which is directly part of the OGRE class "Ogre::Hlms". So for syntax, have a look into the OGRE 2.1 documentation.
 	*/
-	class ShaderBuilder
+	class ShaderBuilder final
 	{
 
 
@@ -87,7 +87,7 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		struct BuildShader
+		struct BuildShader final
 		{
 			std::string sourceCode;
 			AssetIds	assetIds;						///< List of IDs of the assets (shader blueprint, shader piece) which took part in the shader cache creation

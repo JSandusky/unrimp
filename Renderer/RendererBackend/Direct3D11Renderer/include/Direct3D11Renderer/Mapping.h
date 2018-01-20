@@ -47,7 +47,7 @@ namespace Direct3D11Renderer
 	*  @brief
 	*    Direct3D 11 mapping
 	*/
-	class Mapping
+	class Mapping final
 	{
 
 

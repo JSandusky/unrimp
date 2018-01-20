@@ -58,7 +58,7 @@ namespace Renderer
 *    - Framebuffer object (FBO) used for render to texture
 *    - General Purpose Computation on Graphics Processing Unit (GPGPU) by using the renderer interface and shaders without having any output window
 */
-class FirstGpgpu
+class FirstGpgpu final
 {
 
 

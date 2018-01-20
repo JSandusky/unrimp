@@ -58,7 +58,7 @@ namespace RendererRuntime
 
 		#pragma pack(push)
 		#pragma pack(1)
-			struct Header
+			struct Header final
 			{
 				uint32_t formatType;
 				uint32_t formatVersion;

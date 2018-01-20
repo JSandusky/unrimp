@@ -49,7 +49,7 @@ class BatchDrawInstanced;
 *    - 2D array texture
 *    - Texture buffer
 */
-class CubeRendererDrawInstanced : public ICubeRenderer
+class CubeRendererDrawInstanced final : public ICubeRenderer
 {
 
 

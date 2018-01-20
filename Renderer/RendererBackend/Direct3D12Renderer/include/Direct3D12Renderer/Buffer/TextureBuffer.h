@@ -58,7 +58,7 @@ namespace Direct3D12Renderer
 	*  @brief
 	*    Direct3D 12 texture buffer object (TBO) class
 	*/
-	class TextureBuffer : public Renderer::ITextureBuffer
+	class TextureBuffer final : public Renderer::ITextureBuffer
 	{
 
 

@@ -67,7 +67,7 @@ namespace RendererRuntime
 	*  @note
 	*    - Internally MojoShader ( https://icculus.org/mojoshader/ ) is used
 	*/
-	class Preprocessor
+	class Preprocessor final
 	{
 
 

@@ -46,7 +46,7 @@ namespace VulkanRenderer
 	*  @brief
 	*    Vulkan framebuffer interface
 	*/
-	class Framebuffer : public Renderer::IFramebuffer
+	class Framebuffer final : public Renderer::IFramebuffer
 	{
 
 

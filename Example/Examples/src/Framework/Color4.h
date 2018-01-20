@@ -31,7 +31,7 @@
 *  @brief
 *    Minimalistic floating point RGBA color class
 */
-class Color4
+class Color4 final
 {
 
 

@@ -334,17 +334,17 @@ namespace RendererRuntime
 			for (size_t i = 0; i < numberOfSamplerStates; ++i, ++materialBlueprintSamplerState)
 			{
 				MaterialBlueprintResource::SamplerState& samplerState = samplerStates[i];
-				memcpy(&samplerState.rendererSamplerState, static_cast<Renderer::SamplerState*>(materialBlueprintSamplerState), sizeof(Renderer::SamplerState));
+				memcpy(&samplerState.rendererSamplerState, &materialBlueprintSamplerState->samplerState, sizeof(Renderer::SamplerState));
 				samplerState.rootParameterIndex = materialBlueprintSamplerState->rootParameterIndex;
-				if (Renderer::FilterMode::UNKNOWN == materialBlueprintSamplerState->filter)
+				if (Renderer::FilterMode::UNKNOWN == materialBlueprintSamplerState->samplerState.filter)
 				{
-					materialBlueprintSamplerState->filter = defaultTextureFilterMode;
+					materialBlueprintSamplerState->samplerState.filter = defaultTextureFilterMode;
 				}
-				if (isUninitialized(materialBlueprintSamplerState->maxAnisotropy))
+				if (isUninitialized(materialBlueprintSamplerState->samplerState.maxAnisotropy))
 				{
-					materialBlueprintSamplerState->maxAnisotropy = defaultMaximumTextureAnisotropy;
+					materialBlueprintSamplerState->samplerState.maxAnisotropy = defaultMaximumTextureAnisotropy;
 				}
-				samplerState.samplerStatePtr = renderer.createSamplerState(*materialBlueprintSamplerState);
+				samplerState.samplerStatePtr = renderer.createSamplerState(materialBlueprintSamplerState->samplerState);
 				RENDERER_SET_RESOURCE_DEBUG_NAME(samplerState.samplerStatePtr, getAsset().virtualFilename)
 			}
 			mMaterialBlueprintResource->mSamplerStateGroup = nullptr;

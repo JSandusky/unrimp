@@ -53,7 +53,7 @@ namespace Direct3D10Renderer
 	*  @brief
 	*    Direct3D 10 runtime linking
 	*/
-	class Direct3D10RuntimeLinking
+	class Direct3D10RuntimeLinking final
 	{
 
 

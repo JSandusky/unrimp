@@ -53,7 +53,7 @@ namespace Direct3D10Renderer
 	*  @brief
 	*    Direct3D 10 buffer manager interface
 	*/
-	class BufferManager : public Renderer::IBufferManager
+	class BufferManager final : public Renderer::IBufferManager
 	{
 
 

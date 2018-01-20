@@ -76,7 +76,7 @@ namespace RendererRuntime
 *    - Scene
 *    - Virtual reality (VR)
 */
-class FirstScene : public ExampleBase, public RendererRuntime::IResourceListener
+class FirstScene final : public ExampleBase, public RendererRuntime::IResourceListener
 {
 
 

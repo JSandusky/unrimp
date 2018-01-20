@@ -53,7 +53,7 @@ namespace NullRenderer
 	*  @brief
 	*    Null indirect buffer object class
 	*/
-	class IndirectBuffer : public Renderer::IIndirectBuffer
+	class IndirectBuffer final : public Renderer::IIndirectBuffer
 	{
 
 

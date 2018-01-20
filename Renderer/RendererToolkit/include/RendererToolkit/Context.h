@@ -53,7 +53,7 @@ namespace RendererToolkit
 	*  @brief
 	*    Context class encapsulating all embedding related wirings
 	*/
-	class Context
+	class Context final
 	{
 
 

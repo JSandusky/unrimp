@@ -55,7 +55,7 @@ namespace RendererRuntime
 	*    - Basing on "Managing Decoupling Part 4 -- The ID Lookup Table" https://github.com/niklasfrykholm/blog/blob/master/2011/managing-decoupling-4.md by Niklas Frykholm ( http://www.frykholm.se/ )
 	*/
 	template <class ELEMENT_TYPE, typename ID_TYPE, uint32_t MAXIMUM_NUMBER_OF_ELEMENTS>
-	class PackedElementManager : private Manager
+	class PackedElementManager final : private Manager
 	{
 
 
@@ -89,7 +89,7 @@ namespace RendererRuntime
 		static const uint32_t INDEX_MASK		= 0xffff;
 		static const uint32_t NEW_OBJECT_ID_ADD	= 0x10000;
 
-		struct Index
+		struct Index final
 		{
 			ID_TYPE  id;
 			uint16_t index;

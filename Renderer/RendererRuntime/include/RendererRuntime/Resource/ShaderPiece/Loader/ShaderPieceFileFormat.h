@@ -57,7 +57,7 @@ namespace RendererRuntime
 		static const uint32_t FORMAT_TYPE	 = StringId("ShaderPiece");
 		static const uint32_t FORMAT_VERSION = 2;
 
-		struct ShaderPieceHeader
+		struct ShaderPieceHeader final
 		{
 			uint32_t numberOfShaderSourceCodeBytes;
 		};

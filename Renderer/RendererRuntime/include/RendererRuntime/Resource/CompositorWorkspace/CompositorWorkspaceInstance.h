@@ -79,7 +79,7 @@ namespace RendererRuntime
 	*    during rendering. The result of this culling step is that each render queue index range has renderable managers to consider assigned to them.
 	*    Executed compositor instances passes only access this prepared render queue index information to fill their render queues.
 	*/
-	class CompositorWorkspaceInstance : protected IResourceListener
+	class CompositorWorkspaceInstance final : protected IResourceListener
 	{
 
 
@@ -89,7 +89,7 @@ namespace RendererRuntime
 	public:
 		typedef std::vector<RenderableManager*> RenderableManagers;
 
-		struct RenderQueueIndexRange
+		struct RenderQueueIndexRange final
 		{
 			uint8_t			   minimumRenderQueueIndex;	///< Fixed during runtime
 			uint8_t			   maximumRenderQueueIndex;	///< Fixed during runtime

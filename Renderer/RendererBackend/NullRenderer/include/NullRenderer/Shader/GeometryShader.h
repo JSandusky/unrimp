@@ -53,7 +53,7 @@ namespace NullRenderer
 	*  @brief
 	*    Null geometry shader class
 	*/
-	class GeometryShader : public Renderer::IGeometryShader
+	class GeometryShader final : public Renderer::IGeometryShader
 	{
 
 

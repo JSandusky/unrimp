@@ -44,7 +44,7 @@ namespace Renderer
 	*  @brief
 	*    Texture format
 	*/
-	struct TextureFormat
+	struct TextureFormat final
 	{
 		enum Enum
 		{
@@ -152,7 +152,7 @@ namespace Renderer
 	*  @brief
 	*    Texture flags
 	*/
-	struct TextureFlag
+	struct TextureFlag final
 	{
 		enum Enum
 		{
@@ -186,7 +186,7 @@ namespace Renderer
 	*  @see
 	*    - "ID3D12Device::CreateCommittedResource method" documentation at https://msdn.microsoft.com/de-de/library/windows/desktop/dn899178%28v=vs.85%29.aspx
 	*/
-	struct OptimizedTextureClearValue
+	struct OptimizedTextureClearValue final
 	{
 		union
 		{

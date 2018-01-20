@@ -51,7 +51,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Compositor render target texture; used as part of compositor framebuffers
 	*/
-	class CompositorRenderTargetTexture
+	class CompositorRenderTargetTexture final
 	{
 
 

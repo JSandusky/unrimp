@@ -45,7 +45,7 @@
 *    - Pipeline state object (PSO)
 *    - Vertex shader (VS), tessellation control shader (TCS), tessellation evaluation shader (TES) and fragment shader (FS)
 */
-class FirstTessellation : public ExampleBase
+class FirstTessellation final : public ExampleBase
 {
 
 

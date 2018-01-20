@@ -55,7 +55,7 @@ namespace OpenGLES3Renderer
 	*  @brief
 	*    OpenGL ES 3 index buffer object (IBO, "element array buffer" in OpenGL terminology) class
 	*/
-	class IndexBuffer : public Renderer::IIndexBuffer
+	class IndexBuffer final : public Renderer::IIndexBuffer
 	{
 
 

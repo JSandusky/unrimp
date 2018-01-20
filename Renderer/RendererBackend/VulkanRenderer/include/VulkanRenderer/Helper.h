@@ -91,7 +91,7 @@ namespace VulkanRenderer
 	*  @brief
 	*    Vulkan helper
 	*/
-	class Helper
+	class Helper final
 	{
 
 

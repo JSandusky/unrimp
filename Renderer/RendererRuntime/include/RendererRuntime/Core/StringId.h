@@ -61,7 +61,7 @@ namespace RendererRuntime
 	*      by Stefan Reinalter ( http://www.gamasutra.com/view/news/38198/InDepth_Quasi_CompileTime_String_Hashing.php#.UG1MpVFQbq4 )
 	*    - As hash function FNV-1a is used ( http://isthe.com/chongo/tech/comp/fnv/ )
 	*/
-	class StringId
+	class StringId final
 	{
 
 
@@ -75,7 +75,7 @@ namespace RendererRuntime
 		*  @brief
 		*    "const char*"-wrapper enabling the compiler to distinguish between static and dynamic strings
 		*/
-		struct ConstCharWrapper
+		struct ConstCharWrapper final
 		{
 			/**
 			*  @brief

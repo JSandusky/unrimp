@@ -61,7 +61,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class CompositorWorkspaceResourceManager : public ResourceManager<CompositorWorkspaceResource>
+	class CompositorWorkspaceResourceManager final : public ResourceManager<CompositorWorkspaceResource>
 	{
 
 

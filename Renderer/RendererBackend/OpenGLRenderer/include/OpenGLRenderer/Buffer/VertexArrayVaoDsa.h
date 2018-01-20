@@ -57,7 +57,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL vertex array class, effective vertex array object (VAO), effective direct state access (DSA)
 	*/
-	class VertexArrayVaoDsa : public VertexArrayVao
+	class VertexArrayVaoDsa final : public VertexArrayVao
 	{
 
 

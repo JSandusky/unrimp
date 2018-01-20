@@ -73,7 +73,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class ProjectAssetMonitor
+	class ProjectAssetMonitor final
 	{
 
 

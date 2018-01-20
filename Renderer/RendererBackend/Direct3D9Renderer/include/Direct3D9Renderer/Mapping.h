@@ -58,7 +58,7 @@ namespace Direct3D9Renderer
 	*  @brief
 	*    Direct3D 9 mapping
 	*/
-	class Mapping
+	class Mapping final
 	{
 
 

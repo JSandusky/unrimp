@@ -46,7 +46,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class ProgramCache
+	class ProgramCache final
 	{
 
 

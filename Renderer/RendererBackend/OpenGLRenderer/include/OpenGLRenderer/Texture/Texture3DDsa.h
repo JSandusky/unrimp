@@ -44,7 +44,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL 3D texture class, effective direct state access (DSA)
 	*/
-	class Texture3DDsa : public Texture3D
+	class Texture3DDsa final : public Texture3D
 	{
 
 

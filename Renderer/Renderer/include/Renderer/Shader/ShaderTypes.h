@@ -76,7 +76,7 @@ namespace Renderer
 	*  @brief
 	*    Shader bytecode (aka shader microcode, binary large object (BLOB))
 	*/
-	class ShaderBytecode
+	class ShaderBytecode final
 	{
 
 
@@ -129,7 +129,7 @@ namespace Renderer
 	*  @brief
 	*    Shader source code
 	*/
-	struct ShaderSourceCode
+	struct ShaderSourceCode final
 	{
 		const char* sourceCode	= nullptr;	///< Shader ASCII source code, if null pointer or empty string a null pointer will be returned
 		const char* profile		= nullptr;	///< Shader ASCII profile to use, if null pointer or empty string, a default profile will be used which usually tries to use the best available profile that runs on most hardware (Examples: "glslf", "arbfp1", "ps_3_0")

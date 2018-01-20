@@ -61,7 +61,7 @@ namespace VulkanRenderer
 	*  @brief
 	*    Vulkan pipeline state class
 	*/
-	class PipelineState : public Renderer::IPipelineState
+	class PipelineState final : public Renderer::IPipelineState
 	{
 
 

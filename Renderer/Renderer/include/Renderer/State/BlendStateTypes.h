@@ -106,7 +106,7 @@ namespace Renderer
 	*  @see
 	*    - "D3D12_RENDER_TARGET_BLEND_DESC"-documentation for details
 	*/
-	struct RenderTargetBlendDesc
+	struct RenderTargetBlendDesc final
 	{
 		int		blendEnable;			///< Boolean value. Default: "false"
 		Blend	srcBlend;				///< Default: "Renderer::Blend::ONE"
@@ -130,13 +130,13 @@ namespace Renderer
 	*  @see
 	*    - "D3D12_BLEND_DESC"-documentation for details
 	*/
-	struct BlendState
+	struct BlendState final
 	{
 		int					  alphaToCoverageEnable;	///< Boolean value. Default: "false"
 		int					  independentBlendEnable;	///< Boolean value. Default: "false"
 		RenderTargetBlendDesc renderTarget[8];			///< Default: See "Renderer::RenderTargetBlendDesc"
 	};
-	struct BlendStateBuilder
+	struct BlendStateBuilder final
 	{
 
 

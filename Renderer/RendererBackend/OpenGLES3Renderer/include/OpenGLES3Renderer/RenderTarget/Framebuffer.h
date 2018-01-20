@@ -44,7 +44,7 @@ namespace OpenGLES3Renderer
 	*  @brief
 	*    OpenGL ES 3 framebuffer class
 	*/
-	class Framebuffer : public Renderer::IFramebuffer
+	class Framebuffer final : public Renderer::IFramebuffer
 	{
 
 

@@ -75,7 +75,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class OpenVRMeshResourceLoader : public IMeshResourceLoader
+	class OpenVRMeshResourceLoader final : public IMeshResourceLoader
 	{
 
 

@@ -46,7 +46,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL indirect buffer object class, effective direct state access (DSA)
 	*/
-	class IndirectBufferDsa : public IndirectBuffer
+	class IndirectBufferDsa final : public IndirectBuffer
 	{
 
 

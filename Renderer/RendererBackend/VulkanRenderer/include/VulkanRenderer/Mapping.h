@@ -58,7 +58,7 @@ namespace VulkanRenderer
 	*  @brief
 	*    Vulkan mapping
 	*/
-	class Mapping
+	class Mapping final
 	{
 
 

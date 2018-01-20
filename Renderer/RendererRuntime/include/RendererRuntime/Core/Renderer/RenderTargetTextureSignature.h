@@ -52,7 +52,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Render target texture signature
 	*/
-	class RenderTargetTextureSignature
+	class RenderTargetTextureSignature final
 	{
 
 

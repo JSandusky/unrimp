@@ -71,7 +71,7 @@ namespace RendererRuntime
 	*               and then update all of them in parallel using multi-threading
 	*    - TODO(co) It might make sense to let the skeleton animation resource manager manage skeleton animation controller instances as well
 	*/
-	class SkeletonAnimationController : public IResourceListener
+	class SkeletonAnimationController final : public IResourceListener
 	{
 
 

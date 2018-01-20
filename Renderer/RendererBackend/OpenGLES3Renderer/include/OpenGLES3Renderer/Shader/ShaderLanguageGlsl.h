@@ -53,7 +53,7 @@ namespace OpenGLES3Renderer
 	*  @brief
 	*    GLSL shader language class
 	*/
-	class ShaderLanguageGlsl : public Renderer::IShaderLanguage
+	class ShaderLanguageGlsl final : public Renderer::IShaderLanguage
 	{
 
 

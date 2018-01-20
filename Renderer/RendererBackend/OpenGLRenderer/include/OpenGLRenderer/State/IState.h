@@ -56,7 +56,7 @@ namespace OpenGLRenderer
 		*  @brief
 		*    Destructor
 		*/
-		inline virtual ~IState();
+		inline ~IState();
 
 
 	};

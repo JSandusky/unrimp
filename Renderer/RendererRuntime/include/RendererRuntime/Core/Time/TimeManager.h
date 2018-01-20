@@ -51,7 +51,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Time manager
 	*/
-	class TimeManager : public Manager
+	class TimeManager final : public Manager
 	{
 
 

@@ -47,7 +47,7 @@ namespace RendererToolkit
 	*  @todo
 	*    - TODO(co) Under construction
 	*/
-	class OgreAssetImporter : public IAssetImporter
+	class OgreAssetImporter final : public IAssetImporter
 	{
 
 

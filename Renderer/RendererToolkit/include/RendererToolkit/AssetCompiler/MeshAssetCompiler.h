@@ -40,7 +40,7 @@ namespace RendererToolkit
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class MeshAssetCompiler : public IAssetCompiler
+	class MeshAssetCompiler final : public IAssetCompiler
 	{
 
 

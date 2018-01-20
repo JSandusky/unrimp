@@ -47,7 +47,7 @@ namespace RendererRuntime
 	*  @note
 	*    - Automatically controls light parameters as well as the owner scene node rotation via time-of-day
 	*/
-	class SunlightSceneItem : public LightSceneItem
+	class SunlightSceneItem final : public LightSceneItem
 	{
 
 

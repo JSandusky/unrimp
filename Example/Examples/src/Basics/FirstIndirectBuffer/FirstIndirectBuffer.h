@@ -42,7 +42,7 @@
 *    - Everything from "FirstTriangle"
 *    - Indirect buffer
 */
-class FirstIndirectBuffer : public FirstTriangle
+class FirstIndirectBuffer final : public FirstTriangle
 {
 
 

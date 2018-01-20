@@ -58,7 +58,7 @@ namespace RendererToolkit
 	*  @note
 	*    - Has build-in support for texture channel packing "_argb_nxa" and "_hr_rg_mb_nya"
 	*/
-	class SketchfabAssetImporter : public IAssetImporter
+	class SketchfabAssetImporter final : public IAssetImporter
 	{
 
 

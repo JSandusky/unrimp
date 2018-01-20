@@ -58,7 +58,7 @@ namespace OpenGLRenderer
 	*  @brief
 	*    OpenGL swap chain class
 	*/
-	class SwapChain : public Renderer::ISwapChain
+	class SwapChain final : public Renderer::ISwapChain
 	{
 
 

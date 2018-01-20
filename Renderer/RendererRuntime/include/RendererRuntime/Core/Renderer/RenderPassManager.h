@@ -53,7 +53,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Classes                                               ]
 	//[-------------------------------------------------------]
-	class RenderPassManager : private Manager
+	class RenderPassManager final : private Manager
 	{
 
 

@@ -105,7 +105,7 @@ namespace Renderer
 		char				  baseShaderRegisterName[NAME_LENGTH];	///< When not using explicit binding locations (OpenGL ES 3, legacy GLSL profiles)
 		ShaderVisibility	  shaderVisibility;
 	};
-	struct DescriptorRangeBuilder : public DescriptorRange
+	struct DescriptorRangeBuilder final : public DescriptorRange
 	{
 		static const uint32_t OFFSET_APPEND = 0xffffffff;
 		DescriptorRangeBuilder()
@@ -183,7 +183,7 @@ namespace Renderer
 		uint32_t numberOfDescriptorRanges;
 		uint64_t descriptorRanges;			///< Can't use "const DescriptorRange*" because we need to have something platform neutral we can easily serialize without getting too fine granular
 	};
-	struct RootDescriptorTableBuilder : public RootDescriptorTable
+	struct RootDescriptorTableBuilder final : public RootDescriptorTable
 	{
 		RootDescriptorTableBuilder()
 		{
@@ -250,7 +250,7 @@ namespace Renderer
 		uint32_t registerSpace;
 		uint32_t numberOf32BitValues;
 	};
-	struct RootConstantsBuilder : public RootConstants
+	struct RootConstantsBuilder final : public RootConstants
 	{
 		RootConstantsBuilder()
 		{
@@ -301,7 +301,7 @@ namespace Renderer
 		uint32_t shaderRegister;
 		uint32_t registerSpace;
 	};
-	struct RootDescriptorBuilder : public RootDescriptor
+	struct RootDescriptorBuilder final : public RootDescriptor
 	{
 		RootDescriptorBuilder()
 		{
@@ -350,12 +350,12 @@ namespace Renderer
 			RootDescriptor		descriptor;
 		};
 	};
-	struct RootParameterData
+	struct RootParameterData final
 	{
 		RootParameterType	parameterType;
 		uint32_t			numberOfDescriptorRanges;
 	};
-	struct RootParameterBuilder : public RootParameter
+	struct RootParameterBuilder final : public RootParameter
 	{
 		RootParameterBuilder()
 		{
@@ -449,7 +449,7 @@ namespace Renderer
 	*  @see
 	*    - "D3D12_ROOT_SIGNATURE_FLAGS"-documentation for details
 	*/
-	struct RootSignatureFlags
+	struct RootSignatureFlags final
 	{
 		enum Enum
 		{
@@ -491,7 +491,7 @@ namespace Renderer
 	*  @see
 	*    - "D3D12_STATIC_SAMPLER_DESC"-documentation for details
 	*/
-	struct StaticSampler
+	struct StaticSampler final
 	{
 		FilterMode			filter;
 		TextureAddressMode	addressU;
@@ -528,7 +528,7 @@ namespace Renderer
 		const StaticSampler*	 staticSamplers;
 		RootSignatureFlags::Enum flags;
 	};
-	struct RootSignatureBuilder : public RootSignature
+	struct RootSignatureBuilder final : public RootSignature
 	{
 		RootSignatureBuilder()
 		{

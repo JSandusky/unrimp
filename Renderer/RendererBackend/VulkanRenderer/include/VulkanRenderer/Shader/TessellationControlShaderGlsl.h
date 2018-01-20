@@ -60,7 +60,7 @@ namespace VulkanRenderer
 	*  @brief
 	*    GLSL tessellation control shader ("hull shader" in Direct3D terminology) class
 	*/
-	class TessellationControlShaderGlsl : public Renderer::ITessellationControlShader
+	class TessellationControlShaderGlsl final : public Renderer::ITessellationControlShader
 	{
 
 

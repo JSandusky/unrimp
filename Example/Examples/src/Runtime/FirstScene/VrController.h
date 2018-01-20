@@ -52,7 +52,7 @@ namespace RendererRuntime
 *    - The first VR controller is used for teleporting. A green light indicates the position one will end up. When pressing the trigger button one teleports to this position.
 *    - The GUI is placed over the second VR controller
 */
-class VrController : public IController
+class VrController final : public IController
 {
 
 

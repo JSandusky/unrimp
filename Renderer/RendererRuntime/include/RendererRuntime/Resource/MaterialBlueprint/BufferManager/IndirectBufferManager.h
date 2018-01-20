@@ -65,7 +65,7 @@ namespace RendererRuntime
 	*  @brief
 	*    Indirect buffer manager
 	*/
-	class IndirectBufferManager : private Manager
+	class IndirectBufferManager final : private Manager
 	{
 
 
@@ -73,7 +73,7 @@ namespace RendererRuntime
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
 	public:
-		struct IndirectBuffer
+		struct IndirectBuffer final
 		{
 			Renderer::IIndirectBuffer* indirectBuffer;			///< Indirect buffer instance, always valid
 			uint32_t				   indirectBufferOffset;	///< Current indirect buffer offset

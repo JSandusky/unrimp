@@ -145,7 +145,7 @@ namespace RendererToolkit
 		//[ Private definitions                                   ]
 		//[-------------------------------------------------------]
 		private:
-			struct FileAction
+			struct FileAction final
 			{
 				FW::String filename;
 				FW::Action action;

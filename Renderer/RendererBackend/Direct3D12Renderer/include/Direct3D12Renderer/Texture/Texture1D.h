@@ -56,7 +56,7 @@ namespace Direct3D12Renderer
 	*  @brief
 	*    Direct3D 12 1D texture class
 	*/
-	class Texture1D : public Renderer::ITexture1D
+	class Texture1D final : public Renderer::ITexture1D
 	{
 
 
