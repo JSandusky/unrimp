@@ -85,7 +85,7 @@ float4 Bilerp(float4 v0, float4 v1, float4 v2, float4 v3, float2 i)
 	[domain("quad")]
 @end
 @property(GLSL)
-	layout(quads, fractional_even_spacing, cw) in;
+	layout(quads, fractional_even_spacing, ccw) in;	// Not "cw" by intent
 @end
 MAIN_BEGIN_TESSELLATION_EVALUATION(4)
 	// Bilerp the position
