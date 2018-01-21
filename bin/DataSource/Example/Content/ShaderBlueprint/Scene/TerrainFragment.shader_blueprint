@@ -33,10 +33,10 @@
 //[-------------------------------------------------------]
 // Attribute input / output
 INPUT_BEGIN
-	float4 Position : SV_POSITION;	// Interpolated object space vertex position inside the patch as output
-	INPUT_TEXTURE_COORDINATE(0, float2, TexCoord, 					 0)	// Texture coordinate
-	INPUT_TEXTURE_COORDINATE(1, float3, PreviousClipSpacePositionVS, 1)	// Previous clip space position
-	INPUT_TEXTURE_COORDINATE(2, float3, WorldSpacePosition, 		 2)	// World space position
+	INPUT_POSITION			(0, float4, Position)						// Interpolated object space vertex position inside the patch as output
+	INPUT_TEXTURE_COORDINATE(1, float2, TexCoord, 					 0)	// Texture coordinate
+	INPUT_TEXTURE_COORDINATE(2, float3, PreviousClipSpacePositionVS, 1)	// Previous clip space position
+	INPUT_TEXTURE_COORDINATE(3, float3, WorldSpacePosition, 		 2)	// World space position
 	DECLARE_COVERAGE_MASK
 	DECLARE_FRAGMENT_POSITION
 INPUT_END

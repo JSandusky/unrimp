@@ -42,7 +42,7 @@ INPUT_END_PATCH
 
 // Per patch control point input / output
 INPUT_BEGIN
-	INPUT_POSITION(0, float4, Position)	// World space control point position of the patch we received from the tessellation control shader (TCS) as input
+	INPUT_POSITION(0, float4, INPUT_ARRAY(PositionTC))	// World space control point position of the patch we received from the tessellation control shader (TCS) as input
 INPUT_END
 OUTPUT_BEGIN
 	OUTPUT_POSITION			 (0)											// Interpolated world space vertex position inside the patch as output
@@ -89,7 +89,7 @@ float4 Bilerp(float4 v0, float4 v1, float4 v2, float4 v3, float2 i)
 @end
 MAIN_BEGIN_TESSELLATION_EVALUATION(4)
 	// Bilerp the position
-	float4 worldSpacePosition = Bilerp(ShaderInput[0].Position, ShaderInput[1].Position, ShaderInput[2].Position, ShaderInput[3].Position, TESS_COORD.xy);
+	float4 worldSpacePosition = Bilerp(MAIN_INPUT_ARRAY(PositionTC, 0), MAIN_INPUT_ARRAY(PositionTC, 1), MAIN_INPUT_ARRAY(PositionTC, 2), MAIN_INPUT_ARRAY(PositionTC, 3), TESS_COORD.xy);
 	worldSpacePosition.w = 1.0f;
 
 	// Apply height map

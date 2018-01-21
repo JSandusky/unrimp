@@ -148,18 +148,14 @@ namespace RendererRuntime
 		// Setup renderable manager: Instancing is used
 		// -> One tiles is one instance and the index buffer describes all the NxN patches within one tile
 		const IRendererRuntime& rendererRuntime = getSceneResource().getRendererRuntime();
-		// TODO(co) Terrain kickoff: Currently only for Direct3D 11 to have something to start with
-		if (0 == strcmp(rendererRuntime.getRenderer().getName(), "Direct3D11"))
+		RenderableManager::Renderables& renderables = mRenderableManager.getRenderables();
+		renderables.reserve(static_cast<size_t>(mNumberOfTerrainTileRings));
+		for (int i = 0; i != mNumberOfTerrainTileRings; ++i)
 		{
-			RenderableManager::Renderables& renderables = mRenderableManager.getRenderables();
-			renderables.reserve(static_cast<size_t>(mNumberOfTerrainTileRings));
-			for (int i = 0; i != mNumberOfTerrainTileRings; ++i)
-			{
-				const TerrainTileRing& terrainTileRing = mTerrainTileRings[i];
-				renderables.emplace_back(mRenderableManager, terrainTileRing.vertexArrayPtr, true, 0, ::detail::NUMBER_OF_INDICES, rendererRuntime.getMaterialResourceManager(), getMaterialResourceId(), getUninitialized<SkeletonResourceId>(), terrainTileRing.numberOfTiles);
-			}
-			mRenderableManager.updateCachedRenderablesData();
+			const TerrainTileRing& terrainTileRing = mTerrainTileRings[i];
+			renderables.emplace_back(mRenderableManager, terrainTileRing.vertexArrayPtr, true, 0, ::detail::NUMBER_OF_INDICES, rendererRuntime.getMaterialResourceManager(), getMaterialResourceId(), getUninitialized<SkeletonResourceId>(), terrainTileRing.numberOfTiles);
 		}
+		mRenderableManager.updateCachedRenderablesData();
 	}
 
 

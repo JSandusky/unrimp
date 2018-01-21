@@ -960,9 +960,10 @@ namespace OpenGLRenderer
 
 				// Set OpenGL primitive topology
 				mOpenGLPrimitiveTopology = mPipelineState->getOpenGLPrimitiveTopology();
-				if (mNumberOfVerticesPerPatch != mPipelineState->getNumberOfVerticesPerPatch())
+				const int newNumberOfVerticesPerPatch = mPipelineState->getNumberOfVerticesPerPatch();
+				if (0 != newNumberOfVerticesPerPatch && mNumberOfVerticesPerPatch != newNumberOfVerticesPerPatch)
 				{
-					mNumberOfVerticesPerPatch = mPipelineState->getNumberOfVerticesPerPatch();
+					mNumberOfVerticesPerPatch = newNumberOfVerticesPerPatch;
 					glPatchParameteri(GL_PATCH_VERTICES, mNumberOfVerticesPerPatch);
 				}
 

@@ -46,6 +46,7 @@
 		#define INPUT_BEGIN struct SHADER_INPUT {
 		#define INPUT_BEGIN_PATCH struct SHADER_INPUT_PATCH {
 		#define INPUT_BEGIN_CONTROL_POINT struct SHADER_INPUT_CONTROL_POINT {
+			#define INPUT_ARRAY(name) name
 			#define INPUT_VERTEX_ID uint vertexId : SV_VERTEXID;
 			#define INPUT_VERTEX_DRAW_ID(attributeIndex) uint drawId : DRAWID;	// "DRAWID" is a special vertex attribute semantic introduced, see "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html
 			#define INPUT_VERTEX_POSITION(attributeIndex, type, name) type name : POSITION;
@@ -66,7 +67,9 @@
 		// Shader attribute output
 		#define OUTPUT_BEGIN struct SHADER_OUTPUT {
 		#define OUTPUT_BEGIN_PATCH struct SHADER_OUTPUT_PATCH {
+			#define OUTPUT_ARRAY(name) name
 			#define OUTPUT_POSITION(attributeIndex) float4 OutputPosition : SV_POSITION;
+			#define OUTPUT_POSITION_NAMED(attributeIndex, type, name) type name : SV_POSITION;
 			#define OUTPUT_TEXTURE_COORDINATE(attributeIndex, type, name, semanticIndex) type name : TEXCOORD##semanticIndex;
 			#define OUTPUT_TEXTURE_COORDINATE_NOINTERPOLATION(attributeIndex, type, name, semanticIndex) nointerpolation type name : TEXCOORD##semanticIndex;
 			#define OUTPUT_COLOR(semanticIndex) float4 OutputColor##semanticIndex : SV_TARGET##semanticIndex;
@@ -82,11 +85,13 @@
 		#define MAIN_BEGIN_TESSELLATION_CONTROL(numberOfInputControlPoints, numberOfOutputControlPoints) [outputcontrolpoints(numberOfOutputControlPoints)] [patchconstantfunc("mainPerPatchInvocation")] SHADER_OUTPUT main(SHADER_INPUT_CONTROL_POINT ShaderInputControlPoint, InputPatch<SHADER_INPUT, numberOfInputControlPoints> ShaderInput) { SHADER_OUTPUT shaderOutput;
 		#define MAIN_BEGIN_TESSELLATION_EVALUATION(numberOfInputControlPoints) SHADER_OUTPUT main(SHADER_INPUT_PATCH ShaderInputPatch, const OutputPatch<SHADER_INPUT, numberOfInputControlPoints> ShaderInput) { SHADER_OUTPUT shaderOutput;
 			#define MAIN_INPUT(name) ShaderInput.name
+			#define MAIN_INPUT_ARRAY(name, index) ShaderInput[index].name
 			#define MAIN_INPUT_VERTEX_ID ShaderInput.vertexId
 			#define MAIN_INPUT_DRAW_ID ShaderInput.drawId
 			#define MAIN_OUTPUT(name) shaderOutput.name
 			#define MAIN_OUTPUT_POSITION shaderOutput.OutputPosition
 			#define MAIN_OUTPUT_COLOR(semanticIndex) shaderOutput.OutputColor##semanticIndex
+			#define MAIN_OUTPUT_CONTROL_POINT(name) shaderOutput.name
 			#define MAIN_OUTPUT_TESS_LEVEL_INNER shaderOutputPatch.TessLevelInner
 			#define MAIN_OUTPUT_TESS_LEVEL_OUTER shaderOutputPatch.TessLevelOuter
 			#define MAIN_RETURN return shaderOutput;
@@ -247,6 +252,7 @@
 		#define INPUT_BEGIN
 		#define INPUT_BEGIN_PATCH
 		#define INPUT_BEGIN_CONTROL_POINT
+			#define INPUT_ARRAY(name) name[]
 			#define INPUT_VERTEX_ID
 			#define INPUT_VERTEX_DRAW_ID(attributeIndex) layout(location = attributeIndex) in uint drawId;	// See "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html
 			#define INPUT_VERTEX_POSITION(attributeIndex, type, name) layout(location = attributeIndex) in type name;
@@ -267,7 +273,9 @@
 		// Shader attribute output
 		#define OUTPUT_BEGIN
 		#define OUTPUT_BEGIN_PATCH
+			#define OUTPUT_ARRAY(name) name[]
 			#define OUTPUT_POSITION(attributeIndex) layout(location = attributeIndex) out gl_PerVertex { vec4 gl_Position; };
+			#define OUTPUT_POSITION_NAMED(attributeIndex, type, name) layout(location = attributeIndex) out type name;
 			#define OUTPUT_TEXTURE_COORDINATE(attributeIndex, type, name, semanticIndex) layout(location = attributeIndex) out type name;
 			#define OUTPUT_TEXTURE_COORDINATE_NOINTERPOLATION(attributeIndex, type, name, semanticIndex) layout(location = attributeIndex) flat out type name;
 			#define OUTPUT_COLOR(semanticIndex) layout(location = ##semanticIndex) out vec4 OutputColor##semanticIndex;
@@ -280,9 +288,10 @@
 		#define MAIN_BEGIN void main() {
 		#define MAIN_BEGIN_NO_OUTPUT void mainPerPatchInvocation() {
 		#define MAIN_BEGIN_TESSELLATION_CONTROL_PATCH(numberOfInputControlPoints) void mainPerPatchInvocation() {
-		#define MAIN_BEGIN_TESSELLATION_CONTROL(numberOfInputControlPoints, numberOfOutputControlPoints) layout(vertices = numberOfOutputControlPoints) out; void main() {
+		#define MAIN_BEGIN_TESSELLATION_CONTROL(numberOfInputControlPoints, numberOfOutputControlPoints) layout(vertices = numberOfOutputControlPoints) out; void main() { if (0 == gl_InvocationID) { mainPerPatchInvocation(); }
 		#define MAIN_BEGIN_TESSELLATION_EVALUATION(numberOfInputControlPoints) void main() {
 			#define MAIN_INPUT(name) name
+			#define MAIN_INPUT_ARRAY(name, index) name[index]
 			#define MAIN_INPUT_VERTEX_ID gl_VertexIndex						// "gl_VertexIndex" is equivalent to OpenGL's "gl_VertexID"
 
 			// TODO(co) Review in detail: Looks like that with "gl_InstanceIndex" we don't need the "drawId"-hack in Vulkan
@@ -292,6 +301,7 @@
 			#define MAIN_OUTPUT(name) name
 			#define MAIN_OUTPUT_POSITION gl_Position
 			#define MAIN_OUTPUT_COLOR(semanticIndex) OutputColor##semanticIndex
+			#define MAIN_OUTPUT_CONTROL_POINT(name) name[gl_InvocationID]
 			#define MAIN_OUTPUT_TESS_LEVEL_INNER gl_TessLevelInner
 			#define MAIN_OUTPUT_TESS_LEVEL_OUTER gl_TessLevelOuter
 			#define MAIN_RETURN
@@ -437,6 +447,7 @@
 		#define INPUT_BEGIN
 		#define INPUT_BEGIN_PATCH
 		#define INPUT_BEGIN_CONTROL_POINT
+			#define INPUT_ARRAY(name) name[]
 			#define INPUT_VERTEX_ID
 			#define INPUT_VERTEX_DRAW_ID(attributeIndex) in uint drawId; uniform uint drawIdUniform;	// See "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html - "drawIdUniform" is used in case "GL_ARB_base_instance" isn't supported (Mac OS X 10.11 for example)
 			#define INPUT_VERTEX_POSITION(attributeIndex, type, name) in type name;
@@ -457,7 +468,9 @@
 		// Shader attribute output
 		#define OUTPUT_BEGIN
 		#define OUTPUT_BEGIN_PATCH
+			#define OUTPUT_ARRAY(name) name[]
 			#define OUTPUT_POSITION(attributeIndex) out gl_PerVertex { vec4 gl_Position; };
+			#define OUTPUT_POSITION_NAMED(attributeIndex, type, name) layout(location = attributeIndex) out type name;
 			#define OUTPUT_TEXTURE_COORDINATE(attributeIndex, type, name, semanticIndex) out type name;
 			#define OUTPUT_TEXTURE_COORDINATE_NOINTERPOLATION(attributeIndex, type, name, semanticIndex) flat out type name;
 			#define OUTPUT_COLOR(semanticIndex) layout(location = ##semanticIndex) out vec4 OutputColor##semanticIndex;
@@ -470,14 +483,16 @@
 		#define MAIN_BEGIN void main() {
 		#define MAIN_BEGIN_NO_OUTPUT void main() {
 		#define MAIN_BEGIN_TESSELLATION_CONTROL_PATCH(numberOfInputControlPoints) void mainPerPatchInvocation() {
-		#define MAIN_BEGIN_TESSELLATION_CONTROL(numberOfInputControlPoints, numberOfOutputControlPoints) layout(vertices = numberOfOutputControlPoints) out; void main() {
+		#define MAIN_BEGIN_TESSELLATION_CONTROL(numberOfInputControlPoints, numberOfOutputControlPoints) layout(vertices = numberOfOutputControlPoints) out; void main() { if (0 == gl_InvocationID) { mainPerPatchInvocation(); }
 		#define MAIN_BEGIN_TESSELLATION_EVALUATION(numberOfInputControlPoints) void main() {
 			#define MAIN_INPUT(name) name
+			#define MAIN_INPUT_ARRAY(name, index) name[index]
 			#define MAIN_INPUT_VERTEX_ID gl_VertexID
 			#define MAIN_INPUT_DRAW_ID (drawId + drawIdUniform + uint(gl_InstanceID))
 			#define MAIN_OUTPUT(name) name
 			#define MAIN_OUTPUT_POSITION gl_Position
 			#define MAIN_OUTPUT_COLOR(semanticIndex) OutputColor##semanticIndex
+			#define MAIN_OUTPUT_CONTROL_POINT(name) name[gl_InvocationID]
 			#define MAIN_OUTPUT_TESS_LEVEL_INNER gl_TessLevelInner
 			#define MAIN_OUTPUT_TESS_LEVEL_OUTER gl_TessLevelOuter
 			#define MAIN_RETURN
@@ -632,6 +647,7 @@
 		#define INPUT_BEGIN
 		#define INPUT_BEGIN_PATCH
 		#define INPUT_BEGIN_CONTROL_POINT
+			#define INPUT_ARRAY(name) name[]
 			#define INPUT_VERTEX_ID
 			#define INPUT_VERTEX_DRAW_ID(attributeIndex) in uint drawId; uniform uint drawIdUniform;	// See "17/11/2012 Surviving without gl_DrawID" - https://www.g-truc.net/post-0518.html - "drawIdUniform" is used in case "GL_EXT_base_instance" isn't supported
 			#define INPUT_VERTEX_POSITION(attributeIndex, type, name) in highp type name;
@@ -652,7 +668,9 @@
 		// Shader attribute output
 		#define OUTPUT_BEGIN
 		#define OUTPUT_BEGIN_PATCH
+			#define OUTPUT_ARRAY(name) name[]
 			#define OUTPUT_POSITION(attributeIndex) // gl_Position is still defined in OpenGL ES 300 GLSL
+			#define OUTPUT_POSITION_NAMED(attributeIndex, type, name) layout(location = attributeIndex) out type name;
 			#define OUTPUT_TEXTURE_COORDINATE(attributeIndex, type, name, semanticIndex) out highp type name;
 			#define OUTPUT_TEXTURE_COORDINATE_NOINTERPOLATION(attributeIndex, type, name, semanticIndex) flat out highp type name;
 			#define OUTPUT_COLOR(semanticIndex) layout(location = ##semanticIndex) out highp vec4 OutputColor##semanticIndex;
@@ -665,14 +683,16 @@
 		#define MAIN_BEGIN void main() {
 		#define MAIN_BEGIN_NO_OUTPUT void main() {
 		#define MAIN_BEGIN_TESSELLATION_CONTROL_PATCH(numberOfInputControlPoints) void mainPerPatchInvocation() {
-		#define MAIN_BEGIN_TESSELLATION_CONTROL(numberOfInputControlPoints, numberOfOutputControlPoints) layout(vertices = numberOfOutputControlPoints) out; void main() {
+		#define MAIN_BEGIN_TESSELLATION_CONTROL(numberOfInputControlPoints, numberOfOutputControlPoints) layout(vertices = numberOfOutputControlPoints) out; void main() { if (0 == gl_InvocationID) { mainPerPatchInvocation(); }
 		#define MAIN_BEGIN_TESSELLATION_EVALUATION(numberOfInputControlPoints) void main() {
 			#define MAIN_INPUT(name) name
+			#define MAIN_INPUT_ARRAY(name, index) name[index]
 			#define MAIN_INPUT_VERTEX_ID gl_VertexID
 			#define MAIN_INPUT_DRAW_ID (drawId + drawIdUniform + uint(gl_InstanceID))
 			#define MAIN_OUTPUT(name) name
 			#define MAIN_OUTPUT_POSITION gl_Position
 			#define MAIN_OUTPUT_COLOR(semanticIndex) OutputColor##semanticIndex
+			#define MAIN_OUTPUT_CONTROL_POINT(name) name[gl_InvocationID]
 			#define MAIN_OUTPUT_TESS_LEVEL_INNER gl_TessLevelInner
 			#define MAIN_OUTPUT_TESS_LEVEL_OUTER gl_TessLevelOuter
 			#define MAIN_RETURN

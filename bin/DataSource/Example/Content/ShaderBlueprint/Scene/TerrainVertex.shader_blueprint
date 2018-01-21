@@ -40,7 +40,7 @@ INPUT_BEGIN_VERTEX
 	INPUT_TEXTURE_COORDINATE(1, float4, Adjacency, 0)	// These are the size of the neighbours along +/- x or y axes. For interior tiles this is 1. For edge tiles it is 0.5 or 2.0. x = neighbour minus x, y = neighbour minus y, z = neighbour plus x, w = neighbour plus y.
 INPUT_END_VERTEX
 OUTPUT_BEGIN_VERTEX
-	OUTPUT_POSITION			 (0)							// World space control point position of the patch
+	OUTPUT_POSITION_NAMED	 (0, float4, PositionVS)		// World space control point position of the patch
 	OUTPUT_TEXTURE_COORDINATE(1, float4, AdjacencyVS, 0)	// These are the size of the neighbours along +/- x or y axes. For interior tiles this is 1. For edge tiles it is 0.5 or 2.0. x = neighbour minus x, y = neighbour minus y, z = neighbour plus x, w = neighbour plus y.
 OUTPUT_END_VERTEX
 
@@ -103,6 +103,6 @@ MAIN_BEGIN_VERTEX
 	float3 worldSpacePosition;
 	ReconstructPosition(MAIN_INPUT_VERTEX_ID, MAIN_INPUT(Position), worldSpacePosition);
 	worldSpacePosition.y = SampleHeightMap(worldSpacePosition.xz);
-	MAIN_OUTPUT_POSITION = float4(worldSpacePosition, 0.0f);
+	MAIN_OUTPUT(PositionVS) = float4(worldSpacePosition, 0.0f);
 	MAIN_OUTPUT(AdjacencyVS) = MAIN_INPUT(Adjacency);
 MAIN_END_VERTEX
