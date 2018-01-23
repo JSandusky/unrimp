@@ -40,9 +40,10 @@ INPUT_BEGIN
 	DECLARE_FRAGMENT_POSITION
 INPUT_END
 OUTPUT_BEGIN
-	OUTPUT_COLOR(0)	// rgb = albedo color, a = alpha
-	OUTPUT_COLOR(1)	// rgb = view space normal
-	OUTPUT_COLOR(2)	// rg  = screen space velocity
+	OUTPUT_COLOR(0)	// GBuffer 0: rgb = albedo color, a = alpha unused (required for blend operations)
+	OUTPUT_COLOR(1)	// GBuffer 1: rgb = view space normal, a = roughness
+	OUTPUT_COLOR(2)	// GBuffer 2: rgb = emissive color, a = metallic
+	OUTPUT_COLOR(3)	// 			  rg  = screen space velocity
 OUTPUT_END
 
 // Uniform buffers
@@ -54,11 +55,8 @@ UNIFORM_BUFFER_END
 TEXTURE_BUFFER(1, 0, float4, LightTextureBuffer, 0)	// "LIGHT"
 
 // Textures
-TEXTURE_2D_ARRAY(2, 0, ShadowMap, 1)
-TEXTURE_CUBE(2, 1, ReflectionCubeMap, 2)
-TEXTURE_3D_UINT(2, 2, LightClustersMap3D, 3)
-TEXTURE_2D(2, 4, _argb_nxa, 5)
-TEXTURE_2D(2, 5, _aor_rg_mb_nya, 6)
+TEXTURE_2D(2, 1, _argb_nxa, 2)
+TEXTURE_2D(2, 2, _aor_rg_mb_nya, 3)
 
 // Samplers
 SAMPLER_STATE(5, 0, SamplerPoint, 0)
@@ -71,20 +69,6 @@ SAMPLER_STATE(3, 2, SamplerLinearClamp, 2)
 //[-------------------------------------------------------]
 @includepiece($ProjectName/ShaderPiece/TangentFrame.asset)
 	@insertpiece(DefineGetTangentFrame)
-@includepiece($ProjectName/ShaderPiece/PhysicallyBasedShading.asset)
-	@property(HighQualityLighting)
-		@insertpiece(DefinePhysicallyBasedShading)
-	@end
-	@property(!HighQualityLighting)
-		@insertpiece(DefineBlinnPhongBasedShading)
-	@end
-@includepiece($ProjectName/ShaderPiece/Depth.asset)
-	@insertpiece(DefineGetLinearDepthReversedZ)
-@includepiece($ProjectName/ShaderPiece/ExponentialShadow.asset)
-	@insertpiece(DefineExponentialShadow)
-@includepiece($ProjectName/ShaderPiece/Shadow.asset)
-	@insertpiece(DefineCalculateShadowVisibility)
-	@insertpiece(DefineShadowDebugging)
 
 // TODO(co) Use this for the detail textures
 // The tri-planar texture mapping is basing on "Use Tri-Planar Texture Mapping for Better Terrain" - https://gamedevelopment.tutsplus.com/articles/use-tri-planar-texture-mapping-for-better-terrain--gamedev-13821
@@ -161,25 +145,6 @@ MAIN_BEGIN
 	float3 viewSpaceIncident = MultiplyQuaternionVector(PassData.WorldSpaceToViewSpaceQuaternion, worldSpaceIncident);
 	float3 triPlanarBlending = GetTriPlanarBlending(worldSpaceNormal);	// TODO(co) Use this for the detail textures
 
-	// Get reflection color
-	@insertpiece(CalculateReflectionColor)
-
-	// Ambient term
-	float3 color = (reflectionColor * metallic + albedo) * (PassData.AmbientColor.rgb + CalculateHemisphereLighting(worldSpaceNormal.xyz, PassData.AmbientColor.rgb * 0.7f, PassData.AmbientColor.rgb * 0.2f));
-
-	// Directional sunlight, our primary light
-	float shadowVisibility = CalculateShadowVisibility(worldSpacePosition, GetLinearDepthReversedZ(FRAGMENT_POSITION.z));
-	if (shadowVisibility > 0.0f)
-	{
-		color += shadowVisibility * CalculateLighting(albedo, roughness, metallic, viewSpaceNormal, viewSpaceIncident, reflectionColor, PassData.ViewSpaceSunlightDirection, PassData.SunlightColor);
-	}
-
-	// Perform clustered shading
-	@insertpiece(PerformClusteredShading)
-
-	// Apply ambient occlusion
-	color *= ambientOcclusion;
-
 	// Complex pixel detection
 	// -> See "Antialiased Deferred Rendering" - https://docs.nvidia.com/gameworks/content/gameworkslibrary/graphicssamples/d3d_samples/antialiaseddeferredrendering.htm
 	float edgePixel = (COVERAGE_MASK != PassData.FullCoverageMask) ? 1.0f : 0.0f;
@@ -187,11 +152,9 @@ MAIN_BEGIN
 	// Calculate screen space velocity
 	@insertpiece(DefineCalculateScreenSpaceVelocity)
 
-	// Don't remove the following commented code: Shadow map debugging
-	// color *= GetShadowCascadeColor(GetLinearDepthReversedZ(FRAGMENT_POSITION.z));
-
 	// Done
-	MAIN_OUTPUT_COLOR(0) = float4(color, edgePixel);
-	MAIN_OUTPUT_COLOR(1) = float4(viewSpaceNormal, edgePixel);
-	MAIN_OUTPUT_COLOR(2) = float4(velocity.x, velocity.y, 0.0f, 0.0f);
+	MAIN_OUTPUT_COLOR(0) = float4(albedo * ambientOcclusion, edgePixel);
+	MAIN_OUTPUT_COLOR(1) = float4(viewSpaceNormal, roughness);
+	MAIN_OUTPUT_COLOR(2) = float4(0.0f, 0.0f, 0.0f, metallic);
+	MAIN_OUTPUT_COLOR(3) = float4(velocity.x, velocity.y, 0.0f, 0.0f);
 MAIN_END

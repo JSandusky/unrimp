@@ -8,7 +8,10 @@
 	{
 		"Techniques":
 		{
-			"Forward": "$ProjectName/MaterialBlueprint/Terrain/Terrain.asset"
+			"Default": "$ProjectName/MaterialBlueprint/Terrain/Debug.asset",
+			"Debug": "$ProjectName/MaterialBlueprint/Terrain/Debug.asset",
+			"Forward": "$ProjectName/MaterialBlueprint/Terrain/Forward.asset",
+			"Deferred": "$ProjectName/MaterialBlueprint/Terrain/Deferred.asset"
 		}
 	}
 }

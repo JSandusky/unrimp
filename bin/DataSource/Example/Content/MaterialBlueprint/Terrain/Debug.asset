@@ -14,7 +14,7 @@
 		},
 		"MaterialBlueprintAssetCompiler":
 		{
-			"InputFile": "Terrain.material_blueprint"
+			"InputFile": "Debug.material_blueprint"
 		}
 	}
 }

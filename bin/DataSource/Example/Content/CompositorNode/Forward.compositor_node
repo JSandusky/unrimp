@@ -273,7 +273,7 @@
 			{
 				"Scene":
 				{
-					"Description": "Render skybox",
+					"Description": "Render sky",
 					"MaximumDepth": "0.0",
 					"MinimumRenderQueueIndex": "254",
 					"MaximumRenderQueueIndex": "254",

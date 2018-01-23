@@ -94,7 +94,7 @@
 				"VertexShaderBlueprint": "$ProjectName/ShaderBlueprint/Terrain/Vertex.asset",
 				"TessellationControlShaderBlueprint": "$ProjectName/ShaderBlueprint/Terrain/TessellationControl.asset",
 				"TessellationEvaluationShaderBlueprint": "$ProjectName/ShaderBlueprint/Terrain/TessellationEvaluation.asset",
-				"FragmentShaderBlueprint": "$ProjectName/ShaderBlueprint/Terrain/Fragment.asset"
+				"FragmentShaderBlueprint": "$ProjectName/ShaderBlueprint/Terrain/DeferredFragment.asset"
 			},
 			"PrimitiveTopology": "PATCH_LIST_4",
 			"RasterizerState":
@@ -274,46 +274,8 @@
 			{
 				"0":
 				{
-					"BaseShaderRegisterName": "ShadowMap",
-					"BaseShaderRegister": "1",
-					"ShaderVisibility": "FRAGMENT",
-					"ResourceType": "TEXTURE",
-					"Usage": "STATIC",
-					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "Example/Texture/Dynamic/ShadowMapRenderTarget",
-					"FallbackTexture": "Unrimp/Texture/DynamicByCode/BlackMap2D",
-					"MipmapsUsed": "FALSE",
-					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
-				},
-				"1":
-				{
-					"BaseShaderRegisterName": "ReflectionCubeMap",
-					"BaseShaderRegister": "2",
-					"ShaderVisibility": "FRAGMENT",
-					"ResourceType": "TEXTURE",
-					"Usage": "MATERIAL_REFERENCE",
-					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@ReflectionCubeMap",
-					"FallbackTexture": "Unrimp/Texture/DynamicByCode/WhiteMapCube",
-					"RgbHardwareGammaCorrection": "TRUE",
-					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
-				},
-				"2":
-				{
-					"BaseShaderRegisterName": "LightClustersMap3D",
-					"BaseShaderRegister": "3",
-					"ShaderVisibility": "FRAGMENT",
-					"ResourceType": "TEXTURE",
-					"Usage": "STATIC",
-					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "Unrimp/Texture/DynamicByCode/LightClustersMap3D",
-					"FallbackTexture": "Unrimp/Texture/DynamicByCode/LightClustersMap3D",
-					"SamplerStateBaseShaderRegisterName": "SamplerPoint"
-				},
-				"3":
-				{
 					"BaseShaderRegisterName": "HeightMap",
-					"BaseShaderRegister": "4",
+					"BaseShaderRegister": "1",
 					"ResourceType": "TEXTURE",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
@@ -321,10 +283,10 @@
 					"FallbackTexture": "Unrimp/Texture/DynamicByCode/BlackMap2D",
 					"SamplerStateBaseShaderRegisterName": "SamplerLinearClamp"
 				},
-				"4":
+				"1":
 				{
 					"BaseShaderRegisterName": "_argb_nxa",
-					"BaseShaderRegister": "5",
+					"BaseShaderRegister": "2",
 					"ShaderVisibility": "FRAGMENT",
 					"ResourceType": "TEXTURE",
 					"Usage": "MATERIAL_REFERENCE",
@@ -334,10 +296,10 @@
 					"RgbHardwareGammaCorrection": "TRUE",
 					"SamplerStateBaseShaderRegisterName": "SamplerLinearClamp"
 				},
-				"5":
+				"2":
 				{
 					"BaseShaderRegisterName": "_aor_rg_mb_nya",
-					"BaseShaderRegister": "6",
+					"BaseShaderRegister": "3",
 					"ShaderVisibility": "FRAGMENT",
 					"ResourceType": "TEXTURE",
 					"Usage": "MATERIAL_REFERENCE",
@@ -346,6 +308,7 @@
 					"FallbackTexture": "Unrimp/Texture/DynamicByCode/Identity_hr_rg_mb_nya2D",
 					"SamplerStateBaseShaderRegisterName": "SamplerLinearClamp"
 				}
+
 			},
 			"3":
 			{

@@ -57,7 +57,7 @@ UNIFORM_BUFFER_BEGIN(0, 0, PassUniformBuffer, 0)
 UNIFORM_BUFFER_END
 
 // Textures
-TEXTURE_2D(2, 3, HeightMap, 4)
+TEXTURE_2D(2, 0, HeightMap, 1)
 
 // Samplers
 SAMPLER_STATE(3, 1, SamplerLinearClamp, 1)

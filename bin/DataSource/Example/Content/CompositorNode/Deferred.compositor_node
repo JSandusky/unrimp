@@ -260,13 +260,20 @@
 					"MinimumRenderQueueIndex": "0",
 					"MaximumRenderQueueIndex": "253",
 					"MaterialTechnique": "Deferred"
+				},
+				"Scene":
+				{
+					"Description": "Render terrain into GBuffer",
+					"MinimumRenderQueueIndex": "253",
+					"MaximumRenderQueueIndex": "253",
+					"MaterialTechnique": "Deferred"
 				}
 			},
 			"GBufferSkyFramebuffer":
 			{
 				"Scene":
 				{
-					"Description": "Render skybox",
+					"Description": "Render sky",
 					"MaximumDepth": "0.0",
 					"MinimumRenderQueueIndex": "254",
 					"MaximumRenderQueueIndex": "254",
