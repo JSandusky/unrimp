@@ -45,10 +45,10 @@ INPUT_BEGIN
 	INPUT_POSITION(0, float4, INPUT_ARRAY(PositionTC))	// World space control point position of the patch we received from the tessellation control shader (TCS) as input
 INPUT_END
 OUTPUT_BEGIN
-	OUTPUT_POSITION			 (0)											// Interpolated world space vertex position inside the patch as output
 	OUTPUT_TEXTURE_COORDINATE(1, float2, TexCoord, 					  0)	// Texture coordinate
 	OUTPUT_TEXTURE_COORDINATE(2, float3, PreviousClipSpacePositionVS, 1)	// Previous clip space position
 	OUTPUT_TEXTURE_COORDINATE(3, float3, WorldSpacePosition, 		  2)	// World space position
+	OUTPUT_POSITION			 (0)											// Interpolated world space vertex position inside the patch as output
 OUTPUT_END
 
 // Uniform buffers

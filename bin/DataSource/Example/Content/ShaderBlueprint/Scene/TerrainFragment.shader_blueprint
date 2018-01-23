@@ -27,13 +27,12 @@
 @includepiece($ProjectName/ShaderPiece/Terrain.asset)
 	@insertpiece(DefineTerrainPassDataStruct)
 
-
+ 
 //[-------------------------------------------------------]
 //[ Input / output                                        ]
 //[-------------------------------------------------------]
 // Attribute input / output
 INPUT_BEGIN
-	INPUT_POSITION			(0, float4, Position)						// Interpolated object space vertex position inside the patch as output
 	INPUT_TEXTURE_COORDINATE(1, float2, TexCoord, 					 0)	// Texture coordinate
 	INPUT_TEXTURE_COORDINATE(2, float3, PreviousClipSpacePositionVS, 1)	// Previous clip space position
 	INPUT_TEXTURE_COORDINATE(3, float3, WorldSpacePosition, 		 2)	// World space position
