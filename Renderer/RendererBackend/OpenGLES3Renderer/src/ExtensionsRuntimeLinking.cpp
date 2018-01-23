@@ -178,7 +178,6 @@ namespace OpenGLES3Renderer
 			IMPORT_FUNC(glPushDebugGroupKHR)
 			IMPORT_FUNC(glPopDebugGroupKHR)
 			IMPORT_FUNC(glObjectLabelKHR)
-			IMPORT_FUNC(glGetObjectLabelKHR)
 			mGL_KHR_debug = result;
 		}
 

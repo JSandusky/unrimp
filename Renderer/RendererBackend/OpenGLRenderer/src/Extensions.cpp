@@ -426,7 +426,6 @@ namespace OpenGLRenderer
 			IMPORT_FUNC(glPushDebugGroup)
 			IMPORT_FUNC(glPopDebugGroup)
 			IMPORT_FUNC(glObjectLabel)
-			IMPORT_FUNC(glGetObjectLabel)
 			mGL_KHR_debug = result;
 		}
 

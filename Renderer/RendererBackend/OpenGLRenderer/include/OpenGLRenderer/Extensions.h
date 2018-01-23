@@ -359,7 +359,6 @@ namespace OpenGLRenderer
 	FNDEF_EX(glPushDebugGroup,		PFNGLPUSHDEBUGGROUPPROC);
 	FNDEF_EX(glPopDebugGroup,		PFNGLPOPDEBUGGROUPPROC);
 	FNDEF_EX(glObjectLabel,			PFNGLOBJECTLABELPROC);
-	FNDEF_EX(glGetObjectLabel,		PFNGLGETOBJECTLABELPROC);
 
 
 	//[-------------------------------------------------------]

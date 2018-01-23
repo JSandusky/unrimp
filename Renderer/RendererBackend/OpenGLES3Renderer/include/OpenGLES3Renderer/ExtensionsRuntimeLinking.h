@@ -265,14 +265,12 @@ namespace OpenGLES3Renderer
 	FNDEF_EX(void,	glPushDebugGroupKHR,		(GLenum source, GLuint id, GLsizei length, const GLchar* message));
 	FNDEF_EX(void,	glPopDebugGroupKHR,			(void));
 	FNDEF_EX(void,	glObjectLabelKHR,			(GLenum identifier, GLuint name, GLsizei length, const GLchar* label));
-	FNDEF_EX(void,	glGetObjectLabelKHR,		(GLenum identifier, GLuint name, GLsizei bufSize, GLsizei* length, GLchar* label));
 	#define glDebugMessageCallbackKHR	FNPTR(glDebugMessageCallbackKHR)
 	#define glDebugMessageControlKHR	FNPTR(glDebugMessageControlKHR)
 	#define glDebugMessageInsertKHR		FNPTR(glDebugMessageInsertKHR)
 	#define glPushDebugGroupKHR			FNPTR(glPushDebugGroupKHR)
 	#define glPopDebugGroupKHR			FNPTR(glPopDebugGroupKHR)
 	#define glObjectLabelKHR			FNPTR(glObjectLabelKHR)
-	#define glGetObjectLabelKHR			FNPTR(glGetObjectLabelKHR)
 
 
 	//[-------------------------------------------------------]
