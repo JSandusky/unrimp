@@ -31,7 +31,7 @@
 					},
 					"SkyboxSceneItem":
 					{
-						"MaterialBlueprint": "$ProjectName/MaterialBlueprint/Scene/Skybox.asset",
+						"MaterialBlueprint": "$ProjectName/MaterialBlueprint/Sky/Sky.asset",
 						"SetMaterialProperties":
 						{
 							"UseProceduralSky": "TRUE"
@@ -39,7 +39,7 @@
 					},
 					"TerrainSceneItem":
 					{
-						"MaterialBlueprint": "$ProjectName/MaterialBlueprint/Scene/Terrain.asset",
+						"MaterialBlueprint": "$ProjectName/MaterialBlueprint/Terrain/Terrain.asset",
 						"SetMaterialProperties":
 						{
 							"HeightMap": "$ProjectName/Texture/Terrain/Gonzales_h.asset",

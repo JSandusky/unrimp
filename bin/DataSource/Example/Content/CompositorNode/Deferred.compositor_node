@@ -308,7 +308,7 @@
 				"Quad":
 				{
 					"Description": "Composite deferred data",
-					"MaterialBlueprint": "$ProjectName/MaterialBlueprint/Deferred/DeferredCompositor.asset",
+					"MaterialBlueprint": "$ProjectName/MaterialBlueprint/Compositor/Deferred.asset",
 					"SetMaterialProperties":
 					{
 						"GBufferMap0": "Example/Texture/Dynamic/MultisampleGBufferRenderTarget0",
@@ -644,7 +644,7 @@
 				},
 				"DebugGui":
 				{
-					"MaterialBlueprint": "$ProjectName/MaterialBlueprint/Debug/Gui.asset",
+					"MaterialBlueprint": "$ProjectName/MaterialBlueprint/Gui/Debug.asset",
 					"SetMaterialProperties":
 					{
 						"GlyphMap": "Unrimp/Texture/DynamicByCode/ImGuiGlyphMap2D",

@@ -8,11 +8,11 @@
 	{
 		"Techniques":
 		{
-			"Default": "$ProjectName/MaterialBlueprint/Debug/SkinnedMesh.asset",
-			"Debug": "$ProjectName/MaterialBlueprint/Debug/SkinnedMesh.asset",
-			"Forward": "$ProjectName/MaterialBlueprint/Forward/SkinnedMesh.asset",
-			"Deferred": "$ProjectName/MaterialBlueprint/Deferred/SkinnedMesh.asset",
-			"DepthOnly": "$ProjectName/MaterialBlueprint/Scene/SkinnedMeshDepthOnly.asset"
+			"Default": "$ProjectName/MaterialBlueprint/Mesh/DebugSkinned.asset",
+			"Debug": "$ProjectName/MaterialBlueprint/Mesh/DebugSkinned.asset",
+			"Forward": "$ProjectName/MaterialBlueprint/Mesh/ForwardSkinned.asset",
+			"Deferred": "$ProjectName/MaterialBlueprint/Mesh/DeferredSkinned.asset",
+			"DepthOnly": "$ProjectName/MaterialBlueprint/Mesh/DepthOnlySkinned.asset"
 		}
 	}
 }

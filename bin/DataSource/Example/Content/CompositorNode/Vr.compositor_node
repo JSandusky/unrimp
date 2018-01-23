@@ -213,7 +213,7 @@
 				"Quad":
 				{
 					"Description": "Composite forward data",
-					"MaterialBlueprint": "$ProjectName/MaterialBlueprint/Forward/ForwardCompositor.asset",
+					"MaterialBlueprint": "$ProjectName/MaterialBlueprint/Compositor/Forward.asset",
 					"SetMaterialProperties":
 					{
 						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget0",

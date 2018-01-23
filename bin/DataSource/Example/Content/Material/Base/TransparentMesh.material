@@ -8,7 +8,7 @@
 	{
 		"Techniques":
 		{
-			"Transparent": "$ProjectName/MaterialBlueprint/Scene/TransparentMesh.asset"
+			"Transparent": "$ProjectName/MaterialBlueprint/Mesh/Transparent.asset"
 		}
 	}
 }

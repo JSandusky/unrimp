@@ -8,11 +8,11 @@
 	{
 		"Techniques":
 		{
-			"Default": "$ProjectName/MaterialBlueprint/Debug/Mesh.asset",
-			"Debug": "$ProjectName/MaterialBlueprint/Debug/Mesh.asset",
-			"Forward": "$ProjectName/MaterialBlueprint/Forward/Mesh.asset",
-			"Deferred": "$ProjectName/MaterialBlueprint/Deferred/Mesh.asset",
-			"DepthOnly": "$ProjectName/MaterialBlueprint/Scene/MeshDepthOnly.asset"
+			"Default": "$ProjectName/MaterialBlueprint/Mesh/Debug.asset",
+			"Debug": "$ProjectName/MaterialBlueprint/Mesh/Debug.asset",
+			"Forward": "$ProjectName/MaterialBlueprint/Mesh/Forward.asset",
+			"Deferred": "$ProjectName/MaterialBlueprint/Mesh/Deferred.asset",
+			"DepthOnly": "$ProjectName/MaterialBlueprint/Mesh/DepthOnly.asset"
 		}
 	}
 }

@@ -343,7 +343,7 @@
 				"Quad":
 				{
 					"Description": "Composite forward data",
-					"MaterialBlueprint": "$ProjectName/MaterialBlueprint/Forward/ForwardCompositor.asset",
+					"MaterialBlueprint": "$ProjectName/MaterialBlueprint/Compositor/Forward.asset",
 					"SetMaterialProperties":
 					{
 						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget0",
@@ -668,7 +668,7 @@
 				},
 				"DebugGui":
 				{
-					"MaterialBlueprint": "$ProjectName/MaterialBlueprint/Debug/Gui.asset",
+					"MaterialBlueprint": "$ProjectName/MaterialBlueprint/Gui/Debug.asset",
 					"SetMaterialProperties":
 					{
 						"GlyphMap": "Unrimp/Texture/DynamicByCode/ImGuiGlyphMap2D",
