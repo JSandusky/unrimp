@@ -220,7 +220,15 @@ namespace RendererToolkit
 		{
 			RENDERER_ASSERT(getContext(), nullptr != mRapidJsonDocument, "Invalid renderer toolkit Rapid JSON document")
 			const IAssetCompiler::Configuration configuration(rapidJsonDocument, (*mRapidJsonDocument)["Targets"], rendererTarget, mQualityStrategy);
-			return iterator->second->checkIfChanged(input, configuration);
+			try
+			{
+				return iterator->second->checkIfChanged(input, configuration);
+			}
+			catch (const std::exception&)
+			{
+				// In case of an "RendererToolkit::IAssetCompiler::checkIfChanged()"-exception, consider the asset as changed
+				return true;
+			}
 		}
 
 		// Not changed
