@@ -39,7 +39,7 @@
 					},
 					"TerrainSceneItem":
 					{
-						"MaterialBlueprint": "$ProjectName/MaterialBlueprint/Terrain/Terrain.asset",
+						"Material": "$ProjectName/Material/Base/Terrain.asset",
 						"SetMaterialProperties":
 						{
 							"HeightMap": "$ProjectName/Texture/Terrain/Gonzales_h.asset",

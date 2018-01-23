@@ -266,7 +266,7 @@
 					"Description": "Render terrain",
 					"MinimumRenderQueueIndex": "253",
 					"MaximumRenderQueueIndex": "253",
-					"MaterialTechnique": "Default"
+					"MaterialTechnique": "Forward"
 				}
 			},
 			"HdrSkyMultisampleFramebuffer":

@@ -76,9 +76,9 @@ namespace
 			// Check whether or not material properties should be set
 			if (rapidJsonValuePass.HasMember("SetMaterialProperties"))
 			{
-				if (rapidJsonValuePass.HasMember("MaterialAssetId"))
+				if (rapidJsonValuePass.HasMember("Material"))
 				{
-					RendererToolkit::JsonMaterialHelper::getPropertiesByMaterialAssetId(input, RendererToolkit::StringHelper::getSourceAssetIdByString(rapidJsonValuePass["MaterialAssetId"].GetString(), input), sortedMaterialPropertyVector);
+					RendererToolkit::JsonMaterialHelper::getPropertiesByMaterialAssetId(input, RendererToolkit::StringHelper::getSourceAssetIdByString(rapidJsonValuePass["Material"].GetString(), input), sortedMaterialPropertyVector);
 				}
 				else if (rapidJsonValuePass.HasMember("MaterialBlueprint"))
 				{
@@ -145,7 +145,7 @@ namespace
 			// Set data
 			RendererRuntime::AssetId materialAssetId;
 			RendererRuntime::AssetId materialBlueprintAssetId;
-			RendererToolkit::JsonHelper::optionalCompiledAssetId(input, rapidJsonValuePass, "MaterialAssetId", materialAssetId);
+			RendererToolkit::JsonHelper::optionalCompiledAssetId(input, rapidJsonValuePass, "Material", materialAssetId);
 			RendererToolkit::JsonHelper::optionalStringIdProperty(rapidJsonValuePass, "MaterialTechnique", passQuad.materialTechniqueId);
 			RendererToolkit::JsonHelper::optionalCompiledAssetId(input, rapidJsonValuePass, "MaterialBlueprint", materialBlueprintAssetId);
 			passQuad.materialAssetId = materialAssetId;

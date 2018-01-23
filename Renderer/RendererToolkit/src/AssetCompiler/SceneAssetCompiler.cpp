@@ -101,9 +101,9 @@ namespace
 			// Check whether or not material properties should be set
 			if (rapidJsonValueSceneItem.HasMember("SetMaterialProperties"))
 			{
-				if (rapidJsonValueSceneItem.HasMember("MaterialAssetId"))
+				if (rapidJsonValueSceneItem.HasMember("Material"))
 				{
-					RendererToolkit::JsonMaterialHelper::getPropertiesByMaterialAssetId(input, RendererToolkit::StringHelper::getSourceAssetIdByString(rapidJsonValueSceneItem["MaterialAssetId"].GetString(), input), sortedMaterialPropertyVector);
+					RendererToolkit::JsonMaterialHelper::getPropertiesByMaterialAssetId(input, RendererToolkit::StringHelper::getSourceAssetIdByString(rapidJsonValueSceneItem["Material"].GetString(), input), sortedMaterialPropertyVector);
 				}
 				else if (rapidJsonValueSceneItem.HasMember("MaterialBlueprint"))
 				{
@@ -141,7 +141,7 @@ namespace
 			// Set data
 			RendererRuntime::AssetId materialAssetId;
 			RendererRuntime::AssetId materialBlueprintAssetId;
-			RendererToolkit::JsonHelper::optionalCompiledAssetId(input, rapidJsonValueSceneItem, "MaterialAssetId", materialAssetId);
+			RendererToolkit::JsonHelper::optionalCompiledAssetId(input, rapidJsonValueSceneItem, "Material", materialAssetId);
 			RendererToolkit::JsonHelper::optionalStringIdProperty(rapidJsonValueSceneItem, "MaterialTechnique", materialItem.materialTechniqueId);
 			RendererToolkit::JsonHelper::optionalCompiledAssetId(input, rapidJsonValueSceneItem, "MaterialBlueprint", materialBlueprintAssetId);
 			materialItem.materialAssetId = materialAssetId;
@@ -157,11 +157,7 @@ namespace
 			{
 				throw std::runtime_error("Material asset ID is defined, but material blueprint asset ID is defined as well. Only one asset ID is allowed.");
 			}
-			if (RendererRuntime::isInitialized(materialItem.materialAssetId) && RendererRuntime::isUninitialized(materialItem.materialTechniqueId))
-			{
-				throw std::runtime_error("Material asset ID is defined, but material technique is not defined");
-			}
-			if (RendererRuntime::isInitialized(materialItem.materialBlueprintAssetId) && RendererRuntime::isUninitialized(materialItem.materialTechniqueId))
+			if (RendererRuntime::isUninitialized(materialItem.materialTechniqueId))
 			{
 				materialItem.materialTechniqueId = RendererRuntime::MaterialResourceManager::DEFAULT_MATERIAL_TECHNIQUE_ID;
 			}

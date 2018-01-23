@@ -74,8 +74,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void MaterialSceneItem::onLoadingStateChange(const IResource& resource)
 	{
-		assert(resource.getId() == mMaterialResourceId);
-		createMaterialResource(resource.getId());
+		assert(resource.getAssetId() == mMaterialAssetId);
+		if (resource.getLoadingState() == IResource::LoadingState::LOADED)
+		{
+			createMaterialResource(resource.getId());
+		}
 	}
 
 
