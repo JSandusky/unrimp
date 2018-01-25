@@ -38,13 +38,6 @@
 				"Value": "Unrimp/Texture/DynamicByCode/Identity_hr_rg_mb_nya2D",
 				"Description": "R channel = Ambient occlusion map ('_ao'-postfix), G channel = Roughness map ('_r'-postfix, aka specular F0, roughness = 1 - glossiness (= smoothness)), B channel = Metallic map ('_m'-postfix), A channel = y component of normal map ('_n'-postfix)"
 			},
-			"ReflectionCubeMap":
-			{
-				"Usage": "TEXTURE_REFERENCE",
-				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "$ProjectName/Texture/CubeMap/Maskonaive3/Maskonaive3_rcube.asset",
-				"Description": "Reflection cube map"
-			},
 			"WorldPosition":
 			{
 				"Usage": "SHADER_UNIFORM",
@@ -70,20 +63,6 @@
 				"MaximumValue": "64.0",
 				"StepSize": "1.0",
 				"Description": "Desired pixels per triangle edge"
-			},
-			"GlobalWetness":
-			{
-				"Usage": "GLOBAL_REFERENCE_FALLBACK",
-				"ValueType": "FLOAT",
-				"Value": "0.0",
-				"Description": "Fallback value in case there's no wetness global material property"
-			},
-			"GlobalAmbientColor":
-			{
-				"Usage": "GLOBAL_REFERENCE_FALLBACK",
-				"ValueType": "FLOAT_3",
-				"Value": "0.2 0.2 0.2",
-				"Description": "Fallback value in case there's no ambient color global material property"
 			}
 		},
 		"PipelineState":
@@ -136,27 +115,23 @@
 						},
 						"ShadowMatrix":
 						{
-							"Usage": "PASS_REFERENCE",
-							"ValueType": "FLOAT_4_4",
-							"Value": "@SHADOW_MATRIX"
+							"Usage": "UNKNOWN",
+							"ValueType": "FLOAT_4_4"
 						},
 						"ShadowCascadeOffsets":
 						{
-							"Usage": "PASS_REFERENCE",
-							"ValueType": "FLOAT_4_4",
-							"Value": "@SHADOW_CASCADE_OFFSETS"
+							"Usage": "UNKNOWN",
+							"ValueType": "FLOAT_4_4"
 						},
 						"ShadowCascadeScales":
 						{
-							"Usage": "PASS_REFERENCE",
-							"ValueType": "FLOAT_4_4",
-							"Value": "@SHADOW_CASCADE_SCALES"
+							"Usage": "UNKNOWN",
+							"ValueType": "FLOAT_4_4"
 						},
 						"ShadowCascadeSplits":
 						{
-							"Usage": "PASS_REFERENCE",
-							"ValueType": "FLOAT_4",
-							"Value": "@SHADOW_CASCADE_SPLITS"
+							"Usage": "UNKNOWN",
+							"ValueType": "FLOAT_4"
 						},
 						"ViewSpaceToClipSpaceMatrix":
 						{
@@ -184,9 +159,8 @@
 						},
 						"Wetness":
 						{
-							"Usage": "GLOBAL_REFERENCE",
-							"ValueType": "FLOAT",
-							"Value": "@GlobalWetness"
+							"Usage": "UNKNOWN",
+							"ValueType": "FLOAT"
 						},
 						"WorldPosition":
 						{
@@ -202,15 +176,13 @@
 						},
 						"AmbientColor":
 						{
-							"Usage": "GLOBAL_REFERENCE",
-							"ValueType": "FLOAT_3",
-							"Value": "@GlobalAmbientColor"
+							"Usage": "UNKNOWN",
+							"ValueType": "FLOAT_3"
 						},
 						"SunlightColor":
 						{
-							"Usage": "PASS_REFERENCE",
-							"ValueType": "FLOAT_3",
-							"Value": "@SUNLIGHT_COLOR"
+							"Usage": "UNKNOWN",
+							"ValueType": "FLOAT_3"
 						},
 						"CameraWorldSpacePosition":
 						{
@@ -220,15 +192,13 @@
 						},
 						"LightClustersScale":
 						{
-							"Usage": "PASS_REFERENCE",
-							"ValueType": "FLOAT_3",
-							"Value": "@LIGHT_CLUSTERS_SCALE"
+							"Usage": "UNKNOWN",
+							"ValueType": "FLOAT_3"
 						},
 						"LightClustersBias":
 						{
-							"Usage": "PASS_REFERENCE",
-							"ValueType": "FLOAT_3",
-							"Value": "@LIGHT_CLUSTERS_BIAS"
+							"Usage": "UNKNOWN",
+							"ValueType": "FLOAT_3"
 						},
 						"ViewportSize":
 						{
