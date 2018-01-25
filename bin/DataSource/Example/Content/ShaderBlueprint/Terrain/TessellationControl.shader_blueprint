@@ -220,40 +220,57 @@ MAIN_BEGIN_TESSELLATION_CONTROL_PATCH(4)
 			// is the neighbour's size relative to ours. Similarly for plus and Y, etc. You really
 			// need a diagram to make sense of the adjacency conditions in the if statements.
 			// These four ifs deal with neighbours that are smaller.
-			MAIN_OUTPUT_TESS_LEVEL_OUTER[0] = MAIN_OUTPUT_TESS_LEVEL_OUTER[1] = MAIN_OUTPUT_TESS_LEVEL_OUTER[2] = MAIN_OUTPUT_TESS_LEVEL_OUTER[3] = 1.0f;
 			if (MAIN_INPUT_ARRAY(AdjacencyVS, 0).x < 0.55f && 0 == patchXY.x)
 			{
 				MAIN_OUTPUT_TESS_LEVEL_OUTER[0] = SmallerNeighbourAdjacencyFix(MAIN_INPUT_ARRAY(PositionVS, 0).xyz, MAIN_INPUT_ARRAY(PositionVS, 1).xyz, sideLength);
+			}
+			else if (MAIN_INPUT_ARRAY(AdjacencyVS, 0).x > 1.0f && 0 == patchXY.x)
+			{
+				// Deal with neighbours that are larger than us
+				MAIN_OUTPUT_TESS_LEVEL_OUTER[0] = LargerNeighbourAdjacencyFix(MAIN_INPUT_ARRAY(PositionVS, 0).xyz, MAIN_INPUT_ARRAY(PositionVS, 1).xyz, patchXY.y, sideLength);
+			}
+			else
+			{
+				MAIN_OUTPUT_TESS_LEVEL_OUTER[0] = SphereToScreenSpaceTessellation(MAIN_INPUT_ARRAY(PositionVS, 0).xyz, MAIN_INPUT_ARRAY(PositionVS, 1).xyz, sideLength);
 			}
 			if (MAIN_INPUT_ARRAY(AdjacencyVS, 0).y < 0.55f && 0 == patchXY.y)
 			{
 				MAIN_OUTPUT_TESS_LEVEL_OUTER[1] = SmallerNeighbourAdjacencyFix(MAIN_INPUT_ARRAY(PositionVS, 3).xyz, MAIN_INPUT_ARRAY(PositionVS, 0).xyz, sideLength);
 			}
+			else if (MAIN_INPUT_ARRAY(AdjacencyVS, 0).y > 1.0f && 0 == patchXY.y)
+			{
+				// Deal with neighbours that are larger than us
+				MAIN_OUTPUT_TESS_LEVEL_OUTER[1] = LargerNeighbourAdjacencyFix(MAIN_INPUT_ARRAY(PositionVS, 0).xyz, MAIN_INPUT_ARRAY(PositionVS, 3).xyz, patchXY.x, sideLength);	// Irregular index pattern - it's correct
+			}
+			else
+			{
+				MAIN_OUTPUT_TESS_LEVEL_OUTER[1] = SphereToScreenSpaceTessellation(MAIN_INPUT_ARRAY(PositionVS, 3).xyz, MAIN_INPUT_ARRAY(PositionVS, 0).xyz, sideLength);
+			}
 			if (MAIN_INPUT_ARRAY(AdjacencyVS, 0).z < 0.55f && TERRAIN_PATCHES_PER_TILE_EDGE - 1 == patchXY.x)
 			{
 				MAIN_OUTPUT_TESS_LEVEL_OUTER[2] = SmallerNeighbourAdjacencyFix(MAIN_INPUT_ARRAY(PositionVS, 2).xyz, MAIN_INPUT_ARRAY(PositionVS, 3).xyz, sideLength);
+			}
+			else if (MAIN_INPUT_ARRAY(AdjacencyVS, 0).z > 1.0f && TERRAIN_PATCHES_PER_TILE_EDGE - 1 == patchXY.x)
+			{
+				// Deal with neighbours that are larger than us
+				MAIN_OUTPUT_TESS_LEVEL_OUTER[2] = LargerNeighbourAdjacencyFix(MAIN_INPUT_ARRAY(PositionVS, 3).xyz, MAIN_INPUT_ARRAY(PositionVS, 2).xyz, patchXY.y, sideLength);
+			}
+			else
+			{
+				MAIN_OUTPUT_TESS_LEVEL_OUTER[2] = SphereToScreenSpaceTessellation(MAIN_INPUT_ARRAY(PositionVS, 2).xyz, MAIN_INPUT_ARRAY(PositionVS, 3).xyz, sideLength);
 			}
 			if (MAIN_INPUT_ARRAY(AdjacencyVS, 0).w < 0.55f && TERRAIN_PATCHES_PER_TILE_EDGE - 1 == patchXY.y)
 			{
 				MAIN_OUTPUT_TESS_LEVEL_OUTER[3] = SmallerNeighbourAdjacencyFix(MAIN_INPUT_ARRAY(PositionVS, 1).xyz, MAIN_INPUT_ARRAY(PositionVS, 2).xyz, sideLength);
 			}
-
-			// Deal with neighbours that are larger than us
-			if (MAIN_INPUT_ARRAY(AdjacencyVS, 0).x > 1.0f && 0 == patchXY.x)
+			else if (MAIN_INPUT_ARRAY(AdjacencyVS, 0).w > 1.0f && TERRAIN_PATCHES_PER_TILE_EDGE - 1 == patchXY.y)
 			{
-				MAIN_OUTPUT_TESS_LEVEL_OUTER[0] = LargerNeighbourAdjacencyFix(MAIN_INPUT_ARRAY(PositionVS, 0).xyz, MAIN_INPUT_ARRAY(PositionVS, 1).xyz, patchXY.y, sideLength);
-			}
-			if (MAIN_INPUT_ARRAY(AdjacencyVS, 0).y > 1.0f && 0 == patchXY.y)
-			{
-				MAIN_OUTPUT_TESS_LEVEL_OUTER[1] = LargerNeighbourAdjacencyFix(MAIN_INPUT_ARRAY(PositionVS, 0).xyz, MAIN_INPUT_ARRAY(PositionVS, 3).xyz, patchXY.x, sideLength);	// Irregular index pattern - it's correct
-			}
-			if (MAIN_INPUT_ARRAY(AdjacencyVS, 0).z > 1.0f && TERRAIN_PATCHES_PER_TILE_EDGE - 1 == patchXY.x)
-			{
-				MAIN_OUTPUT_TESS_LEVEL_OUTER[2] = LargerNeighbourAdjacencyFix(MAIN_INPUT_ARRAY(PositionVS, 3).xyz, MAIN_INPUT_ARRAY(PositionVS, 2).xyz, patchXY.y, sideLength);
-			}
-			if (MAIN_INPUT_ARRAY(AdjacencyVS, 0).w > 1.0f && TERRAIN_PATCHES_PER_TILE_EDGE - 1 == patchXY.y)
-			{
+				// Deal with neighbours that are larger than us
 				MAIN_OUTPUT_TESS_LEVEL_OUTER[3] = LargerNeighbourAdjacencyFix(MAIN_INPUT_ARRAY(PositionVS, 1).xyz, MAIN_INPUT_ARRAY(PositionVS, 2).xyz, patchXY.x, sideLength);	// Irregular index pattern - it's correct
+			}
+			else
+			{
+				MAIN_OUTPUT_TESS_LEVEL_OUTER[3] = SphereToScreenSpaceTessellation(MAIN_INPUT_ARRAY(PositionVS, 1).xyz, MAIN_INPUT_ARRAY(PositionVS, 2).xyz, sideLength);
 			}
 
 			// Use average of edge points for interior - visually looks OK.
