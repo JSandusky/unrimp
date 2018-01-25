@@ -84,7 +84,10 @@ float4 Bilerp(float4 v0, float4 v1, float4 v2, float4 v3, float2 i)
 @property(HLSL)
 	[domain("quad")]
 @end
-@property(GLSL)
+@property(GLSL && Vulkan)
+	layout(quads, fractional_even_spacing, cw) in;
+@end
+@property(GLSL && !Vulkan)
 	layout(quads, fractional_even_spacing, ccw) in;	// Not "cw" by intent
 @end
 MAIN_BEGIN_TESSELLATION_EVALUATION(4)

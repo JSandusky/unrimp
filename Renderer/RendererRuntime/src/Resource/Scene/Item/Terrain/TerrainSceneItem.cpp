@@ -85,7 +85,7 @@ namespace
 			{ // Attribute 1
 				// Data destination
 				Renderer::VertexAttributeFormat::FLOAT_4,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
-				"AdjacencySize",							// name[32] (char)
+				"Adjacency",								// name[32] (char)
 				"TEXCOORD",									// semanticName[32] (char)
 				0,											// semanticIndex (uint32_t)
 				// Data source
