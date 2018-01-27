@@ -275,7 +275,6 @@
 	{
 		// -> Select mip level based on roughness
 		float3 R = reflect(-worldSpaceIncident, worldSpaceNormal);
-		R = MultiplyQuaternionVector(PassData.ViewSpaceToWorldSpaceQuaternion, R);
 		float2 cubeDimension = CAST_TO(GET_TEXTURE_CUBE_SIZE(ReflectionCubeMap), float2);
 		float numberOfCubeMipmaps = log2(max(cubeDimension.x, cubeDimension.y));
 		reflectionColor = SAMPLE_CUBE_LOD(ReflectionCubeMap, SamplerLinear, float4(R, roughness * numberOfCubeMipmaps)).rgb;
