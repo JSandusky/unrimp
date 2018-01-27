@@ -15,8 +15,7 @@ The first public Unrimp source code release after starting the project on Friday
 
 Screenshots
 ======
-![](Documentation/Screenshot1.jpg) <!-- .element height="25%" width="25%" -->
-![](Documentation/Screenshot2.jpg) <!-- .element height="25%" width="25%" -->
+<img src="https://github.com/cofenberg/unrimp/raw/cofenberg/Documentation/Screenshot1.jpg" width="640" height="360"><img src="https://github.com/cofenberg/unrimp/raw/cofenberg/Documentation/Screenshot2.jpg" width="640" height="360">
 
 
 Features
