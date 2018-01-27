@@ -130,7 +130,11 @@ MAIN_BEGIN
 		float3 tangentSpaceNormal;
 		tangentSpaceNormal.x = value_argb_nxa.a * 2.0f - 1.0f;
 		tangentSpaceNormal.y = value_aor_rg_mb_nya.a * 2.0f - 1.0f;
-		tangentSpaceNormal.z = sqrt(1.0f - dot(tangentSpaceNormal.xy, tangentSpaceNormal.xy));
+		tangentSpaceNormal.z = 1.0f - dot(tangentSpaceNormal.xy, tangentSpaceNormal.xy);
+		if (tangentSpaceNormal.z > 0.0f)
+		{
+			tangentSpaceNormal.z = sqrt(tangentSpaceNormal.z);
+		}
 
 		// Transform the tangent space normal into view space
 		// TODO(co) Needs to be reviewed, checkout "Followup: Normal Mapping Without Precomputed Tangents" - http://www.thetenthplanet.de/archives/1180

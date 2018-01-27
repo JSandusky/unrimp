@@ -17,6 +17,14 @@
 				"MinimumIntegerValue": "0",
 				"MaximumIntegerValue": "255"
 			},
+			"HighQualityLighting":
+			{
+				"Usage": "SHADER_COMBINATION",
+				"ValueType": "GLOBAL_MATERIAL_PROPERTY_ID",
+				"Value": "@GlobalHighQualityLighting",
+				"Description": "If high quality lighting is true physically based shading (PBS) is used, else a cheaper lighting model is used instead",
+				"VisualImportance": "100"
+			},
 			"HeightMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
@@ -70,6 +78,13 @@
 				"MaximumValue": "64.0",
 				"StepSize": "1.0",
 				"Description": "Desired pixels per triangle edge"
+			},
+			"GlobalHighQualityLighting":
+			{
+				"Usage": "GLOBAL_REFERENCE_FALLBACK",
+				"ValueType": "BOOLEAN",
+				"Value": "TRUE",
+				"Description": "Fallback value in case there's no global high quality lighting global material property"
 			},
 			"GlobalWetness":
 			{

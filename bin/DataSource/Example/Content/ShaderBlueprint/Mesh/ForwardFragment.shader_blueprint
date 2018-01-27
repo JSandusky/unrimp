@@ -158,11 +158,10 @@ MAIN_BEGIN
 	float3 viewSpaceNormal;
 	viewSpaceNormal.x = value_argb_nxa.a * 2.0f - 1.0f;
 	viewSpaceNormal.y = value_hr_rg_mb_nya.a * 2.0f - 1.0f;
-	viewSpaceNormal.z = sqrt(1.0f - dot(viewSpaceNormal.xy, viewSpaceNormal.xy));
-	// TODO(co) Get rid of this
-	if (isnan(viewSpaceNormal.z))
+	viewSpaceNormal.z = 1.0f - dot(viewSpaceNormal.xy, viewSpaceNormal.xy);
+	if (viewSpaceNormal.z > 0.0f)
 	{
-		viewSpaceNormal.z = 1.0f;
+		viewSpaceNormal.z = sqrt(viewSpaceNormal.z);
 	}
 
 	// Transform the tangent space normal into view space
