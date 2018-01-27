@@ -33,7 +33,7 @@
 #include <RendererRuntime/Core/Math/Math.h>
 #include <RendererRuntime/Core/File/MemoryFile.h>
 #include <RendererRuntime/Core/File/FileSystemHelper.h>
-#include <RendererRuntime/Resource/Scene/Item/Sky/SkyboxSceneItem.h>
+#include <RendererRuntime/Resource/Scene/Item/Sky/SkySceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/Camera/CameraSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/Light/SunlightSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/Terrain/TerrainSceneItem.h>
@@ -308,10 +308,10 @@ namespace RendererToolkit
 										numberOfBytes += sizeof(RendererRuntime::v1Scene::SkeletonMeshItem);
 									}
 								}
-								else if (RendererRuntime::SkyboxSceneItem::TYPE_ID == typeId || RendererRuntime::TerrainSceneItem::TYPE_ID == typeId)
+								else if (RendererRuntime::SkySceneItem::TYPE_ID == typeId || RendererRuntime::TerrainSceneItem::TYPE_ID == typeId)
 								{
 									::detail::fillSortedMaterialPropertyVector(input, rapidJsonValueItem, sortedMaterialPropertyVector);
-									numberOfBytes = static_cast<uint32_t>(sizeof(RendererRuntime::v1Scene::SkyboxItem) + sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size());
+									numberOfBytes = static_cast<uint32_t>(sizeof(RendererRuntime::v1Scene::SkyItem) + sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size());
 								}
 								else
 								{
@@ -437,13 +437,13 @@ namespace RendererToolkit
 											memoryFile.write(subMeshMaterialAssetIds.data(), sizeof(RendererRuntime::AssetId) * subMeshMaterialAssetIds.size());
 										}
 									}
-									else if (RendererRuntime::SkyboxSceneItem::TYPE_ID == typeId)
+									else if (RendererRuntime::SkySceneItem::TYPE_ID == typeId)
 									{
-										RendererRuntime::v1Scene::SkyboxItem skyboxItem;
-										::detail::readMaterialSceneItem(input, sortedMaterialPropertyVector, rapidJsonValueItem, skyboxItem);
+										RendererRuntime::v1Scene::SkyItem skyItem;
+										::detail::readMaterialSceneItem(input, sortedMaterialPropertyVector, rapidJsonValueItem, skyItem);
 
 										// Write down
-										memoryFile.write(&skyboxItem, sizeof(RendererRuntime::v1Scene::SkyboxItem));
+										memoryFile.write(&skyItem, sizeof(RendererRuntime::v1Scene::SkyItem));
 										if (!sortedMaterialPropertyVector.empty())
 										{
 											// Write down all material properties

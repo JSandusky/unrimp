@@ -42,9 +42,9 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Skybox scene item
+	*    Sky scene item
 	*/
-	class SkyboxSceneItem final : public MaterialSceneItem
+	class SkySceneItem final : public MaterialSceneItem
 	{
 
 
@@ -83,10 +83,10 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	private:
-		inline explicit SkyboxSceneItem(SceneResource& sceneResource);
-		virtual ~SkyboxSceneItem() override;
-		explicit SkyboxSceneItem(const SkyboxSceneItem&) = delete;
-		SkyboxSceneItem& operator=(const SkyboxSceneItem&) = delete;
+		inline explicit SkySceneItem(SceneResource& sceneResource);
+		virtual ~SkySceneItem() override;
+		explicit SkySceneItem(const SkySceneItem&) = delete;
+		SkySceneItem& operator=(const SkySceneItem&) = delete;
 
 
 	//[-------------------------------------------------------]
@@ -108,4 +108,4 @@ namespace RendererRuntime
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "RendererRuntime/Resource/Scene/Item/Sky/SkyboxSceneItem.inl"
+#include "RendererRuntime/Resource/Scene/Item/Sky/SkySceneItem.inl"

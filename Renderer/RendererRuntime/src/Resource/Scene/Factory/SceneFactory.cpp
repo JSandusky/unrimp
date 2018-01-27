@@ -23,7 +23,7 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/Scene/Factory/SceneFactory.h"
-#include "RendererRuntime/Resource/Scene/Item/Sky/SkyboxSceneItem.h"
+#include "RendererRuntime/Resource/Scene/Item/Sky/SkySceneItem.h"
 #include "RendererRuntime/Resource/Scene/Item/Camera/CameraSceneItem.h"
 #include "RendererRuntime/Resource/Scene/Item/Light/SunlightSceneItem.h"
 #include "RendererRuntime/Resource/Scene/Item/Terrain/TerrainSceneItem.h"
@@ -65,9 +65,9 @@ namespace RendererRuntime
 		{
 			sceneItem = new SunlightSceneItem(sceneResource);
 		}
-		else if (sceneItemTypeId == SkyboxSceneItem::TYPE_ID)
+		else if (sceneItemTypeId == SkySceneItem::TYPE_ID)
 		{
-			sceneItem = new SkyboxSceneItem(sceneResource);
+			sceneItem = new SkySceneItem(sceneResource);
 		}
 		else if (sceneItemTypeId == TerrainSceneItem::TYPE_ID)
 		{

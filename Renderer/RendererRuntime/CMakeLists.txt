@@ -145,7 +145,7 @@ set(SOURCE_CODES
 	src/Resource/Scene/Item/Light/SunlightSceneItem.cpp
 	src/Resource/Scene/Item/Mesh/MeshSceneItem.cpp
 	src/Resource/Scene/Item/Mesh/SkeletonMeshSceneItem.cpp
-	src/Resource/Scene/Item/Sky/SkyboxSceneItem.cpp
+	src/Resource/Scene/Item/Sky/SkySceneItem.cpp
 	src/Resource/Scene/Item/Sky/HosekWilkieSky.cpp
 	src/Resource/Scene/Item/Terrain/TerrainSceneItem.cpp
 	src/Resource/Scene/Loader/SceneResourceLoader.cpp

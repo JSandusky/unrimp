@@ -594,9 +594,6 @@
     <None Include="include\RendererRuntime\Resource\Scene\Item\Camera\CameraSceneItem.inl">
       <Filter>Source Files\Resource\Scene\Item\Camera</Filter>
     </None>
-    <None Include="include\RendererRuntime\Resource\Scene\Item\Sky\SkyboxSceneItem.inl">
-      <Filter>Source Files\Resource\Scene\Item\Sky</Filter>
-    </None>
     <None Include="include\RendererRuntime\Resource\Scene\Item\Light\SunlightSceneItem.inl">
       <Filter>Source Files\Resource\Scene\Item\Light</Filter>
     </None>
@@ -647,6 +644,9 @@
     </None>
     <None Include="include\RendererRuntime\Core\Math\Plane.inl">
       <Filter>Source Files\Core\Math</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Scene\Item\Sky\SkySceneItem.inl">
+      <Filter>Source Files\Resource\Scene\Item\Sky</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1226,9 +1226,6 @@
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Camera\CameraSceneItem.h">
       <Filter>Source Files\Resource\Scene\Item\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Sky\SkyboxSceneItem.h">
-      <Filter>Source Files\Resource\Scene\Item\Sky</Filter>
-    </ClInclude>
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Light\SunlightSceneItem.h">
       <Filter>Source Files\Resource\Scene\Item\Light</Filter>
     </ClInclude>
@@ -1282,6 +1279,9 @@
     </ClInclude>
     <ClInclude Include="include\RendererRuntime\Core\Math\Plane.h">
       <Filter>Source Files\Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Sky\SkySceneItem.h">
+      <Filter>Source Files\Resource\Scene\Item\Sky</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1645,9 +1645,6 @@
     <ClCompile Include="src\Resource\Scene\Item\Camera\CameraSceneItem.cpp">
       <Filter>Source Files\Resource\Scene\Item\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="src\Resource\Scene\Item\Sky\SkyboxSceneItem.cpp">
-      <Filter>Source Files\Resource\Scene\Item\Sky</Filter>
-    </ClCompile>
     <ClCompile Include="src\Resource\Scene\Item\Light\SunlightSceneItem.cpp">
       <Filter>Source Files\Resource\Scene\Item\Light</Filter>
     </ClCompile>
@@ -1683,6 +1680,9 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Scene\ISceneItem.cpp">
       <Filter>Source Files\Resource\Scene\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Scene\Item\Sky\SkySceneItem.cpp">
+      <Filter>Source Files\Resource\Scene\Item\Sky</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

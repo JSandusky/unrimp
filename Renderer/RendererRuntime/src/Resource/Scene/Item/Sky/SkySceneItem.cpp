@@ -22,7 +22,7 @@
 //[ Includes                                              ]
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
-#include "RendererRuntime/Resource/Scene/Item/Sky/SkyboxSceneItem.h"
+#include "RendererRuntime/Resource/Scene/Item/Sky/SkySceneItem.h"
 #include "RendererRuntime/Resource/Scene/SceneResource.h"
 #include "RendererRuntime/Resource/Scene/SceneNode.h"
 #include "RendererRuntime/IRendererRuntime.h"
@@ -40,7 +40,7 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global variables                                      ]
 		//[-------------------------------------------------------]
-		static Renderer::IVertexArrayPtr VertexArrayPtr;	///< Vertex array object (VAO), can be a null pointer, shared between all skybox instances
+		static Renderer::IVertexArrayPtr VertexArrayPtr;	///< Vertex array object (VAO), can be a null pointer, shared between all sky instances
 
 
 		//[-------------------------------------------------------]
@@ -80,7 +80,7 @@ namespace
 				 1.0f, -1.0f,- 1.0f
 			};
 			Renderer::IVertexBufferPtr vertexBuffer(bufferManager.createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
-			RENDERER_SET_RESOURCE_DEBUG_NAME(vertexBuffer, "Skybox")
+			RENDERER_SET_RESOURCE_DEBUG_NAME(vertexBuffer, "Sky")
 
 			// Create the index buffer object (IBO)
 			static const uint16_t INDICES[] =
@@ -93,12 +93,12 @@ namespace
 				3, 2, 7, 7, 6, 3	// Bottom
 			};
 			Renderer::IIndexBuffer* indexBuffer = bufferManager.createIndexBuffer(sizeof(INDICES), Renderer::IndexBufferFormat::UNSIGNED_SHORT, INDICES, Renderer::BufferUsage::STATIC_DRAW);
-			RENDERER_SET_RESOURCE_DEBUG_NAME(indexBuffer, "Skybox")
+			RENDERER_SET_RESOURCE_DEBUG_NAME(indexBuffer, "Sky")
 
 			// Create vertex array object (VAO)
 			const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] = { vertexBuffer };
 			Renderer::IVertexArray* vertexArray = bufferManager.createVertexArray(vertexAttributes, static_cast<uint32_t>(glm::countof(vertexArrayVertexBuffers)), vertexArrayVertexBuffers, indexBuffer);
-			RENDERER_SET_RESOURCE_DEBUG_NAME(vertexArray, "Skybox")
+			RENDERER_SET_RESOURCE_DEBUG_NAME(vertexArray, "Sky")
 
 			// Done
 			return vertexArray;
@@ -122,13 +122,13 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public definitions                                    ]
 	//[-------------------------------------------------------]
-	const SceneItemTypeId SkyboxSceneItem::TYPE_ID("SkyboxSceneItem");
+	const SceneItemTypeId SkySceneItem::TYPE_ID("SkySceneItem");
 
 
 	//[-------------------------------------------------------]
 	//[ Public RendererRuntime::ISceneItem methods            ]
 	//[-------------------------------------------------------]
-	void SkyboxSceneItem::onAttachedToSceneNode(SceneNode& sceneNode)
+	void SkySceneItem::onAttachedToSceneNode(SceneNode& sceneNode)
 	{
 		mRenderableManager.setTransform(&sceneNode.getGlobalTransform());
 
@@ -136,12 +136,12 @@ namespace RendererRuntime
 		ISceneItem::onAttachedToSceneNode(sceneNode);
 	}
 
-	const RenderableManager* SkyboxSceneItem::getRenderableManager() const
+	const RenderableManager* SkySceneItem::getRenderableManager() const
 	{
 		if (!isInitialized(getMaterialResourceId()))
 		{
 			// TODO(co) Get rid of the nasty delayed initialization in here, including the evil const-cast. For this, full asynchronous material blueprint loading must work. See "TODO(co) Currently material blueprint resource loading is a blocking process.".
-			const_cast<SkyboxSceneItem*>(this)->initialize();
+			const_cast<SkySceneItem*>(this)->initialize();
 		}
 		return &mRenderableManager;
 	}
@@ -150,11 +150,11 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected virtual RendererRuntime::MaterialSceneItem methods ]
 	//[-------------------------------------------------------]
-	void SkyboxSceneItem::onMaterialResourceCreated()
+	void SkySceneItem::onMaterialResourceCreated()
 	{
 		const IRendererRuntime& rendererRuntime = getSceneResource().getRendererRuntime();
 
-		// Add reference to vertex array object (VAO) shared between all skybox instances
+		// Add reference to vertex array object (VAO) shared between all sky instances
 		if (nullptr == ::detail::VertexArrayPtr)
 		{
 			::detail::VertexArrayPtr = ::detail::createVertexArray(rendererRuntime.getBufferManager());
@@ -171,14 +171,14 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	SkyboxSceneItem::~SkyboxSceneItem()
+	SkySceneItem::~SkySceneItem()
 	{
 		if (isInitialized(getMaterialResourceId()))
 		{
 			// Clear the renderable manager right now so we have no more references to the shared vertex array
 			mRenderableManager.getRenderables().clear();
 
-			// Release reference to vertex array object (VAO) shared between all skybox instances
+			// Release reference to vertex array object (VAO) shared between all sky instances
 			if (nullptr != ::detail::VertexArrayPtr && 1 == ::detail::VertexArrayPtr->releaseReference())	// +1 for reference to global shared pointer
 			{
 				::detail::VertexArrayPtr = nullptr;

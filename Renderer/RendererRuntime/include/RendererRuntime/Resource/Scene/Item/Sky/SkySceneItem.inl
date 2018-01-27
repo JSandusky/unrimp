@@ -28,12 +28,12 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Public RendererRuntime::ISceneItem methods            ]
 	//[-------------------------------------------------------]
-	inline SceneItemTypeId SkyboxSceneItem::getSceneItemTypeId() const
+	inline SceneItemTypeId SkySceneItem::getSceneItemTypeId() const
 	{
 		return TYPE_ID;
 	}
 
-	inline void SkyboxSceneItem::onDetachedFromSceneNode(SceneNode& sceneNode)
+	inline void SkySceneItem::onDetachedFromSceneNode(SceneNode& sceneNode)
 	{
 		mRenderableManager.setTransform(nullptr);
 
@@ -41,7 +41,7 @@ namespace RendererRuntime
 		ISceneItem::onDetachedFromSceneNode(sceneNode);
 	}
 
-	inline void SkyboxSceneItem::setVisible(bool visible)
+	inline void SkySceneItem::setVisible(bool visible)
 	{
 		mRenderableManager.setVisible(visible);
 	}
@@ -50,7 +50,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	//[ Protected methods                                     ]
 	//[-------------------------------------------------------]
-	inline SkyboxSceneItem::SkyboxSceneItem(SceneResource& sceneResource) :
+	inline SkySceneItem::SkySceneItem(SceneResource& sceneResource) :
 		MaterialSceneItem(sceneResource, false)	///< The sky isn't allowed to be culled
 	{
 		// Nothing here

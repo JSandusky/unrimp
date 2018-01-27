@@ -29,7 +29,7 @@
 						"EastDirection": "25.0 DEGREE",
 						"TimeOfDay": "14.42 O_CLOCK"
 					},
-					"SkyboxSceneItem":
+					"SkySceneItem":
 					{
 						"MaterialBlueprint": "$ProjectName/MaterialBlueprint/Sky/Sky.asset",
 						"SetMaterialProperties":

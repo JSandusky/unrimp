@@ -127,7 +127,7 @@ namespace RendererRuntime
 				uint32_t			numberOfMaterialProperties = 0;
 			};
 
-			struct SkyboxItem final : public MaterialItem
+			struct SkyItem final : public MaterialItem
 			{
 				// Nothing here
 			};

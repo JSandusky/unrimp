@@ -141,7 +141,7 @@
     <None Include="include\RendererRuntime\Resource\Scene\Item\Mesh\MeshSceneItem.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Item\Mesh\SkeletonMeshSceneItem.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Item\Sky\HosekWilkieSky.inl" />
-    <None Include="include\RendererRuntime\Resource\Scene\Item\Sky\SkyboxSceneItem.inl" />
+    <None Include="include\RendererRuntime\Resource\Scene\Item\Sky\SkySceneItem.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Item\Terrain\TerrainSceneItem.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\Loader\SceneResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Scene\SceneNode.inl" />
@@ -329,7 +329,7 @@
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Mesh\SkeletonMeshSceneItem.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Sky\ArHosekSkyModelData_RGB.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Sky\HosekWilkieSky.h" />
-    <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Sky\SkyboxSceneItem.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Sky\SkySceneItem.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Terrain\TerrainSceneItem.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Loader\SceneFileFormat.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Loader\SceneResourceLoader.h" />
@@ -659,7 +659,7 @@
     <ClCompile Include="src\Resource\Scene\Item\Mesh\MeshSceneItem.cpp" />
     <ClCompile Include="src\Resource\Scene\Item\Mesh\SkeletonMeshSceneItem.cpp" />
     <ClCompile Include="src\Resource\Scene\Item\Sky\HosekWilkieSky.cpp" />
-    <ClCompile Include="src\Resource\Scene\Item\Sky\SkyboxSceneItem.cpp" />
+    <ClCompile Include="src\Resource\Scene\Item\Sky\SkySceneItem.cpp" />
     <ClCompile Include="src\Resource\Scene\Item\Terrain\TerrainSceneItem.cpp" />
     <ClCompile Include="src\Resource\Scene\Loader\SceneResourceLoader.cpp" />
     <ClCompile Include="src\Resource\Scene\SceneNode.cpp" />
