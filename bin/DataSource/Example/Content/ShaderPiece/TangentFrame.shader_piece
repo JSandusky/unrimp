@@ -63,3 +63,22 @@
 		);
 	}
 @end
+
+@piece(DefineUnpackTextureNormalXY)
+	// Get the per fragment normal [0..1] by using a tangent space BC5/3DC/ATI2N stored normal map
+	// -> See "Real-Time Normal Map DXT Compression" -> "3.3 Tangent-Space 3Dc" - http://www.nvidia.com/object/real-time-normal-map-dxt-compression.html
+	float3 UnpackTextureNormalXY(float normalX, float normalY)
+	{
+		float3 normal;
+		normal.x = normalX * 2.0f - 1.0f;
+		normal.y = normalY * 2.0f - 1.0f;
+		normal.z = 1.0f - dot(normal.xy, normal.xy);
+		if (normal.z > 0.0f)
+		{
+			normal.z = sqrt(normal.z);
+		}
+
+		// Done
+		return normal;
+	}
+@end

@@ -69,6 +69,7 @@ SAMPLER_STATE(3, 2, SamplerLinearClamp, 2)
 //[-------------------------------------------------------]
 @includepiece($ProjectName/ShaderPiece/TangentFrame.asset)
 	@insertpiece(DefineGetTangentFrame)
+	@insertpiece(DefineUnpackTextureNormalXY)
 
 // TODO(co) Use this for the detail textures
 // The tri-planar texture mapping is basing on "Use Tri-Planar Texture Mapping for Better Terrain" - https://gamedevelopment.tutsplus.com/articles/use-tri-planar-texture-mapping-for-better-terrain--gamedev-13821
@@ -125,19 +126,9 @@ MAIN_BEGIN
 	// Get the view space normal
 	float3 viewSpaceNormal = float3(0.0f, 0.0f, -1.0f);
 	{
-		// Get the per fragment normal [0..1] by using a tangent space BC5/3DC/ATI2N stored normal map
-		// -> See "Real-Time Normal Map DXT Compression" -> "3.3 Tangent-Space 3Dc" - http://www.nvidia.com/object/real-time-normal-map-dxt-compression.html
-		float3 tangentSpaceNormal;
-		tangentSpaceNormal.x = value_argb_nxa.a * 2.0f - 1.0f;
-		tangentSpaceNormal.y = value_aor_rg_mb_nya.a * 2.0f - 1.0f;
-		tangentSpaceNormal.z = 1.0f - dot(tangentSpaceNormal.xy, tangentSpaceNormal.xy);
-		if (tangentSpaceNormal.z > 0.0f)
-		{
-			tangentSpaceNormal.z = sqrt(tangentSpaceNormal.z);
-		}
-
 		// Transform the tangent space normal into view space
-		// TODO(co) Needs to be reviewed, checkout "Followup: Normal Mapping Without Precomputed Tangents" - http://www.thetenthplanet.de/archives/1180
+		// -> We could use "Followup: Normal Mapping Without Precomputed Tangents" by Christian Schüler ( http://www.thetenthplanet.de/archives/1180 ), but the following simple solution is sufficient in here
+		float3 tangentSpaceNormal = UnpackTextureNormalXY(value_argb_nxa.a, value_aor_rg_mb_nya.a);
 		tangentSpaceNormal = float3(-tangentSpaceNormal.x, tangentSpaceNormal.z, -tangentSpaceNormal.y);
 		viewSpaceNormal = MultiplyQuaternionVector(PassData.WorldSpaceToViewSpaceQuaternion, tangentSpaceNormal);
 	}

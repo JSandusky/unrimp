@@ -95,6 +95,13 @@ SAMPLER_STATE(4, 0, SamplerLinear, 0)
 
 
 //[-------------------------------------------------------]
+//[ Functions                                             ]
+//[-------------------------------------------------------]
+@includepiece($ProjectName/ShaderPiece/TangentFrame.asset)
+	@insertpiece(DefineUnpackTextureNormalXY)
+
+
+//[-------------------------------------------------------]
 //[ Main                                                  ]
 //[-------------------------------------------------------]
 MAIN_BEGIN
@@ -107,23 +114,13 @@ MAIN_BEGIN
 	float4 value_argb_nxa = SAMPLE_2D(_argb_nxa, SamplerLinear, MAIN_INPUT(TexCoordVS));
 	float4 value_hr_rg_mb_nya = SAMPLE_2D(_hr_rg_mb_nya, SamplerLinear, MAIN_INPUT(TexCoordVS));
 
-	// Get the per fragment normal [0..1] by using a tangent space BC5/3DC/ATI2N stored normal map
-	// -> See "Real-Time Normal Map DXT Compression" -> "3.3 Tangent-Space 3Dc" - http://www.nvidia.com/object/real-time-normal-map-dxt-compression.html
-	float3 normal;
-	normal.x = value_argb_nxa.a * 2.0f - 1.0f;
-	normal.y = value_hr_rg_mb_nya.a * 2.0f - 1.0f;
-	normal.z = 1.0f - dot(normal.xy, normal.xy);
-	if (normal.z > 0.0f)
-	{
-		normal.z = sqrt(normal.z);
-	}
-
 	// Transform the tangent space normal into view space
-	normal = normalize(normal.x * MAIN_INPUT(TangentFrame0VS) + normal.y * MAIN_INPUT(TangentFrame1VS) + normal.z * MAIN_INPUT(TangentFrame2VS));
+	float3 viewSpaceNormal = UnpackTextureNormalXY(value_argb_nxa.a, value_hr_rg_mb_nya.a);
+	viewSpaceNormal = normalize(viewSpaceNormal.x * MAIN_INPUT(TangentFrame0VS) + viewSpaceNormal.y * MAIN_INPUT(TangentFrame1VS) + viewSpaceNormal.z * MAIN_INPUT(TangentFrame2VS));
 
 	// Handle two sided lighting
 	// -> It's not worth to add additional expensive shader combinations just for this tiny thing
-	normal = IS_FRONT_FACE ? normal : -normal;
+	viewSpaceNormal = IS_FRONT_FACE ? viewSpaceNormal : -viewSpaceNormal;
 
 	// Albedo
 	float3 albedo = material.AlbedoColor * value_argb_nxa.rgb;
@@ -146,7 +143,7 @@ MAIN_BEGIN
 
 	// Done
 	MAIN_OUTPUT_COLOR(0) = float4(albedo, edgePixel);
-	MAIN_OUTPUT_COLOR(1) = float4(normal, roughness);
+	MAIN_OUTPUT_COLOR(1) = float4(viewSpaceNormal, roughness);
 	MAIN_OUTPUT_COLOR(2) = float4(emissive, metallic);
 	MAIN_OUTPUT_COLOR(3) = float4(velocity.x, velocity.y, 0.0f, 0.0f);
 MAIN_END

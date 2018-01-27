@@ -119,6 +119,7 @@ SAMPLER_STATE(5, 1, SamplerLinear, 1)
 //[-------------------------------------------------------]
 @includepiece($ProjectName/ShaderPiece/TangentFrame.asset)
 	@insertpiece(DefineGetTangentFrame)
+	@insertpiece(DefineUnpackTextureNormalXY)
 @includepiece($ProjectName/ShaderPiece/PhysicallyBasedShading.asset)
 	@property(HighQualityLighting)
 		@insertpiece(DefinePhysicallyBasedShading)
@@ -153,18 +154,8 @@ MAIN_BEGIN
 	float roughness = material.Roughness * value_hr_rg_mb_nya.g;
 	float metallic = SATURATE(PassData.Wetness + material.Metallic + value_hr_rg_mb_nya.b);
 
-	// Get the per fragment normal [0..1] by using a tangent space BC5/3DC/ATI2N stored normal map
-	// -> See "Real-Time Normal Map DXT Compression" -> "3.3 Tangent-Space 3Dc" - http://www.nvidia.com/object/real-time-normal-map-dxt-compression.html
-	float3 viewSpaceNormal;
-	viewSpaceNormal.x = value_argb_nxa.a * 2.0f - 1.0f;
-	viewSpaceNormal.y = value_hr_rg_mb_nya.a * 2.0f - 1.0f;
-	viewSpaceNormal.z = 1.0f - dot(viewSpaceNormal.xy, viewSpaceNormal.xy);
-	if (viewSpaceNormal.z > 0.0f)
-	{
-		viewSpaceNormal.z = sqrt(viewSpaceNormal.z);
-	}
-
 	// Transform the tangent space normal into view space
+	float3 viewSpaceNormal = UnpackTextureNormalXY(value_argb_nxa.a, value_hr_rg_mb_nya.a);
 	viewSpaceNormal = normalize(viewSpaceNormal.x * MAIN_INPUT(TangentFrame0VS) + viewSpaceNormal.y * MAIN_INPUT(TangentFrame1VS) + viewSpaceNormal.z * MAIN_INPUT(TangentFrame2VS));
 
 	// Handle two sided lighting
