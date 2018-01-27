@@ -150,6 +150,12 @@
 							"Usage": "GLOBAL_REFERENCE",
 							"ValueType": "FLOAT",
 							"Value": "@GlobalWindSpeed"
+						},
+						"SunlightColor":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_3",
+							"Value": "@SUNLIGHT_COLOR"
 						}
 					}
 				}
