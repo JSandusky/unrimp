@@ -183,6 +183,7 @@ namespace
 			NORMAL_MAP,
 			HEIGHT_MAP,
 			ROUGHNESS_MAP,
+			GLOSS_MAP,
 			METALLIC_MAP,
 			EMISSIVE_MAP,
 			NUMBER_OF_SEMANTICS
@@ -197,12 +198,12 @@ namespace
 			// HEIGHT_MAP
 			{ "bump", "bumpmap", "heightmap" },
 			// ROUGHNESS_MAP
-			{ "roughness", "rough", "r",
-			  "glossiness", "glossness", "gloss", "g", "glossy"	// Gloss = metallic	// TODO(co) Roughness = 1 - glossiness
-			},
+			{ "roughness", "rough", "r" },
+			// GLOSS_MAP
+			{ "glossiness", "glossness", "gloss", "g", "glossy" },
 			// METALLIC_MAP
 			{ "metalness", "metallic", "metal", "m",
-			  "specular", "spec", "s"		// Specular = roughness
+			  "specular", "spec", "s"		// Specular = roughness	TODO(co) Need a support strategy for specular map
 			},
 			// EMISSIVE_MAP
 			{ "emission", "emit", "emissive", "glow" }
@@ -413,8 +414,17 @@ namespace
 						}
 						else if ("_hr_rg_mb_nya" == semantic)
 						{
+							// Sanity check
+							if (!textureFilenames[SemanticType::ROUGHNESS_MAP].empty() && !textureFilenames[SemanticType::GLOSS_MAP].empty())
+							{
+								// Error!
+								throw std::runtime_error("Failed to import Sketchfab ZIP-archive \"" + input.absoluteSourceFilename + "\" since material \"" + materialName + "\" is referencing a roughness map as well as a gloss map, but only one of those are allowed at one and the same time");
+							}
+
+							// Add members
 							ADD_MEMBER(HEIGHT_MAP)
 							ADD_MEMBER(ROUGHNESS_MAP)
+							ADD_MEMBER(GLOSS_MAP)
 							ADD_MEMBER(METALLIC_MAP)
 							ADD_MEMBER(NORMAL_MAP)
 						}
@@ -466,7 +476,7 @@ namespace
 				}
 
 				// Texture channel packing "_hr_rg_mb_nya"
-				if (!textureFilenames[SemanticType::HEIGHT_MAP].empty() || !textureFilenames[SemanticType::ROUGHNESS_MAP].empty() ||
+				if (!textureFilenames[SemanticType::HEIGHT_MAP].empty() || !textureFilenames[SemanticType::ROUGHNESS_MAP].empty() || !textureFilenames[SemanticType::GLOSS_MAP].empty() ||
 					!textureFilenames[SemanticType::METALLIC_MAP].empty() || !textureFilenames[SemanticType::NORMAL_MAP].empty())
 				{
 					createTextureChannelPackingAssetFile(input, materialName, textureFilenames, "_hr_rg_mb_nya");
@@ -518,7 +528,7 @@ namespace
 				}
 
 				// Texture channel packing "_hr_rg_mb_nya"
-				if (!textureFilenames[SemanticType::HEIGHT_MAP].empty() || !textureFilenames[SemanticType::ROUGHNESS_MAP].empty() ||
+				if (!textureFilenames[SemanticType::HEIGHT_MAP].empty() || !textureFilenames[SemanticType::ROUGHNESS_MAP].empty() || !textureFilenames[SemanticType::GLOSS_MAP].empty() ||
 					!textureFilenames[SemanticType::METALLIC_MAP].empty() || !textureFilenames[SemanticType::NORMAL_MAP].empty())
 				{
 					rapidJsonValueProperties.AddMember("_hr_rg_mb_nya", rapidjson::StringRef(relativeFilename_hr_rg_mb_nya.c_str()), rapidJsonAllocatorType);

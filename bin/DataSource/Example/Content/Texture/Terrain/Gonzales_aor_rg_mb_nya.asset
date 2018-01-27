@@ -19,7 +19,7 @@
 			"InputFiles":
 			{
 				"AMBIENT_OCCLUSION_MAP": "Gonzales_ao.png",
-				"ROUGHNESS_MAP": "Gonzales_r.png",
+				"GLOSS_MAP": "Gonzales_r.png",
 				"NORMAL_MAP": "Gonzales_n.png"
 			}
 		}

@@ -190,7 +190,8 @@ namespace
 			ALBEDO_MAP,
 			ALPHA_MAP,
 			NORMAL_MAP,
-			ROUGHNESS_MAP,
+			ROUGHNESS_MAP,	///< Roughness map ('_r'-postfix, aka specular F0, roughness = 1 - glossiness (= smoothness))
+			GLOSS_MAP,		///< Gloss map (glossiness = 1 - roughness), during runtime only roughness map should be used hence gloss map is automatically converted into reflection map so artists don't need to manipulate texture source assets
 			METALLIC_MAP,
 			EMISSIVE_MAP,
 			HEIGHT_MAP,
@@ -427,6 +428,7 @@ namespace
 			ELSE_IF_VALUE(ALPHA_MAP)
 			ELSE_IF_VALUE(NORMAL_MAP)
 			ELSE_IF_VALUE(ROUGHNESS_MAP)
+			ELSE_IF_VALUE(GLOSS_MAP)
 			ELSE_IF_VALUE(METALLIC_MAP)
 			ELSE_IF_VALUE(EMISSIVE_MAP)
 			ELSE_IF_VALUE(HEIGHT_MAP)
@@ -742,19 +744,32 @@ namespace
 				{
 					throw std::runtime_error("No input files defined");
 				}
+				bool roughnessMapFoundAndProcessed = false;
 				for (rapidjson::Value::ConstMemberIterator rapidJsonMemberIteratorInputFile = rapidJsonValueInputFiles.MemberBegin(); rapidJsonMemberIteratorInputFile != rapidJsonValueInputFiles.MemberEnd(); ++rapidJsonMemberIteratorInputFile)
 				{
 					bool textureSemanticFound = false;
 					const TextureSemantic textureSemantic = getTextureSemanticByRapidJsonValue(rapidJsonMemberIteratorInputFile->name);
 					for (Source& source : mSources)
 					{
-						if (source.textureSemantic == textureSemantic)
+						// We support automatic conversion between roughness map and gloss map
+						const bool roughnessMapConversionNeeded = (TextureSemantic::ROUGHNESS_MAP == source.textureSemantic && TextureSemantic::GLOSS_MAP == textureSemantic) || (TextureSemantic::GLOSS_MAP == source.textureSemantic && TextureSemantic::ROUGHNESS_MAP == textureSemantic);
+						if (source.textureSemantic == textureSemantic || roughnessMapConversionNeeded)
 						{
 							textureSemanticFound = true;
 
+							// Sanity check: There's either a roughness map or a gloss map, but never ever both
+							if (TextureSemantic::ROUGHNESS_MAP == textureSemantic || TextureSemantic::GLOSS_MAP == textureSemantic)
+							{
+								if (roughnessMapFoundAndProcessed)
+								{
+									throw std::runtime_error("Texture input file \"" + std::string(rapidJsonMemberIteratorInputFile->value.GetString()) + "\" with texture semantic \"" + std::string(rapidJsonMemberIteratorInputFile->name.GetString()) + "\": There's either a roughness map or a gloss map, but never ever both");
+								}
+								roughnessMapFoundAndProcessed = true;
+							}
+
 							// Support for Toksvig specular anti-aliasing to reduce shimmering
 							std::string usedSourceNormalMapFilename;
-							if (textureSemantic == TextureSemantic::ROUGHNESS_MAP && toksvigSpecularAntiAliasing)
+							if ((textureSemantic == TextureSemantic::ROUGHNESS_MAP || textureSemantic == TextureSemantic::GLOSS_MAP) && toksvigSpecularAntiAliasing)
 							{
 								// Search for normal map
 								usedSourceNormalMapFilename = getSourceNormalMapFilename(basePath, virtualSourceNormalMapFilename, rapidJsonValueInputFiles);
@@ -773,6 +788,30 @@ namespace
 									throw std::runtime_error("Texture input file \"" + std::string(rapidJsonMemberIteratorInputFile->value.GetString()) + "\" has less channels then required by texture semantic \"" + std::string(rapidJsonMemberIteratorInputFile->name.GetString()) + '\"');
 								}
 							}
+
+							// We support automatic conversion between roughness map and gloss map
+							if (roughnessMapConversionNeeded)
+							{
+								// Sanity check
+								if (1 != source.numberOfChannels)
+								{
+									throw std::runtime_error("Texture input file \"" + std::string(rapidJsonMemberIteratorInputFile->value.GetString()) + "\" with texture semantic \"" + std::string(rapidJsonMemberIteratorInputFile->name.GetString()) + "\" must have exactly one channel");
+								}
+
+								// Convert
+								const crnlib::mip_level& crunchMipLevel = *source.crunchMipmappedTexture.get_level(0, 0);
+								const crnlib::uint width = crunchMipLevel.get_width();
+								const crnlib::uint height = crunchMipLevel.get_height();
+								crnlib::image_u8* crunchImage = crunchMipLevel.get_image();
+								for (crnlib::uint y = 0; y < height; ++y)
+								{
+									for (crnlib::uint x = 0; x < width; ++x)
+									{
+										// Roughness = 1 - glossiness
+										(*crunchImage)(x, y).c[0] = 255u - (*crunchImage)(x, y).c[0];
+									}
+								}
+							}
 							break;
 						}
 					}
@@ -787,7 +826,7 @@ namespace
 				{
 					for (Source& source : mSources)
 					{
-						if (source.textureSemantic == TextureSemantic::ROUGHNESS_MAP)
+						if (source.textureSemantic == TextureSemantic::ROUGHNESS_MAP || source.textureSemantic == TextureSemantic::GLOSS_MAP)
 						{
 							if (!source.crunchMipmappedTexture.is_valid())
 							{
@@ -960,7 +999,7 @@ namespace
 				// Not changed
 				return false;
 			}
-			else if (TextureSemantic::ROUGHNESS_MAP == textureSemantic)
+			else if (TextureSemantic::ROUGHNESS_MAP == textureSemantic || TextureSemantic::GLOSS_MAP == textureSemantic)
 			{
 				// A roughness map has two source files: First the roughness map itself and second a normal map
 				// -> An asset can specify both files or only one of them
@@ -1203,6 +1242,7 @@ namespace
 					break;
 
 				case TextureSemantic::ROUGHNESS_MAP:
+				case TextureSemantic::GLOSS_MAP:
 				case TextureSemantic::METALLIC_MAP:
 				case TextureSemantic::HEIGHT_MAP:
 				case TextureSemantic::TINT_MAP:
@@ -1577,7 +1617,7 @@ namespace RendererToolkit
 				// Reflection cube maps or packed channels don't have a single input file, they're composed of multiple input files
 				throwException = false;
 			}
-			else if (::detail::TextureSemantic::ROUGHNESS_MAP == textureSemantic)
+			else if (::detail::TextureSemantic::ROUGHNESS_MAP == textureSemantic || ::detail::TextureSemantic::GLOSS_MAP == textureSemantic)
 			{
 				// If a normal map input file is provided roughness maps can be calculated automatically using Toksvig specular anti-aliasing to reduce shimmering, in this case a input file is optional
 				throwException = normalMapInputFile.empty();
@@ -1587,7 +1627,7 @@ namespace RendererToolkit
 				throw std::runtime_error("Input file must be defined");
 			}
 		}
-		if (::detail::TextureSemantic::ROUGHNESS_MAP != textureSemantic && ::detail::TextureSemantic::PACKED_CHANNELS != textureSemantic && !normalMapInputFile.empty())
+		if (::detail::TextureSemantic::ROUGHNESS_MAP != textureSemantic && ::detail::TextureSemantic::GLOSS_MAP != textureSemantic && ::detail::TextureSemantic::PACKED_CHANNELS != textureSemantic && !normalMapInputFile.empty())
 		{
 			throw std::runtime_error("Providing a normal map is only valid for roughness maps or packed channels");
 		}
