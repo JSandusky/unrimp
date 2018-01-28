@@ -2498,7 +2498,7 @@ namespace OpenGLRenderer
 			mCapabilities.maximumTextureBufferSize = 0;
 		}
 
-		// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
+		// Maximum indirect buffer size in bytes
 		if (mExtensions->isGL_ARB_draw_indirect())
 		{
 			// TODO(co) How to get the indirect buffer maximum size? Didn't find any information about this.

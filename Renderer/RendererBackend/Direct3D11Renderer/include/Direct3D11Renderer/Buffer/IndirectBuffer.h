@@ -35,7 +35,6 @@
 //[ Forward declarations                                  ]
 //[-------------------------------------------------------]
 struct ID3D11Buffer;
-struct ID3D11ShaderResourceView;
 namespace Direct3D11Renderer
 {
 	class Direct3D11Renderer;
@@ -87,30 +86,13 @@ namespace Direct3D11Renderer
 
 		/**
 		*  @brief
-		*    Return writable indirect buffer emulation data pointer
-		*
-		*  @return
-		*    Writable indirect buffer emulation data pointer, can be a null pointer, don't destroy the returned instance
-		*/
-		inline uint8_t* getWritableEmulationData() const;
-
-		/**
-		*  @brief
 		*    Return the Direct3D indirect buffer instance
 		*
 		*  @return
 		*    The Direct3D indirect buffer instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
 		*/
 		inline ID3D11Buffer* getD3D11Buffer() const;
-
-		/**
-		*  @brief
-		*    Return the Direct3D shader resource view instance
-		*
-		*  @return
-		*    The Direct3D shader resource view instance, can be a null pointer, do not release the returned instance unless you added an own reference to it
-		*/
-		inline ID3D11ShaderResourceView* getD3D11ShaderResourceView() const;
+		inline ID3D11Buffer* getStagingD3D11Buffer() const;
 
 
 	//[-------------------------------------------------------]
@@ -146,10 +128,8 @@ namespace Direct3D11Renderer
 	//[ Private data                                          ]
 	//[-------------------------------------------------------]
 	private:
-		uint32_t				  mNumberOfBytes;
-		uint8_t*				  mData;							///< Indirect buffer data, can be a null pointer
-		ID3D11Buffer*			  mD3D11Buffer;						///< Direct3D indirect buffer instance, can be a null pointer
-		ID3D11ShaderResourceView* mD3D11ShaderResourceViewIndirect;	///< Direct3D 11 shader resource view, can be a null pointer
+		ID3D11Buffer* mD3D11Buffer;			///< Direct3D indirect buffer instance, can be a null pointer
+		ID3D11Buffer* mStagingD3D11Buffer;	///< Staging Direct3D indirect buffer instance, can be a null pointer
 
 
 	};

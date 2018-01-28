@@ -65,7 +65,7 @@ namespace Renderer
 		uint32_t			maximumNumberOf2DTextureArraySlices;			///< Maximum number of 2D texture array slices (usually 512 up to 8192, in case there's no support for 2D texture arrays it's 0)
 		uint32_t			maximumUniformBufferSize;						///< Maximum uniform buffer (UBO) size in bytes (usually at least 4096 *16 bytes, in case there's no support for uniform buffer it's 0)
 		uint32_t			maximumTextureBufferSize;						///< Maximum texture buffer (TBO) size in texel (>65536, typically much larger than that of one-dimensional texture, in case there's no support for texture buffer it's 0)
-		uint32_t			maximumIndirectBufferSize;						///< Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
+		uint32_t			maximumIndirectBufferSize;						///< Maximum indirect buffer size in bytes
 		uint8_t				maximumNumberOfMultisamples;					///< Maximum number of multisamples (always at least 1, usually 8)
 		uint8_t				maximumAnisotropy;								///< Maximum anisotropy (always at least 1, usually 16)
 		bool				upperLeftOrigin;								///< Upper left origin (true for Vulkan, Direct3D, OpenGL with "GL_ARB_clip_control"-extension)

@@ -196,6 +196,9 @@ PRAGMA_WARNING_PUSH
 	#include <inttypes.h>	// For uint32_t, uint64_t etc.
 PRAGMA_WARNING_POP
 #include <string.h>		// For "strcat()" and "strncat()", we include it here because inside this header macros are defined which uses those methods
+#ifdef WIN32
+	#include <intrin.h>	// For "__nop()"
+#endif
 
 
 //[-------------------------------------------------------]

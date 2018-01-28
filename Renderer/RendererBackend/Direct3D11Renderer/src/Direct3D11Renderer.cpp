@@ -235,9 +235,7 @@ namespace
 				const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
 				if (nullptr != realData->indirectBuffer)
 				{
-					// No resource owner security check in here, we only support emulated indirect buffer
-					// TODO(co) Implement indirect buffer support, see e.g. "Voxel visualization using DrawIndexedInstancedIndirect" - http://www.alexandre-pestana.com/tag/directx/ for hints
-					static_cast<Direct3D11Renderer::Direct3D11Renderer&>(renderer).drawEmulated(realData->indirectBuffer->getEmulationData(), realData->indirectBufferOffset, realData->numberOfDraws);
+					static_cast<Direct3D11Renderer::Direct3D11Renderer&>(renderer).draw(*realData->indirectBuffer, realData->indirectBufferOffset, realData->numberOfDraws);
 				}
 				else
 				{
@@ -250,9 +248,7 @@ namespace
 				const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
 				if (nullptr != realData->indirectBuffer)
 				{
-					// No resource owner security check in here, we only support emulated indirect buffer
-					// TODO(co) Implement indirect buffer support, see e.g. "Voxel visualization using DrawIndexedInstancedIndirect" - http://www.alexandre-pestana.com/tag/directx/ for hints
-					static_cast<Direct3D11Renderer::Direct3D11Renderer&>(renderer).drawIndexedEmulated(realData->indirectBuffer->getEmulationData(), realData->indirectBufferOffset, realData->numberOfDraws);
+					static_cast<Direct3D11Renderer::Direct3D11Renderer&>(renderer).drawIndexed(*realData->indirectBuffer, realData->indirectBufferOffset, realData->numberOfDraws);
 				}
 				else
 				{
@@ -1233,6 +1229,44 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Draw call                                             ]
 	//[-------------------------------------------------------]
+	void Direct3D11Renderer::draw(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
+	{
+		// Sanity check
+		RENDERER_ASSERT(mContext, numberOfDraws > 0, "Number of Direct3D 11 draws must not be zero")
+
+		// Before doing anything else: If there's emulation data, use it (for example "Renderer::IndirectBuffer" might have been used to generate the data)
+		const uint8_t* emulationData = indirectBuffer.getEmulationData();
+		if (nullptr != emulationData)
+		{
+			drawEmulated(emulationData, indirectBufferOffset, numberOfDraws);
+		}
+		else
+		{
+			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+			DIRECT3D11RENDERER_RENDERERMATCHCHECK_ASSERT(*this, indirectBuffer)
+
+			// Draw indirect
+			ID3D11Buffer* d3D11Buffer = static_cast<const IndirectBuffer&>(indirectBuffer).getD3D11Buffer();
+			if (1 == numberOfDraws)
+			{
+				mD3D11DeviceContext->DrawInstancedIndirect(d3D11Buffer, indirectBufferOffset);
+			}
+			else if (numberOfDraws > 1)
+			{
+				// Emulate multi-draw-indirect
+				for (uint32_t i = 0; i < numberOfDraws; ++i)
+				{
+					mD3D11DeviceContext->DrawInstancedIndirect(d3D11Buffer, indirectBufferOffset);
+					indirectBufferOffset += sizeof(Renderer::DrawInstancedArguments);
+				}
+
+				// TODO(co) Implement multi-draw-indirect support
+				// - AMD: "agsDriverExtensionsDX11_MultiDrawInstancedIndirect()" - https://gpuopen-librariesandsdks.github.io/ags/group__mdi.html
+				// - NVIDIA: "NvAPI_D3D11_MultiDrawInstancedIndirect()" - http://docs.nvidia.com/gameworks/content/gameworkslibrary/coresdk/nvapi/group__dx.html#gaf417228a716d10efcb29fa592795f160
+			}
+		}
+	}
+
 	void Direct3D11Renderer::drawEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
 	{
 		// Sanity checks
@@ -1269,6 +1303,44 @@ namespace Direct3D11Renderer
 
 			// Advance
 			emulationData += sizeof(Renderer::DrawInstancedArguments);
+		}
+	}
+
+	void Direct3D11Renderer::drawIndexed(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
+	{
+		// Sanity checks
+		RENDERER_ASSERT(mContext, numberOfDraws > 0, "Number of Direct3D 11 draws must not be zero")
+
+		// Before doing anything else: If there's emulation data, use it (for example "Renderer::IndirectBuffer" might have been used to generate the data)
+		const uint8_t* emulationData = indirectBuffer.getEmulationData();
+		if (nullptr != emulationData)
+		{
+			drawIndexedEmulated(emulationData, indirectBufferOffset, numberOfDraws);
+		}
+		else
+		{
+			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+			DIRECT3D11RENDERER_RENDERERMATCHCHECK_ASSERT(*this, indirectBuffer)
+
+			// Draw indirect
+			ID3D11Buffer* d3D11Buffer = static_cast<const IndirectBuffer&>(indirectBuffer).getD3D11Buffer();
+			if (1 == numberOfDraws)
+			{
+				mD3D11DeviceContext->DrawIndexedInstancedIndirect(d3D11Buffer, indirectBufferOffset);
+			}
+			else if (numberOfDraws > 1)
+			{
+				// Emulate multi-draw-indirect
+				for (uint32_t i = 0; i < numberOfDraws; ++i)
+				{
+					mD3D11DeviceContext->DrawIndexedInstancedIndirect(d3D11Buffer, indirectBufferOffset);
+					indirectBufferOffset += sizeof(Renderer::DrawIndexedInstancedArguments);
+				}
+
+				// TODO(co) Implement multi-draw-indirect support
+				// - AMD: "agsDriverExtensionsDX11_MultiDrawIndexedInstancedIndirect()" - https://gpuopen-librariesandsdks.github.io/ags/group__mdi.html
+				// - NVIDIA: "NvAPI_D3D11_MultiDrawIndexedInstancedIndirect()" - http://docs.nvidia.com/gameworks/content/gameworkslibrary/coresdk/nvapi/group__dx.html#ga04cbd1b776a391e45d38377bd3156f9e
+			}
 		}
 	}
 
@@ -1523,12 +1595,7 @@ namespace Direct3D11Renderer
 				return (S_OK == mD3D11DeviceContext->Map(static_cast<TextureBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
 
 			case Renderer::ResourceType::INDIRECT_BUFFER:
-				// TODO(co) Implement indirect buffer support, see e.g. "Voxel visualization using DrawIndexedInstancedIndirect" - http://www.alexandre-pestana.com/tag/directx/ for hints
-				// return (S_OK == mD3D11DeviceContext->Map(static_cast<IndirectBuffer&>(resource).getD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
-				mappedSubresource.data		 = static_cast<IndirectBuffer&>(resource).getWritableEmulationData();
-				mappedSubresource.rowPitch   = 0;
-				mappedSubresource.depthPitch = 0;
-				return true;
+				return (S_OK == mD3D11DeviceContext->Map(static_cast<IndirectBuffer&>(resource).getStagingD3D11Buffer(), subresource, static_cast<D3D11_MAP>(mapType), mapFlags, reinterpret_cast<D3D11_MAPPED_SUBRESOURCE*>(&mappedSubresource)));
 
 			TEXTURE_RESOURCE(Renderer::ResourceType::TEXTURE_1D, Texture1D)
 			TEXTURE_RESOURCE(Renderer::ResourceType::TEXTURE_2D, Texture2D)
@@ -1600,9 +1667,13 @@ namespace Direct3D11Renderer
 				break;
 
 			case Renderer::ResourceType::INDIRECT_BUFFER:
-				// TODO(co) Implement indirect buffer support, see e.g. "Voxel visualization using DrawIndexedInstancedIndirect" - http://www.alexandre-pestana.com/tag/directx/ for hints
-				// mD3D11DeviceContext->Unmap(static_cast<IndirectBuffer&>(resource).getD3D11Buffer(), subresource);
+			{
+				IndirectBuffer& indirectBuffer = static_cast<IndirectBuffer&>(resource);
+				ID3D11Buffer* stagingD3D11Buffer = indirectBuffer.getStagingD3D11Buffer();
+				mD3D11DeviceContext->Unmap(stagingD3D11Buffer, subresource);
+				mD3D11DeviceContext->CopyResource(indirectBuffer.getD3D11Buffer(), stagingD3D11Buffer);
 				break;
+			}
 
 			TEXTURE_RESOURCE(Renderer::ResourceType::TEXTURE_1D, Texture1D)
 			TEXTURE_RESOURCE(Renderer::ResourceType::TEXTURE_2D, Texture2D)
@@ -1776,8 +1847,7 @@ namespace Direct3D11Renderer
 				// Maximum texture buffer (TBO) size in texel (>65536, typically much larger than that of one-dimensional texture, in case there's no support for texture buffer it's 0)
 				mCapabilities.maximumTextureBufferSize = 0;
 
-				// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
-				// TODO(co) Implement indirect buffer support
+				// Maximum indirect buffer size in bytes
 				mCapabilities.maximumIndirectBufferSize = 64 * 1024;	// 64 KiB
 
 				// Maximum number of multisamples (always at least 1, usually 8)
@@ -1815,8 +1885,7 @@ namespace Direct3D11Renderer
 				// Maximum texture buffer (TBO) size in texel (>65536, typically much larger than that of one-dimensional texture, in case there's no support for texture buffer it's 0)
 				mCapabilities.maximumTextureBufferSize = 0;
 
-				// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
-				// TODO(co) Implement indirect buffer support
+				// Maximum indirect buffer size in bytes
 				mCapabilities.maximumIndirectBufferSize = 64 * 1024;	// 64 KiB
 
 				// Maximum number of multisamples (always at least 1, usually 8)
@@ -1854,8 +1923,7 @@ namespace Direct3D11Renderer
 				// Maximum texture buffer (TBO) size in texel (>65536, typically much larger than that of one-dimensional texture, in case there's no support for texture buffer it's 0)
 				mCapabilities.maximumTextureBufferSize = 0;
 
-				// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
-				// TODO(co) Implement indirect buffer support
+				// Maximum indirect buffer size in bytes
 				mCapabilities.maximumIndirectBufferSize = 64 * 1024;	// 64 KiB
 
 				// Maximum number of multisamples (always at least 1, usually 8)
@@ -1893,8 +1961,7 @@ namespace Direct3D11Renderer
 				// Maximum texture buffer (TBO) size in texel (>65536, typically much larger than that of one-dimensional texture, in case there's no support for texture buffer it's 0)
 				mCapabilities.maximumTextureBufferSize = 128 * 1024 * 1024;	// TODO(co) http://msdn.microsoft.com/en-us/library/ff476876%28v=vs.85%29.aspx does not mention the texture buffer? Currently the OpenGL 3 minimum is used: 128 MiB.
 
-				// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
-				// TODO(co) Implement indirect buffer support
+				// Maximum indirect buffer size in bytes
 				mCapabilities.maximumIndirectBufferSize = 64 * 1024;	// 64 KiB
 
 				// Maximum number of multisamples (always at least 1, usually 8)
@@ -1932,8 +1999,7 @@ namespace Direct3D11Renderer
 				// Maximum texture buffer (TBO) size in texel (>65536, typically much larger than that of one-dimensional texture, in case there's no support for texture buffer it's 0)
 				mCapabilities.maximumTextureBufferSize = 128 * 1024 * 1024;	// TODO(co) http://msdn.microsoft.com/en-us/library/ff476876%28v=vs.85%29.aspx does not mention the texture buffer? Currently the OpenGL 3 minimum is used: 128 MiB.
 
-				// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
-				// TODO(co) Implement indirect buffer support
+				// Maximum indirect buffer size in bytes
 				mCapabilities.maximumIndirectBufferSize = 64 * 1024;	// 64 KiB
 
 				// Maximum number of multisamples (always at least 1, usually 8)
@@ -1972,8 +2038,7 @@ namespace Direct3D11Renderer
 				// Maximum texture buffer (TBO) size in texel (>65536, typically much larger than that of one-dimensional texture, in case there's no support for texture buffer it's 0)
 				mCapabilities.maximumTextureBufferSize = 128 * 1024 * 1024;	// TODO(co) http://msdn.microsoft.com/en-us/library/ff476876%28v=vs.85%29.aspx does not mention the texture buffer? Currently the OpenGL 3 minimum is used: 128 MiB.
 
-				// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
-				// TODO(co) Implement indirect buffer support
+				// Maximum indirect buffer size in bytes
 				mCapabilities.maximumIndirectBufferSize = 64 * 1024;	// 64 KiB
 
 				// Maximum number of multisamples (always at least 1, usually 8)

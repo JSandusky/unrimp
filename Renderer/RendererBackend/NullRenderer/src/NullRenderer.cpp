@@ -803,7 +803,7 @@ namespace NullRenderer
 		// Maximum texture buffer (TBO) size in texel (>65536, typically much larger than that of one-dimensional texture, in case there's no support for texture buffer it's 0)
 		mCapabilities.maximumTextureBufferSize = 42;
 
-		// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
+		// Maximum indirect buffer size in bytes
 		mCapabilities.maximumIndirectBufferSize = 64 * 1024;	// 64 KiB
 
 		// Maximum number of multisamples (always at least 1, usually 8)

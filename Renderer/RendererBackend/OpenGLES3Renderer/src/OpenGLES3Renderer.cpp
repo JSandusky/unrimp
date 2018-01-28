@@ -1890,7 +1890,7 @@ namespace OpenGLES3Renderer
 			mCapabilities.maximumTextureBufferSize = sizeof(float) * 4 * 4096;	// 64 KiB
 		}
 
-		// Maximum indirect buffer size in bytes (in case there's no support for indirect buffer it's 0)
+		// Maximum indirect buffer size in bytes
 		mCapabilities.maximumIndirectBufferSize = 64 * 1024;	// 64 KiB
 
 		// Maximum number of multisamples (always at least 4 according to https://www.khronos.org/registry/OpenGL-Refpages/es3.0/html/glGet.xhtml )

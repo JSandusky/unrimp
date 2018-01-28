@@ -28,19 +28,14 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	inline uint8_t* IndirectBuffer::getWritableEmulationData() const
-	{
-		return mData;
-	}
-
 	inline ID3D11Buffer* IndirectBuffer::getD3D11Buffer() const
 	{
 		return mD3D11Buffer;
 	}
 
-	inline ID3D11ShaderResourceView* IndirectBuffer::getD3D11ShaderResourceView() const
+	inline ID3D11Buffer* IndirectBuffer::getStagingD3D11Buffer() const
 	{
-		return mD3D11ShaderResourceViewIndirect;
+		return mStagingD3D11Buffer;
 	}
 
 
@@ -49,7 +44,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	inline const uint8_t* IndirectBuffer::getEmulationData() const
 	{
-		return mData;
+		return nullptr;
 	}
 
 

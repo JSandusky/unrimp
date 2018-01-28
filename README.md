@@ -142,6 +142,7 @@ Renderer Runtime (e.g. "The Game")
 	- Procedural sky
 		- Hosek-Wilkie sky which is also used to derive a sun color
 		- Distance clouds
+		- Sun
 
 
 Renderer Toolkit (e.g. "The Editor")

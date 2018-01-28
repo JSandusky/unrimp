@@ -41,37 +41,20 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
-	IndirectBuffer::IndirectBuffer(Direct3D11Renderer& direct3D11Renderer, uint32_t numberOfBytes, const void* data, Renderer::BufferUsage) :
+	IndirectBuffer::IndirectBuffer(Direct3D11Renderer& direct3D11Renderer, uint32_t numberOfBytes, const void* data, Renderer::BufferUsage bufferUsage) :
 		IIndirectBuffer(direct3D11Renderer),
-		mNumberOfBytes(numberOfBytes),
-		mData(nullptr),
 		mD3D11Buffer(nullptr),
-		mD3D11ShaderResourceViewIndirect(nullptr)
+		mStagingD3D11Buffer(nullptr)
 	{
-		if (mNumberOfBytes > 0)
-		{
-			mData = RENDERER_MALLOC_TYPED(direct3D11Renderer.getContext(), uint8_t, mNumberOfBytes);
-			if (nullptr != data)
-			{
-				memcpy(mData, data, mNumberOfBytes);
-			}
-		}
-		else
-		{
-			RENDERER_ASSERT(direct3D11Renderer.getContext(), nullptr == data, "Invalid Direct3D 11 indirect buffer data")
-		}
-
-		// TODO(co) Implement indirect buffer support, see e.g. "Voxel visualization using DrawIndexedInstancedIndirect" - http://www.alexandre-pestana.com/tag/directx/ for hints
-		/*
-		{ // Buffer part
+		{ // Buffer part: Indirect buffers can't be mapped in Direct3D 11 since considered to be exclusively written by GPU
 			// Direct3D 11 buffer description
 			D3D11_BUFFER_DESC d3d11BufferDesc;
-			d3d11BufferDesc.ByteWidth           = numberOfBytes;
-			d3d11BufferDesc.Usage               = static_cast<D3D11_USAGE>(Mapping::getDirect3D11UsageAndCPUAccessFlags(bufferUsage, d3d11BufferDesc.CPUAccessFlags));
-			d3d11BufferDesc.BindFlags           = D3D11_BIND_SHADER_RESOURCE;
-			//d3d11BufferDesc.CPUAccessFlags    = <filled above>;
-			d3d11BufferDesc.MiscFlags           = 0;
-			d3d11BufferDesc.StructureByteStride = 0;
+			d3d11BufferDesc.ByteWidth			= numberOfBytes;
+			d3d11BufferDesc.Usage				= D3D11_USAGE_DEFAULT;
+			d3d11BufferDesc.BindFlags			= D3D11_BIND_UNORDERED_ACCESS;
+			d3d11BufferDesc.CPUAccessFlags		= 0;
+			d3d11BufferDesc.MiscFlags			= D3D11_RESOURCE_MISC_DRAWINDIRECT_ARGS;
+			d3d11BufferDesc.StructureByteStride	= 0;
 
 			// Data given?
 			if (nullptr != data)
@@ -82,28 +65,46 @@ namespace Direct3D11Renderer
 				d3d11SubresourceData.SysMemPitch      = 0;
 				d3d11SubresourceData.SysMemSlicePitch = 0;
 
-				// Create the Direct3D 11 constant buffer
+				// Create the Direct3D 11 indirect buffer
 				direct3D11Renderer.getD3D11Device()->CreateBuffer(&d3d11BufferDesc, &d3d11SubresourceData, &mD3D11Buffer);
 			}
 			else
 			{
-				// Create the Direct3D 11 constant buffer
+				// Create the Direct3D 11 indirect buffer
 				direct3D11Renderer.getD3D11Device()->CreateBuffer(&d3d11BufferDesc, nullptr, &mD3D11Buffer);
 			}
 		}
 
-		{ // Shader resource view part
-			// Direct3D 11 shader resource view description
-			D3D11_SHADER_RESOURCE_VIEW_DESC d3d11ShaderResourceViewDesc = {};
-			d3d11ShaderResourceViewDesc.Format				 = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(textureFormat));
-			d3d11ShaderResourceViewDesc.ViewDimension		 = D3D11_SRV_DIMENSION_BUFFER;
-			d3d11ShaderResourceViewDesc.Buffer.ElementOffset = 0;
-			d3d11ShaderResourceViewDesc.Buffer.ElementWidth	 = numberOfBytes / Renderer::TextureFormat::getNumberOfBytesPerElement(textureFormat);
+		// Staging buffer part: Indirect buffers can't be mapped in Direct3D 11 since considered to be exclusively written by GPU, so we need an additional staging buffer to send dynamic data from CPU to GPU
+		if (Renderer::BufferUsage::STATIC_DRAW != bufferUsage && Renderer::BufferUsage::STATIC_READ != bufferUsage && Renderer::BufferUsage::STATIC_COPY != bufferUsage)
+		{
+			// Direct3D 11 buffer description
+			D3D11_BUFFER_DESC d3d11BufferDesc;
+			d3d11BufferDesc.ByteWidth			= numberOfBytes;
+			d3d11BufferDesc.Usage               = static_cast<D3D11_USAGE>(Mapping::getDirect3D11UsageAndCPUAccessFlags(bufferUsage, d3d11BufferDesc.CPUAccessFlags));
+			d3d11BufferDesc.BindFlags           = D3D11_BIND_SHADER_RESOURCE;
+			//d3d11BufferDesc.CPUAccessFlags    = <filled above>;
+			d3d11BufferDesc.MiscFlags			= 0;
+			d3d11BufferDesc.StructureByteStride	= 0;
 
-			// Create the Direct3D 11 shader resource view instance
-			direct3D11Renderer.getD3D11Device()->CreateShaderResourceView(mD3D11Buffer, &d3d11ShaderResourceViewDesc, &mD3D11ShaderResourceViewIndirect);
+			// Data given?
+			if (nullptr != data)
+			{
+				// Direct3D 11 subresource data
+				D3D11_SUBRESOURCE_DATA d3d11SubresourceData;
+				d3d11SubresourceData.pSysMem          = data;
+				d3d11SubresourceData.SysMemPitch      = 0;
+				d3d11SubresourceData.SysMemSlicePitch = 0;
+
+				// Create the Direct3D 11 indirect buffer
+				direct3D11Renderer.getD3D11Device()->CreateBuffer(&d3d11BufferDesc, &d3d11SubresourceData, &mStagingD3D11Buffer);
+			}
+			else
+			{
+				// Create the Direct3D 11 indirect buffer
+				direct3D11Renderer.getD3D11Device()->CreateBuffer(&d3d11BufferDesc, nullptr, &mStagingD3D11Buffer);
+			}
 		}
-		*/
 
 		// Assign a default name to the resource for debugging purposes
 		#ifdef RENDERER_DEBUG
@@ -113,18 +114,16 @@ namespace Direct3D11Renderer
 
 	IndirectBuffer::~IndirectBuffer()
 	{
-		RENDERER_FREE(getRenderer().getContext(), mData);
-
 		// Release the used resources
-		if (nullptr != mD3D11ShaderResourceViewIndirect)
-		{
-			mD3D11ShaderResourceViewIndirect->Release();
-			mD3D11ShaderResourceViewIndirect = nullptr;
-		}
 		if (nullptr != mD3D11Buffer)
 		{
 			mD3D11Buffer->Release();
 			mD3D11Buffer = nullptr;
+		}
+		if (nullptr != mStagingD3D11Buffer)
+		{
+			mStagingD3D11Buffer->Release();
+			mStagingD3D11Buffer = nullptr;
 		}
 	}
 
@@ -137,15 +136,6 @@ namespace Direct3D11Renderer
 		{
 			RENDERER_DECORATED_DEBUG_NAME(name, detailedName, "IndirectBufferObject", 23);	// 23 = "IndirectBufferObject: " including terminating zero
 
-			// Assign a debug name to the shader resource view
-			if (nullptr != mD3D11ShaderResourceViewIndirect)
-			{
-				// Set the debug name
-				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning
-				mD3D11ShaderResourceViewIndirect->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
-				mD3D11ShaderResourceViewIndirect->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(detailedName)), detailedName);
-			}
-
 			// Assign a debug name to the indirect buffer
 			if (nullptr != mD3D11Buffer)
 			{
@@ -153,6 +143,13 @@ namespace Direct3D11Renderer
 				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning
 				mD3D11Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
 				mD3D11Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(detailedName)), detailedName);
+			}
+			if (nullptr != mStagingD3D11Buffer)
+			{
+				// Set the debug name
+				// -> First: Ensure that there's no previous private data, else we might get slapped with a warning
+				mStagingD3D11Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
+				mStagingD3D11Buffer->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(strlen(detailedName)), detailedName);
 			}
 		}
 	#else
