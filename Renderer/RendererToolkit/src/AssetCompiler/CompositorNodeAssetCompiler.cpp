@@ -184,10 +184,6 @@ namespace
 			{
 				throw std::runtime_error("The maximum render queue index must be equal or greater as the minimum render queue index");
 			}
-			if (passScene.maximumRenderQueueIndex < passScene.minimumRenderQueueIndex)
-			{
-				throw std::runtime_error("The maximum render queue index must be equal or greater as the minimum render queue index");
-			}
 		}
 
 		uint32_t getRenderTargetTextureSize(const rapidjson::Value& rapidJsonValueRenderTargetTexture, const char* propertyName, const char* defaultValue)

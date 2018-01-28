@@ -33,6 +33,8 @@
 	#include "OpenGLRenderer/Linux/OpenGLContextLinux.h"
 #endif
 
+#include <tuple>	// For "std::ignore"
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -851,6 +853,7 @@ namespace OpenGLRenderer
 		{
 			bool result = true;	// Success by default
 			IMPORT_FUNC(glShaderBinary)	// OpenGL 4.1
+			std::ignore = result;
 		}
 
 
