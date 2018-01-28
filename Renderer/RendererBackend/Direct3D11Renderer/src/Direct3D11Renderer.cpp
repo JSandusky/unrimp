@@ -89,7 +89,7 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
-		bool createDevice(UINT flags, ID3D11Device** d3d11Device, ID3D11DeviceContext** d3d11DeviceContext, D3D_FEATURE_LEVEL& d3dFeatureLevel)
+		bool createDevice(Direct3D11Renderer::AGSContext* agsContext, UINT flags, ID3D11Device** d3d11Device, ID3D11DeviceContext** d3d11DeviceContext, D3D_FEATURE_LEVEL& d3dFeatureLevel)
 		{
 			// Driver types
 			static const D3D_DRIVER_TYPE D3D_DRIVER_TYPES[] =
@@ -111,21 +111,54 @@ namespace
 			static const UINT NUMBER_OF_FEATURE_LEVELS = _countof(D3D_FEATURE_LEVELS);
 
 			// Create the Direct3D 11 device
-			for (UINT deviceType = 0; deviceType < NUMBER_OF_DRIVER_TYPES; ++deviceType)
+			if (nullptr != agsContext)
 			{
-				const HRESULT result = Direct3D11Renderer::D3D11CreateDevice(nullptr, D3D_DRIVER_TYPES[deviceType], nullptr, flags, D3D_FEATURE_LEVELS, NUMBER_OF_FEATURE_LEVELS, D3D11_SDK_VERSION, d3d11Device, &d3dFeatureLevel, d3d11DeviceContext);
-				if (SUCCEEDED(result))
+				for (UINT deviceType = 0; deviceType < NUMBER_OF_DRIVER_TYPES; ++deviceType)
 				{
-					// Done
-					return true;
+					Direct3D11Renderer::AGSDX11ExtensionParams agsDx11ExtensionParams = {};
+					Direct3D11Renderer::AGSDX11ReturnedParams agsDx11ReturnedParams = {};
+					Direct3D11Renderer::AGSDX11DeviceCreationParams agsDx11DeviceCreationParams1 = { nullptr, D3D_DRIVER_TYPES[deviceType], nullptr, flags, D3D_FEATURE_LEVELS, NUMBER_OF_FEATURE_LEVELS, D3D11_SDK_VERSION, nullptr };
+					if (Direct3D11Renderer::agsDriverExtensionsDX11_CreateDevice(agsContext, &agsDx11DeviceCreationParams1, &agsDx11ExtensionParams, &agsDx11ReturnedParams) == Direct3D11Renderer::AGS_SUCCESS)
+					{
+						*d3d11Device = agsDx11ReturnedParams.pDevice;
+						*d3d11DeviceContext = agsDx11ReturnedParams.pImmediateContext;
+
+						// Done
+						return true;
+					}
+					else
+					{
+						// Maybe the system doesn't support Direct3D 11.1, try again requesting Direct3D 11
+						Direct3D11Renderer::AGSDX11DeviceCreationParams agsDx11DeviceCreationParams2 = { nullptr, D3D_DRIVER_TYPES[deviceType], nullptr, flags, &D3D_FEATURE_LEVELS[1], NUMBER_OF_FEATURE_LEVELS - 1, D3D11_SDK_VERSION, nullptr };
+						if (Direct3D11Renderer::agsDriverExtensionsDX11_CreateDevice(agsContext, &agsDx11DeviceCreationParams2, &agsDx11ExtensionParams, &agsDx11ReturnedParams) == Direct3D11Renderer::AGS_SUCCESS)
+						{
+							*d3d11Device = agsDx11ReturnedParams.pDevice;
+							*d3d11DeviceContext = agsDx11ReturnedParams.pImmediateContext;
+
+							// Done
+							return true;
+						}
+					}
 				}
-				else if (E_INVALIDARG == result)
+			}
+			else
+			{
+				for (UINT deviceType = 0; deviceType < NUMBER_OF_DRIVER_TYPES; ++deviceType)
 				{
-					// Maybe the system doesn't support Direct3D 11.1, try again requesting Direct3D 11
-					if (SUCCEEDED(Direct3D11Renderer::D3D11CreateDevice(nullptr, D3D_DRIVER_TYPES[deviceType], nullptr, flags, &D3D_FEATURE_LEVELS[1], NUMBER_OF_FEATURE_LEVELS - 1, D3D11_SDK_VERSION, d3d11Device, &d3dFeatureLevel, d3d11DeviceContext)))
+					const HRESULT result = Direct3D11Renderer::D3D11CreateDevice(nullptr, D3D_DRIVER_TYPES[deviceType], nullptr, flags, D3D_FEATURE_LEVELS, NUMBER_OF_FEATURE_LEVELS, D3D11_SDK_VERSION, d3d11Device, &d3dFeatureLevel, d3d11DeviceContext);
+					if (SUCCEEDED(result))
 					{
 						// Done
 						return true;
+					}
+					else if (E_INVALIDARG == result)
+					{
+						// Maybe the system doesn't support Direct3D 11.1, try again requesting Direct3D 11
+						if (SUCCEEDED(Direct3D11Renderer::D3D11CreateDevice(nullptr, D3D_DRIVER_TYPES[deviceType], nullptr, flags, &D3D_FEATURE_LEVELS[1], NUMBER_OF_FEATURE_LEVELS - 1, D3D11_SDK_VERSION, d3d11Device, &d3dFeatureLevel, d3d11DeviceContext)))
+						{
+							// Done
+							return true;
+						}
 					}
 				}
 			}
@@ -363,11 +396,11 @@ namespace Direct3D11Renderer
 			#endif
 
 			// Create the Direct3D 11 device
-			if (!detail::createDevice(flags, &mD3D11Device, &mD3D11DeviceContext, mD3DFeatureLevel) && (flags & D3D11_CREATE_DEVICE_DEBUG))
+			if (!detail::createDevice(mDirect3D11RuntimeLinking->getAgsContext(), flags, &mD3D11Device, &mD3D11DeviceContext, mD3DFeatureLevel) && (flags & D3D11_CREATE_DEVICE_DEBUG))
 			{
 				RENDERER_LOG(mContext, CRITICAL, "Failed to create the Direct3D 11 device instance, retrying without debug flag (maybe no Windows SDK is installed)")
 				flags &= ~D3D11_CREATE_DEVICE_DEBUG;
-				detail::createDevice(flags, &mD3D11Device, &mD3D11DeviceContext, mD3DFeatureLevel);
+				detail::createDevice(mDirect3D11RuntimeLinking->getAgsContext(), flags, &mD3D11Device, &mD3D11DeviceContext, mD3DFeatureLevel);
 			}
 
 			// Is there a valid Direct3D 11 device and device context?
@@ -504,7 +537,15 @@ namespace Direct3D11Renderer
 		}
 		if (nullptr != mD3D11Device)
 		{
-			mD3D11Device->Release();
+			AGSContext* agsContext = mDirect3D11RuntimeLinking->getAgsContext();
+			if (nullptr != agsContext)
+			{
+				agsDriverExtensionsDX11_DestroyDevice(agsContext, mD3D11Device, nullptr);
+			}
+			else
+			{
+				mD3D11Device->Release();
+			}
 			mD3D11Device = nullptr;
 		}
 
@@ -1253,16 +1294,26 @@ namespace Direct3D11Renderer
 			}
 			else if (numberOfDraws > 1)
 			{
-				// Emulate multi-draw-indirect
-				for (uint32_t i = 0; i < numberOfDraws; ++i)
+				// TODO(co) Possible minor optimization to avoid branching here: Modify "DISPATCH_FUNCTIONS" function table depending on available features
+				if (nullptr != agsDriverExtensionsDX11_MultiDrawInstancedIndirect)
 				{
-					mD3D11DeviceContext->DrawInstancedIndirect(d3D11Buffer, indirectBufferOffset);
-					indirectBufferOffset += sizeof(Renderer::DrawInstancedArguments);
+					// AMD: "agsDriverExtensionsDX11_MultiDrawInstancedIndirect()" - https://gpuopen-librariesandsdks.github.io/ags/group__mdi.html
+					agsDriverExtensionsDX11_MultiDrawInstancedIndirect(mDirect3D11RuntimeLinking->getAgsContext(), numberOfDraws, d3D11Buffer, indirectBufferOffset, sizeof(Renderer::DrawInstancedArguments));
 				}
-
-				// TODO(co) Implement multi-draw-indirect support
-				// - AMD: "agsDriverExtensionsDX11_MultiDrawInstancedIndirect()" - https://gpuopen-librariesandsdks.github.io/ags/group__mdi.html
-				// - NVIDIA: "NvAPI_D3D11_MultiDrawInstancedIndirect()" - http://docs.nvidia.com/gameworks/content/gameworkslibrary/coresdk/nvapi/group__dx.html#gaf417228a716d10efcb29fa592795f160
+				else if (nullptr != NvAPI_D3D11_MultiDrawInstancedIndirect)
+				{
+					// NVIDIA: "NvAPI_D3D11_MultiDrawInstancedIndirect()" - http://docs.nvidia.com/gameworks/content/gameworkslibrary/coresdk/nvapi/group__dx.html#gaf417228a716d10efcb29fa592795f160
+					NvAPI_D3D11_MultiDrawInstancedIndirect(mD3D11DeviceContext, numberOfDraws, d3D11Buffer, indirectBufferOffset, sizeof(Renderer::DrawInstancedArguments));
+				}
+				else
+				{
+					// Emulate multi-draw-indirect
+					for (uint32_t i = 0; i < numberOfDraws; ++i)
+					{
+						mD3D11DeviceContext->DrawInstancedIndirect(d3D11Buffer, indirectBufferOffset);
+						indirectBufferOffset += sizeof(Renderer::DrawInstancedArguments);
+					}
+				}
 			}
 		}
 	}
@@ -1330,16 +1381,26 @@ namespace Direct3D11Renderer
 			}
 			else if (numberOfDraws > 1)
 			{
-				// Emulate multi-draw-indirect
-				for (uint32_t i = 0; i < numberOfDraws; ++i)
+				// TODO(co) Possible minor optimization to avoid branching here: Modify "DISPATCH_FUNCTIONS" function table depending on available features
+				if (nullptr != agsDriverExtensionsDX11_MultiDrawIndexedInstancedIndirect)
 				{
-					mD3D11DeviceContext->DrawIndexedInstancedIndirect(d3D11Buffer, indirectBufferOffset);
-					indirectBufferOffset += sizeof(Renderer::DrawIndexedInstancedArguments);
+					// AMD: "agsDriverExtensionsDX11_MultiDrawIndexedInstancedIndirect()" - https://gpuopen-librariesandsdks.github.io/ags/group__mdi.html
+					agsDriverExtensionsDX11_MultiDrawIndexedInstancedIndirect(mDirect3D11RuntimeLinking->getAgsContext(), numberOfDraws, d3D11Buffer, indirectBufferOffset, sizeof(Renderer::DrawIndexedInstancedArguments));
 				}
-
-				// TODO(co) Implement multi-draw-indirect support
-				// - AMD: "agsDriverExtensionsDX11_MultiDrawIndexedInstancedIndirect()" - https://gpuopen-librariesandsdks.github.io/ags/group__mdi.html
-				// - NVIDIA: "NvAPI_D3D11_MultiDrawIndexedInstancedIndirect()" - http://docs.nvidia.com/gameworks/content/gameworkslibrary/coresdk/nvapi/group__dx.html#ga04cbd1b776a391e45d38377bd3156f9e
+				else if (nullptr != NvAPI_D3D11_MultiDrawIndexedInstancedIndirect)
+				{
+					// NVIDIA: "NvAPI_D3D11_MultiDrawIndexedInstancedIndirect()" - http://docs.nvidia.com/gameworks/content/gameworkslibrary/coresdk/nvapi/group__dx.html#ga04cbd1b776a391e45d38377bd3156f9e
+					NvAPI_D3D11_MultiDrawIndexedInstancedIndirect(mD3D11DeviceContext, numberOfDraws, d3D11Buffer, indirectBufferOffset, sizeof(Renderer::DrawInstancedArguments));
+				}
+				else
+				{
+					// Emulate multi-draw-indirect
+					for (uint32_t i = 0; i < numberOfDraws; ++i)
+					{
+						mD3D11DeviceContext->DrawIndexedInstancedIndirect(d3D11Buffer, indirectBufferOffset);
+						indirectBufferOffset += sizeof(Renderer::DrawIndexedInstancedArguments);
+					}
+				}
 			}
 		}
 	}

@@ -159,6 +159,15 @@ namespace Direct3D12Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Macros & definitions                                  ]
+	//[-------------------------------------------------------]
+	// Redirect D3D12* and D3DX11* function calls to funcPtr_D3D12* and funcPtr_D3DX11*
+	#ifndef FNPTR
+		#define FNPTR(name) funcPtr_##name
+	#endif
+
+
+	//[-------------------------------------------------------]
 	//[ DXGI core functions                                   ]
 	//[-------------------------------------------------------]
 	#ifdef DIRECT3D12_DEFINERUNTIMELINKING
@@ -167,6 +176,7 @@ namespace Direct3D12Renderer
 		#define FNDEF_DXGI(retType, funcName, args) extern retType (WINAPI *funcPtr_##funcName) args
 	#endif
 	FNDEF_DXGI(HRESULT,	CreateDXGIFactory1,	(REFIID riid, _COM_Outptr_ void **ppFactory));
+	#define CreateDXGIFactory1	FNPTR(CreateDXGIFactory1)
 
 
 	//[-------------------------------------------------------]
@@ -179,8 +189,11 @@ namespace Direct3D12Renderer
 	#endif
 	FNDEF_D3D12(HRESULT,	D3D12CreateDevice,				(_In_opt_ IUnknown* pAdapter, D3D_FEATURE_LEVEL MinimumFeatureLevel, _In_ REFIID riid, _COM_Outptr_opt_ void** ppDevice));
 	FNDEF_D3D12(HRESULT,	D3D12SerializeRootSignature,	(_In_ const D3D12_ROOT_SIGNATURE_DESC* pRootSignature, _In_ D3D_ROOT_SIGNATURE_VERSION Version, _Out_ ID3DBlob** ppBlob, _Always_(_Outptr_opt_result_maybenull_) ID3DBlob** ppErrorBlob));
+	#define D3D12CreateDevice			FNPTR(D3D12CreateDevice)
+	#define D3D12SerializeRootSignature	FNPTR(D3D12SerializeRootSignature)
 	#ifdef RENDERER_DEBUG
 		FNDEF_D3D12(HRESULT,	D3D12GetDebugInterface,	(_In_ REFIID riid, _COM_Outptr_opt_ void** ppvDebug));
+		#define D3D12GetDebugInterface	FNPTR(D3D12GetDebugInterface)
 	#endif
 
 
@@ -193,6 +206,7 @@ namespace Direct3D12Renderer
 		#define FNDEF_D3DX11(retType, funcName, args) extern retType (WINAPI *funcPtr_##funcName) args
 	#endif
 	// FNDEF_D3DX11(HRESULT,	D3DX11FilterTexture,		(ID3D12DeviceContext *, ID3D12Resource *, UINT, UINT));	// TODO(co) Direct3D 12 update
+	// #define D3DX11FilterTexture		FNPTR(D3DX11FilterTexture)	// TODO(co) Direct3D 12 update
 
 
 	//[-------------------------------------------------------]
@@ -207,31 +221,6 @@ namespace Direct3D12Renderer
 	typedef ID3D10Blob ID3DBlob;
 	FNDEF_D3DX12(HRESULT,	D3DCompile,		(LPCVOID, SIZE_T, LPCSTR, CONST D3D_SHADER_MACRO*, ID3DInclude*, LPCSTR, LPCSTR, UINT, UINT, ID3DBlob**, ID3DBlob**));
 	FNDEF_D3DX12(HRESULT,	D3DCreateBlob,	(SIZE_T Size, ID3DBlob** ppBlob));
-
-
-	//[-------------------------------------------------------]
-	//[ Macros & definitions                                  ]
-	//[-------------------------------------------------------]
-	#ifndef FNPTR
-		#define FNPTR(name) funcPtr_##name
-	#endif
-
-	// Redirect D3D12* and D3DX11* function calls to funcPtr_D3D12* and funcPtr_D3DX11*
-
-	// DXGI
-	#define CreateDXGIFactory1	FNPTR(CreateDXGIFactory1)
-
-	// D3D12
-	#define D3D12CreateDevice			FNPTR(D3D12CreateDevice)
-	#define D3D12SerializeRootSignature	FNPTR(D3D12SerializeRootSignature)
-	#ifdef RENDERER_DEBUG
-		#define D3D12GetDebugInterface	FNPTR(D3D12GetDebugInterface)
-	#endif
-
-	// D3DX11
-	// #define D3DX11FilterTexture		FNPTR(D3DX11FilterTexture)	// TODO(co) Direct3D 12 update
-
-	// D3DCompiler
 	#define D3DCompile		FNPTR(D3DCompile)
 	#define D3DCreateBlob	FNPTR(D3DCreateBlob)
 

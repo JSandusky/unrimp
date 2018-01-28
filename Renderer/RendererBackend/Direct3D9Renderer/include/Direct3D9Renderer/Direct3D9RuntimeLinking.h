@@ -136,6 +136,15 @@ namespace Direct3D9Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Macros & definitions                                  ]
+	//[-------------------------------------------------------]
+	// Redirect D3D9* and D3DX9* function calls to funcPtr_D3D9* and funcPtr_D3DX9*
+	#ifndef FNPTR
+		#define FNPTR(name) funcPtr_##name
+	#endif
+
+
+	//[-------------------------------------------------------]
 	//[ D3D9 core functions                                   ]
 	//[-------------------------------------------------------]
 	#ifdef DIRECT3D9_DEFINERUNTIMELINKING
@@ -144,13 +153,19 @@ namespace Direct3D9Renderer
 		#define FNDEF_D3D9(retType, funcName, args) extern retType (WINAPI *funcPtr_##funcName) args
 	#endif
 	FNDEF_D3D9(IDirect3D9*,	Direct3DCreate9,	(UINT));
+	#define Direct3DCreate9	FNPTR(Direct3DCreate9)
 	// Debug
 	FNDEF_D3D9(DWORD,		D3DPERF_GetStatus,	(void));
 	FNDEF_D3D9(void,		D3DPERF_SetOptions,	(DWORD));
+	#define D3DPERF_GetStatus	FNPTR(D3DPERF_GetStatus)
+	#define D3DPERF_SetOptions	FNPTR(D3DPERF_SetOptions)
 	#ifdef RENDERER_DEBUG
 		FNDEF_D3D9(void,	D3DPERF_SetMarker,	(D3DCOLOR, LPCWSTR));
 		FNDEF_D3D9(int,		D3DPERF_BeginEvent,	(D3DCOLOR, LPCWSTR));
 		FNDEF_D3D9(int,		D3DPERF_EndEvent,	(void));
+		#define D3DPERF_SetMarker	FNPTR(D3DPERF_SetMarker)
+		#define D3DPERF_BeginEvent	FNPTR(D3DPERF_BeginEvent)
+		#define D3DPERF_EndEvent	FNPTR(D3DPERF_EndEvent)
 	#endif
 
 
@@ -165,29 +180,6 @@ namespace Direct3D9Renderer
 	FNDEF_D3DX9(HRESULT,	D3DXLoadSurfaceFromMemory,	(LPDIRECT3DSURFACE9, CONST PALETTEENTRY*, CONST RECT*, LPCVOID, D3DFORMAT, UINT, CONST PALETTEENTRY*, CONST RECT*, DWORD, D3DCOLOR));
 	FNDEF_D3DX9(HRESULT,	D3DXCompileShader,			(LPCSTR, UINT, CONST D3DXMACRO*, LPD3DXINCLUDE, LPCSTR, LPCSTR, DWORD, LPD3DXBUFFER*, LPD3DXBUFFER*, LPD3DXCONSTANTTABLE*));
 	FNDEF_D3DX9(HRESULT,	D3DXGetShaderConstantTable,	(const DWORD*, LPD3DXCONSTANTTABLE*));
-
-
-	//[-------------------------------------------------------]
-	//[ Macros & definitions                                  ]
-	//[-------------------------------------------------------]
-	#ifndef FNPTR
-		#define FNPTR(name) funcPtr_##name
-	#endif
-
-	// Redirect D3D9* and D3DX9* function calls to funcPtr_D3D9* and funcPtr_D3DX9*
-
-	// D3D9
-	#define Direct3DCreate9		FNPTR(Direct3DCreate9)
-	// Debug
-	#define D3DPERF_GetStatus		FNPTR(D3DPERF_GetStatus)
-	#define D3DPERF_SetOptions		FNPTR(D3DPERF_SetOptions)
-	#ifdef RENDERER_DEBUG
-		#define D3DPERF_SetMarker	FNPTR(D3DPERF_SetMarker)
-		#define D3DPERF_BeginEvent	FNPTR(D3DPERF_BeginEvent)
-		#define D3DPERF_EndEvent	FNPTR(D3DPERF_EndEvent)
-	#endif
-
-	// D3DX9
 	#define D3DXLoadSurfaceFromMemory	FNPTR(D3DXLoadSurfaceFromMemory)
 	#define D3DXCompileShader			FNPTR(D3DXCompileShader)
 	#define D3DXGetShaderConstantTable	FNPTR(D3DXGetShaderConstantTable)

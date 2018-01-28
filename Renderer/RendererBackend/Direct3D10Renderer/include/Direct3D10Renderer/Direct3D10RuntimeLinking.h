@@ -146,6 +146,15 @@ namespace Direct3D10Renderer
 
 
 	//[-------------------------------------------------------]
+	//[ Macros & definitions                                  ]
+	//[-------------------------------------------------------]
+	// Redirect D3D10* and D3DX10* function calls to funcPtr_D3D10* and funcPtr_D3DX10*
+	#ifndef FNPTR
+		#define FNPTR(name) funcPtr_##name
+	#endif
+
+
+	//[-------------------------------------------------------]
 	//[ D3D10 core functions                                  ]
 	//[-------------------------------------------------------]
 	#ifdef DIRECT3D10_DEFINERUNTIMELINKING
@@ -154,6 +163,8 @@ namespace Direct3D10Renderer
 		#define FNDEF_D3D10(retType, funcName, args) extern retType (WINAPI *funcPtr_##funcName) args
 	#endif
 	FNDEF_D3D10(HRESULT,	D3D10CreateDevice,	(IDXGIAdapter*, D3D10_DRIVER_TYPE, HMODULE, UINT, UINT, ID3D10Device**));
+	#define D3D10CreateDevice	FNPTR(D3D10CreateDevice)
+	#define D3D10CreateBlob		FNPTR(D3D10CreateBlob)
 
 
 	//[-------------------------------------------------------]
@@ -165,6 +176,7 @@ namespace Direct3D10Renderer
 		#define FNDEF_D3DX10(retType, funcName, args) extern retType (WINAPI *funcPtr_##funcName) args
 	#endif
 	FNDEF_D3DX10(HRESULT,	D3DX10FilterTexture,	(ID3D10Resource*, UINT, UINT));
+	#define D3DX10FilterTexture		FNPTR(D3DX10FilterTexture)
 
 
 	//[-------------------------------------------------------]
@@ -179,25 +191,6 @@ namespace Direct3D10Renderer
 	typedef ID3D10Blob ID3DBlob;
 	FNDEF_D3DX10(HRESULT,	D3DCompile,		(LPCVOID, SIZE_T, LPCSTR, CONST D3D_SHADER_MACRO*, ID3DInclude*, LPCSTR, LPCSTR, UINT, UINT, ID3DBlob**, ID3DBlob**));
 	FNDEF_D3DX10(HRESULT,	D3DCreateBlob,	(SIZE_T Size, ID3DBlob** ppBlob));
-
-
-	//[-------------------------------------------------------]
-	//[ Macros & definitions                                  ]
-	//[-------------------------------------------------------]
-	#ifndef FNPTR
-		#define FNPTR(name) funcPtr_##name
-	#endif
-
-	// Redirect D3D10* and D3DX10* function calls to funcPtr_D3D10* and funcPtr_D3DX10*
-
-	// D3D10
-	#define D3D10CreateDevice	FNPTR(D3D10CreateDevice)
-	#define D3D10CreateBlob		FNPTR(D3D10CreateBlob)
-
-	// D3DX10
-	#define D3DX10FilterTexture		FNPTR(D3DX10FilterTexture)
-
-	// D3DCompiler
 	#define D3DCompile		FNPTR(D3DCompile)
 	#define D3DCreateBlob	FNPTR(D3DCreateBlob)
 

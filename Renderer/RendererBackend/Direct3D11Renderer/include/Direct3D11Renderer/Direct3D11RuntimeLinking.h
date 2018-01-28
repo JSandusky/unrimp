@@ -36,6 +36,7 @@
 namespace Direct3D11Renderer
 {
 	class Direct3D11Renderer;
+	struct AGSContext;	// AMD AGS
 }
 
 
@@ -85,6 +86,15 @@ namespace Direct3D11Renderer
 		*/
 		bool isDirect3D11Avaiable();
 
+		/**
+		*  @brief
+		*    Return the AMD AGS instance
+		*
+		*  @return
+		*    The AMD AGS instance, can be a null pointer, don't destroy the returned instance
+		*/
+		AGSContext* getAgsContext() const;
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
@@ -129,6 +139,24 @@ namespace Direct3D11Renderer
 		*/
 		bool loadD3DCompilerEntryPoints();
 
+		/**
+		*  @brief
+		*    Load the AMD AGS entry points
+		*
+		*  @return
+		*    "true" if all went fine, else "false"
+		*/
+		bool loadAmdAgsEntryPoints();
+
+		/**
+		*  @brief
+		*    Load the NvAPI entry points
+		*
+		*  @return
+		*    "true" if all went fine, else "false"
+		*/
+		bool loadNvAPIEntryPoints();
+
 
 	//[-------------------------------------------------------]
 	//[ Private data                                          ]
@@ -138,11 +166,23 @@ namespace Direct3D11Renderer
 		void*				mD3D11SharedLibrary;		///< D3D11 shared library, can be a null pointer
 		void*				mD3DX11SharedLibrary;		///< D3DX11 shared library, can be a null pointer
 		void*				mD3DCompilerSharedLibrary;	///< D3DCompiler shared library, can be a null pointer
+		void*				mAmdAgsSharedLibrary;		///< AMD AGS shared library, can be a null pointer
+		AGSContext*			mAgsContext;				///< AMD AGS context, can be a null pointer
+		void*				mNvAPISharedLibrary;		///< NvAPI shared library, can be a null pointer
 		bool				mEntryPointsRegistered;		///< Entry points successfully registered?
 		bool				mInitialized;				///< Already initialized?
 
 
 	};
+
+
+	//[-------------------------------------------------------]
+	//[ Macros & definitions                                  ]
+	//[-------------------------------------------------------]
+	// Redirect D3D11* and D3DX11* function calls to funcPtr_D3D11* and funcPtr_D3DX11*
+	#ifndef FNPTR
+		#define FNPTR(name) funcPtr_##name
+	#endif
 
 
 	//[-------------------------------------------------------]
@@ -154,6 +194,7 @@ namespace Direct3D11Renderer
 		#define FNDEF_D3D11(retType, funcName, args) extern retType (WINAPI *funcPtr_##funcName) args
 	#endif
 	FNDEF_D3D11(HRESULT,	D3D11CreateDevice,	(__in_opt IDXGIAdapter*, D3D_DRIVER_TYPE, HMODULE, UINT, __in_ecount_opt( FeatureLevels ) CONST D3D_FEATURE_LEVEL*, UINT, UINT, __out_opt ID3D11Device**, __out_opt D3D_FEATURE_LEVEL*, __out_opt ID3D11DeviceContext**));
+	#define D3D11CreateDevice	FNPTR(D3D11CreateDevice)
 
 
 	//[-------------------------------------------------------]
@@ -165,6 +206,7 @@ namespace Direct3D11Renderer
 		#define FNDEF_D3DX11(retType, funcName, args) extern retType (WINAPI *funcPtr_##funcName) args
 	#endif
 	FNDEF_D3DX11(HRESULT,	D3DX11FilterTexture,	(ID3D11DeviceContext*, ID3D11Resource*, UINT, UINT));
+	#define D3DX11FilterTexture	FNPTR(D3DX11FilterTexture)
 
 
 	//[-------------------------------------------------------]
@@ -179,26 +221,92 @@ namespace Direct3D11Renderer
 	typedef ID3D10Blob ID3DBlob;
 	FNDEF_D3DX11(HRESULT,	D3DCompile,		(LPCVOID, SIZE_T, LPCSTR, CONST D3D_SHADER_MACRO*, ID3DInclude*, LPCSTR, LPCSTR, UINT, UINT, ID3DBlob**, ID3DBlob**));
 	FNDEF_D3DX11(HRESULT,	D3DCreateBlob,	(SIZE_T Size, ID3DBlob** ppBlob));
-
-
-	//[-------------------------------------------------------]
-	//[ Macros & definitions                                  ]
-	//[-------------------------------------------------------]
-	#ifndef FNPTR
-		#define FNPTR(name) funcPtr_##name
-	#endif
-
-	// Redirect D3D11* and D3DX11* function calls to funcPtr_D3D11* and funcPtr_D3DX11*
-
-	// D3D11
-	#define D3D11CreateDevice	FNPTR(D3D11CreateDevice)
-
-	// D3DX11
-	#define D3DX11FilterTexture	FNPTR(D3DX11FilterTexture)
-
-	// D3DCompiler
 	#define D3DCompile		FNPTR(D3DCompile)
 	#define D3DCreateBlob	FNPTR(D3DCreateBlob)
+
+
+	//[-------------------------------------------------------]
+	//[ AMD AGS functions                                     ]
+	//[-------------------------------------------------------]
+	// -> Using v5.1.1 - 2017-09-19
+	// -> From https://github.com/GPUOpen-LibrariesAndSDKs/AGS_SDK and https://raw.githubusercontent.com/GPUOpen-LibrariesAndSDKs/Barycentrics12/master/ags_lib/inc/amd_ags.h
+	#ifdef DIRECT3D11_DEFINERUNTIMELINKING
+		#define FNDEF_AMD_AGS(retType, funcName, args) retType (WINAPI *funcPtr_##funcName) args
+	#else
+		#define FNDEF_AMD_AGS(retType, funcName, args) extern retType (WINAPI *funcPtr_##funcName) args
+	#endif
+	struct AGSGPUInfo;
+	struct AGSConfiguration;
+	struct AGSDX11DeviceCreationParams
+	{
+		IDXGIAdapter*               pAdapter;
+		D3D_DRIVER_TYPE             DriverType;
+		HMODULE                     Software;
+		UINT                        Flags;
+		const D3D_FEATURE_LEVEL*    pFeatureLevels;
+		UINT                        FeatureLevels;
+		UINT                        SDKVersion;
+		const DXGI_SWAP_CHAIN_DESC* pSwapChainDesc;
+	};
+	struct AGSDX11ExtensionParams
+	{
+		unsigned int uavSlot;
+		const WCHAR* pAppName;
+		UINT         appVersion;
+		const WCHAR* pEngineName;
+		UINT         engineVersion;
+	};
+	struct AGSDX11ReturnedParams
+	{
+		ID3D11Device*        pDevice;
+		D3D_FEATURE_LEVEL    FeatureLevel;
+		ID3D11DeviceContext* pImmediateContext;
+		IDXGISwapChain*      pSwapChain;
+		unsigned int         extensionsSupported;
+	};
+	enum AGSReturnCode
+	{
+		AGS_SUCCESS,
+		AGS_INVALID_ARGS,
+		AGS_OUT_OF_MEMORY,
+		AGS_ERROR_MISSING_DLL,
+		AGS_ERROR_LEGACY_DRIVER,
+		AGS_EXTENSION_NOT_SUPPORTED,
+		AGS_ADL_FAILURE,
+	};
+	FNDEF_AMD_AGS(AGSReturnCode,	agsInit,													(AGSContext** context, const AGSConfiguration* config, AGSGPUInfo* gpuInfo));
+	FNDEF_AMD_AGS(AGSReturnCode,	agsDeInit,													(AGSContext* context));
+	FNDEF_AMD_AGS(AGSReturnCode,	agsDriverExtensionsDX11_CreateDevice,						(AGSContext* context, AGSDX11DeviceCreationParams* creationParams, AGSDX11ExtensionParams* extensionParams, AGSDX11ReturnedParams* returnedParams));
+	FNDEF_AMD_AGS(AGSReturnCode,	agsDriverExtensionsDX11_DestroyDevice,						(AGSContext* context, ID3D11Device* device, unsigned int* references));
+	FNDEF_AMD_AGS(AGSReturnCode,	agsDriverExtensionsDX11_MultiDrawInstancedIndirect,			(AGSContext* context, unsigned int drawCount, ID3D11Buffer* pBufferForArgs, unsigned int alignedByteOffsetForArgs, unsigned int byteStrideForArgs));
+	FNDEF_AMD_AGS(AGSReturnCode,	agsDriverExtensionsDX11_MultiDrawIndexedInstancedIndirect,	(AGSContext* context, unsigned int drawCount, ID3D11Buffer* pBufferForArgs, unsigned int alignedByteOffsetForArgs, unsigned int byteStrideForArgs));
+	#define agsInit														FNPTR(agsInit)
+	#define agsDeInit													FNPTR(agsDeInit)
+	#define agsDriverExtensionsDX11_CreateDevice						FNPTR(agsDriverExtensionsDX11_CreateDevice)
+	#define agsDriverExtensionsDX11_DestroyDevice						FNPTR(agsDriverExtensionsDX11_DestroyDevice)
+	#define agsDriverExtensionsDX11_MultiDrawInstancedIndirect			FNPTR(agsDriverExtensionsDX11_MultiDrawInstancedIndirect)
+	#define agsDriverExtensionsDX11_MultiDrawIndexedInstancedIndirect	FNPTR(agsDriverExtensionsDX11_MultiDrawIndexedInstancedIndirect)
+
+
+	//[-------------------------------------------------------]
+	//[ NvAPI functions                                       ]
+	//[-------------------------------------------------------]
+	// From https://developer.nvidia.com/nvapi and http://developer.download.nvidia.com/NVAPI/PG-5116-001_v01_public.pdf
+	#ifdef DIRECT3D11_DEFINERUNTIMELINKING
+		#define FNDEF_NvAPI(retType, funcName, args) retType (WINAPI *funcPtr_##funcName) args
+	#else
+		#define FNDEF_NvAPI(retType, funcName, args) extern retType (WINAPI *funcPtr_##funcName) args
+	#endif
+	typedef int NvAPI_Status;
+	typedef unsigned int NvU32;
+	FNDEF_NvAPI(NvAPI_Status,	NvAPI_Initialize,								());
+	FNDEF_NvAPI(NvAPI_Status,	NvAPI_Unload,									());
+	FNDEF_NvAPI(NvAPI_Status,	NvAPI_D3D11_MultiDrawInstancedIndirect,			(__in ID3D11DeviceContext* pDevContext11, __in NvU32 drawCount, __in ID3D11Buffer* pBuffer, __in NvU32 alignedByteOffsetForArgs, __in NvU32 alignedByteStrideForArgs));
+	FNDEF_NvAPI(NvAPI_Status,	NvAPI_D3D11_MultiDrawIndexedInstancedIndirect,	(__in ID3D11DeviceContext* pDevContext11, __in NvU32 drawCount, __in ID3D11Buffer* pBuffer, __in NvU32 alignedByteOffsetForArgs, __in NvU32 alignedByteStrideForArgs));
+	#define NvAPI_Initialize								FNPTR(NvAPI_Initialize)
+	#define NvAPI_Unload									FNPTR(NvAPI_Unload)
+	#define NvAPI_D3D11_MultiDrawInstancedIndirect			FNPTR(NvAPI_D3D11_MultiDrawInstancedIndirect)
+	#define NvAPI_D3D11_MultiDrawIndexedInstancedIndirect	FNPTR(NvAPI_D3D11_MultiDrawIndexedInstancedIndirect)
 
 
 //[-------------------------------------------------------]

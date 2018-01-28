@@ -44,6 +44,9 @@ namespace Direct3D11Renderer
 		mD3D11SharedLibrary(nullptr),
 		mD3DX11SharedLibrary(nullptr),
 		mD3DCompilerSharedLibrary(nullptr),
+		mAmdAgsSharedLibrary(nullptr),
+		mAgsContext(nullptr),
+		mNvAPISharedLibrary(nullptr),
 		mEntryPointsRegistered(false),
 		mInitialized(false)
 	{
@@ -64,6 +67,22 @@ namespace Direct3D11Renderer
 		if (nullptr != mD3DCompilerSharedLibrary)
 		{
 			::FreeLibrary(static_cast<HMODULE>(mD3DCompilerSharedLibrary));
+		}
+		if (nullptr != mAmdAgsSharedLibrary)
+		{
+			if (nullptr != agsDeInit && AGS_SUCCESS != agsDeInit(mAgsContext))
+			{
+				RENDERER_LOG(mDirect3D11Renderer.getContext(), CRITICAL, "Direct3D 11: Failed to unload AMG AGS")
+			}
+			::FreeLibrary(static_cast<HMODULE>(mAmdAgsSharedLibrary));
+		}
+		if (nullptr != mNvAPISharedLibrary)
+		{
+			if (nullptr != NvAPI_Unload && 0 != NvAPI_Unload())
+			{
+				RENDERER_LOG(mDirect3D11Renderer.getContext(), CRITICAL, "Direct3D 11: Failed to unload NvAPI")
+			}
+			::FreeLibrary(static_cast<HMODULE>(mNvAPISharedLibrary));
 		}
 	}
 
@@ -87,6 +106,11 @@ namespace Direct3D11Renderer
 		return mEntryPointsRegistered;
 	}
 
+	AGSContext* Direct3D11RuntimeLinking::getAgsContext() const
+	{
+		return mAgsContext;
+	}
+
 
 	//[-------------------------------------------------------]
 	//[ Private methods                                       ]
@@ -104,6 +128,35 @@ namespace Direct3D11Renderer
 				if (nullptr == mD3DCompilerSharedLibrary)
 				{
 					RENDERER_LOG(mDirect3D11Renderer.getContext(), CRITICAL, "Failed to load in the shared Direct3D 11 library \"D3DCompiler_47.dll\"")
+				}
+
+				// TODO(co) Need to ensure this only runs on AMD GPUs and also makes no problems when changing the GPU inside a system
+				// Optional vendor specific part: AMD AGS
+				mAmdAgsSharedLibrary = ::LoadLibraryExA("amd_ags.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
+				if (nullptr != mAmdAgsSharedLibrary && !loadAmdAgsEntryPoints())
+				{
+					RENDERER_LOG(mDirect3D11Renderer.getContext(), CRITICAL, "Direct3D 11: Failed to load AMD AGS function entry points")
+					::FreeLibrary(static_cast<HMODULE>(mAmdAgsSharedLibrary));
+					mAmdAgsSharedLibrary									  = nullptr;
+					agsInit													  = nullptr;
+					agsDeInit												  = nullptr;
+					agsDriverExtensionsDX11_CreateDevice					  = nullptr;
+					agsDriverExtensionsDX11_DestroyDevice					  = nullptr;
+					agsDriverExtensionsDX11_MultiDrawInstancedIndirect		  = nullptr;
+					agsDriverExtensionsDX11_MultiDrawIndexedInstancedIndirect = nullptr;
+				}
+
+				// Optional vendor specific part: NvAPI
+				mNvAPISharedLibrary = ::LoadLibraryExA("nvapi.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
+				if (nullptr != mNvAPISharedLibrary && !loadNvAPIEntryPoints())
+				{
+					RENDERER_LOG(mDirect3D11Renderer.getContext(), CRITICAL, "Direct3D 11: Failed to load NvAPI function entry points")
+					::FreeLibrary(static_cast<HMODULE>(mNvAPISharedLibrary));
+					mNvAPISharedLibrary							  = nullptr;
+					NvAPI_Initialize							  = nullptr;
+					NvAPI_Unload								  = nullptr;
+					NvAPI_D3D11_MultiDrawInstancedIndirect		  = nullptr;
+					NvAPI_D3D11_MultiDrawIndexedInstancedIndirect = nullptr;
 				}
 			}
 			else
@@ -215,6 +268,94 @@ namespace Direct3D11Renderer
 
 		// Undefine the helper macro
 		#undef IMPORT_FUNC
+
+		// Done
+		return result;
+	}
+
+	bool Direct3D11RuntimeLinking::loadAmdAgsEntryPoints()
+	{
+		bool result = true;	// Success by default
+
+		// Define a helper macro
+		#define IMPORT_FUNC(funcName)																																						\
+			if (result)																																										\
+			{																																												\
+				void* symbol = ::GetProcAddress(static_cast<HMODULE>(mAmdAgsSharedLibrary), #funcName);																						\
+				if (nullptr != symbol)																																						\
+				{																																											\
+					*(reinterpret_cast<void**>(&(funcName))) = symbol;																														\
+				}																																											\
+				else																																										\
+				{																																											\
+					wchar_t moduleFilename[MAX_PATH];																																		\
+					moduleFilename[0] = '\0';																																				\
+					::GetModuleFileNameW(static_cast<HMODULE>(mAmdAgsSharedLibrary), moduleFilename, MAX_PATH);																				\
+					RENDERER_LOG(mDirect3D11Renderer.getContext(), CRITICAL, "Failed to locate the entry point \"%s\" within the AMD AGS shared library \"%s\"", #funcName, moduleFilename)	\
+					result = false;																																							\
+				}																																											\
+			}
+
+		// Load the entry points
+		IMPORT_FUNC(agsInit);
+		IMPORT_FUNC(agsDeInit);
+		IMPORT_FUNC(agsDriverExtensionsDX11_CreateDevice);
+		IMPORT_FUNC(agsDriverExtensionsDX11_DestroyDevice);
+		IMPORT_FUNC(agsDriverExtensionsDX11_MultiDrawInstancedIndirect);
+		IMPORT_FUNC(agsDriverExtensionsDX11_MultiDrawIndexedInstancedIndirect);
+
+		// Undefine the helper macro
+		#undef IMPORT_FUNC
+
+		// Initialize AMD AGS (e.g. for multi-indirect-draw support)
+		if (nullptr != agsInit && AGS_SUCCESS != agsInit(&mAgsContext, nullptr, nullptr))
+		{
+			RENDERER_LOG(mDirect3D11Renderer.getContext(), CRITICAL, "Direct3D 11: Failed to initialize AMD AGS")
+			result = false;
+		}
+
+		// Done
+		return result;
+	}
+
+	bool Direct3D11RuntimeLinking::loadNvAPIEntryPoints()
+	{
+		bool result = true;	// Success by default
+
+		// Define a helper macro
+		#define IMPORT_FUNC(funcName)																																						\
+			if (result)																																										\
+			{																																												\
+				void* symbol = ::GetProcAddress(static_cast<HMODULE>(mNvAPISharedLibrary), #funcName);																						\
+				if (nullptr != symbol)																																						\
+				{																																											\
+					*(reinterpret_cast<void**>(&(funcName))) = symbol;																														\
+				}																																											\
+				else																																										\
+				{																																											\
+					wchar_t moduleFilename[MAX_PATH];																																		\
+					moduleFilename[0] = '\0';																																				\
+					::GetModuleFileNameW(static_cast<HMODULE>(mNvAPISharedLibrary), moduleFilename, MAX_PATH);																				\
+					RENDERER_LOG(mDirect3D11Renderer.getContext(), CRITICAL, "Failed to locate the entry point \"%s\" within the NvAPI shared library \"%s\"", #funcName, moduleFilename)	\
+					result = false;																																							\
+				}																																											\
+			}
+
+		// Load the entry points
+		IMPORT_FUNC(NvAPI_Initialize);
+		IMPORT_FUNC(NvAPI_Unload);
+		IMPORT_FUNC(NvAPI_D3D11_MultiDrawInstancedIndirect);
+		IMPORT_FUNC(NvAPI_D3D11_MultiDrawIndexedInstancedIndirect);
+
+		// Undefine the helper macro
+		#undef IMPORT_FUNC
+
+		// Initialize NvAPI (e.g. for multi-indirect-draw support)
+		if (nullptr != NvAPI_Initialize && 0 != NvAPI_Initialize())
+		{
+			RENDERER_LOG(mDirect3D11Renderer.getContext(), CRITICAL, "Direct3D 11: Failed to initialize NvAPI")
+			result = false;
+		}
 
 		// Done
 		return result;
