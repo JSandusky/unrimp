@@ -118,6 +118,7 @@ FirstScene::FirstScene() :
 	mWetness(0.0f),
 	// Post processing
 	mPerformFxaa(false),
+	mPerformSharpen(true),
 	mPerformChromaticAberration(false),
 	mPerformOldCrtEffect(false),
 	mPerformFilmGrain(false),
@@ -576,6 +577,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				if (ImGui::BeginMenu("Post Processing"))
 				{
 					ImGui::Checkbox("FXAA", &mPerformFxaa);
+					ImGui::Checkbox("Sharpen", &mPerformSharpen);
 					ImGui::Checkbox("Chromatic Aberration", &mPerformChromaticAberration);
 					ImGui::Checkbox("Old CRT", &mPerformOldCrtEffect);
 					ImGui::Checkbox("Film Grain", &mPerformFilmGrain);
@@ -712,6 +714,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				static const RendererRuntime::AssetId SEPIA_TEXTURE_ASSET_ID("Example/Texture/Compositor/SepiaColorCorrectionLookupTable16x1");
 				materialResource->setPropertyById("ColorCorrectionLookupTableMap", RendererRuntime::MaterialPropertyValue::fromTextureAssetId(mPerformSepiaColorCorrection ? SEPIA_TEXTURE_ASSET_ID : IDENTITY_TEXTURE_ASSET_ID));
 				materialResource->setPropertyById("Fxaa", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformFxaa));
+				materialResource->setPropertyById("Sharpen", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformSharpen));
 				materialResource->setPropertyById("ChromaticAberration", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformChromaticAberration));
 				materialResource->setPropertyById("OldCrtEffect", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformOldCrtEffect));
 				materialResource->setPropertyById("FilmGrain", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformFilmGrain));

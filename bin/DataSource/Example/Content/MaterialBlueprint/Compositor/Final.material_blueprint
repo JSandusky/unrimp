@@ -20,15 +20,33 @@
 				"Usage": "SHADER_COMBINATION",
 				"ValueType": "BOOLEAN",
 				"Value": "FALSE",
-				"Description": "Enable Fast Approximate Anti-Aliasing (FXAA)?",
+				"Description": "Enable Fast Approximate Anti-Aliasing (FXAA)? Mutually exclusive properties: 'Fxaa', 'Sharpen', 'OldCrtEffect', 'ChromaticAberration'.",
 				"VisualImportance": "100"
+			},
+			"Sharpen":
+			{
+				"Usage": "SHADER_COMBINATION",
+				"ValueType": "BOOLEAN",
+				"Value": "FALSE",
+				"Description": "Enable sharpen effect? Mutually exclusive properties: 'Fxaa', 'Sharpen', 'OldCrtEffect', 'ChromaticAberration'.",
+				"VisualImportance": "100"
+			},
+			"SharpenIntensity":
+			{
+				"Usage": "SHADER_UNIFORM",
+				"ValueType": "FLOAT",
+				"Value": "0.28",
+				"MinimumValue": "0.0",
+				"MaximumValue": "1.0",
+				"StepSize": "0.01",
+				"Description": "Sharpen intensity"
 			},
 			"ChromaticAberration":
 			{
 				"Usage": "SHADER_COMBINATION",
 				"ValueType": "BOOLEAN",
 				"Value": "FALSE",
-				"Description": "Enable chromatic aberration effect?",
+				"Description": "Enable chromatic aberration effect? Mutually exclusive properties: 'Fxaa', 'Sharpen', 'OldCrtEffect', 'ChromaticAberration'.",
 				"VisualImportance": "100"
 			},
 			"ChromaticAberrationMaximumDistort":
@@ -56,7 +74,7 @@
 				"Usage": "SHADER_COMBINATION",
 				"ValueType": "BOOLEAN",
 				"Value": "FALSE",
-				"Description": "Enable old CRT effect?",
+				"Description": "Enable old CRT effect? Mutually exclusive properties: 'Fxaa', 'Sharpen', 'OldCrtEffect', 'ChromaticAberration'.",
 				"VisualImportance": "100"
 			},
 			"FilmGrain":
@@ -145,6 +163,12 @@
 					"NumberOfElements": "1",
 					"ElementProperties":
 					{
+						"ViewportSize":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_2",
+							"Value": "@VIEWPORT_SIZE"
+						},
 						"InverseViewportSize":
 						{
 							"Usage": "PASS_REFERENCE",
@@ -162,6 +186,12 @@
 							"Usage": "MATERIAL_REFERENCE",
 							"ValueType": "FLOAT_2",
 							"Value": "@ContrastBrightness"
+						},
+						"SharpenIntensity":
+						{
+							"Usage": "MATERIAL_REFERENCE",
+							"ValueType": "FLOAT",
+							"Value": "@SharpenIntensity"
 						},
 						"FilmGrainIntensity":
 						{

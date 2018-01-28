@@ -194,6 +194,7 @@ private:
 	float	   mWetness;
 	// Post processing
 	bool	   mPerformFxaa;
+	bool	   mPerformSharpen;
 	bool	   mPerformChromaticAberration;
 	bool	   mPerformOldCrtEffect;
 	bool	   mPerformFilmGrain;
