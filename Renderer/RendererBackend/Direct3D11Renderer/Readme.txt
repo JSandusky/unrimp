@@ -23,7 +23,9 @@ Direct3D 11 renderer implementation.
 
 
 == Dependencies ==
-Direct3D 11 runtime and Direct3D 11 capable graphics driver, nothing else.
+- Direct3D 11 runtime and Direct3D 11 capable graphics driver
+- Optional AMD AGS for multi-draw-indirect on AMD GPUs ("amd_ags_x64.dll" and "amd_ags_x86.dll" aren't automatically installed with the GPU driver)
+- Optional NVIDIA NvAPI for multi-draw-indirect on NVIDIA GPUs ("nvapi.dll" is automatically installed with the GPU driver)
 
 
 == Preprocessor Definitions ==

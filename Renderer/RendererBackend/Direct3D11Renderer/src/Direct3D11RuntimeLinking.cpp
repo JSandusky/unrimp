@@ -133,7 +133,14 @@ namespace Direct3D11Renderer
 					// Optional vendor specific part: AMD AGS
 					if (amdDxgiAdapter)
 					{
-						mAmdAgsSharedLibrary = ::LoadLibraryExA("amd_ags.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
+						#ifdef X64_ARCHITECTURE
+							mAmdAgsSharedLibrary = ::LoadLibraryExA("amd_ags_x64.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
+						#else
+							// TODO(co) Currently an "Exception thrown: write access violation. **this** was nullptr."-exception gets thrown when calling "agsInit()" in x86 release (fine in x86 debug, fine in x64)
+							#ifdef DEBUG
+								mAmdAgsSharedLibrary = ::LoadLibraryExA("amd_ags_x86.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
+							#endif
+						#endif
 						if (nullptr != mAmdAgsSharedLibrary && !loadAmdAgsEntryPoints())
 						{
 							RENDERER_LOG(mDirect3D11Renderer.getContext(), CRITICAL, "Direct3D 11: Failed to load AMD AGS function entry points")

@@ -196,6 +196,7 @@
       <Command>md "..\..\bin\$(PlatformTarget)d_static\"
 copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_static\"
 copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)d_static\"
+copy "..\..\External\Windows_$(PlatformTarget)\AGS_SDK\bin\amd_ags_$(PlatformTarget).dll" "..\..\bin\$(PlatformTarget)d_static\"
 copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..\bin\$(PlatformTarget)d_static\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -225,6 +226,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
       <Command>md "..\..\bin\$(PlatformTarget)d_static\"
 copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_static\"
 copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)d_static\"
+copy "..\..\External\Windows_$(PlatformTarget)\AGS_SDK\bin\amd_ags_$(PlatformTarget).dll" "..\..\bin\$(PlatformTarget)d_static\"
 copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..\bin\$(PlatformTarget)d_static\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -254,6 +256,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
       <Command>md "..\..\bin\$(PlatformTarget)d_dynamic\"
 copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_dynamic\"
 copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)d_dynamic\"
+copy "..\..\External\Windows_$(PlatformTarget)\AGS_SDK\bin\amd_ags_$(PlatformTarget).dll" "..\..\bin\$(PlatformTarget)d_dynamic\"
 copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..\bin\$(PlatformTarget)d_dynamic\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -283,6 +286,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
       <Command>md "..\..\bin\$(PlatformTarget)d_dynamic\"
 copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)d_dynamic\"
 copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)d_dynamic\"
+copy "..\..\External\Windows_$(PlatformTarget)\AGS_SDK\bin\amd_ags_$(PlatformTarget).dll" "..\..\bin\$(PlatformTarget)d_dynamic\"
 copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..\bin\$(PlatformTarget)d_dynamic\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -323,6 +327,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
       <Command>md "..\..\bin\$(PlatformTarget)_static\"
 copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_static\"
 copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)_static\"
+copy "..\..\External\Windows_$(PlatformTarget)\AGS_SDK\bin\amd_ags_$(PlatformTarget).dll" "..\..\bin\$(PlatformTarget)_static\"
 copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..\bin\$(PlatformTarget)_static\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -362,6 +367,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
       <Command>md "..\..\bin\$(PlatformTarget)_static\"
 copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_static\"
 copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)_static\"
+copy "..\..\External\Windows_$(PlatformTarget)\AGS_SDK\bin\amd_ags_$(PlatformTarget).dll" "..\..\bin\$(PlatformTarget)_static\"
 copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..\bin\$(PlatformTarget)_static\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -402,6 +408,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
       <Command>md "..\..\bin\$(PlatformTarget)_dynamic\"
 copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
 copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)_dynamic\"
+copy "..\..\External\Windows_$(PlatformTarget)\AGS_SDK\bin\amd_ags_$(PlatformTarget).dll" "..\..\bin\$(PlatformTarget)_dynamic\"
 copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..\bin\$(PlatformTarget)_dynamic\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -441,6 +448,7 @@ copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..
       <Command>md "..\..\bin\$(PlatformTarget)_dynamic\"
 copy "$(OutDir)\$(TargetName).exe" "..\..\bin\$(PlatformTarget)_dynamic\"
 copy "$(OutDir)\$(TargetName).pdb" "..\..\bin\$(PlatformTarget)_dynamic\"
+copy "..\..\External\Windows_$(PlatformTarget)\AGS_SDK\bin\amd_ags_$(PlatformTarget).dll" "..\..\bin\$(PlatformTarget)_dynamic\"
 copy "..\..\External\Windows_$(PlatformTarget)\OpenVR\bin\openvr_api.dll" "..\..\bin\$(PlatformTarget)_dynamic\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
