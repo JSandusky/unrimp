@@ -1275,44 +1275,35 @@ namespace Direct3D11Renderer
 		// Sanity check
 		RENDERER_ASSERT(mContext, numberOfDraws > 0, "Number of Direct3D 11 draws must not be zero")
 
-		// Before doing anything else: If there's emulation data, use it (for example "Renderer::IndirectBuffer" might have been used to generate the data)
-		const uint8_t* emulationData = indirectBuffer.getEmulationData();
-		if (nullptr != emulationData)
-		{
-			drawEmulated(emulationData, indirectBufferOffset, numberOfDraws);
-		}
-		else
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D11RENDERER_RENDERERMATCHCHECK_ASSERT(*this, indirectBuffer)
+		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+		DIRECT3D11RENDERER_RENDERERMATCHCHECK_ASSERT(*this, indirectBuffer)
 
-			// Draw indirect
-			ID3D11Buffer* d3D11Buffer = static_cast<const IndirectBuffer&>(indirectBuffer).getD3D11Buffer();
-			if (1 == numberOfDraws)
+		// Draw indirect
+		ID3D11Buffer* d3D11Buffer = static_cast<const IndirectBuffer&>(indirectBuffer).getD3D11Buffer();
+		if (1 == numberOfDraws)
+		{
+			mD3D11DeviceContext->DrawInstancedIndirect(d3D11Buffer, indirectBufferOffset);
+		}
+		else if (numberOfDraws > 1)
+		{
+			// TODO(co) Possible minor optimization to avoid branching here: Modify "DISPATCH_FUNCTIONS" function table depending on available features
+			if (nullptr != agsDriverExtensionsDX11_MultiDrawInstancedIndirect)
 			{
-				mD3D11DeviceContext->DrawInstancedIndirect(d3D11Buffer, indirectBufferOffset);
+				// AMD: "agsDriverExtensionsDX11_MultiDrawInstancedIndirect()" - https://gpuopen-librariesandsdks.github.io/ags/group__mdi.html
+				agsDriverExtensionsDX11_MultiDrawInstancedIndirect(mDirect3D11RuntimeLinking->getAgsContext(), numberOfDraws, d3D11Buffer, indirectBufferOffset, sizeof(Renderer::DrawInstancedArguments));
 			}
-			else if (numberOfDraws > 1)
+			else if (nullptr != NvAPI_D3D11_MultiDrawInstancedIndirect)
 			{
-				// TODO(co) Possible minor optimization to avoid branching here: Modify "DISPATCH_FUNCTIONS" function table depending on available features
-				if (nullptr != agsDriverExtensionsDX11_MultiDrawInstancedIndirect)
+				// NVIDIA: "NvAPI_D3D11_MultiDrawInstancedIndirect()" - http://docs.nvidia.com/gameworks/content/gameworkslibrary/coresdk/nvapi/group__dx.html#gaf417228a716d10efcb29fa592795f160
+				NvAPI_D3D11_MultiDrawInstancedIndirect(mD3D11DeviceContext, numberOfDraws, d3D11Buffer, indirectBufferOffset, sizeof(Renderer::DrawInstancedArguments));
+			}
+			else
+			{
+				// Emulate multi-draw-indirect
+				for (uint32_t i = 0; i < numberOfDraws; ++i)
 				{
-					// AMD: "agsDriverExtensionsDX11_MultiDrawInstancedIndirect()" - https://gpuopen-librariesandsdks.github.io/ags/group__mdi.html
-					agsDriverExtensionsDX11_MultiDrawInstancedIndirect(mDirect3D11RuntimeLinking->getAgsContext(), numberOfDraws, d3D11Buffer, indirectBufferOffset, sizeof(Renderer::DrawInstancedArguments));
-				}
-				else if (nullptr != NvAPI_D3D11_MultiDrawInstancedIndirect)
-				{
-					// NVIDIA: "NvAPI_D3D11_MultiDrawInstancedIndirect()" - http://docs.nvidia.com/gameworks/content/gameworkslibrary/coresdk/nvapi/group__dx.html#gaf417228a716d10efcb29fa592795f160
-					NvAPI_D3D11_MultiDrawInstancedIndirect(mD3D11DeviceContext, numberOfDraws, d3D11Buffer, indirectBufferOffset, sizeof(Renderer::DrawInstancedArguments));
-				}
-				else
-				{
-					// Emulate multi-draw-indirect
-					for (uint32_t i = 0; i < numberOfDraws; ++i)
-					{
-						mD3D11DeviceContext->DrawInstancedIndirect(d3D11Buffer, indirectBufferOffset);
-						indirectBufferOffset += sizeof(Renderer::DrawInstancedArguments);
-					}
+					mD3D11DeviceContext->DrawInstancedIndirect(d3D11Buffer, indirectBufferOffset);
+					indirectBufferOffset += sizeof(Renderer::DrawInstancedArguments);
 				}
 			}
 		}
@@ -1362,44 +1353,35 @@ namespace Direct3D11Renderer
 		// Sanity checks
 		RENDERER_ASSERT(mContext, numberOfDraws > 0, "Number of Direct3D 11 draws must not be zero")
 
-		// Before doing anything else: If there's emulation data, use it (for example "Renderer::IndirectBuffer" might have been used to generate the data)
-		const uint8_t* emulationData = indirectBuffer.getEmulationData();
-		if (nullptr != emulationData)
-		{
-			drawIndexedEmulated(emulationData, indirectBufferOffset, numberOfDraws);
-		}
-		else
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			DIRECT3D11RENDERER_RENDERERMATCHCHECK_ASSERT(*this, indirectBuffer)
+		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+		DIRECT3D11RENDERER_RENDERERMATCHCHECK_ASSERT(*this, indirectBuffer)
 
-			// Draw indirect
-			ID3D11Buffer* d3D11Buffer = static_cast<const IndirectBuffer&>(indirectBuffer).getD3D11Buffer();
-			if (1 == numberOfDraws)
+		// Draw indirect
+		ID3D11Buffer* d3D11Buffer = static_cast<const IndirectBuffer&>(indirectBuffer).getD3D11Buffer();
+		if (1 == numberOfDraws)
+		{
+			mD3D11DeviceContext->DrawIndexedInstancedIndirect(d3D11Buffer, indirectBufferOffset);
+		}
+		else if (numberOfDraws > 1)
+		{
+			// TODO(co) Possible minor optimization to avoid branching here: Modify "DISPATCH_FUNCTIONS" function table depending on available features
+			if (nullptr != agsDriverExtensionsDX11_MultiDrawIndexedInstancedIndirect)
 			{
-				mD3D11DeviceContext->DrawIndexedInstancedIndirect(d3D11Buffer, indirectBufferOffset);
+				// AMD: "agsDriverExtensionsDX11_MultiDrawIndexedInstancedIndirect()" - https://gpuopen-librariesandsdks.github.io/ags/group__mdi.html
+				agsDriverExtensionsDX11_MultiDrawIndexedInstancedIndirect(mDirect3D11RuntimeLinking->getAgsContext(), numberOfDraws, d3D11Buffer, indirectBufferOffset, sizeof(Renderer::DrawIndexedInstancedArguments));
 			}
-			else if (numberOfDraws > 1)
+			else if (nullptr != NvAPI_D3D11_MultiDrawIndexedInstancedIndirect)
 			{
-				// TODO(co) Possible minor optimization to avoid branching here: Modify "DISPATCH_FUNCTIONS" function table depending on available features
-				if (nullptr != agsDriverExtensionsDX11_MultiDrawIndexedInstancedIndirect)
+				// NVIDIA: "NvAPI_D3D11_MultiDrawIndexedInstancedIndirect()" - http://docs.nvidia.com/gameworks/content/gameworkslibrary/coresdk/nvapi/group__dx.html#ga04cbd1b776a391e45d38377bd3156f9e
+				NvAPI_D3D11_MultiDrawIndexedInstancedIndirect(mD3D11DeviceContext, numberOfDraws, d3D11Buffer, indirectBufferOffset, sizeof(Renderer::DrawInstancedArguments));
+			}
+			else
+			{
+				// Emulate multi-draw-indirect
+				for (uint32_t i = 0; i < numberOfDraws; ++i)
 				{
-					// AMD: "agsDriverExtensionsDX11_MultiDrawIndexedInstancedIndirect()" - https://gpuopen-librariesandsdks.github.io/ags/group__mdi.html
-					agsDriverExtensionsDX11_MultiDrawIndexedInstancedIndirect(mDirect3D11RuntimeLinking->getAgsContext(), numberOfDraws, d3D11Buffer, indirectBufferOffset, sizeof(Renderer::DrawIndexedInstancedArguments));
-				}
-				else if (nullptr != NvAPI_D3D11_MultiDrawIndexedInstancedIndirect)
-				{
-					// NVIDIA: "NvAPI_D3D11_MultiDrawIndexedInstancedIndirect()" - http://docs.nvidia.com/gameworks/content/gameworkslibrary/coresdk/nvapi/group__dx.html#ga04cbd1b776a391e45d38377bd3156f9e
-					NvAPI_D3D11_MultiDrawIndexedInstancedIndirect(mD3D11DeviceContext, numberOfDraws, d3D11Buffer, indirectBufferOffset, sizeof(Renderer::DrawInstancedArguments));
-				}
-				else
-				{
-					// Emulate multi-draw-indirect
-					for (uint32_t i = 0; i < numberOfDraws; ++i)
-					{
-						mD3D11DeviceContext->DrawIndexedInstancedIndirect(d3D11Buffer, indirectBufferOffset);
-						indirectBufferOffset += sizeof(Renderer::DrawIndexedInstancedArguments);
-					}
+					mD3D11DeviceContext->DrawIndexedInstancedIndirect(d3D11Buffer, indirectBufferOffset);
+					indirectBufferOffset += sizeof(Renderer::DrawIndexedInstancedArguments);
 				}
 			}
 		}

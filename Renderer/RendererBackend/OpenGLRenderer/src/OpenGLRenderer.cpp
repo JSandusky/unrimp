@@ -1465,48 +1465,37 @@ namespace OpenGLRenderer
 	{
 		// Sanity check
 		RENDERER_ASSERT(mContext, numberOfDraws > 0, "Number of OpenGL draws must not be zero")
+		RENDERER_ASSERT(mContext, mExtensions->isGL_ARB_draw_indirect(), "The GL_ARB_draw_indirect OpenGL extension isn't supported")
 		// It's possible to draw without "mVertexArray"
 
 		// Tessellation support: "glPatchParameteri()" is called within "OpenGLRenderer::iaSetPrimitiveTopology()"
 
-		// Before doing anything else: If there's emulation data, use it (for example "Renderer::IndirectBuffer" might have been used to generate the data)
-		const uint8_t* emulationData = indirectBuffer.getEmulationData();
-		if (nullptr != emulationData)
-		{
-			drawEmulated(emulationData, indirectBufferOffset, numberOfDraws);
+		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+		OPENGLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, indirectBuffer)
+
+		{ // Bind indirect buffer
+			const GLuint openGLIndirectBuffer = static_cast<const IndirectBuffer&>(indirectBuffer).getOpenGLIndirectBuffer();
+			if (openGLIndirectBuffer != mOpenGLIndirectBuffer)
+			{
+				mOpenGLIndirectBuffer = openGLIndirectBuffer;
+				glBindBufferARB(GL_DRAW_INDIRECT_BUFFER, mOpenGLIndirectBuffer);
+			}
 		}
-		else
+
+		// Draw indirect
+		if (1 == numberOfDraws)
 		{
-			// Sanity check
-			RENDERER_ASSERT(mContext, mExtensions->isGL_ARB_draw_indirect(), "The GL_ARB_draw_indirect OpenGL extension isn't supported")
-
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, indirectBuffer)
-
-			{ // Bind indirect buffer
-				const GLuint openGLIndirectBuffer = static_cast<const IndirectBuffer&>(indirectBuffer).getOpenGLIndirectBuffer();
-				if (openGLIndirectBuffer != mOpenGLIndirectBuffer)
-				{
-					mOpenGLIndirectBuffer = openGLIndirectBuffer;
-					glBindBufferARB(GL_DRAW_INDIRECT_BUFFER, mOpenGLIndirectBuffer);
-				}
-			}
-
-			// Draw indirect
-			if (1 == numberOfDraws)
+			glDrawArraysIndirect(mOpenGLPrimitiveTopology, reinterpret_cast<void*>(static_cast<uintptr_t>(indirectBufferOffset)));
+		}
+		else if (numberOfDraws > 1)
+		{
+			if (mExtensions->isGL_ARB_multi_draw_indirect())
 			{
-				glDrawArraysIndirect(mOpenGLPrimitiveTopology, reinterpret_cast<void*>(static_cast<uintptr_t>(indirectBufferOffset)));
+				glMultiDrawArraysIndirect(mOpenGLPrimitiveTopology, reinterpret_cast<void*>(static_cast<uintptr_t>(indirectBufferOffset)), static_cast<GLsizei>(numberOfDraws), 0);	// 0 = tightly packed
 			}
-			else if (numberOfDraws > 1)
+			else
 			{
-				if (mExtensions->isGL_ARB_multi_draw_indirect())
-				{
-					glMultiDrawArraysIndirect(mOpenGLPrimitiveTopology, reinterpret_cast<void*>(static_cast<uintptr_t>(indirectBufferOffset)), static_cast<GLsizei>(numberOfDraws), 0);	// 0 = tightly packed
-				}
-				else
-				{
-					// TODO(co) Emulation (see specification for examples)
-				}
+				// TODO(co) Emulation (see specification for examples)
 			}
 		}
 	}
@@ -1556,47 +1545,36 @@ namespace OpenGLRenderer
 		RENDERER_ASSERT(mContext, numberOfDraws > 0, "Number of OpenGL draws must not be zero")
 		RENDERER_ASSERT(mContext, nullptr != mVertexArray, "OpenGL draw indexed needs a set vertex array")
 		RENDERER_ASSERT(mContext, nullptr != mVertexArray->getIndexBuffer(), "OpenGL draw indexed needs a set vertex array which contains an index buffer")
+		RENDERER_ASSERT(mContext, mExtensions->isGL_ARB_draw_indirect(), "The GL_ARB_draw_indirect OpenGL extension isn't supported")
 
 		// Tessellation support: "glPatchParameteri()" is called within "OpenGLRenderer::iaSetPrimitiveTopology()"
 
-		// Before doing anything else: If there's emulation data, use it (for example "Renderer::IndirectBuffer" might have been used to generate the data)
-		const uint8_t* emulationData = indirectBuffer.getEmulationData();
-		if (nullptr != emulationData)
-		{
-			drawIndexedEmulated(emulationData, indirectBufferOffset, numberOfDraws);
+		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+		OPENGLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, indirectBuffer)
+
+		{ // Bind indirect buffer
+			const GLuint openGLIndirectBuffer = static_cast<const IndirectBuffer&>(indirectBuffer).getOpenGLIndirectBuffer();
+			if (openGLIndirectBuffer != mOpenGLIndirectBuffer)
+			{
+				mOpenGLIndirectBuffer = openGLIndirectBuffer;
+				glBindBufferARB(GL_DRAW_INDIRECT_BUFFER, mOpenGLIndirectBuffer);
+			}
 		}
-		else
+
+		// Draw indirect
+		if (1 == numberOfDraws)
 		{
-			// Sanity checks
-			RENDERER_ASSERT(mContext, mExtensions->isGL_ARB_draw_indirect(), "The GL_ARB_draw_indirect OpenGL extension isn't supported")
-
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			OPENGLRENDERER_RENDERERMATCHCHECK_ASSERT(*this, indirectBuffer)
-
-			{ // Bind indirect buffer
-				const GLuint openGLIndirectBuffer = static_cast<const IndirectBuffer&>(indirectBuffer).getOpenGLIndirectBuffer();
-				if (openGLIndirectBuffer != mOpenGLIndirectBuffer)
-				{
-					mOpenGLIndirectBuffer = openGLIndirectBuffer;
-					glBindBufferARB(GL_DRAW_INDIRECT_BUFFER, mOpenGLIndirectBuffer);
-				}
-			}
-
-			// Draw indirect
-			if (1 == numberOfDraws)
+			glDrawElementsIndirect(mOpenGLPrimitiveTopology, mVertexArray->getIndexBuffer()->getOpenGLType(), reinterpret_cast<void*>(static_cast<uintptr_t>(indirectBufferOffset)));
+		}
+		else if (numberOfDraws > 1)
+		{
+			if (mExtensions->isGL_ARB_multi_draw_indirect())
 			{
-				glDrawElementsIndirect(mOpenGLPrimitiveTopology, mVertexArray->getIndexBuffer()->getOpenGLType(), reinterpret_cast<void*>(static_cast<uintptr_t>(indirectBufferOffset)));
+				glMultiDrawElementsIndirect(mOpenGLPrimitiveTopology, mVertexArray->getIndexBuffer()->getOpenGLType(), reinterpret_cast<void*>(static_cast<uintptr_t>(indirectBufferOffset)), static_cast<GLsizei>(numberOfDraws), 0);	// 0 = tightly packed
 			}
-			else if (numberOfDraws > 1)
+			else
 			{
-				if (mExtensions->isGL_ARB_multi_draw_indirect())
-				{
-					glMultiDrawElementsIndirect(mOpenGLPrimitiveTopology, mVertexArray->getIndexBuffer()->getOpenGLType(), reinterpret_cast<void*>(static_cast<uintptr_t>(indirectBufferOffset)), static_cast<GLsizei>(numberOfDraws), 0);	// 0 = tightly packed
-				}
-				else
-				{
-					// TODO(co) Emulation (see specification for examples)
-				}
+				// TODO(co) Emulation (see specification for examples)
 			}
 		}
 	}
@@ -1955,24 +1933,7 @@ namespace OpenGLRenderer
 				return ::detail::mapBuffer(mContext, *mExtensions, GL_TEXTURE_BUFFER_ARB, GL_TEXTURE_BINDING_BUFFER_ARB, static_cast<TextureBuffer&>(resource).getOpenGLTextureBuffer(), mapType, mappedSubresource);
 
 			case Renderer::ResourceType::INDIRECT_BUFFER:
-			{
-				const IndirectBuffer& indirectBuffer = static_cast<IndirectBuffer&>(resource);
-				uint8_t* emulationData = indirectBuffer.getWritableEmulationData();
-				if (nullptr != emulationData)
-				{
-					mappedSubresource.data		 = emulationData;
-					mappedSubresource.rowPitch   = 0;
-					mappedSubresource.depthPitch = 0;
-
-					// Done
-					return true;
-				}
-				else
-				{
-					return ::detail::mapBuffer(mContext, *mExtensions, GL_DRAW_INDIRECT_BUFFER, GL_DRAW_INDIRECT_BUFFER_BINDING, indirectBuffer.getOpenGLIndirectBuffer(), mapType, mappedSubresource);
-				}
-				break;	// Impossible to reach, but still add it
-			}
+				return ::detail::mapBuffer(mContext, *mExtensions, GL_DRAW_INDIRECT_BUFFER, GL_DRAW_INDIRECT_BUFFER_BINDING, static_cast<IndirectBuffer&>(resource).getOpenGLIndirectBuffer(), mapType, mappedSubresource);
 
 			case Renderer::ResourceType::TEXTURE_1D:
 			{
@@ -2094,14 +2055,8 @@ namespace OpenGLRenderer
 				break;
 
 			case Renderer::ResourceType::INDIRECT_BUFFER:
-			{
-				const IndirectBuffer& indirectBuffer = static_cast<IndirectBuffer&>(resource);
-				if (nullptr == indirectBuffer.getEmulationData())
-				{
-					::detail::unmapBuffer(*mExtensions, GL_DRAW_INDIRECT_BUFFER, GL_DRAW_INDIRECT_BUFFER_BINDING, indirectBuffer.getOpenGLIndirectBuffer());
-				}
+				::detail::unmapBuffer(*mExtensions, GL_DRAW_INDIRECT_BUFFER, GL_DRAW_INDIRECT_BUFFER_BINDING, static_cast<IndirectBuffer&>(resource).getOpenGLIndirectBuffer());
 				break;
-			}
 
 			case Renderer::ResourceType::TEXTURE_1D:
 			{

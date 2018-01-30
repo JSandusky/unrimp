@@ -104,15 +104,6 @@ namespace VulkanRenderer
 		*/
 		inline VkDeviceMemory getVkDeviceMemory() const;
 
-		/**
-		*  @brief
-		*    Return writable indirect buffer emulation data pointer
-		*
-		*  @return
-		*    Writable indirect buffer emulation data pointer, can be a null pointer, don't destroy the returned instance
-		*/
-		inline uint8_t* getWritableEmulationData() const;
-
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IIndirectBuffer methods      ]

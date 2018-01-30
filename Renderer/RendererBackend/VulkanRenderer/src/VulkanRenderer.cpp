@@ -685,26 +685,17 @@ namespace VulkanRenderer
 		RENDERER_ASSERT(mContext, numberOfDraws > 0, "Number of Vulkan draws must not be zero")
 		// It's possible to draw without "mVertexArray"
 
-		// Before doing anything else: If there's emulation data, use it (for example "Renderer::IndirectBuffer" might have been used to generate the data)
-		const uint8_t* emulationData = indirectBuffer.getEmulationData();
-		if (nullptr != emulationData)
-		{
-			drawEmulated(emulationData, indirectBufferOffset, numberOfDraws);
-		}
-		else
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			VULKANRENDERER_RENDERERMATCHCHECK_ASSERT(*this, indirectBuffer)
+		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+		VULKANRENDERER_RENDERERMATCHCHECK_ASSERT(*this, indirectBuffer)
 
-			// Start Vulkan render pass, if necessary
-			if (!mInsideVulkanRenderPass)
-			{
-				beginVulkanRenderPass();
-			}
-
-			// Vulkan draw indirect command
-			vkCmdDrawIndirect(getVulkanContext().getVkCommandBuffer(), static_cast<const IndirectBuffer&>(indirectBuffer).getVkBuffer(), indirectBufferOffset, numberOfDraws, sizeof(VkDrawIndirectCommand));
+		// Start Vulkan render pass, if necessary
+		if (!mInsideVulkanRenderPass)
+		{
+			beginVulkanRenderPass();
 		}
+
+		// Vulkan draw indirect command
+		vkCmdDrawIndirect(getVulkanContext().getVkCommandBuffer(), static_cast<const IndirectBuffer&>(indirectBuffer).getVkBuffer(), indirectBufferOffset, numberOfDraws, sizeof(VkDrawIndirectCommand));
 	}
 
 	void VulkanRenderer::drawEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
@@ -741,26 +732,17 @@ namespace VulkanRenderer
 		RENDERER_ASSERT(mContext, nullptr != mVertexArray, "Vulkan draw indexed needs a set vertex array")
 		RENDERER_ASSERT(mContext, nullptr != mVertexArray->getIndexBuffer(), "Vulkan draw indexed needs a set vertex array which contains an index buffer")
 
-		// Before doing anything else: If there's emulation data, use it (for example "Renderer::IndirectBuffer" might have been used to generate the data)
-		const uint8_t* emulationData = indirectBuffer.getEmulationData();
-		if (nullptr != emulationData)
-		{
-			drawIndexedEmulated(emulationData, indirectBufferOffset, numberOfDraws);
-		}
-		else
-		{
-			// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
-			VULKANRENDERER_RENDERERMATCHCHECK_ASSERT(*this, indirectBuffer)
+		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+		VULKANRENDERER_RENDERERMATCHCHECK_ASSERT(*this, indirectBuffer)
 
-			// Start Vulkan render pass, if necessary
-			if (!mInsideVulkanRenderPass)
-			{
-				beginVulkanRenderPass();
-			}
-
-			// Vulkan draw indexed indirect command
-			vkCmdDrawIndexedIndirect(getVulkanContext().getVkCommandBuffer(), static_cast<const IndirectBuffer&>(indirectBuffer).getVkBuffer(), indirectBufferOffset, numberOfDraws, sizeof(VkDrawIndexedIndirectCommand));
+		// Start Vulkan render pass, if necessary
+		if (!mInsideVulkanRenderPass)
+		{
+			beginVulkanRenderPass();
 		}
+
+		// Vulkan draw indexed indirect command
+		vkCmdDrawIndexedIndirect(getVulkanContext().getVkCommandBuffer(), static_cast<const IndirectBuffer&>(indirectBuffer).getVkBuffer(), indirectBufferOffset, numberOfDraws, sizeof(VkDrawIndexedIndirectCommand));
 	}
 
 	void VulkanRenderer::drawIndexedEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
@@ -1001,24 +983,9 @@ namespace VulkanRenderer
 
 			case Renderer::ResourceType::INDIRECT_BUFFER:
 			{
-				const IndirectBuffer& indirectBuffer = static_cast<IndirectBuffer&>(resource);
-				uint8_t* emulationData = indirectBuffer.getWritableEmulationData();
-				if (nullptr != emulationData)
-				{
-					mappedSubresource.data		 = emulationData;
-					mappedSubresource.rowPitch   = 0;
-					mappedSubresource.depthPitch = 0;
-
-					// Done
-					return true;
-				}
-				else
-				{
-					mappedSubresource.rowPitch   = 0;
-					mappedSubresource.depthPitch = 0;
-					return (vkMapMemory(getVulkanContext().getVkDevice(), static_cast<IndirectBuffer&>(resource).getVkDeviceMemory(), 0, VK_WHOLE_SIZE, 0, &mappedSubresource.data) == VK_SUCCESS);
-				}
-				break;	// Impossible to reach, but still add it
+				mappedSubresource.rowPitch   = 0;
+				mappedSubresource.depthPitch = 0;
+				return (vkMapMemory(getVulkanContext().getVkDevice(), static_cast<IndirectBuffer&>(resource).getVkDeviceMemory(), 0, VK_WHOLE_SIZE, 0, &mappedSubresource.data) == VK_SUCCESS);
 			}
 
 			case Renderer::ResourceType::TEXTURE_1D:
@@ -1107,11 +1074,7 @@ namespace VulkanRenderer
 
 			case Renderer::ResourceType::INDIRECT_BUFFER:
 			{
-				const IndirectBuffer& indirectBuffer = static_cast<IndirectBuffer&>(resource);
-				if (nullptr == indirectBuffer.getEmulationData())
-				{
-					vkUnmapMemory(getVulkanContext().getVkDevice(), indirectBuffer.getVkDeviceMemory());
-				}
+				vkUnmapMemory(getVulkanContext().getVkDevice(), static_cast<IndirectBuffer&>(resource).getVkDeviceMemory());
 				break;
 			}
 

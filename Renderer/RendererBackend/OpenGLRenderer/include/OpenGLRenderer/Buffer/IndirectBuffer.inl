@@ -33,12 +33,6 @@ namespace OpenGLRenderer
 		return mOpenGLIndirectBuffer;
 	}
 
-	inline uint8_t* IndirectBuffer::getWritableEmulationData() const
-	{
-		// Currently there's no need to emulate the indirect buffer inside the OpenGL renderer backend
-		return nullptr;
-	}
-
 
 	//[-------------------------------------------------------]
 	//[ Public virtual Renderer::IIndirectBuffer methods      ]
