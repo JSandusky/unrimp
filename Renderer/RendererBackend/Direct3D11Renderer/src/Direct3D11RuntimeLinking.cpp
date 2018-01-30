@@ -323,35 +323,49 @@ namespace Direct3D11Renderer
 		bool result = true;	// Success by default
 
 		// Define a helper macro
-		#define IMPORT_FUNC(funcName)																																						\
-			if (result)																																										\
-			{																																												\
-				void* symbol = ::GetProcAddress(static_cast<HMODULE>(mNvAPISharedLibrary), #funcName);																						\
-				if (nullptr != symbol)																																						\
-				{																																											\
-					*(reinterpret_cast<void**>(&(funcName))) = symbol;																														\
-				}																																											\
-				else																																										\
-				{																																											\
-					wchar_t moduleFilename[MAX_PATH];																																		\
-					moduleFilename[0] = '\0';																																				\
-					::GetModuleFileNameW(static_cast<HMODULE>(mNvAPISharedLibrary), moduleFilename, MAX_PATH);																				\
-					RENDERER_LOG(mDirect3D11Renderer.getContext(), CRITICAL, "Failed to locate the entry point \"%s\" within the NvAPI shared library \"%s\"", #funcName, moduleFilename)	\
-					result = false;																																							\
-				}																																											\
+		#define IMPORT_FUNC(funcName)																																					\
+			void* symbol = ::GetProcAddress(static_cast<HMODULE>(mNvAPISharedLibrary), #funcName);																						\
+			if (nullptr != symbol)																																						\
+			{																																											\
+				*(reinterpret_cast<void**>(&(funcName))) = symbol;																														\
+			}																																											\
+			else																																										\
+			{																																											\
+				wchar_t moduleFilename[MAX_PATH];																																		\
+				moduleFilename[0] = '\0';																																				\
+				::GetModuleFileNameW(static_cast<HMODULE>(mNvAPISharedLibrary), moduleFilename, MAX_PATH);																				\
+				RENDERER_LOG(mDirect3D11Renderer.getContext(), CRITICAL, "Failed to locate the entry point \"%s\" within the NvAPI shared library \"%s\"", #funcName, moduleFilename)	\
+				result = false;																																							\
+			}
+		FNDEF_NvAPI(void*,	nvapi_QueryInterface,	(unsigned int offset));
+		#define nvapi_QueryInterface	FNPTR(nvapi_QueryInterface)
+		#define IMPORT_NVAPI_FUNC(funcName, ID) \
+			*(reinterpret_cast<void**>(&(funcName))) = nvapi_QueryInterface(ID); \
+			if (nullptr == funcName) \
+			{ \
+				result = false; \
 			}
 
 		// Load the entry points
-		IMPORT_FUNC(NvAPI_Initialize);
-		IMPORT_FUNC(NvAPI_Unload);
-		IMPORT_FUNC(NvAPI_D3D11_MultiDrawInstancedIndirect);
-		IMPORT_FUNC(NvAPI_D3D11_MultiDrawIndexedInstancedIndirect);
+		nvapi_QueryInterface = nullptr;
+		IMPORT_FUNC(nvapi_QueryInterface);
+
+		// Query function pointers
+		if (nullptr != nvapi_QueryInterface)
+		{
+			IMPORT_NVAPI_FUNC(NvAPI_Initialize, 0x150E828UL)
+			IMPORT_NVAPI_FUNC(NvAPI_Unload, 0xD22BDD7EUL)
+			IMPORT_NVAPI_FUNC(NvAPI_D3D11_MultiDrawInstancedIndirect, 0xD4E26BBF)
+			IMPORT_NVAPI_FUNC(NvAPI_D3D11_MultiDrawIndexedInstancedIndirect, 0x59E890F9)
+		}
 
 		// Undefine the helper macro
+		#undef IMPORT_NVAPI_FUNC
+		#undef NvAPI_QueryInterface
 		#undef IMPORT_FUNC
 
 		// Initialize NvAPI (e.g. for multi-indirect-draw support)
-		if (nullptr != NvAPI_Initialize && 0 != NvAPI_Initialize())
+		if (result && nullptr != NvAPI_Initialize && 0 != NvAPI_Initialize())
 		{
 			RENDERER_LOG(mDirect3D11Renderer.getContext(), CRITICAL, "Direct3D 11: Failed to initialize NvAPI")
 			result = false;
