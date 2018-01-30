@@ -276,12 +276,64 @@ namespace
 				}
 			}
 
+			void DrawAgs(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
+				if (nullptr != realData->indirectBuffer)
+				{
+					static_cast<Direct3D11Renderer::Direct3D11Renderer&>(renderer).drawAgs(*realData->indirectBuffer, realData->indirectBufferOffset, realData->numberOfDraws);
+				}
+				else
+				{
+					static_cast<Direct3D11Renderer::Direct3D11Renderer&>(renderer).drawEmulated(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData), realData->indirectBufferOffset, realData->numberOfDraws);
+				}
+			}
+
+			void DrawNvApi(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
+				if (nullptr != realData->indirectBuffer)
+				{
+					static_cast<Direct3D11Renderer::Direct3D11Renderer&>(renderer).drawNvApi(*realData->indirectBuffer, realData->indirectBufferOffset, realData->numberOfDraws);
+				}
+				else
+				{
+					static_cast<Direct3D11Renderer::Direct3D11Renderer&>(renderer).drawEmulated(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData), realData->indirectBufferOffset, realData->numberOfDraws);
+				}
+			}
+
 			void DrawIndexed(const void* data, Renderer::IRenderer& renderer)
 			{
 				const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
 				if (nullptr != realData->indirectBuffer)
 				{
 					static_cast<Direct3D11Renderer::Direct3D11Renderer&>(renderer).drawIndexed(*realData->indirectBuffer, realData->indirectBufferOffset, realData->numberOfDraws);
+				}
+				else
+				{
+					static_cast<Direct3D11Renderer::Direct3D11Renderer&>(renderer).drawIndexedEmulated(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData), realData->indirectBufferOffset, realData->numberOfDraws);
+				}
+			}
+
+			void DrawIndexedAgs(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
+				if (nullptr != realData->indirectBuffer)
+				{
+					static_cast<Direct3D11Renderer::Direct3D11Renderer&>(renderer).drawIndexedAgs(*realData->indirectBuffer, realData->indirectBufferOffset, realData->numberOfDraws);
+				}
+				else
+				{
+					static_cast<Direct3D11Renderer::Direct3D11Renderer&>(renderer).drawIndexedEmulated(Renderer::CommandPacketHelper::getAuxiliaryMemory(realData), realData->indirectBufferOffset, realData->numberOfDraws);
+				}
+			}
+
+			void DrawIndexedNvApi(const void* data, Renderer::IRenderer& renderer)
+			{
+				const Renderer::Command::Draw* realData = static_cast<const Renderer::Command::Draw*>(data);
+				if (nullptr != realData->indirectBuffer)
+				{
+					static_cast<Direct3D11Renderer::Direct3D11Renderer&>(renderer).drawIndexedNvApi(*realData->indirectBuffer, realData->indirectBufferOffset, realData->numberOfDraws);
 				}
 				else
 				{
@@ -316,7 +368,7 @@ namespace
 		//[-------------------------------------------------------]
 		//[ Global definitions                                    ]
 		//[-------------------------------------------------------]
-		static const Renderer::BackendDispatchFunction DISPATCH_FUNCTIONS[Renderer::CommandDispatchFunctionIndex::NumberOfFunctions] =
+		static Renderer::BackendDispatchFunction DISPATCH_FUNCTIONS[Renderer::CommandDispatchFunctionIndex::NumberOfFunctions] =
 		{
 			// Command buffer
 			&BackendDispatch::ExecuteCommandBuffer,
@@ -396,11 +448,24 @@ namespace Direct3D11Renderer
 			#endif
 
 			// Create the Direct3D 11 device
-			if (!detail::createDevice(mDirect3D11RuntimeLinking->getAgsContext(), flags, &mD3D11Device, &mD3D11DeviceContext, mD3DFeatureLevel) && (flags & D3D11_CREATE_DEVICE_DEBUG))
+			AGSContext* agsContext = mDirect3D11RuntimeLinking->getAgsContext();
+			if (!detail::createDevice(agsContext, flags, &mD3D11Device, &mD3D11DeviceContext, mD3DFeatureLevel) && (flags & D3D11_CREATE_DEVICE_DEBUG))
 			{
 				RENDERER_LOG(mContext, CRITICAL, "Failed to create the Direct3D 11 device instance, retrying without debug flag (maybe no Windows SDK is installed)")
 				flags &= ~D3D11_CREATE_DEVICE_DEBUG;
-				detail::createDevice(mDirect3D11RuntimeLinking->getAgsContext(), flags, &mD3D11Device, &mD3D11DeviceContext, mD3DFeatureLevel);
+				detail::createDevice(agsContext, flags, &mD3D11Device, &mD3D11DeviceContext, mD3DFeatureLevel);
+			}
+
+			// Update dispatch draw function pointers, if needed
+			if (nullptr != agsContext)
+			{
+				detail::DISPATCH_FUNCTIONS[Renderer::CommandDispatchFunctionIndex::Draw] = &detail::BackendDispatch::DrawAgs;
+				detail::DISPATCH_FUNCTIONS[Renderer::CommandDispatchFunctionIndex::DrawIndexed] = &detail::BackendDispatch::DrawIndexedAgs;
+			}
+			else
+			{
+				detail::DISPATCH_FUNCTIONS[Renderer::CommandDispatchFunctionIndex::Draw] = (nullptr != NvAPI_D3D11_MultiDrawInstancedIndirect) ? &detail::BackendDispatch::DrawNvApi : &detail::BackendDispatch::Draw;
+				detail::DISPATCH_FUNCTIONS[Renderer::CommandDispatchFunctionIndex::DrawIndexed] = (nullptr != NvAPI_D3D11_MultiDrawIndexedInstancedIndirect) ? &detail::BackendDispatch::DrawIndexedNvApi : &detail::BackendDispatch::DrawIndexed;
 			}
 
 			// Is there a valid Direct3D 11 device and device context?
@@ -1286,26 +1351,56 @@ namespace Direct3D11Renderer
 		}
 		else if (numberOfDraws > 1)
 		{
-			// TODO(co) Possible minor optimization to avoid branching here: Modify "DISPATCH_FUNCTIONS" function table depending on available features
-			if (nullptr != agsDriverExtensionsDX11_MultiDrawInstancedIndirect)
+			// Emulate multi-draw-indirect
+			for (uint32_t i = 0; i < numberOfDraws; ++i)
 			{
-				// AMD: "agsDriverExtensionsDX11_MultiDrawInstancedIndirect()" - https://gpuopen-librariesandsdks.github.io/ags/group__mdi.html
-				agsDriverExtensionsDX11_MultiDrawInstancedIndirect(mDirect3D11RuntimeLinking->getAgsContext(), numberOfDraws, d3D11Buffer, indirectBufferOffset, sizeof(Renderer::DrawInstancedArguments));
+				mD3D11DeviceContext->DrawInstancedIndirect(d3D11Buffer, indirectBufferOffset);
+				indirectBufferOffset += sizeof(Renderer::DrawInstancedArguments);
 			}
-			else if (nullptr != NvAPI_D3D11_MultiDrawInstancedIndirect)
-			{
-				// NVIDIA: "NvAPI_D3D11_MultiDrawInstancedIndirect()" - http://docs.nvidia.com/gameworks/content/gameworkslibrary/coresdk/nvapi/group__dx.html#gaf417228a716d10efcb29fa592795f160
-				NvAPI_D3D11_MultiDrawInstancedIndirect(mD3D11DeviceContext, numberOfDraws, d3D11Buffer, indirectBufferOffset, sizeof(Renderer::DrawInstancedArguments));
-			}
-			else
-			{
-				// Emulate multi-draw-indirect
-				for (uint32_t i = 0; i < numberOfDraws; ++i)
-				{
-					mD3D11DeviceContext->DrawInstancedIndirect(d3D11Buffer, indirectBufferOffset);
-					indirectBufferOffset += sizeof(Renderer::DrawInstancedArguments);
-				}
-			}
+		}
+	}
+
+	void Direct3D11Renderer::drawAgs(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
+	{
+		// Sanity check
+		RENDERER_ASSERT(mContext, numberOfDraws > 0, "Number of Direct3D 11 draws must not be zero")
+		RENDERER_ASSERT(mContext, nullptr != agsDriverExtensionsDX11_MultiDrawInstancedIndirect, "Direct3D 11: AMD AGS function \"agsDriverExtensionsDX11_MultiDrawInstancedIndirect()\" not found")
+
+		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+		DIRECT3D11RENDERER_RENDERERMATCHCHECK_ASSERT(*this, indirectBuffer)
+
+		// Draw indirect
+		ID3D11Buffer* d3D11Buffer = static_cast<const IndirectBuffer&>(indirectBuffer).getD3D11Buffer();
+		if (1 == numberOfDraws)
+		{
+			mD3D11DeviceContext->DrawInstancedIndirect(d3D11Buffer, indirectBufferOffset);
+		}
+		else if (numberOfDraws > 1)
+		{
+			// AMD: "agsDriverExtensionsDX11_MultiDrawInstancedIndirect()" - https://gpuopen-librariesandsdks.github.io/ags/group__mdi.html
+			agsDriverExtensionsDX11_MultiDrawInstancedIndirect(mDirect3D11RuntimeLinking->getAgsContext(), numberOfDraws, d3D11Buffer, indirectBufferOffset, sizeof(Renderer::DrawInstancedArguments));
+		}
+	}
+
+	void Direct3D11Renderer::drawNvApi(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
+	{
+		// Sanity check
+		RENDERER_ASSERT(mContext, numberOfDraws > 0, "Number of Direct3D 11 draws must not be zero")
+		RENDERER_ASSERT(mContext, nullptr != NvAPI_D3D11_MultiDrawInstancedIndirect, "Direct3D 11: NvAPI function \"NvAPI_D3D11_MultiDrawInstancedIndirect()\" not found")
+
+		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+		DIRECT3D11RENDERER_RENDERERMATCHCHECK_ASSERT(*this, indirectBuffer)
+
+		// Draw indirect
+		ID3D11Buffer* d3D11Buffer = static_cast<const IndirectBuffer&>(indirectBuffer).getD3D11Buffer();
+		if (1 == numberOfDraws)
+		{
+			mD3D11DeviceContext->DrawInstancedIndirect(d3D11Buffer, indirectBufferOffset);
+		}
+		else if (numberOfDraws > 1)
+		{
+			// NVIDIA: "NvAPI_D3D11_MultiDrawInstancedIndirect()" - http://docs.nvidia.com/gameworks/content/gameworkslibrary/coresdk/nvapi/group__dx.html#gaf417228a716d10efcb29fa592795f160
+			NvAPI_D3D11_MultiDrawInstancedIndirect(mD3D11DeviceContext, numberOfDraws, d3D11Buffer, indirectBufferOffset, sizeof(Renderer::DrawInstancedArguments));
 		}
 	}
 
@@ -1364,26 +1459,56 @@ namespace Direct3D11Renderer
 		}
 		else if (numberOfDraws > 1)
 		{
-			// TODO(co) Possible minor optimization to avoid branching here: Modify "DISPATCH_FUNCTIONS" function table depending on available features
-			if (nullptr != agsDriverExtensionsDX11_MultiDrawIndexedInstancedIndirect)
+			// Emulate multi-draw-indirect
+			for (uint32_t i = 0; i < numberOfDraws; ++i)
 			{
-				// AMD: "agsDriverExtensionsDX11_MultiDrawIndexedInstancedIndirect()" - https://gpuopen-librariesandsdks.github.io/ags/group__mdi.html
-				agsDriverExtensionsDX11_MultiDrawIndexedInstancedIndirect(mDirect3D11RuntimeLinking->getAgsContext(), numberOfDraws, d3D11Buffer, indirectBufferOffset, sizeof(Renderer::DrawIndexedInstancedArguments));
+				mD3D11DeviceContext->DrawIndexedInstancedIndirect(d3D11Buffer, indirectBufferOffset);
+				indirectBufferOffset += sizeof(Renderer::DrawIndexedInstancedArguments);
 			}
-			else if (nullptr != NvAPI_D3D11_MultiDrawIndexedInstancedIndirect)
-			{
-				// NVIDIA: "NvAPI_D3D11_MultiDrawIndexedInstancedIndirect()" - http://docs.nvidia.com/gameworks/content/gameworkslibrary/coresdk/nvapi/group__dx.html#ga04cbd1b776a391e45d38377bd3156f9e
-				NvAPI_D3D11_MultiDrawIndexedInstancedIndirect(mD3D11DeviceContext, numberOfDraws, d3D11Buffer, indirectBufferOffset, sizeof(Renderer::DrawInstancedArguments));
-			}
-			else
-			{
-				// Emulate multi-draw-indirect
-				for (uint32_t i = 0; i < numberOfDraws; ++i)
-				{
-					mD3D11DeviceContext->DrawIndexedInstancedIndirect(d3D11Buffer, indirectBufferOffset);
-					indirectBufferOffset += sizeof(Renderer::DrawIndexedInstancedArguments);
-				}
-			}
+		}
+	}
+
+	void Direct3D11Renderer::drawIndexedAgs(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
+	{
+		// Sanity checks
+		RENDERER_ASSERT(mContext, numberOfDraws > 0, "Number of Direct3D 11 draws must not be zero")
+		RENDERER_ASSERT(mContext, nullptr != agsDriverExtensionsDX11_MultiDrawIndexedInstancedIndirect, "Direct3D 11: NvAPI function \"agsDriverExtensionsDX11_MultiDrawIndexedInstancedIndirect()\" not found")
+
+		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+		DIRECT3D11RENDERER_RENDERERMATCHCHECK_ASSERT(*this, indirectBuffer)
+
+		// Draw indirect
+		ID3D11Buffer* d3D11Buffer = static_cast<const IndirectBuffer&>(indirectBuffer).getD3D11Buffer();
+		if (1 == numberOfDraws)
+		{
+			mD3D11DeviceContext->DrawIndexedInstancedIndirect(d3D11Buffer, indirectBufferOffset);
+		}
+		else if (numberOfDraws > 1)
+		{
+			// AMD: "agsDriverExtensionsDX11_MultiDrawIndexedInstancedIndirect()" - https://gpuopen-librariesandsdks.github.io/ags/group__mdi.html
+			agsDriverExtensionsDX11_MultiDrawIndexedInstancedIndirect(mDirect3D11RuntimeLinking->getAgsContext(), numberOfDraws, d3D11Buffer, indirectBufferOffset, sizeof(Renderer::DrawIndexedInstancedArguments));
+		}
+	}
+
+	void Direct3D11Renderer::drawIndexedNvApi(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
+	{
+		// Sanity checks
+		RENDERER_ASSERT(mContext, numberOfDraws > 0, "Number of Direct3D 11 draws must not be zero")
+		RENDERER_ASSERT(mContext, nullptr != NvAPI_D3D11_MultiDrawIndexedInstancedIndirect, "Direct3D 11: NvAPI function \"NvAPI_D3D11_MultiDrawIndexedInstancedIndirect()\" not found")
+
+		// Security check: Is the given resource owned by this renderer? (calls "return" in case of a mismatch)
+		DIRECT3D11RENDERER_RENDERERMATCHCHECK_ASSERT(*this, indirectBuffer)
+
+		// Draw indirect
+		ID3D11Buffer* d3D11Buffer = static_cast<const IndirectBuffer&>(indirectBuffer).getD3D11Buffer();
+		if (1 == numberOfDraws)
+		{
+			mD3D11DeviceContext->DrawIndexedInstancedIndirect(d3D11Buffer, indirectBufferOffset);
+		}
+		else if (numberOfDraws > 1)
+		{
+			// NVIDIA: "NvAPI_D3D11_MultiDrawIndexedInstancedIndirect()" - http://docs.nvidia.com/gameworks/content/gameworkslibrary/coresdk/nvapi/group__dx.html#ga04cbd1b776a391e45d38377bd3156f9e
+			NvAPI_D3D11_MultiDrawIndexedInstancedIndirect(mD3D11DeviceContext, numberOfDraws, d3D11Buffer, indirectBufferOffset, sizeof(Renderer::DrawInstancedArguments));
 		}
 	}
 
