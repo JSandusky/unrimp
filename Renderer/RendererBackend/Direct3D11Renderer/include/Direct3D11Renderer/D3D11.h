@@ -608,7 +608,8 @@ struct DXGI_SWAP_CHAIN_DESC
 };
 
 // "Microsoft DirectX SDK (June 2010)" -> "DXGI.h"
-struct IDXGIFactory : public IDXGIObject
+MIDL_INTERFACE("7b7166ec-21c7-44ae-b21a-c9ae321ae369")
+IDXGIFactory : public IDXGIObject
 {
 	public:
 		virtual HRESULT STDMETHODCALLTYPE EnumAdapters(UINT Adapter, __out IDXGIAdapter **ppAdapter) = 0;

@@ -41,6 +41,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	Direct3D11RuntimeLinking::Direct3D11RuntimeLinking(Direct3D11Renderer& direct3D11Renderer) :
 		mDirect3D11Renderer(direct3D11Renderer),
+		mDxgiSharedLibrary(nullptr),
 		mD3D11SharedLibrary(nullptr),
 		mD3DX11SharedLibrary(nullptr),
 		mD3DCompilerSharedLibrary(nullptr),
@@ -56,6 +57,10 @@ namespace Direct3D11Renderer
 	Direct3D11RuntimeLinking::~Direct3D11RuntimeLinking()
 	{
 		// Destroy the shared library instances
+		if (nullptr != mDxgiSharedLibrary)
+		{
+			::FreeLibrary(static_cast<HMODULE>(mDxgiSharedLibrary));
+		}
 		if (nullptr != mD3D11SharedLibrary)
 		{
 			::FreeLibrary(static_cast<HMODULE>(mD3D11SharedLibrary));
@@ -97,8 +102,68 @@ namespace Direct3D11Renderer
 			// Load the shared libraries
 			if (loadSharedLibraries())
 			{
-				// Load the D3D11, D3DX11 and D3DCompiler entry points
-				mEntryPointsRegistered = (loadD3D11EntryPoints() && loadD3DX11EntryPoints() && loadD3DCompilerEntryPoints());
+				// Load the DXGI, D3D11, D3DX11 and D3DCompiler entry points
+				mEntryPointsRegistered = (loadDxgiEntryPoints() && loadD3D11EntryPoints() && loadD3DX11EntryPoints() && loadD3DCompilerEntryPoints());
+
+				// AMD AGS and NvAPI for e.g. multi-draw-indirect support
+				if (mEntryPointsRegistered)
+				{
+					// Check whether or not the primary DXGI adapter is an AMD GPU
+					bool amdDxgiAdapter = false;
+					bool nvidiaDxgiAdapter = false;
+					{
+						// Get the primary DXGI adapter
+						IDXGIFactory* dxgiFactory = nullptr;
+						CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&dxgiFactory);
+						if (nullptr == dxgiFactory)
+						{
+							// Error!
+							return false;
+						}
+						IDXGIAdapter* dxgiAdapter = nullptr;
+						dxgiFactory->EnumAdapters(0, &dxgiAdapter);
+						DXGI_ADAPTER_DESC dxgiAdapterDesc = {};
+						dxgiAdapter->GetDesc(&dxgiAdapterDesc);
+						amdDxgiAdapter = (0x1002 == dxgiAdapterDesc.VendorId);		// 0x1002 -> See "How-To Identify the Manufacturer and Model of an AMD Graphics Card" at http://support.amd.com/en-us/kb-articles/Pages/HowtoidentifythemodelofanATIgraphicscard.aspx
+						nvidiaDxgiAdapter = (0x10DE == dxgiAdapterDesc.VendorId);	// 0x10DE -> See "Device IDs" at http://www.nvidia.com/object/device_ids.html
+						dxgiAdapter->Release();
+						dxgiFactory->Release();
+					}
+
+					// Optional vendor specific part: AMD AGS
+					if (amdDxgiAdapter)
+					{
+						mAmdAgsSharedLibrary = ::LoadLibraryExA("amd_ags.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
+						if (nullptr != mAmdAgsSharedLibrary && !loadAmdAgsEntryPoints())
+						{
+							RENDERER_LOG(mDirect3D11Renderer.getContext(), CRITICAL, "Direct3D 11: Failed to load AMD AGS function entry points")
+							::FreeLibrary(static_cast<HMODULE>(mAmdAgsSharedLibrary));
+							mAmdAgsSharedLibrary									  = nullptr;
+							agsInit													  = nullptr;
+							agsDeInit												  = nullptr;
+							agsDriverExtensionsDX11_CreateDevice					  = nullptr;
+							agsDriverExtensionsDX11_DestroyDevice					  = nullptr;
+							agsDriverExtensionsDX11_MultiDrawInstancedIndirect		  = nullptr;
+							agsDriverExtensionsDX11_MultiDrawIndexedInstancedIndirect = nullptr;
+						}
+					}
+
+					// Optional vendor specific part: NvAPI
+					if (nvidiaDxgiAdapter)
+					{
+						mNvAPISharedLibrary = ::LoadLibraryExA("nvapi.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
+						if (nullptr != mNvAPISharedLibrary && !loadNvAPIEntryPoints())
+						{
+							RENDERER_LOG(mDirect3D11Renderer.getContext(), CRITICAL, "Direct3D 11: Failed to load NvAPI function entry points")
+							::FreeLibrary(static_cast<HMODULE>(mNvAPISharedLibrary));
+							mNvAPISharedLibrary							  = nullptr;
+							NvAPI_Initialize							  = nullptr;
+							NvAPI_Unload								  = nullptr;
+							NvAPI_D3D11_MultiDrawInstancedIndirect		  = nullptr;
+							NvAPI_D3D11_MultiDrawIndexedInstancedIndirect = nullptr;
+						}
+					}
+				}
 			}
 		}
 
@@ -118,59 +183,71 @@ namespace Direct3D11Renderer
 	bool Direct3D11RuntimeLinking::loadSharedLibraries()
 	{
 		// Load the shared library
-		mD3D11SharedLibrary = ::LoadLibraryExA("d3d11.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
-		if (nullptr != mD3D11SharedLibrary)
+		mDxgiSharedLibrary = ::LoadLibraryExA("dxgi.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
+		if (nullptr != mDxgiSharedLibrary)
 		{
-			mD3DX11SharedLibrary = ::LoadLibraryExA("d3dx11_43.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
-			if (nullptr != mD3DX11SharedLibrary)
+			mD3D11SharedLibrary = ::LoadLibraryExA("d3d11.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
+			if (nullptr != mD3D11SharedLibrary)
 			{
-				mD3DCompilerSharedLibrary = ::LoadLibraryExA("D3DCompiler_47.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
-				if (nullptr == mD3DCompilerSharedLibrary)
+				mD3DX11SharedLibrary = ::LoadLibraryExA("d3dx11_43.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
+				if (nullptr != mD3DX11SharedLibrary)
 				{
-					RENDERER_LOG(mDirect3D11Renderer.getContext(), CRITICAL, "Failed to load in the shared Direct3D 11 library \"D3DCompiler_47.dll\"")
+					mD3DCompilerSharedLibrary = ::LoadLibraryExA("D3DCompiler_47.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
+					if (nullptr == mD3DCompilerSharedLibrary)
+					{
+						RENDERER_LOG(mDirect3D11Renderer.getContext(), CRITICAL, "Failed to load in the shared Direct3D 11 library \"D3DCompiler_47.dll\"")
+					}
 				}
-
-				// TODO(co) Need to ensure this only runs on AMD GPUs and also makes no problems when changing the GPU inside a system
-				// Optional vendor specific part: AMD AGS
-				mAmdAgsSharedLibrary = ::LoadLibraryExA("amd_ags.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
-				if (nullptr != mAmdAgsSharedLibrary && !loadAmdAgsEntryPoints())
+				else
 				{
-					RENDERER_LOG(mDirect3D11Renderer.getContext(), CRITICAL, "Direct3D 11: Failed to load AMD AGS function entry points")
-					::FreeLibrary(static_cast<HMODULE>(mAmdAgsSharedLibrary));
-					mAmdAgsSharedLibrary									  = nullptr;
-					agsInit													  = nullptr;
-					agsDeInit												  = nullptr;
-					agsDriverExtensionsDX11_CreateDevice					  = nullptr;
-					agsDriverExtensionsDX11_DestroyDevice					  = nullptr;
-					agsDriverExtensionsDX11_MultiDrawInstancedIndirect		  = nullptr;
-					agsDriverExtensionsDX11_MultiDrawIndexedInstancedIndirect = nullptr;
-				}
-
-				// Optional vendor specific part: NvAPI
-				mNvAPISharedLibrary = ::LoadLibraryExA("nvapi.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
-				if (nullptr != mNvAPISharedLibrary && !loadNvAPIEntryPoints())
-				{
-					RENDERER_LOG(mDirect3D11Renderer.getContext(), CRITICAL, "Direct3D 11: Failed to load NvAPI function entry points")
-					::FreeLibrary(static_cast<HMODULE>(mNvAPISharedLibrary));
-					mNvAPISharedLibrary							  = nullptr;
-					NvAPI_Initialize							  = nullptr;
-					NvAPI_Unload								  = nullptr;
-					NvAPI_D3D11_MultiDrawInstancedIndirect		  = nullptr;
-					NvAPI_D3D11_MultiDrawIndexedInstancedIndirect = nullptr;
+					RENDERER_LOG(mDirect3D11Renderer.getContext(), CRITICAL, "Failed to load in the shared Direct3D 11 library \"d3dx11_43.dll\"")
 				}
 			}
 			else
 			{
-				RENDERER_LOG(mDirect3D11Renderer.getContext(), CRITICAL, "Failed to load in the shared Direct3D 11 library \"d3dx11_43.dll\"")
+				RENDERER_LOG(mDirect3D11Renderer.getContext(), CRITICAL, "Failed to load in the shared Direct3D 11 library \"d3d11.dll\"")
 			}
 		}
 		else
 		{
-			RENDERER_LOG(mDirect3D11Renderer.getContext(), CRITICAL, "Failed to load in the shared Direct3D 11 library \"d3d11.dll\"")
+			RENDERER_LOG(mDirect3D11Renderer.getContext(), CRITICAL, "Failed to load in the shared Direct3D 11 library \"dxgi.dll\"")
 		}
 
 		// Done
-		return (nullptr != mD3D11SharedLibrary && nullptr != mD3DX11SharedLibrary && nullptr != mD3DCompilerSharedLibrary);
+		return (nullptr != mDxgiSharedLibrary && nullptr != mD3D11SharedLibrary && nullptr != mD3DX11SharedLibrary && nullptr != mD3DCompilerSharedLibrary);
+	}
+
+	bool Direct3D11RuntimeLinking::loadDxgiEntryPoints()
+	{
+		bool result = true;	// Success by default
+
+		// Define a helper macro
+		#define IMPORT_FUNC(funcName)																																									\
+			if (result)																																													\
+			{																																															\
+				void* symbol = ::GetProcAddress(static_cast<HMODULE>(mDxgiSharedLibrary), #funcName);																									\
+				if (nullptr != symbol)																																									\
+				{																																														\
+					*(reinterpret_cast<void**>(&(funcName))) = symbol;																																	\
+				}																																														\
+				else																																													\
+				{																																														\
+					wchar_t moduleFilename[MAX_PATH];																																					\
+					moduleFilename[0] = '\0';																																							\
+					::GetModuleFileNameW(static_cast<HMODULE>(mDxgiSharedLibrary), moduleFilename, MAX_PATH);																							\
+					RENDERER_LOG(mDirect3D11Renderer.getContext(), CRITICAL, "Failed to locate the entry point \"%s\" within the Direct3D 11 DXGI shared library \"%s\"", #funcName, moduleFilename)	\
+					result = false;																																										\
+				}																																														\
+			}
+
+		// Load the entry points
+		IMPORT_FUNC(CreateDXGIFactory);
+
+		// Undefine the helper macro
+		#undef IMPORT_FUNC
+
+		// Done
+		return result;
 	}
 
 	bool Direct3D11RuntimeLinking::loadD3D11EntryPoints()

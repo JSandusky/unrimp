@@ -114,6 +114,15 @@ namespace Direct3D11Renderer
 
 		/**
 		*  @brief
+		*    Load the DXGI entry points
+		*
+		*  @return
+		*    "true" if all went fine, else "false"
+		*/
+		bool loadDxgiEntryPoints();
+
+		/**
+		*  @brief
 		*    Load the D3D11 entry points
 		*
 		*  @return
@@ -163,6 +172,7 @@ namespace Direct3D11Renderer
 	//[-------------------------------------------------------]
 	private:
 		Direct3D11Renderer&	mDirect3D11Renderer;		///< Owner Direct3D 11 renderer instance
+		void*				mDxgiSharedLibrary;			///< DXGI shared library, can be a null pointer
 		void*				mD3D11SharedLibrary;		///< D3D11 shared library, can be a null pointer
 		void*				mD3DX11SharedLibrary;		///< D3DX11 shared library, can be a null pointer
 		void*				mD3DCompilerSharedLibrary;	///< D3DCompiler shared library, can be a null pointer
@@ -183,6 +193,18 @@ namespace Direct3D11Renderer
 	#ifndef FNPTR
 		#define FNPTR(name) funcPtr_##name
 	#endif
+
+
+	//[-------------------------------------------------------]
+	//[ DXGI core functions                                   ]
+	//[-------------------------------------------------------]
+	#ifdef DIRECT3D11_DEFINERUNTIMELINKING
+		#define FNDEF_DXGI(retType, funcName, args) retType (WINAPI *funcPtr_##funcName) args
+	#else
+		#define FNDEF_DXGI(retType, funcName, args) extern retType (WINAPI *funcPtr_##funcName) args
+	#endif
+	FNDEF_DXGI(HRESULT,	CreateDXGIFactory,	(REFIID riid, _COM_Outptr_ void **ppFactory));
+	#define CreateDXGIFactory	FNPTR(CreateDXGIFactory)
 
 
 	//[-------------------------------------------------------]
