@@ -1,0 +1,95 @@
+{
+	"Format":
+	{
+		"Type": "MaterialBlueprintAsset",
+		"Version": "2"
+	},
+	"MaterialBlueprintAsset":
+	{
+		"Properties":
+		{
+			"RenderQueueIndex":
+			{
+				"Usage": "STATIC",
+				"ValueType": "INTEGER",
+				"Value": "255",
+				"Description": "Render queue index [0, 255]",
+				"MinimumIntegerValue": "0",
+				"MaximumIntegerValue": "255"
+			},
+			"_argb_nxa":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/DynamicByCode/Identity_argb_nxa2D",
+				"Description": "RGB channel = Albedo map ('_a'-postfix), A channel = x component of normal map ('_n'-postfix)"
+			}
+		},
+		"PipelineState":
+		{
+			"VertexAttributes": "$ProjectName/VertexAttributes/Default/Null.asset", 
+			"ShaderBlueprints":
+			{
+				"VertexShaderBlueprint": "$ProjectName/ShaderBlueprint/Particles/Vertex.asset",
+				"FragmentShaderBlueprint": "$ProjectName/ShaderBlueprint/Particles/Fragment.asset"
+			},
+			"RasterizerState":
+			{
+				"CullMode": "NONE"
+			},
+			"DepthStencilState":
+			{
+				"DepthWriteMask": "ZERO"
+			}
+		},
+		"ResourceGroups":
+		{
+			"0":
+			{
+				"0":
+				{
+					"BaseShaderRegisterName": "PassUniformBuffer",
+					"BaseShaderRegister": "0",
+					"ResourceType": "UNIFORM_BUFFER",
+					"BufferUsage": "PASS",
+					"NumberOfElements": "1",
+					"ElementProperties":
+					{
+						"WorldSpaceToClipSpaceMatrix":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4_4",
+							"Value": "@WORLD_SPACE_TO_CLIP_SPACE_MATRIX"
+						}
+					}
+				}
+			},
+			"1":
+			{
+				"0":
+				{
+					"BaseShaderRegisterName": "_argb_nxa",
+					"BaseShaderRegister": "0",
+					"ShaderVisibility": "FRAGMENT",
+					"ResourceType": "TEXTURE",
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@_argb_nxa",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/Identity_argb_nxa2D",
+					"RgbHardwareGammaCorrection": "TRUE",
+					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
+				}
+			},
+			"2":
+			{
+				"0":
+				{
+					"BaseShaderRegisterName": "SamplerLinear",
+					"BaseShaderRegister": "0",
+					"ShaderVisibility": "FRAGMENT",
+					"ResourceType": "SAMPLER_STATE"
+				}
+			}
+		}
+	}
+}

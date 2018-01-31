@@ -148,6 +148,7 @@ set(SOURCE_CODES
 	src/Resource/Scene/Item/Sky/SkySceneItem.cpp
 	src/Resource/Scene/Item/Sky/HosekWilkieSky.cpp
 	src/Resource/Scene/Item/Terrain/TerrainSceneItem.cpp
+	src/Resource/Scene/Item/Particles/ParticlesSceneItem.cpp
 	src/Resource/Scene/Loader/SceneResourceLoader.cpp
 	src/Resource/Scene/SceneNode.cpp
 	src/Resource/Scene/ISceneItem.cpp

@@ -73,7 +73,11 @@ namespace RendererRuntime
 		mMemoryFile.read(&vertexAttributesHeader, sizeof(v1VertexAttributes::VertexAttributesHeader));
 
 		// TODO(co) Implement vertex attributes file format. This here is just a fixed build in dummy.
-		if (593231539 == getAsset().assetId)	// "VertexAttributes/Default/Compositor"
+		if (852946543 == getAsset().assetId)	// "Example/VertexAttributes/Default/Null"
+		{
+			mVertexAttributesResource->mVertexAttributes = Renderer::VertexAttributes(0, nullptr);
+		}
+		else if (593231539 == getAsset().assetId)	// "Example/VertexAttributes/Default/Compositor"
 		{
 			Renderer::VertexAttributes& vertexAttributes = const_cast<Renderer::VertexAttributes&>(mVertexAttributesResource->mVertexAttributes);
 			static const Renderer::VertexAttribute vertexAttributesLayout[] =
@@ -94,7 +98,7 @@ namespace RendererRuntime
 			vertexAttributes.numberOfAttributes = static_cast<uint32_t>(glm::countof(vertexAttributesLayout));
 			vertexAttributes.attributes = vertexAttributesLayout;
 		}
-		else if (4054156081 == getAsset().assetId)	// "VertexAttributes/Default/Position"
+		else if (4054156081 == getAsset().assetId)	// "Example/VertexAttributes/Default/Position"
 		{
 			Renderer::VertexAttributes& vertexAttributes = const_cast<Renderer::VertexAttributes&>(mVertexAttributesResource->mVertexAttributes);
 			static const Renderer::VertexAttribute vertexAttributesLayout[] =
@@ -115,7 +119,7 @@ namespace RendererRuntime
 			vertexAttributes.numberOfAttributes = static_cast<uint32_t>(glm::countof(vertexAttributesLayout));
 			vertexAttributes.attributes = vertexAttributesLayout;
 		}
-		else if (4212832814 == getAsset().assetId)	// "VertexAttributes/Default/DebugGui"
+		else if (4212832814 == getAsset().assetId)	// "Example/VertexAttributes/Default/DebugGui"
 		{
 			Renderer::VertexAttributes& vertexAttributes = const_cast<Renderer::VertexAttributes&>(mVertexAttributesResource->mVertexAttributes);
 			static const Renderer::VertexAttribute vertexAttributesLayout[] =
@@ -160,15 +164,15 @@ namespace RendererRuntime
 			vertexAttributes.numberOfAttributes = static_cast<uint32_t>(glm::countof(vertexAttributesLayout));
 			vertexAttributes.attributes = vertexAttributesLayout;
 		}
-		else if (1156289207 == getAsset().assetId)	// "VertexAttributes/Default/Mesh"
+		else if (1156289207 == getAsset().assetId)	// "Example/VertexAttributes/Default/Mesh"
 		{
 			mVertexAttributesResource->mVertexAttributes = Renderer::VertexAttributes(MeshResource::VERTEX_ATTRIBUTES.numberOfAttributes, MeshResource::VERTEX_ATTRIBUTES.attributes);
 		}
-		else if (871545499 == getAsset().assetId)	// "VertexAttributes/Default/SkinnedMesh"
+		else if (871545499 == getAsset().assetId)	// "Example/VertexAttributes/Default/SkinnedMesh"
 		{
 			mVertexAttributesResource->mVertexAttributes = Renderer::VertexAttributes(MeshResource::SKINNED_VERTEX_ATTRIBUTES.numberOfAttributes, MeshResource::SKINNED_VERTEX_ATTRIBUTES.attributes);
 		}
-		else if (684507259 == getAsset().assetId)	// "VertexAttributes/Default/Terrain"
+		else if (684507259 == getAsset().assetId)	// "Example/VertexAttributes/Default/Terrain"
 		{
 			mVertexAttributesResource->mVertexAttributes = Renderer::VertexAttributes(TerrainSceneItem::VERTEX_ATTRIBUTES.numberOfAttributes, TerrainSceneItem::VERTEX_ATTRIBUTES.attributes);
 		}

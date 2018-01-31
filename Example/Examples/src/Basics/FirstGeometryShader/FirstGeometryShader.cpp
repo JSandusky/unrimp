@@ -69,40 +69,7 @@ void FirstGeometryShader::onInitialization()
 		}
 
 		// Vertex input layout
-		const Renderer::VertexAttribute vertexAttributesLayout[] =
-		{
-			{ // Attribute 0
-				// Data destination
-				Renderer::VertexAttributeFormat::FLOAT_1,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
-				"Position",									// name[32] (char)
-				"POSITION",									// semanticName[32] (char)
-				0,											// semanticIndex (uint32_t)
-				// Data source
-				0,											// inputSlot (uint32_t)
-				0,											// alignedByteOffset (uint32_t)
-				sizeof(float),								// strideInBytes (uint32_t)
-				0											// instancesPerElement (uint32_t)
-			}
-		};
-		const Renderer::VertexAttributes vertexAttributes(static_cast<uint32_t>(glm::countof(vertexAttributesLayout)), vertexAttributesLayout);
-
-		{ // Create vertex array object (VAO)
-			// Create the vertex buffer object (VBO)
-			static const float VERTEX_POSITION[] =
-			{			// Vertex ID
-				42.0f	// 0
-			};
-			Renderer::IVertexBufferPtr vertexBuffer(mBufferManager->createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
-
-			// Create vertex array object (VAO)
-			// -> The vertex array object (VAO) keeps a reference to the used vertex buffer object (VBO)
-			// -> This means that there's no need to keep an own vertex buffer object (VBO) reference
-			// -> When the vertex array object (VAO) is destroyed, it automatically decreases the
-			//    reference of the used vertex buffer objects (VBO). If the reference counter of a
-			//    vertex buffer object (VBO) reaches zero, it's automatically destroyed.
-			const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] = { vertexBuffer };
-			mVertexArray = mBufferManager->createVertexArray(vertexAttributes, static_cast<uint32_t>(glm::countof(vertexArrayVertexBuffers)), vertexArrayVertexBuffers);
-		}
+		const Renderer::VertexAttributes vertexAttributes(0, nullptr);
 
 		// Create the program: Decide which shader language should be used (for example "GLSL" or "HLSL")
 		Renderer::IShaderLanguagePtr shaderLanguage(renderer->getShaderLanguage());
@@ -147,7 +114,6 @@ void FirstGeometryShader::onInitialization()
 void FirstGeometryShader::onDeinitialization()
 {
 	// Release the used resources
-	mVertexArray = nullptr;
 	mPipelineState = nullptr;
 	mRootSignature = nullptr;
 	mCommandBuffer.clear();
@@ -178,7 +144,6 @@ void FirstGeometryShader::fillCommandBuffer()
 	assert(mCommandBuffer.isEmpty());
 	assert(nullptr != mRootSignature);
 	assert(nullptr != mPipelineState);
-	assert(nullptr != mVertexArray);
 
 	// Begin debug event
 	COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(mCommandBuffer)
@@ -192,12 +157,9 @@ void FirstGeometryShader::fillCommandBuffer()
 	// Set the used pipeline state object (PSO)
 	Renderer::Command::SetPipelineState::create(mCommandBuffer, mPipelineState);
 
-	// Input assembly (IA): Set the used vertex array
-	Renderer::Command::SetVertexArray::create(mCommandBuffer, mVertexArray);
-
 	// Render the specified geometric primitive, based on an array of vertices
 	// -> Emit a single point in order to generate a draw call, the geometry shader does the rest
-	// -> Attribute less rendering (aka "drawing without data")
+	// -> Attribute-less rendering (aka "drawing without data")
 	Renderer::Command::Draw::create(mCommandBuffer, 1);
 
 	// End debug event

@@ -257,6 +257,23 @@
 						"Mesh": "$ProjectName/Mesh/TestObject/testObj.asset"
 					}
 				}
+			},
+			{
+				"Properties":
+				{
+					"Position": "0.0 0.0 0.0 METER"
+				},
+				"Items":
+				{
+					"ParticlesSceneItem":
+					{
+						"Material": "$ProjectName/Material/Base/Particles.asset",
+						"SetMaterialProperties":
+						{
+							"_argb_nxa": "$ProjectName/Texture/Terrain/Gonzales_argb_nxa.asset"
+						}
+					}
+				}
 			}
 		]
 	}

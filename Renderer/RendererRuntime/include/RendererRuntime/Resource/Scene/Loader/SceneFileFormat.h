@@ -136,6 +136,11 @@ namespace RendererRuntime
 			{
 				// Nothing here
 			};
+
+			struct ParticlesItem final : public MaterialItem
+			{
+				// Nothing here
+			};
 		#pragma pack(pop)
 
 

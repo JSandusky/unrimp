@@ -224,6 +224,9 @@
     <Filter Include="Source Files\Resource\Scene\Culling">
       <UniqueIdentifier>{fb320af9-2c49-4ae5-a1dd-fe97da41a9ed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Resource\Scene\Item\Particles">
+      <UniqueIdentifier>{bf2a3b62-7d1a-44f6-a2a4-70bd8b1398d9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.txt" />
@@ -647,6 +650,9 @@
     </None>
     <None Include="include\RendererRuntime\Resource\Scene\Item\Sky\SkySceneItem.inl">
       <Filter>Source Files\Resource\Scene\Item\Sky</Filter>
+    </None>
+    <None Include="include\RendererRuntime\Resource\Scene\Item\Particles\ParticlesSceneItem.inl">
+      <Filter>Source Files\Resource\Scene\Item\Particles</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1283,6 +1289,9 @@
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Sky\SkySceneItem.h">
       <Filter>Source Files\Resource\Scene\Item\Sky</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Particles\ParticlesSceneItem.h">
+      <Filter>Source Files\Resource\Scene\Item\Particles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
@@ -1683,6 +1692,9 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Scene\Item\Sky\SkySceneItem.cpp">
       <Filter>Source Files\Resource\Scene\Item\Sky</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Scene\Item\Particles\ParticlesSceneItem.cpp">
+      <Filter>Source Files\Resource\Scene\Item\Particles</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

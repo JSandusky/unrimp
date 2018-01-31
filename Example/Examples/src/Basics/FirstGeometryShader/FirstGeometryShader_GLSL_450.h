@@ -33,7 +33,6 @@ if (0 == strcmp(renderer->getName(), "Vulkan"))
 vertexShaderSourceCode = R"(#version 450 core	// OpenGL 4.5
 
 // Attribute input/output
-layout(location = 0) in float Position;	// Dummy
 layout(location = 0) out gl_PerVertex
 {
 	vec4 gl_Position;
@@ -42,8 +41,8 @@ layout(location = 0) out gl_PerVertex
 // Programs
 void main()
 {
-	// Pass through the dummy
-	gl_Position = vec4(Position, 0.0, 0.0, 1.0);
+	// Pass through a dummy
+	gl_Position = vec4(0.0f, 0.0, 0.0, 1.0);
 }
 )";
 

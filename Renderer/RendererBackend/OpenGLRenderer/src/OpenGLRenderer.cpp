@@ -402,6 +402,7 @@ namespace OpenGLRenderer
 		mGraphicsRootSignature(nullptr),
 		mDefaultSamplerState(nullptr),
 		mOpenGLCopyResourceFramebuffer(0),
+		mDefaultOpenGLVertexArray(0),
 		// States
 		mPipelineState(nullptr),
 		// Input-assembler (IA) stage
@@ -469,6 +470,13 @@ namespace OpenGLRenderer
 				// Create the default sampler state
 				mDefaultSamplerState = createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
 
+				// Create default OpenGL vertex array
+				if (mExtensions->isGL_ARB_vertex_array_object())
+				{
+					glGenVertexArrays(1, &mDefaultOpenGLVertexArray);
+					glBindVertexArray(mDefaultOpenGLVertexArray);
+				}
+
 				// Add references to the default sampler state and set it
 				if (nullptr != mDefaultSamplerState)
 				{
@@ -508,6 +516,10 @@ namespace OpenGLRenderer
 		// Destroy the OpenGL framebuffer used by "OpenGLRenderer::OpenGLRenderer::copyResource()" if the "GL_ARB_copy_image"-extension isn't available
 		// -> Silently ignores 0's and names that do not correspond to existing buffer objects
 		glDeleteFramebuffers(1, &mOpenGLCopyResourceFramebuffer);
+
+		// Destroy the OpenGL default vertex array
+		// -> Silently ignores 0's and names that do not correspond to existing vertex array objects
+		glDeleteVertexArrays(1, &mDefaultOpenGLVertexArray);
 
 		// Release the graphics root signature instance, in case we have one
 		if (nullptr != mGraphicsRootSignature)
@@ -2556,7 +2568,7 @@ namespace OpenGLRenderer
 				case VertexArray::InternalResourceType::VAO:
 					// Unbind OpenGL vertex array
 					// -> No need to check for "GL_ARB_vertex_array_object", in case were in here we know it must exist
-					glBindVertexArray(0);
+					glBindVertexArray(mDefaultOpenGLVertexArray);
 					break;
 			}
 

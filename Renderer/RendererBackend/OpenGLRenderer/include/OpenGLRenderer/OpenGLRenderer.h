@@ -304,6 +304,7 @@ namespace OpenGLRenderer
 		RootSignature*			   mGraphicsRootSignature;			///< Currently set graphics root signature (we keep a reference to it), can be a null pointer
 		Renderer::ISamplerState*   mDefaultSamplerState;			///< Default rasterizer state (we keep a reference to it), can be a null pointer
 		uint32_t				   mOpenGLCopyResourceFramebuffer;	///< OpenGL framebuffer ("container" object, not shared between OpenGL contexts) used by "OpenGLRenderer::OpenGLRenderer::copyResource()" if the "GL_ARB_copy_image"-extension isn't available, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
+		uint32_t				   mDefaultOpenGLVertexArray;		///< Default OpenGL vertex array ("container" object, not shared between OpenGL contexts) to enable attribute-less rendering, can be zero if no resource is allocated (type "GLuint" not used in here in order to keep the header slim)
 		// States
 		PipelineState* mPipelineState;	///< Currently set pipeline state (we keep a reference to it), can be a null pointer
 		// Input-assembler (IA) stage

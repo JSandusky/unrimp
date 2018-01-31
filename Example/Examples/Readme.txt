@@ -91,7 +91,7 @@ Standalone renderer examples.
 		- Vertex shader (VS), geometry shader (GS) and fragment shader (FS)
 		- Root signature
 		- Pipeline state object (PSO)
-		- Attribute less rendering (aka "drawing without data")
+		- Attribute-less rendering (aka "drawing without data")
 	- "FirstTessellation" demonstrates:
 		- Vertex buffer object (VBO)
 		- Vertex array object (VAO)

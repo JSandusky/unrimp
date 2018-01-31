@@ -37,6 +37,7 @@
 #include <RendererRuntime/Resource/Scene/Item/Camera/CameraSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/Light/SunlightSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/Terrain/TerrainSceneItem.h>
+#include <RendererRuntime/Resource/Scene/Item/Particles/ParticlesSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Item/Mesh/SkeletonMeshSceneItem.h>
 #include <RendererRuntime/Resource/Scene/Loader/SceneFileFormat.h>
 #include <RendererRuntime/Resource/Material/MaterialProperties.h>
@@ -308,10 +309,10 @@ namespace RendererToolkit
 										numberOfBytes += sizeof(RendererRuntime::v1Scene::SkeletonMeshItem);
 									}
 								}
-								else if (RendererRuntime::SkySceneItem::TYPE_ID == typeId || RendererRuntime::TerrainSceneItem::TYPE_ID == typeId)
+								else if (RendererRuntime::SkySceneItem::TYPE_ID == typeId || RendererRuntime::TerrainSceneItem::TYPE_ID == typeId || RendererRuntime::ParticlesSceneItem::TYPE_ID == typeId)
 								{
 									::detail::fillSortedMaterialPropertyVector(input, rapidJsonValueItem, sortedMaterialPropertyVector);
-									numberOfBytes = static_cast<uint32_t>(sizeof(RendererRuntime::v1Scene::SkyItem) + sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size());
+									numberOfBytes = static_cast<uint32_t>(sizeof(RendererRuntime::v1Scene::MaterialItem) + sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size());
 								}
 								else
 								{
@@ -457,6 +458,19 @@ namespace RendererToolkit
 
 										// Write down
 										memoryFile.write(&terrainItem, sizeof(RendererRuntime::v1Scene::TerrainItem));
+										if (!sortedMaterialPropertyVector.empty())
+										{
+											// Write down all material properties
+											memoryFile.write(sortedMaterialPropertyVector.data(), sizeof(RendererRuntime::MaterialProperty) * sortedMaterialPropertyVector.size());
+										}
+									}
+									else if (RendererRuntime::ParticlesSceneItem::TYPE_ID == typeId)
+									{
+										RendererRuntime::v1Scene::ParticlesItem particlesItem;
+										::detail::readMaterialSceneItem(input, sortedMaterialPropertyVector, rapidJsonValueItem, particlesItem);
+
+										// Write down
+										memoryFile.write(&particlesItem, sizeof(RendererRuntime::v1Scene::ParticlesItem));
 										if (!sortedMaterialPropertyVector.empty())
 										{
 											// Write down all material properties

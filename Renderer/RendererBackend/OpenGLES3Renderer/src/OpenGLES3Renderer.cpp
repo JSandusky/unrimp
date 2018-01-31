@@ -346,6 +346,7 @@ namespace OpenGLES3Renderer
 		mGraphicsRootSignature(nullptr),
 		mDefaultSamplerState(nullptr),
 		mOpenGLES3CopyResourceFramebuffer(0),
+		mDefaultOpenGLES3VertexArray(0),
 		// States
 		mPipelineState(nullptr),
 		// Input-assembler (IA) stage
@@ -385,6 +386,10 @@ namespace OpenGLES3Renderer
 
 			// Create the default sampler state
 			mDefaultSamplerState = createSamplerState(Renderer::ISamplerState::getDefaultSamplerState());
+
+			// Create default OpenGL ES 3 vertex array
+			glGenVertexArrays(1, &mDefaultOpenGLES3VertexArray);
+			glBindVertexArray(mDefaultOpenGLES3VertexArray);
 
 			// Add references to the default sampler state and set it
 			if (nullptr != mDefaultSamplerState)
@@ -428,6 +433,10 @@ namespace OpenGLES3Renderer
 		{
 			iaSetVertexArray(nullptr);
 		}
+
+		// Destroy the OpenGL ES 3 default vertex array
+		// -> Silently ignores 0's and names that do not correspond to existing vertex array objects
+		glDeleteVertexArrays(1, &mDefaultOpenGLES3VertexArray);
 
 		// Release the graphics root signature instance, in case we have one
 		if (nullptr != mGraphicsRootSignature)
@@ -744,7 +753,7 @@ namespace OpenGLES3Renderer
 			else if (nullptr != mVertexArray)
 			{
 				// Unbind OpenGL ES 3 vertex array
-				glBindVertexArray(0);
+				glBindVertexArray(mDefaultOpenGLES3VertexArray);
 
 				// Release reference
 				mVertexArray->releaseReference();

@@ -19,19 +19,6 @@
 
 
 //[-------------------------------------------------------]
-//[ Includes                                              ]
-//[-------------------------------------------------------]
-#include "RendererRuntime/PrecompiledHeader.h"
-#include "RendererRuntime/Resource/Scene/Factory/SceneFactory.h"
-#include "RendererRuntime/Resource/Scene/Item/Sky/SkySceneItem.h"
-#include "RendererRuntime/Resource/Scene/Item/Camera/CameraSceneItem.h"
-#include "RendererRuntime/Resource/Scene/Item/Light/SunlightSceneItem.h"
-#include "RendererRuntime/Resource/Scene/Item/Terrain/TerrainSceneItem.h"
-#include "RendererRuntime/Resource/Scene/Item/Particles/ParticlesSceneItem.h"
-#include "RendererRuntime/Resource/Scene/Item/Mesh/SkeletonMeshSceneItem.h"
-
-
-//[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
 namespace RendererRuntime
@@ -39,32 +26,24 @@ namespace RendererRuntime
 
 
 	//[-------------------------------------------------------]
-	//[ Protected virtual RendererRuntime::ISceneFactory methods ]
+	//[ Public RendererRuntime::ISceneItem methods            ]
 	//[-------------------------------------------------------]
-	ISceneItem* SceneFactory::createSceneItem(const SceneItemTypeId& sceneItemTypeId, SceneResource& sceneResource) const
+	inline SceneItemTypeId ParticlesSceneItem::getSceneItemTypeId() const
 	{
-		ISceneItem* sceneItem = nullptr;
+		return TYPE_ID;
+	}
 
-		// Define helper macros
-		#define IF_VALUE(name)			 if (sceneItemTypeId == name::TYPE_ID) sceneItem = new name(sceneResource);
-		#define ELSE_IF_VALUE(name) else if (sceneItemTypeId == name::TYPE_ID) sceneItem = new name(sceneResource);
+	inline void ParticlesSceneItem::onDetachedFromSceneNode(SceneNode& sceneNode)
+	{
+		mRenderableManager.setTransform(nullptr);
 
-		// Evaluate the scene item type, sorted by usual frequency
-		IF_VALUE(	  MeshSceneItem)
-		ELSE_IF_VALUE(LightSceneItem)
-		ELSE_IF_VALUE(SkeletonMeshSceneItem)
-		ELSE_IF_VALUE(ParticlesSceneItem)
-		ELSE_IF_VALUE(CameraSceneItem)
-		ELSE_IF_VALUE(SunlightSceneItem)
-		ELSE_IF_VALUE(SkySceneItem)
-		ELSE_IF_VALUE(TerrainSceneItem)
+		// Call the base implementation
+		ISceneItem::onDetachedFromSceneNode(sceneNode);
+	}
 
-		// Undefine helper macros
-		#undef IF_VALUE
-		#undef ELSE_IF_VALUE
-
-		// Done
-		return sceneItem;
+	inline void ParticlesSceneItem::setVisible(bool visible)
+	{
+		mRenderableManager.setVisible(visible);
 	}
 
 

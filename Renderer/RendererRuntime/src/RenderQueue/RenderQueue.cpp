@@ -231,6 +231,7 @@ namespace RendererRuntime
 		const uint32_t instanceCount = (singlePassStereoInstancing ? 2u : 1u);
 
 		// Track currently bound renderer resources and states to void generating redundant commands
+		bool vertexArraySet = false;
 		Renderer::IVertexArray* currentVertexArray = nullptr;
 		Renderer::IPipelineState* currentPipelineState = nullptr;
 
@@ -280,220 +281,220 @@ namespace RendererRuntime
 				{
 					assert(nullptr != queuedRenderable.renderable);
 					const Renderable& renderable = *queuedRenderable.renderable;
-					Renderer::IVertexArrayPtr vertexArrayPtr = renderable.getVertexArrayPtr();
-					if (nullptr != vertexArrayPtr)
+
+					// Material resource
+					const MaterialResource* materialResource = materialResourceManager.tryGetById(renderable.getMaterialResourceId());
+					if (nullptr != materialResource)
 					{
-						// Material resource
-						const MaterialResource* materialResource = materialResourceManager.tryGetById(renderable.getMaterialResourceId());
-						if (nullptr != materialResource)
+						MaterialTechnique* materialTechnique = materialResource->getMaterialTechniqueById(materialTechniqueId);
+						if (nullptr != materialTechnique)
 						{
-							MaterialTechnique* materialTechnique = materialResource->getMaterialTechniqueById(materialTechniqueId);
-							if (nullptr != materialTechnique)
+							MaterialBlueprintResource* materialBlueprintResource = materialBlueprintResourceManager.tryGetById(materialTechnique->getMaterialBlueprintResourceId());
+							if (nullptr != materialBlueprintResource && IResource::LoadingState::LOADED == materialBlueprintResource->getLoadingState())
 							{
-								MaterialBlueprintResource* materialBlueprintResource = materialBlueprintResourceManager.tryGetById(materialTechnique->getMaterialBlueprintResourceId());
-								if (nullptr != materialBlueprintResource && IResource::LoadingState::LOADED == materialBlueprintResource->getLoadingState())
+								// TODO(co) Gather shader properties (later on we cache as much as possible of this work inside the renderable)
+								mScratchShaderProperties.clear();
+								for (int i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
 								{
-									// TODO(co) Gather shader properties (later on we cache as much as possible of this work inside the renderable)
-									mScratchShaderProperties.clear();
-									for (int i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
+									mScratchDynamicShaderPieces[i].clear();
+								}
+								{ // Gather shader properties from static material properties generating shader combinations
+									const MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector = materialResource->getSortedPropertyVector();
+									const size_t numberOfMaterialProperties = sortedMaterialPropertyVector.size();
+									for (size_t i = 0; i < numberOfMaterialProperties; ++i)
 									{
-										mScratchDynamicShaderPieces[i].clear();
-									}
-									{ // Gather shader properties from static material properties generating shader combinations
-										const MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector = materialResource->getSortedPropertyVector();
-										const size_t numberOfMaterialProperties = sortedMaterialPropertyVector.size();
-										for (size_t i = 0; i < numberOfMaterialProperties; ++i)
+										const MaterialProperty& materialProperty = sortedMaterialPropertyVector[i];
+										if (materialProperty.getUsage() == MaterialProperty::Usage::SHADER_COMBINATION)
 										{
-											const MaterialProperty& materialProperty = sortedMaterialPropertyVector[i];
-											if (materialProperty.getUsage() == MaterialProperty::Usage::SHADER_COMBINATION)
+											switch (materialProperty.getValueType())
 											{
-												switch (materialProperty.getValueType())
+												case MaterialPropertyValue::ValueType::BOOLEAN:
+													mScratchShaderProperties.setPropertyValue(materialProperty.getMaterialPropertyId(), materialProperty.getBooleanValue());
+													break;
+
+												case MaterialPropertyValue::ValueType::INTEGER:
+													mScratchShaderProperties.setPropertyValue(materialProperty.getMaterialPropertyId(), materialProperty.getIntegerValue());
+													break;
+
+												case MaterialPropertyValue::ValueType::GLOBAL_MATERIAL_PROPERTY_ID:
 												{
-													case MaterialPropertyValue::ValueType::BOOLEAN:
-														mScratchShaderProperties.setPropertyValue(materialProperty.getMaterialPropertyId(), materialProperty.getBooleanValue());
-														break;
-
-													case MaterialPropertyValue::ValueType::INTEGER:
-														mScratchShaderProperties.setPropertyValue(materialProperty.getMaterialPropertyId(), materialProperty.getIntegerValue());
-														break;
-
-													case MaterialPropertyValue::ValueType::GLOBAL_MATERIAL_PROPERTY_ID:
+													const MaterialProperty* globalMaterialProperty = globalMaterialProperties.getPropertyById(materialProperty.getGlobalMaterialPropertyId());
+													if (nullptr != globalMaterialProperty)
 													{
-														const MaterialProperty* globalMaterialProperty = globalMaterialProperties.getPropertyById(materialProperty.getGlobalMaterialPropertyId());
+														::detail::setShaderPropertiesPropertyValue(materialProperty.getMaterialPropertyId(), *globalMaterialProperty, mScratchShaderProperties);
+													}
+													else
+													{
+														// Try global material property reference fallback
+														globalMaterialProperty = materialBlueprintResource->getMaterialProperties().getPropertyById(materialProperty.getGlobalMaterialPropertyId());
 														if (nullptr != globalMaterialProperty)
 														{
 															::detail::setShaderPropertiesPropertyValue(materialProperty.getMaterialPropertyId(), *globalMaterialProperty, mScratchShaderProperties);
 														}
 														else
 														{
-															// Try global material property reference fallback
-															globalMaterialProperty = materialBlueprintResource->getMaterialProperties().getPropertyById(materialProperty.getGlobalMaterialPropertyId());
-															if (nullptr != globalMaterialProperty)
-															{
-																::detail::setShaderPropertiesPropertyValue(materialProperty.getMaterialPropertyId(), *globalMaterialProperty, mScratchShaderProperties);
-															}
-															else
-															{
-																// Error, can't resolve reference
-																assert(false);	// TODO(co) Error handling
-															}
+															// Error, can't resolve reference
+															assert(false);	// TODO(co) Error handling
 														}
-														break;
 													}
-
-													case MaterialPropertyValue::ValueType::UNKNOWN:
-													case MaterialPropertyValue::ValueType::INTEGER_2:
-													case MaterialPropertyValue::ValueType::INTEGER_3:
-													case MaterialPropertyValue::ValueType::INTEGER_4:
-													case MaterialPropertyValue::ValueType::FLOAT:
-													case MaterialPropertyValue::ValueType::FLOAT_2:
-													case MaterialPropertyValue::ValueType::FLOAT_3:
-													case MaterialPropertyValue::ValueType::FLOAT_4:
-													case MaterialPropertyValue::ValueType::FLOAT_3_3:
-													case MaterialPropertyValue::ValueType::FLOAT_4_4:
-													case MaterialPropertyValue::ValueType::FILL_MODE:
-													case MaterialPropertyValue::ValueType::CULL_MODE:
-													case MaterialPropertyValue::ValueType::CONSERVATIVE_RASTERIZATION_MODE:
-													case MaterialPropertyValue::ValueType::DEPTH_WRITE_MASK:
-													case MaterialPropertyValue::ValueType::STENCIL_OP:
-													case MaterialPropertyValue::ValueType::COMPARISON_FUNC:
-													case MaterialPropertyValue::ValueType::BLEND:
-													case MaterialPropertyValue::ValueType::BLEND_OP:
-													case MaterialPropertyValue::ValueType::FILTER_MODE:
-													case MaterialPropertyValue::ValueType::TEXTURE_ADDRESS_MODE:
-													case MaterialPropertyValue::ValueType::TEXTURE_ASSET_ID:
-													default:
-														assert(false);	// TODO(co) Error handling
-														break;
+													break;
 												}
+
+												case MaterialPropertyValue::ValueType::UNKNOWN:
+												case MaterialPropertyValue::ValueType::INTEGER_2:
+												case MaterialPropertyValue::ValueType::INTEGER_3:
+												case MaterialPropertyValue::ValueType::INTEGER_4:
+												case MaterialPropertyValue::ValueType::FLOAT:
+												case MaterialPropertyValue::ValueType::FLOAT_2:
+												case MaterialPropertyValue::ValueType::FLOAT_3:
+												case MaterialPropertyValue::ValueType::FLOAT_4:
+												case MaterialPropertyValue::ValueType::FLOAT_3_3:
+												case MaterialPropertyValue::ValueType::FLOAT_4_4:
+												case MaterialPropertyValue::ValueType::FILL_MODE:
+												case MaterialPropertyValue::ValueType::CULL_MODE:
+												case MaterialPropertyValue::ValueType::CONSERVATIVE_RASTERIZATION_MODE:
+												case MaterialPropertyValue::ValueType::DEPTH_WRITE_MASK:
+												case MaterialPropertyValue::ValueType::STENCIL_OP:
+												case MaterialPropertyValue::ValueType::COMPARISON_FUNC:
+												case MaterialPropertyValue::ValueType::BLEND:
+												case MaterialPropertyValue::ValueType::BLEND_OP:
+												case MaterialPropertyValue::ValueType::FILTER_MODE:
+												case MaterialPropertyValue::ValueType::TEXTURE_ADDRESS_MODE:
+												case MaterialPropertyValue::ValueType::TEXTURE_ASSET_ID:
+												default:
+													assert(false);	// TODO(co) Error handling
+													break;
 											}
 										}
 									}
+								}
 
-									// Automatic "UseGpuSkinning"-property setting
-									if (isInitialized(renderable.getSkeletonResourceId()))
+								// Automatic "UseGpuSkinning"-property setting
+								if (isInitialized(renderable.getSkeletonResourceId()))
+								{
+									static const StringId USE_GPU_SKINNING("UseGpuSkinning");
+									if (nullptr != materialBlueprintResource->getMaterialProperties().getPropertyById(USE_GPU_SKINNING))
 									{
-										static const StringId USE_GPU_SKINNING("UseGpuSkinning");
-										if (nullptr != materialBlueprintResource->getMaterialProperties().getPropertyById(USE_GPU_SKINNING))
-										{
-											mScratchShaderProperties.setPropertyValue(USE_GPU_SKINNING, 1);
-										}
+										mScratchShaderProperties.setPropertyValue(USE_GPU_SKINNING, 1);
+									}
+								}
+
+								materialBlueprintResource->optimizeShaderProperties(mScratchShaderProperties);
+
+								// Automatic build-in "SinglePassStereoInstancing"-property setting
+								if (singlePassStereoInstancing)
+								{
+									static const StringId SINGLE_PASS_STEREO_INSTANCING("SinglePassStereoInstancing");
+									mScratchShaderProperties.setPropertyValue(SINGLE_PASS_STEREO_INSTANCING, 1);
+								}
+
+								Renderer::IPipelineStatePtr pipelineStatePtr = materialBlueprintResource->getPipelineStateCacheManager().getPipelineStateCacheByCombination(materialTechnique->getSerializedPipelineStateHash(), mScratchShaderProperties, mScratchDynamicShaderPieces, false);
+								if (nullptr != pipelineStatePtr)
+								{
+									// Set the used pipeline state object (PSO)
+									if (currentPipelineState != pipelineStatePtr)
+									{
+										currentPipelineState = pipelineStatePtr;
+										Renderer::Command::SetPipelineState::create(commandBuffer, currentPipelineState);
 									}
 
-									materialBlueprintResource->optimizeShaderProperties(mScratchShaderProperties);
-
-									// Automatic build-in "SinglePassStereoInstancing"-property setting
-									if (singlePassStereoInstancing)
-									{
-										static const StringId SINGLE_PASS_STEREO_INSTANCING("SinglePassStereoInstancing");
-										mScratchShaderProperties.setPropertyValue(SINGLE_PASS_STEREO_INSTANCING, 1);
-									}
-
-									Renderer::IPipelineStatePtr pipelineStatePtr = materialBlueprintResource->getPipelineStateCacheManager().getPipelineStateCacheByCombination(materialTechnique->getSerializedPipelineStateHash(), mScratchShaderProperties, mScratchDynamicShaderPieces, false);
-									if (nullptr != pipelineStatePtr)
-									{
-										// Set the used pipeline state object (PSO)
-										if (currentPipelineState != pipelineStatePtr)
+									{ // Setup input assembly (IA): Set the used vertex array
+										Renderer::IVertexArrayPtr vertexArrayPtr = renderable.getVertexArrayPtr();
+										if (!vertexArraySet || currentVertexArray != vertexArrayPtr)
 										{
-											currentPipelineState = pipelineStatePtr;
-											Renderer::Command::SetPipelineState::create(commandBuffer, currentPipelineState);
-										}
-
-										// Setup input assembly (IA): Set the used vertex array
-										if (currentVertexArray != vertexArrayPtr)
-										{
+											vertexArraySet = true;
 											currentVertexArray = vertexArrayPtr;
 											Renderer::Command::SetVertexArray::create(commandBuffer, currentVertexArray);
 										}
+									}
 
-										// Expensive state change: Handle material blueprint resource switches
-										// -> Render queue should be sorted by material blueprint resource first to reduce those expensive state changes
-										bool bindMaterialBlueprint = false;
-										PassBufferManager* passBufferManager = nullptr;
-										const MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer = materialBlueprintResource->getInstanceUniformBuffer();
-										if (compositorContextData.mCurrentlyBoundMaterialBlueprintResource != materialBlueprintResource)
+									// Expensive state change: Handle material blueprint resource switches
+									// -> Render queue should be sorted by material blueprint resource first to reduce those expensive state changes
+									bool bindMaterialBlueprint = false;
+									PassBufferManager* passBufferManager = nullptr;
+									const MaterialBlueprintResource::UniformBuffer* instanceUniformBuffer = materialBlueprintResource->getInstanceUniformBuffer();
+									if (compositorContextData.mCurrentlyBoundMaterialBlueprintResource != materialBlueprintResource)
+									{
+										compositorContextData.mCurrentlyBoundMaterialBlueprintResource = materialBlueprintResource;
+										bindMaterialBlueprint = true;
+									}
+									if (bindMaterialBlueprint || enforcePassBufferManagerFillBuffer)
+									{
+										// Fill the pass buffer manager
+										passBufferManager = materialBlueprintResource->getPassBufferManager();
+										if (nullptr != passBufferManager)
 										{
-											compositorContextData.mCurrentlyBoundMaterialBlueprintResource = materialBlueprintResource;
-											bindMaterialBlueprint = true;
+											passBufferManager->fillBuffer(renderTarget, compositorContextData, *materialResource);
+											enforcePassBufferManagerFillBuffer = false;
 										}
-										if (bindMaterialBlueprint || enforcePassBufferManagerFillBuffer)
+									}
+									if (bindMaterialBlueprint)
+									{
+										// Bind the material blueprint resource and instance and light buffer manager to the used renderer
+										materialBlueprintResource->fillCommandBuffer(commandBuffer);
+										if (nullptr != instanceUniformBuffer)
 										{
-											// Fill the pass buffer manager
-											passBufferManager = materialBlueprintResource->getPassBufferManager();
-											if (nullptr != passBufferManager)
-											{
-												passBufferManager->fillBuffer(renderTarget, compositorContextData, *materialResource);
-												enforcePassBufferManagerFillBuffer = false;
-											}
+											instanceBufferManager.startupBufferFilling(*materialBlueprintResource, commandBuffer);
 										}
-										if (bindMaterialBlueprint)
-										{
-											// Bind the material blueprint resource and instance and light buffer manager to the used renderer
-											materialBlueprintResource->fillCommandBuffer(commandBuffer);
-											if (nullptr != instanceUniformBuffer)
-											{
-												instanceBufferManager.startupBufferFilling(*materialBlueprintResource, commandBuffer);
-											}
-											lightBufferManager.fillCommandBuffer(*materialBlueprintResource, commandBuffer);
-										}
-										else if (nullptr != passBufferManager)
-										{
-											// Bind pass buffer manager since we filled the buffer
-											passBufferManager->fillCommandBuffer(commandBuffer);
-										}
+										lightBufferManager.fillCommandBuffer(*materialBlueprintResource, commandBuffer);
+									}
+									else if (nullptr != passBufferManager)
+									{
+										// Bind pass buffer manager since we filled the buffer
+										passBufferManager->fillCommandBuffer(commandBuffer);
+									}
 
-										// Cheap state change: Bind the material technique to the used renderer
-										if (materialTechnique->fillCommandBuffer(mRendererRuntime, commandBuffer))
-										{
-											// Assigned material pool changed
-											// TODO(co) Break instancing
-											NOP;
-										}
-										// TODO(co) Detect texture hash change: Break instancing
+									// Cheap state change: Bind the material technique to the used renderer
+									if (materialTechnique->fillCommandBuffer(mRendererRuntime, commandBuffer))
+									{
+										// Assigned material pool changed
+										// TODO(co) Break instancing
+										NOP;
+									}
+									// TODO(co) Detect texture hash change: Break instancing
 
-										// Fill the instance buffer manager
-										const uint32_t startInstanceLocation = (nullptr != instanceUniformBuffer) ? instanceBufferManager.fillBuffer(*materialBlueprintResource, materialBlueprintResource->getPassBufferManager(), *instanceUniformBuffer, renderable, *materialTechnique, commandBuffer) : 0;
+									// Fill the instance buffer manager
+									const uint32_t startInstanceLocation = (nullptr != instanceUniformBuffer) ? instanceBufferManager.fillBuffer(*materialBlueprintResource, materialBlueprintResource->getPassBufferManager(), *instanceUniformBuffer, renderable, *materialTechnique, commandBuffer) : 0;
 
-										// Render the specified geometric primitive, based on indexing into an array of vertices
-										// -> Please note that it's valid that there are no indices, for example "RendererRuntime::CompositorInstancePassDebugGui" is using the render queue only to set the material resource blueprint
-										if (0 != renderable.getNumberOfIndices())
+									// Render the specified geometric primitive, based on indexing into an array of vertices
+									// -> Please note that it's valid that there are no indices, for example "RendererRuntime::CompositorInstancePassDebugGui" is using the render queue only to set the material resource blueprint
+									if (0 != renderable.getNumberOfIndices())
+									{
+										// Sanity checks
+										assert(nullptr != indirectBuffer);
+										assert(nullptr != indirectBufferData);
+
+										// Draw
+										if (renderable.getDrawIndexed())
 										{
-											// Sanity checks
-											assert(nullptr != indirectBuffer);
-											assert(nullptr != indirectBufferData);
+											// Fill indirect buffer
+											Renderer::DrawIndexedInstancedArguments* drawIndexedInstancedArguments = reinterpret_cast<Renderer::DrawIndexedInstancedArguments*>(indirectBufferData + indirectBufferOffset);
+											drawIndexedInstancedArguments->indexCountPerInstance = renderable.getNumberOfIndices();
+											drawIndexedInstancedArguments->instanceCount		 = instanceCount * renderable.getInstanceCount();
+											drawIndexedInstancedArguments->startIndexLocation	 = renderable.getStartIndexLocation();
+											drawIndexedInstancedArguments->baseVertexLocation	 = 0;
+											drawIndexedInstancedArguments->startInstanceLocation = startInstanceLocation;
 
 											// Draw
-											if (renderable.getDrawIndexed())
-											{
-												// Fill indirect buffer
-												Renderer::DrawIndexedInstancedArguments* drawIndexedInstancedArguments = reinterpret_cast<Renderer::DrawIndexedInstancedArguments*>(indirectBufferData + indirectBufferOffset);
-												drawIndexedInstancedArguments->indexCountPerInstance = renderable.getNumberOfIndices();
-												drawIndexedInstancedArguments->instanceCount		 = instanceCount * renderable.getInstanceCount();
-												drawIndexedInstancedArguments->startIndexLocation	 = renderable.getStartIndexLocation();
-												drawIndexedInstancedArguments->baseVertexLocation	 = 0;
-												drawIndexedInstancedArguments->startInstanceLocation = startInstanceLocation;
+											Renderer::Command::DrawIndexed::create(commandBuffer, *indirectBuffer, indirectBufferOffset);
 
-												// Draw
-												Renderer::Command::DrawIndexed::create(commandBuffer, *indirectBuffer, indirectBufferOffset);
+											// Advance indirect buffer offset
+											indirectBufferOffset += sizeof(Renderer::DrawIndexedInstancedArguments);
+										}
+										else
+										{
+											// Fill indirect buffer
+											Renderer::DrawInstancedArguments* drawInstancedArguments = reinterpret_cast<Renderer::DrawInstancedArguments*>(indirectBufferData + indirectBufferOffset);
+											drawInstancedArguments->vertexCountPerInstance = renderable.getNumberOfIndices();
+											drawInstancedArguments->instanceCount		   = instanceCount * renderable.getInstanceCount();
+											drawInstancedArguments->startVertexLocation	   = renderable.getStartIndexLocation();
+											drawInstancedArguments->startInstanceLocation  = startInstanceLocation;
 
-												// Advance indirect buffer offset
-												indirectBufferOffset += sizeof(Renderer::DrawIndexedInstancedArguments);
-											}
-											else
-											{
-												// Fill indirect buffer
-												Renderer::DrawInstancedArguments* drawInstancedArguments = reinterpret_cast<Renderer::DrawInstancedArguments*>(indirectBufferData + indirectBufferOffset);
-												drawInstancedArguments->vertexCountPerInstance = renderable.getNumberOfIndices();
-												drawInstancedArguments->instanceCount		   = instanceCount * renderable.getInstanceCount();
-												drawInstancedArguments->startVertexLocation	   = renderable.getStartIndexLocation();
-												drawInstancedArguments->startInstanceLocation  = startInstanceLocation;
+											// Draw
+											Renderer::Command::Draw::create(commandBuffer, *indirectBuffer, indirectBufferOffset);
 
-												// Draw
-												Renderer::Command::Draw::create(commandBuffer, *indirectBuffer, indirectBufferOffset);
-
-												// Advance indirect buffer offset
-												indirectBufferOffset += sizeof(Renderer::DrawInstancedArguments);
-											}
+											// Advance indirect buffer offset
+											indirectBufferOffset += sizeof(Renderer::DrawInstancedArguments);
 										}
 									}
 								}
