@@ -270,7 +270,7 @@
 						"Material": "$ProjectName/Material/Base/Particles.asset",
 						"SetMaterialProperties":
 						{
-							"_argb_nxa": "$ProjectName/Texture/Terrain/Gonzales_argb_nxa.asset"
+							"_argb_nxa": "$ProjectName/Texture/Imrod/Imrod_argb_nxa.asset"
 						}
 					}
 				}

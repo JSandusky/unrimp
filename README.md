@@ -137,6 +137,7 @@ Renderer Runtime (e.g. "The Game")
 	- Types: Directional, point and spot
 	- High-level sunlight controlled via time-of-day
 - Skeleton animation
+- Particles rendering
 - Sky
 	- Classic environment cube map skybox
 	- Procedural sky

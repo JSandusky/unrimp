@@ -68,8 +68,7 @@ namespace RendererRuntime
 	//[-------------------------------------------------------]
 	void ParticlesSceneItem::onMaterialResourceCreated()
 	{
-		static const uint32_t NUMBER_OF_VERTICES_PER_PARTICLE = 6;
-		mRenderableManager.getRenderables().emplace_back(mRenderableManager, Renderer::IVertexArrayPtr(), false, 0, 0, getSceneResource().getRendererRuntime().getMaterialResourceManager(), getMaterialResourceId(), getUninitialized<SkeletonResourceId>(), mMaximumNumberOfParticles * NUMBER_OF_VERTICES_PER_PARTICLE);
+		mRenderableManager.getRenderables().emplace_back(mRenderableManager, Renderer::IVertexArrayPtr(), false, 0, 6 * mMaximumNumberOfParticles, getSceneResource().getRendererRuntime().getMaterialResourceManager(), getMaterialResourceId(), getUninitialized<SkeletonResourceId>());
 		mRenderableManager.updateCachedRenderablesData();
 	}
 

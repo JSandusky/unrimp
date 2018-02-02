@@ -125,6 +125,7 @@
 		// Math
 		#define LERP(a, b, t) lerp(a, b, t)
 		#define SATURATE(a) saturate(a)
+		#define ROW_MATRIX_2x2(r0, r1) float2x2(r0, r1)
 		#define ROW_MATRIX_3x3(r0, r1, r2) float3x3(r0, r1, r2)
 		#define ROW_MATRIX_4x4(r0, r1, r2, r3) float4x4(r0, r1, r2, r3)
 		#define MATRIX_MUL(m, v) mul(m, v)
@@ -292,7 +293,7 @@
 		#define MAIN_BEGIN_TESSELLATION_EVALUATION(numberOfInputControlPoints) void main() {
 			#define MAIN_INPUT(name) name
 			#define MAIN_INPUT_ARRAY(name, index) name[index]
-			#define MAIN_INPUT_VERTEX_ID gl_VertexIndex						// "gl_VertexIndex" is equivalent to OpenGL's "gl_VertexID"
+			#define MAIN_INPUT_VERTEX_ID uint(gl_VertexIndex)						// "gl_VertexIndex" is equivalent to OpenGL's "gl_VertexID"
 
 			// TODO(co) Review in detail: Looks like that with "gl_InstanceIndex" we don't need the "drawId"-hack in Vulkan
 			#define MAIN_INPUT_DRAW_ID uint(gl_InstanceIndex)				// "gl_InstanceIndex" is not equivalent to OpenGL's "gl_InstanceID" because "gl_InstanceID" does not include the "baseInstance"-parameter
@@ -323,6 +324,7 @@
 		// Math
 		#define LERP(a, b, t) mix(a, b, t)
 		#define SATURATE(a) clamp(a, 0.0f, 1.0f)
+		#define ROW_MATRIX_2x2(r0, r1) transpose(mat2(r0, r1))
 		#define ROW_MATRIX_3x3(r0, r1, r2) transpose(mat3(r0, r1, r2))
 		#define ROW_MATRIX_4x4(r0, r1, r2, r3) transpose(mat4(r0, r1, r2, r3))
 		#define MATRIX_MUL(m, v) (m * v)
@@ -487,7 +489,7 @@
 		#define MAIN_BEGIN_TESSELLATION_EVALUATION(numberOfInputControlPoints) void main() {
 			#define MAIN_INPUT(name) name
 			#define MAIN_INPUT_ARRAY(name, index) name[index]
-			#define MAIN_INPUT_VERTEX_ID gl_VertexID
+			#define MAIN_INPUT_VERTEX_ID uint(gl_VertexID)
 			#define MAIN_INPUT_DRAW_ID (drawId + drawIdUniform + uint(gl_InstanceID))
 			#define MAIN_OUTPUT(name) name
 			#define MAIN_OUTPUT_POSITION gl_Position
@@ -514,6 +516,7 @@
 		// Math
 		#define LERP(a, b, t) mix(a, b, t)
 		#define SATURATE(a) clamp(a, 0.0f, 1.0f)
+		#define ROW_MATRIX_2x2(r0, r1) transpose(mat2(r0, r1))
 		#define ROW_MATRIX_3x3(r0, r1, r2) transpose(mat3(r0, r1, r2))
 		#define ROW_MATRIX_4x4(r0, r1, r2, r3) transpose(mat4(r0, r1, r2, r3))
 		#define MATRIX_MUL(m, v) (m * v)
@@ -687,7 +690,7 @@
 		#define MAIN_BEGIN_TESSELLATION_EVALUATION(numberOfInputControlPoints) void main() {
 			#define MAIN_INPUT(name) name
 			#define MAIN_INPUT_ARRAY(name, index) name[index]
-			#define MAIN_INPUT_VERTEX_ID gl_VertexID
+			#define MAIN_INPUT_VERTEX_ID uint(gl_VertexID)
 			#define MAIN_INPUT_DRAW_ID (drawId + drawIdUniform + uint(gl_InstanceID))
 			#define MAIN_OUTPUT(name) name
 			#define MAIN_OUTPUT_POSITION gl_Position
@@ -714,6 +717,7 @@
 		// Math
 		#define LERP(a, b, t) mix(a, b, t)
 		#define SATURATE(a) clamp(a, 0.0f, 1.0f)
+		#define ROW_MATRIX_2x2(r0, r1) transpose(mat2(r0, r1))
 		#define ROW_MATRIX_3x3(r0, r1, r2) transpose(mat3(r0, r1, r2))
 		#define ROW_MATRIX_4x4(r0, r1, r2, r3) transpose(mat4(r0, r1, r2, r3))
 		#define MATRIX_MUL(m, v) (m * v)

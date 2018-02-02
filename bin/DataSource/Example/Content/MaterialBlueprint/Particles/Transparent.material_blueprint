@@ -17,12 +17,29 @@
 				"MinimumIntegerValue": "0",
 				"MaximumIntegerValue": "255"
 			},
+			"NumberOfMultisamples":
+			{
+				"Usage": "SHADER_COMBINATION",
+				"ValueType": "GLOBAL_MATERIAL_PROPERTY_ID",
+				"Value": "@GlobalNumberOfMultisamples",
+				"Description": "Number of multisamples. Valid values are 0, 2, 4, 8. Use 0 to disable multisample.",
+				"VisualImportance": "100",
+				"MaximumIntegerValue": "8",
+				"ValidIntegerValues": [ 0, 2, 4, 8 ]
+			},
 			"_argb_nxa":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "Unrimp/Texture/DynamicByCode/Identity_argb_nxa2D",
 				"Description": "RGB channel = Albedo map ('_a'-postfix), A channel = x component of normal map ('_n'-postfix)"
+			},
+			"DepthMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/DynamicByCode/BlackMap2D",
+				"Description": "2D depth map"
 			}
 		},
 		"PipelineState":
@@ -55,11 +72,23 @@
 					"NumberOfElements": "1",
 					"ElementProperties":
 					{
-						"WorldSpaceToClipSpaceMatrix":
+						"WorldSpaceToViewSpaceMatrix":
 						{
 							"Usage": "PASS_REFERENCE",
 							"ValueType": "FLOAT_4_4",
-							"Value": "@WORLD_SPACE_TO_CLIP_SPACE_MATRIX"
+							"Value": "@WORLD_SPACE_TO_VIEW_SPACE_MATRIX"
+						},
+						"ViewSpaceToClipSpaceMatrix":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4_4",
+							"Value": "@VIEW_SPACE_TO_CLIP_SPACE_MATRIX"
+						},
+						"GlobalTimeInSeconds":
+						{
+							"Usage": "GLOBAL_REFERENCE",
+							"ValueType": "FLOAT",
+							"Value": "@GlobalTimeInSeconds"
 						}
 					}
 				}
@@ -78,6 +107,19 @@
 					"FallbackTexture": "Unrimp/Texture/DynamicByCode/Identity_argb_nxa2D",
 					"RgbHardwareGammaCorrection": "TRUE",
 					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
+				},
+				"1":
+				{
+					"BaseShaderRegisterName": "DepthMap",
+					"BaseShaderRegister": "1",
+					"ShaderVisibility": "FRAGMENT",
+					"ResourceType": "TEXTURE",
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@DepthMap",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/BlackMap2D",
+					"MipmapsUsed": "FALSE",
+					"SamplerStateBaseShaderRegisterName": "SamplerPoint"
 				}
 			},
 			"2":
@@ -88,6 +130,16 @@
 					"BaseShaderRegister": "0",
 					"ShaderVisibility": "FRAGMENT",
 					"ResourceType": "SAMPLER_STATE"
+				},
+				"1":
+				{
+					"BaseShaderRegisterName": "SamplerPoint",
+					"BaseShaderRegister": "1",
+					"ShaderVisibility": "FRAGMENT",
+					"ResourceType": "SAMPLER_STATE",
+					"Filter": "MIN_MAG_MIP_POINT",
+					"MaxAnisotropy": "1",
+					"MaxLOD": "0.0"
 				}
 			}
 		}

@@ -63,7 +63,7 @@ SAMPLER_STATE(3, 1, SamplerLinearClamp, 1)
 	@insertpiece(DefineWorldXZToHeightUV)
 	@insertpiece(DefineSampleHeightMap)
 
-void ReconstructPosition(int vertexId, float3 vertexPosition, out float3 position)
+void ReconstructPosition(uint vertexId, float3 vertexPosition, out float3 position)
 {
 	float iv = floor(vertexId * TERRAIN_RECIP_CONTROL_VTX_PER_TILE_EDGE);
 	float iu = vertexId - iv * TERRAIN_CONTROL_VTX_PER_TILE_EDGE;
