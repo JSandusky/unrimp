@@ -116,7 +116,7 @@
 		},
 		"PipelineState":
 		{
-			"VertexAttributes": "$ProjectName/VertexAttributes/Default/Compositor.asset",
+			"VertexAttributes": "$ProjectName/VertexAttributes/Default/Null.asset",
 			"ShaderBlueprints":
 			{
 				"VertexShaderBlueprint": "$ProjectName/ShaderBlueprint/Compositor/PositionTextureCoordinateVertexRay.asset",

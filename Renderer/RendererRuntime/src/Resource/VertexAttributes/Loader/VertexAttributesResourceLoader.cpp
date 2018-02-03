@@ -77,27 +77,6 @@ namespace RendererRuntime
 		{
 			mVertexAttributesResource->mVertexAttributes = Renderer::VertexAttributes(0, nullptr);
 		}
-		else if (593231539 == getAsset().assetId)	// "Example/VertexAttributes/Default/Compositor"
-		{
-			Renderer::VertexAttributes& vertexAttributes = const_cast<Renderer::VertexAttributes&>(mVertexAttributesResource->mVertexAttributes);
-			static const Renderer::VertexAttribute vertexAttributesLayout[] =
-			{
-				{ // Attribute 0
-					// Data destination
-					Renderer::VertexAttributeFormat::FLOAT_4,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
-					"PositionTexCoord",							// name[32] (char)
-					"POSITION",									// semanticName[32] (char)
-					0,											// semanticIndex (uint32_t)
-					// Data source
-					0,											// inputSlot (uint32_t)
-					0,											// alignedByteOffset (uint32_t)
-					sizeof(float) * 4,							// strideInBytes (uint32_t)
-					0											// instancesPerElement (uint32_t)
-				}
-			};
-			vertexAttributes.numberOfAttributes = static_cast<uint32_t>(glm::countof(vertexAttributesLayout));
-			vertexAttributes.attributes = vertexAttributesLayout;
-		}
 		else if (4054156081 == getAsset().assetId)	// "Example/VertexAttributes/Default/Position"
 		{
 			Renderer::VertexAttributes& vertexAttributes = const_cast<Renderer::VertexAttributes&>(mVertexAttributesResource->mVertexAttributes);

@@ -535,7 +535,7 @@ namespace RendererRuntime
 				glm::vec4& bottomLeft = viewSpaceFrustumCorners[6];	// Vertex ID 2
 				topRight.x   = glm::mix(topLeft.x, topRight.x, 2.0f);
 				bottomLeft.y = glm::mix(topLeft.y, bottomLeft.y, 2.0f);
-				if (!mRendererRuntime->getRenderer().getCapabilities().upperLeftOrigin)
+				if (mRendererRuntime->getRenderer().getCapabilities().upperLeftOrigin)
 				{
 					topLeft.y = 1.0f - topLeft.y;
 					topRight.y = 1.0f - topRight.y;

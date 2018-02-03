@@ -66,10 +66,7 @@ namespace RendererRuntime
 	*    Using a screen covering triangle as discussed at e.g.
 	*    - https://web.archive.org/web/20140719063725/http://www.altdev.co/2011/08/08/interesting-vertex-shader-trick/
 	*    - "Vertex Shader Tricks by Bill Bilodeau - AMD at GDC14" - http://de.slideshare.net/DevCentralAMD/vertex-shader-tricks-bill-bilodeau
-	*    - "Rendering a Screen Covering Triangle in OpenGL (with no buffers)" - https://rauwendaal.net/2014/06/14/rendering-a-screen-covering-triangle-in-opengl/
-	*
-	*  @todo
-	*    - TODO(co) "gl_VertexID" is not available in OpenGL ES 3, so we have to use a vertex array buffer there. Add vertex array buffer less rendering for renderer backends supporting "gl_VertexID" or similar (see e.g. https://web.archive.org/web/20140719063725/http://www.altdev.co/2011/08/08/interesting-vertex-shader-trick/ ).
+	*    - Attribute-less rendering: "Rendering a Screen Covering Triangle in OpenGL (with no buffers)" - https://rauwendaal.net/2014/06/14/rendering-a-screen-covering-triangle-in-opengl/
 	*/
 	class CompositorInstancePassQuad : public ICompositorInstancePass, public IResourceListener
 	{

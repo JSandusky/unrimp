@@ -138,6 +138,9 @@ Renderer Runtime (e.g. "The Game")
 	- High-level sunlight controlled via time-of-day
 - Skeleton animation
 - Particles rendering
+- Terrain
+	- This software contains source code provided by NVIDIA Corporation. The height map terrain tessellation implementation is basing on ["DirectX 11 Terrain Tessellation"](https://developer.nvidia.com/sites/default/files/akamai/gamedev/files/sdk/11/TerrainTessellation_WhitePaper.pdf) by Iain Cantlay and the concrete implementation "TerrainTessellation"-sample inside ["NVIDIA Direct3D SDK 11"](https://developer.nvidia.com/dx11-samples).
+	- Terrain data created by [Marcel Gonzales](http://www.marcelgonzales.com/)
 - Sky
 	- Classic environment cube map skybox
 	- Procedural sky
@@ -195,9 +198,6 @@ Examples (just some high level keywords)
 - Depth fog
 - Vignette
 - Sharpen
-- Terrain
-	- This software contains source code provided by NVIDIA Corporation. The height map terrain tessellation implementation is basing on ["DirectX 11 Terrain Tessellation"](https://developer.nvidia.com/sites/default/files/akamai/gamedev/files/sdk/11/TerrainTessellation_WhitePaper.pdf) by Iain Cantlay and the concrete implementation "TerrainTessellation"-sample inside ["NVIDIA Direct3D SDK 11"](https://developer.nvidia.com/dx11-samples).
-	- Terrain data created by [Marcel Gonzales](http://www.marcelgonzales.com/)
 
 
 Terminology and Acronyms

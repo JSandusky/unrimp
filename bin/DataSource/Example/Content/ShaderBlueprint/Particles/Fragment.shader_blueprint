@@ -84,7 +84,7 @@ MAIN_BEGIN
 		float sceneDepth = GetLinearDepth(SAMPLE_DEPTH_2D_LOD(DepthMap, SamplerPointClamp, float4(FRAGMENT_POSITION.xy * PassData.InverseViewportSize, 0.0f, 0.0f)));
 		float depthDifference = sceneDepth - MAIN_INPUT(TexCoordDepthVS).z;
 		float fade = 0.5f * pow(SATURATE(2.0f * ((depthDifference > 0.5f) ? 1.0f - depthDifference : depthDifference)), ContrastPower);
-		fade = (depthDifference > 0.5f) ? 1.0f - fade : fade;
+		fade = (depthDifference > 0.5f) ? (1.0f - fade) : fade;
 		color = float4(fade, fade, fade, fade);	// TODO(co) Just for testing, alpha modulation later on
 	}
 

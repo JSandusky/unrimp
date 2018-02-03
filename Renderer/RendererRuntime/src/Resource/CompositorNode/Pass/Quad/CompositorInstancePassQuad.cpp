@@ -31,78 +31,6 @@
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
-// Disable warnings in external headers, we can't fix them
-PRAGMA_WARNING_PUSH
-	PRAGMA_WARNING_DISABLE_MSVC(4464)	// warning C4464: relative include path contains '..'
-	#include <glm/detail/setup.hpp>
-PRAGMA_WARNING_POP
-
-
-//[-------------------------------------------------------]
-//[ Anonymous detail namespace                            ]
-//[-------------------------------------------------------]
-namespace
-{
-	namespace detail
-	{
-
-
-		//[-------------------------------------------------------]
-		//[ Global variables                                      ]
-		//[-------------------------------------------------------]
-		static Renderer::IVertexArrayPtr VertexArrayPtr;	///< Vertex array object (VAO), can be a null pointer, shared between all compositor instance pass quad instances
-
-
-		//[-------------------------------------------------------]
-		//[ Global functions                                      ]
-		//[-------------------------------------------------------]
-		Renderer::IVertexArray* createVertexArray(Renderer::IBufferManager& bufferManager)
-		{
-			// Vertex input layout
-			const Renderer::VertexAttribute vertexAttributesLayout[] =
-			{
-				{ // Attribute 0
-					// Data destination
-					Renderer::VertexAttributeFormat::FLOAT_4,	// vertexAttributeFormat (Renderer::VertexAttributeFormat)
-					"PositionTexCoord",							// name[32] (char)
-					"POSITION",									// semanticName[32] (char)
-					0,											// semanticIndex (uint32_t)
-					// Data source
-					0,											// inputSlot (uint32_t)
-					0,											// alignedByteOffset (uint32_t)
-					sizeof(float) * 4,							// strideInBytes (uint32_t)
-					0											// instancesPerElement (uint32_t)
-				}
-			};
-			const Renderer::VertexAttributes vertexAttributes(static_cast<uint32_t>(glm::countof(vertexAttributesLayout)), vertexAttributesLayout);
-
-			// Create the vertex buffer object (VBO)
-			// -> Clip space vertex positions, left/bottom is (-1,-1) and right/top is (1,1)
-			static const float VERTEX_POSITION[] =
-			{								// Vertex ID	Triangle on screen
-				-1.0f,  1.0f, 0.0f, 0.0f,	// 0			  0.......1
-				 3.0f,  1.0f, 2.0f, 0.0f,	// 1			  .   .
-				-1.0f, -3.0f, 0.0f, 2.0f	// 2			  2
-			};
-			Renderer::IVertexBufferPtr vertexBuffer(bufferManager.createVertexBuffer(sizeof(VERTEX_POSITION), VERTEX_POSITION, Renderer::BufferUsage::STATIC_DRAW));
-			RENDERER_SET_RESOURCE_DEBUG_NAME(vertexBuffer, "Compositor instance pass quad")
-
-			// Create vertex array object (VAO)
-			const Renderer::VertexArrayVertexBuffer vertexArrayVertexBuffers[] = { vertexBuffer };
-			Renderer::IVertexArray* vertexArray = bufferManager.createVertexArray(vertexAttributes, static_cast<uint32_t>(glm::countof(vertexArrayVertexBuffers)), vertexArrayVertexBuffers);
-			RENDERER_SET_RESOURCE_DEBUG_NAME(vertexArray, "Compositor instance pass quad")
-
-			// Done
-			return vertexArray;
-		}
-
-
-//[-------------------------------------------------------]
-//[ Anonymous detail namespace                            ]
-//[-------------------------------------------------------]
-	} // detail
-}
-
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
@@ -151,14 +79,8 @@ namespace RendererRuntime
 	{
 		if (isInitialized(mMaterialResourceId))
 		{
-			// Clear the renderable manager right now so we have no more references to the shared vertex array
+			// Clear the renderable manager
 			mRenderableManager.getRenderables().clear();
-
-			// Release reference to vertex array object (VAO) shared between all compositor instance pass quad instances
-			if (nullptr != ::detail::VertexArrayPtr && 1 == ::detail::VertexArrayPtr->releaseReference())	// +1 for reference to global shared pointer
-			{
-				::detail::VertexArrayPtr = nullptr;
-			}
 
 			// Destroy the material resource the compositor instance pass quad created
 			getCompositorNodeInstance().getCompositorWorkspaceInstance().getRendererRuntime().getMaterialResourceManager().destroyMaterialResource(mMaterialResourceId);
@@ -228,16 +150,8 @@ namespace RendererRuntime
 			}
 		}
 
-		// Add reference to vertex array object (VAO) shared between all compositor instance pass quad instances
-		if (nullptr == ::detail::VertexArrayPtr)
-		{
-			::detail::VertexArrayPtr = ::detail::createVertexArray(rendererRuntime.getBufferManager());
-			assert(nullptr != ::detail::VertexArrayPtr);
-		}
-		::detail::VertexArrayPtr->addReference();
-
-		// Setup renderable manager
-		mRenderableManager.getRenderables().emplace_back(mRenderableManager, ::detail::VertexArrayPtr, false, 0, 3, materialResourceManager, mMaterialResourceId, getUninitialized<SkeletonResourceId>());
+		// Setup renderable manager using attribute-less rendering
+		mRenderableManager.getRenderables().emplace_back(mRenderableManager, Renderer::IVertexArrayPtr(), false, 0, 3, materialResourceManager, mMaterialResourceId, getUninitialized<SkeletonResourceId>());
 	}
 
 
