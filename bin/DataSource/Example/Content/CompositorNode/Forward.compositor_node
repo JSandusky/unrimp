@@ -23,6 +23,11 @@
 				"TextureFormat": "D32_FLOAT",
 				"AllowMultisample": "TRUE"
 			},
+			"Example/Texture/Dynamic/MultisampleDepthStencilRenderTargetCopy":
+			{
+				"TextureFormat": "D32_FLOAT",
+				"AllowMultisample": "TRUE"
+			},
 			"Example/Texture/Dynamic/MultisampleNormalRenderTarget":
 			{
 				"Description": "rgb = view space normal",
@@ -155,6 +160,10 @@
 				"ColorTextures": [ "Example/Texture/Dynamic/HdrMultisampleColorRenderTarget" ],
 				"DepthStencilTexture": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget"
 			},
+			"DepthStencilMultisampleFramebufferCopy":
+			{
+				"DepthStencilTexture": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTargetCopy"
+			},
 			"HdrFramebuffer0":
 			{
 				"ColorTextures": [ "Example/Texture/Dynamic/HdrColorRenderTarget0" ]
@@ -278,6 +287,14 @@
 					"MinimumRenderQueueIndex": "254",
 					"MaximumRenderQueueIndex": "254",
 					"MaterialTechnique": "Default"
+				}
+			},
+			"DepthStencilMultisampleFramebufferCopy":
+			{
+				"Copy":
+				{
+					"DestinationTexture": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTargetCopy",
+					"SourceTexture": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget"
 				}
 			},
 			"HdrTransparentMultisampleFramebuffer":

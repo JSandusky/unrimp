@@ -187,6 +187,7 @@ Examples (just some high level keywords)
 - [Pseudo lens flare](http://john-chapman-graphics.blogspot.de/2013/02/pseudo-lens-flare.html)
 - [Alpha to coverage](https://medium.com/@bgolus/anti-aliased-alpha-test-the-esoteric-alpha-to-coverage-8b177335ae4f)
 - Depth of field
+- [Soft particles](https://developer.download.nvidia.com/whitepapers/2007/SDK10/SoftParticles_hi.pdf)
 - GPU skinning
 - Motion blur
 - Film grain

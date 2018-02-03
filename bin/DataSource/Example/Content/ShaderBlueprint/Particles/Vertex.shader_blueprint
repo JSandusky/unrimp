@@ -33,9 +33,9 @@ INPUT_BEGIN_VERTEX
 	INPUT_VERTEX_ID
 INPUT_END_VERTEX
 OUTPUT_BEGIN_VERTEX
-	OUTPUT_TEXTURE_COORDINATE(1, float2, TexCoordVS, 0)	// Texture coordinate
-	OUTPUT_TEXTURE_COORDINATE(2, float4, ColorVS, 1)	// Color
-	OUTPUT_POSITION			 (0)						// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
+	OUTPUT_TEXTURE_COORDINATE(1, float3, TexCoordDepthVS, 0)	// xy = texture coordinate, z = particle depth
+	OUTPUT_TEXTURE_COORDINATE(2, float4, ColorVS, 		  1)	// Color
+	OUTPUT_POSITION			 (0)								// Clip space vertex position as output, left/bottom is (-1,-1) and right/top is (1,1)
 OUTPUT_END_VERTEX
 
 // Uniform buffers
@@ -43,6 +43,8 @@ struct PassDataStruct
 {
 	float4x4 WorldSpaceToViewSpaceMatrix;
 	float4x4 ViewSpaceToClipSpaceMatrix;
+	float2   InverseViewportSize;
+	float2	 ProjectionParameters;
 	float    GlobalTimeInSeconds;
 };
 UNIFORM_BUFFER_BEGIN(0, 0, PassUniformBuffer, 0)
@@ -90,7 +92,7 @@ MAIN_BEGIN_VERTEX
 	MAIN_OUTPUT_POSITION.xyz += viewSpacePosition;
 	MAIN_OUTPUT_POSITION = MATRIX_MUL(PassData.ViewSpaceToClipSpaceMatrix, MAIN_OUTPUT_POSITION);
 
-	// Pass through the texture coordinate and color
-	MAIN_OUTPUT(TexCoordVS) = uv;
+	// Pass through the texture coordinate, color and clip space position
+	MAIN_OUTPUT(TexCoordDepthVS) = float3(uv, MAIN_OUTPUT_POSITION.w);
 	MAIN_OUTPUT(ColorVS) = particleColor;
 MAIN_END_VERTEX
