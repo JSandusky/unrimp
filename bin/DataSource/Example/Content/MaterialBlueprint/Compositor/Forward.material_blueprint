@@ -8,16 +8,6 @@
 	{
 		"Properties":
 		{
-			"NumberOfMultisamples":
-			{
-				"Usage": "SHADER_COMBINATION",
-				"ValueType": "GLOBAL_MATERIAL_PROPERTY_ID",
-				"Value": "@GlobalNumberOfMultisamples",
-				"Description": "Number of multisamples. Valid values are 0, 2, 4, 8. Use 0 to disable multisample.",
-				"VisualImportance": "100",
-				"MaximumIntegerValue": "8",
-				"ValidIntegerValues": [ 0, 2, 4, 8 ]
-			},
 			"AtmosphereFogDensity":
 			{
 				"Usage": "SHADER_UNIFORM",
@@ -136,12 +126,6 @@
 							"Usage": "MATERIAL_REFERENCE",
 							"ValueType": "FLOAT_3",
 							"Value": "@DiffuseFogColor"
-						},
-						"InverseViewportSize":
-						{
-							"Usage": "PASS_REFERENCE",
-							"ValueType": "FLOAT_2",
-							"Value": "@INVERSE_VIEWPORT_SIZE"
 						},
 						"ProjectionParameters":
 						{

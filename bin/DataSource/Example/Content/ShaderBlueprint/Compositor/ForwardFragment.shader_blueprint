@@ -47,7 +47,6 @@ struct PassDataStruct
 	float3	 AmbientColor;
 	float3	 SunlightColor;
 	float3   DiffuseFogColor;
-	float2	 InverseViewportSize;
 	float2	 ProjectionParameters;
 };
 UNIFORM_BUFFER_BEGIN(0, 0, PassUniformBuffer, 0)
@@ -56,12 +55,7 @@ UNIFORM_BUFFER_END
 
 // Textures
 TEXTURE_2D(1, 0, ColorMap, 0)
-@property(NumberOfMultisamples)
-	TEXTURE_2D_MS(1, 1, DepthMap, @value(NumberOfMultisamples), 1)
-@end
-@property(!NumberOfMultisamples)
-	TEXTURE_2D(1, 1, DepthMap, 1)
-@end
+TEXTURE_2D(1, 1, DepthMap, 1)
 TEXTURE_2D(1, 2, ScreenSpaceAmbientOcclusionMap, 2)
 
 // Samplers
@@ -75,12 +69,11 @@ SAMPLER_STATE(2, 0, SamplerPointClamp, 0)
 	@insertpiece(DefineCalculateFoggedColor)
 @includepiece($ProjectName/ShaderPiece/Depth.asset)
 	@insertpiece(DefineGetLinearDepth)
-	@insertpiece(DefineGetDepthFromDepthMap)
 
-float3 CalculateColor(float3 viewRay, float3 color, float screenSpaceAmbientOcclusion, float2 screenSpacePosition, int sampleIndex)
+float3 CalculateColor(float3 viewRay, float3 color, float screenSpaceAmbientOcclusion, float2 screenSpacePosition)
 {
 	// Read depth map value and check whether or not a depth value was written (depth = 1 = depth clear value)
-	float depth = GetDepthFromDepthMap(screenSpacePosition, sampleIndex);
+	float depth = SAMPLE_DEPTH_2D_LOD(DepthMap, SamplerPointClamp, float4(screenSpacePosition, 0.0f, 0.0f));
 	if (1.0f != depth)
 	{
 		// Scale the view ray by the ratio of the linear z value to the projected view ray
@@ -110,29 +103,8 @@ MAIN_BEGIN
 	float3 viewRay = normalize(MAIN_INPUT(ViewRayVS));
 
 	// Calculate fragment color
-	@property(NumberOfMultisamples)
-		// Complex pixel detection
-		float3 finalColor;
-		if (0 != color.a)
-		{
-			// Custom MSAA resolve
-			finalColor = float3(0.0f, 0.0f, 0.0f);
-			@foreach(NumberOfMultisamples, i, 0)
-			{
-				finalColor += CalculateColor(viewRay, color.rgb, screenSpaceAmbientOcclusion, MAIN_INPUT(TexCoordVS), @i);
-			}
-			@end
-			finalColor /= @value(NumberOfMultisamples);
-		}
-		else
-		{
-			finalColor = CalculateColor(viewRay, color.rgb, screenSpaceAmbientOcclusion, MAIN_INPUT(TexCoordVS), 0);
-		}
-	@end
-	@property(!NumberOfMultisamples)
-		float3 finalColor = CalculateColor(viewRay, color.rgb, screenSpaceAmbientOcclusion, MAIN_INPUT(TexCoordVS), 0);
-	@end
-	
+	float3 finalColor = CalculateColor(viewRay, color.rgb, screenSpaceAmbientOcclusion, MAIN_INPUT(TexCoordVS));
+
 	// Done
 	MAIN_OUTPUT_COLOR(0) = float4(finalColor, color.a);
 MAIN_END

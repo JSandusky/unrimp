@@ -23,6 +23,10 @@
 				"TextureFormat": "D32_FLOAT",
 				"AllowMultisample": "TRUE"
 			},
+			"Example/Texture/Dynamic/DepthStencilRenderTarget":
+			{
+				"TextureFormat": "R32_FLOAT"
+			},
 			"Example/Texture/Dynamic/MultisampleNormalRenderTarget":
 			{
 				"Description": "rgb = view space normal",
@@ -101,6 +105,10 @@
 			{
 				"ColorTextures": [ "Example/Texture/Dynamic/HdrMultisampleColorRenderTarget", "Example/Texture/Dynamic/MultisampleNormalRenderTarget" ],
 				"DepthStencilTexture": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget"
+			},
+			"MsaaResolveDepthFramebuffer":
+			{
+				"ColorTextures": [ "Example/Texture/Dynamic/DepthStencilRenderTarget" ]
 			},
 			"HdrFramebuffer0":
 			{
@@ -215,6 +223,17 @@
 					"SourceMultisampleFramebuffer": "HdrMultisampleFramebuffer"
 				}
 			},
+			"MsaaResolveDepthFramebuffer":
+			{
+				"Quad":
+				{
+					"MaterialBlueprint": "$ProjectName/MaterialBlueprint/Compositor/MsaaResolveDepth.asset",
+					"SetMaterialProperties":
+					{
+						"DepthMap": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget"
+					}
+				}
+			},
 			"HdrFramebuffer1":
 			{
 				"Quad":
@@ -224,7 +243,7 @@
 					"SetMaterialProperties":
 					{
 						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget0",
-						"DepthMap": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget",
+						"DepthMap": "Example/Texture/Dynamic/DepthStencilRenderTarget",
 						"ScreenSpaceAmbientOcclusionMap": "Unrimp/Texture/DynamicByCode/WhiteMap2D"
 					}
 				}

@@ -47,7 +47,8 @@ INPUT_BEGIN
 	DECLARE_FRAGMENT_POSITION
 INPUT_END
 OUTPUT_BEGIN
-	OUTPUT_COLOR(0)
+	OUTPUT_COLOR(0)	// Resolved color
+	OUTPUT_COLOR(1)	// Resolved depth
 OUTPUT_END
 
 // Uniform buffers
@@ -233,7 +234,6 @@ MAIN_BEGIN
 		SUB_SAMPLES_OFFSETS[0] = float2(0.0f, 0.0f);
 	#endif
 
-	float2 fragmentPosition = FRAGMENT_POSITION.xy;
 	float3 sum = float3(0.0f, 0.0f, 0.0f);
 	float totalWeight = 0.0f;
 
@@ -258,7 +258,7 @@ MAIN_BEGIN
 		for (int x = -SAMPLE_RADIUS; x <= SAMPLE_RADIUS; ++x)
 		{
 			float2 sampleOffset = float2(x, y);
-			float2 samplePosition = fragmentPosition + sampleOffset;
+			float2 samplePosition = FRAGMENT_POSITION.xy + sampleOffset;
 			samplePosition = clamp(samplePosition, float2(0.0f, 0.0f), PassData.ViewportSize - 1.0f);
 
 			UNROLL_HINT
@@ -304,7 +304,7 @@ MAIN_BEGIN
 		float alpha = SAMPLE_2D_MS(ColorMap, int2(FRAGMENT_POSITION.xy), 0).a;
 	@end
 	@property(!NumberOfMultisamples)
-		float4 color = TEXTURE_FETCH_2D(ColorMap, int3(fragmentPosition, 0));
+		float4 color = TEXTURE_FETCH_2D(ColorMap, int3(FRAGMENT_POSITION.xy, 0));
 		float3 result = color.rgb;
 		float alpha = color.a;
 	@end
@@ -319,7 +319,7 @@ MAIN_BEGIN
 
 	{ // Temporal AA
 		float3 currentColor = result;
-		float3 previousColor = Reproject(fragmentPosition);
+		float3 previousColor = Reproject(FRAGMENT_POSITION.xy);
 
 		{ // Clamp mode: Variance clip
 			float3 mu = m1 / mWeight;
@@ -339,6 +339,21 @@ MAIN_BEGIN
 		result = (currentColor * weightA + previousColor * weightB) / (weightA + weightB);
 	}
 
+	// Resolve depth
+	@property(NumberOfMultisamples)
+		// Maximum operator due to the usage of Reversed-Z (see e.g. https://developer.nvidia.com/content/depth-precision-visualized and https://nlguillemot.wordpress.com/2016/12/07/reversed-z-in-opengl/)
+		float depth = SAMPLE_2D_MS(DepthMap, int2(FRAGMENT_POSITION.xy), 0).r;
+		UNROLL_HINT
+		for (int sampleIndex = 1; sampleIndex < NUMBER_OF_MSAA_SAMPLES; ++sampleIndex)
+		{
+			depth = max(depth, SAMPLE_2D_MS(DepthMap, int2(FRAGMENT_POSITION.xy), sampleIndex).r);
+		}
+	@end
+	@property(!NumberOfMultisamples)
+		float depth = TEXTURE_FETCH_2D(DepthMap, int3(FRAGMENT_POSITION.xy, 0)).r;
+	@end
+
 	// Done
 	MAIN_OUTPUT_COLOR(0) = float4(result.rgb, alpha);
+	MAIN_OUTPUT_COLOR(1) = float4(depth, depth, depth, depth);
 MAIN_END

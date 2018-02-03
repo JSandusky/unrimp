@@ -23,10 +23,9 @@
 				"TextureFormat": "D32_FLOAT",
 				"AllowMultisample": "TRUE"
 			},
-			"Example/Texture/Dynamic/MultisampleDepthStencilRenderTargetCopy":
+			"Example/Texture/Dynamic/DepthStencilRenderTarget":
 			{
-				"TextureFormat": "D32_FLOAT",
-				"AllowMultisample": "TRUE"
+				"TextureFormat": "R32_FLOAT"
 			},
 			"Example/Texture/Dynamic/MultisampleNormalRenderTarget":
 			{
@@ -160,9 +159,9 @@
 				"ColorTextures": [ "Example/Texture/Dynamic/HdrMultisampleColorRenderTarget" ],
 				"DepthStencilTexture": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget"
 			},
-			"DepthStencilMultisampleFramebufferCopy":
+			"MsaaResolveFramebuffer":
 			{
-				"DepthStencilTexture": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTargetCopy"
+				"ColorTextures": [ "Example/Texture/Dynamic/HdrColorRenderTarget0", "Example/Texture/Dynamic/DepthStencilRenderTarget" ]
 			},
 			"HdrFramebuffer0":
 			{
@@ -289,14 +288,6 @@
 					"MaterialTechnique": "Default"
 				}
 			},
-			"DepthStencilMultisampleFramebufferCopy":
-			{
-				"Copy":
-				{
-					"DestinationTexture": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTargetCopy",
-					"SourceTexture": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget"
-				}
-			},
 			"HdrTransparentMultisampleFramebuffer":
 			{
 				"Scene":
@@ -308,7 +299,7 @@
 					"MaterialTechnique": "Transparent"
 				}
 			},
-			"HdrFramebuffer0":
+			"MsaaResolveFramebuffer":
 			{
 				"Quad":
 				{
@@ -339,7 +330,7 @@
 					"SetMaterialProperties":
 					{
 						"NormalMap": "Example/Texture/Dynamic/MultisampleNormalRenderTarget",
-						"DepthMap": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget"
+						"DepthMap": "Example/Texture/Dynamic/DepthStencilRenderTarget"
 					}
 				}
 			},
@@ -364,7 +355,7 @@
 					"SetMaterialProperties":
 					{
 						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget0",
-						"DepthMap": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget",
+						"DepthMap": "Example/Texture/Dynamic/DepthStencilRenderTarget",
 						"ScreenSpaceAmbientOcclusionMap": "Example/Texture/Dynamic/BlurredScreenSpaceAmbientOcclusionRenderTarget"
 					}
 				}
@@ -489,7 +480,7 @@
 					"SetMaterialProperties":
 					{
 						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget1",
-						"DepthMap": "Example/Texture/Dynamic/MultisampleDepthStencilRenderTarget",
+						"DepthMap": "Example/Texture/Dynamic/DepthStencilRenderTarget",
 						"BlurMap": "Example/Texture/Dynamic/GaussianBlurDownscale2ColorRenderTarget"
 					}
 				}

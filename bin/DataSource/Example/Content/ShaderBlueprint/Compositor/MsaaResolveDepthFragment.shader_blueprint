@@ -24,70 +24,56 @@
 @includepiece($ProjectName/ShaderPiece/Core.asset)
 	@insertpiece(SetCrossPlatformSettings)
 
+@property(NumberOfMultisamples)
+	#define NUMBER_OF_MSAA_SAMPLES @value(NumberOfMultisamples)
+@end
+@property(!NumberOfMultisamples)
+	#define NUMBER_OF_MSAA_SAMPLES 1
+@end
+
 
 //[-------------------------------------------------------]
 //[ Input / output                                        ]
 //[-------------------------------------------------------]
 // Attribute input / output
 INPUT_BEGIN
-	INPUT_TEXTURE_COORDINATE(1, float3, TexCoordDepthVS, 0)	// xy = texture coordinate, z = particle depth
-	INPUT_TEXTURE_COORDINATE(2, float4, ColorVS, 1)			// Color
+	INPUT_TEXTURE_COORDINATE(1, float2, TexCoordVS, 0)	// Texture coordinate
 	DECLARE_FRAGMENT_POSITION
 INPUT_END
 OUTPUT_BEGIN
-	OUTPUT_COLOR(0)	// rgb = albedo color, a = alpha
+	OUTPUT_COLOR(0)	// Resolved depth
 OUTPUT_END
 
-// Uniform buffers
-struct PassDataStruct
-{
-	float4x4 WorldSpaceToViewSpaceMatrix;
-	float4x4 ViewSpaceToClipSpaceMatrix;
-	float2   InverseViewportSize;
-	float2	 ProjectionParameters;
-	float    GlobalTimeInSeconds;
-};
-UNIFORM_BUFFER_BEGIN(0, 0, PassUniformBuffer, 0)
-	PassDataStruct PassData;
-UNIFORM_BUFFER_END
-
 // Textures
-TEXTURE_2D(1, 0, _argb_nxa, 0)
-TEXTURE_2D(1, 1, DepthMap, 1)
+@property(NumberOfMultisamples)
+	TEXTURE_2D_MS(0, 0, DepthMap, NUMBER_OF_MSAA_SAMPLES, 0)
+@end
+@property(!NumberOfMultisamples)
+	TEXTURE_2D(0, 0, DepthMap, 0)
+@end
 
 // Samplers
-SAMPLER_STATE(2, 0, SamplerLinear, 0)
-SAMPLER_STATE(2, 1, SamplerPointClamp, 1)
-
-
-//[-------------------------------------------------------]
-//[ Functions                                             ]
-//[-------------------------------------------------------]
-@includepiece($ProjectName/ShaderPiece/Depth.asset)
-	@insertpiece(DefineGetLinearDepth)
+SAMPLER_STATE(1, 0, SamplerPoint, 0)
 
 
 //[-------------------------------------------------------]
 //[ Main                                                  ]
 //[-------------------------------------------------------]
 MAIN_BEGIN
-	// TODO(co) Pass or material parameters
-	float ContrastPower = 3.0f;
-
-	// Fetch texel
-	float4 color = SAMPLE_2D(_argb_nxa, SamplerLinear, MAIN_INPUT(TexCoordDepthVS).xy);
-
-	// Apply particle color
-	color *= MAIN_INPUT(ColorVS);
-
-	{ // Soft particles function as described in "Soft Particles" by Tristan Lorach - https://developer.download.nvidia.com/whitepapers/2007/SDK10/SoftParticles_hi.pdf
-		float sceneDepth = GetLinearDepth(SAMPLE_DEPTH_2D_LOD(DepthMap, SamplerPointClamp, float4(FRAGMENT_POSITION.xy * PassData.InverseViewportSize, 0.0f, 0.0f)));
-		float depthDifference = sceneDepth - MAIN_INPUT(TexCoordDepthVS).z;
-		float fade = 0.5f * pow(SATURATE(2.0f * ((depthDifference > 0.5f) ? 1.0f - depthDifference : depthDifference)), ContrastPower);
-		fade = (depthDifference > 0.5f) ? 1.0f - fade : fade;
-		color = float4(fade, fade, fade, fade);	// TODO(co) Just for testing, alpha modulation later on
-	}
+	// Resolve depth
+	@property(NumberOfMultisamples)
+		// Maximum operator due to the usage of Reversed-Z (see e.g. https://developer.nvidia.com/content/depth-precision-visualized and https://nlguillemot.wordpress.com/2016/12/07/reversed-z-in-opengl/)
+		float depth = SAMPLE_2D_MS(DepthMap, int2(FRAGMENT_POSITION.xy), 0).r;
+		UNROLL_HINT
+		for (int sampleIndex = 1; sampleIndex < NUMBER_OF_MSAA_SAMPLES; ++sampleIndex)
+		{
+			depth = max(depth, SAMPLE_2D_MS(DepthMap, int2(FRAGMENT_POSITION.xy), sampleIndex).r);
+		}
+	@end
+	@property(!NumberOfMultisamples)
+		float depth = TEXTURE_FETCH_2D(DepthMap, int3(FRAGMENT_POSITION.xy, 0)).r;
+	@end
 
 	// Done
-	MAIN_OUTPUT_COLOR(0) = color;
+	MAIN_OUTPUT_COLOR(0) = float4(depth, depth, depth, depth);
 MAIN_END

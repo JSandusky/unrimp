@@ -55,12 +55,11 @@ UNIFORM_BUFFER_END
 // Textures
 @property(NumberOfMultisamples)
 	TEXTURE_2D_MS(1, 0, NormalMap, @value(NumberOfMultisamples), 0)	// Normal map: rgb = view space normal
-	TEXTURE_2D_MS(1, 1, DepthMap, @value(NumberOfMultisamples), 1)
 @end
 @property(!NumberOfMultisamples)
 	TEXTURE_2D(1, 0, NormalMap, 0)	// Normal map: rgb = view space normal
-	TEXTURE_2D(1, 1, DepthMap, 1)
 @end
+TEXTURE_2D(1, 1, DepthMap, 1)
 TEXTURE_1D(1, 2, SsaoSampleKernelMap, 2)
 TEXTURE_2D(1, 3, SsaoNoise4x4Map, 3)
 
@@ -74,7 +73,6 @@ SAMPLER_STATE(2, 1, SamplerPointWrap, 1)
 //[-------------------------------------------------------]
 @includepiece($ProjectName/ShaderPiece/Depth.asset)
 	@insertpiece(DefineGetLinearDepth)
-	@insertpiece(DefineGetDepthFromDepthMap)
 
 // Fade value with distance
 float farFade(float value, float2 fadeStartEnd, float linearDepth)
@@ -97,7 +95,7 @@ float3 GetNormalFromNormalMap(float2 textureCoordinate, int sampleIndex)
 float CalculateOcclusion(float3 viewRay, float2 textureCoordinate, int sampleIndex)
 {
 	// Get depth and normal of the fragment
-	float depth = GetDepthFromDepthMap(textureCoordinate, sampleIndex);
+	float depth = SAMPLE_DEPTH_2D_LOD(DepthMap, SamplerPointClamp, float4(textureCoordinate, 0.0f, 0.0f));
 	float originLinearDepth = GetLinearDepth(depth);
 	float3 normal = GetNormalFromNormalMap(textureCoordinate, sampleIndex);
 
@@ -132,7 +130,7 @@ float CalculateOcclusion(float3 viewRay, float2 textureCoordinate, int sampleInd
 		if (offset.x >= 0.0f && offset.y >= 0.0f && offset.x <= 1.0f && offset.y <= 1.0f)
 		{
 			// Compute occlusion based on the (scaled) Z difference
-			float linearSampleDepth = GetLinearDepth(GetDepthFromDepthMap(offset.xy, sampleIndex));
+			float linearSampleDepth = GetLinearDepth(SAMPLE_DEPTH_2D_LOD(DepthMap, SamplerPointClamp, float4(offset.xy, 0.0f, 0.0f)));
 			
 			// Range check & accumulates
 			float rangeCheck = (abs(originLinearDepth - linearSampleDepth) < PassData.Radius) ? 1.0 : 0.0;

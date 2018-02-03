@@ -52,22 +52,3 @@
 		@end
 	}
 @end
-
-@piece(DefineGetDepthFromDepthMap)
-	float GetDepthFromDepthMap(float2 textureCoordinate, int sampleIndex)
-	{
-		@property(NumberOfMultisamples)
-			return SAMPLE_DEPTH_2D_MS(DepthMap, int2(textureCoordinate * (1.0f / PassData.InverseViewportSize)), sampleIndex);
-		@end
-		@property(!NumberOfMultisamples)
-			return SAMPLE_DEPTH_2D_LOD(DepthMap, SamplerPointClamp, float4(textureCoordinate, 0.0f, 0.0f));
-		@end
-	}
-@end
-
-@piece(DefineGetLinearDepthFromDepthMap)
-	float GetLinearDepthFromDepthMap(float2 textureCoordinate, int sampleIndex)
-	{
-		return GetLinearDepth(GetDepthFromDepthMap(textureCoordinate, sampleIndex));
-	}
-@end
