@@ -67,15 +67,13 @@ MAIN_BEGIN_VERTEX
 	uint particleIndex = MAIN_INPUT_VERTEX_ID / 6u;
 
 	// Get view space vertex position and texture coordinate
-	float3 BILLBOARD[] =
-	{
-		float3(-1.0f, -1.0f, 0.0f),	// 0
-		float3( 1.0f, -1.0f, 0.0f),	// 1
-		float3(-1.0f,  1.0f, 0.0f),	// 2
-		float3(-1.0f,  1.0f, 0.0f),	// 3
-		float3( 1.0f, -1.0f, 0.0f),	// 4
-		float3( 1.0f,  1.0f, 0.0f)	// 5
-	};
+	float3 BILLBOARD[6];
+	BILLBOARD[0] = float3(-1.0f, -1.0f, 0.0f);	// 0
+	BILLBOARD[1] = float3( 1.0f, -1.0f, 0.0f);	// 1
+	BILLBOARD[2] = float3(-1.0f,  1.0f, 0.0f);	// 2
+	BILLBOARD[3] = float3(-1.0f,  1.0f, 0.0f);	// 3
+	BILLBOARD[4] = float3( 1.0f, -1.0f, 0.0f);	// 4
+	BILLBOARD[5] = float3( 1.0f,  1.0f, 0.0f);	// 5
 	float3 viewSpacePosition = BILLBOARD[vertexIndex];
 	float2 uv = viewSpacePosition.xy * float2(0.5f, 0.5f) + float2(0.5f, 0.5f);
 
