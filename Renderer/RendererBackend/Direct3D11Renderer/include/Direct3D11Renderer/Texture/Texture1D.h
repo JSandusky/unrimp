@@ -95,13 +95,6 @@ namespace Direct3D11Renderer
 		*
 		*  @return
 		*    The texture format
-		*
-		*  @remarks
-		*    For textures used as depth stencil render target, Direct3D 11 format handling becomes a little bit more complex due to
-		*    the offered flexibility. For example the abstract texture format "Renderer::TextureFormat::D32_FLOAT" translates into
-		*    - Direct3D 11 texture format is "DXGI_FORMAT_R32_TYPELESS"
-		*    - Direct3D 11 shader resource view format is "DXGI_FORMAT_R32_FLOAT"
-		*    - Direct3D 11 depth stencil view format is "DXGI_FORMAT_D32_FLOAT"
 		*/
 		inline Renderer::TextureFormat::Enum getTextureFormat() const;
 

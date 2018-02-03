@@ -73,6 +73,7 @@
 			#define OUTPUT_TEXTURE_COORDINATE(attributeIndex, type, name, semanticIndex) type name : TEXCOORD##semanticIndex;
 			#define OUTPUT_TEXTURE_COORDINATE_NOINTERPOLATION(attributeIndex, type, name, semanticIndex) nointerpolation type name : TEXCOORD##semanticIndex;
 			#define OUTPUT_COLOR(semanticIndex) float4 OutputColor##semanticIndex : SV_TARGET##semanticIndex;
+			#define OUTPUT_DEPTH float OutputDepth : SV_DEPTH;
 			#define OUTPUT_TESS_LEVEL_INNER(numberOfComponents)	float TessLevelInner[numberOfComponents] : SV_INSIDETESSFACTOR;
 			#define OUTPUT_TESS_LEVEL_OUTER(numberOfComponents)	float TessLevelOuter[numberOfComponents] : SV_TESSFACTOR;
 		#define OUTPUT_END };
@@ -91,6 +92,7 @@
 			#define MAIN_OUTPUT(name) shaderOutput.name
 			#define MAIN_OUTPUT_POSITION shaderOutput.OutputPosition
 			#define MAIN_OUTPUT_COLOR(semanticIndex) shaderOutput.OutputColor##semanticIndex
+			#define MAIN_OUTPUT_DEPTH shaderOutput.OutputDepth
 			#define MAIN_OUTPUT_CONTROL_POINT(name) shaderOutput.name
 			#define MAIN_OUTPUT_TESS_LEVEL_INNER shaderOutputPatch.TessLevelInner
 			#define MAIN_OUTPUT_TESS_LEVEL_OUTER shaderOutputPatch.TessLevelOuter
@@ -280,6 +282,7 @@
 			#define OUTPUT_TEXTURE_COORDINATE(attributeIndex, type, name, semanticIndex) layout(location = attributeIndex) out type name;
 			#define OUTPUT_TEXTURE_COORDINATE_NOINTERPOLATION(attributeIndex, type, name, semanticIndex) layout(location = attributeIndex) flat out type name;
 			#define OUTPUT_COLOR(semanticIndex) layout(location = ##semanticIndex) out vec4 OutputColor##semanticIndex;
+			#define OUTPUT_DEPTH
 			#define OUTPUT_TESS_LEVEL_INNER(numberOfComponents)
 			#define OUTPUT_TESS_LEVEL_OUTER(numberOfComponents)
 		#define OUTPUT_END
@@ -302,6 +305,7 @@
 			#define MAIN_OUTPUT(name) name
 			#define MAIN_OUTPUT_POSITION gl_Position
 			#define MAIN_OUTPUT_COLOR(semanticIndex) OutputColor##semanticIndex
+			#define MAIN_OUTPUT_DEPTH gl_FragDepth
 			#define MAIN_OUTPUT_CONTROL_POINT(name) name[gl_InvocationID]
 			#define MAIN_OUTPUT_TESS_LEVEL_INNER gl_TessLevelInner
 			#define MAIN_OUTPUT_TESS_LEVEL_OUTER gl_TessLevelOuter
@@ -476,6 +480,7 @@
 			#define OUTPUT_TEXTURE_COORDINATE(attributeIndex, type, name, semanticIndex) out type name;
 			#define OUTPUT_TEXTURE_COORDINATE_NOINTERPOLATION(attributeIndex, type, name, semanticIndex) flat out type name;
 			#define OUTPUT_COLOR(semanticIndex) layout(location = ##semanticIndex) out vec4 OutputColor##semanticIndex;
+			#define OUTPUT_DEPTH
 			#define OUTPUT_TESS_LEVEL_INNER(numberOfComponents)
 			#define OUTPUT_TESS_LEVEL_OUTER(numberOfComponents)
 		#define OUTPUT_END
@@ -494,6 +499,7 @@
 			#define MAIN_OUTPUT(name) name
 			#define MAIN_OUTPUT_POSITION gl_Position
 			#define MAIN_OUTPUT_COLOR(semanticIndex) OutputColor##semanticIndex
+			#define MAIN_OUTPUT_DEPTH gl_FragDepth
 			#define MAIN_OUTPUT_CONTROL_POINT(name) name[gl_InvocationID]
 			#define MAIN_OUTPUT_TESS_LEVEL_INNER gl_TessLevelInner
 			#define MAIN_OUTPUT_TESS_LEVEL_OUTER gl_TessLevelOuter
@@ -677,6 +683,7 @@
 			#define OUTPUT_TEXTURE_COORDINATE(attributeIndex, type, name, semanticIndex) out highp type name;
 			#define OUTPUT_TEXTURE_COORDINATE_NOINTERPOLATION(attributeIndex, type, name, semanticIndex) flat out highp type name;
 			#define OUTPUT_COLOR(semanticIndex) layout(location = ##semanticIndex) out highp vec4 OutputColor##semanticIndex;
+			#define OUTPUT_DEPTH
 			#define OUTPUT_TESS_LEVEL_INNER(numberOfComponents)
 			#define OUTPUT_TESS_LEVEL_OUTER(numberOfComponents)
 		#define OUTPUT_END
@@ -695,6 +702,7 @@
 			#define MAIN_OUTPUT(name) name
 			#define MAIN_OUTPUT_POSITION gl_Position
 			#define MAIN_OUTPUT_COLOR(semanticIndex) OutputColor##semanticIndex
+			#define MAIN_OUTPUT_DEPTH gl_FragDepth
 			#define MAIN_OUTPUT_CONTROL_POINT(name) name[gl_InvocationID]
 			#define MAIN_OUTPUT_TESS_LEVEL_INNER gl_TessLevelInner
 			#define MAIN_OUTPUT_TESS_LEVEL_OUTER gl_TessLevelOuter

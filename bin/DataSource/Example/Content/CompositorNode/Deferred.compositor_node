@@ -43,7 +43,11 @@
 			},
 			"Example/Texture/Dynamic/DepthStencilRenderTarget":
 			{
-				"TextureFormat": "R32_FLOAT"
+				"TextureFormat": "D32_FLOAT"
+			},
+			"Example/Texture/Dynamic/DepthStencilRenderTargetCopy":
+			{
+				"TextureFormat": "D32_FLOAT"
 			},
 			"Example/Texture/Dynamic/ScreenSpaceAmbientOcclusionRenderTarget":
 			{
@@ -163,7 +167,7 @@
 			},
 			"MsaaResolveDepthFramebuffer":
 			{
-				"ColorTextures": [ "Example/Texture/Dynamic/DepthStencilRenderTarget" ]
+				"DepthStencilTexture": "Example/Texture/Dynamic/DepthStencilRenderTarget"
 			},
 			"ScreenSpaceAmbientOcclusionFramebuffer":
 			{
@@ -180,6 +184,11 @@
 			"HdrFramebuffer1":
 			{
 				"ColorTextures": [ "Example/Texture/Dynamic/HdrColorRenderTarget1" ]
+			},
+			"TransparentFramebuffer":
+			{
+				"ColorTextures": [ "Example/Texture/Dynamic/HdrColorRenderTarget0" ],
+				"DepthStencilTexture": "Example/Texture/Dynamic/DepthStencilRenderTargetCopy"
 			},
 			"LuminanceFramebuffer":
 			{
@@ -345,6 +354,15 @@
 						"ScreenSpaceAmbientOcclusionMap": "Example/Texture/Dynamic/BlurredScreenSpaceAmbientOcclusionRenderTarget"
 					}
 				},
+				"Copy":
+				{
+					"Description": "Sadly even with read-only it's impossible to read from a depth map while it's bound as depth buffer, so we need a copy",
+					"DestinationTexture": "Example/Texture/Dynamic/DepthStencilRenderTargetCopy",
+					"SourceTexture": "Example/Texture/Dynamic/DepthStencilRenderTarget"
+				}
+			},
+			"TransparentFramebuffer":
+			{
 				"Scene":
 				{
 					"Description": "Render transparent objects",

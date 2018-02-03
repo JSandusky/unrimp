@@ -64,13 +64,12 @@ namespace Direct3D11Renderer
 		mGenerateMipmaps = (generateMipmaps && (flags & Renderer::TextureFlag::RENDER_TARGET));
 
 		// Direct3D 11 2D array texture description
-		const DXGI_FORMAT dxgiFormat = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(textureFormat));
 		D3D11_TEXTURE2D_DESC d3d11Texture2DDesc;
 		d3d11Texture2DDesc.Width			  = width;
 		d3d11Texture2DDesc.Height			  = height;
 		d3d11Texture2DDesc.MipLevels		  = (generateMipmaps ? 0u : numberOfMipmaps);	// 0 = Let Direct3D 11 allocate the complete mipmap chain for us
 		d3d11Texture2DDesc.ArraySize		  = NUMBER_OF_SLICES;
-		d3d11Texture2DDesc.Format			  = dxgiFormat;
+		d3d11Texture2DDesc.Format			  = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11ResourceFormat(textureFormat));
 		d3d11Texture2DDesc.SampleDesc.Count	  = 1;
 		d3d11Texture2DDesc.SampleDesc.Quality = 0;
 		d3d11Texture2DDesc.Usage			  = static_cast<D3D11_USAGE>(textureUsage);	// These constants directly map to Direct3D constants, do not change them
@@ -185,7 +184,7 @@ namespace Direct3D11Renderer
 		{
 			// Direct3D 11 shader resource view description
 			D3D11_SHADER_RESOURCE_VIEW_DESC d3d11ShaderResourceViewDesc = {};
-			d3d11ShaderResourceViewDesc.Format						= dxgiFormat;
+			d3d11ShaderResourceViewDesc.Format						= static_cast<DXGI_FORMAT>(Mapping::getDirect3D11ShaderResourceViewFormat(textureFormat));
 			d3d11ShaderResourceViewDesc.ViewDimension				= D3D11_SRV_DIMENSION_TEXTURECUBE;
 			d3d11ShaderResourceViewDesc.TextureCube.MipLevels		= numberOfMipmaps;
 			d3d11ShaderResourceViewDesc.TextureCube.MostDetailedMip	= 0;

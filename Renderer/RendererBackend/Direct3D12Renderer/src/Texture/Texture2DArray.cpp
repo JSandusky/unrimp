@@ -63,7 +63,7 @@ namespace Direct3D12Renderer
 		d3d12Texture2DDesc.Height			  = height;
 		d3d12Texture2DDesc.MipLevels		  = mipmaps ? 0u : 1u;	// 0 = Let Direct3D 12 allocate the complete mipmap chain for us
 		d3d12Texture2DDesc.ArraySize		  = numberOfSlices;
-		d3d12Texture2DDesc.Format			  = static_cast<DXGI_FORMAT>(Mapping::getDirect3D12Format(textureFormat));
+		d3d12Texture2DDesc.Format			  = static_cast<DXGI_FORMAT>(Mapping::getDirect3D12ResourceFormat(textureFormat));
 		d3d12Texture2DDesc.SampleDesc.Count	  = 1;
 		d3d12Texture2DDesc.SampleDesc.Quality = 0;
 		d3d12Texture2DDesc.Usage			  = static_cast<D3D12_USAGE>(textureUsage);	// These constants directly map to Direct3D constants, do not change them

@@ -64,13 +64,12 @@ namespace Direct3D10Renderer
 		mGenerateMipmaps = (generateMipmaps && (flags & Renderer::TextureFlag::RENDER_TARGET));
 
 		// Direct3D 10 2D array texture description
-		const DXGI_FORMAT dxgiFormat = static_cast<DXGI_FORMAT>(Mapping::getDirect3D10Format(textureFormat));
 		D3D10_TEXTURE2D_DESC d3d10Texture2DDesc;
 		d3d10Texture2DDesc.Width			  = width;
 		d3d10Texture2DDesc.Height			  = height;
 		d3d10Texture2DDesc.MipLevels		  = (generateMipmaps ? 0u : numberOfMipmaps);	// 0 = Let Direct3D 10 allocate the complete mipmap chain for us
 		d3d10Texture2DDesc.ArraySize		  = NUMBER_OF_SLICES;
-		d3d10Texture2DDesc.Format			  = dxgiFormat;
+		d3d10Texture2DDesc.Format			  = static_cast<DXGI_FORMAT>(Mapping::getDirect3D10ResourceFormat(textureFormat));
 		d3d10Texture2DDesc.SampleDesc.Count	  = 1;
 		d3d10Texture2DDesc.SampleDesc.Quality = 0;
 		d3d10Texture2DDesc.Usage			  = static_cast<D3D10_USAGE>(textureUsage);	// These constants directly map to Direct3D constants, do not change them
@@ -184,7 +183,7 @@ namespace Direct3D10Renderer
 		{
 			// Direct3D 10 shader resource view description
 			D3D10_SHADER_RESOURCE_VIEW_DESC d3d10ShaderResourceViewDesc = {};
-			d3d10ShaderResourceViewDesc.Format						= dxgiFormat;
+			d3d10ShaderResourceViewDesc.Format						= static_cast<DXGI_FORMAT>(Mapping::getDirect3D10ShaderResourceViewFormat(textureFormat));
 			d3d10ShaderResourceViewDesc.ViewDimension				= D3D10_SRV_DIMENSION_TEXTURECUBE;
 			d3d10ShaderResourceViewDesc.TextureCube.MipLevels		= numberOfMipmaps;
 			d3d10ShaderResourceViewDesc.TextureCube.MostDetailedMip	= 0;

@@ -63,12 +63,11 @@ namespace Direct3D11Renderer
 		mGenerateMipmaps = (generateMipmaps && (flags & Renderer::TextureFlag::RENDER_TARGET));
 
 		// Direct3D 11 1D texture description
-		DXGI_FORMAT dxgiFormat = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11Format(textureFormat));
 		D3D11_TEXTURE1D_DESC d3d11Texture1DDesc;
 		d3d11Texture1DDesc.Width		  = width;
 		d3d11Texture1DDesc.MipLevels	  = (generateMipmaps ? 0u : numberOfMipmaps);	// 0 = Let Direct3D 11 allocate the complete mipmap chain for us
 		d3d11Texture1DDesc.ArraySize	  = 1;
-		d3d11Texture1DDesc.Format		  = dxgiFormat;
+		d3d11Texture1DDesc.Format		  = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11ResourceFormat(textureFormat));
 		d3d11Texture1DDesc.Usage		  = static_cast<D3D11_USAGE>(textureUsage);	// These constants directly map to Direct3D constants, do not change them
 		d3d11Texture1DDesc.BindFlags	  = D3D11_BIND_SHADER_RESOURCE;
 		d3d11Texture1DDesc.CPUAccessFlags = (Renderer::TextureUsage::DYNAMIC == textureUsage) ? D3D11_CPU_ACCESS_WRITE : 0u;
@@ -81,10 +80,6 @@ namespace Direct3D11Renderer
 			if (isDepthFormat)
 			{
 				d3d11Texture1DDesc.BindFlags |= D3D11_BIND_DEPTH_STENCIL;
-
-				// See "Direct3D11Renderer::Texture1D::getTextureFormat()" for details
-				d3d11Texture1DDesc.Format = DXGI_FORMAT_R32_TYPELESS;
-				dxgiFormat = DXGI_FORMAT_R32_FLOAT;
 			}
 			else
 			{
@@ -158,7 +153,7 @@ namespace Direct3D11Renderer
 		{
 			// Direct3D 11 shader resource view description
 			D3D11_SHADER_RESOURCE_VIEW_DESC d3d11ShaderResourceViewDesc = {};
-			d3d11ShaderResourceViewDesc.Format					  = dxgiFormat;
+			d3d11ShaderResourceViewDesc.Format					  = static_cast<DXGI_FORMAT>(Mapping::getDirect3D11ShaderResourceViewFormat(textureFormat));
 			d3d11ShaderResourceViewDesc.ViewDimension			  = D3D11_SRV_DIMENSION_TEXTURE1D;
 			d3d11ShaderResourceViewDesc.Texture1D.MipLevels		  = numberOfMipmaps;
 			d3d11ShaderResourceViewDesc.Texture1D.MostDetailedMip = 0;

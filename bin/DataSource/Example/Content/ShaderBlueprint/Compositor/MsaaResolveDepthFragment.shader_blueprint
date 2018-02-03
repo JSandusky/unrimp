@@ -41,7 +41,7 @@ INPUT_BEGIN
 	DECLARE_FRAGMENT_POSITION
 INPUT_END
 OUTPUT_BEGIN
-	OUTPUT_COLOR(0)	// Resolved depth
+	OUTPUT_DEPTH	// Resolved depth
 OUTPUT_END
 
 // Textures
@@ -75,5 +75,5 @@ MAIN_BEGIN
 	@end
 
 	// Done
-	MAIN_OUTPUT_COLOR(0) = float4(depth, depth, depth, depth);
+	MAIN_OUTPUT_DEPTH = depth;
 MAIN_END

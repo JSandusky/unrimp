@@ -63,13 +63,12 @@ namespace Direct3D10Renderer
 		mGenerateMipmaps = (generateMipmaps && (flags & Renderer::TextureFlag::RENDER_TARGET));
 
 		// Direct3D 10 3D texture description
-		DXGI_FORMAT dxgiFormat = static_cast<DXGI_FORMAT>(Mapping::getDirect3D10Format(textureFormat));
 		D3D10_TEXTURE3D_DESC d3d10Texture3DDesc;
 		d3d10Texture3DDesc.Width		  = width;
 		d3d10Texture3DDesc.Height		  = height;
 		d3d10Texture3DDesc.Depth		  = depth;
 		d3d10Texture3DDesc.MipLevels	  = (generateMipmaps ? 0u : numberOfMipmaps);	// 0 = Let Direct3D 10 allocate the complete mipmap chain for us
-		d3d10Texture3DDesc.Format		  = dxgiFormat;
+		d3d10Texture3DDesc.Format		  = static_cast<DXGI_FORMAT>(Mapping::getDirect3D10ResourceFormat(textureFormat));
 		d3d10Texture3DDesc.Usage		  = static_cast<D3D10_USAGE>(textureUsage);	// These constants directly map to Direct3D constants, do not change them
 		d3d10Texture3DDesc.BindFlags	  = D3D10_BIND_SHADER_RESOURCE;
 		d3d10Texture3DDesc.CPUAccessFlags = (Renderer::TextureUsage::DYNAMIC == textureUsage) ? D3D10_CPU_ACCESS_WRITE : 0u;
@@ -82,10 +81,6 @@ namespace Direct3D10Renderer
 			if (isDepthFormat)
 			{
 				d3d10Texture3DDesc.BindFlags |= D3D10_BIND_DEPTH_STENCIL;
-
-				// See "Direct3D10Renderer::Texture3D::getTextureFormat()" for details
-				d3d10Texture3DDesc.Format = DXGI_FORMAT_R32_TYPELESS;
-				dxgiFormat = DXGI_FORMAT_R32_FLOAT;
 			}
 			else
 			{
@@ -166,7 +161,7 @@ namespace Direct3D10Renderer
 		{
 			// Direct3D 10 shader resource view description
 			D3D10_SHADER_RESOURCE_VIEW_DESC d3d10ShaderResourceViewDesc = {};
-			d3d10ShaderResourceViewDesc.Format					  = dxgiFormat;
+			d3d10ShaderResourceViewDesc.Format					  = static_cast<DXGI_FORMAT>(Mapping::getDirect3D10ShaderResourceViewFormat(textureFormat));
 			d3d10ShaderResourceViewDesc.ViewDimension			  = D3D10_SRV_DIMENSION_TEXTURE3D;
 			d3d10ShaderResourceViewDesc.Texture3D.MipLevels		  = numberOfMipmaps;
 			d3d10ShaderResourceViewDesc.Texture3D.MostDetailedMip = 0;

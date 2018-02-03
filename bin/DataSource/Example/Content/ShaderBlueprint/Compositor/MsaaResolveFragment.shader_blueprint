@@ -48,7 +48,7 @@ INPUT_BEGIN
 INPUT_END
 OUTPUT_BEGIN
 	OUTPUT_COLOR(0)	// Resolved color
-	OUTPUT_COLOR(1)	// Resolved depth
+	OUTPUT_DEPTH	// Resolved depth
 OUTPUT_END
 
 // Uniform buffers
@@ -355,5 +355,5 @@ MAIN_BEGIN
 
 	// Done
 	MAIN_OUTPUT_COLOR(0) = float4(result.rgb, alpha);
-	MAIN_OUTPUT_COLOR(1) = float4(depth, depth, depth, depth);
+	MAIN_OUTPUT_DEPTH = depth;
 MAIN_END
