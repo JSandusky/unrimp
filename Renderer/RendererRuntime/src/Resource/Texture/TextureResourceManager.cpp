@@ -49,7 +49,7 @@ namespace
 		{
 			Renderer::ITextureManager& textureManager = rendererRuntime.getTextureManager();
 
-			// White RGB texture
+			// White RGBA texture
 			const uint8_t whiteRgbData[] = {
 				255, 255, 255, 255,	// Face 0
 				255, 255, 255, 255,	// Face 1
@@ -59,11 +59,11 @@ namespace
 				255, 255, 255, 255	// Face 5
 			};
 			Renderer::ITexturePtr whiteRgb1DTexturePtr(textureManager.createTexture1D(1, Renderer::TextureFormat::R8G8B8A8, whiteRgbData, 0u, Renderer::TextureUsage::IMMUTABLE));
-			RENDERER_SET_RESOURCE_DEBUG_NAME(whiteRgb1DTexturePtr, "White 1D RGB texture")
+			RENDERER_SET_RESOURCE_DEBUG_NAME(whiteRgb1DTexturePtr, "White 1D RGBA texture")
 			Renderer::ITexturePtr whiteRgb2DTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::R8G8B8A8, whiteRgbData, 0u, Renderer::TextureUsage::IMMUTABLE));
-			RENDERER_SET_RESOURCE_DEBUG_NAME(whiteRgb2DTexturePtr, "White 2D RGB texture")
+			RENDERER_SET_RESOURCE_DEBUG_NAME(whiteRgb2DTexturePtr, "White 2D RGBA texture")
 			Renderer::ITexturePtr whiteRgbCubeTexturePtr(textureManager.createTextureCube(1, 1, Renderer::TextureFormat::R8G8B8A8, whiteRgbData, 0u, Renderer::TextureUsage::IMMUTABLE));
-			RENDERER_SET_RESOURCE_DEBUG_NAME(whiteRgbCubeTexturePtr, "White cube RGB texture")
+			RENDERER_SET_RESOURCE_DEBUG_NAME(whiteRgbCubeTexturePtr, "White cube RGBA texture")
 
 			// Normal map identity texture
 			const uint8_t normalMapIdentityData[] = { 128, 128, 255, 255 };
@@ -85,11 +85,11 @@ namespace
 				0, 0, 0, 0	// Face 5
 			};
 			Renderer::ITexturePtr blackRgb1DTexturePtr(textureManager.createTexture1D(1, Renderer::TextureFormat::R8G8B8A8, blackRgbData, 0u, Renderer::TextureUsage::IMMUTABLE));
-			RENDERER_SET_RESOURCE_DEBUG_NAME(blackRgb1DTexturePtr, "Black 1D RGB texture")
+			RENDERER_SET_RESOURCE_DEBUG_NAME(blackRgb1DTexturePtr, "Black 1D RGBA texture")
 			Renderer::ITexturePtr blackRgb2DTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::R8G8B8A8, blackRgbData, 0u, Renderer::TextureUsage::IMMUTABLE));
-			RENDERER_SET_RESOURCE_DEBUG_NAME(blackRgb2DTexturePtr, "Black 2D RGB texture")
+			RENDERER_SET_RESOURCE_DEBUG_NAME(blackRgb2DTexturePtr, "Black 2D RGBA texture")
 			Renderer::ITexturePtr blackRgbCubeTexturePtr(textureManager.createTextureCube(1, 1, Renderer::TextureFormat::R8G8B8A8, blackRgbData, 0u, Renderer::TextureUsage::IMMUTABLE));
-			RENDERER_SET_RESOURCE_DEBUG_NAME(blackRgbCubeTexturePtr, "Black cube RGB texture")
+			RENDERER_SET_RESOURCE_DEBUG_NAME(blackRgbCubeTexturePtr, "Black cube RGBA texture")
 
 			// Black alpha texture
 			const uint8_t blackAData[] = { 0 };

@@ -186,6 +186,7 @@ private:
 	Compositor mInstancedCompositor;
 	int		   mCurrentCompositor;
 	bool	   mHighQualityLighting;
+	bool	   mSoftParticles;
 	int		   mCurrentTextureFiltering;
 	int		   mNumberOfTopTextureMipmapsToRemove;
 	// Environment

@@ -53,18 +53,24 @@ UNIFORM_BUFFER_END
 
 // Textures
 TEXTURE_2D(1, 0, _argb_alpha, 0)
-TEXTURE_2D(1, 1, DepthMap, 1)
+@property(SoftParticles)
+	TEXTURE_2D(1, 1, DepthMap, 1)
+@end
 
 // Samplers
 SAMPLER_STATE(2, 0, SamplerLinear, 0)
-SAMPLER_STATE(2, 1, SamplerPointClamp, 1)
+@property(SoftParticles)
+	SAMPLER_STATE(2, 1, SamplerPointClamp, 1)
+@end
 
 
 //[-------------------------------------------------------]
 //[ Functions                                             ]
 //[-------------------------------------------------------]
-@includepiece($ProjectName/ShaderPiece/Depth.asset)
-	@insertpiece(DefineGetLinearDepth)
+@property(SoftParticles)
+	@includepiece($ProjectName/ShaderPiece/Depth.asset)
+		@insertpiece(DefineGetLinearDepth)
+@end
 
 
 //[-------------------------------------------------------]
@@ -80,13 +86,16 @@ MAIN_BEGIN
 	// Apply particle color
 	color *= MAIN_INPUT(ColorVS);
 
-	{ // Soft particles function as described in "Soft Particles" by Tristan Lorach - https://developer.download.nvidia.com/whitepapers/2007/SDK10/SoftParticles_hi.pdf
+	// Soft particles function as described in "Soft Particles" by Tristan Lorach - https://developer.download.nvidia.com/whitepapers/2007/SDK10/SoftParticles_hi.pdf
+	@property(SoftParticles)
+	{ 
 		float sceneDepth = GetLinearDepth(SAMPLE_DEPTH_2D_LOD(DepthMap, SamplerPointClamp, float4(FRAGMENT_POSITION.xy * PassData.InverseViewportSize, 0.0f, 0.0f)));
 		float depthDifference = sceneDepth - MAIN_INPUT(TexCoordDepthVS).z;
 		float fade = 0.5f * pow(SATURATE(2.0f * ((depthDifference > 0.5f) ? 1.0f - depthDifference : depthDifference)), ContrastPower);
 		fade = (depthDifference > 0.5f) ? (1.0f - fade) : fade;
 		color.a *= fade;
 	}
+	@end
 
 	// Done
 	MAIN_OUTPUT_COLOR(0) = color;

@@ -17,12 +17,27 @@
 				"MinimumIntegerValue": "0",
 				"MaximumIntegerValue": "255"
 			},
+			"SoftParticles":
+			{
+				"Usage": "SHADER_COMBINATION",
+				"ValueType": "GLOBAL_MATERIAL_PROPERTY_ID",
+				"Value": "@GlobalSoftParticles",
+				"Description": "'true' if soft-particles should be used, else 'false'",
+				"VisualImportance": "100"
+			},
 			"_argb_alpha":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "Unrimp/Texture/DynamicByCode/BlackMap2D",
 				"Description": "RGB channel = Albedo map ('_a'-postfix), A channel = alpha ('_alpha'-postfix)"
+			},
+			"GlobalSoftParticles":
+			{
+				"Usage": "GLOBAL_REFERENCE_FALLBACK",
+				"ValueType": "BOOLEAN",
+				"Value": "TRUE",
+				"Description": "Fallback value in case there's no global soft-particles global material property"
 			}
 		},
 		"PipelineState":

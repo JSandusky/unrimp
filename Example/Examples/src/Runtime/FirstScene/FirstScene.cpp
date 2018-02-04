@@ -110,6 +110,7 @@ FirstScene::FirstScene() :
 	mInstancedCompositor(Compositor::FORWARD),
 	mCurrentCompositor(mInstancedCompositor),
 	mHighQualityLighting(true),
+	mSoftParticles(true),
 	mCurrentTextureFiltering(TextureFiltering::ANISOTROPIC_4),
 	mNumberOfTopTextureMipmapsToRemove(0),
 	// Environment
@@ -251,6 +252,7 @@ void FirstScene::onUpdate()
 		{ // Tell the material blueprint resource manager about our global material properties
 			RendererRuntime::MaterialProperties& globalMaterialProperties = rendererRuntime->getMaterialBlueprintResourceManager().getGlobalMaterialProperties();
 			globalMaterialProperties.setPropertyById("GlobalHighQualityLighting", RendererRuntime::MaterialPropertyValue::fromBoolean(mHighQualityLighting));
+			globalMaterialProperties.setPropertyById("GlobalSoftParticles", RendererRuntime::MaterialPropertyValue::fromBoolean(mSoftParticles));
 			globalMaterialProperties.setPropertyById("GlobalCloudsIntensity", RendererRuntime::MaterialPropertyValue::fromFloat(mCloudsIntensity));
 			globalMaterialProperties.setPropertyById("GlobalWindSpeed", RendererRuntime::MaterialPropertyValue::fromFloat(mWindSpeed));
 			globalMaterialProperties.setPropertyById("GlobalWetness", RendererRuntime::MaterialPropertyValue::fromFloat(mWetness));
@@ -553,6 +555,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 						ImGui::Combo("Compositor", &mCurrentCompositor, items, static_cast<int>(glm::countof(items)));
 					}
 					ImGui::Checkbox("High Quality Lighting", &mHighQualityLighting);
+					ImGui::Checkbox("Soft-Particles", &mSoftParticles);
 					{
 						const char* items[] = { "Point", "Bilinear", "Trilinear", "2x Anisotropic", "4x Anisotropic", "8x Anisotropic", "16x Anisotropic" };
 						ImGui::Combo("Texture filtering", &mCurrentTextureFiltering, items, static_cast<int>(glm::countof(items)));
