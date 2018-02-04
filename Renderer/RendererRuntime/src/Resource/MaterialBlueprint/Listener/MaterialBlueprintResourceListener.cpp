@@ -348,10 +348,7 @@ namespace RendererRuntime
 		// Get the render target with and height
 		renderTarget.getWidthAndHeight(mRenderTargetWidth, mRenderTargetHeight);
 		const bool singlePassStereoInstancing = mCompositorContextData->getSinglePassStereoInstancing();
-		if (singlePassStereoInstancing)
-		{
-			mRenderTargetWidth /= 2;
-		}
+		const uint32_t renderTargetWidth = singlePassStereoInstancing ? (mRenderTargetWidth / 2) : mRenderTargetWidth;
 
 		// Get camera settings
 		const CameraSceneItem* cameraSceneItem = compositorContextData.getCameraSceneItem();
@@ -395,7 +392,7 @@ namespace RendererRuntime
 					cameraSceneItem->getPreviousWorldSpaceToViewSpaceMatrix(previousWorldSpaceToViewSpaceMatrix);
 
 					// Get view space to clip space matrix (aka "projection matrix")
-					viewSpaceToClipSpaceMatrix = cameraSceneItem->getViewSpaceToClipSpaceMatrixReversedZ(static_cast<float>(mRenderTargetWidth) / mRenderTargetHeight);
+					viewSpaceToClipSpaceMatrix = cameraSceneItem->getViewSpaceToClipSpaceMatrixReversedZ(static_cast<float>(renderTargetWidth) / mRenderTargetHeight);
 				}
 			}
 			else
@@ -407,7 +404,7 @@ namespace RendererRuntime
 
 				// Get view space to clip space matrix (aka "projection matrix")
 				// -> Near and far flipped due to usage of Reversed-Z (see e.g. https://developer.nvidia.com/content/depth-precision-visualized and https://nlguillemot.wordpress.com/2016/12/07/reversed-z-in-opengl/)
-				viewSpaceToClipSpaceMatrix = glm::perspective(CameraSceneItem::DEFAULT_FOV_Y, static_cast<float>(mRenderTargetWidth) / mRenderTargetHeight, CameraSceneItem::DEFAULT_FAR_Z, CameraSceneItem::DEFAULT_NEAR_Z);
+				viewSpaceToClipSpaceMatrix = glm::perspective(CameraSceneItem::DEFAULT_FOV_Y, static_cast<float>(renderTargetWidth) / mRenderTargetHeight, CameraSceneItem::DEFAULT_FAR_Z, CameraSceneItem::DEFAULT_NEAR_Z);
 			}
 			mPassData->worldSpaceToViewSpaceQuaternion[eyeIndex] = glm::quat(mPassData->worldSpaceToViewSpaceMatrix[eyeIndex]);
 			mPassData->worldSpaceToClipSpaceMatrix[eyeIndex] = viewSpaceToClipSpaceMatrix * mPassData->worldSpaceToViewSpaceMatrix[eyeIndex];
