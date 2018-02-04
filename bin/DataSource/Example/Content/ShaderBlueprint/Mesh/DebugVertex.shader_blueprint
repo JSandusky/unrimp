@@ -105,4 +105,4 @@ MAIN_BEGIN_VERTEX
 
 	// Pass through the 32 bit texture coordinate
 	MAIN_OUTPUT(TexCoordVS) = MAIN_INPUT(TexCoord);
-MAIN_END_VERTEX
+MAIN_END_VERTEX(MAIN_OUTPUT_POSITION)

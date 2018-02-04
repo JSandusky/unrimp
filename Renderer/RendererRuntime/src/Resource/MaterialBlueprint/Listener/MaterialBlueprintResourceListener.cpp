@@ -70,6 +70,7 @@ namespace
 		#define DEFINE_CONSTANT(name) static const RendererRuntime::StringId name(#name);
 			// Pass data influenced by single pass stereo rendering via instancing as described in "High Performance Stereo Rendering For VR", Timothy Wilson, San Diego, Virtual Reality Meetup
 			DEFINE_CONSTANT(WORLD_SPACE_TO_VIEW_SPACE_MATRIX)
+			DEFINE_CONSTANT(WORLD_SPACE_TO_VIEW_SPACE_MATRIX2)
 			DEFINE_CONSTANT(VIEW_SPACE_TO_WORLD_SPACE_MATRIX)
 			DEFINE_CONSTANT(WORLD_SPACE_TO_VIEW_SPACE_QUATERNION)
 			DEFINE_CONSTANT(VIEW_SPACE_TO_WORLD_SPACE_QUATERNION)
@@ -78,6 +79,7 @@ namespace
 			DEFINE_CONSTANT(PREVIOUS_WORLD_SPACE_TO_CLIP_SPACE_MATRIX)
 			DEFINE_CONSTANT(PREVIOUS_WORLD_SPACE_TO_VIEW_SPACE_MATRIX)
 			DEFINE_CONSTANT(VIEW_SPACE_TO_CLIP_SPACE_MATRIX)
+			DEFINE_CONSTANT(VIEW_SPACE_TO_CLIP_SPACE_MATRIX2)
 			DEFINE_CONSTANT(VIEW_SPACE_TO_TEXTURE_SPACE_MATRIX)
 			DEFINE_CONSTANT(CLIP_SPACE_TO_VIEW_SPACE_MATRIX)
 			DEFINE_CONSTANT(CLIP_SPACE_TO_WORLD_SPACE_MATRIX)
@@ -424,6 +426,11 @@ namespace RendererRuntime
 			assert(sizeof(float) * 4 * 4 == numberOfBytes);
 			memcpy(buffer, glm::value_ptr(mPassData->worldSpaceToViewSpaceMatrix[0]), numberOfBytes);
 		}
+		else if (::detail::WORLD_SPACE_TO_VIEW_SPACE_MATRIX2 == referenceValue)
+		{
+			assert(sizeof(float) * 4 * 4 == numberOfBytes);
+			memcpy(buffer, glm::value_ptr(mPassData->worldSpaceToViewSpaceMatrix[1]), numberOfBytes);
+		}
 		else if (::detail::VIEW_SPACE_TO_WORLD_SPACE_MATRIX == referenceValue)
 		{
 			assert(sizeof(float) * 4 * 4 == numberOfBytes);
@@ -463,6 +470,11 @@ namespace RendererRuntime
 		{
 			assert(sizeof(float) * 4 * 4 == numberOfBytes);
 			memcpy(buffer, glm::value_ptr(mPassData->viewSpaceToClipSpaceMatrix[0]), numberOfBytes);
+		}
+		else if (::detail::VIEW_SPACE_TO_CLIP_SPACE_MATRIX2 == referenceValue)
+		{
+			assert(sizeof(float) * 4 * 4 == numberOfBytes);
+			memcpy(buffer, glm::value_ptr(mPassData->viewSpaceToClipSpaceMatrix[1]), numberOfBytes);
 		}
 		else if (::detail::VIEW_SPACE_TO_TEXTURE_SPACE_MATRIX == referenceValue)
 		{

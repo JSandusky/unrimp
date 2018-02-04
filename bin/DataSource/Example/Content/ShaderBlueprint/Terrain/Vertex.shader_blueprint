@@ -105,4 +105,4 @@ MAIN_BEGIN_VERTEX
 	worldSpacePosition.y = SampleHeightMap(worldSpacePosition.xz);
 	MAIN_OUTPUT(PositionVS) = float4(worldSpacePosition, 0.0f);
 	MAIN_OUTPUT(AdjacencyVS) = MAIN_INPUT(Adjacency);
-MAIN_END_VERTEX
+MAIN_END_VERTEX(MAIN_OUTPUT(PositionVS))

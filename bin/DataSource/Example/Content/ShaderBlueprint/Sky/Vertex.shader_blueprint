@@ -71,4 +71,4 @@ MAIN_BEGIN_VERTEX
 
 	// Pass through the object space position as texture coordinate
 	MAIN_OUTPUT(TexCoordVS) = MAIN_INPUT(Position);
-MAIN_END_VERTEX
+MAIN_END_VERTEX(MAIN_OUTPUT_POSITION)

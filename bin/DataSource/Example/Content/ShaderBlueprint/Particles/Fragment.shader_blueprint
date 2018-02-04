@@ -41,8 +41,8 @@ OUTPUT_END
 // Uniform buffers
 struct PassDataStruct
 {
-	float4x4 WorldSpaceToViewSpaceMatrix;
-	float4x4 ViewSpaceToClipSpaceMatrix;
+	float4x4 WorldSpaceToViewSpaceMatrix[2];
+	float4x4 ViewSpaceToClipSpaceMatrix[2];
 	float2   InverseViewportSize;
 	float2	 ProjectionParameters;
 	float    GlobalTimeInSeconds;

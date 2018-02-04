@@ -145,4 +145,4 @@ MAIN_BEGIN_VERTEX
 	MAIN_OUTPUT(TangentFrame0VS) = tangentFrame[0];
 	MAIN_OUTPUT(TangentFrame1VS) = tangentFrame[1];
 	MAIN_OUTPUT(TangentFrame2VS) = tangentFrame[2];
-MAIN_END_VERTEX
+MAIN_END_VERTEX(MAIN_OUTPUT_POSITION)

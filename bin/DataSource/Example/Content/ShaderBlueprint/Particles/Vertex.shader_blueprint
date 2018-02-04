@@ -41,8 +41,8 @@ OUTPUT_END_VERTEX
 // Uniform buffers
 struct PassDataStruct
 {
-	float4x4 WorldSpaceToViewSpaceMatrix;
-	float4x4 ViewSpaceToClipSpaceMatrix;
+	float4x4 WorldSpaceToViewSpaceMatrix[2];
+	float4x4 ViewSpaceToClipSpaceMatrix[2];
 	float2   InverseViewportSize;
 	float2	 ProjectionParameters;
 	float    GlobalTimeInSeconds;
@@ -86,11 +86,11 @@ MAIN_BEGIN_VERTEX
 	viewSpacePosition *= particleSize;
 
 	// Transform the billboard to clip-space
-	MAIN_OUTPUT_POSITION = MATRIX_MUL(PassData.WorldSpaceToViewSpaceMatrix, float4(particlePosition, 1.0f));
+	MAIN_OUTPUT_POSITION = MATRIX_MUL(PassData.WorldSpaceToViewSpaceMatrix[MAIN_INPUT_STEREO_EYE_INDEX], float4(particlePosition, 1.0f));
 	MAIN_OUTPUT_POSITION.xyz += viewSpacePosition;
-	MAIN_OUTPUT_POSITION = MATRIX_MUL(PassData.ViewSpaceToClipSpaceMatrix, MAIN_OUTPUT_POSITION);
+	MAIN_OUTPUT_POSITION = MATRIX_MUL(PassData.ViewSpaceToClipSpaceMatrix[MAIN_INPUT_STEREO_EYE_INDEX], MAIN_OUTPUT_POSITION);
 
 	// Pass through the texture coordinate, color and clip space position
 	MAIN_OUTPUT(TexCoordDepthVS) = float3(uv, MAIN_OUTPUT_POSITION.w);
 	MAIN_OUTPUT(ColorVS) = particleColor;
-MAIN_END_VERTEX
+MAIN_END_VERTEX(MAIN_OUTPUT_POSITION)

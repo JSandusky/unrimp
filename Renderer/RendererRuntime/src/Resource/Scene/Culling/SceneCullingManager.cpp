@@ -579,6 +579,11 @@ namespace RendererRuntime
 				{
 					::detail::gatherRenderQueueIndexRangesRenderableManagersBySceneItem(*mCullableSceneItemSet->sceneItemVector[i], cameraPosition, renderQueueIndexRanges);
 				}
+				// Fill render queue index ranges with the always-visible stuff
+				for (const ISceneItem* sceneItem : mUncullableSceneItems)
+				{
+					::detail::gatherRenderQueueIndexRangesRenderableManagersBySceneItem(*sceneItem, cameraPosition, renderQueueIndexRanges);
+				}
 				return;
 
 				// TODO(co) Single pass stereo rendering: "You must conservatively cull on the CPU by about 5 degrees": http://media.steampowered.com/apps/valve/2015/Alex_Vlachos_Advanced_VR_Rendering_GDC2015.pdf

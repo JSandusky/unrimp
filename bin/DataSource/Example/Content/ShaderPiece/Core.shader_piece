@@ -111,7 +111,7 @@
 			#define MAIN_BEGIN_VERTEX SHADER_OUTPUT main(SHADER_INPUT ShaderInput) { SHADER_OUTPUT shaderOutput; uint stereoEyeIndex = (ShaderInput.stereoInstanceId & 1u);
 				#define MAIN_INPUT_DRAW_ID_VERTEX (ShaderInput.drawId - stereoEyeIndex)
 				#define MAIN_INPUT_STEREO_EYE_INDEX stereoEyeIndex
-			#define MAIN_END_VERTEX { float4 StereoEyeClipEdge[2]; StereoEyeClipEdge[0] = float4(1.0f, 0.0f, 0.0f, 1.0f); StereoEyeClipEdge[1] = float4(-1.0f, 0.0f, 0.0f, 1.0f); float StereoEyeOffsetScale[2] = { 0.5f, -0.5f }; shaderOutput.stereoCullDistance = shaderOutput.stereoClipDistance = dot(StereoEyeClipEdge[stereoEyeIndex], MAIN_OUTPUT_POSITION); MAIN_OUTPUT_POSITION.x *= 0.5f; MAIN_OUTPUT_POSITION.x += StereoEyeOffsetScale[stereoEyeIndex] * MAIN_OUTPUT_POSITION.w; } return shaderOutput; }
+			#define MAIN_END_VERTEX(vertexOutputPosition) { float4 StereoEyeClipEdge[2]; StereoEyeClipEdge[0] = float4(1.0f, 0.0f, 0.0f, 1.0f); StereoEyeClipEdge[1] = float4(-1.0f, 0.0f, 0.0f, 1.0f); float StereoEyeOffsetScale[2] = { 0.5f, -0.5f }; shaderOutput.stereoCullDistance = shaderOutput.stereoClipDistance = dot(StereoEyeClipEdge[stereoEyeIndex], vertexOutputPosition); vertexOutputPosition.x *= 0.5f; vertexOutputPosition.x += StereoEyeOffsetScale[stereoEyeIndex] * vertexOutputPosition.w; } return shaderOutput; }
 		@end
 		@property(!SinglePassStereoInstancing)
 			#define INPUT_BEGIN_VERTEX struct SHADER_INPUT {
@@ -121,7 +121,7 @@
 			#define MAIN_BEGIN_VERTEX SHADER_OUTPUT main(SHADER_INPUT ShaderInput) { SHADER_OUTPUT shaderOutput;
 				#define MAIN_INPUT_DRAW_ID_VERTEX ShaderInput.drawId
 				#define MAIN_INPUT_STEREO_EYE_INDEX 0
-			#define MAIN_END_VERTEX return shaderOutput; }
+			#define MAIN_END_VERTEX(vertexOutputPosition) return shaderOutput; }
 		@end
 
 		// Math
@@ -323,7 +323,7 @@
 		#define MAIN_BEGIN_VERTEX void main() {
 			#define MAIN_INPUT_DRAW_ID_VERTEX uint(gl_InstanceIndex)
 			#define MAIN_INPUT_STEREO_EYE_INDEX 0
-		#define MAIN_END_VERTEX }
+		#define MAIN_END_VERTEX(vertexOutputPosition) }
 
 		// Math
 		#define LERP(a, b, t) mix(a, b, t)
@@ -517,7 +517,7 @@
 		#define MAIN_BEGIN_VERTEX void main() {
 			#define MAIN_INPUT_DRAW_ID_VERTEX (drawId + drawIdUniform + uint(gl_InstanceID))
 			#define MAIN_INPUT_STEREO_EYE_INDEX 0
-		#define MAIN_END_VERTEX }
+		#define MAIN_END_VERTEX(vertexOutputPosition) }
 
 		// Math
 		#define LERP(a, b, t) mix(a, b, t)
@@ -720,7 +720,7 @@
 		#define MAIN_BEGIN_VERTEX void main() {
 			#define MAIN_INPUT_DRAW_ID_VERTEX (drawId + drawIdUniform + uint(gl_InstanceID))
 			#define MAIN_INPUT_STEREO_EYE_INDEX 0
-		#define MAIN_END_VERTEX }
+		#define MAIN_END_VERTEX(vertexOutputPosition) }
 
 		// Math
 		#define LERP(a, b, t) mix(a, b, t)
