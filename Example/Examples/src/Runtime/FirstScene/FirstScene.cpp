@@ -192,7 +192,10 @@ void FirstScene::onInitialization()
 				{
 					// Select the VR compositor and enable MSAA by default since image stability is quite important for VR
 					// -> "Advanced VR Rendering" by Alex Vlachos, Valve -> page 26 -> "4xMSAA Minimum Quality" ( http://media.steampowered.com/apps/valve/2015/Alex_Vlachos_Advanced_VR_Rendering_GDC2015.pdf )
-					mCurrentCompositor = mInstancedCompositor = Compositor::VR;
+					if (Compositor::DEBUG != mCurrentCompositor)
+					{
+						mCurrentCompositor = mInstancedCompositor = Compositor::VR;
+					}
 					mCurrentMsaa = Msaa::FOUR;
 					mCurrentTextureFiltering = TextureFiltering::ANISOTROPIC_4;
 				}
