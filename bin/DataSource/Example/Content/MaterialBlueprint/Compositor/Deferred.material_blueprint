@@ -85,6 +85,13 @@
 				"Value": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
 				"Description": "2D screen space ambient occlusion (SSAO) map"
 			},
+			"DistortionMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/DynamicByCode/BlackMap2D",
+				"Description": "2D screen space distortion map"
+			},
 			"ReflectionCubeMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
@@ -357,8 +364,21 @@
 				},
 				"6":
 				{
-					"BaseShaderRegisterName": "ReflectionCubeMap",
+					"BaseShaderRegisterName": "DistortionMap",
 					"BaseShaderRegister": "7",
+					"ShaderVisibility": "FRAGMENT",
+					"ResourceType": "TEXTURE",
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@DistortionMap",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/BlackMap2D",
+					"MipmapsUsed": "FALSE",
+					"SamplerStateBaseShaderRegisterName": "SamplerPoint"
+				},
+				"7":
+				{
+					"BaseShaderRegisterName": "ReflectionCubeMap",
+					"BaseShaderRegister": "8",
 					"ShaderVisibility": "FRAGMENT",
 					"ResourceType": "TEXTURE",
 					"Usage": "MATERIAL_REFERENCE",
@@ -368,10 +388,10 @@
 					"RgbHardwareGammaCorrection": "TRUE",
 					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
 				},
-				"7":
+				"8":
 				{
 					"BaseShaderRegisterName": "LightClustersMap3D",
-					"BaseShaderRegister": "8",
+					"BaseShaderRegister": "9",
 					"ShaderVisibility": "FRAGMENT",
 					"ResourceType": "TEXTURE",
 					"Usage": "STATIC",

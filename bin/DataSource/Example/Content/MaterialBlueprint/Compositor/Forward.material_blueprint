@@ -46,6 +46,13 @@
 				"Value": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
 				"Description": "2D screen space ambient occlusion (SSAO) map"
 			},
+			"DistortionMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/DynamicByCode/BlackMap2D",
+				"Description": "2D screen space distortion map"
+			},
 			"GlobalAmbientColor":
 			{
 				"Usage": "GLOBAL_REFERENCE_FALLBACK",
@@ -174,6 +181,19 @@
 					"ValueType": "TEXTURE_ASSET_ID",
 					"Value": "@ScreenSpaceAmbientOcclusionMap",
 					"FallbackTexture": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
+					"MipmapsUsed": "FALSE",
+					"SamplerStateBaseShaderRegisterName": "SamplerPointClamp"
+				},
+				"3":
+				{
+					"BaseShaderRegisterName": "DistortionMap",
+					"BaseShaderRegister": "3",
+					"ShaderVisibility": "FRAGMENT",
+					"ResourceType": "TEXTURE",
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@DistortionMap",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/BlackMap2D",
 					"MipmapsUsed": "FALSE",
 					"SamplerStateBaseShaderRegisterName": "SamplerPointClamp"
 				}

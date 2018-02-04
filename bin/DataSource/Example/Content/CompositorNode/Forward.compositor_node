@@ -62,6 +62,10 @@
 			{
 				"TextureFormat": "R32_FLOAT"
 			},
+			"Example/Texture/Dynamic/DistortionRenderTarget":
+			{
+				"TextureFormat": "R16G16_SNORM"
+			},
 			"Example/Texture/Dynamic/LuminanceRenderTarget":
 			{
 				"Width": "1024",
@@ -188,6 +192,11 @@
 			{
 				"ColorTextures": [ "Example/Texture/Dynamic/BlurredScreenSpaceAmbientOcclusionRenderTarget" ]
 			},
+			"DistortionFramebuffer":
+			{
+				"ColorTextures": [ "Example/Texture/Dynamic/DistortionRenderTarget" ],
+				"DepthStencilTexture": "Example/Texture/Dynamic/DepthStencilRenderTargetCopy"
+			},
 			"LuminanceFramebuffer":
 			{
 				"ColorTextures": [ "Example/Texture/Dynamic/LuminanceRenderTarget" ]
@@ -264,8 +273,7 @@
 				"Description": "Forward rendering, also renders out view space normals into an additional render target",
 				"Clear":
 				{
-					"Flags": "COLOR | DEPTH",
-					"Color": "0.0 0.0 0.0 0.0"
+					"Flags": "COLOR | DEPTH"
 				},
 				"Scene":
 				{
@@ -340,6 +348,27 @@
 					}
 				}
 			},
+			"DistortionFramebuffer":
+			{
+				"Clear":
+				{
+					"Flags": "COLOR"
+				},
+				"Copy":
+				{
+					"Description": "Sadly even with read-only it's impossible to read from a depth map while it's bound as depth buffer, so we need a copy",
+					"DestinationTexture": "Example/Texture/Dynamic/DepthStencilRenderTargetCopy",
+					"SourceTexture": "Example/Texture/Dynamic/DepthStencilRenderTarget"
+				},
+				"Scene":
+				{
+					"Description": "Render transparent objects which contain distortion TODO(co) Currently everything transparent is rendered to have something to start with",
+					"MinimumRenderQueueIndex": "255",
+					"MaximumRenderQueueIndex": "255",
+					"TransparentPass": "TRUE",
+					"MaterialTechnique": "Transparent"
+				}
+			},
 			"HdrFramebuffer1":
 			{
 				"Quad":
@@ -350,14 +379,9 @@
 					{
 						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget0",
 						"DepthMap": "Example/Texture/Dynamic/DepthStencilRenderTarget",
-						"ScreenSpaceAmbientOcclusionMap": "Example/Texture/Dynamic/BlurredScreenSpaceAmbientOcclusionRenderTarget"
+						"ScreenSpaceAmbientOcclusionMap": "Example/Texture/Dynamic/BlurredScreenSpaceAmbientOcclusionRenderTarget",
+						"DistortionMap": "Example/Texture/Dynamic/DistortionRenderTarget"
 					}
-				},
-				"Copy":
-				{
-					"Description": "Sadly even with read-only it's impossible to read from a depth map while it's bound as depth buffer, so we need a copy",
-					"DestinationTexture": "Example/Texture/Dynamic/DepthStencilRenderTargetCopy",
-					"SourceTexture": "Example/Texture/Dynamic/DepthStencilRenderTarget"
 				}
 			},
 			"TransparentFramebuffer":

@@ -82,8 +82,9 @@ TEXTURE_BUFFER(1, 0, float4, LightTextureBuffer, 0)	// "LIGHT"
 @end
 TEXTURE_2D_ARRAY(2, 4, ShadowMap, 5)
 TEXTURE_2D(2, 5, ScreenSpaceAmbientOcclusionMap, 6)
-TEXTURE_CUBE(2, 6, ReflectionCubeMap, 7)
-TEXTURE_3D_UINT(2, 7, LightClustersMap3D, 8)
+TEXTURE_2D(2, 6, DistortionMap, 7)
+TEXTURE_CUBE(2, 7, ReflectionCubeMap, 8)
+TEXTURE_3D_UINT(2, 8, LightClustersMap3D, 9)
 
 // Samplers
 SAMPLER_STATE(2, 0, SamplerPoint, 0)
@@ -172,14 +173,18 @@ MAIN_BEGIN
 	// Get the normalized view ray
 	float3 viewRay = normalize(MAIN_INPUT(ViewRayVS));
 
+	// Get texture coordinate and apply distortion
+	float2 texCoord = MAIN_INPUT(TexCoordVS);
+	texCoord += SAMPLE_2D_LOD(DistortionMap, SamplerPoint, float4(texCoord, 0.0f, 0.0f)).rg;
+
 	// Gather screen space ambient occlusion value
-	float screenSpaceAmbientOcclusion = SAMPLE_2D_LOD(ScreenSpaceAmbientOcclusionMap, SamplerPoint, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f)).r;
+	float screenSpaceAmbientOcclusion = SAMPLE_2D_LOD(ScreenSpaceAmbientOcclusionMap, SamplerPoint, float4(texCoord, 0.0f, 0.0f)).r;
 
 	// Calculate color by GBuffer
 	float3 color = float3(0.0f, 0.0f, 0.0f);
 	@property(NumberOfMultisamples)
 		// Custom MSAA resolve
-		int2 textureCoordinate = int2(MAIN_INPUT(TexCoordVS) * PassData.ViewportSize);
+		int2 textureCoordinate = int2(texCoord * PassData.ViewportSize);
 		@foreach(NumberOfMultisamples, i, 0)
 		{
 			// Read GBuffer data
@@ -194,7 +199,7 @@ MAIN_BEGIN
 				float4 gbuffer2Value = SAMPLE_2D_MS(GBufferMap2, textureCoordinate, @i);
 
 				// Calculate color by GBuffer
-				color += CalculateColorByGBuffer(viewRay, MAIN_INPUT(TexCoordVS), gbuffer0Value, gbuffer1Value, gbuffer2Value, depth, screenSpaceAmbientOcclusion);
+				color += CalculateColorByGBuffer(viewRay, texCoord, gbuffer0Value, gbuffer1Value, gbuffer2Value, depth, screenSpaceAmbientOcclusion);
 			}
 			else
 			{
@@ -206,7 +211,7 @@ MAIN_BEGIN
 		color /= @value(NumberOfMultisamples);
 	@end
 	@property(!NumberOfMultisamples)
-		float4 textureCoordinate = float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f);
+		float4 textureCoordinate = float4(texCoord, 0.0f, 0.0f);
 
 		// Read GBuffer data
 		float4 gbuffer0Value = SAMPLE_2D_LOD(GBufferMap0, SamplerPoint, textureCoordinate);
@@ -220,7 +225,7 @@ MAIN_BEGIN
 			float4 gbuffer2Value = SAMPLE_2D_LOD(GBufferMap2, SamplerPoint, textureCoordinate);
 
 			// Calculate color by GBuffer
-			color = CalculateColorByGBuffer(viewRay, MAIN_INPUT(TexCoordVS), gbuffer0Value, gbuffer1Value, gbuffer2Value, depth, screenSpaceAmbientOcclusion);
+			color = CalculateColorByGBuffer(viewRay, texCoord, gbuffer0Value, gbuffer1Value, gbuffer2Value, depth, screenSpaceAmbientOcclusion);
 		}
 		else
 		{
