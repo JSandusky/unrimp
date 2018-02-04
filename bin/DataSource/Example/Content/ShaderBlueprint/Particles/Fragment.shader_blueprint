@@ -52,7 +52,7 @@ UNIFORM_BUFFER_BEGIN(0, 0, PassUniformBuffer, 0)
 UNIFORM_BUFFER_END
 
 // Textures
-TEXTURE_2D(1, 0, _argb_nxa, 0)
+TEXTURE_2D(1, 0, _argb_alpha, 0)
 TEXTURE_2D(1, 1, DepthMap, 1)
 
 // Samplers
@@ -72,10 +72,10 @@ SAMPLER_STATE(2, 1, SamplerPointClamp, 1)
 //[-------------------------------------------------------]
 MAIN_BEGIN
 	// TODO(co) Pass or material parameters
-	float ContrastPower = 3.0f;
+	float ContrastPower = 1.5f;
 
 	// Fetch texel
-	float4 color = SAMPLE_2D(_argb_nxa, SamplerLinear, MAIN_INPUT(TexCoordDepthVS).xy);
+	float4 color = SAMPLE_2D(_argb_alpha, SamplerLinear, MAIN_INPUT(TexCoordDepthVS).xy);
 
 	// Apply particle color
 	color *= MAIN_INPUT(ColorVS);
@@ -85,7 +85,7 @@ MAIN_BEGIN
 		float depthDifference = sceneDepth - MAIN_INPUT(TexCoordDepthVS).z;
 		float fade = 0.5f * pow(SATURATE(2.0f * ((depthDifference > 0.5f) ? 1.0f - depthDifference : depthDifference)), ContrastPower);
 		fade = (depthDifference > 0.5f) ? (1.0f - fade) : fade;
-		color = float4(fade, fade, fade, fade);	// TODO(co) Just for testing, alpha modulation later on
+		color.a *= fade;
 	}
 
 	// Done

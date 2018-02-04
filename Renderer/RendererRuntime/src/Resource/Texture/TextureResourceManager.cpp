@@ -75,7 +75,7 @@ namespace
 			Renderer::ITexturePtr whiteA2DTexturePtr(textureManager.createTexture2D(1, 1, Renderer::TextureFormat::R8, whiteAData, 0u, Renderer::TextureUsage::IMMUTABLE));
 			RENDERER_SET_RESOURCE_DEBUG_NAME(whiteA2DTexturePtr, "White 2D alpha texture")
 
-			// Black RGB texture
+			// Black RGBA texture
 			const uint8_t blackRgbData[] = {
 				0, 0, 0, 0,	// Face 0
 				0, 0, 0, 0,	// Face 1

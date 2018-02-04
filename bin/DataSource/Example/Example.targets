@@ -135,6 +135,42 @@
 					}
 				],
 				"RgbHardwareGammaCorrection": "FALSE"
+			},
+			"_argb_alpha":
+			{
+				"Sources":
+				[
+					{
+						"TextureSemantic": "ALBEDO_MAP",
+						"NumberOfChannels": 3,
+						"DefaultColor": "1.0 1.0 1.0"
+					},
+					{
+						"TextureSemantic": "ALPHA_MAP",
+						"NumberOfChannels": 1,
+						"DefaultColor": "1.0"
+					}
+				],
+				"Destinations":
+				[
+					{
+						"TextureSemantic": "ALBEDO_MAP",
+						"SourceChannel": 0
+					},
+					{
+						"TextureSemantic": "ALBEDO_MAP",
+						"SourceChannel": 1
+					},
+					{
+						"TextureSemantic": "ALBEDO_MAP",
+						"SourceChannel": 2
+					},
+					{
+						"TextureSemantic": "ALPHA_MAP",
+						"SourceChannel": 0
+					}
+				],
+				"RgbHardwareGammaCorrection": "TRUE"
 			}
 		},
 		"TextureTargets":
