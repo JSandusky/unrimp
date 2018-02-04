@@ -583,7 +583,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				if (ImGui::BeginMenu("Post Processing"))
 				{
 					{ // Mutually exclusive
-						int activeRadioButton = 0;
+						int activeRadioButton = -1;
 						if (mPerformFxaa)
 						{
 							activeRadioButton = 0;
@@ -600,6 +600,7 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 						{
 							activeRadioButton = 3;
 						}
+						ImGui::RadioButton("-",					   &activeRadioButton, -1);
 						ImGui::RadioButton("FXAA",				   &activeRadioButton, 0);
 						ImGui::RadioButton("Sharpen",			   &activeRadioButton, 1);
 						ImGui::RadioButton("Chromatic Aberration", &activeRadioButton, 2);
