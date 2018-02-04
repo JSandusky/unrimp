@@ -582,10 +582,34 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				// Post processing
 				if (ImGui::BeginMenu("Post Processing"))
 				{
-					ImGui::Checkbox("FXAA", &mPerformFxaa);
-					ImGui::Checkbox("Sharpen", &mPerformSharpen);
-					ImGui::Checkbox("Chromatic Aberration", &mPerformChromaticAberration);
-					ImGui::Checkbox("Old CRT", &mPerformOldCrtEffect);
+					{ // Mutually exclusive
+						int activeRadioButton = 0;
+						if (mPerformFxaa)
+						{
+							activeRadioButton = 0;
+						}
+						else if (mPerformSharpen)
+						{
+							activeRadioButton = 1;
+						}
+						else if (mPerformChromaticAberration)
+						{
+							activeRadioButton = 2;
+						}
+						else if (mPerformOldCrtEffect)
+						{
+							activeRadioButton = 3;
+						}
+						ImGui::RadioButton("FXAA",				   &activeRadioButton, 0);
+						ImGui::RadioButton("Sharpen",			   &activeRadioButton, 1);
+						ImGui::RadioButton("Chromatic Aberration", &activeRadioButton, 2);
+						ImGui::RadioButton("Old CRT",			   &activeRadioButton, 3);
+						ImGui::Separator();
+						mPerformFxaa				= (0 == activeRadioButton);
+						mPerformSharpen				= (1 == activeRadioButton);
+						mPerformChromaticAberration	= (2 == activeRadioButton);
+						mPerformOldCrtEffect		= (3 == activeRadioButton);
+					}
 					ImGui::Checkbox("Film Grain", &mPerformFilmGrain);
 					ImGui::Checkbox("Sepia Color Correction", &mPerformSepiaColorCorrection);
 					ImGui::Checkbox("Vignette", &mPerformVignette);
