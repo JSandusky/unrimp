@@ -53,8 +53,6 @@ OUTPUT_END
 // Uniform buffers
 struct PassDataStruct
 {
-	float2 ViewportSize;
-	float2 InverseViewportSize;
 	float2 VignetteFalloffAmount;	// Vignette falloff (x-value) and vignette amount (y-value)
 	float2 ContrastBrightness;		// Contrast (x-value) and brightness (y-value)
 	float  SharpenIntensity;
@@ -103,6 +101,10 @@ SAMPLER_STATE(2, 0, SamplerLinear, 0)
 MAIN_BEGIN
 	float4 color = float4(0.0f, 0.0f, 0.0f, 1.0f);
 
+	// The final compositor is rendered into the original render target which can be for example an operation system window
+	// -> In order to support dynamic resolution scale we need to ask the color map for the viewport size rather than the render target
+	float2 viewportSize = CAST_TO(GET_TEXTURE_2D_SIZE(ColorMap), float2);
+
 	// Mutually exclusive since each effect is gathering multiple color map samples
 	// -> This isn't a real problem since the point of the effects is mutually exclusive as well sense wise
 	@property(OldCrtEffect)
@@ -128,7 +130,7 @@ MAIN_BEGIN
 				fxaaTex,							// tex
 				fxaaTex,							// fxaaConsole360TexExpBiasNegOne
 				fxaaTex,							// fxaaConsole360TexExpBiasNegTwo
-				float2(PassData.InverseViewportSize.x, PassData.InverseViewportSize.y),	// fxaaQualityRcpFrame
+				1.0f / viewportSize,				// fxaaQualityRcpFrame
 				float4(0.0f, 0.0f, 0.0f, 0.0f),		// fxaaConsoleRcpFrameOpt
 				float4(0.0f, 0.0f, 0.0f, 0.0f),		// fxaaConsoleRcpFrameOpt2
 				float4(0.0f, 0.0f, 0.0f, 0.0f),		// fxaaConsole360RcpFrameOpt2
@@ -145,12 +147,12 @@ MAIN_BEGIN
 		@property(!Fxaa)
 			@property(Sharpen)
 			{
-				int2 coordinate = CAST_TO(MAIN_INPUT(TexCoordVS) * PassData.ViewportSize, int2);
-				float4 center = TEXTURE_FETCH_2D(ColorMap, int3(coordinate, 			   0));
-				float4 top =	TEXTURE_FETCH_2D(ColorMap, int3(coordinate + int2( 0, -1), 0));
-				float4 left =	TEXTURE_FETCH_2D(ColorMap, int3(coordinate + int2(-1,  0), 0));
-				float4 right =	TEXTURE_FETCH_2D(ColorMap, int3(coordinate + int2( 1,  0), 0));
-				float4 bottom = TEXTURE_FETCH_2D(ColorMap, int3(coordinate + int2( 0,  1), 0));
+				float2 inverseViewportSize = 1.0f / viewportSize;
+				float4 center = SAMPLE_2D_LOD(ColorMap, SamplerLinear, float4(MAIN_INPUT(TexCoordVS), 											   0.0f, 0.0f));
+				float4 top =	SAMPLE_2D_LOD(ColorMap, SamplerLinear, float4(MAIN_INPUT(TexCoordVS) + float2( 0.0f, -1.0f) * inverseViewportSize, 0.0f, 0.0f));
+				float4 left =	SAMPLE_2D_LOD(ColorMap, SamplerLinear, float4(MAIN_INPUT(TexCoordVS) + float2(-1.0f,  0.0f) * inverseViewportSize, 0.0f, 0.0f));
+				float4 right =	SAMPLE_2D_LOD(ColorMap, SamplerLinear, float4(MAIN_INPUT(TexCoordVS) + float2( 1.0f,  0.0f) * inverseViewportSize, 0.0f, 0.0f));
+				float4 bottom = SAMPLE_2D_LOD(ColorMap, SamplerLinear, float4(MAIN_INPUT(TexCoordVS) + float2( 0.0f,  1.0f) * inverseViewportSize, 0.0f, 0.0f));
 				color = SATURATE(center + (4 * center - top - bottom - left - right) * PassData.SharpenIntensity);
 			}
 			@end
@@ -173,7 +175,7 @@ MAIN_BEGIN
 	@end
 
 	// Apply screen space dither
-	color.rgb += ScreenSpaceDither(MAIN_INPUT(TexCoordVS) * PassData.ViewportSize);
+	color.rgb += ScreenSpaceDither(MAIN_INPUT(TexCoordVS) * viewportSize);
 
 	// Ensure we're in a 0..1 range
 	color = SATURATE(color);

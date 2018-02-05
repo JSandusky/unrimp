@@ -38,6 +38,7 @@ Features
 			- Efficiency and responsiveness over flexibility (were it isn't useful in practice)
 			- Intented to be controlled by a high-level entity-component system, no unused implementation feature overkill in the basic runtime
 		- Toolkit designed with developer fast iterations in mind: Asset source flexibility, asset background compilation, hot-reloading
+	- Interfaces for log, assert and memory allocator so the user has the control over those things, standard implementations are provided
 - Cross-platform
 	- Microsoft Windows x86 and x64
 	- Linux
@@ -95,7 +96,6 @@ Renderer API and Backends
 	- Used inside the renderer implementations for better renderer debugging
 - Renderer implementation specific optimizations
 	- OpenGL: Usage of direct state access (DSA), if available
-- Interfaces for log, assert and memory allocator so the user has the control over those things, standard implementations are provided
 
 
 Renderer Runtime (e.g. "The Game")
