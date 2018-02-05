@@ -324,6 +324,7 @@ void FirstScene::onDraw()
 	RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
 	if (nullptr != mainRenderTarget && nullptr != rendererRuntime && nullptr != mCompositorWorkspaceInstance)
 	{
+		applyCurrentSettings(*mainRenderTarget);
 		createDebugGui(*mainRenderTarget);
 		RendererRuntime::SceneResource* sceneResource = rendererRuntime->getSceneResourceManager().tryGetById(mSceneResourceId);
 		if (nullptr != sceneResource && sceneResource->getLoadingState() == RendererRuntime::IResource::LoadingState::LOADED)
@@ -468,6 +469,115 @@ void FirstScene::onLoadingStateChange(const RendererRuntime::IResource& resource
 //[-------------------------------------------------------]
 //[ Private methods                                       ]
 //[-------------------------------------------------------]
+void FirstScene::applyCurrentSettings(Renderer::IRenderTarget& mainRenderTarget)
+{
+	RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
+	if (nullptr != mCompositorWorkspaceInstance && RendererRuntime::isInitialized(mSceneResourceId) && nullptr != rendererRuntime)
+	{
+		// Changes in main swap chain?
+		if (mCurrentFullscreen != mFullscreen)
+		{
+			mCurrentFullscreen = mFullscreen;
+			static_cast<Renderer::ISwapChain&>(mainRenderTarget).setFullscreenState(mCurrentFullscreen);
+		}
+		if (mCurrentUseVerticalSynchronization != mUseVerticalSynchronization)
+		{
+			mCurrentUseVerticalSynchronization = mUseVerticalSynchronization;
+			static_cast<Renderer::ISwapChain&>(mainRenderTarget).setVerticalSynchronizationInterval(mCurrentUseVerticalSynchronization ? 1u : 0u);
+		}
+
+		// Recreate the compositor workspace instance, if required
+		if (mInstancedCompositor != mCurrentCompositor)
+		{
+			mInstancedCompositor = static_cast<Compositor>(mCurrentCompositor);
+			createCompositorWorkspace();
+		}
+
+		// Update texture related settings
+		{ // Default texture filtering
+			RendererRuntime::MaterialBlueprintResourceManager& materialBlueprintResourceManager = rendererRuntime->getMaterialBlueprintResourceManager();
+			switch (mCurrentTextureFiltering)
+			{
+				case TextureFiltering::POINT:
+					materialBlueprintResourceManager.setDefaultTextureFiltering(Renderer::FilterMode::MIN_MAG_MIP_POINT, 1);
+					break;
+
+				case TextureFiltering::BILINEAR:
+					materialBlueprintResourceManager.setDefaultTextureFiltering(Renderer::FilterMode::MIN_MAG_LINEAR_MIP_POINT, 1);
+					break;
+
+				case TextureFiltering::TRILINEAR:
+					materialBlueprintResourceManager.setDefaultTextureFiltering(Renderer::FilterMode::MIN_MAG_MIP_LINEAR, 1);
+					break;
+
+				case TextureFiltering::ANISOTROPIC_2:
+					materialBlueprintResourceManager.setDefaultTextureFiltering(Renderer::FilterMode::ANISOTROPIC, 2);
+					break;
+
+				case TextureFiltering::ANISOTROPIC_4:
+					materialBlueprintResourceManager.setDefaultTextureFiltering(Renderer::FilterMode::ANISOTROPIC, 4);
+					break;
+
+				case TextureFiltering::ANISOTROPIC_8:
+					materialBlueprintResourceManager.setDefaultTextureFiltering(Renderer::FilterMode::ANISOTROPIC, 8);
+					break;
+
+				case TextureFiltering::ANISOTROPIC_16:
+					materialBlueprintResourceManager.setDefaultTextureFiltering(Renderer::FilterMode::ANISOTROPIC, 16);
+					break;
+			}
+		}
+		rendererRuntime->getTextureResourceManager().setNumberOfTopMipmapsToRemove(static_cast<uint8_t>(mNumberOfTopTextureMipmapsToRemove));
+
+		// Update compositor workspace
+		{ // MSAA
+			static const uint8_t NUMBER_OF_MULTISAMPLES[4] = { 1, 2, 4, 8 };
+			uint8_t numberOfMultisamples = NUMBER_OF_MULTISAMPLES[mCurrentMsaa];
+			const uint8_t maximumNumberOfMultisamples = rendererRuntime->getRenderer().getCapabilities().maximumNumberOfMultisamples;
+			if (numberOfMultisamples > maximumNumberOfMultisamples)
+			{
+				numberOfMultisamples = maximumNumberOfMultisamples;
+			}
+			mCompositorWorkspaceInstance->setNumberOfMultisamples(numberOfMultisamples);
+		}
+		mCompositorWorkspaceInstance->setResolutionScale(mResolutionScale);
+
+		{ // Update the material resource instance
+			const RendererRuntime::MaterialResourceManager& materialResourceManager = rendererRuntime->getMaterialResourceManager();
+
+			// Depth of field compositor material
+			RendererRuntime::MaterialResource* materialResource = materialResourceManager.getMaterialResourceByAssetId("Example/MaterialBlueprint/Compositor/DepthOfField");
+			if (nullptr != materialResource)
+			{
+				materialResource->setPropertyById("BlurrinessCutoff", RendererRuntime::MaterialPropertyValue::fromFloat(mDepthOfFieldBlurrinessCutoff));
+			}
+
+			// Final compositor material
+			materialResource = materialResourceManager.getMaterialResourceByAssetId("Example/MaterialBlueprint/Compositor/Final");
+			if (nullptr != materialResource)
+			{
+				static const RendererRuntime::AssetId IDENTITY_TEXTURE_ASSET_ID("Unrimp/Texture/DynamicByCode/IdentityColorCorrectionLookupTable3D");
+				static const RendererRuntime::AssetId SEPIA_TEXTURE_ASSET_ID("Example/Texture/Compositor/SepiaColorCorrectionLookupTable16x1");
+				materialResource->setPropertyById("ColorCorrectionLookupTableMap", RendererRuntime::MaterialPropertyValue::fromTextureAssetId(mPerformSepiaColorCorrection ? SEPIA_TEXTURE_ASSET_ID : IDENTITY_TEXTURE_ASSET_ID));
+				materialResource->setPropertyById("Fxaa", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformFxaa));
+				materialResource->setPropertyById("Sharpen", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformSharpen));
+				materialResource->setPropertyById("ChromaticAberration", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformChromaticAberration));
+				materialResource->setPropertyById("OldCrtEffect", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformOldCrtEffect));
+				materialResource->setPropertyById("FilmGrain", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformFilmGrain));
+				materialResource->setPropertyById("Vignette", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformVignette));
+			}
+
+			// Imrod material clone
+			materialResource = materialResourceManager.tryGetById(mCloneMaterialResourceId);
+			if (nullptr != materialResource)
+			{
+				materialResource->setPropertyById("UseEmissiveMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseEmissiveMap));
+				materialResource->setPropertyById("AlbedoColor", RendererRuntime::MaterialPropertyValue::fromFloat3(mAlbedoColor));
+			}
+		}
+	}
+}
+
 void FirstScene::createCompositorWorkspace()
 {
 	RendererRuntime::IRendererRuntime* rendererRuntime = getRendererRuntime();
@@ -657,108 +767,6 @@ void FirstScene::createDebugGui(Renderer::IRenderTarget& mainRenderTarget)
 				}
 			}
 			ImGui::End();
-		}
-
-		// Changes in main swap chain?
-		if (mCurrentFullscreen != mFullscreen)
-		{
-			mCurrentFullscreen = mFullscreen;
-			static_cast<Renderer::ISwapChain&>(mainRenderTarget).setFullscreenState(mCurrentFullscreen);
-		}
-		if (mCurrentUseVerticalSynchronization != mUseVerticalSynchronization)
-		{
-			mCurrentUseVerticalSynchronization = mUseVerticalSynchronization;
-			static_cast<Renderer::ISwapChain&>(mainRenderTarget).setVerticalSynchronizationInterval(mCurrentUseVerticalSynchronization ? 1u : 0u);
-		}
-
-		// Recreate the compositor workspace instance, if required
-		if (mInstancedCompositor != mCurrentCompositor)
-		{
-			mInstancedCompositor = static_cast<Compositor>(mCurrentCompositor);
-			createCompositorWorkspace();
-		}
-
-		// Update texture related settings
-		{ // Default texture filtering
-			RendererRuntime::MaterialBlueprintResourceManager& materialBlueprintResourceManager = rendererRuntime->getMaterialBlueprintResourceManager();
-			switch (mCurrentTextureFiltering)
-			{
-				case TextureFiltering::POINT:
-					materialBlueprintResourceManager.setDefaultTextureFiltering(Renderer::FilterMode::MIN_MAG_MIP_POINT, 1);
-					break;
-
-				case TextureFiltering::BILINEAR:
-					materialBlueprintResourceManager.setDefaultTextureFiltering(Renderer::FilterMode::MIN_MAG_LINEAR_MIP_POINT, 1);
-					break;
-
-				case TextureFiltering::TRILINEAR:
-					materialBlueprintResourceManager.setDefaultTextureFiltering(Renderer::FilterMode::MIN_MAG_MIP_LINEAR, 1);
-					break;
-
-				case TextureFiltering::ANISOTROPIC_2:
-					materialBlueprintResourceManager.setDefaultTextureFiltering(Renderer::FilterMode::ANISOTROPIC, 2);
-					break;
-
-				case TextureFiltering::ANISOTROPIC_4:
-					materialBlueprintResourceManager.setDefaultTextureFiltering(Renderer::FilterMode::ANISOTROPIC, 4);
-					break;
-
-				case TextureFiltering::ANISOTROPIC_8:
-					materialBlueprintResourceManager.setDefaultTextureFiltering(Renderer::FilterMode::ANISOTROPIC, 8);
-					break;
-
-				case TextureFiltering::ANISOTROPIC_16:
-					materialBlueprintResourceManager.setDefaultTextureFiltering(Renderer::FilterMode::ANISOTROPIC, 16);
-					break;
-			}
-		}
-		rendererRuntime->getTextureResourceManager().setNumberOfTopMipmapsToRemove(static_cast<uint8_t>(mNumberOfTopTextureMipmapsToRemove));
-
-		// Update compositor workspace
-		{ // MSAA
-			static const uint8_t NUMBER_OF_MULTISAMPLES[4] = { 1, 2, 4, 8 };
-			uint8_t numberOfMultisamples = NUMBER_OF_MULTISAMPLES[mCurrentMsaa];
-			const uint8_t maximumNumberOfMultisamples = rendererRuntime->getRenderer().getCapabilities().maximumNumberOfMultisamples;
-			if (numberOfMultisamples > maximumNumberOfMultisamples)
-			{
-				numberOfMultisamples = maximumNumberOfMultisamples;
-			}
-			mCompositorWorkspaceInstance->setNumberOfMultisamples(numberOfMultisamples);
-		}
-		mCompositorWorkspaceInstance->setResolutionScale(mResolutionScale);
-
-		{ // Update the material resource instance
-			const RendererRuntime::MaterialResourceManager& materialResourceManager = rendererRuntime->getMaterialResourceManager();
-
-			// Depth of field compositor material
-			RendererRuntime::MaterialResource* materialResource = materialResourceManager.getMaterialResourceByAssetId("Example/MaterialBlueprint/Compositor/DepthOfField");
-			if (nullptr != materialResource)
-			{
-				materialResource->setPropertyById("BlurrinessCutoff", RendererRuntime::MaterialPropertyValue::fromFloat(mDepthOfFieldBlurrinessCutoff));
-			}
-
-			// Final compositor material
-			materialResource = materialResourceManager.getMaterialResourceByAssetId("Example/MaterialBlueprint/Compositor/Final");
-			if (nullptr != materialResource)
-			{
-				static const RendererRuntime::AssetId IDENTITY_TEXTURE_ASSET_ID("Unrimp/Texture/DynamicByCode/IdentityColorCorrectionLookupTable3D");
-				static const RendererRuntime::AssetId SEPIA_TEXTURE_ASSET_ID("Example/Texture/Compositor/SepiaColorCorrectionLookupTable16x1");
-				materialResource->setPropertyById("ColorCorrectionLookupTableMap", RendererRuntime::MaterialPropertyValue::fromTextureAssetId(mPerformSepiaColorCorrection ? SEPIA_TEXTURE_ASSET_ID : IDENTITY_TEXTURE_ASSET_ID));
-				materialResource->setPropertyById("Fxaa", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformFxaa));
-				materialResource->setPropertyById("Sharpen", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformSharpen));
-				materialResource->setPropertyById("ChromaticAberration", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformChromaticAberration));
-				materialResource->setPropertyById("OldCrtEffect", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformOldCrtEffect));
-				materialResource->setPropertyById("FilmGrain", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformFilmGrain));
-				materialResource->setPropertyById("Vignette", RendererRuntime::MaterialPropertyValue::fromBoolean(mPerformVignette));
-			}
-
-			// Imrod material clone
-			materialResource = materialResourceManager.tryGetById(mCloneMaterialResourceId);
-			if (nullptr != materialResource)
-			{
-				materialResource->setPropertyById("UseEmissiveMap", RendererRuntime::MaterialPropertyValue::fromBoolean(mUseEmissiveMap));
-				materialResource->setPropertyById("AlbedoColor", RendererRuntime::MaterialPropertyValue::fromFloat3(mAlbedoColor));
-			}
 		}
 	}
 }
