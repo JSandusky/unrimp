@@ -200,7 +200,7 @@ namespace detail
 		return mat3_cast(*this);
 	}
 	
-	template<typename T, qualifier Q>	
+	template<typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER tquat<T, Q>::operator mat<4, 4, T, Q>()
 	{
 		return mat4_cast(*this);
@@ -306,6 +306,12 @@ namespace detail
 	GLM_FUNC_QUALIFIER tquat<T, Q> operator+(tquat<T, Q> const& q, tquat<T, Q> const& p)
 	{
 		return tquat<T, Q>(q) += p;
+	}
+
+	template<typename T, qualifier Q>
+	GLM_FUNC_QUALIFIER tquat<T, Q> operator-(tquat<T, Q> const& q, tquat<T, Q> const& p)
+	{
+		return tquat<T, Q>(q) -= p;
 	}
 
 	template<typename T, qualifier Q>
@@ -669,39 +675,20 @@ namespace detail
 		T biggestVal = sqrt(fourBiggestSquaredMinus1 + static_cast<T>(1)) * static_cast<T>(0.5);
 		T mult = static_cast<T>(0.25) / biggestVal;
 
-		tquat<T, Q> Result;
 		switch(biggestIndex)
 		{
 		case 0:
-			Result.w = biggestVal;
-			Result.x = (m[1][2] - m[2][1]) * mult;
-			Result.y = (m[2][0] - m[0][2]) * mult;
-			Result.z = (m[0][1] - m[1][0]) * mult;
-			break;
+			return tquat<T, Q>(biggestVal, (m[1][2] - m[2][1]) * mult, (m[2][0] - m[0][2]) * mult, (m[0][1] - m[1][0]) * mult);
 		case 1:
-			Result.w = (m[1][2] - m[2][1]) * mult;
-			Result.x = biggestVal;
-			Result.y = (m[0][1] + m[1][0]) * mult;
-			Result.z = (m[2][0] + m[0][2]) * mult;
-			break;
+			return tquat<T, Q>((m[1][2] - m[2][1]) * mult, biggestVal, (m[0][1] + m[1][0]) * mult, (m[2][0] + m[0][2]) * mult);
 		case 2:
-			Result.w = (m[2][0] - m[0][2]) * mult;
-			Result.x = (m[0][1] + m[1][0]) * mult;
-			Result.y = biggestVal;
-			Result.z = (m[1][2] + m[2][1]) * mult;
-			break;
+			return tquat<T, Q>((m[2][0] - m[0][2]) * mult, (m[0][1] + m[1][0]) * mult, biggestVal, (m[1][2] + m[2][1]) * mult);
 		case 3:
-			Result.w = (m[0][1] - m[1][0]) * mult;
-			Result.x = (m[2][0] + m[0][2]) * mult;
-			Result.y = (m[1][2] + m[2][1]) * mult;
-			Result.z = biggestVal;
-			break;
-			
-		default:					// Silence a -Wswitch-default warning in GCC. Should never actually get here. Assert is just for sanity.
+			return tquat<T, Q>((m[0][1] - m[1][0]) * mult, (m[2][0] + m[0][2]) * mult, (m[1][2] + m[2][1]) * mult, biggestVal);
+		default: // Silence a -Wswitch-default warning in GCC. Should never actually get here. Assert is just for sanity.
 			assert(false);
-			break;
+			return tquat<T, Q>(1, 0, 0, 0);
 		}
-		return Result;
 	}
 
 	template<typename T, qualifier Q>

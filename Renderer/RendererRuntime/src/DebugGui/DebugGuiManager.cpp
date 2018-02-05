@@ -100,13 +100,13 @@ namespace
 		//[ Global functions                                      ]
 		//[-------------------------------------------------------]
 		// From "imgui.cpp"
-		ImGuiIniData* FindWindowSettings(const char* name)
+		ImGuiWindowSettings* FindWindowSettings(const char* name)
 		{
 			ImGuiContext& g = *GImGui;
 			ImGuiID id = ImHash(name, 0);
-			for (int i = 0; i != g.Settings.Size; i++)
+			for (int i = 0; i != g.SettingsWindows.Size; i++)
 			{
-				ImGuiIniData* ini = &g.Settings[i];
+				ImGuiWindowSettings* ini = &g.SettingsWindows[i];
 				if (ini->Id == id)
 					return ini;
 			}
@@ -114,10 +114,10 @@ namespace
 		}
 
 		// From "imgui.cpp"
-		ImGuiIniData* AddWindowSettings(const char* name)
+		ImGuiWindowSettings* AddWindowSettings(const char* name)
 		{
-			GImGui->Settings.resize(GImGui->Settings.Size + 1);
-			ImGuiIniData* ini = &GImGui->Settings.back();
+			GImGui->SettingsWindows.resize(GImGui->SettingsWindows.Size + 1);
+			ImGuiWindowSettings* ini = &GImGui->SettingsWindows.back();
 			ini->Name = ImStrdup(name);
 			ini->Id = ImHash(name, 0);
 			ini->Collapsed = false;
@@ -372,7 +372,7 @@ namespace RendererRuntime
 
 	bool DebugGuiManager::getIniSetting(const char* name, float value[4])
 	{
-		ImGuiIniData* settings = ::detail::FindWindowSettings(name);
+		ImGuiWindowSettings* settings = ::detail::FindWindowSettings(name);
 		if (nullptr != settings)
 		{
 			value[0] = settings->Pos.x;
@@ -390,7 +390,7 @@ namespace RendererRuntime
 
 	void DebugGuiManager::setIniSetting(const char* name, const float value[4])
 	{
-		ImGuiIniData* settings = ::detail::FindWindowSettings(name);
+		ImGuiWindowSettings* settings = ::detail::FindWindowSettings(name);
 		if (nullptr == settings)
 		{
 			settings = ::detail::AddWindowSettings(name);
@@ -463,21 +463,14 @@ namespace RendererRuntime
 			}
 		}
 
-		// TODO(co) When having ImGui window rounding and anti-aliased shapes active (ImGui default) and using
-		//          "unrimp\bin\DataSource\Content\ShaderBlueprint\Debug\GuiFragment.shader_blueprint" for a blurred
-		//          GUI background, there's a nasty bright line at the left and top side. When disabling anti-aliased
-		//          shapes or window rounding this artifact is gone. Decided to disable window rounding to keep the
-		//          nicely blurred GUI background without the visual artifact. Might be worth digging into
-		//          "ImDrawList::AddConvexPolyFilled()" in detail so see whether or not we can change something inside ImGui.
-		ImGuiStyle& imGuiStyle = ImGui::GetStyle();
-		imGuiStyle.WindowRounding = 0.0f;
-
 		// Initialize ImGui at once and not delayed
 		// -> "imgui.cpp" -> "LoadIniSettingsFromDisk()" will clamp values, we don't want this
 		{
+			ImGuiStyle& imGuiStyle = ImGui::GetStyle();
 			const ImVec2 windowMinSizeBackup = imGuiStyle.WindowMinSize;
 			imGuiStyle.WindowMinSize.x = imGuiStyle.WindowMinSize.y = std::numeric_limits<float>::lowest();
 			ImGui::Initialize();
+			ImGui::StyleColorsDark();
 			imGuiStyle.WindowMinSize = windowMinSizeBackup;
 		}
 

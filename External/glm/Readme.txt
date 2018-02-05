@@ -1,4 +1,4 @@
-GLM - OpenGL mathematics library - "glm-0.9.9.0" (September 23, 2017 - commit 7733266417547839ea07b54020d0d32109ecdc0a)
+GLM - OpenGL mathematics library - "glm-0.9.9.0" (latest commit be53cebcd3ec3366e30f520bfaa35991274fc390 - January 9, 2018)
 - License: "MIT License"
 - Online: http://glm.g-truc.net/
 - Just consisting of headers
