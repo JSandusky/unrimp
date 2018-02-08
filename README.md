@@ -186,6 +186,7 @@ Examples (just some high level keywords)
 - [Old CRT post processing effect](https://www.shadertoy.com/view/MsXGD4)
 - [Gamma correct rendering](https://developer.nvidia.com/gpugems/GPUGems3/gpugems3_ch24.html)
 - Bloom with dirty lens
+- [Volumetric light/fog](https://fr.slideshare.net/BenjaminGlatzel/volumetric-lighting-for-many-lights-in-lords-of-the-fallen)
 - Chromatic aberration
 - Clustered shading
 - [Pseudo lens flare](http://john-chapman-graphics.blogspot.de/2013/02/pseudo-lens-flare.html)

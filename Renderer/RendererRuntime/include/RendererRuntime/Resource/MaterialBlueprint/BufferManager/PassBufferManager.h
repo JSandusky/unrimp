@@ -92,12 +92,13 @@ namespace RendererRuntime
 		*/
 		struct PassData final
 		{
-			glm::mat4 worldSpaceToClipSpaceMatrix[2];
-			glm::mat4 previousWorldSpaceToClipSpaceMatrix[2];
+			glm::mat4 worldSpaceToClipSpaceMatrixReversedZ[2];
+			glm::mat4 previousWorldSpaceToClipSpaceMatrixReversedZ[2];
 			glm::mat4 worldSpaceToViewSpaceMatrix[2];
 			glm::quat worldSpaceToViewSpaceQuaternion[2];
 			glm::mat4 previousWorldSpaceToViewSpaceMatrix[2];
 			glm::mat4 viewSpaceToClipSpaceMatrix[2];
+			glm::mat4 viewSpaceToClipSpaceMatrixReversedZ[2];
 		};
 
 

@@ -83,8 +83,9 @@ TEXTURE_BUFFER(1, 0, float4, LightTextureBuffer, 0)	// "LIGHT"
 TEXTURE_2D_ARRAY(2, 4, ShadowMap, 5)
 TEXTURE_2D(2, 5, ScreenSpaceAmbientOcclusionMap, 6)
 TEXTURE_2D(2, 6, DistortionMap, 7)
-TEXTURE_CUBE(2, 7, ReflectionCubeMap, 8)
-TEXTURE_3D_UINT(2, 8, LightClustersMap3D, 9)
+TEXTURE_2D(1, 7, VolumetricLightMap, 8)
+TEXTURE_CUBE(2, 8, ReflectionCubeMap, 9)
+TEXTURE_3D_UINT(2, 9, LightClustersMap3D, 10)
 
 // Samplers
 SAMPLER_STATE(2, 0, SamplerPoint, 0)
@@ -113,7 +114,7 @@ SAMPLER_STATE(2, 1, SamplerLinear, 1)
 	@insertpiece(DefineCalculateShadowVisibility)
 	@insertpiece(DefineShadowDebugging)
 
-float3 CalculateColorByGBuffer(float3 viewRay, float2 screenSpacePosition, float4 gbuffer0Value, float4 gbuffer1Value, float4 gbuffer2Value, float depth, float screenSpaceAmbientOcclusion)
+float3 CalculateColorByGBuffer(float3 viewRay, float4 gbuffer0Value, float4 gbuffer1Value, float4 gbuffer2Value, float depth, float screenSpaceAmbientOcclusion, float3 volumetricLight)
 {
 	// Gather GBuffer data
 	float3 albedo		   = gbuffer0Value.rgb;
@@ -158,6 +159,9 @@ float3 CalculateColorByGBuffer(float3 viewRay, float2 screenSpacePosition, float
 	// Apply fog
 	color = CalculateFoggedColor(viewSpacePosition, color);
 
+	// Apply volumetric light
+	color += volumetricLight;
+
 	// Don't remove the following commented code: Shadow map debugging
 	// color *= GetShadowCascadeColor(linearDepth);
 
@@ -180,6 +184,9 @@ MAIN_BEGIN
 	// Gather screen space ambient occlusion value
 	float screenSpaceAmbientOcclusion = SAMPLE_2D_LOD(ScreenSpaceAmbientOcclusionMap, SamplerPoint, float4(texCoord, 0.0f, 0.0f)).r;
 
+	// Gather volumetric light value
+	float3 volumetricLight = SAMPLE_2D_LOD(VolumetricLightMap, SamplerLinear, float4(texCoord, 0.0f, 0.0f)).rgb;
+
 	// Calculate color by GBuffer
 	float3 color = float3(0.0f, 0.0f, 0.0f);
 	@property(NumberOfMultisamples)
@@ -199,7 +206,7 @@ MAIN_BEGIN
 				float4 gbuffer2Value = SAMPLE_2D_MS(GBufferMap2, textureCoordinate, @i);
 
 				// Calculate color by GBuffer
-				color += CalculateColorByGBuffer(viewRay, texCoord, gbuffer0Value, gbuffer1Value, gbuffer2Value, depth, screenSpaceAmbientOcclusion);
+				color += CalculateColorByGBuffer(viewRay, gbuffer0Value, gbuffer1Value, gbuffer2Value, depth, screenSpaceAmbientOcclusion, volumetricLight);
 			}
 			else
 			{
@@ -225,7 +232,7 @@ MAIN_BEGIN
 			float4 gbuffer2Value = SAMPLE_2D_LOD(GBufferMap2, SamplerPoint, textureCoordinate);
 
 			// Calculate color by GBuffer
-			color = CalculateColorByGBuffer(viewRay, texCoord, gbuffer0Value, gbuffer1Value, gbuffer2Value, depth, screenSpaceAmbientOcclusion);
+			color = CalculateColorByGBuffer(viewRay, gbuffer0Value, gbuffer1Value, gbuffer2Value, depth, screenSpaceAmbientOcclusion, volumetricLight);
 		}
 		else
 		{

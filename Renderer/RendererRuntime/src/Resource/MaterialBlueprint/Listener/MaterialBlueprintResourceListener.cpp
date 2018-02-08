@@ -359,6 +359,7 @@ namespace RendererRuntime
 
 		// Calculate required matrices basing whether or not the VR-manager is currently running
 		glm::mat4 viewSpaceToClipSpaceMatrix;
+		glm::mat4 viewSpaceToClipSpaceMatrixReversedZ;
 		glm::mat4 previousWorldSpaceToViewSpaceMatrix;
 		const IVrManager& vrManager = rendererRuntime.getVrManager();
 		const bool vrRendering = (singlePassStereoInstancing && vrManager.isRunning() && !cameraSceneItem->hasCustomWorldSpaceToViewSpaceMatrix() && !cameraSceneItem->hasCustomViewSpaceToClipSpaceMatrix());
@@ -374,7 +375,8 @@ namespace RendererRuntime
 					// Ask the virtual reality manager for the HMD transformation
 					// -> Near and far flipped due to usage of Reversed-Z (see e.g. https://developer.nvidia.com/content/depth-precision-visualized and https://nlguillemot.wordpress.com/2016/12/07/reversed-z-in-opengl/)
 					const IVrManager::VrEye vrEye = (0 == eyeIndex) ? IVrManager::VrEye::RIGHT : IVrManager::VrEye::LEFT;
-					viewSpaceToClipSpaceMatrix = vrManager.getHmdViewSpaceToClipSpaceMatrix(vrEye, mFarZ, mNearZ);
+					viewSpaceToClipSpaceMatrix = vrManager.getHmdViewSpaceToClipSpaceMatrix(vrEye, mNearZ, mFarZ);
+					viewSpaceToClipSpaceMatrixReversedZ = vrManager.getHmdViewSpaceToClipSpaceMatrix(vrEye, mFarZ, mNearZ);
 					const glm::mat4& viewTranslateMatrix = glm::inverse(vrManager.getHmdEyeSpaceToHeadSpaceMatrix(vrEye)) * glm::inverse(vrManager.getHmdPoseMatrix());
 
 					// Calculate the world space to view space matrix (Aka "view matrix")
@@ -394,7 +396,8 @@ namespace RendererRuntime
 					cameraSceneItem->getPreviousWorldSpaceToViewSpaceMatrix(previousWorldSpaceToViewSpaceMatrix);
 
 					// Get view space to clip space matrix (aka "projection matrix")
-					viewSpaceToClipSpaceMatrix = cameraSceneItem->getViewSpaceToClipSpaceMatrixReversedZ(static_cast<float>(renderTargetWidth) / mRenderTargetHeight);
+					viewSpaceToClipSpaceMatrix = cameraSceneItem->getViewSpaceToClipSpaceMatrix(static_cast<float>(renderTargetWidth) / mRenderTargetHeight);
+					viewSpaceToClipSpaceMatrixReversedZ = cameraSceneItem->getViewSpaceToClipSpaceMatrixReversedZ(static_cast<float>(renderTargetWidth) / mRenderTargetHeight);
 				}
 			}
 			else
@@ -406,13 +409,15 @@ namespace RendererRuntime
 
 				// Get view space to clip space matrix (aka "projection matrix")
 				// -> Near and far flipped due to usage of Reversed-Z (see e.g. https://developer.nvidia.com/content/depth-precision-visualized and https://nlguillemot.wordpress.com/2016/12/07/reversed-z-in-opengl/)
-				viewSpaceToClipSpaceMatrix = glm::perspective(CameraSceneItem::DEFAULT_FOV_Y, static_cast<float>(renderTargetWidth) / mRenderTargetHeight, CameraSceneItem::DEFAULT_FAR_Z, CameraSceneItem::DEFAULT_NEAR_Z);
+				viewSpaceToClipSpaceMatrix = glm::perspective(CameraSceneItem::DEFAULT_FOV_Y, static_cast<float>(renderTargetWidth) / mRenderTargetHeight, CameraSceneItem::DEFAULT_NEAR_Z, CameraSceneItem::DEFAULT_FAR_Z);
+				viewSpaceToClipSpaceMatrixReversedZ = glm::perspective(CameraSceneItem::DEFAULT_FOV_Y, static_cast<float>(renderTargetWidth) / mRenderTargetHeight, CameraSceneItem::DEFAULT_FAR_Z, CameraSceneItem::DEFAULT_NEAR_Z);
 			}
 			mPassData->worldSpaceToViewSpaceQuaternion[eyeIndex] = glm::quat(mPassData->worldSpaceToViewSpaceMatrix[eyeIndex]);
-			mPassData->worldSpaceToClipSpaceMatrix[eyeIndex] = viewSpaceToClipSpaceMatrix * mPassData->worldSpaceToViewSpaceMatrix[eyeIndex];
-			mPassData->previousWorldSpaceToClipSpaceMatrix[eyeIndex] = viewSpaceToClipSpaceMatrix * previousWorldSpaceToViewSpaceMatrix;	// TODO(co) Do also support the previous view space to clip space matrix so e.g. FOV changes have an influence?
+			mPassData->worldSpaceToClipSpaceMatrixReversedZ[eyeIndex] = viewSpaceToClipSpaceMatrixReversedZ * mPassData->worldSpaceToViewSpaceMatrix[eyeIndex];
+			mPassData->previousWorldSpaceToClipSpaceMatrixReversedZ[eyeIndex] = viewSpaceToClipSpaceMatrixReversedZ * previousWorldSpaceToViewSpaceMatrix;	// TODO(co) Do also support the previous view space to clip space matrix so e.g. FOV changes have an influence?
 			mPassData->previousWorldSpaceToViewSpaceMatrix[eyeIndex] = previousWorldSpaceToViewSpaceMatrix;
 			mPassData->viewSpaceToClipSpaceMatrix[eyeIndex] = viewSpaceToClipSpaceMatrix;
+			mPassData->viewSpaceToClipSpaceMatrixReversedZ[eyeIndex] = viewSpaceToClipSpaceMatrixReversedZ;
 		}
 	}
 
@@ -449,17 +454,17 @@ namespace RendererRuntime
 		else if (::detail::WORLD_SPACE_TO_CLIP_SPACE_MATRIX == referenceValue)
 		{
 			assert(sizeof(float) * 4 * 4 == numberOfBytes);
-			memcpy(buffer, glm::value_ptr(mPassData->worldSpaceToClipSpaceMatrix[0]), numberOfBytes);
+			memcpy(buffer, glm::value_ptr(mPassData->worldSpaceToClipSpaceMatrixReversedZ[0]), numberOfBytes);
 		}
 		else if (::detail::WORLD_SPACE_TO_CLIP_SPACE_MATRIX_2 == referenceValue)
 		{
 			assert(sizeof(float) * 4 * 4 == numberOfBytes);
-			memcpy(buffer, glm::value_ptr(mPassData->worldSpaceToClipSpaceMatrix[1]), numberOfBytes);
+			memcpy(buffer, glm::value_ptr(mPassData->worldSpaceToClipSpaceMatrixReversedZ[1]), numberOfBytes);
 		}
 		else if (::detail::PREVIOUS_WORLD_SPACE_TO_CLIP_SPACE_MATRIX == referenceValue)
 		{
 			assert(sizeof(float) * 4 * 4 == numberOfBytes);
-			memcpy(buffer, glm::value_ptr(mPassData->previousWorldSpaceToClipSpaceMatrix[0]), numberOfBytes);
+			memcpy(buffer, glm::value_ptr(mPassData->previousWorldSpaceToClipSpaceMatrixReversedZ[0]), numberOfBytes);
 		}
 		else if (::detail::PREVIOUS_WORLD_SPACE_TO_VIEW_SPACE_MATRIX == referenceValue)
 		{
@@ -469,27 +474,27 @@ namespace RendererRuntime
 		else if (::detail::VIEW_SPACE_TO_CLIP_SPACE_MATRIX == referenceValue)
 		{
 			assert(sizeof(float) * 4 * 4 == numberOfBytes);
-			memcpy(buffer, glm::value_ptr(mPassData->viewSpaceToClipSpaceMatrix[0]), numberOfBytes);
+			memcpy(buffer, glm::value_ptr(mPassData->viewSpaceToClipSpaceMatrixReversedZ[0]), numberOfBytes);
 		}
 		else if (::detail::VIEW_SPACE_TO_CLIP_SPACE_MATRIX2 == referenceValue)
 		{
 			assert(sizeof(float) * 4 * 4 == numberOfBytes);
-			memcpy(buffer, glm::value_ptr(mPassData->viewSpaceToClipSpaceMatrix[1]), numberOfBytes);
+			memcpy(buffer, glm::value_ptr(mPassData->viewSpaceToClipSpaceMatrixReversedZ[1]), numberOfBytes);
 		}
 		else if (::detail::VIEW_SPACE_TO_TEXTURE_SPACE_MATRIX == referenceValue)
 		{
 			assert(sizeof(float) * 4 * 4 == numberOfBytes);
-			memcpy(buffer, glm::value_ptr(Math::getTextureScaleBiasMatrix(mRendererRuntime->getRenderer()) * mPassData->viewSpaceToClipSpaceMatrix[0]), numberOfBytes);
+			memcpy(buffer, glm::value_ptr(Math::getTextureScaleBiasMatrix(mRendererRuntime->getRenderer()) * mPassData->viewSpaceToClipSpaceMatrixReversedZ[0]), numberOfBytes);
 		}
 		else if (::detail::CLIP_SPACE_TO_VIEW_SPACE_MATRIX == referenceValue)
 		{
 			assert(sizeof(float) * 4 * 4 == numberOfBytes);
-			memcpy(buffer, glm::value_ptr(glm::inverse(mPassData->viewSpaceToClipSpaceMatrix[0])), numberOfBytes);
+			memcpy(buffer, glm::value_ptr(glm::inverse(mPassData->viewSpaceToClipSpaceMatrixReversedZ[0])), numberOfBytes);
 		}
 		else if (::detail::CLIP_SPACE_TO_WORLD_SPACE_MATRIX == referenceValue)
 		{
 			assert(sizeof(float) * 4 * 4 == numberOfBytes);
-			memcpy(buffer, glm::value_ptr(glm::inverse(mPassData->worldSpaceToClipSpaceMatrix[0])), numberOfBytes);
+			memcpy(buffer, glm::value_ptr(glm::inverse(mPassData->worldSpaceToClipSpaceMatrixReversedZ[0])), numberOfBytes);
 		}
 		else if (::detail::CAMERA_WORLD_SPACE_POSITION == referenceValue)
 		{
@@ -509,19 +514,18 @@ namespace RendererRuntime
 			static const float FAR_Z = 1.0f;
 
 			// Calculate the view space frustum corners
-			// -> Near and far flipped due to usage of Reversed-Z (see e.g. https://developer.nvidia.com/content/depth-precision-visualized and https://nlguillemot.wordpress.com/2016/12/07/reversed-z-in-opengl/)
 			glm::vec4 viewSpaceFrustumCorners[8] =
 			{
 				// Near
-				{-1.0f,  1.0f, FAR_Z, 1.0f},	// 0: Near top left
-				{ 1.0f,  1.0f, FAR_Z, 1.0f},	// 1: Near top right
-				{-1.0f, -1.0f, FAR_Z, 1.0f},	// 2: Near bottom left
-				{ 1.0f, -1.0f, FAR_Z, 1.0f},	// 3: Near bottom right
+				{-1.0f,  1.0f, nearZ, 1.0f},	// 0: Near top left
+				{ 1.0f,  1.0f, nearZ, 1.0f},	// 1: Near top right
+				{-1.0f, -1.0f, nearZ, 1.0f},	// 2: Near bottom left
+				{ 1.0f, -1.0f, nearZ, 1.0f},	// 3: Near bottom right
 				// Far
-				{-1.0f,  1.0f, nearZ, 1.0f},	// 4: Far top left
-				{ 1.0f,  1.0f, nearZ, 1.0f},	// 5: Far top right
-				{-1.0f, -1.0f, nearZ, 1.0f},	// 6: Far bottom left
-				{ 1.0f, -1.0f, nearZ, 1.0f}		// 7: Far bottom right
+				{-1.0f,  1.0f, FAR_Z, 1.0f},	// 4: Far top left
+				{ 1.0f,  1.0f, FAR_Z, 1.0f},	// 5: Far top right
+				{-1.0f, -1.0f, FAR_Z, 1.0f},	// 6: Far bottom left
+				{ 1.0f, -1.0f, FAR_Z, 1.0f}		// 7: Far bottom right
 			};
 			const glm::mat4 clipSpaceToViewSpaceMatrix = glm::inverse(mPassData->viewSpaceToClipSpaceMatrix[0]);
 			for (int i = 0; i < 8; ++i)

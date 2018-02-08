@@ -92,6 +92,13 @@
 				"Value": "Unrimp/Texture/DynamicByCode/BlackMap2D",
 				"Description": "2D screen space distortion map"
 			},
+			"VolumetricLightMap":
+			{
+				"Usage": "TEXTURE_REFERENCE",
+				"ValueType": "TEXTURE_ASSET_ID",
+				"Value": "Unrimp/Texture/DynamicByCode/BlackMap2D",
+				"Description": "2D volumetric light map"
+			},
 			"ReflectionCubeMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
@@ -377,8 +384,21 @@
 				},
 				"7":
 				{
-					"BaseShaderRegisterName": "ReflectionCubeMap",
+					"BaseShaderRegisterName": "VolumetricLightMap",
 					"BaseShaderRegister": "8",
+					"ShaderVisibility": "FRAGMENT",
+					"ResourceType": "TEXTURE",
+					"Usage": "MATERIAL_REFERENCE",
+					"ValueType": "TEXTURE_ASSET_ID",
+					"Value": "@VolumetricLightMap",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/BlackMap2D",
+					"MipmapsUsed": "FALSE",
+					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
+				},
+				"8":
+				{
+					"BaseShaderRegisterName": "ReflectionCubeMap",
+					"BaseShaderRegister": "9",
 					"ShaderVisibility": "FRAGMENT",
 					"ResourceType": "TEXTURE",
 					"Usage": "MATERIAL_REFERENCE",
@@ -388,10 +408,10 @@
 					"RgbHardwareGammaCorrection": "TRUE",
 					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
 				},
-				"8":
+				"9":
 				{
 					"BaseShaderRegisterName": "LightClustersMap3D",
-					"BaseShaderRegister": "9",
+					"BaseShaderRegister": "10",
 					"ShaderVisibility": "FRAGMENT",
 					"ResourceType": "TEXTURE",
 					"Usage": "STATIC",

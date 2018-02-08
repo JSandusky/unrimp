@@ -66,6 +66,10 @@
 			{
 				"TextureFormat": "R16G16_SNORM"
 			},
+			"Example/Texture/Dynamic/VolumetricLightRenderTarget":
+			{
+				"TextureFormat": "R11G11B10F"
+			},
 			"Example/Texture/Dynamic/LuminanceRenderTarget":
 			{
 				"Width": "1024",
@@ -196,6 +200,10 @@
 			{
 				"ColorTextures": [ "Example/Texture/Dynamic/DistortionRenderTarget" ],
 				"DepthStencilTexture": "Example/Texture/Dynamic/DepthStencilRenderTargetCopy"
+			},
+			"VolumetricLightFramebuffer":
+			{
+				"ColorTextures": [ "Example/Texture/Dynamic/VolumetricLightRenderTarget" ]
 			},
 			"LuminanceFramebuffer":
 			{
@@ -369,6 +377,18 @@
 					"MaterialTechnique": "Transparent"
 				}
 			},
+			"VolumetricLightFramebuffer":
+			{
+				"Quad":
+				{
+					"MaterialBlueprint": "$ProjectName/MaterialBlueprint/Compositor/VolumetricLight.asset",
+					"SetMaterialProperties":
+					{
+						"DepthMap": "Example/Texture/Dynamic/DepthStencilRenderTarget",
+						"ShadowMap": "Example/Texture/Dynamic/ShadowMapRenderTarget"
+					}
+				}
+			},
 			"HdrFramebuffer1":
 			{
 				"Quad":
@@ -380,7 +400,8 @@
 						"ColorMap": "Example/Texture/Dynamic/HdrColorRenderTarget0",
 						"DepthMap": "Example/Texture/Dynamic/DepthStencilRenderTarget",
 						"ScreenSpaceAmbientOcclusionMap": "Example/Texture/Dynamic/BlurredScreenSpaceAmbientOcclusionRenderTarget",
-						"DistortionMap": "Example/Texture/Dynamic/DistortionRenderTarget"
+						"DistortionMap": "Example/Texture/Dynamic/DistortionRenderTarget",
+						"VolumetricLightMap": "Example/Texture/Dynamic/VolumetricLightRenderTarget"
 					}
 				}
 			},

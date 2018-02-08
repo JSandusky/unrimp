@@ -58,6 +58,7 @@ TEXTURE_2D(1, 0, ColorMap, 0)
 TEXTURE_2D(1, 1, DepthMap, 1)
 TEXTURE_2D(1, 2, ScreenSpaceAmbientOcclusionMap, 2)
 TEXTURE_2D(1, 3, DistortionMap, 3)
+TEXTURE_2D(1, 4, VolumetricLightMap, 4)
 
 // Samplers
 SAMPLER_STATE(2, 0, SamplerPointClamp, 0)
@@ -82,7 +83,13 @@ float3 CalculateColor(float3 viewRay, float3 color, float screenSpaceAmbientOccl
 		float3 viewSpacePosition = viewRay * (GetLinearDepth(depth) / dot(float3(0.0f, 0.0f, 1.0f), viewRay));
 
 		// Calculate fogged color
-		return CalculateFoggedColor(viewSpacePosition, color * screenSpaceAmbientOcclusion);
+		float3 foggedColor = CalculateFoggedColor(viewSpacePosition, color * screenSpaceAmbientOcclusion);
+
+		// Apply volumetric light
+		foggedColor += SAMPLE_2D_LOD(VolumetricLightMap, SamplerPointClamp, float4(screenSpacePosition, 0.0f, 0.0f)).rgb;
+
+		// Done
+		return foggedColor;
 	}
 	else
 	{

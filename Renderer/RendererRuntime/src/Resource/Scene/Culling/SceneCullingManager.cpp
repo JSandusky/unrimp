@@ -456,7 +456,7 @@ namespace
 				// Create the matrix to go from object->world->view->clip space
 				const SimdMatrix clip = simdMultiply(viewSpaceToClipSpaceMatrix, world);
 
-				// Load the mininum and maximum corner positions of the bounding box in object space
+				// Load the minimum and maximum corner positions of the bounding box in object space
 				SimdVector minimumPosition;
 				minimumPosition.x = float4(minimumX[i0], minimumX[i1], minimumX[i2], minimumX[i3]);
 				minimumPosition.y = float4(minimumY[i0], minimumY[i1], minimumY[i2], minimumY[i3]);
@@ -482,7 +482,7 @@ namespace
 				bool4 anyZLess = BOOL4_ALL_FALSE;
 				bool4 allZGreater = BOOL4_ALL_TRUE;
 
-				// Test each corner of the oobb and if any corner intersects the frustum that object is visible
+				// Test each corner of the OOBB and if any corner intersects the frustum that object is visible
 				for (uint32_t cs = 0; cs < 8; ++cs)
 				{
 					const float4 neg_cs_w = -clipPosition[cs].w;

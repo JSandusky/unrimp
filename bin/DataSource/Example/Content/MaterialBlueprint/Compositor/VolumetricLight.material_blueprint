@@ -25,13 +25,6 @@
 				"Value": "1.0 1.0 1.0",
 				"Description": "Diffuse fog color"
 			},
-			"ColorMap":
-			{
-				"Usage": "TEXTURE_REFERENCE",
-				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
-				"Description": "2D color map"
-			},
 			"DepthMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
@@ -39,33 +32,12 @@
 				"Value": "Unrimp/Texture/DynamicByCode/BlackMap2D",
 				"Description": "2D depth map"
 			},
-			"ScreenSpaceAmbientOcclusionMap":
-			{
-				"Usage": "TEXTURE_REFERENCE",
-				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
-				"Description": "2D screen space ambient occlusion (SSAO) map"
-			},
-			"DistortionMap":
+			"ShadowMap":
 			{
 				"Usage": "TEXTURE_REFERENCE",
 				"ValueType": "TEXTURE_ASSET_ID",
 				"Value": "Unrimp/Texture/DynamicByCode/BlackMap2D",
-				"Description": "2D screen space distortion map"
-			},
-			"VolumetricLightMap":
-			{
-				"Usage": "TEXTURE_REFERENCE",
-				"ValueType": "TEXTURE_ASSET_ID",
-				"Value": "Unrimp/Texture/DynamicByCode/BlackMap2D",
-				"Description": "2D volumetric light map"
-			},
-			"GlobalAmbientColor":
-			{
-				"Usage": "GLOBAL_REFERENCE_FALLBACK",
-				"ValueType": "FLOAT_3",
-				"Value": "0.2 0.2 0.2",
-				"Description": "Fallback value in case there's no ambient color global material property"
+				"Description": "2D shadow map"
 			}
 		},
 		"PipelineState":
@@ -74,7 +46,7 @@
 			"ShaderBlueprints":
 			{
 				"VertexShaderBlueprint": "$ProjectName/ShaderBlueprint/Compositor/PositionTextureCoordinateVertexRay.asset",
-				"FragmentShaderBlueprint": "$ProjectName/ShaderBlueprint/Compositor/ForwardFragment.asset"
+				"FragmentShaderBlueprint": "$ProjectName/ShaderBlueprint/Compositor/VolumetricLightFragment.asset"
 			},
 			"RasterizerState":
 			{
@@ -111,11 +83,47 @@
 							"ValueType": "FLOAT_4_4",
 							"Value": "@CLIP_SPACE_TO_VIEW_SPACE_MATRIX"
 						},
-						"ViewSpaceSunlightDirection":
+						"ViewSpaceToWorldSpaceMatrix":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4_4",
+							"Value": "@VIEW_SPACE_TO_WORLD_SPACE_MATRIX"
+						},
+						"WorldSpaceToViewSpaceMatrix":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4_4",
+							"Value": "@WORLD_SPACE_TO_VIEW_SPACE_MATRIX"
+						},
+						"ShadowMatrix":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4_4",
+							"Value": "@SHADOW_MATRIX"
+						},
+						"ShadowCascadeOffsets":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4_4",
+							"Value": "@SHADOW_CASCADE_OFFSETS"
+						},
+						"ShadowCascadeScales":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4_4",
+							"Value": "@SHADOW_CASCADE_SCALES"
+						},
+						"ShadowCascadeSplits":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4",
+							"Value": "@SHADOW_CASCADE_SPLITS"
+						},
+						"WorldSpaceSunlightDirection":
 						{
 							"Usage": "PASS_REFERENCE",
 							"ValueType": "FLOAT_3",
-							"Value": "@VIEW_SPACE_SUNLIGHT_DIRECTION"
+							"Value": "@WORLD_SPACE_SUNLIGHT_DIRECTION"
 						},
 						"AtmosphereFogDensity":
 						{
@@ -123,11 +131,11 @@
 							"ValueType": "FLOAT",
 							"Value": "@AtmosphereFogDensity"
 						},
-						"AmbientColor":
+						"ViewSpaceToWorldSpaceQuaternion":
 						{
-							"Usage": "GLOBAL_REFERENCE",
-							"ValueType": "FLOAT_3",
-							"Value": "@GlobalAmbientColor"
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_4",
+							"Value": "@VIEW_SPACE_TO_WORLD_SPACE_QUATERNION"
 						},
 						"SunlightColor":
 						{
@@ -140,6 +148,30 @@
 							"Usage": "MATERIAL_REFERENCE",
 							"ValueType": "FLOAT_3",
 							"Value": "@DiffuseFogColor"
+						},
+						"CameraWorldSpacePosition":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_3",
+							"Value": "@CAMERA_WORLD_SPACE_POSITION"
+						},
+						"LightClustersScale":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_3",
+							"Value": "@LIGHT_CLUSTERS_SCALE"
+						},
+						"LightClustersBias":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_3",
+							"Value": "@LIGHT_CLUSTERS_BIAS"
+						},
+						"ViewportSize":
+						{
+							"Usage": "PASS_REFERENCE",
+							"ValueType": "FLOAT_2",
+							"Value": "@VIEWPORT_SIZE"
 						},
 						"ProjectionParameters":
 						{
@@ -154,18 +186,18 @@
 			{
 				"0":
 				{
-					"BaseShaderRegisterName": "ColorMap",
+					"ValueType": "FLOAT_4",
+					"BaseShaderRegisterName": "LightTextureBuffer",
 					"BaseShaderRegister": "0",
 					"ShaderVisibility": "FRAGMENT",
-					"ResourceType": "TEXTURE",
-					"Usage": "MATERIAL_REFERENCE",
-					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@ColorMap",
-					"FallbackTexture": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
-					"MipmapsUsed": "FALSE",
-					"SamplerStateBaseShaderRegisterName": "SamplerPointClamp"
-				},
-				"1":
+					"ResourceType": "TEXTURE_BUFFER",
+					"BufferUsage": "LIGHT",
+					"Value": "@LIGHT"
+				}
+			},
+			"2":
+			{
+				"0":
 				{
 					"BaseShaderRegisterName": "DepthMap",
 					"BaseShaderRegister": "1",
@@ -176,59 +208,54 @@
 					"Value": "@DepthMap",
 					"FallbackTexture": "Unrimp/Texture/DynamicByCode/BlackMap2D",
 					"MipmapsUsed": "FALSE",
-					"SamplerStateBaseShaderRegisterName": "SamplerPointClamp"
+					"SamplerStateBaseShaderRegisterName": "SamplerPoint"
 				},
-				"2":
+				"1":
 				{
-					"BaseShaderRegisterName": "ScreenSpaceAmbientOcclusionMap",
+					"BaseShaderRegisterName": "ShadowMap",
 					"BaseShaderRegister": "2",
 					"ShaderVisibility": "FRAGMENT",
 					"ResourceType": "TEXTURE",
 					"Usage": "MATERIAL_REFERENCE",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@ScreenSpaceAmbientOcclusionMap",
-					"FallbackTexture": "Unrimp/Texture/DynamicByCode/WhiteMap2D",
+					"Value": "@ShadowMap",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/BlackMap2D",
 					"MipmapsUsed": "FALSE",
-					"SamplerStateBaseShaderRegisterName": "SamplerPointClamp"
+					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
 				},
-				"3":
+				"2":
 				{
-					"BaseShaderRegisterName": "DistortionMap",
+					"BaseShaderRegisterName": "LightClustersMap3D",
 					"BaseShaderRegister": "3",
 					"ShaderVisibility": "FRAGMENT",
 					"ResourceType": "TEXTURE",
-					"Usage": "MATERIAL_REFERENCE",
+					"Usage": "STATIC",
 					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@DistortionMap",
-					"FallbackTexture": "Unrimp/Texture/DynamicByCode/BlackMap2D",
-					"MipmapsUsed": "FALSE",
-					"SamplerStateBaseShaderRegisterName": "SamplerPointClamp"
-				},
-				"4":
-				{
-					"BaseShaderRegisterName": "VolumetricLightMap",
-					"BaseShaderRegister": "4",
-					"ShaderVisibility": "FRAGMENT",
-					"ResourceType": "TEXTURE",
-					"Usage": "MATERIAL_REFERENCE",
-					"ValueType": "TEXTURE_ASSET_ID",
-					"Value": "@VolumetricLightMap",
-					"FallbackTexture": "Unrimp/Texture/DynamicByCode/BlackMap2D",
-					"MipmapsUsed": "FALSE",
-					"SamplerStateBaseShaderRegisterName": "SamplerPointClamp"
+					"Value": "Unrimp/Texture/DynamicByCode/LightClustersMap3D",
+					"FallbackTexture": "Unrimp/Texture/DynamicByCode/LightClustersMap3D",
+					"SamplerStateBaseShaderRegisterName": "SamplerLinear"
 				}
 			},
-			"2":
+			"3":
 			{
 				"0":
 				{
-					"BaseShaderRegisterName": "SamplerPointClamp",
+					"BaseShaderRegisterName": "SamplerPoint",
 					"BaseShaderRegister": "0",
 					"ShaderVisibility": "FRAGMENT",
 					"ResourceType": "SAMPLER_STATE",
 					"Filter": "MIN_MAG_MIP_POINT",
 					"MaxAnisotropy": "1",
 					"MaxLOD": "0.0"
+				},
+				"1":
+				{
+					"BaseShaderRegisterName": "SamplerLinear",
+					"BaseShaderRegister": "1",
+					"ShaderVisibility": "FRAGMENT",
+					"ResourceType": "SAMPLER_STATE",
+					"Filter": "MIN_MAG_MIP_LINEAR",
+					"MaxAnisotropy": "1"
 				}
 			}
 		}
