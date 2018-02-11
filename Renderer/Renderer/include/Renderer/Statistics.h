@@ -158,7 +158,6 @@ namespace Renderer
 		*
 		*  @note
 		*    - Primarily for debugging
-		*    - Not for the public "Renderer.h"-interface
 		*    - The result is calculated by using the current statistics, do only call this method if you have to
 		*/
 		inline uint32_t getNumberOfCurrentResources() const;

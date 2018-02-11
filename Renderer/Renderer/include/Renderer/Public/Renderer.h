@@ -2126,6 +2126,33 @@ namespace Renderer
 			{}
 			inline ~Statistics()
 			{}
+			inline uint32_t getNumberOfCurrentResources() const
+			{
+				return	currentNumberOfRootSignatures +
+						currentNumberOfResourceGroups +
+						currentNumberOfPrograms +
+						currentNumberOfVertexArrays +
+						currentNumberOfRenderPasses +
+						currentNumberOfSwapChains +
+						currentNumberOfFramebuffers +
+						currentNumberOfIndexBuffers +
+						currentNumberOfVertexBuffers +
+						currentNumberOfUniformBuffers +
+						currentNumberOfTextureBuffers +
+						currentNumberOfIndirectBuffers +
+						currentNumberOfTexture1Ds +
+						currentNumberOfTexture2Ds +
+						currentNumberOfTexture2DArrays +
+						currentNumberOfTexture3Ds +
+						currentNumberOfTextureCubes +
+						currentNumberOfPipelineStates +
+						currentNumberOfSamplerStates +
+						currentNumberOfVertexShaders +
+						currentNumberOfTessellationControlShaders +
+						currentNumberOfTessellationEvaluationShaders +
+						currentNumberOfGeometryShaders +
+						currentNumberOfFragmentShaders;
+			}
 		private:
 			explicit Statistics(const Statistics&) = delete;
 			Statistics& operator =(const Statistics&) = delete;

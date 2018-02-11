@@ -371,7 +371,7 @@ namespace RendererRuntime
 				#else
 					const uint32_t numberOfCommands = commandBuffer.getNumberOfCommands();
 				#endif
-				if (ImGui::TreeNode("EmittedCommands", "Emitted commands %d", numberOfCommands))
+				if (ImGui::TreeNode("EmittedCommands", "Emitted commands: %d", numberOfCommands))
 				{
 					// Loop through all commands and count them
 					uint32_t numberOfCommandFunctions[Renderer::CommandDispatchFunctionIndex::NumberOfFunctions] = {};
@@ -415,6 +415,39 @@ namespace RendererRuntime
 					ImGui::TreePop();
 				}
 			}
+
+			// Renderer statistics
+			#ifndef RENDERER_NO_STATISTICS
+				const Renderer::Statistics& statistics = compositorWorkspaceInstance->getRendererRuntime().getRenderer().getStatistics();
+				if (ImGui::TreeNode("RendererResources", "Renderer resources: %d", statistics.getNumberOfCurrentResources()))
+				{
+					ImGui::Text("Root signatures: %d", statistics.currentNumberOfRootSignatures.load());
+					ImGui::Text("Resource groups: %d", statistics.currentNumberOfResourceGroups.load());
+					ImGui::Text("Programs: %d", statistics.currentNumberOfPrograms.load());
+					ImGui::Text("Vertex arrays: %d", statistics.currentNumberOfVertexArrays.load());
+					ImGui::Text("Render passes: %d", statistics.currentNumberOfRenderPasses.load());
+					ImGui::Text("Swap shains: %d", statistics.currentNumberOfSwapChains.load());
+					ImGui::Text("Framebuffers: %d", statistics.currentNumberOfFramebuffers.load());
+					ImGui::Text("Index buffers: %d", statistics.currentNumberOfIndexBuffers.load());
+					ImGui::Text("Vertex buffers: %d", statistics.currentNumberOfVertexBuffers.load());
+					ImGui::Text("Uniform buffers: %d", statistics.currentNumberOfUniformBuffers.load());
+					ImGui::Text("Texture buffers: %d", statistics.currentNumberOfTextureBuffers.load());
+					ImGui::Text("Indirect buffers: %d", statistics.currentNumberOfIndirectBuffers.load());
+					ImGui::Text("1D textures: %d", statistics.currentNumberOfTexture1Ds.load());
+					ImGui::Text("2D textures: %d", statistics.currentNumberOfTexture2Ds.load());
+					ImGui::Text("2D texture arrays: %d", statistics.currentNumberOfTexture2DArrays.load());
+					ImGui::Text("3D textures: %d", statistics.currentNumberOfTexture3Ds.load());
+					ImGui::Text("Cubes textures: %d", statistics.currentNumberOfTextureCubes.load());
+					ImGui::Text("Pipeline states: %d", statistics.currentNumberOfPipelineStates.load());
+					ImGui::Text("Sampler states: %d", statistics.currentNumberOfSamplerStates.load());
+					ImGui::Text("Vertex shaders: %d", statistics.currentNumberOfVertexShaders.load());
+					ImGui::Text("Tessellation control shaders: %d", statistics.currentNumberOfTessellationControlShaders.load());
+					ImGui::Text("Tessellation evaluation shaders: %d", statistics.currentNumberOfTessellationEvaluationShaders.load());
+					ImGui::Text("Geometry shaders: %d", statistics.currentNumberOfGeometryShaders.load());
+					ImGui::Text("Fragment shaders: %d", statistics.currentNumberOfFragmentShaders.load());
+					ImGui::TreePop();
+				}
+			#endif
 		}
 		ImGui::End();
 	}
