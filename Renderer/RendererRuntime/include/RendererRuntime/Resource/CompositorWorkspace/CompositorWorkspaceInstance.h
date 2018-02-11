@@ -120,6 +120,7 @@ namespace RendererRuntime
 		RENDERERRUNTIME_API_EXPORT void executeVr(Renderer::IRenderTarget& renderTarget, CameraSceneItem* cameraSceneItem, const LightSceneItem* lightSceneItem);	// If "RendererRuntime::IVrManager::isRunning()" is true, virtual reality rendering is used, don't use this method if you want to render e.g. into a texture for other purposes
 		RENDERERRUNTIME_API_EXPORT void execute(Renderer::IRenderTarget& renderTarget, const CameraSceneItem* cameraSceneItem, const LightSceneItem* lightSceneItem, bool singlePassStereoInstancing = false);
 		inline Renderer::IRenderTarget* getExecutionRenderTarget() const;	// Only valid during compositor workspace instance execution
+		inline const Renderer::CommandBuffer& getCommandBuffer() const;
 
 
 	//[-------------------------------------------------------]

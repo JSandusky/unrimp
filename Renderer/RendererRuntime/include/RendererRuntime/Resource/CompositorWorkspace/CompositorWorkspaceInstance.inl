@@ -58,6 +58,11 @@ namespace RendererRuntime
 		return mExecutionRenderTarget;
 	}
 
+	inline const Renderer::CommandBuffer& CompositorWorkspaceInstance::getCommandBuffer() const
+	{
+		return mCommandBuffer;
+	}
+
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]

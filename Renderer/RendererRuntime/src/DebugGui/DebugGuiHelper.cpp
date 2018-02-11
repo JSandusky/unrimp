@@ -349,6 +349,71 @@ namespace RendererRuntime
 				}
 				ImGui::Text("Rendered renderable managers %d", processedRenderableManager.size());
 				ImGui::Text("Rendered renderables %d", numberOfRenderables);
+
+				// Command buffer metrics
+				const Renderer::CommandBuffer& commandBuffer = compositorWorkspaceInstance->getCommandBuffer();
+				#ifdef RENDERER_NO_STATISTICS
+					uint32_t numberOfCommands = 0;
+					{
+						uint8_t* commandPacketBuffer = const_cast<uint8_t*>(commandBuffer.getCommandPacketBuffer());	// TODO(co) Get rid of the evil const-cast
+						Renderer::CommandPacket commandPacket = commandPacketBuffer;
+						while (nullptr != commandPacket)
+						{
+							// Count command packet
+							++numberOfCommands;
+
+							{ // Next command
+								const uint32_t nextCommandPacketByteIndex = Renderer::CommandPacketHelper::getNextCommandPacketByteIndex(commandPacket);
+								commandPacket = (~0u != nextCommandPacketByteIndex) ? &commandPacketBuffer[nextCommandPacketByteIndex] : nullptr;
+							}
+						}
+					}
+				#else
+					const uint32_t numberOfCommands = commandBuffer.getNumberOfCommands();
+				#endif
+				if (ImGui::TreeNode("EmittedCommands", "Emitted commands %d", numberOfCommands))
+				{
+					// Loop through all commands and count them
+					uint32_t numberOfCommandFunctions[Renderer::CommandDispatchFunctionIndex::NumberOfFunctions] = {};
+					uint8_t* commandPacketBuffer = const_cast<uint8_t*>(commandBuffer.getCommandPacketBuffer());	// TODO(co) Get rid of the evil const-cast
+					Renderer::CommandPacket commandPacket = commandPacketBuffer;
+					while (nullptr != commandPacket)
+					{
+						// Count command packet
+						++numberOfCommandFunctions[Renderer::CommandPacketHelper::loadCommandDispatchFunctionIndex(commandPacket)];
+
+						{ // Next command
+							const uint32_t nextCommandPacketByteIndex = Renderer::CommandPacketHelper::getNextCommandPacketByteIndex(commandPacket);
+							commandPacket = (~0u != nextCommandPacketByteIndex) ? &commandPacketBuffer[nextCommandPacketByteIndex] : nullptr;
+						}
+					}
+
+					// Print the number of emitted command functions
+					static const char* commandFunction[Renderer::CommandDispatchFunctionIndex::NumberOfFunctions] =
+					{
+						"ExecuteCommandBuffer",
+						"SetGraphicsRootSignature",
+						"SetGraphicsResourceGroup",
+						"SetPipelineState",
+						"SetVertexArray",
+						"SetViewports",
+						"SetScissorRectangles",
+						"SetRenderTarget",
+						"Clear",
+						"ResolveMultisampleFramebuffer",
+						"CopyResource",
+						"Draw",
+						"DrawIndexed",
+						"SetDebugMarker",
+						"BeginDebugEvent",
+						"EndDebugEvent"
+					};
+					for (uint32_t i = 0; i < Renderer::CommandDispatchFunctionIndex::NumberOfFunctions; ++i)
+					{
+						ImGui::Text("%s: %d", commandFunction[i], numberOfCommandFunctions[i]);
+					}
+					ImGui::TreePop();
+				}
 			}
 		}
 		ImGui::End();

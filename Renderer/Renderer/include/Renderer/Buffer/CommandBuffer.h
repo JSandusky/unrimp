@@ -255,6 +255,21 @@ namespace Renderer
 
 		/**
 		*  @brief
+		*    Return the command packet buffer
+		*
+		*  @return
+		*    The command packet buffer, can be a null pointer, don't destroy the instance
+		*
+		*  @note
+		*    - Internal, don't access the method if you don't have to
+		*/
+		inline const uint8_t* getCommandPacketBuffer() const
+		{
+			return mCommandPacketBuffer;
+		}
+
+		/**
+		*  @brief
 		*    Clear the command buffer
 		*/
 		inline void clear()
@@ -348,24 +363,6 @@ namespace Renderer
 		{
 			renderer.submitCommandBuffer(*this);
 			clear();
-		}
-
-		//[-------------------------------------------------------]
-		//[ Internal                                              ]
-		//[-------------------------------------------------------]
-		/**
-		*  @brief
-		*    Return the command packet buffer
-		*
-		*  @return
-		*    The command packet buffer, can be a null pointer, don't destroy the instance
-		*
-		*  @note
-		*    - Don't put this method into the public interface, there's no need for public access
-		*/
-		const uint8_t* getCommandPacketBuffer() const
-		{
-			return mCommandPacketBuffer;
 		}
 
 

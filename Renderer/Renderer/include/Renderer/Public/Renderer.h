@@ -3051,6 +3051,10 @@ namespace Renderer
 					return mNumberOfCommands;
 				}
 			#endif
+			inline const uint8_t* getCommandPacketBuffer() const
+			{
+				return mCommandPacketBuffer;
+			}
 			inline void clear()
 			{
 				mPreviousCommandPacketByteIndex = ~0u;
