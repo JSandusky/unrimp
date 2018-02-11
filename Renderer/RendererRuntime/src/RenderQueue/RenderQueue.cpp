@@ -117,6 +117,104 @@ namespace
 			}
 		}
 
+		FORCEINLINE void gatherShaderProperties(const RendererRuntime::MaterialResource& materialResource, const RendererRuntime::MaterialBlueprintResource& materialBlueprintResource, const RendererRuntime::MaterialProperties& globalMaterialProperties, const RendererRuntime::Renderable& renderable, bool singlePassStereoInstancing, RendererRuntime::ShaderProperties& shaderProperties, RendererRuntime::DynamicShaderPieces dynamicShaderPieces[RendererRuntime::NUMBER_OF_SHADER_TYPES])
+		{
+			shaderProperties.clear();
+			for (int i = 0; i < RendererRuntime::NUMBER_OF_SHADER_TYPES; ++i)
+			{
+				dynamicShaderPieces[i].clear();
+			}
+			{ // Gather shader properties from static material properties generating shader combinations
+				const RendererRuntime::MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector = materialResource.getSortedPropertyVector();
+				const size_t numberOfMaterialProperties = sortedMaterialPropertyVector.size();
+				for (size_t i = 0; i < numberOfMaterialProperties; ++i)
+				{
+					const RendererRuntime::MaterialProperty& materialProperty = sortedMaterialPropertyVector[i];
+					if (materialProperty.getUsage() == RendererRuntime::MaterialProperty::Usage::SHADER_COMBINATION)
+					{
+						switch (materialProperty.getValueType())
+						{
+							case RendererRuntime::MaterialPropertyValue::ValueType::BOOLEAN:
+								shaderProperties.setPropertyValue(materialProperty.getMaterialPropertyId(), materialProperty.getBooleanValue());
+								break;
+
+							case RendererRuntime::MaterialPropertyValue::ValueType::INTEGER:
+								shaderProperties.setPropertyValue(materialProperty.getMaterialPropertyId(), materialProperty.getIntegerValue());
+								break;
+
+							case RendererRuntime::MaterialPropertyValue::ValueType::GLOBAL_MATERIAL_PROPERTY_ID:
+							{
+								const RendererRuntime::MaterialProperty* globalMaterialProperty = globalMaterialProperties.getPropertyById(materialProperty.getGlobalMaterialPropertyId());
+								if (nullptr != globalMaterialProperty)
+								{
+									setShaderPropertiesPropertyValue(materialProperty.getMaterialPropertyId(), *globalMaterialProperty, shaderProperties);
+								}
+								else
+								{
+									// Try global material property reference fallback
+									globalMaterialProperty = materialBlueprintResource.getMaterialProperties().getPropertyById(materialProperty.getGlobalMaterialPropertyId());
+									if (nullptr != globalMaterialProperty)
+									{
+										setShaderPropertiesPropertyValue(materialProperty.getMaterialPropertyId(), *globalMaterialProperty, shaderProperties);
+									}
+									else
+									{
+										// Error, can't resolve reference
+										assert(false);	// TODO(co) Error handling
+									}
+								}
+								break;
+							}
+
+							case RendererRuntime::MaterialPropertyValue::ValueType::UNKNOWN:
+							case RendererRuntime::MaterialPropertyValue::ValueType::INTEGER_2:
+							case RendererRuntime::MaterialPropertyValue::ValueType::INTEGER_3:
+							case RendererRuntime::MaterialPropertyValue::ValueType::INTEGER_4:
+							case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT:
+							case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_2:
+							case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_3:
+							case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_4:
+							case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_3_3:
+							case RendererRuntime::MaterialPropertyValue::ValueType::FLOAT_4_4:
+							case RendererRuntime::MaterialPropertyValue::ValueType::FILL_MODE:
+							case RendererRuntime::MaterialPropertyValue::ValueType::CULL_MODE:
+							case RendererRuntime::MaterialPropertyValue::ValueType::CONSERVATIVE_RASTERIZATION_MODE:
+							case RendererRuntime::MaterialPropertyValue::ValueType::DEPTH_WRITE_MASK:
+							case RendererRuntime::MaterialPropertyValue::ValueType::STENCIL_OP:
+							case RendererRuntime::MaterialPropertyValue::ValueType::COMPARISON_FUNC:
+							case RendererRuntime::MaterialPropertyValue::ValueType::BLEND:
+							case RendererRuntime::MaterialPropertyValue::ValueType::BLEND_OP:
+							case RendererRuntime::MaterialPropertyValue::ValueType::FILTER_MODE:
+							case RendererRuntime::MaterialPropertyValue::ValueType::TEXTURE_ADDRESS_MODE:
+							case RendererRuntime::MaterialPropertyValue::ValueType::TEXTURE_ASSET_ID:
+							default:
+								assert(false);	// TODO(co) Error handling
+								break;
+						}
+					}
+				}
+			}
+
+			// Automatic "UseGpuSkinning"-property setting
+			if (RendererRuntime::isInitialized(renderable.getSkeletonResourceId()))
+			{
+				static const RendererRuntime::StringId USE_GPU_SKINNING("UseGpuSkinning");
+				if (nullptr != materialBlueprintResource.getMaterialProperties().getPropertyById(USE_GPU_SKINNING))
+				{
+					shaderProperties.setPropertyValue(USE_GPU_SKINNING, 1);
+				}
+			}
+
+			materialBlueprintResource.optimizeShaderProperties(shaderProperties);
+
+			// Automatic build-in "SinglePassStereoInstancing"-property setting
+			if (singlePassStereoInstancing)
+			{
+				static const RendererRuntime::StringId SINGLE_PASS_STEREO_INSTANCING("SinglePassStereoInstancing");
+				shaderProperties.setPropertyValue(SINGLE_PASS_STEREO_INSTANCING, 1);
+			}
+		}
+
 
 //[-------------------------------------------------------]
 //[ Anonymous detail namespace                            ]
@@ -293,100 +391,7 @@ namespace RendererRuntime
 							if (nullptr != materialBlueprintResource && IResource::LoadingState::LOADED == materialBlueprintResource->getLoadingState())
 							{
 								// TODO(co) Gather shader properties (later on we cache as much as possible of this work inside the renderable)
-								mScratchShaderProperties.clear();
-								for (int i = 0; i < NUMBER_OF_SHADER_TYPES; ++i)
-								{
-									mScratchDynamicShaderPieces[i].clear();
-								}
-								{ // Gather shader properties from static material properties generating shader combinations
-									const MaterialProperties::SortedPropertyVector& sortedMaterialPropertyVector = materialResource->getSortedPropertyVector();
-									const size_t numberOfMaterialProperties = sortedMaterialPropertyVector.size();
-									for (size_t i = 0; i < numberOfMaterialProperties; ++i)
-									{
-										const MaterialProperty& materialProperty = sortedMaterialPropertyVector[i];
-										if (materialProperty.getUsage() == MaterialProperty::Usage::SHADER_COMBINATION)
-										{
-											switch (materialProperty.getValueType())
-											{
-												case MaterialPropertyValue::ValueType::BOOLEAN:
-													mScratchShaderProperties.setPropertyValue(materialProperty.getMaterialPropertyId(), materialProperty.getBooleanValue());
-													break;
-
-												case MaterialPropertyValue::ValueType::INTEGER:
-													mScratchShaderProperties.setPropertyValue(materialProperty.getMaterialPropertyId(), materialProperty.getIntegerValue());
-													break;
-
-												case MaterialPropertyValue::ValueType::GLOBAL_MATERIAL_PROPERTY_ID:
-												{
-													const MaterialProperty* globalMaterialProperty = globalMaterialProperties.getPropertyById(materialProperty.getGlobalMaterialPropertyId());
-													if (nullptr != globalMaterialProperty)
-													{
-														::detail::setShaderPropertiesPropertyValue(materialProperty.getMaterialPropertyId(), *globalMaterialProperty, mScratchShaderProperties);
-													}
-													else
-													{
-														// Try global material property reference fallback
-														globalMaterialProperty = materialBlueprintResource->getMaterialProperties().getPropertyById(materialProperty.getGlobalMaterialPropertyId());
-														if (nullptr != globalMaterialProperty)
-														{
-															::detail::setShaderPropertiesPropertyValue(materialProperty.getMaterialPropertyId(), *globalMaterialProperty, mScratchShaderProperties);
-														}
-														else
-														{
-															// Error, can't resolve reference
-															assert(false);	// TODO(co) Error handling
-														}
-													}
-													break;
-												}
-
-												case MaterialPropertyValue::ValueType::UNKNOWN:
-												case MaterialPropertyValue::ValueType::INTEGER_2:
-												case MaterialPropertyValue::ValueType::INTEGER_3:
-												case MaterialPropertyValue::ValueType::INTEGER_4:
-												case MaterialPropertyValue::ValueType::FLOAT:
-												case MaterialPropertyValue::ValueType::FLOAT_2:
-												case MaterialPropertyValue::ValueType::FLOAT_3:
-												case MaterialPropertyValue::ValueType::FLOAT_4:
-												case MaterialPropertyValue::ValueType::FLOAT_3_3:
-												case MaterialPropertyValue::ValueType::FLOAT_4_4:
-												case MaterialPropertyValue::ValueType::FILL_MODE:
-												case MaterialPropertyValue::ValueType::CULL_MODE:
-												case MaterialPropertyValue::ValueType::CONSERVATIVE_RASTERIZATION_MODE:
-												case MaterialPropertyValue::ValueType::DEPTH_WRITE_MASK:
-												case MaterialPropertyValue::ValueType::STENCIL_OP:
-												case MaterialPropertyValue::ValueType::COMPARISON_FUNC:
-												case MaterialPropertyValue::ValueType::BLEND:
-												case MaterialPropertyValue::ValueType::BLEND_OP:
-												case MaterialPropertyValue::ValueType::FILTER_MODE:
-												case MaterialPropertyValue::ValueType::TEXTURE_ADDRESS_MODE:
-												case MaterialPropertyValue::ValueType::TEXTURE_ASSET_ID:
-												default:
-													assert(false);	// TODO(co) Error handling
-													break;
-											}
-										}
-									}
-								}
-
-								// Automatic "UseGpuSkinning"-property setting
-								if (isInitialized(renderable.getSkeletonResourceId()))
-								{
-									static const StringId USE_GPU_SKINNING("UseGpuSkinning");
-									if (nullptr != materialBlueprintResource->getMaterialProperties().getPropertyById(USE_GPU_SKINNING))
-									{
-										mScratchShaderProperties.setPropertyValue(USE_GPU_SKINNING, 1);
-									}
-								}
-
-								materialBlueprintResource->optimizeShaderProperties(mScratchShaderProperties);
-
-								// Automatic build-in "SinglePassStereoInstancing"-property setting
-								if (singlePassStereoInstancing)
-								{
-									static const StringId SINGLE_PASS_STEREO_INSTANCING("SinglePassStereoInstancing");
-									mScratchShaderProperties.setPropertyValue(SINGLE_PASS_STEREO_INSTANCING, 1);
-								}
+								::detail::gatherShaderProperties(*materialResource, *materialBlueprintResource, globalMaterialProperties, renderable, singlePassStereoInstancing, mScratchShaderProperties, mScratchDynamicShaderPieces);
 
 								Renderer::IPipelineStatePtr pipelineStatePtr = materialBlueprintResource->getPipelineStateCacheManager().getPipelineStateCacheByCombination(materialTechnique->getSerializedPipelineStateHash(), mScratchShaderProperties, mScratchDynamicShaderPieces, false);
 								if (nullptr != pipelineStatePtr)

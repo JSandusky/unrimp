@@ -355,16 +355,16 @@ namespace RendererRuntime
 				#ifdef RENDERER_NO_STATISTICS
 					uint32_t numberOfCommands = 0;
 					{
-						uint8_t* commandPacketBuffer = const_cast<uint8_t*>(commandBuffer.getCommandPacketBuffer());	// TODO(co) Get rid of the evil const-cast
-						Renderer::CommandPacket commandPacket = commandPacketBuffer;
-						while (nullptr != commandPacket)
+						const uint8_t* commandPacketBuffer = commandBuffer.getCommandPacketBuffer();
+						Renderer::ConstCommandPacket constCommandPacket = commandPacketBuffer;
+						while (nullptr != constCommandPacket)
 						{
 							// Count command packet
 							++numberOfCommands;
 
 							{ // Next command
-								const uint32_t nextCommandPacketByteIndex = Renderer::CommandPacketHelper::getNextCommandPacketByteIndex(commandPacket);
-								commandPacket = (~0u != nextCommandPacketByteIndex) ? &commandPacketBuffer[nextCommandPacketByteIndex] : nullptr;
+								const uint32_t nextCommandPacketByteIndex = Renderer::CommandPacketHelper::getNextCommandPacketByteIndex(constCommandPacket);
+								constCommandPacket = (~0u != nextCommandPacketByteIndex) ? &commandPacketBuffer[nextCommandPacketByteIndex] : nullptr;
 							}
 						}
 					}
@@ -375,16 +375,16 @@ namespace RendererRuntime
 				{
 					// Loop through all commands and count them
 					uint32_t numberOfCommandFunctions[Renderer::CommandDispatchFunctionIndex::NumberOfFunctions] = {};
-					uint8_t* commandPacketBuffer = const_cast<uint8_t*>(commandBuffer.getCommandPacketBuffer());	// TODO(co) Get rid of the evil const-cast
-					Renderer::CommandPacket commandPacket = commandPacketBuffer;
-					while (nullptr != commandPacket)
+					const uint8_t* commandPacketBuffer = commandBuffer.getCommandPacketBuffer();
+					Renderer::ConstCommandPacket constCommandPacket = commandPacketBuffer;
+					while (nullptr != constCommandPacket)
 					{
 						// Count command packet
-						++numberOfCommandFunctions[Renderer::CommandPacketHelper::loadCommandDispatchFunctionIndex(commandPacket)];
+						++numberOfCommandFunctions[Renderer::CommandPacketHelper::loadCommandDispatchFunctionIndex(constCommandPacket)];
 
 						{ // Next command
-							const uint32_t nextCommandPacketByteIndex = Renderer::CommandPacketHelper::getNextCommandPacketByteIndex(commandPacket);
-							commandPacket = (~0u != nextCommandPacketByteIndex) ? &commandPacketBuffer[nextCommandPacketByteIndex] : nullptr;
+							const uint32_t nextCommandPacketByteIndex = Renderer::CommandPacketHelper::getNextCommandPacketByteIndex(constCommandPacket);
+							constCommandPacket = (~0u != nextCommandPacketByteIndex) ? &commandPacketBuffer[nextCommandPacketByteIndex] : nullptr;
 						}
 					}
 

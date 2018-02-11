@@ -1665,19 +1665,19 @@ namespace OpenGLES3Renderer
 	void OpenGLES3Renderer::submitCommandBuffer(const Renderer::CommandBuffer& commandBuffer)
 	{
 		// Loop through all commands
-		uint8_t* commandPacketBuffer = const_cast<uint8_t*>(commandBuffer.getCommandPacketBuffer());	// TODO(co) Get rid of the evil const-cast
-		Renderer::CommandPacket commandPacket = commandPacketBuffer;
-		while (nullptr != commandPacket)
+		const uint8_t* commandPacketBuffer = commandBuffer.getCommandPacketBuffer();
+		Renderer::ConstCommandPacket constCommandPacket = commandPacketBuffer;
+		while (nullptr != constCommandPacket)
 		{
 			{ // Submit command packet
-				const Renderer::CommandDispatchFunctionIndex commandDispatchFunctionIndex = Renderer::CommandPacketHelper::loadCommandDispatchFunctionIndex(commandPacket);
-				const void* command = Renderer::CommandPacketHelper::loadCommand(commandPacket);
+				const Renderer::CommandDispatchFunctionIndex commandDispatchFunctionIndex = Renderer::CommandPacketHelper::loadCommandDispatchFunctionIndex(constCommandPacket);
+				const void* command = Renderer::CommandPacketHelper::loadCommand(constCommandPacket);
 				detail::DISPATCH_FUNCTIONS[commandDispatchFunctionIndex](command, *this);
 			}
 
 			{ // Next command
-				const uint32_t nextCommandPacketByteIndex = Renderer::CommandPacketHelper::getNextCommandPacketByteIndex(commandPacket);
-				commandPacket = (~0u != nextCommandPacketByteIndex) ? &commandPacketBuffer[nextCommandPacketByteIndex] : nullptr;
+				const uint32_t nextCommandPacketByteIndex = Renderer::CommandPacketHelper::getNextCommandPacketByteIndex(constCommandPacket);
+				constCommandPacket = (~0u != nextCommandPacketByteIndex) ? &commandPacketBuffer[nextCommandPacketByteIndex] : nullptr;
 			}
 		}
 	}

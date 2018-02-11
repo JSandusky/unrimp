@@ -2975,6 +2975,7 @@ namespace Renderer
 		};
 		typedef void (*BackendDispatchFunction)(const void*, IRenderer& renderer);
 		typedef void* CommandPacket;
+		typedef const void* ConstCommandPacket;
 		namespace CommandPacketHelper
 		{
 			static const uint32_t OFFSET_NEXT_COMMAND_PACKET_BYTE_INDEX	= 0u;
@@ -2987,7 +2988,11 @@ namespace Renderer
 			}
 			inline uint32_t getNextCommandPacketByteIndex(const CommandPacket commandPacket)
 			{
-				return *reinterpret_cast<uint32_t*>(reinterpret_cast<uint8_t*>(commandPacket) + OFFSET_NEXT_COMMAND_PACKET_BYTE_INDEX);
+				return *reinterpret_cast<const uint32_t*>(reinterpret_cast<const uint8_t*>(commandPacket) + OFFSET_NEXT_COMMAND_PACKET_BYTE_INDEX);
+			}
+			inline uint32_t getNextCommandPacketByteIndex(const ConstCommandPacket constCommandPacket)
+			{
+				return *reinterpret_cast<const uint32_t*>(reinterpret_cast<const uint8_t*>(constCommandPacket) + OFFSET_NEXT_COMMAND_PACKET_BYTE_INDEX);
 			}
 			inline void storeNextCommandPacketByteIndex(const CommandPacket commandPacket, uint32_t nextPacketByteIndex)
 			{
@@ -2997,6 +3002,10 @@ namespace Renderer
 			{
 				return reinterpret_cast<CommandDispatchFunctionIndex*>(reinterpret_cast<uint8_t*>(commandPacket) + OFFSET_BACKEND_DISPATCH_FUNCTION);
 			}
+			inline const CommandDispatchFunctionIndex* getCommandDispatchFunctionIndex(const ConstCommandPacket constCommandPacket)
+			{
+				return reinterpret_cast<const CommandDispatchFunctionIndex*>(reinterpret_cast<const uint8_t*>(constCommandPacket) + OFFSET_BACKEND_DISPATCH_FUNCTION);
+			}
 			inline void storeBackendDispatchFunctionIndex(const CommandPacket commandPacket, CommandDispatchFunctionIndex commandDispatchFunctionIndex)
 			{
 				*getCommandDispatchFunctionIndex(commandPacket) = commandDispatchFunctionIndex;
@@ -3004,6 +3013,10 @@ namespace Renderer
 			inline CommandDispatchFunctionIndex loadCommandDispatchFunctionIndex(const CommandPacket commandPacket)
 			{
 				return *getCommandDispatchFunctionIndex(commandPacket);
+			}
+			inline CommandDispatchFunctionIndex loadCommandDispatchFunctionIndex(const ConstCommandPacket constCommandPacket)
+			{
+				return *getCommandDispatchFunctionIndex(constCommandPacket);
 			}
 			template <typename T>
 			T* getCommand(const CommandPacket commandPacket)
@@ -3013,6 +3026,10 @@ namespace Renderer
 			inline const void* loadCommand(const CommandPacket commandPacket)
 			{
 				return reinterpret_cast<uint8_t*>(commandPacket) + OFFSET_COMMAND;
+			}
+			inline const void* loadCommand(const ConstCommandPacket constCommandPacket)
+			{
+				return reinterpret_cast<const uint8_t*>(constCommandPacket) + OFFSET_COMMAND;
 			}
 			template <typename T>
 			uint8_t* getAuxiliaryMemory(T* command)
