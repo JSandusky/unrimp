@@ -278,7 +278,7 @@ void FirstInstancing::onDraw()
 	if (nullptr != renderer)
 	{
 		// Submit command buffer to the renderer backend
-		mCommandBuffer.submit(*renderer);
+		mCommandBuffer.submitToRenderer(*renderer);
 	}
 }
 

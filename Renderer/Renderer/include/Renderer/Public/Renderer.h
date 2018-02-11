@@ -2311,7 +2311,7 @@ namespace Renderer
 		public:
 			virtual ~IRootSignature() override;
 		public:
-			virtual IResourceGroup* createResourceGroup(uint32_t rootParameterIndex, uint32_t numberOfResources, IResource** resources, Renderer::ISamplerState** samplerStates = nullptr) = 0;
+			virtual IResourceGroup* createResourceGroup(uint32_t rootParameterIndex, uint32_t numberOfResources, IResource** resources, ISamplerState** samplerStates = nullptr) = 0;
 		protected:
 			explicit IRootSignature(IRenderer& renderer);
 			explicit IRootSignature(const IRootSignature& source) = delete;
@@ -3113,13 +3113,60 @@ namespace Renderer
 				#endif
 				return CommandPacketHelper::getCommand<U>(commandPacket);
 			}
-			inline void submit(IRenderer& renderer) const
+			inline void submitToRenderer(IRenderer& renderer) const
 			{
 				renderer.submitCommandBuffer(*this);
 			}
-			inline void submitAndClear(IRenderer& renderer)
+			inline void submitToRendererAndClear(IRenderer& renderer)
 			{
 				renderer.submitCommandBuffer(*this);
+				clear();
+			}
+			inline void submitToCommandBuffer(CommandBuffer& commandBuffer) const
+			{
+				#ifdef RENDERER_DEBUG
+					assert((this != &commandBuffer) && "Can't submit a command buffer to itself");
+					assert(!isEmpty() && "Can't submit empty command buffers");
+				#endif
+				const uint32_t numberOfCommandBytes = mCurrentCommandPacketByteIndex;
+				#ifdef RENDERER_DEBUG
+					assert((static_cast<uint64_t>(commandBuffer.mCurrentCommandPacketByteIndex) + numberOfCommandBytes) < 4294967295u);
+				#endif
+				if (commandBuffer.mCommandPacketBufferNumberOfBytes < commandBuffer.mCurrentCommandPacketByteIndex + numberOfCommandBytes)
+				{
+					const uint32_t newCommandPacketBufferNumberOfBytes = commandBuffer.mCommandPacketBufferNumberOfBytes + NUMBER_OF_BYTES_TO_GROW + numberOfCommandBytes;
+					uint8_t* newCommandPacketBuffer = new uint8_t[newCommandPacketBufferNumberOfBytes];
+					if (nullptr != commandBuffer.mCommandPacketBuffer)
+					{
+						memcpy(newCommandPacketBuffer, commandBuffer.mCommandPacketBuffer, commandBuffer.mCommandPacketBufferNumberOfBytes);
+						delete [] commandBuffer.mCommandPacketBuffer;
+					}
+					commandBuffer.mCommandPacketBuffer = newCommandPacketBuffer;
+					commandBuffer.mCommandPacketBufferNumberOfBytes = newCommandPacketBufferNumberOfBytes;
+				}
+				memcpy(&commandBuffer.mCommandPacketBuffer[commandBuffer.mCurrentCommandPacketByteIndex], mCommandPacketBuffer, mCurrentCommandPacketByteIndex);
+				if (~0u != commandBuffer.mPreviousCommandPacketByteIndex)
+				{
+					CommandPacketHelper::storeNextCommandPacketByteIndex(&commandBuffer.mCommandPacketBuffer[commandBuffer.mPreviousCommandPacketByteIndex], commandBuffer.mCurrentCommandPacketByteIndex);
+				}
+				CommandPacket commandPacket = &commandBuffer.mCommandPacketBuffer[commandBuffer.mCurrentCommandPacketByteIndex];
+				uint32_t nextCommandPacketByteIndex = CommandPacketHelper::getNextCommandPacketByteIndex(commandPacket);
+				while (~0u != nextCommandPacketByteIndex)
+				{
+					nextCommandPacketByteIndex = commandBuffer.mCurrentCommandPacketByteIndex + nextCommandPacketByteIndex;
+					CommandPacketHelper::storeNextCommandPacketByteIndex(commandPacket, nextCommandPacketByteIndex);
+					commandPacket = &commandBuffer.mCommandPacketBuffer[nextCommandPacketByteIndex];
+					nextCommandPacketByteIndex = CommandPacketHelper::getNextCommandPacketByteIndex(commandPacket);
+				}
+				commandBuffer.mPreviousCommandPacketByteIndex = commandBuffer.mCurrentCommandPacketByteIndex + mPreviousCommandPacketByteIndex;
+				commandBuffer.mCurrentCommandPacketByteIndex += mCurrentCommandPacketByteIndex;
+				#ifndef RENDERER_NO_STATISTICS
+					commandBuffer.mNumberOfCommands += mNumberOfCommands;
+				#endif
+			}
+			inline void submitToCommandBufferAndClear(CommandBuffer& commandBuffer)
+			{
+				submitToCommandBuffer(commandBuffer);
 				clear();
 			}
 		private:

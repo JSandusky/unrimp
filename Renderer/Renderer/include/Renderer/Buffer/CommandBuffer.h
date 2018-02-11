@@ -368,7 +368,7 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Renderer to submit the command buffer to
 		*/
-		inline void submit(IRenderer& renderer) const
+		inline void submitToRenderer(IRenderer& renderer) const
 		{
 			renderer.submitCommandBuffer(*this);
 		}
@@ -380,9 +380,89 @@ namespace Renderer
 		*  @param[in] renderer
 		*    Renderer to submit the command buffer to
 		*/
-		inline void submitAndClear(IRenderer& renderer)
+		inline void submitToRendererAndClear(IRenderer& renderer)
 		{
 			renderer.submitCommandBuffer(*this);
+			clear();
+		}
+
+		/**
+		*  @brief
+		*    Submit the command buffer to another command buffer without flushing; use this for recording command buffers once and submit them multiple times
+		*
+		*  @param[in] commandBuffer
+		*    Command buffer to submit the command buffer to
+		*/
+		inline void submitToCommandBuffer(CommandBuffer& commandBuffer) const
+		{
+			// Sanity check
+			assert((this != &commandBuffer) && "Can't submit a command buffer to itself");
+			assert(!isEmpty() && "Can't submit empty command buffers");
+
+			// How many command package buffer bytes are consumed by the command to add?
+			const uint32_t numberOfCommandBytes = mCurrentCommandPacketByteIndex;
+
+			// 4294967295 is the maximum value of an "uint32_t"-type: Check for overflow
+			// -> We use the magic number here to avoid "std::numeric_limits::max()" usage
+			assert((static_cast<uint64_t>(commandBuffer.mCurrentCommandPacketByteIndex) + numberOfCommandBytes) < 4294967295u);
+
+			// Grow command packet buffer, if required
+			if (commandBuffer.mCommandPacketBufferNumberOfBytes < commandBuffer.mCurrentCommandPacketByteIndex + numberOfCommandBytes)
+			{
+				// Allocate new memory, grow using a known value but do also add the number of bytes consumed by the current command to add (many auxiliary bytes might be requested)
+				const uint32_t newCommandPacketBufferNumberOfBytes = commandBuffer.mCommandPacketBufferNumberOfBytes + NUMBER_OF_BYTES_TO_GROW + numberOfCommandBytes;
+				uint8_t* newCommandPacketBuffer = new uint8_t[newCommandPacketBufferNumberOfBytes];
+
+				// Copy over current command package buffer content and free it, if required
+				if (nullptr != commandBuffer.mCommandPacketBuffer)
+				{
+					memcpy(newCommandPacketBuffer, commandBuffer.mCommandPacketBuffer, commandBuffer.mCommandPacketBufferNumberOfBytes);
+					delete [] commandBuffer.mCommandPacketBuffer;
+				}
+
+				// Finalize
+				commandBuffer.mCommandPacketBuffer = newCommandPacketBuffer;
+				commandBuffer.mCommandPacketBufferNumberOfBytes = newCommandPacketBufferNumberOfBytes;
+			}
+
+			// Copy over the command buffer in one burst
+			memcpy(&commandBuffer.mCommandPacketBuffer[commandBuffer.mCurrentCommandPacketByteIndex], mCommandPacketBuffer, mCurrentCommandPacketByteIndex);
+
+			// Setup previous command package
+			if (~0u != commandBuffer.mPreviousCommandPacketByteIndex)
+			{
+				CommandPacketHelper::storeNextCommandPacketByteIndex(&commandBuffer.mCommandPacketBuffer[commandBuffer.mPreviousCommandPacketByteIndex], commandBuffer.mCurrentCommandPacketByteIndex);
+			}
+
+			// Update command package indices
+			CommandPacket commandPacket = &commandBuffer.mCommandPacketBuffer[commandBuffer.mCurrentCommandPacketByteIndex];
+			uint32_t nextCommandPacketByteIndex = CommandPacketHelper::getNextCommandPacketByteIndex(commandPacket);
+			while (~0u != nextCommandPacketByteIndex)
+			{
+				nextCommandPacketByteIndex = commandBuffer.mCurrentCommandPacketByteIndex + nextCommandPacketByteIndex;
+				CommandPacketHelper::storeNextCommandPacketByteIndex(commandPacket, nextCommandPacketByteIndex);
+				commandPacket = &commandBuffer.mCommandPacketBuffer[nextCommandPacketByteIndex];
+				nextCommandPacketByteIndex = CommandPacketHelper::getNextCommandPacketByteIndex(commandPacket);
+			}
+
+			// Finalize
+			commandBuffer.mPreviousCommandPacketByteIndex = commandBuffer.mCurrentCommandPacketByteIndex + mPreviousCommandPacketByteIndex;
+			commandBuffer.mCurrentCommandPacketByteIndex += mCurrentCommandPacketByteIndex;
+			#ifndef RENDERER_NO_STATISTICS
+				commandBuffer.mNumberOfCommands += mNumberOfCommands;
+			#endif
+		}
+
+		/**
+		*  @brief
+		*    Submit the command buffer to another command buffer and clear so the command buffer is empty again
+		*
+		*  @param[in] commandBuffer
+		*    Command buffer to submit the command buffer to
+		*/
+		inline void submitToCommandBufferAndClear(CommandBuffer& commandBuffer)
+		{
+			submitToCommandBuffer(commandBuffer);
 			clear();
 		}
 

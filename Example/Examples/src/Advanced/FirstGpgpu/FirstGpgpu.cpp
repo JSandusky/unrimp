@@ -384,11 +384,11 @@ void FirstGpgpu::onDoJob()
 {
 	// Generate the content of the 2D texture to process later on
 	// -> After this step, "mTexture2D[0]" holds the content we want to process later on
-	mCommandBufferContentGeneration.submit(*mRenderer);
+	mCommandBufferContentGeneration.submitToRenderer(*mRenderer);
 
 	// Content processing
 	// -> After this step, "mTexture2D[1]" holds the processed content
-	mCommandBufferContentProcessing.submit(*mRenderer);
+	mCommandBufferContentProcessing.submitToRenderer(*mRenderer);
 
 	// TODO(co) "Renderer::IRenderer::map()"/"Renderer::IRenderer::unmap()" are currently under construction
 	// Map the texture holding the processed content

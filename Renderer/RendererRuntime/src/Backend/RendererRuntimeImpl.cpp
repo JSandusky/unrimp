@@ -29,6 +29,7 @@
 #include "RendererRuntime/Core/File/IFileManager.h"
 #include "RendererRuntime/Core/Thread/ThreadPool.h"
 #include "RendererRuntime/Resource/Detail/ResourceStreamer.h"
+#include "RendererRuntime/Resource/Detail/RendererResourceManager.h"
 #include "RendererRuntime/Resource/Mesh/MeshResourceManager.h"
 #include "RendererRuntime/Resource/Scene/SceneResourceManager.h"
 #include "RendererRuntime/Resource/ShaderPiece/ShaderPieceResourceManager.h"
@@ -177,6 +178,7 @@ namespace RendererRuntime
 		mTimeManager = new TimeManager();
 
 		// Create the resource manager instances
+		mRendererResourceManager = new RendererResourceManager(*this);
 		mResourceStreamer = new ResourceStreamer(*this);
 		mVertexAttributesResourceManager = new VertexAttributesResourceManager(*this);
 		mTextureResourceManager = new TextureResourceManager(*this);
@@ -262,6 +264,7 @@ namespace RendererRuntime
 		// Release the texture and buffer manager instance
 		mTextureManager->releaseReference();
 		mBufferManager->releaseReference();
+		delete mRendererResourceManager;
 
 		// Release our renderer reference
 		mRenderer->releaseReference();

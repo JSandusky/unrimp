@@ -257,6 +257,6 @@ void InstancedCubes::onDraw()
 		}
 
 		// Submit command buffer to the renderer backend
-		mCommandBuffer.submitAndClear(*renderer);
+		mCommandBuffer.submitToRendererAndClear(*renderer);
 	}
 }

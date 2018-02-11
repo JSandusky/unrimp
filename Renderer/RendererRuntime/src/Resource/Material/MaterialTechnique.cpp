@@ -23,13 +23,14 @@
 //[-------------------------------------------------------]
 #include "RendererRuntime/PrecompiledHeader.h"
 #include "RendererRuntime/Resource/Material/MaterialTechnique.h"
-#include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/Material/MaterialResource.h"
+#include "RendererRuntime/Resource/Material/MaterialResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResourceManager.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/MaterialBlueprintResource.h"
 #include "RendererRuntime/Resource/MaterialBlueprint/BufferManager/MaterialBufferManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResourceManager.h"
 #include "RendererRuntime/Resource/Texture/TextureResource.h"
+#include "RendererRuntime/Resource/Detail/RendererResourceManager.h"
 #include "RendererRuntime/Core/Math/Math.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
@@ -140,24 +141,28 @@ namespace RendererRuntime
 		return mTextures;
 	}
 
-	bool MaterialTechnique::fillCommandBuffer(const IRendererRuntime& rendererRuntime, Renderer::CommandBuffer& commandBuffer)
+	void MaterialTechnique::fillCommandBuffer(const IRendererRuntime& rendererRuntime, Renderer::CommandBuffer& commandBuffer, uint32_t& textureResourceGroupRootParameterIndex, Renderer::IResourceGroup** textureResourceGroup)
 	{
-		bool assignedMaterialPoolChange = false;
-
 		// Sanity check
 		assert(isInitialized(mMaterialBlueprintResourceId));
+		assert((nullptr != textureResourceGroup) && "The renderer texture resource group pointer must be valid");
 
 		{ // Bind the material buffer manager
 			MaterialBufferManager* materialBufferManager = getMaterialBufferManager();
 			if (nullptr != materialBufferManager)
 			{
-				assignedMaterialPoolChange = materialBufferManager->fillCommandBuffer(*this, commandBuffer);
+				materialBufferManager->fillCommandBuffer(*this, commandBuffer);
 			}
 		}
 
 		// Set textures
 		const Textures& textures = getTextures(rendererRuntime);
-		if (!textures.empty())
+		if (textures.empty())
+		{
+			setUninitialized(textureResourceGroupRootParameterIndex);
+			*textureResourceGroup = nullptr;
+		}
+		else
 		{
 			// Create texture resource group, if needed
 			if (nullptr == mTextureResourceGroup)
@@ -218,16 +223,14 @@ namespace RendererRuntime
 					}
 				}
 				// TODO(co) All textures need to be inside the same resource group, this needs to be guaranteed by design
-				mTextureResourceGroup = materialBlueprintResource->getRootSignaturePtr()->createResourceGroup(textures[0].rootParameterIndex, static_cast<uint32_t>(numberOfTextures), textureResources.data(), samplerStates.data());
+				mTextureResourceGroup = rendererRuntime.getRendererResourceManager().createResourceGroup(*materialBlueprintResource->getRootSignaturePtr(), textures[0].rootParameterIndex, static_cast<uint32_t>(numberOfTextures), textureResources.data(), samplerStates.data());
 				RENDERER_SET_RESOURCE_DEBUG_NAME(mTextureResourceGroup, "Material technique")
 			}
 
-			// Set resource group
-			Renderer::Command::SetGraphicsResourceGroup::create(commandBuffer, textures[0].rootParameterIndex, mTextureResourceGroup);
+			// Tell the caller about the resource group
+			textureResourceGroupRootParameterIndex = textures[0].rootParameterIndex;
+			*textureResourceGroup = mTextureResourceGroup;
 		}
-
-		// Done
-		return assignedMaterialPoolChange;
 	}
 
 

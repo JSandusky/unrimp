@@ -242,7 +242,7 @@ namespace RendererRuntime
 					materialBlueprintResourceManager.onPreCommandBufferExecution();
 
 					// Submit command buffer to the renderer backend
-					mCommandBuffer.submit(renderer);
+					mCommandBuffer.submitToRenderer(renderer);
 
 					// The command buffer has been submitted, inform everyone who cares about this
 					for (const CompositorNodeInstance* compositorNodeInstance : mSequentialCompositorNodeInstances)

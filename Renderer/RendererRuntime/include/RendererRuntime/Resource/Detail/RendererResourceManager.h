@@ -27,7 +27,8 @@
 //[-------------------------------------------------------]
 //[ Includes                                              ]
 //[-------------------------------------------------------]
-#include "Renderer/IResource.h"
+#include <inttypes.h>	// For uint32_t, uint64_t etc.
+#include <unordered_map>
 
 
 //[-------------------------------------------------------]
@@ -35,15 +36,21 @@
 //[-------------------------------------------------------]
 namespace Renderer
 {
+	class IResource;
 	class ISamplerState;
+	class IRootSignature;
 	class IResourceGroup;
+}
+namespace RendererRuntime
+{
+	class IRendererRuntime;
 }
 
 
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-namespace Renderer
+namespace RendererRuntime
 {
 
 
@@ -52,82 +59,60 @@ namespace Renderer
 	//[-------------------------------------------------------]
 	/**
 	*  @brief
-	*    Abstract root signature ("pipeline layout" in Vulkan terminology) interface
-	*
-	*  @note
-	*    - Overview of the binding models of explicit APIs: "Choosing a binding model" - https://github.com/gpuweb/gpuweb/issues/19
+	*    Renderer resource manager
 	*/
-	class IRootSignature : public IResource
+	class RendererResourceManager final
 	{
+
+
+	//[-------------------------------------------------------]
+	//[ Friends                                               ]
+	//[-------------------------------------------------------]
+		friend class RendererRuntimeImpl;
 
 
 	//[-------------------------------------------------------]
 	//[ Public methods                                        ]
 	//[-------------------------------------------------------]
 	public:
-		/**
-		*  @brief
-		*    Destructor
-		*/
-		inline virtual ~IRootSignature() override;
+		Renderer::IResourceGroup* createResourceGroup(Renderer::IRootSignature& rootSignature, uint32_t rootParameterIndex, uint32_t numberOfResources, Renderer::IResource** resources, Renderer::ISamplerState** samplerStates = nullptr);
 
 
 	//[-------------------------------------------------------]
-	//[ Public virtual Renderer::IRootSignature methods       ]
+	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
-	public:
-		/**
-		*  @brief
-		*    Create a resource group instance
-		*
-		*  @param[in] rootParameterIndex
-		*    The root parameter index number for binding
-		*  @param[in] numberOfResources
-		*    Number of resources, having no resources is invalid
-		*  @param[in] resources
-		*    At least "numberOfResources" resource pointers, must be valid, the resource group will keep a reference to the resources
-		*  @param[in] samplerStates
-		*    If not a null pointer at least "numberOfResources" sampler state pointers, must be valid if there's at least one texture resource, the resource group will keep a reference to the sampler states
-		*
-		*  @return
-		*    The created resource group instance, a null pointer on error. Release the returned instance if you no longer need it.
-		*/
-		virtual IResourceGroup* createResourceGroup(uint32_t rootParameterIndex, uint32_t numberOfResources, IResource** resources, ISamplerState** samplerStates = nullptr) = 0;
+	private:
+		inline explicit RendererResourceManager(IRendererRuntime& rendererRuntime);
+		~RendererResourceManager();
+		explicit RendererResourceManager(const RendererResourceManager&) = delete;
+		RendererResourceManager& operator=(const RendererResourceManager&) = delete;
 
 
 	//[-------------------------------------------------------]
-	//[ Protected methods                                     ]
+	//[ Private definitions                                   ]
 	//[-------------------------------------------------------]
-	protected:
-		/**
-		*  @brief
-		*    Constructor
-		*
-		*  @param[in] renderer
-		*    Owner renderer instance
-		*/
-		inline explicit IRootSignature(IRenderer& renderer);
+	private:
+		typedef std::unordered_map<uint32_t, Renderer::IResourceGroup*> ResourceGroups;
 
-		explicit IRootSignature(const IRootSignature& source) = delete;
-		IRootSignature& operator =(const IRootSignature& source) = delete;
+
+	//[-------------------------------------------------------]
+	//[ Private data                                          ]
+	//[-------------------------------------------------------]
+	private:
+		IRendererRuntime& mRendererRuntime;	///< Renderer runtime instance, do not destroy the instance
+		ResourceGroups	  mResourceGroups;
 
 
 	};
 
 
-	//[-------------------------------------------------------]
-	//[ Type definitions                                      ]
-	//[-------------------------------------------------------]
-	typedef SmartRefCount<IRootSignature> IRootSignaturePtr;
-
-
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
-} // Renderer
+} // RendererRuntime
 
 
 //[-------------------------------------------------------]
 //[ Implementation                                        ]
 //[-------------------------------------------------------]
-#include "Renderer/IRootSignature.inl"
+#include "RendererRuntime/Resource/Detail/RendererResourceManager.inl"

@@ -100,6 +100,7 @@
     <None Include="include\RendererRuntime\Resource\Detail\IResource.inl" />
     <None Include="include\RendererRuntime\Resource\Detail\IResourceLoader.inl" />
     <None Include="include\RendererRuntime\Resource\Detail\IResourceManager.inl" />
+    <None Include="include\RendererRuntime\Resource\Detail\RendererResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\Detail\ResourceManager.inl" />
     <None Include="include\RendererRuntime\Resource\Detail\ResourceManagerTemplate.inl" />
     <None Include="include\RendererRuntime\Resource\Detail\ResourceStreamer.inl" />
@@ -281,6 +282,7 @@
     <ClInclude Include="include\RendererRuntime\Resource\Detail\IResource.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Detail\IResourceLoader.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Detail\IResourceManager.h" />
+    <ClInclude Include="include\RendererRuntime\Resource\Detail\RendererResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Detail\ResourceManager.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Detail\ResourceManagerTemplate.h" />
     <ClInclude Include="include\RendererRuntime\Resource\Detail\ResourceStreamer.h" />
@@ -625,6 +627,7 @@
     <ClCompile Include="src\Resource\CompositorWorkspace\CompositorWorkspaceResourceManager.cpp" />
     <ClCompile Include="src\Resource\CompositorWorkspace\Loader\CompositorWorkspaceResourceLoader.cpp" />
     <ClCompile Include="src\Resource\Detail\IResource.cpp" />
+    <ClCompile Include="src\Resource\Detail\RendererResourceManager.cpp" />
     <ClCompile Include="src\Resource\Detail\ResourceStreamer.cpp" />
     <ClCompile Include="src\Resource\IResourceListener.cpp" />
     <ClCompile Include="src\Resource\MaterialBlueprint\BufferManager\IndirectBufferManager.cpp" />

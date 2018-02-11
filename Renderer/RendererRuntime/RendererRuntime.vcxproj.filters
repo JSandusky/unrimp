@@ -654,6 +654,9 @@
     <None Include="include\RendererRuntime\Resource\Scene\Item\Particles\ParticlesSceneItem.inl">
       <Filter>Source Files\Resource\Scene\Item\Particles</Filter>
     </None>
+    <None Include="include\RendererRuntime\Resource\Detail\RendererResourceManager.inl">
+      <Filter>Source Files\Resource\Detail</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\RendererRuntime\IRendererRuntime.h">
@@ -1292,6 +1295,9 @@
     <ClInclude Include="include\RendererRuntime\Resource\Scene\Item\Particles\ParticlesSceneItem.h">
       <Filter>Source Files\Resource\Scene\Item\Particles</Filter>
     </ClInclude>
+    <ClInclude Include="include\RendererRuntime\Resource\Detail\RendererResourceManager.h">
+      <Filter>Source Files\Resource\Detail</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Backend\RendererRuntimeImpl.cpp">
@@ -1695,6 +1701,9 @@
     </ClCompile>
     <ClCompile Include="src\Resource\Scene\Item\Particles\ParticlesSceneItem.cpp">
       <Filter>Source Files\Resource\Scene\Item\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource\Detail\RendererResourceManager.cpp">
+      <Filter>Source Files\Resource\Detail</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

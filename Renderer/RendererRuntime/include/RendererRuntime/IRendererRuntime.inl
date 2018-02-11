@@ -73,6 +73,11 @@ namespace RendererRuntime
 		return *mTimeManager;
 	}
 
+	inline RendererResourceManager& IRendererRuntime::getRendererResourceManager() const
+	{
+		return *mRendererResourceManager;
+	}
+
 	inline ResourceStreamer& IRendererRuntime::getResourceStreamer() const
 	{
 		return *mResourceStreamer;

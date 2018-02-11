@@ -166,11 +166,12 @@ namespace RendererRuntime
 		*    Renderer runtime to use
 		*  @param[out] commandBuffer
 		*    Command buffer to fill
-		*
-		*  @return
-		*    "true" on assigned material pool change, else "false"
+		*  @param[out] textureResourceGroupRootParameterIndex
+		*    Root parameter index to bind the texture resource group to, can be "RendererRuntime::getUninitialized<uint32_t>()"
+		*  @param[out] textureResourceGroup
+		*    Renderer texture resource group to set
 		*/
-		bool fillCommandBuffer(const IRendererRuntime& rendererRuntime, Renderer::CommandBuffer& commandBuffer);
+		void fillCommandBuffer(const IRendererRuntime& rendererRuntime, Renderer::CommandBuffer& commandBuffer, uint32_t& textureResourceGroupRootParameterIndex, Renderer::IResourceGroup** textureResourceGroup);
 
 
 	//[-------------------------------------------------------]

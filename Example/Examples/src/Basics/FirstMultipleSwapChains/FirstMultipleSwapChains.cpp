@@ -387,7 +387,7 @@ void FirstMultipleSwapChains::onDrawRequest()
 					}
 
 					// Submit command buffer to the renderer backend
-					mCommandBuffer.submitAndClear(*renderer);
+					mCommandBuffer.submitToRendererAndClear(*renderer);
 
 					// End scene rendering
 					// -> Required for Direct3D 9 and Direct3D 12
@@ -444,7 +444,7 @@ void FirstMultipleSwapChains::onDrawRequest()
 			}
 
 			// Submit command buffer to the renderer backend
-			mCommandBuffer.submitAndClear(*renderer);
+			mCommandBuffer.submitToRendererAndClear(*renderer);
 
 			// End scene rendering
 			// -> Required for Direct3D 9 and Direct3D 12

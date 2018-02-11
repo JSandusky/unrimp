@@ -278,7 +278,7 @@ void IcosahedronTessellation::onDraw()
 		}
 
 		// Submit command buffer to the renderer backend
-		mCommandBuffer.submit(*renderer);
+		mCommandBuffer.submitToRenderer(*renderer);
 	}
 }
 

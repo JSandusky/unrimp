@@ -36,6 +36,7 @@
 #include "RendererRuntime/Core/Math/Transform.h"
 #include "RendererRuntime/IRendererRuntime.h"
 
+#include <array>
 #include <algorithm>
 
 
@@ -315,6 +316,7 @@ namespace RendererRuntime
 	{
 		// Sanity check
 		assert((getNumberOfDrawCalls() > 0) && "Don't call the fill command buffer method if there's no work to be done");
+		assert(mScratchCommandBuffer.isEmpty() && "Scratch command buffer should be empty at this point in time");
 
 		// Begin debug event
 		COMMAND_BEGIN_DEBUG_EVENT_FUNCTION(commandBuffer)
@@ -349,6 +351,12 @@ namespace RendererRuntime
 			indirectBufferOffset = managedIndirectBuffer->indirectBufferOffset;
 			indirectBufferData   = managedIndirectBuffer->mappedData;
 		}
+
+		// For gathering multi-draw-indirect data
+		std::array<Renderer::IResourceGroup*, 16> currentSetGraphicsResourceGroup;
+		uint32_t currentDrawIndirectBufferOffset = indirectBufferOffset;
+		uint32_t currentNumberOfDraws = 0;
+		bool currentDrawIndexed = false;
 
 		// Process all render queues
 		// -> When adding renderables from renderable manager we could build up a minimum/maximum used render queue index to sometimes reduce
@@ -400,7 +408,7 @@ namespace RendererRuntime
 									if (currentPipelineState != pipelineStatePtr)
 									{
 										currentPipelineState = pipelineStatePtr;
-										Renderer::Command::SetPipelineState::create(commandBuffer, currentPipelineState);
+										Renderer::Command::SetPipelineState::create(mScratchCommandBuffer, currentPipelineState);
 									}
 
 									{ // Setup input assembly (IA): Set the used vertex array
@@ -409,7 +417,7 @@ namespace RendererRuntime
 										{
 											vertexArraySet = true;
 											currentVertexArray = vertexArrayPtr;
-											Renderer::Command::SetVertexArray::create(commandBuffer, currentVertexArray);
+											Renderer::Command::SetVertexArray::create(mScratchCommandBuffer, currentVertexArray);
 										}
 									}
 
@@ -421,6 +429,7 @@ namespace RendererRuntime
 									if (compositorContextData.mCurrentlyBoundMaterialBlueprintResource != materialBlueprintResource)
 									{
 										compositorContextData.mCurrentlyBoundMaterialBlueprintResource = materialBlueprintResource;
+										std::fill(currentSetGraphicsResourceGroup.begin(), currentSetGraphicsResourceGroup.end(), nullptr);
 										bindMaterialBlueprint = true;
 									}
 									if (bindMaterialBlueprint || enforcePassBufferManagerFillBuffer)
@@ -436,30 +445,59 @@ namespace RendererRuntime
 									if (bindMaterialBlueprint)
 									{
 										// Bind the material blueprint resource and instance and light buffer manager to the used renderer
-										materialBlueprintResource->fillCommandBuffer(commandBuffer);
+										materialBlueprintResource->fillCommandBuffer(mScratchCommandBuffer);
 										if (nullptr != instanceUniformBuffer)
 										{
-											instanceBufferManager.startupBufferFilling(*materialBlueprintResource, commandBuffer);
+											instanceBufferManager.startupBufferFilling(*materialBlueprintResource, mScratchCommandBuffer);
 										}
-										lightBufferManager.fillCommandBuffer(*materialBlueprintResource, commandBuffer);
+										lightBufferManager.fillCommandBuffer(*materialBlueprintResource, mScratchCommandBuffer);
 									}
 									else if (nullptr != passBufferManager)
 									{
 										// Bind pass buffer manager since we filled the buffer
-										passBufferManager->fillCommandBuffer(commandBuffer);
+										passBufferManager->fillCommandBuffer(mScratchCommandBuffer);
 									}
 
 									// Cheap state change: Bind the material technique to the used renderer
-									if (materialTechnique->fillCommandBuffer(mRendererRuntime, commandBuffer))
+									uint32_t textureResourceGroupRootParameterIndex = getUninitialized<uint32_t>();
+									Renderer::IResourceGroup* textureResourceGroup = nullptr;
+									materialTechnique->fillCommandBuffer(mRendererRuntime, mScratchCommandBuffer, textureResourceGroupRootParameterIndex, &textureResourceGroup);
+									if (isInitialized(textureResourceGroupRootParameterIndex) && nullptr != textureResourceGroup && currentSetGraphicsResourceGroup[textureResourceGroupRootParameterIndex] != textureResourceGroup)
 									{
-										// Assigned material pool changed
-										// TODO(co) Break instancing
-										NOP;
+										currentSetGraphicsResourceGroup[textureResourceGroupRootParameterIndex] = textureResourceGroup;
+										Renderer::Command::SetGraphicsResourceGroup::create(mScratchCommandBuffer, textureResourceGroupRootParameterIndex, textureResourceGroup);
 									}
-									// TODO(co) Detect texture hash change: Break instancing
 
 									// Fill the instance buffer manager
-									const uint32_t startInstanceLocation = (nullptr != instanceUniformBuffer) ? instanceBufferManager.fillBuffer(*materialBlueprintResource, materialBlueprintResource->getPassBufferManager(), *instanceUniformBuffer, renderable, *materialTechnique, commandBuffer) : 0;
+									const uint32_t startInstanceLocation = (nullptr != instanceUniformBuffer) ? instanceBufferManager.fillBuffer(*materialBlueprintResource, materialBlueprintResource->getPassBufferManager(), *instanceUniformBuffer, renderable, *materialTechnique, mScratchCommandBuffer) : 0;
+
+									// Emit draw command, if necessary
+									if (renderable.getDrawIndexed() != currentDrawIndexed || !mScratchCommandBuffer.isEmpty())
+									{
+										if (currentDrawIndexed)
+										{
+											if (currentNumberOfDraws)
+											{
+												Renderer::Command::DrawIndexed::create(commandBuffer, *indirectBuffer, currentDrawIndirectBufferOffset, currentNumberOfDraws);
+												currentNumberOfDraws = 0;
+											}
+										}
+										else
+										{
+											if (currentNumberOfDraws)
+											{
+												Renderer::Command::Draw::create(commandBuffer, *indirectBuffer, currentDrawIndirectBufferOffset, currentNumberOfDraws);
+												currentNumberOfDraws = 0;
+											}
+										}
+										currentDrawIndirectBufferOffset = indirectBufferOffset;
+									}
+
+									// Inject scratch command buffer into the main command buffer
+									if (!mScratchCommandBuffer.isEmpty())
+									{
+										mScratchCommandBuffer.submitToCommandBufferAndClear(commandBuffer);
+									}
 
 									// Render the specified geometric primitive, based on indexing into an array of vertices
 									// -> Please note that it's valid that there are no indices, for example "RendererRuntime::CompositorInstancePassDebugGui" is using the render queue only to set the material resource blueprint
@@ -469,7 +507,7 @@ namespace RendererRuntime
 										assert(nullptr != indirectBuffer);
 										assert(nullptr != indirectBufferData);
 
-										// Draw
+										// Fill indirect buffer
 										if (renderable.getDrawIndexed())
 										{
 											// Fill indirect buffer
@@ -480,11 +518,9 @@ namespace RendererRuntime
 											drawIndexedInstancedArguments->baseVertexLocation	 = 0;
 											drawIndexedInstancedArguments->startInstanceLocation = startInstanceLocation;
 
-											// Draw
-											Renderer::Command::DrawIndexed::create(commandBuffer, *indirectBuffer, indirectBufferOffset);
-
 											// Advance indirect buffer offset
 											indirectBufferOffset += sizeof(Renderer::DrawIndexedInstancedArguments);
+											currentDrawIndexed = true;
 										}
 										else
 										{
@@ -495,18 +531,30 @@ namespace RendererRuntime
 											drawInstancedArguments->startVertexLocation	   = renderable.getStartIndexLocation();
 											drawInstancedArguments->startInstanceLocation  = startInstanceLocation;
 
-											// Draw
-											Renderer::Command::Draw::create(commandBuffer, *indirectBuffer, indirectBufferOffset);
-
 											// Advance indirect buffer offset
 											indirectBufferOffset += sizeof(Renderer::DrawInstancedArguments);
+											currentDrawIndexed = false;
 										}
+										++currentNumberOfDraws;
 									}
 								}
 							}
 						}
 					}
 				}
+			}
+		}
+
+		// Emit last open draw command, if necessary
+		if (currentNumberOfDraws)
+		{
+			if (currentDrawIndexed)
+			{
+				Renderer::Command::DrawIndexed::create(commandBuffer, *indirectBuffer, currentDrawIndirectBufferOffset, currentNumberOfDraws);
+			}
+			else
+			{
+				Renderer::Command::Draw::create(commandBuffer, *indirectBuffer, currentDrawIndirectBufferOffset, currentNumberOfDraws);
 			}
 		}
 

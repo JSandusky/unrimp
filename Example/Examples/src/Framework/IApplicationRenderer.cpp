@@ -190,7 +190,7 @@ void IApplicationRenderer::onDrawRequest()
 			}
 
 			// Submit command buffer to the renderer backend
-			mCommandBuffer.submitAndClear(*mRenderer);
+			mCommandBuffer.submitToRendererAndClear(*mRenderer);
 
 			// Call the draw method
 			if (nullptr != mExampleBase)
@@ -202,7 +202,7 @@ void IApplicationRenderer::onDrawRequest()
 			COMMAND_END_DEBUG_EVENT(mCommandBuffer)
 
 			// Submit command buffer to the renderer backend
-			mCommandBuffer.submitAndClear(*mRenderer);
+			mCommandBuffer.submitToRendererAndClear(*mRenderer);
 
 			// End scene rendering
 			// -> Required for Direct3D 9 and Direct3D 12

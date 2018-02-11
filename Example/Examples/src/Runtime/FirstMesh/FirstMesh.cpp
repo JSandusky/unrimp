@@ -363,7 +363,7 @@ void FirstMesh::onDraw()
 		COMMAND_END_DEBUG_EVENT(mCommandBuffer)
 
 		// Submit command buffer to the renderer backend
-		mCommandBuffer.submitAndClear(*renderer);
+		mCommandBuffer.submitToRendererAndClear(*renderer);
 	}
 }
 
