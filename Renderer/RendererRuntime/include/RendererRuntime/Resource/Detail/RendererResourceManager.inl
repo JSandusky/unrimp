@@ -29,7 +29,8 @@ namespace RendererRuntime
 	//[ Private methods                                       ]
 	//[-------------------------------------------------------]
 	inline RendererResourceManager::RendererResourceManager(IRendererRuntime& rendererRuntime) :
-		mRendererRuntime(rendererRuntime)
+		mRendererRuntime(rendererRuntime),
+		mGarbageCollectionCounter(0)
 	{
 		// Nothing here
 	}

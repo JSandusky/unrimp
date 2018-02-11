@@ -28,9 +28,6 @@
 #include <Renderer/Public/Renderer.h>
 
 
-// TODO(co) "RendererRuntime::RendererResourceManager": From time to time, look for orphaned renderer resources and free them
-
-
 //[-------------------------------------------------------]
 //[ Namespace                                             ]
 //[-------------------------------------------------------]
@@ -72,6 +69,29 @@ namespace RendererRuntime
 			resourceGroup->addReference();
 			mResourceGroups.emplace(hash, resourceGroup);
 			return resourceGroup;
+		}
+	}
+
+	void RendererResourceManager::garbageCollection()
+	{
+		// TODO(co) "RendererRuntime::RendererResourceManager": From time to time, look for orphaned renderer resources and free them. Currently a trivial approach is used which might cause hiccups. For example distribute the traversal over time.
+		++mGarbageCollectionCounter;
+		if (mGarbageCollectionCounter > 100)
+		{
+			ResourceGroups::iterator iterator = mResourceGroups.begin();
+			while (iterator != mResourceGroups.end())
+			{
+				if (iterator->second->getRefCount() == 1)
+				{
+					iterator->second->releaseReference();
+					iterator = mResourceGroups.erase(iterator);
+				}
+				else
+				{
+					++iterator;
+				}
+			}
+			mGarbageCollectionCounter = 0;
 		}
 	}
 

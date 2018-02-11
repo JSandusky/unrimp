@@ -316,6 +316,7 @@ namespace RendererRuntime
 		{
 			mResourceManagers[i]->update();
 		}
+		mRendererResourceManager->garbageCollection();
 	}
 
 	void RendererRuntimeImpl::clearPipelineStateObjectCache()
