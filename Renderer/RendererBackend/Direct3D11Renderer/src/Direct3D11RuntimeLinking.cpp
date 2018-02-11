@@ -158,7 +158,13 @@ namespace Direct3D11Renderer
 					// Optional vendor specific part: NvAPI
 					if (nvidiaDxgiAdapter)
 					{
-						mNvAPISharedLibrary = ::LoadLibraryExA("nvapi.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
+						// TODO(co) Work in progress, currently rather instable?
+						/*
+						#ifdef X64_ARCHITECTURE
+							mNvAPISharedLibrary = ::LoadLibraryExA("nvapi64.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
+						#else
+							mNvAPISharedLibrary = ::LoadLibraryExA("nvapi.dll", nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
+						#endif
 						if (nullptr != mNvAPISharedLibrary && !loadNvAPIEntryPoints())
 						{
 							RENDERER_LOG(mDirect3D11Renderer.getContext(), CRITICAL, "Direct3D 11: Failed to load NvAPI function entry points")
@@ -169,6 +175,7 @@ namespace Direct3D11Renderer
 							NvAPI_D3D11_MultiDrawInstancedIndirect		  = nullptr;
 							NvAPI_D3D11_MultiDrawIndexedInstancedIndirect = nullptr;
 						}
+						*/
 					}
 				}
 			}
