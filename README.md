@@ -175,6 +175,7 @@ Examples (just some high level keywords)
 - Memory leaks: On Microsoft Windows, "_CrtMemCheckpoint()" and "_CrtMemDumpAllObjectsSince()" is used by default to detect memory leaks while developing and not later on. In case something triggers, use third parts tools to locate the memory leak in detail.
 - Physically based shading (PBS) using "metallic workflow" (aka "metal-rough-workflow" aka "Albedo/Metallic/Roughness") instead of "specular workflow" (aka "specular-gloss-workflow" aka "Diffuse/Specular/Glossines")
 - Microsoft Windows: ["NVIDIA Optimus"](http://developer.download.nvidia.com/devzone/devcenter/gamegraphics/files/OptimusRenderingPolicies.pdf) and ["AMD Dynamic Switchable Graphic"](https://community.amd.com/message/1307599#comment-1307599) awareness to reduce the risk of getting the integrated graphics unit assigned when there's a dedicated graphics card as well
+- [Volumetric light/fog](https://fr.slideshare.net/BenjaminGlatzel/volumetric-lighting-for-many-lights-in-lords-of-the-fallen) (aka crepuscular rays, god rays, sunbeams, sunbursts, light shafts or star flare)
 - [Custom resolved MSAA for antialiased deferred rendering and temporal anti-aliasing](https://mynameismjp.wordpress.com/2012/10/28/msaa-resolve-filters/)
 - Gaussian blur, used to e.g. blur the transparent ImGui background
 - High dynamic range (HDR) rendering with adaptive luminance
@@ -186,7 +187,6 @@ Examples (just some high level keywords)
 - [Old CRT post processing effect](https://www.shadertoy.com/view/MsXGD4)
 - [Gamma correct rendering](https://developer.nvidia.com/gpugems/GPUGems3/gpugems3_ch24.html)
 - Bloom with dirty lens
-- [Volumetric light/fog](https://fr.slideshare.net/BenjaminGlatzel/volumetric-lighting-for-many-lights-in-lords-of-the-fallen)
 - Chromatic aberration
 - Clustered shading
 - [Pseudo lens flare](http://john-chapman-graphics.blogspot.de/2013/02/pseudo-lens-flare.html)

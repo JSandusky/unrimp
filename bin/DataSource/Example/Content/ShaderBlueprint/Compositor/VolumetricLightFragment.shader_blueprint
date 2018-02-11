@@ -109,7 +109,7 @@ float CalculateMieScatter(float3 lightDirection, float3 cameraDirection)
 //[ Main                                                  ]
 //[-------------------------------------------------------]
 MAIN_BEGIN
-	// Read depth map value and check whether or not a depth value was written
+	// Read depth map value
 	float depth = SAMPLE_DEPTH_2D_LOD(DepthMap, SamplerPoint, float4(MAIN_INPUT(TexCoordVS), 0.0f, 0.0f));
 
 	// Get the normalized view ray

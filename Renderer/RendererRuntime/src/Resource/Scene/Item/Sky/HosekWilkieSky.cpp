@@ -242,7 +242,7 @@ namespace RendererRuntime
 				mSunColor = glm::max(mSunColor, Math::VEC3_ZERO);
 
 				// Some visual adjustments so the simple approximation doesn't look that wrong
-				mSunColor = glm::vec3(mSunColor.b, mSunColor.g, mSunColor.r) * 2.0f;
+				mSunColor = glm::vec3(mSunColor.b, mSunColor.g, mSunColor.r) * 0.75f;
 			}
 		}
 	}
