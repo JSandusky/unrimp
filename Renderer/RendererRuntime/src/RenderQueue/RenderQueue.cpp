@@ -353,7 +353,7 @@ namespace RendererRuntime
 		}
 
 		// For gathering multi-draw-indirect data
-		std::array<Renderer::IResourceGroup*, 16> currentSetGraphicsResourceGroup;
+		std::array<Renderer::IResourceGroup*, 16> currentSetGraphicsResourceGroup;	// TODO(co) Use maximum number of graphics resource groups here, 16 is considered a save number of root parameters
 		uint32_t currentDrawIndirectBufferOffset = indirectBufferOffset;
 		uint32_t currentNumberOfDraws = 0;
 		bool currentDrawIndexed = false;

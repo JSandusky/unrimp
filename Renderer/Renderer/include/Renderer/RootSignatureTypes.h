@@ -557,7 +557,7 @@ namespace Renderer
 			initialize(*this, _numberOfParameters, _parameters, _numberOfStaticSamplers, _staticSamplers, _flags);
 		}
 		static inline void initialize(
-			RootSignature &rootSignature,
+			RootSignature& rootSignature,
 			uint32_t _numberOfParameters,
 			const RootParameter* _parameters,
 			uint32_t _numberOfStaticSamplers = 0,
