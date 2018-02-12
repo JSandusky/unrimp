@@ -1524,7 +1524,18 @@ namespace OpenGLRenderer
 			}
 			else
 			{
-				// TODO(co) Emulation (see specification for examples)
+				// Emulate multi-draw-indirect
+				#ifdef RENDERER_DEBUG
+					beginDebugEvent("Multi-draw-indirect emulation");
+				#endif
+				for (uint32_t i = 0; i < numberOfDraws; ++i)
+				{
+					glDrawArraysIndirect(mOpenGLPrimitiveTopology, reinterpret_cast<void*>(static_cast<uintptr_t>(indirectBufferOffset)));
+					indirectBufferOffset += sizeof(Renderer::DrawInstancedArguments);
+				}
+				#ifdef RENDERER_DEBUG
+					endDebugEvent();
+				#endif
 			}
 		}
 	}
@@ -1615,7 +1626,19 @@ namespace OpenGLRenderer
 			}
 			else
 			{
-				// TODO(co) Emulation (see specification for examples)
+				// Emulate multi-indexed-draw-indirect
+				#ifdef RENDERER_DEBUG
+					beginDebugEvent("Multi-indexed-draw-indirect emulation");
+				#endif
+				const uint32_t openGLType = mVertexArray->getIndexBuffer()->getOpenGLType();
+				for (uint32_t i = 0; i < numberOfDraws; ++i)
+				{
+					glDrawElementsIndirect(mOpenGLPrimitiveTopology, openGLType, reinterpret_cast<void*>(static_cast<uintptr_t>(indirectBufferOffset)));
+					indirectBufferOffset += sizeof(Renderer::DrawIndexedInstancedArguments);
+				}
+				#ifdef RENDERER_DEBUG
+					endDebugEvent();
+				#endif
 			}
 		}
 	}
