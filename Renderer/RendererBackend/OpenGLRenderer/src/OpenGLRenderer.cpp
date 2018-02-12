@@ -322,22 +322,39 @@ namespace
 			//[-------------------------------------------------------]
 			//[ Debug                                                 ]
 			//[-------------------------------------------------------]
-			void SetDebugMarker(const void* data, Renderer::IRenderer& renderer)
-			{
-				const Renderer::Command::SetDebugMarker* realData = static_cast<const Renderer::Command::SetDebugMarker*>(data);
-				static_cast<OpenGLRenderer::OpenGLRenderer&>(renderer).setDebugMarker(realData->name);
-			}
+			#ifdef RENDERER_DEBUG
+				void SetDebugMarker(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetDebugMarker* realData = static_cast<const Renderer::Command::SetDebugMarker*>(data);
+					static_cast<OpenGLRenderer::OpenGLRenderer&>(renderer).setDebugMarker(realData->name);
+				}
 
-			void BeginDebugEvent(const void* data, Renderer::IRenderer& renderer)
-			{
-				const Renderer::Command::BeginDebugEvent* realData = static_cast<const Renderer::Command::BeginDebugEvent*>(data);
-				static_cast<OpenGLRenderer::OpenGLRenderer&>(renderer).beginDebugEvent(realData->name);
-			}
+				void BeginDebugEvent(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::BeginDebugEvent* realData = static_cast<const Renderer::Command::BeginDebugEvent*>(data);
+					static_cast<OpenGLRenderer::OpenGLRenderer&>(renderer).beginDebugEvent(realData->name);
+				}
 
-			void EndDebugEvent(const void*, Renderer::IRenderer& renderer)
-			{
-				static_cast<OpenGLRenderer::OpenGLRenderer&>(renderer).endDebugEvent();
-			}
+				void EndDebugEvent(const void*, Renderer::IRenderer& renderer)
+				{
+					static_cast<OpenGLRenderer::OpenGLRenderer&>(renderer).endDebugEvent();
+				}
+			#else
+				void SetDebugMarker(const void*, Renderer::IRenderer&)
+				{
+					// Nothing here
+				}
+
+				void BeginDebugEvent(const void*, Renderer::IRenderer&)
+				{
+					// Nothing here
+				}
+
+				void EndDebugEvent(const void*, Renderer::IRenderer&)
+				{
+					// Nothing here
+				}
+			#endif
 
 
 		}
@@ -1707,21 +1724,6 @@ namespace OpenGLRenderer
 			{
 				glPopDebugGroup();
 			}
-		}
-	#else
-		void OpenGLRenderer::setDebugMarker(const char*)
-		{
-			// Nothing here
-		}
-
-		void OpenGLRenderer::beginDebugEvent(const char*)
-		{
-			// Nothing here
-		}
-
-		void OpenGLRenderer::endDebugEvent()
-		{
-			// Nothing here
 		}
 	#endif
 

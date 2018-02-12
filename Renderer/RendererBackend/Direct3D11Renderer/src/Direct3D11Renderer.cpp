@@ -344,22 +344,39 @@ namespace
 			//[-------------------------------------------------------]
 			//[ Debug                                                 ]
 			//[-------------------------------------------------------]
-			void SetDebugMarker(const void* data, Renderer::IRenderer& renderer)
-			{
-				const Renderer::Command::SetDebugMarker* realData = static_cast<const Renderer::Command::SetDebugMarker*>(data);
-				static_cast<Direct3D11Renderer::Direct3D11Renderer&>(renderer).setDebugMarker(realData->name);
-			}
+			#ifdef RENDERER_DEBUG
+				void SetDebugMarker(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetDebugMarker* realData = static_cast<const Renderer::Command::SetDebugMarker*>(data);
+					static_cast<Direct3D11Renderer::Direct3D11Renderer&>(renderer).setDebugMarker(realData->name);
+				}
 
-			void BeginDebugEvent(const void* data, Renderer::IRenderer& renderer)
-			{
-				const Renderer::Command::BeginDebugEvent* realData = static_cast<const Renderer::Command::BeginDebugEvent*>(data);
-				static_cast<Direct3D11Renderer::Direct3D11Renderer&>(renderer).beginDebugEvent(realData->name);
-			}
+				void BeginDebugEvent(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::BeginDebugEvent* realData = static_cast<const Renderer::Command::BeginDebugEvent*>(data);
+					static_cast<Direct3D11Renderer::Direct3D11Renderer&>(renderer).beginDebugEvent(realData->name);
+				}
 
-			void EndDebugEvent(const void*, Renderer::IRenderer& renderer)
-			{
-				static_cast<Direct3D11Renderer::Direct3D11Renderer&>(renderer).endDebugEvent();
-			}
+				void EndDebugEvent(const void*, Renderer::IRenderer& renderer)
+				{
+					static_cast<Direct3D11Renderer::Direct3D11Renderer&>(renderer).endDebugEvent();
+				}
+			#else
+				void SetDebugMarker(const void*, Renderer::IRenderer&)
+				{
+					// Nothing here
+				}
+
+				void BeginDebugEvent(const void*, Renderer::IRenderer&)
+				{
+					// Nothing here
+				}
+
+				void EndDebugEvent(const void*, Renderer::IRenderer&)
+				{
+					// Nothing here
+				}
+			#endif
 
 
 		}
@@ -1581,27 +1598,15 @@ namespace Direct3D11Renderer
 				mD3DUserDefinedAnnotation->BeginEvent(unicodeName);
 			}
 		}
-	#else
-		void Direct3D11Renderer::setDebugMarker(const char*)
-		{
-			// Nothing here
-		}
 
-		void Direct3D11Renderer::beginDebugEvent(const char*)
+		void Direct3D11Renderer::endDebugEvent()
 		{
-			// Nothing here
-		}
-	#endif
-
-	void Direct3D11Renderer::endDebugEvent()
-	{
-		#ifdef RENDERER_DEBUG
 			if (nullptr != mD3DUserDefinedAnnotation)
 			{
 				mD3DUserDefinedAnnotation->EndEvent();
 			}
-		#endif
-	}
+		}
+	#endif
 
 
 	//[-------------------------------------------------------]

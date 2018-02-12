@@ -216,22 +216,39 @@ namespace
 			//[-------------------------------------------------------]
 			//[ Debug                                                 ]
 			//[-------------------------------------------------------]
-			void SetDebugMarker(const void* data, Renderer::IRenderer& renderer)
-			{
-				const Renderer::Command::SetDebugMarker* realData = static_cast<const Renderer::Command::SetDebugMarker*>(data);
-				static_cast<Direct3D12Renderer::Direct3D12Renderer&>(renderer).setDebugMarker(realData->name);
-			}
+			#ifdef RENDERER_DEBUG
+				void SetDebugMarker(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetDebugMarker* realData = static_cast<const Renderer::Command::SetDebugMarker*>(data);
+					static_cast<Direct3D12Renderer::Direct3D12Renderer&>(renderer).setDebugMarker(realData->name);
+				}
 
-			void BeginDebugEvent(const void* data, Renderer::IRenderer& renderer)
-			{
-				const Renderer::Command::BeginDebugEvent* realData = static_cast<const Renderer::Command::BeginDebugEvent*>(data);
-				static_cast<Direct3D12Renderer::Direct3D12Renderer&>(renderer).beginDebugEvent(realData->name);
-			}
+				void BeginDebugEvent(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::BeginDebugEvent* realData = static_cast<const Renderer::Command::BeginDebugEvent*>(data);
+					static_cast<Direct3D12Renderer::Direct3D12Renderer&>(renderer).beginDebugEvent(realData->name);
+				}
 
-			void EndDebugEvent(const void*, Renderer::IRenderer& renderer)
-			{
-				static_cast<Direct3D12Renderer::Direct3D12Renderer&>(renderer).endDebugEvent();
-			}
+				void EndDebugEvent(const void*, Renderer::IRenderer& renderer)
+				{
+					static_cast<Direct3D12Renderer::Direct3D12Renderer&>(renderer).endDebugEvent();
+				}
+			#else
+				void SetDebugMarker(const void*, Renderer::IRenderer&)
+				{
+					// Nothing here
+				}
+
+				void BeginDebugEvent(const void*, Renderer::IRenderer&)
+				{
+					// Nothing here
+				}
+
+				void EndDebugEvent(const void*, Renderer::IRenderer&)
+				{
+					// Nothing here
+				}
+			#endif
 
 
 		}
@@ -1133,27 +1150,15 @@ namespace Direct3D12Renderer
 				mD3D12GraphicsCommandList->BeginEvent(PIX_EVENT_ANSI_VERSION, name, size);
 			}
 		}
-	#else
-		void Direct3D12Renderer::setDebugMarker(const char*)
-		{
-			// Nothing here
-		}
 
-		void Direct3D12Renderer::beginDebugEvent(const char*)
+		void Direct3D12Renderer::endDebugEvent()
 		{
-			// Nothing here
-		}
-	#endif
-
-	void Direct3D12Renderer::endDebugEvent()
-	{
-		#ifdef RENDERER_DEBUG
 			if (nullptr != mD3D12GraphicsCommandList)
 			{
 				mD3D12GraphicsCommandList->EndEvent();
 			}
-		#endif
-	}
+		}
+	#endif
 
 
 	//[-------------------------------------------------------]

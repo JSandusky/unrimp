@@ -211,22 +211,39 @@ namespace
 			//[-------------------------------------------------------]
 			//[ Debug                                                 ]
 			//[-------------------------------------------------------]
-			void SetDebugMarker(const void* data, Renderer::IRenderer& renderer)
-			{
-				const Renderer::Command::SetDebugMarker* realData = static_cast<const Renderer::Command::SetDebugMarker*>(data);
-				static_cast<Direct3D9Renderer::Direct3D9Renderer&>(renderer).setDebugMarker(realData->name);
-			}
+			#ifdef RENDERER_DEBUG
+				void SetDebugMarker(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetDebugMarker* realData = static_cast<const Renderer::Command::SetDebugMarker*>(data);
+					static_cast<Direct3D9Renderer::Direct3D9Renderer&>(renderer).setDebugMarker(realData->name);
+				}
 
-			void BeginDebugEvent(const void* data, Renderer::IRenderer& renderer)
-			{
-				const Renderer::Command::BeginDebugEvent* realData = static_cast<const Renderer::Command::BeginDebugEvent*>(data);
-				static_cast<Direct3D9Renderer::Direct3D9Renderer&>(renderer).beginDebugEvent(realData->name);
-			}
+				void BeginDebugEvent(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::BeginDebugEvent* realData = static_cast<const Renderer::Command::BeginDebugEvent*>(data);
+					static_cast<Direct3D9Renderer::Direct3D9Renderer&>(renderer).beginDebugEvent(realData->name);
+				}
 
-			void EndDebugEvent(const void*, Renderer::IRenderer& renderer)
-			{
-				static_cast<Direct3D9Renderer::Direct3D9Renderer&>(renderer).endDebugEvent();
-			}
+				void EndDebugEvent(const void*, Renderer::IRenderer& renderer)
+				{
+					static_cast<Direct3D9Renderer::Direct3D9Renderer&>(renderer).endDebugEvent();
+				}
+			#else
+				void SetDebugMarker(const void*, Renderer::IRenderer&)
+				{
+					// Nothing here
+				}
+
+				void BeginDebugEvent(const void*, Renderer::IRenderer&)
+				{
+					// Nothing here
+				}
+
+				void EndDebugEvent(const void*, Renderer::IRenderer&)
+				{
+					// Nothing here
+				}
+			#endif
 
 
 		}
@@ -1254,27 +1271,15 @@ namespace Direct3D9Renderer
 				D3DPERF_BeginEvent(D3DCOLOR_RGBA(255, 255, 255, 255), unicodeName);
 			}
 		}
-	#else
-		void Direct3D9Renderer::setDebugMarker(const char*)
-		{
-			// Nothing here
-		}
 
-		void Direct3D9Renderer::beginDebugEvent(const char*)
+		void Direct3D9Renderer::endDebugEvent()
 		{
-			// Nothing here
-		}
-	#endif
-
-	void Direct3D9Renderer::endDebugEvent()
-	{
-		#ifdef RENDERER_DEBUG
 			if (nullptr != D3DPERF_EndEvent)
 			{
 				D3DPERF_EndEvent();
 			}
-		#endif
-	}
+		}
+	#endif
 
 
 	//[-------------------------------------------------------]

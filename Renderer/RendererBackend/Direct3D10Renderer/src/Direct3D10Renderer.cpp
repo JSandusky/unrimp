@@ -240,22 +240,39 @@ namespace
 			//[-------------------------------------------------------]
 			//[ Debug                                                 ]
 			//[-------------------------------------------------------]
-			void SetDebugMarker(const void* data, Renderer::IRenderer& renderer)
-			{
-				const Renderer::Command::SetDebugMarker* realData = static_cast<const Renderer::Command::SetDebugMarker*>(data);
-				static_cast<Direct3D10Renderer::Direct3D10Renderer&>(renderer).setDebugMarker(realData->name);
-			}
+			#ifdef RENDERER_DEBUG
+				void SetDebugMarker(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetDebugMarker* realData = static_cast<const Renderer::Command::SetDebugMarker*>(data);
+					static_cast<Direct3D10Renderer::Direct3D10Renderer&>(renderer).setDebugMarker(realData->name);
+				}
 
-			void BeginDebugEvent(const void* data, Renderer::IRenderer& renderer)
-			{
-				const Renderer::Command::BeginDebugEvent* realData = static_cast<const Renderer::Command::BeginDebugEvent*>(data);
-				static_cast<Direct3D10Renderer::Direct3D10Renderer&>(renderer).beginDebugEvent(realData->name);
-			}
+				void BeginDebugEvent(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::BeginDebugEvent* realData = static_cast<const Renderer::Command::BeginDebugEvent*>(data);
+					static_cast<Direct3D10Renderer::Direct3D10Renderer&>(renderer).beginDebugEvent(realData->name);
+				}
 
-			void EndDebugEvent(const void*, Renderer::IRenderer& renderer)
-			{
-				static_cast<Direct3D10Renderer::Direct3D10Renderer&>(renderer).endDebugEvent();
-			}
+				void EndDebugEvent(const void*, Renderer::IRenderer& renderer)
+				{
+					static_cast<Direct3D10Renderer::Direct3D10Renderer&>(renderer).endDebugEvent();
+				}
+			#else
+				void SetDebugMarker(const void*, Renderer::IRenderer&)
+				{
+					// Nothing here
+				}
+
+				void BeginDebugEvent(const void*, Renderer::IRenderer&)
+				{
+					// Nothing here
+				}
+
+				void EndDebugEvent(const void*, Renderer::IRenderer&)
+				{
+					// Nothing here
+				}
+			#endif
 
 
 		}
@@ -1329,21 +1346,9 @@ namespace Direct3D10Renderer
 				D3DPERF_BeginEvent(D3DCOLOR_RGBA(255, 255, 255, 255), unicodeName);
 			}
 		}
-	#else
-		void Direct3D10Renderer::setDebugMarker(const char*)
-		{
-			// Nothing here
-		}
 
-		void Direct3D10Renderer::beginDebugEvent(const char*)
+		void Direct3D10Renderer::endDebugEvent()
 		{
-			// Nothing here
-		}
-	#endif
-
-	void Direct3D10Renderer::endDebugEvent()
-	{
-		#ifdef RENDERER_DEBUG
 			// Create the Direct3D 9 runtime linking instance, in case there's no one, yet
 			if (nullptr == mDirect3D9RuntimeLinking)
 			{
@@ -1355,8 +1360,8 @@ namespace Direct3D10Renderer
 			{
 				D3DPERF_EndEvent();
 			}
-		#endif
-	}
+		}
+	#endif
 
 
 	//[-------------------------------------------------------]

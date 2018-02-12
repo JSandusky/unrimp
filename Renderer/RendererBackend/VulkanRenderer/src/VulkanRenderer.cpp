@@ -229,22 +229,39 @@ namespace
 			//[-------------------------------------------------------]
 			//[ Debug                                                 ]
 			//[-------------------------------------------------------]
-			void SetDebugMarker(const void* data, Renderer::IRenderer& renderer)
-			{
-				const Renderer::Command::SetDebugMarker* realData = static_cast<const Renderer::Command::SetDebugMarker*>(data);
-				static_cast<VulkanRenderer::VulkanRenderer&>(renderer).setDebugMarker(realData->name);
-			}
+			#ifdef RENDERER_DEBUG
+				void SetDebugMarker(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::SetDebugMarker* realData = static_cast<const Renderer::Command::SetDebugMarker*>(data);
+					static_cast<VulkanRenderer::VulkanRenderer&>(renderer).setDebugMarker(realData->name);
+				}
 
-			void BeginDebugEvent(const void* data, Renderer::IRenderer& renderer)
-			{
-				const Renderer::Command::BeginDebugEvent* realData = static_cast<const Renderer::Command::BeginDebugEvent*>(data);
-				static_cast<VulkanRenderer::VulkanRenderer&>(renderer).beginDebugEvent(realData->name);
-			}
+				void BeginDebugEvent(const void* data, Renderer::IRenderer& renderer)
+				{
+					const Renderer::Command::BeginDebugEvent* realData = static_cast<const Renderer::Command::BeginDebugEvent*>(data);
+					static_cast<VulkanRenderer::VulkanRenderer&>(renderer).beginDebugEvent(realData->name);
+				}
 
-			void EndDebugEvent(const void*, Renderer::IRenderer& renderer)
-			{
-				static_cast<VulkanRenderer::VulkanRenderer&>(renderer).endDebugEvent();
-			}
+				void EndDebugEvent(const void*, Renderer::IRenderer& renderer)
+				{
+					static_cast<VulkanRenderer::VulkanRenderer&>(renderer).endDebugEvent();
+				}
+			#else
+				void SetDebugMarker(const void*, Renderer::IRenderer&)
+				{
+					// Nothing here
+				}
+
+				void BeginDebugEvent(const void*, Renderer::IRenderer&)
+				{
+					// Nothing here
+				}
+
+				void EndDebugEvent(const void*, Renderer::IRenderer&)
+				{
+					// Nothing here
+				}
+			#endif
 
 
 		}
@@ -777,55 +794,57 @@ namespace VulkanRenderer
 	//[-------------------------------------------------------]
 	//[ Debug                                                 ]
 	//[-------------------------------------------------------]
-	void VulkanRenderer::setDebugMarker(const char* name)
-	{
-		if (nullptr != vkCmdDebugMarkerInsertEXT)
+	#ifdef RENDERER_DEBUG
+		void VulkanRenderer::setDebugMarker(const char* name)
 		{
-			RENDERER_ASSERT(mContext, nullptr != name, "Vulkan debug marker names must not be a null pointer")
-			const VkDebugMarkerMarkerInfoEXT vkDebugMarkerMarkerInfoEXT =
+			if (nullptr != vkCmdDebugMarkerInsertEXT)
 			{
-				VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT,	// sType (VkStructureType)
-				nullptr,										// pNext (const void*)
-				name,											// pMarkerName (const char*)
-				{ // color[4] (float)
-					0.0f,
-					0.0f,
-					1.0f,	// Blue
-					1.0f
-				}
-			};
-			vkCmdDebugMarkerInsertEXT(getVulkanContext().getVkCommandBuffer(), &vkDebugMarkerMarkerInfoEXT);
+				RENDERER_ASSERT(mContext, nullptr != name, "Vulkan debug marker names must not be a null pointer")
+				const VkDebugMarkerMarkerInfoEXT vkDebugMarkerMarkerInfoEXT =
+				{
+					VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT,	// sType (VkStructureType)
+					nullptr,										// pNext (const void*)
+					name,											// pMarkerName (const char*)
+					{ // color[4] (float)
+						0.0f,
+						0.0f,
+						1.0f,	// Blue
+						1.0f
+					}
+				};
+				vkCmdDebugMarkerInsertEXT(getVulkanContext().getVkCommandBuffer(), &vkDebugMarkerMarkerInfoEXT);
+			}
 		}
-	}
 
-	void VulkanRenderer::beginDebugEvent(const char* name)
-	{
-		if (nullptr != vkCmdDebugMarkerBeginEXT)
+		void VulkanRenderer::beginDebugEvent(const char* name)
 		{
-			RENDERER_ASSERT(mContext, nullptr != name, "Vulkan debug event names must not be a null pointer")
-			const VkDebugMarkerMarkerInfoEXT vkDebugMarkerMarkerInfoEXT =
+			if (nullptr != vkCmdDebugMarkerBeginEXT)
 			{
-				VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT,	// sType (VkStructureType)
-				nullptr,										// pNext (const void*)
-				name,											// pMarkerName (const char*)
-				{ // color[4] (float)
-					0.0f,
-					1.0f,	// Green
-					0.0f,
-					1.0f
-				}
-			};
-			vkCmdDebugMarkerBeginEXT(getVulkanContext().getVkCommandBuffer(), &vkDebugMarkerMarkerInfoEXT);
+				RENDERER_ASSERT(mContext, nullptr != name, "Vulkan debug event names must not be a null pointer")
+				const VkDebugMarkerMarkerInfoEXT vkDebugMarkerMarkerInfoEXT =
+				{
+					VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT,	// sType (VkStructureType)
+					nullptr,										// pNext (const void*)
+					name,											// pMarkerName (const char*)
+					{ // color[4] (float)
+						0.0f,
+						1.0f,	// Green
+						0.0f,
+						1.0f
+					}
+				};
+				vkCmdDebugMarkerBeginEXT(getVulkanContext().getVkCommandBuffer(), &vkDebugMarkerMarkerInfoEXT);
+			}
 		}
-	}
 
-	void VulkanRenderer::endDebugEvent()
-	{
-		if (nullptr != vkCmdDebugMarkerEndEXT)
+		void VulkanRenderer::endDebugEvent()
 		{
-			vkCmdDebugMarkerEndEXT(getVulkanContext().getVkCommandBuffer());
+			if (nullptr != vkCmdDebugMarkerEndEXT)
+			{
+				vkCmdDebugMarkerEndEXT(getVulkanContext().getVkCommandBuffer());
+			}
 		}
-	}
+	#endif
 
 
 	//[-------------------------------------------------------]

@@ -173,9 +173,11 @@ namespace Direct3D12Renderer
 		//[-------------------------------------------------------]
 		//[ Debug                                                 ]
 		//[-------------------------------------------------------]
-		void setDebugMarker(const char* name);
-		void beginDebugEvent(const char* name);
-		void endDebugEvent();
+		#ifdef RENDERER_DEBUG
+			void setDebugMarker(const char* name);
+			void beginDebugEvent(const char* name);
+			void endDebugEvent();
+		#endif
 
 
 	//[-------------------------------------------------------]
