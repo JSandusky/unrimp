@@ -732,6 +732,12 @@ namespace VulkanRenderer
 		}
 
 		// Emit the draw calls
+		#ifdef RENDERER_DEBUG
+			if (numberOfDraws > 1)
+			{
+				beginDebugEvent("Multi-draw-indirect emulation");
+			}
+		#endif
 		const VkCommandBuffer vkCommandBuffer = getVulkanContext().getVkCommandBuffer();
 		for (uint32_t i = 0; i < numberOfDraws; ++i)
 		{
@@ -740,6 +746,12 @@ namespace VulkanRenderer
 			vkCmdDraw(vkCommandBuffer, drawInstancedArguments.vertexCountPerInstance, drawInstancedArguments.instanceCount, drawInstancedArguments.startVertexLocation, drawInstancedArguments.startInstanceLocation);
 			emulationData += sizeof(Renderer::DrawInstancedArguments);
 		}
+		#ifdef RENDERER_DEBUG
+			if (numberOfDraws > 1)
+			{
+				endDebugEvent();
+			}
+		#endif
 	}
 
 	void VulkanRenderer::drawIndexed(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
@@ -780,6 +792,12 @@ namespace VulkanRenderer
 		}
 
 		// Emit the draw calls
+		#ifdef RENDERER_DEBUG
+			if (numberOfDraws > 1)
+			{
+				beginDebugEvent("Multi-indexed-draw-indirect emulation");
+			}
+		#endif
 		const VkCommandBuffer vkCommandBuffer = getVulkanContext().getVkCommandBuffer();
 		for (uint32_t i = 0; i < numberOfDraws; ++i)
 		{
@@ -788,6 +806,12 @@ namespace VulkanRenderer
 			vkCmdDrawIndexed(vkCommandBuffer, drawIndexedInstancedArguments.indexCountPerInstance, drawIndexedInstancedArguments.instanceCount, drawIndexedInstancedArguments.startIndexLocation, drawIndexedInstancedArguments.baseVertexLocation, drawIndexedInstancedArguments.startInstanceLocation);
 			emulationData += sizeof(Renderer::DrawIndexedInstancedArguments);
 		}
+		#ifdef RENDERER_DEBUG
+			if (numberOfDraws > 1)
+			{
+				endDebugEvent();
+			}
+		#endif
 	}
 
 

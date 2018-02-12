@@ -1081,6 +1081,13 @@ namespace Direct3D12Renderer
 		emulationData += indirectBufferOffset;
 
 		// Emit the draw calls
+		// TODD(co) Add multi-draw-indirect support
+		#ifdef RENDERER_DEBUG
+			if (numberOfDraws > 1)
+			{
+				beginDebugEvent("Multi-draw-indirect emulation");
+			}
+		#endif
 		for (uint32_t i = 0; i < numberOfDraws; ++i)
 		{
 			const Renderer::DrawInstancedArguments& drawInstancedArguments = *reinterpret_cast<const Renderer::DrawInstancedArguments*>(emulationData);
@@ -1096,6 +1103,12 @@ namespace Direct3D12Renderer
 			// Advance
 			emulationData += sizeof(Renderer::DrawInstancedArguments);
 		}
+		#ifdef RENDERER_DEBUG
+			if (numberOfDraws > 1)
+			{
+				endDebugEvent();
+			}
+		#endif
 	}
 
 	void Direct3D12Renderer::drawIndexedEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
@@ -1108,6 +1121,13 @@ namespace Direct3D12Renderer
 		emulationData += indirectBufferOffset;
 
 		// Emit the draw calls
+		// TODD(co) Add multi-indexed-draw-indirect support
+		#ifdef RENDERER_DEBUG
+			if (numberOfDraws > 1)
+			{
+				beginDebugEvent("Multi-indexed-draw-indirect emulation");
+			}
+		#endif
 		for (uint32_t i = 0; i < numberOfDraws; ++i)
 		{
 			const Renderer::DrawIndexedInstancedArguments& drawIndexedInstancedArguments = *reinterpret_cast<const Renderer::DrawIndexedInstancedArguments*>(emulationData);
@@ -1124,6 +1144,12 @@ namespace Direct3D12Renderer
 			// Advance
 			emulationData += sizeof(Renderer::DrawIndexedInstancedArguments);
 		}
+		#ifdef RENDERER_DEBUG
+			if (numberOfDraws > 1)
+			{
+				endDebugEvent();
+			}
+		#endif
 	}
 
 

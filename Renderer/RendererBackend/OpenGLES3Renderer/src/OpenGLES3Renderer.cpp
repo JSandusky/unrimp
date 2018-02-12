@@ -1140,6 +1140,12 @@ namespace OpenGLES3Renderer
 		emulationData += indirectBufferOffset;
 
 		// Emit the draw calls
+		#ifdef RENDERER_DEBUG
+			if (numberOfDraws > 1)
+			{
+				beginDebugEvent("Multi-draw-indirect emulation");
+			}
+		#endif
 		for (uint32_t i = 0; i < numberOfDraws; ++i)
 		{
 			const Renderer::DrawInstancedArguments& drawInstancedArguments = *reinterpret_cast<const Renderer::DrawInstancedArguments*>(emulationData);
@@ -1166,6 +1172,12 @@ namespace OpenGLES3Renderer
 			}
 			emulationData += sizeof(Renderer::DrawInstancedArguments);
 		}
+		#ifdef RENDERER_DEBUG
+			if (numberOfDraws > 1)
+			{
+				endDebugEvent();
+			}
+		#endif
 	}
 
 	void OpenGLES3Renderer::drawIndexedEmulated(const uint8_t* emulationData, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
@@ -1180,6 +1192,12 @@ namespace OpenGLES3Renderer
 		emulationData += indirectBufferOffset;
 
 		// Emit the draw calls
+		#ifdef RENDERER_DEBUG
+			if (numberOfDraws > 1)
+			{
+				beginDebugEvent("Multi-indexed-draw-indirect emulation");
+			}
+		#endif
 		IndexBuffer* indexBuffer = mVertexArray->getIndexBuffer();
 		for (uint32_t i = 0; i < numberOfDraws; ++i)
 		{
@@ -1249,6 +1267,12 @@ namespace OpenGLES3Renderer
 				}
 			}
 		}
+		#ifdef RENDERER_DEBUG
+			if (numberOfDraws > 1)
+			{
+				endDebugEvent();
+			}
+		#endif
 	}
 
 

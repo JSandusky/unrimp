@@ -1540,6 +1540,12 @@ namespace OpenGLRenderer
 		emulationData += indirectBufferOffset;
 
 		// Emit the draw calls
+		#ifdef RENDERER_DEBUG
+			if (numberOfDraws > 1)
+			{
+				beginDebugEvent("Multi-draw-indirect emulation");
+			}
+		#endif
 		for (uint32_t i = 0; i < numberOfDraws; ++i)
 		{
 			const Renderer::DrawInstancedArguments& drawInstancedArguments = *reinterpret_cast<const Renderer::DrawInstancedArguments*>(emulationData);
@@ -1566,6 +1572,12 @@ namespace OpenGLRenderer
 			}
 			emulationData += sizeof(Renderer::DrawInstancedArguments);
 		}
+		#ifdef RENDERER_DEBUG
+			if (numberOfDraws > 1)
+			{
+				endDebugEvent();
+			}
+		#endif
 	}
 
 	void OpenGLRenderer::drawIndexed(const Renderer::IIndirectBuffer& indirectBuffer, uint32_t indirectBufferOffset, uint32_t numberOfDraws)
@@ -1620,6 +1632,12 @@ namespace OpenGLRenderer
 		emulationData += indirectBufferOffset;
 
 		// Emit the draw calls
+		#ifdef RENDERER_DEBUG
+			if (numberOfDraws > 1)
+			{
+				beginDebugEvent("Multi-indexed-draw-indirect emulation");
+			}
+		#endif
 		IndexBuffer* indexBuffer = mVertexArray->getIndexBuffer();
 		for (uint32_t i = 0; i < numberOfDraws; ++i)
 		{
@@ -1690,6 +1708,12 @@ namespace OpenGLRenderer
 			}
 			emulationData += sizeof(Renderer::DrawIndexedInstancedArguments);
 		}
+		#ifdef RENDERER_DEBUG
+			if (numberOfDraws > 1)
+			{
+				endDebugEvent();
+			}
+		#endif
 	}
 
 
