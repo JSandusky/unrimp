@@ -124,8 +124,15 @@ namespace Direct3D11Renderer
 						dxgiFactory->EnumAdapters(0, &dxgiAdapter);
 						DXGI_ADAPTER_DESC dxgiAdapterDesc = {};
 						dxgiAdapter->GetDesc(&dxgiAdapterDesc);
-						amdDxgiAdapter = (0x1002 == dxgiAdapterDesc.VendorId);		// 0x1002 -> See "How-To Identify the Manufacturer and Model of an AMD Graphics Card" at http://support.amd.com/en-us/kb-articles/Pages/HowtoidentifythemodelofanATIgraphicscard.aspx
-						nvidiaDxgiAdapter = (0x10DE == dxgiAdapterDesc.VendorId);	// 0x10DE -> See "Device IDs" at http://www.nvidia.com/object/device_ids.html
+						if (0x1414 == dxgiAdapterDesc.VendorId)	// 0x1414 = "Capture Adapter" when using Visual Studio graphics debugger
+						{
+							RENDERER_LOG(mDirect3D11Renderer.getContext(), COMPATIBILITY_WARNING, "Direct3D 11 capture adapter used (e.g. Visual Studio graphics debugger), AMD AGS and NvAPI support disabled")
+						}
+						else
+						{
+							amdDxgiAdapter = (0x1002 == dxgiAdapterDesc.VendorId);		// 0x1002 -> See "How-To Identify the Manufacturer and Model of an AMD Graphics Card" at http://support.amd.com/en-us/kb-articles/Pages/HowtoidentifythemodelofanATIgraphicscard.aspx
+							nvidiaDxgiAdapter = (0x10DE == dxgiAdapterDesc.VendorId);	// 0x10DE -> See "Device IDs" at http://www.nvidia.com/object/device_ids.html
+						}
 						dxgiAdapter->Release();
 						dxgiFactory->Release();
 					}
